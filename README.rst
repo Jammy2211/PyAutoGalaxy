@@ -50,7 +50,7 @@ API Overview
 
 Galaxy morphology calculations are performed in **PyAutoGalaaxy** by building a ``Plane`` object from ``LightProfile``
 and ``Galaxy`` objects. Below, we create a simple galaxy system where a redshift 0.5
-``Galaxy`` with an ``EllSersic`` ``LightProfile`` representing a bulge and an ``EllExponential`` ``LightProfile``
+``Galaxy`` with an ``Sersic`` ``LightProfile`` representing a bulge and an ``Exponential`` ``LightProfile``
 representing a disk.
 
 .. code-block:: python
@@ -70,7 +70,7 @@ representing a disk.
     """
     The galaxy has an elliptical sersic light profile representing its bulge.
     """
-    bulge=ag.lp.EllSersic(
+    bulge=ag.lp.Sersic(
         centre=(0.0, 0.0),
         elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.9, angle=45.0),
         intensity=1.0,
@@ -81,7 +81,7 @@ representing a disk.
     """
     The galaxy also has an elliptical exponential disk
     """
-    disk = ag.lp.EllExponential(
+    disk = ag.lp.Exponential(
         centre=(0.0, 0.0),
         elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.7, angle=30.0),
         intensity=0.5,
@@ -137,9 +137,9 @@ simple analysis which fits a galaxy's light.
     )
 
     """
-    We model the galaxy using an EllSersic LightProfile.
+    We model the galaxy using an Sersic LightProfile.
     """
-    light_profile = ag.lp.EllSersic
+    light_profile = ag.lp.Sersic
 
     """
     We next setup this profile as model components whose parameters are free & fitted for

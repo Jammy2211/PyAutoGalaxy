@@ -8,7 +8,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 def test__deflections_yx_2d_from():
 
-    gaussian = ag.mp.EllDevVaucouleurs()
+    gaussian = ag.mp.DevVaucouleurs()
 
     deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
     deflections_via_cse = gaussian.deflections_2d_via_cse_from(
@@ -17,7 +17,7 @@ def test__deflections_yx_2d_from():
 
     assert deflections == pytest.approx(deflections_via_cse, 1.0e-4)
 
-    gaussian = ag.mp.SphDevVaucouleurs()
+    gaussian = ag.mp.DevVaucouleursSph()
 
     deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
     deflections_via_cse = gaussian.deflections_2d_via_cse_from(
@@ -28,7 +28,7 @@ def test__deflections_yx_2d_from():
 
 
 def test__deflections_via_integral_from():
-    dev = ag.mp.EllDevVaucouleurs(
+    dev = ag.mp.DevVaucouleurs(
         centre=(0.4, 0.2),
         elliptical_comps=(0.0180010, 0.0494575),
         intensity=2.0,
@@ -45,7 +45,7 @@ def test__deflections_via_integral_from():
 
 
 def test__deflections_2d_via_cse_from():
-    dev = ag.mp.EllDevVaucouleurs(
+    dev = ag.mp.DevVaucouleurs(
         centre=(0.4, 0.2),
         elliptical_comps=(0.0180010, 0.0494575),
         intensity=2.0,
@@ -62,7 +62,7 @@ def test__deflections_2d_via_cse_from():
 
     assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-4)
 
-    dev = ag.mp.EllDevVaucouleurs(
+    dev = ag.mp.DevVaucouleurs(
         centre=(0.4, 0.2),
         elliptical_comps=(0.4180010, 0.694575),
         intensity=2.0,
@@ -81,7 +81,7 @@ def test__deflections_2d_via_cse_from():
 
 
 def test__convergence_2d_via_mge_from():
-    dev = ag.mp.EllDevVaucouleurs(
+    dev = ag.mp.DevVaucouleurs(
         elliptical_comps=(0.0, 0.333333),
         intensity=3.0,
         effective_radius=2.0,
@@ -92,7 +92,7 @@ def test__convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(5.6697, 1e-3)
 
-    dev = ag.mp.EllDevVaucouleurs(
+    dev = ag.mp.DevVaucouleurs(
         elliptical_comps=(0.0, -0.333333),
         intensity=2.0,
         effective_radius=3.0,
@@ -103,7 +103,7 @@ def test__convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(7.4455, 1e-3)
 
-    dev = ag.mp.EllDevVaucouleurs(
+    dev = ag.mp.DevVaucouleurs(
         elliptical_comps=(0.0, -0.333333),
         intensity=4.0,
         effective_radius=3.0,
@@ -114,7 +114,7 @@ def test__convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(2.0 * 7.4455, 1e-3)
 
-    dev = ag.mp.EllDevVaucouleurs(
+    dev = ag.mp.DevVaucouleurs(
         elliptical_comps=(0.0, -0.333333),
         intensity=2.0,
         effective_radius=3.0,
@@ -125,7 +125,7 @@ def test__convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(2.0 * 7.4455, 1e-3)
 
-    dev = ag.mp.EllDevVaucouleurs(
+    dev = ag.mp.DevVaucouleurs(
         centre=(0.0, 0.0),
         intensity=1.0,
         effective_radius=0.6,
@@ -138,7 +138,7 @@ def test__convergence_2d_via_mge_from():
 
 
 def test__convergence_2d_from():
-    dev = ag.mp.EllDevVaucouleurs(
+    dev = ag.mp.DevVaucouleurs(
         elliptical_comps=(0.0, 0.333333),
         intensity=3.0,
         effective_radius=2.0,
@@ -149,7 +149,7 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(5.6697, 1e-3)
 
-    dev = ag.mp.EllDevVaucouleurs(
+    dev = ag.mp.DevVaucouleurs(
         elliptical_comps=(0.0, -0.333333),
         intensity=2.0,
         effective_radius=3.0,
@@ -160,7 +160,7 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(7.4455, 1e-3)
 
-    dev = ag.mp.EllDevVaucouleurs(
+    dev = ag.mp.DevVaucouleurs(
         elliptical_comps=(0.0, -0.333333),
         intensity=4.0,
         effective_radius=3.0,
@@ -171,7 +171,7 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(2.0 * 7.4455, 1e-3)
 
-    dev = ag.mp.EllDevVaucouleurs(
+    dev = ag.mp.DevVaucouleurs(
         elliptical_comps=(0.0, -0.333333),
         intensity=2.0,
         effective_radius=3.0,
@@ -182,7 +182,7 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(2.0 * 7.4455, 1e-3)
 
-    dev = ag.mp.EllDevVaucouleurs(
+    dev = ag.mp.DevVaucouleurs(
         centre=(0.0, 0.0),
         intensity=1.0,
         effective_radius=0.6,
@@ -193,7 +193,7 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(0.351797, 1e-3)
 
-    elliptical = ag.mp.EllDevVaucouleurs(
+    elliptical = ag.mp.DevVaucouleurs(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.0),
         intensity=1.0,
@@ -201,7 +201,7 @@ def test__convergence_2d_from():
         mass_to_light_ratio=1.0,
     )
 
-    spherical = ag.mp.EllDevVaucouleurs(
+    spherical = ag.mp.DevVaucouleurs(
         centre=(0.0, 0.0),
         intensity=1.0,
         effective_radius=1.0,

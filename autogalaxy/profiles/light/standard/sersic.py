@@ -9,7 +9,7 @@ from autogalaxy.profiles.light.decorators import (
 )
 
 
-class AbstractEllSersic(LightProfile):
+class AbstractSersic(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -88,7 +88,7 @@ class AbstractEllSersic(LightProfile):
         )
 
 
-class EllSersic(AbstractEllSersic, LightProfile):
+class Sersic(AbstractSersic, LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -177,7 +177,7 @@ class EllSersic(AbstractEllSersic, LightProfile):
         return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
 
 
-class SphSersic(EllSersic):
+class SersicSph(Sersic):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

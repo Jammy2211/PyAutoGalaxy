@@ -4,7 +4,7 @@ from autogalaxy.profiles.light.snr.abstract import LightProfileSNR
 from autogalaxy.profiles.light import standard as lp
 
 
-class EllEff(lp.EllEff, LightProfileSNR):
+class ElsonFreeFall(lp.ElsonFreeFall, LightProfileSNR):
     def __init__(
         self,
         signal_to_noise_ratio: float = 10.0,
@@ -43,7 +43,7 @@ class EllEff(lp.EllEff, LightProfileSNR):
         LightProfileSNR.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)
 
 
-class SphEff(lp.SphEff, LightProfileSNR):
+class ElsonFreeFallSph(lp.ElsonFreeFallSph, LightProfileSNR):
     def __init__(
         self,
         signal_to_noise_ratio: float = 10.0,

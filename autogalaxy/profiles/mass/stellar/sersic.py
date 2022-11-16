@@ -87,7 +87,7 @@ def cse_settings_from(
     return upper_dex, lower_dex, total_cses, sample_points
 
 
-class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile):
+class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -117,7 +117,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
-        super(AbstractEllSersic, self).__init__(
+        super(AbstractSersic, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
         super(MassProfile, self).__init__(
@@ -363,7 +363,7 @@ class AbstractEllSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProf
         return mass_profile
 
 
-class EllSersic(AbstractEllSersic, MassProfileMGE, MassProfileCSE):
+class Sersic(AbstractSersic, MassProfileMGE, MassProfileCSE):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
@@ -427,7 +427,7 @@ class EllSersic(AbstractEllSersic, MassProfileMGE, MassProfileCSE):
         ) / ((1 - (1 - axis_ratio**2) * u) ** (npow + 0.5))
 
 
-class SphSersic(EllSersic):
+class SersicSph(Sersic):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

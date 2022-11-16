@@ -190,7 +190,7 @@ def test__mass_angular_via_normalization_from():
 
     assert mass_angular_from_normalization == pytest.approx(15.19525, 1.0e-4)
 
-    sersic = ag.mp.SphSersic(
+    sersic = ag.mp.SersicSph(
         centre=(0.0, 0.0),
         intensity=1.0,
         effective_radius=1.0,
@@ -202,7 +202,7 @@ def test__mass_angular_via_normalization_from():
         normalization=2.0, radius=2.0
     )
 
-    sersic = ag.mp.SphSersic(
+    sersic = ag.mp.SersicSph(
         centre=(0.0, 0.0),
         intensity=1.0,
         effective_radius=1.0,
@@ -245,7 +245,7 @@ def test__normalization_via_mass_angular_from():
 
     assert normalization == pytest.approx(0.83687, 1.0e-2)
 
-    sersic = ag.mp.SphSersic(
+    sersic = ag.mp.SersicSph(
         centre=(0.0, 0.0),
         intensity=1.0,
         effective_radius=1.0,
@@ -293,7 +293,7 @@ def test__einstein_radius_via_normalization_from():
 
     assert einstein_radius_via_normalization_from == pytest.approx(2.35829, 1.0e-4)
 
-    sersic = ag.mp.SphSersic(
+    sersic = ag.mp.SersicSph(
         centre=(0.0, 0.0),
         intensity=1.0,
         effective_radius=1.0,
@@ -347,7 +347,7 @@ def test__normalization_via_einstein_radius_from():
 
     assert normalization == pytest.approx(2.0, 1.0e-2)
 
-    sersic = ag.mp.SphSersic(
+    sersic = ag.mp.SersicSph(
         centre=(0.0, 0.0),
         intensity=1.0,
         effective_radius=1.0,

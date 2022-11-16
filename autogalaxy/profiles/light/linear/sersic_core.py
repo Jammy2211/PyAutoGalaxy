@@ -6,7 +6,7 @@ from autogalaxy.profiles.light.linear.abstract import LightProfileLinear
 from autogalaxy.profiles.light import standard as lp
 
 
-class EllSersicCore(lp.EllSersicCore, LightProfileLinear):
+class SersicCore(lp.SersicCore, LightProfileLinear):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -53,7 +53,7 @@ class EllSersicCore(lp.EllSersicCore, LightProfileLinear):
 
     @property
     def lp_cls(self):
-        return lp.EllSersicCore
+        return lp.SersicCore
 
     def parameters_dict_from(self, intensity: float) -> Dict[str, float]:
         """

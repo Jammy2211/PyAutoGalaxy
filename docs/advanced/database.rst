@@ -81,19 +81,19 @@ We can iterate over the samples to print the maximum log likelihood model of eve
 The ``Aggregator`` contains tools for querying the database for certain results, for example to load subsets of
 model-fits. This can be done in many different ways, depending on what information you want.
 
-Below, we query based on the model fitted. For example, we can load all results which fitted an ``EllSersic``
+Below, we query based on the model fitted. For example, we can load all results which fitted an ``Sersic``
 light model (note that when we performed the model fit, we composed the model using a galaxy name ``galaxy``
 and light component named ``light``):
 
 .. code-block:: python
 
     galaxy = agg.model.galaxies.galaxy
-    agg_query = agg.query(galaxy.light == al.EllSersic)
+    agg_query = agg.query(galaxy.light == al.Sersic)
 
     samples_gen = agg_query.values("samples")
 
 Queries using the results of model-fitting are also supported. Below, we query the database to find all fits where the
-inferred value of the ``effective_radius`` for the ``EllSersic`` is above 1.0:
+inferred value of the ``effective_radius`` for the ``Sersic`` is above 1.0:
 
 .. code-block:: python
 
@@ -101,13 +101,13 @@ inferred value of the ``effective_radius`` for the ``EllSersic`` is above 1.0:
     agg_query = agg.query(galaxy.light.effective_radius > 1.0)
 
 Advanced queries can be constructed using logic, for example we below we combine the two queries above to find all
-results which fitted an ``EllSersic`` AND (using the & symbol) inferred a value of sigma less than 3.0.
+results which fitted an ``Sersic`` AND (using the & symbol) inferred a value of sigma less than 3.0.
 
 The OR logical clause is also supported via the symbol |.
 
 .. code-block:: python
 
-    agg_query = agg.query((galaxy.light == al.EllSersic) & (galaxy.light.effective_radius > 1.0))
+    agg_query = agg.query((galaxy.light == al.Sersic) & (galaxy.light.effective_radius > 1.0))
 
 We can query using the ``unique_tag`` to load the model-fit to a specific dataset:
 

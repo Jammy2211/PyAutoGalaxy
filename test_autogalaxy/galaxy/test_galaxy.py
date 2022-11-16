@@ -295,7 +295,7 @@ def test__mass_angular_within_circle_from(mp_0, mp_1, gal_x2_mp):
 
     assert mp_0_mass + mp_1_mass == gal_mass
 
-    gal_no_mp = ag.Galaxy(redshift=0.5, light=ag.lp.SphSersic())
+    gal_no_mp = ag.Galaxy(redshift=0.5, light=ag.lp.SersicSph())
 
     with pytest.raises(exc.GalaxyException):
         gal_no_mp.mass_angular_within_circle_from(radius=1.0)
@@ -402,7 +402,7 @@ def test__extract_attribute():
 
 def test__image_2d_from__does_not_include_linear_light_profiles(sub_grid_2d_7x7, lp_0):
 
-    lp_linear = ag.lp_linear.EllSersic(effective_radius=2.0, sersic_index=2.0)
+    lp_linear = ag.lp_linear.Sersic(effective_radius=2.0, sersic_index=2.0)
 
     galaxy = ag.Galaxy(redshift=0.5, light_0=lp_0, light_linear=lp_linear)
 
@@ -414,9 +414,9 @@ def test__image_2d_from__does_not_include_linear_light_profiles(sub_grid_2d_7x7,
 
 
 def test__light_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric_results():
-    lp_0 = ag.lp.EllSersic(centre=(0.0, 0.0), intensity=1.0)
+    lp_0 = ag.lp.Sersic(centre=(0.0, 0.0), intensity=1.0)
 
-    lp_1 = ag.lp.EllSersic(centre=(100.0, 0.0), intensity=1.0)
+    lp_1 = ag.lp.Sersic(centre=(100.0, 0.0), intensity=1.0)
 
     gal_x2_lp = ag.Galaxy(redshift=0.5, light_profile_0=lp_0, light_profile_1=lp_1)
 
@@ -428,14 +428,14 @@ def test__light_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric
         gal_x2_lp.image_2d_from(grid=np.array([[51.0, 0.0]])), 1.0e-4
     )
 
-    lp_0 = ag.lp.EllSersic(
+    lp_0 = ag.lp.Sersic(
         elliptical_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=0.6,
         sersic_index=4.0,
     )
 
-    lp_1 = ag.lp.EllSersic(
+    lp_1 = ag.lp.Sersic(
         elliptical_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=0.6,
@@ -443,7 +443,7 @@ def test__light_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric
         centre=(100, 0),
     )
 
-    lp_2 = ag.lp.EllSersic(
+    lp_2 = ag.lp.Sersic(
         elliptical_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=0.6,
@@ -451,7 +451,7 @@ def test__light_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric
         centre=(0, 100),
     )
 
-    lp_3 = ag.lp.EllSersic(
+    lp_3 = ag.lp.Sersic(
         elliptical_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=0.6,
@@ -720,13 +720,13 @@ def test__centre_of_profile_in_right_place():
 
 def test__cannot_pass_light_or_mass_list():
 
-    light_list = [ag.lp.EllSersic(), ag.lp.EllSersic()]
+    light_list = [ag.lp.Sersic(), ag.lp.Sersic()]
 
     with pytest.raises(exc.GalaxyException):
 
         ag.Galaxy(redshift=0.5, light=light_list)
 
-    mass_list = [ag.mp.EllSersic(), ag.mp.EllSersic()]
+    mass_list = [ag.mp.Sersic(), ag.mp.Sersic()]
 
     with pytest.raises(exc.GalaxyException):
 
@@ -752,7 +752,7 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
 
     grid = ag.Grid2DIterate.from_mask(mask=mask, fractional_accuracy=1.0, sub_steps=[2])
 
-    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=1.0))
+    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
 
     image = galaxy.image_2d_from(grid=grid)
 
@@ -767,7 +767,7 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
     )
 
     galaxy = ag.Galaxy(
-        redshift=0.5, light=ag.lp.EllSersic(centre=(0.08, 0.08), intensity=1.0)
+        redshift=0.5, light=ag.lp.Sersic(centre=(0.08, 0.08), intensity=1.0)
     )
 
     image = galaxy.image_2d_from(grid=grid)

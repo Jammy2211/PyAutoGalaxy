@@ -65,7 +65,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
                     "Instead, pass these objects as a dictionary, where the key of each dictionary entry is"
                     "the name of the profile and the value is the profile, e.g.:"
                     ""
-                    "{bulge : al.lp.EllSersic()}"
+                    "{bulge : al.lp.Sersic()}"
                     ""
                 )
 

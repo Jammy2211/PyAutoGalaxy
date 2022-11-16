@@ -5,7 +5,7 @@ from autogalaxy.profiles.light.snr.abstract import LightProfileSNR
 from autogalaxy.profiles.light import standard as lp
 
 
-class EllChameleon(lp.EllChameleon, LightProfileSNR):
+class Chameleon(lp.Chameleon, LightProfileSNR):
     def __init__(
         self,
         signal_to_noise_ratio: float = 10.0,
@@ -46,7 +46,7 @@ class EllChameleon(lp.EllChameleon, LightProfileSNR):
         LightProfileSNR.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)
 
 
-class SphChameleon(lp.SphChameleon, LightProfileSNR):
+class ChameleonSph(lp.ChameleonSph, LightProfileSNR):
     def __init__(
         self,
         signal_to_noise_ratio: float = 10.0,

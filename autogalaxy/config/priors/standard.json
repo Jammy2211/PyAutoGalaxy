@@ -1,5 +1,5 @@
 {
-    "sersic.SphSersic": {
+    "sersic.SersicSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -70,7 +70,7 @@
             }
         }
     },
-    "sersic.EllSersic": {
+    "sersic.Sersic": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -171,7 +171,7 @@
             }
         }
     },
-    "exponential.SphExponential": {
+    "exponential.ExponentialSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -229,7 +229,7 @@
             }
         }
     },
-    "exponential.EllExponential": {
+    "exponential.Exponential": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -317,7 +317,7 @@
             }
         }
     },
-    "dev_vaucouleurs.SphDevVaucouleurs": {
+    "dev_vaucouleurs.DevVaucouleursSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -375,7 +375,7 @@
             }
         }
     },
-    "dev_vaucouleurs.EllDevVaucouleurs": {
+    "dev_vaucouleurs.DevVaucouleurs": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -463,7 +463,7 @@
             }
         }
     },
-    "sersic_core.SphSersicCore": {
+    "sersic_core.SersicCoreSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -573,7 +573,7 @@
             }
         }
     },
-    "sersic_core.EllSersicCore": {
+    "sersic_core.SersicCore": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -713,7 +713,7 @@
             }
         }
     },
-    "exponential_core.SphExponentialCore": {
+    "exponential_core.ExponentialCoreSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -810,7 +810,7 @@
             }
         }
     },
-    "exponential_core.EllExponentialCore": {
+    "exponential_core.ExponentialCore": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -937,7 +937,7 @@
             }
         }
     },
-    "gaussian.SphGaussian": {
+    "gaussian.GaussianSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -995,7 +995,7 @@
             }
         }
     },
-    "gaussian.EllGaussian": {
+    "gaussian.Gaussian": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -1083,7 +1083,7 @@
             }
         }
     },
-    "moffat.SphMoffat": {
+    "moffat.MoffatSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -1154,7 +1154,7 @@
             }
         }
     },
-    "moffat.EllMoffat": {
+    "moffat.Moffat": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -1255,7 +1255,7 @@
             }
         }
     },
-    "chameleon.SphChameleon": {
+    "chameleon.ChameleonSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -1326,7 +1326,7 @@
             }
         }
     },
-    "chameleon.EllChameleon": {
+    "chameleon.Chameleon": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -1427,7 +1427,7 @@
             }
         }
     },
-    "eff.SphEff": {
+    "eff.ElsonFreeFallSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -1498,7 +1498,7 @@
             }
         }
     },
-    "eff.EllEff": {
+    "eff.ElsonFreeFall": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,

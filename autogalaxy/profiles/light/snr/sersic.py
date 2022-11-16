@@ -4,7 +4,7 @@ from autogalaxy.profiles.light.snr.abstract import LightProfileSNR
 from autogalaxy.profiles.light import standard as lp
 
 
-class EllSersic(lp.EllSersic, LightProfileSNR):
+class Sersic(lp.Sersic, LightProfileSNR):
     def __init__(
         self,
         signal_to_noise_ratio: float = 10.0,
@@ -44,7 +44,7 @@ class EllSersic(lp.EllSersic, LightProfileSNR):
         LightProfileSNR.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)
 
 
-class SphSersic(lp.SphSersic, LightProfileSNR):
+class SersicSph(lp.SersicSph, LightProfileSNR):
     def __init__(
         self,
         signal_to_noise_ratio: float = 10.0,

@@ -6,7 +6,7 @@ from autogalaxy.profiles.light import standard as lp
 from autogalaxy.profiles import light_and_mass_profiles as lmp
 
 
-class EllExponential(lp.EllExponential, LightProfileLinear):
+class Exponential(lp.Exponential, LightProfileLinear):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -37,8 +37,8 @@ class EllExponential(lp.EllExponential, LightProfileLinear):
 
     @property
     def lp_cls(self):
-        return lp.EllExponential
+        return lp.Exponential
 
     @property
     def lmp_cls(self):
-        return lmp.EllExponential
+        return lmp.Exponential

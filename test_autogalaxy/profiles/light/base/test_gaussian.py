@@ -10,7 +10,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__image_2d_from():
-    gaussian = ag.lp.EllGaussian(
+    gaussian = ag.lp.Gaussian(
         centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
     )
 
@@ -18,7 +18,7 @@ def test__image_2d_from():
 
     assert image == pytest.approx(0.60653, 1e-2)
 
-    gaussian = ag.lp.EllGaussian(
+    gaussian = ag.lp.Gaussian(
         centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=2.0, sigma=1.0
     )
 
@@ -26,7 +26,7 @@ def test__image_2d_from():
 
     assert image == pytest.approx(2.0 * 0.60653, 1e-2)
 
-    gaussian = ag.lp.EllGaussian(
+    gaussian = ag.lp.Gaussian(
         centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
     )
 
@@ -34,7 +34,7 @@ def test__image_2d_from():
 
     assert image == pytest.approx(0.88249, 1e-2)
 
-    gaussian = ag.lp.EllGaussian(
+    gaussian = ag.lp.Gaussian(
         centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
     )
 
@@ -42,10 +42,8 @@ def test__image_2d_from():
 
     assert image == pytest.approx(0.3246, 1e-2)
 
-    elliptical = ag.lp.EllGaussian(
-        elliptical_comps=(0.0, 0.0), intensity=3.0, sigma=2.0
-    )
-    spherical = ag.lp.SphGaussian(intensity=3.0, sigma=2.0)
+    elliptical = ag.lp.Gaussian(elliptical_comps=(0.0, 0.0), intensity=3.0, sigma=2.0)
+    spherical = ag.lp.GaussianSph(intensity=3.0, sigma=2.0)
 
     image_elliptical = elliptical.image_2d_from(grid=grid)
     image_spherical = spherical.image_2d_from(grid=grid)

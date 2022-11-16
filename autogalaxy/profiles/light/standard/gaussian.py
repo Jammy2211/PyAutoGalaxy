@@ -9,7 +9,7 @@ from autogalaxy.profiles.light.decorators import (
 )
 
 
-class EllGaussian(LightProfile):
+class Gaussian(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -89,7 +89,7 @@ class EllGaussian(LightProfile):
         return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
 
 
-class SphGaussian(EllGaussian):
+class GaussianSph(Gaussian):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

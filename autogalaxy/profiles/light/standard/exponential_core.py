@@ -1,9 +1,9 @@
 from typing import Tuple
 
-from autogalaxy.profiles.light.standard.sersic_core import EllSersicCore
+from autogalaxy.profiles.light.standard.sersic_core import SersicCore
 
 
-class EllExponentialCore(EllSersicCore):
+class ExponentialCore(SersicCore):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -52,7 +52,7 @@ class EllExponentialCore(EllSersicCore):
         )
 
 
-class SphExponentialCore(EllExponentialCore):
+class ExponentialCoreSph(ExponentialCore):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

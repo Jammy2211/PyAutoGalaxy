@@ -6,7 +6,7 @@ from autogalaxy.profiles.light import standard as lp
 from autogalaxy.profiles import light_and_mass_profiles as lmp
 
 
-class EllGaussian(lp.EllGaussian, LightProfileLinear):
+class Gaussian(lp.Gaussian, LightProfileLinear):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -38,8 +38,8 @@ class EllGaussian(lp.EllGaussian, LightProfileLinear):
 
     @property
     def lp_cls(self):
-        return lp.EllGaussian
+        return lp.Gaussian
 
     @property
     def lmp_cls(self):
-        return lmp.EllGaussian
+        return lmp.Gaussian

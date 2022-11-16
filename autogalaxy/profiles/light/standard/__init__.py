@@ -1,15 +1,15 @@
-from .gaussian import EllGaussian, SphGaussian
-from .moffat import EllMoffat, SphMoffat
+from .gaussian import Gaussian, GaussianSph
+from .moffat import Moffat, MoffatSph
 from .sersic import (
-    EllSersic,
-    SphSersic,
+    Sersic,
+    SersicSph,
 )
-from .exponential import EllExponential, SphExponential
-from .dev_vaucouleurs import EllDevVaucouleurs, SphDevVaucouleurs
-from .sersic_core import EllSersicCore, SphSersicCore
-from .exponential_core import EllExponentialCore, SphExponentialCore
-from .chameleon import EllChameleon, SphChameleon
+from .exponential import Exponential, ExponentialSph
+from .dev_vaucouleurs import DevVaucouleurs, DevVaucouleursSph
+from .sersic_core import SersicCore, SersicCoreSph
+from .exponential_core import ExponentialCore, ExponentialCoreSph
+from .chameleon import Chameleon, ChameleonSph
 from .eff import (
-    EllEff,
-    SphEff,
+    ElsonFreeFall,
+    ElsonFreeFallSph,
 )

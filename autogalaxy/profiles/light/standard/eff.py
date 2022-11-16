@@ -9,7 +9,7 @@ from autogalaxy.profiles.light.decorators import (
 )
 
 
-class EllEff(LightProfile):
+class ElsonFreeFall(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -89,7 +89,7 @@ class EllEff(LightProfile):
         return self.effective_radius * np.sqrt(0.5 ** (1.0 / (1.0 - self.eta)) - 1.0)
 
 
-class SphEff(EllEff):
+class ElsonFreeFallSph(ElsonFreeFall):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

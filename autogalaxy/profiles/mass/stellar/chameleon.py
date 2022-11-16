@@ -10,7 +10,7 @@ from autogalaxy.profiles.mass.stellar.abstract import StellarProfile
 from autogalaxy.profiles.mass.total.isothermal import psi_from
 
 
-class EllChameleon(MassProfile, StellarProfile):
+class Chameleon(MassProfile, StellarProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -42,7 +42,7 @@ class EllChameleon(MassProfile, StellarProfile):
                 (1.0 / Sqrt(x^2 + (y/q)^2 + core_radius_0^2) - 1.0 / Sqrt(x^2 + (y/q)^2 + (core_radius_0 + core_radius_1)**2.0))
         """
 
-        super(EllChameleon, self).__init__(
+        super(Chameleon, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )
         super(MassProfile, self).__init__(
@@ -195,7 +195,7 @@ class EllChameleon(MassProfile, StellarProfile):
         return mass_profile
 
 
-class SphChameleon(EllChameleon):
+class ChameleonSph(Chameleon):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

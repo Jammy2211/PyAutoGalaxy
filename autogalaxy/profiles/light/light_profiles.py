@@ -139,7 +139,7 @@ class LightProfile(EllProfile, OperateImage):
         raise NotImplementedError
 
 
-class EllGaussian(LightProfile):
+class Gaussian(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -219,7 +219,7 @@ class EllGaussian(LightProfile):
         return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
 
 
-class SphGaussian(EllGaussian):
+class GaussianSph(Gaussian):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -246,7 +246,7 @@ class SphGaussian(EllGaussian):
         )
 
 
-class EllMoffat(LightProfile):
+class Moffat(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -336,7 +336,7 @@ class EllMoffat(LightProfile):
         return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
 
 
-class SphMoffat(EllMoffat):
+class MoffatSph(Moffat):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -372,7 +372,7 @@ class SphMoffat(EllMoffat):
         super().__init__(centre=centre, intensity=intensity, alpha=alpha, beta=beta)
 
 
-class AbstractEllSersic(LightProfile):
+class AbstractSersic(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -451,7 +451,7 @@ class AbstractEllSersic(LightProfile):
         )
 
 
-class EllSersic(AbstractEllSersic, LightProfile):
+class Sersic(AbstractSersic, LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -540,7 +540,7 @@ class EllSersic(AbstractEllSersic, LightProfile):
         return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
 
 
-class SphSersic(EllSersic):
+class SersicSph(Sersic):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -574,7 +574,7 @@ class SphSersic(EllSersic):
         )
 
 
-class EllExponential(EllSersic):
+class Exponential(Sersic):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -611,7 +611,7 @@ class EllExponential(EllSersic):
         )
 
 
-class SphExponential(EllExponential):
+class ExponentialSph(Exponential):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -643,7 +643,7 @@ class SphExponential(EllExponential):
         )
 
 
-class EllDevVaucouleurs(EllSersic):
+class DevVaucouleurs(Sersic):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -680,7 +680,7 @@ class EllDevVaucouleurs(EllSersic):
         )
 
 
-class SphDevVaucouleurs(EllDevVaucouleurs):
+class DevVaucouleursSph(DevVaucouleurs):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -712,7 +712,7 @@ class SphDevVaucouleurs(EllDevVaucouleurs):
         )
 
 
-class EllSersicCore(EllSersic):
+class SersicCore(Sersic):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -826,7 +826,7 @@ class EllSersicCore(EllSersic):
         )
 
 
-class SphSersicCore(EllSersicCore):
+class SersicCoreSph(SersicCore):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -877,7 +877,7 @@ class SphSersicCore(EllSersicCore):
         self.gamma = gamma
 
 
-class EllExponentialCore(EllSersicCore):
+class ExponentialCore(SersicCore):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -926,7 +926,7 @@ class EllExponentialCore(EllSersicCore):
         )
 
 
-class SphExponentialCore(EllExponentialCore):
+class ExponentialCoreSph(ExponentialCore):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -973,7 +973,7 @@ class SphExponentialCore(EllExponentialCore):
         self.gamma = gamma
 
 
-class EllChameleon(LightProfile):
+class Chameleon(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -1084,7 +1084,7 @@ class EllChameleon(LightProfile):
         return self.image_2d_via_radii_from(self.grid_to_elliptical_radii(grid))
 
 
-class SphChameleon(EllChameleon):
+class ChameleonSph(Chameleon):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -1126,7 +1126,7 @@ class SphChameleon(EllChameleon):
         )
 
 
-class EllEff(LightProfile):
+class ElsonFreeFall(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -1206,7 +1206,7 @@ class EllEff(LightProfile):
         return self.effective_radius * np.sqrt(0.5 ** (1.0 / (1.0 - self.eta)) - 1.0)
 
 
-class SphEff(EllEff):
+class ElsonFreeFallSph(ElsonFreeFall):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

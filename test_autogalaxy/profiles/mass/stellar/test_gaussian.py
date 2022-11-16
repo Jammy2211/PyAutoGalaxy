@@ -8,7 +8,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 def test__deflections_2d_via_analytic_from():
 
-    gaussian = ag.mp.EllGaussian(
+    gaussian = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.05263),
         intensity=1.0,
@@ -21,7 +21,7 @@ def test__deflections_2d_via_analytic_from():
     assert deflections[0, 0] == pytest.approx(1.024423, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.0, 1.0e-4)
 
-    gaussian = ag.mp.EllGaussian(
+    gaussian = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.111111),
         intensity=1.0,
@@ -34,7 +34,7 @@ def test__deflections_2d_via_analytic_from():
     assert deflections[0, 0] == pytest.approx(0.554062, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.177336, 1.0e-4)
 
-    gaussian = ag.mp.EllGaussian(
+    gaussian = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.111111),
         intensity=1.0,
@@ -47,7 +47,7 @@ def test__deflections_2d_via_analytic_from():
     assert deflections[0, 0] == pytest.approx(1.108125, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.35467, 1.0e-4)
 
-    gaussian = ag.mp.EllGaussian(
+    gaussian = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.111111),
         intensity=2.0,
@@ -63,7 +63,7 @@ def test__deflections_2d_via_analytic_from():
 
 def test__deflections_2d_via_integral_from():
 
-    gaussian = ag.mp.EllGaussian(
+    gaussian = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.05263),
         intensity=1.0,
@@ -78,7 +78,7 @@ def test__deflections_2d_via_integral_from():
 
     assert deflections == pytest.approx(deflections_via_analytic, 1.0e-3)
 
-    gaussian = ag.mp.EllGaussian(
+    gaussian = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.111111),
         intensity=1.0,
@@ -93,7 +93,7 @@ def test__deflections_2d_via_integral_from():
 
     assert deflections == pytest.approx(deflections_via_analytic, 1.0e-3)
 
-    gaussian = ag.mp.EllGaussian(
+    gaussian = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.111111),
         intensity=1.0,
@@ -108,7 +108,7 @@ def test__deflections_2d_via_integral_from():
 
     assert deflections == pytest.approx(deflections_via_analytic, 1.0e-3)
 
-    gaussian = ag.mp.EllGaussian(
+    gaussian = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.111111),
         intensity=2.0,
@@ -126,7 +126,7 @@ def test__deflections_2d_via_integral_from():
 
 def test__deflections_yx_2d_from():
 
-    gaussian = ag.mp.EllGaussian()
+    gaussian = ag.mp.Gaussian()
 
     deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
     deflections_via_integral = gaussian.deflections_2d_via_analytic_from(
@@ -137,7 +137,7 @@ def test__deflections_yx_2d_from():
 
 
 def test__convergence_2d_from():
-    gaussian = ag.mp.EllGaussian(
+    gaussian = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.0),
         intensity=1.0,
@@ -149,7 +149,7 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(0.60653, 1e-2)
 
-    gaussian = ag.mp.EllGaussian(
+    gaussian = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.0),
         intensity=1.0,
@@ -161,7 +161,7 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(2.0 * 0.60653, 1e-2)
 
-    gaussian = ag.mp.EllGaussian(
+    gaussian = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.333333),
         intensity=2.0,
@@ -176,14 +176,14 @@ def test__convergence_2d_from():
 
 def test__intensity_and_convergence_match_for_mass_light_ratio_1():
 
-    gaussian_light_profile = ag.lp.EllGaussian(
+    gaussian_light_profile = ag.lp.Gaussian(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.333333),
         intensity=2.0,
         sigma=3.0,
     )
 
-    gaussian_mass_profile = ag.mp.EllGaussian(
+    gaussian_mass_profile = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.333333),
         intensity=2.0,
@@ -198,7 +198,7 @@ def test__intensity_and_convergence_match_for_mass_light_ratio_1():
 
 
 def test__image_2d_via_radii_from__correct_value():
-    gaussian = ag.mp.EllGaussian(
+    gaussian = ag.mp.Gaussian(
         centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
     )
 
@@ -206,7 +206,7 @@ def test__image_2d_via_radii_from__correct_value():
 
     assert intensity == pytest.approx(0.60653, 1e-2)
 
-    gaussian = ag.mp.EllGaussian(
+    gaussian = ag.mp.Gaussian(
         centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=2.0, sigma=1.0
     )
 
@@ -214,7 +214,7 @@ def test__image_2d_via_radii_from__correct_value():
 
     assert intensity == pytest.approx(2.0 * 0.60653, 1e-2)
 
-    gaussian = ag.mp.EllGaussian(
+    gaussian = ag.mp.Gaussian(
         centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
     )
 
@@ -222,7 +222,7 @@ def test__image_2d_via_radii_from__correct_value():
 
     assert intensity == pytest.approx(0.882496, 1e-2)
 
-    gaussian = ag.mp.EllGaussian(
+    gaussian = ag.mp.Gaussian(
         centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
     )
 

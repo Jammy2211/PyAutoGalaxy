@@ -12,7 +12,7 @@ def test__blurred_image_2d_from(
     sub_grid_2d_7x7, blurring_grid_2d_7x7, psf_3x3, convolver_7x7
 ):
 
-    lp = ag.lp.EllSersic(intensity=1.0)
+    lp = ag.lp.Sersic(intensity=1.0)
 
     image_2d = lp.image_2d_from(grid=sub_grid_2d_7x7)
     blurring_image_2d = lp.image_2d_from(grid=blurring_grid_2d_7x7)
@@ -39,8 +39,8 @@ def test__blurred_image_2d_from(
         lp_blurred_image_2d.native, 1.0e-4
     )
 
-    light_not_operated = ag.lp.EllSersic(intensity=1.0)
-    light_operated = ag.lp_operated.EllGaussian(intensity=1.0)
+    light_not_operated = ag.lp.Sersic(intensity=1.0)
+    light_operated = ag.lp_operated.Gaussian(intensity=1.0)
 
     image_2d_not_operated = light_not_operated.image_2d_from(grid=sub_grid_2d_7x7)
     blurring_image_2d_not_operated = light_not_operated.image_2d_from(
@@ -75,9 +75,9 @@ def test__x1_plane__padded_image__compare_to_galaxy_images_using_padded_grid_sta
 ):
     padded_grid = sub_grid_2d_7x7.padded_grid_from(kernel_shape_native=(3, 3))
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
-    g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.Sersic(intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.Sersic(intensity=2.0))
+    g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.Sersic(intensity=3.0))
 
     padded_g0_image = g0.image_2d_from(grid=padded_grid)
 
@@ -112,7 +112,7 @@ def test__unmasked_blurred_image_2d_from():
 
     grid = ag.Grid2D.from_mask(mask=mask)
 
-    lp = ag.lp.EllSersic(intensity=0.1)
+    lp = ag.lp.Sersic(intensity=0.1)
 
     unmasked_blurred_image_2d = lp.unmasked_blurred_image_2d_from(grid=grid, psf=psf)
 
@@ -127,8 +127,8 @@ def test__unmasked_blurred_image_2d_from():
         1.0e-4,
     )
 
-    light_not_operated = ag.lp.EllGaussian(intensity=1.0)
-    light_operated = ag.lp_operated.EllGaussian(intensity=1.0)
+    light_not_operated = ag.lp.Gaussian(intensity=1.0)
+    light_operated = ag.lp_operated.Gaussian(intensity=1.0)
 
     padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
 
@@ -164,7 +164,7 @@ def test__unmasked_blurred_image_2d_from():
 def test__visibilities_from_grid_and_transformer(
     grid_2d_7x7, sub_grid_2d_7x7, transformer_7x7_7
 ):
-    lp = ag.lp.EllSersic(intensity=1.0)
+    lp = ag.lp.Sersic(intensity=1.0)
     lp_visibilities = lp.visibilities_from(
         grid=grid_2d_7x7, transformer=transformer_7x7_7
     )
@@ -179,8 +179,8 @@ def test__blurred_image_2d_list_from(
     sub_grid_2d_7x7, blurring_grid_2d_7x7, psf_3x3, convolver_7x7
 ):
 
-    lp_0 = ag.lp.EllGaussian(intensity=1.0)
-    lp_1 = ag.lp.EllGaussian(intensity=2.0)
+    lp_0 = ag.lp.Gaussian(intensity=1.0)
+    lp_1 = ag.lp.Gaussian(intensity=2.0)
 
     lp_0_blurred_image_2d = lp_0.blurred_image_2d_from(
         grid=sub_grid_2d_7x7, blurring_grid=blurring_grid_2d_7x7, psf=psf_3x3
@@ -216,7 +216,7 @@ def test__blurred_image_2d_list_from(
         lp_1_blurred_image_2d.native, 1.0e-4
     )
 
-    lp_operated = ag.lp_operated.EllGaussian(intensity=3.0)
+    lp_operated = ag.lp_operated.Gaussian(intensity=3.0)
 
     image_2d_operated = lp_operated.image_2d_from(grid=sub_grid_2d_7x7)
 
@@ -261,8 +261,8 @@ def test__unmasked_blurred_image_2d_list_from():
 
     grid = ag.Grid2D.from_mask(mask=mask)
 
-    lp_0 = ag.lp.EllSersic(intensity=1.0)
-    lp_1 = ag.lp.EllSersic(intensity=2.0)
+    lp_0 = ag.lp.Sersic(intensity=1.0)
+    lp_1 = ag.lp.Sersic(intensity=2.0)
 
     padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
 
@@ -289,8 +289,8 @@ def test__unmasked_blurred_image_2d_list_from():
 
 def test__visibilities_list_from(sub_grid_2d_7x7, transformer_7x7_7):
 
-    lp_0 = ag.lp.EllSersic(intensity=1.0)
-    lp_1 = ag.lp.EllSersic(intensity=2.0)
+    lp_0 = ag.lp.Sersic(intensity=1.0)
+    lp_1 = ag.lp.Sersic(intensity=2.0)
 
     lp_0_image = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
     lp_1_image = lp_1.image_2d_from(grid=sub_grid_2d_7x7)
@@ -312,12 +312,12 @@ def test__galaxy_blurred_image_2d_dict_from(
     sub_grid_2d_7x7, blurring_grid_2d_7x7, convolver_7x7
 ):
 
-    lp_0 = ag.lp.EllSersic(intensity=1.0)
+    lp_0 = ag.lp.Sersic(intensity=1.0)
 
     g0 = ag.Galaxy(redshift=0.5, light_profile=lp_0)
-    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
+    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.Sersic(intensity=2.0))
 
-    light_profile_operated = ag.lp_operated.EllGaussian(intensity=3.0)
+    light_profile_operated = ag.lp_operated.Gaussian(intensity=3.0)
 
     g2 = ag.Galaxy(redshift=0.5, light_profile_operated=light_profile_operated)
 
@@ -354,13 +354,13 @@ def test__galaxy_blurred_image_2d_dict_from(
 
 
 def test__galaxy_visibilities_dict_from(sub_grid_2d_7x7, transformer_7x7_7):
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.Sersic(intensity=1.0))
     g1 = ag.Galaxy(
         redshift=0.5,
         mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
-        light_profile=ag.lp.EllSersic(intensity=2.0),
+        light_profile=ag.lp.Sersic(intensity=2.0),
     )
-    g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=3.0))
+    g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.Sersic(intensity=3.0))
 
     plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
 

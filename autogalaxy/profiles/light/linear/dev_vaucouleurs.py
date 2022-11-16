@@ -6,7 +6,7 @@ from autogalaxy.profiles.light import standard as lp
 from autogalaxy.profiles import light_and_mass_profiles as lmp
 
 
-class EllDevVaucouleurs(lp.EllDevVaucouleurs, LightProfileLinear):
+class DevVaucouleurs(lp.DevVaucouleurs, LightProfileLinear):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -37,8 +37,8 @@ class EllDevVaucouleurs(lp.EllDevVaucouleurs, LightProfileLinear):
 
     @property
     def lp_cls(self):
-        return lp.EllDevVaucouleurs
+        return lp.DevVaucouleurs
 
     @property
     def lmp_cls(self):
-        return lmp.EllDevVaucouleurs
+        return lmp.DevVaucouleurs

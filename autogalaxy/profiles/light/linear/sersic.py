@@ -6,7 +6,7 @@ from autogalaxy.profiles.light import standard as lp
 from autogalaxy.profiles import light_and_mass_profiles as lmp
 
 
-class EllSersic(lp.EllSersic, LightProfileLinear):
+class Sersic(lp.Sersic, LightProfileLinear):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -42,8 +42,8 @@ class EllSersic(lp.EllSersic, LightProfileLinear):
 
     @property
     def lp_cls(self):
-        return lp.EllSersic
+        return lp.Sersic
 
     @property
     def lmp_cls(self):
-        return lmp.EllSersic
+        return lmp.Sersic

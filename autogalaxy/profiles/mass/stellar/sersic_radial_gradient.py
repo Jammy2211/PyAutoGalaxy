@@ -4,12 +4,12 @@ from typing import List, Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles.mass.stellar.sersic import AbstractEllSersic
+from autogalaxy.profiles.mass.stellar.sersic import AbstractSersic
 
 from autogalaxy.profiles.mass.stellar.sersic import cse_settings_from
 
 
-class EllSersicRadialGradient(AbstractEllSersic):
+class SersicRadialGradient(AbstractSersic):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -234,7 +234,7 @@ class EllSersicRadialGradient(AbstractEllSersic):
         )
 
 
-class SphSersicRadialGradient(EllSersicRadialGradient):
+class SphSersicRadialGradient(SersicRadialGradient):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

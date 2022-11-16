@@ -9,7 +9,7 @@ from autogalaxy.profiles.light.decorators import (
 )
 
 
-class EllChameleon(LightProfile):
+class Chameleon(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -120,7 +120,7 @@ class EllChameleon(LightProfile):
         return self.image_2d_via_radii_from(self.grid_to_elliptical_radii(grid))
 
 
-class SphChameleon(EllChameleon):
+class ChameleonSph(Chameleon):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

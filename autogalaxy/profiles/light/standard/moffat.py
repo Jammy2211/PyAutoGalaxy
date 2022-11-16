@@ -9,7 +9,7 @@ from autogalaxy.profiles.light.decorators import (
 )
 
 
-class EllMoffat(LightProfile):
+class Moffat(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -99,7 +99,7 @@ class EllMoffat(LightProfile):
         return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
 
 
-class SphMoffat(EllMoffat):
+class MoffatSph(Moffat):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

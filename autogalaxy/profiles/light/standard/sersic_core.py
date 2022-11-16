@@ -1,10 +1,10 @@
 import numpy as np
 from typing import Tuple
 
-from autogalaxy.profiles.light.standard.sersic import EllSersic
+from autogalaxy.profiles.light.standard.sersic import Sersic
 
 
-class EllSersicCore(EllSersic):
+class SersicCore(Sersic):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -118,7 +118,7 @@ class EllSersicCore(EllSersic):
         )
 
 
-class SphSersicCore(EllSersicCore):
+class SersicCoreSph(SersicCore):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

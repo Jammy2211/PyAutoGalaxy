@@ -26,7 +26,7 @@ def test__fit_figure_of_merit__matches_correct_fit_given_galaxy_profiles(
     interferometer_7,
 ):
 
-    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=0.1))
+    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=0.1))
 
     model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
@@ -47,7 +47,7 @@ def test__fit_figure_of_merit__includes_hyper_image_and_noise__matches_fit(
 ):
     hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
-    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=0.1))
+    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=0.1))
 
     model = af.Collection(
         hyper_background_noise=hyper_background_noise,

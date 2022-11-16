@@ -1,9 +1,9 @@
 from typing import Tuple
 
-from autogalaxy.profiles.mass.stellar.sersic import EllSersic
+from autogalaxy.profiles.mass.stellar.sersic import Sersic
 
 
-class EllExponential(EllSersic):
+class Exponential(Sersic):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -13,7 +13,7 @@ class EllExponential(EllSersic):
         mass_to_light_ratio: float = 1.0,
     ):
         """
-        The EllExponential mass profile, the mass profiles of the light profiles that are used to fit and
+        The Exponential mass profile, the mass profiles of the light profiles that are used to fit and
         subtract the lens model_galaxy's light.
 
         Parameters
@@ -40,7 +40,7 @@ class EllExponential(EllSersic):
         )
 
 
-class SphExponential(EllExponential):
+class ExponentialSph(Exponential):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

@@ -7,7 +7,7 @@ def test__clumps():
     centres = ag.Grid2DIrregular(grid=[(1.0, 1.0)])
 
     clump_model = ag.ClumpModel(
-        redshift=0.5, centres=centres, light_cls=ag.lp.SphSersic
+        redshift=0.5, centres=centres, light_cls=ag.lp.SersicSph
     )
 
     clumps = clump_model.clumps
@@ -31,7 +31,7 @@ def test__clumps():
     clump_model = ag.ClumpModel(
         redshift=0.5,
         centres=centres,
-        light_cls=ag.lp.SphSersic,
+        light_cls=ag.lp.SersicSph,
         mass_cls=ag.mp.SphIsothermal,
     )
 
@@ -51,7 +51,7 @@ def test__clumps_light_only():
     clump_model = ag.ClumpModel(
         redshift=0.5,
         centres=centres,
-        light_cls=ag.lp.SphSersic,
+        light_cls=ag.lp.SersicSph,
         mass_cls=ag.mp.SphIsothermal,
     )
 
@@ -70,7 +70,7 @@ def test__clumps_mass_only():
     clump_model = ag.ClumpModel(
         redshift=0.5,
         centres=centres,
-        light_cls=ag.lp.SphSersic,
+        light_cls=ag.lp.SersicSph,
         mass_cls=ag.mp.SphIsothermal,
     )
 

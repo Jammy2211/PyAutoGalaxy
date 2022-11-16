@@ -4,7 +4,7 @@ from autogalaxy.profiles.light.snr.abstract import LightProfileSNR
 from autogalaxy.profiles.light import standard as lp
 
 
-class EllExponential(lp.EllExponential, LightProfileSNR):
+class Exponential(lp.Exponential, LightProfileSNR):
     def __init__(
         self,
         signal_to_noise_ratio: float = 10.0,
@@ -39,7 +39,7 @@ class EllExponential(lp.EllExponential, LightProfileSNR):
         LightProfileSNR.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)
 
 
-class SphExponential(lp.SphExponential, LightProfileSNR):
+class ExponentialSph(lp.ExponentialSph, LightProfileSNR):
     def __init__(
         self,
         signal_to_noise_ratio: float = 10.0,

@@ -81,9 +81,9 @@ def test__simulator__via_plane_from__same_as_plane_image():
 
     grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
 
-    galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=1.0))
+    galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
 
-    galaxy_1 = ag.Galaxy(redshift=1.0, light=ag.lp.EllSersic(intensity=0.3))
+    galaxy_1 = ag.Galaxy(redshift=1.0, light=ag.lp.Sersic(intensity=0.3))
 
     plane = ag.Plane(redshift=0.75, galaxies=[galaxy_0, galaxy_1])
 
@@ -116,7 +116,7 @@ def test__simulator__simulate_imaging_from_galaxy__source_galaxy__compare_to_ima
 
     galaxy_1 = ag.Galaxy(
         redshift=1.0,
-        light=ag.lp.EllSersic(
+        light=ag.lp.Sersic(
             centre=(0.1, 0.1),
             elliptical_comps=(0.096225, -0.055555),
             intensity=0.3,

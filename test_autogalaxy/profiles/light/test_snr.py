@@ -8,7 +8,7 @@ def test__signal_to_noise_via_simulator_correct():
 
     grid = ag.Grid2D.uniform(shape_native=(21, 21), pixel_scales=1.0)
 
-    sersic = ag.lp_snr.EllSersic(signal_to_noise_ratio=10.0)
+    sersic = ag.lp_snr.Sersic(signal_to_noise_ratio=10.0)
 
     simulator = ag.SimulatorImaging(
         exposure_time=exposure_time,

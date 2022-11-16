@@ -30,7 +30,7 @@ def test__decorator_changes_behaviour_correctly():
 
     grid = ag.Grid2D.uniform(shape_native=(3, 3), pixel_scales=1.0)
 
-    lp = ag.lp.EllGaussian()
+    lp = ag.lp.Gaussian()
 
     lp_image_2d = lp.image_2d_from(grid=grid)
 
@@ -43,7 +43,7 @@ def test__decorator_changes_behaviour_correctly():
     image_2d = lp.image_2d_from(grid=grid, operated_only=False)
     assert image_2d == pytest.approx(lp_image_2d, 1.0e-4)
 
-    lp = ag.lp_operated.EllGaussian()
+    lp = ag.lp_operated.Gaussian()
 
     image_2d = lp.image_2d_from(grid=grid)
     assert image_2d == pytest.approx(lp_image_2d, 1.0e-4)

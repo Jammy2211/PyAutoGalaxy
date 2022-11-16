@@ -29,7 +29,7 @@ def luminosity_from_radius_and_profile(radius, profile):
 
 def test__luminosity_within_centre__compare_to_gridded_calculations():
 
-    sersic = ag.lp.SphSersic(intensity=3.0, effective_radius=2.0, sersic_index=2.0)
+    sersic = ag.lp.SersicSph(intensity=3.0, effective_radius=2.0, sersic_index=2.0)
 
     luminosity_analytic = luminosity_from_radius_and_profile(radius=0.5, profile=sersic)
 
@@ -48,7 +48,7 @@ def test__image_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities()
 
     grid_2d = ag.Grid2D.uniform(shape_native=(5, 5), pixel_scales=1.0)
 
-    gaussian = ag.lp.EllGaussian(
+    gaussian = ag.lp.Gaussian(
         centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
     )
 
@@ -59,7 +59,7 @@ def test__image_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities()
     assert image_1d[1] == pytest.approx(image_2d.native[2, 3], 1.0e-4)
     assert image_1d[2] == pytest.approx(image_2d.native[2, 4], 1.0e-4)
 
-    gaussian = ag.lp.EllGaussian(
+    gaussian = ag.lp.Gaussian(
         centre=(0.2, 0.2), elliptical_comps=(0.3, 0.3), intensity=1.0, sigma=1.0
     )
 
@@ -89,7 +89,7 @@ def test__decorators__grid_iterate_in__iterates_grid_correctly():
 
     grid = ag.Grid2DIterate.from_mask(mask=mask, fractional_accuracy=1.0, sub_steps=[2])
 
-    light_profile = ag.lp.EllSersic(intensity=1.0)
+    light_profile = ag.lp.Sersic(intensity=1.0)
 
     image = light_profile.image_2d_from(grid=grid)
 
@@ -103,7 +103,7 @@ def test__decorators__grid_iterate_in__iterates_grid_correctly():
         mask=mask, fractional_accuracy=0.95, sub_steps=[2, 4, 8]
     )
 
-    light_profile = ag.lp.EllSersic(centre=(0.08, 0.08), intensity=1.0)
+    light_profile = ag.lp.Sersic(centre=(0.08, 0.08), intensity=1.0)
 
     image = light_profile.image_2d_from(grid=grid)
 
@@ -123,12 +123,12 @@ def test__decorators__grid_iterate_in__iterates_grid_correctly():
 def test__regression__centre_of_profile_in_right_place():
     grid = ag.Grid2D.uniform(shape_native=(7, 7), pixel_scales=1.0)
 
-    light_profile = ag.lp.EllSersic(centre=(2.0, 1.0), intensity=1.0)
+    light_profile = ag.lp.Sersic(centre=(2.0, 1.0), intensity=1.0)
     image = light_profile.image_2d_from(grid=grid)
     max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
     assert max_indexes == (1, 4)
 
-    light_profile = ag.lp.SphSersic(centre=(2.0, 1.0), intensity=1.0)
+    light_profile = ag.lp.SersicSph(centre=(2.0, 1.0), intensity=1.0)
     image = light_profile.image_2d_from(grid=grid)
     max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
     assert max_indexes == (1, 4)
@@ -140,12 +140,12 @@ def test__regression__centre_of_profile_in_right_place():
         sub_steps=[2, 4],
     )
 
-    light_profile = ag.lp.EllSersic(centre=(2.0, 1.0), intensity=1.0)
+    light_profile = ag.lp.Sersic(centre=(2.0, 1.0), intensity=1.0)
     image = light_profile.image_2d_from(grid=grid)
     max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
     assert max_indexes == (1, 4)
 
-    light_profile = ag.lp.SphSersic(centre=(2.0, 1.0), intensity=1.0)
+    light_profile = ag.lp.SersicSph(centre=(2.0, 1.0), intensity=1.0)
     image = light_profile.image_2d_from(grid=grid)
     max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
     assert max_indexes == (1, 4)

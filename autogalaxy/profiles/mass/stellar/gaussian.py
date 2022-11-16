@@ -10,7 +10,7 @@ from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.profiles.mass.stellar.abstract import StellarProfile
 
 
-class EllGaussian(MassProfile, StellarProfile):
+class Gaussian(MassProfile, StellarProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -36,9 +36,7 @@ class EllGaussian(MassProfile, StellarProfile):
             The sigma value of the Gaussian.
         """
 
-        super(EllGaussian, self).__init__(
-            centre=centre, elliptical_comps=elliptical_comps
-        )
+        super(Gaussian, self).__init__(centre=centre, elliptical_comps=elliptical_comps)
         super(MassProfile, self).__init__(
             centre=centre, elliptical_comps=elliptical_comps
         )

@@ -4,7 +4,7 @@ from autogalaxy.profiles.light.snr.abstract import LightProfileSNR
 from autogalaxy.profiles.light import standard as lp
 
 
-class EllGaussian(lp.EllGaussian, LightProfileSNR):
+class Gaussian(lp.Gaussian, LightProfileSNR):
     def __init__(
         self,
         signal_to_noise_ratio: float = 10.0,
@@ -35,7 +35,7 @@ class EllGaussian(lp.EllGaussian, LightProfileSNR):
         LightProfileSNR.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)
 
 
-class SphGaussian(lp.SphGaussian, LightProfileSNR):
+class GaussianSph(lp.GaussianSph, LightProfileSNR):
     def __init__(
         self,
         signal_to_noise_ratio: float = 10.0,

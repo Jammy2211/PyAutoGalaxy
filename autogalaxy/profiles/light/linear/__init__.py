@@ -1,10 +1,10 @@
 from .abstract import LightProfile, LightProfileLinear, LightProfileLinearObjFuncList
-from .gaussian import EllGaussian
-from .moffat import EllMoffat
+from .gaussian import Gaussian
+from .moffat import Moffat
 from .sersic import (
-    EllSersic,
+    Sersic,
 )
-from .exponential import EllExponential
-from .dev_vaucouleurs import EllDevVaucouleurs
-from .sersic_core import EllSersicCore
-from .exponential_core import EllExponentialCore
+from .exponential import Exponential
+from .dev_vaucouleurs import DevVaucouleurs
+from .sersic_core import SersicCore
+from .exponential_core import ExponentialCore

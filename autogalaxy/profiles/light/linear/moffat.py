@@ -6,7 +6,7 @@ from autogalaxy.profiles.light import standard as lp
 from autogalaxy.profiles import light_and_mass_profiles as lmp
 
 
-class EllMoffat(lp.EllMoffat, LightProfileLinear):
+class Moffat(lp.Moffat, LightProfileLinear):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -46,8 +46,8 @@ class EllMoffat(lp.EllMoffat, LightProfileLinear):
 
     @property
     def lp_cls(self):
-        return lp.EllMoffat
+        return lp.Moffat
 
     @property
     def lmp_cls(self):
-        return lmp.EllGaussian
+        return lmp.Gaussian

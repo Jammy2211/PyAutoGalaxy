@@ -8,7 +8,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 def test__deflections_2d_via_mge_from():
 
-    sersic = ag.mp.EllSersicCore(
+    sersic = ag.mp.SersicCore(
         centre=(1.0, 2.0),
         elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, angle=70.0),
         intensity=0.45,
@@ -24,7 +24,7 @@ def test__deflections_2d_via_mge_from():
     assert deflections[0, 0] == pytest.approx(0.0015047, 1e-4)
     assert deflections[0, 1] == pytest.approx(-0.004493, 1e-4)
 
-    sersic = ag.mp.EllSersicCore(
+    sersic = ag.mp.SersicCore(
         centre=(1.0, 2.0),
         elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, angle=70.0),
         intensity=2.0 * 0.45,
@@ -40,7 +40,7 @@ def test__deflections_2d_via_mge_from():
     assert deflections[0, 0] == pytest.approx(2.0 * 0.0015047, 1e-4)
     assert deflections[0, 1] == pytest.approx(2.0 * -0.004493, 1e-4)
 
-    sersic = ag.mp.EllSersicCore(
+    sersic = ag.mp.SersicCore(
         centre=(1.0, 2.0),
         elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, angle=70.0),
         intensity=0.45,
@@ -60,7 +60,7 @@ def test__deflections_2d_via_mge_from():
 
 def test__deflections_yx_2d_from():
 
-    sersic_core = ag.mp.EllSersicCore()
+    sersic_core = ag.mp.SersicCore()
 
     deflections = sersic_core.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
     deflections_via_integral = sersic_core.deflections_2d_via_mge_from(
@@ -69,7 +69,7 @@ def test__deflections_yx_2d_from():
 
     assert deflections == pytest.approx(deflections_via_integral, 1.0e-4)
 
-    sersic_core = ag.mp.SphSersicCore()
+    sersic_core = ag.mp.SersicCoreSph()
 
     deflections = sersic_core.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
     deflections_via_integral = sersic_core.deflections_2d_via_mge_from(
@@ -78,7 +78,7 @@ def test__deflections_yx_2d_from():
 
     assert deflections == pytest.approx(deflections_via_integral, 1.0e-4)
 
-    elliptical = ag.mp.EllSersicCore(
+    elliptical = ag.mp.SersicCore(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.0),
         effective_radius=1.0,
@@ -86,7 +86,7 @@ def test__deflections_yx_2d_from():
         mass_to_light_ratio=1.0,
     )
 
-    spherical = ag.mp.EllSersicCore(
+    spherical = ag.mp.SersicCore(
         centre=(0.0, 0.0),
         effective_radius=1.0,
         sersic_index=4.0,
@@ -101,7 +101,7 @@ def test__deflections_yx_2d_from():
 
 def test__convergence_2d_from():
 
-    core_sersic = ag.mp.EllSersicCore(
+    core_sersic = ag.mp.SersicCore(
         elliptical_comps=(0.0, 0.0),
         effective_radius=5.0,
         sersic_index=4.0,
@@ -116,7 +116,7 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(0.1, 1e-3)
 
-    core_sersic = ag.mp.EllSersicCore(
+    core_sersic = ag.mp.SersicCore(
         elliptical_comps=(0.0, 0.0),
         effective_radius=5.0,
         sersic_index=4.0,
@@ -131,7 +131,7 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(0.2, 1e-3)
 
-    elliptical = ag.mp.EllSersicCore(
+    elliptical = ag.mp.SersicCore(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.0),
         effective_radius=1.0,
@@ -139,7 +139,7 @@ def test__convergence_2d_from():
         mass_to_light_ratio=1.0,
     )
 
-    spherical = ag.mp.EllSersicCore(
+    spherical = ag.mp.SersicCore(
         centre=(0.0, 0.0),
         effective_radius=1.0,
         sersic_index=4.0,
@@ -154,7 +154,7 @@ def test__convergence_2d_from():
 
 def test__convergence_2d_via_mge_from():
 
-    core_sersic = ag.mp.EllSersicCore(
+    core_sersic = ag.mp.SersicCore(
         elliptical_comps=(0.2, 0.4),
         effective_radius=5.0,
         sersic_index=4.0,

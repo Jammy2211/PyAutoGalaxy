@@ -6,9 +6,9 @@ import autogalaxy as ag
 
 def test__image_2d_from__does_not_include_linear_light_profiles(sub_grid_2d_7x7):
 
-    lp = ag.lp.EllSersic(intensity=0.1)
+    lp = ag.lp.Sersic(intensity=0.1)
 
-    lp_linear = ag.lp_linear.EllSersic(effective_radius=2.0, sersic_index=2.0)
+    lp_linear = ag.lp_linear.Sersic(effective_radius=2.0, sersic_index=2.0)
 
     lp_image = lp.image_2d_from(grid=sub_grid_2d_7x7)
 

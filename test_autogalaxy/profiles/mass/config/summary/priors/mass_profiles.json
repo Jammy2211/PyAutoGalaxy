@@ -1,5 +1,5 @@
 {
-    "AbstractEllSersic": {
+    "AbstractSersic": {
         "centre_0": {
             "type": "Uniform",
             "lower_limit": 0.0,
@@ -43,7 +43,7 @@
             "upper_limit": 10.0
         }
     },
-    "EllExponential": {
+    "Exponential": {
         "centre_0": {
             "type": "Uniform",
             "lower_limit": 0.0,

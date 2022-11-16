@@ -11,8 +11,8 @@ from autogalaxy.profiles.light.linear import (
 
 def test__mapping_matrix_from(sub_grid_2d_7x7, blurring_grid_2d_7x7, convolver_7x7):
 
-    lp_0 = ag.lp_linear.EllSersic(effective_radius=1.0)
-    lp_1 = ag.lp_linear.EllSersic(effective_radius=2.0)
+    lp_0 = ag.lp_linear.Sersic(effective_radius=1.0)
+    lp_1 = ag.lp_linear.Sersic(effective_radius=2.0)
 
     lp_linear_obj_func_list = LightProfileLinearObjFuncList(
         grid=sub_grid_2d_7x7,
@@ -55,11 +55,11 @@ def test__mapping_matrix_from(sub_grid_2d_7x7, blurring_grid_2d_7x7, convolver_7
 
 def test__lp_from():
 
-    lp_linear = ag.lp_linear.EllSersic(centre=(1.0, 2.0))
+    lp_linear = ag.lp_linear.Sersic(centre=(1.0, 2.0))
 
     lp_non_linear = lp_linear.lp_instance_from(intensity=3.0)
 
     assert not isinstance(lp_non_linear, LightProfileLinear)
-    assert type(lp_non_linear) is ag.lp.EllSersic
+    assert type(lp_non_linear) is ag.lp.Sersic
     assert lp_non_linear.centre == (1.0, 2.0)
     assert lp_non_linear.intensity == 3.0

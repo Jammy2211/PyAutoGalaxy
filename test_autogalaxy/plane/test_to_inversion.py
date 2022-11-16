@@ -169,10 +169,10 @@ def test__regularization_list(masked_imaging_7x7):
         mesh=ag.mesh.Rectangular(shape=(8, 8)), regularization=regularization_1
     )
 
-    galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp_linear.EllGaussian())
+    galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp_linear.Gaussian())
     galaxy_1 = ag.Galaxy(redshift=0.5, pixelization=pixelization_0)
     galaxy_2 = ag.Galaxy(
-        redshift=0.5, light=ag.lp_linear.EllGaussian(), pixelization=pixelization_1
+        redshift=0.5, light=ag.lp_linear.Gaussian(), pixelization=pixelization_1
     )
 
     plane = ag.Plane(galaxies=[galaxy_0, galaxy_1, galaxy_2])
@@ -189,7 +189,7 @@ def test__regularization_list(masked_imaging_7x7):
     regularization_2 = ag.reg.Constant(coefficient=3.0)
 
     basis = ag.lp_basis.Basis(
-        light_profile_list=[ag.lp_linear.EllGaussian()], regularization=regularization_2
+        light_profile_list=[ag.lp_linear.Gaussian()], regularization=regularization_2
     )
 
     galaxy_3 = ag.Galaxy(redshift=0.5, bulge=basis)
@@ -207,7 +207,7 @@ def test__regularization_list(masked_imaging_7x7):
 
 def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
 
-    g_linear = ag.Galaxy(redshift=0.5, light_linear=ag.lp_linear.EllSersic())
+    g_linear = ag.Galaxy(redshift=0.5, light_linear=ag.lp_linear.Sersic())
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g_linear])
 
@@ -253,7 +253,7 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
 
 def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
 
-    g_linear = ag.Galaxy(redshift=0.5, light_linear=ag.lp_linear.EllSersic())
+    g_linear = ag.Galaxy(redshift=0.5, light_linear=ag.lp_linear.Sersic())
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g_linear])
 

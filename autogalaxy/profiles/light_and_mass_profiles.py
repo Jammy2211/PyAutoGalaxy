@@ -15,7 +15,7 @@ class LightMassProfile:
     pass
 
 
-class EllGaussian(lp.EllGaussian, mp.EllGaussian, LightMassProfile):
+class Gaussian(lp.Gaussian, mp.Gaussian, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -25,14 +25,14 @@ class EllGaussian(lp.EllGaussian, mp.EllGaussian, LightMassProfile):
         mass_to_light_ratio: float = 1.0,
     ):
 
-        lp.EllGaussian.__init__(
+        lp.Gaussian.__init__(
             self,
             centre=centre,
             elliptical_comps=elliptical_comps,
             intensity=intensity,
             sigma=sigma,
         )
-        mp.EllGaussian.__init__(
+        mp.Gaussian.__init__(
             self,
             centre=centre,
             elliptical_comps=elliptical_comps,
@@ -42,7 +42,7 @@ class EllGaussian(lp.EllGaussian, mp.EllGaussian, LightMassProfile):
         )
 
 
-class EllSersic(lp.EllSersic, mp.EllSersic, LightMassProfile):
+class Sersic(lp.Sersic, mp.Sersic, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -53,7 +53,7 @@ class EllSersic(lp.EllSersic, mp.EllSersic, LightMassProfile):
         mass_to_light_ratio: float = 1.0,
     ):
 
-        lp.EllSersic.__init__(
+        lp.Sersic.__init__(
             self,
             centre=centre,
             elliptical_comps=elliptical_comps,
@@ -61,7 +61,7 @@ class EllSersic(lp.EllSersic, mp.EllSersic, LightMassProfile):
             effective_radius=effective_radius,
             sersic_index=sersic_index,
         )
-        mp.EllSersic.__init__(
+        mp.Sersic.__init__(
             self,
             centre=centre,
             elliptical_comps=elliptical_comps,
@@ -72,7 +72,7 @@ class EllSersic(lp.EllSersic, mp.EllSersic, LightMassProfile):
         )
 
 
-class SphSersic(EllSersic, LightMassProfile):
+class SersicSph(Sersic, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -82,7 +82,7 @@ class SphSersic(EllSersic, LightMassProfile):
         mass_to_light_ratio: float = 1.0,
     ):
         """
-        The SphSersic mass profile, the mass profiles of the light profiles that are used to fit_normal and
+        The SersicSph mass profile, the mass profiles of the light profiles that are used to fit_normal and
         subtract the lens model_galaxy's light.
 
         Parameters
@@ -96,7 +96,7 @@ class SphSersic(EllSersic, LightMassProfile):
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
-        EllSersic.__init__(
+        Sersic.__init__(
             self,
             centre=centre,
             elliptical_comps=(0.0, 0.0),
@@ -107,7 +107,7 @@ class SphSersic(EllSersic, LightMassProfile):
         )
 
 
-class EllExponential(EllSersic, LightMassProfile):
+class Exponential(Sersic, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -117,7 +117,7 @@ class EllExponential(EllSersic, LightMassProfile):
         mass_to_light_ratio: float = 1.0,
     ):
         """
-        The EllExponential mass profile, the mass profiles of the light profiles that are used to fit_normal and
+        The Exponential mass profile, the mass profiles of the light profiles that are used to fit_normal and
         subtract the lens model_galaxy's light.
 
         Parameters
@@ -135,7 +135,7 @@ class EllExponential(EllSersic, LightMassProfile):
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
-        EllSersic.__init__(
+        Sersic.__init__(
             self,
             centre=centre,
             elliptical_comps=elliptical_comps,
@@ -146,7 +146,7 @@ class EllExponential(EllSersic, LightMassProfile):
         )
 
 
-class SphExponential(EllExponential, LightMassProfile):
+class ExponentialSph(Exponential, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -155,7 +155,7 @@ class SphExponential(EllExponential, LightMassProfile):
         mass_to_light_ratio: float = 1.0,
     ):
         """
-        The SphExponential mass profile, the mass profiles of the light profiles that are used to fit_normal and
+        The ExponentialSph mass profile, the mass profiles of the light profiles that are used to fit_normal and
         subtract the lens model_galaxy's light.
 
         Parameters
@@ -169,7 +169,7 @@ class SphExponential(EllExponential, LightMassProfile):
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
-        EllExponential.__init__(
+        Exponential.__init__(
             self,
             centre=centre,
             elliptical_comps=(0.0, 0.0),
@@ -179,7 +179,7 @@ class SphExponential(EllExponential, LightMassProfile):
         )
 
 
-class EllDevVaucouleurs(EllSersic, LightMassProfile):
+class DevVaucouleurs(Sersic, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -189,7 +189,7 @@ class EllDevVaucouleurs(EllSersic, LightMassProfile):
         mass_to_light_ratio: float = 1.0,
     ):
         """
-        The EllDevVaucouleurs mass profile, the mass profiles of the light profiles that are used to fit_normal and
+        The DevVaucouleurs mass profile, the mass profiles of the light profiles that are used to fit_normal and
         subtract the lens model_galaxy's light.
 
         Parameters
@@ -217,7 +217,7 @@ class EllDevVaucouleurs(EllSersic, LightMassProfile):
         )
 
 
-class SphDevVaucouleurs(EllDevVaucouleurs, LightMassProfile):
+class DevVaucouleursSph(DevVaucouleurs, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -226,7 +226,7 @@ class SphDevVaucouleurs(EllDevVaucouleurs, LightMassProfile):
         mass_to_light_ratio: float = 1.0,
     ):
         """
-        The SphDevVaucouleurs mass profile, the mass profiles of the light profiles that are used to fit_normal and
+        The DevVaucouleursSph mass profile, the mass profiles of the light profiles that are used to fit_normal and
         subtract the lens model_galaxy's light.
 
         Parameters
@@ -240,7 +240,7 @@ class SphDevVaucouleurs(EllDevVaucouleurs, LightMassProfile):
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
-        EllDevVaucouleurs.__init__(
+        DevVaucouleurs.__init__(
             self,
             centre=centre,
             elliptical_comps=(0.0, 0.0),
@@ -250,9 +250,7 @@ class SphDevVaucouleurs(EllDevVaucouleurs, LightMassProfile):
         )
 
 
-class EllSersicRadialGradient(
-    lp.EllSersic, mp.EllSersicRadialGradient, LightMassProfile
-):
+class SersicRadialGradient(lp.Sersic, mp.SersicRadialGradient, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -285,7 +283,7 @@ class EllSersicRadialGradient(
         mass_to_light_gradient
             The mass-to-light radial gradient.
         """
-        lp.EllSersic.__init__(
+        lp.Sersic.__init__(
             self,
             centre=centre,
             elliptical_comps=elliptical_comps,
@@ -293,7 +291,7 @@ class EllSersicRadialGradient(
             effective_radius=effective_radius,
             sersic_index=sersic_index,
         )
-        mp.EllSersicRadialGradient.__init__(
+        mp.SersicRadialGradient.__init__(
             self,
             centre=centre,
             elliptical_comps=elliptical_comps,
@@ -305,7 +303,7 @@ class EllSersicRadialGradient(
         )
 
 
-class SphSersicRadialGradient(EllSersicRadialGradient, LightMassProfile):
+class SphSersicRadialGradient(SersicRadialGradient, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -334,7 +332,7 @@ class SphSersicRadialGradient(EllSersicRadialGradient, LightMassProfile):
             The mass-to-light radial gradient.
         """
 
-        EllSersicRadialGradient.__init__(
+        SersicRadialGradient.__init__(
             self,
             centre=centre,
             elliptical_comps=(0.0, 0.0),
@@ -346,7 +344,7 @@ class SphSersicRadialGradient(EllSersicRadialGradient, LightMassProfile):
         )
 
 
-class EllExponentialRadialGradient(EllSersicRadialGradient, LightMassProfile):
+class EllExponentialRadialGradient(SersicRadialGradient, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -377,7 +375,7 @@ class EllExponentialRadialGradient(EllSersicRadialGradient, LightMassProfile):
             The mass-to-light radial gradient.
         """
 
-        EllSersicRadialGradient.__init__(
+        SersicRadialGradient.__init__(
             self,
             centre=centre,
             elliptical_comps=elliptical_comps,
@@ -430,7 +428,7 @@ class SphExponentialRadialGradient(SphSersicRadialGradient, LightMassProfile):
         )
 
 
-class EllSersicCore(lp.EllSersicCore, mp.EllSersicCore, LightMassProfile):
+class SersicCore(lp.SersicCore, mp.SersicCore, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -444,7 +442,7 @@ class EllSersicCore(lp.EllSersicCore, mp.EllSersicCore, LightMassProfile):
         mass_to_light_ratio: float = 1.0,
     ):
 
-        lp.EllSersicCore.__init__(
+        lp.SersicCore.__init__(
             self,
             centre=centre,
             elliptical_comps=elliptical_comps,
@@ -455,7 +453,7 @@ class EllSersicCore(lp.EllSersicCore, mp.EllSersicCore, LightMassProfile):
             gamma=gamma,
             alpha=alpha,
         )
-        mp.EllSersicCore.__init__(
+        mp.SersicCore.__init__(
             self,
             centre=centre,
             elliptical_comps=elliptical_comps,
@@ -469,7 +467,7 @@ class EllSersicCore(lp.EllSersicCore, mp.EllSersicCore, LightMassProfile):
         )
 
 
-class SphSersicCore(EllSersicCore, LightMassProfile):
+class SersicCoreSph(SersicCore, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -482,7 +480,7 @@ class SphSersicCore(EllSersicCore, LightMassProfile):
         mass_to_light_ratio: float = 1.0,
     ):
         """
-        The SphSersic mass profile, the mass profiles of the light profiles that are used to fit_normal and
+        The SersicSph mass profile, the mass profiles of the light profiles that are used to fit_normal and
         subtract the lens model_galaxy's light.
 
         Parameters
@@ -496,7 +494,7 @@ class SphSersicCore(EllSersicCore, LightMassProfile):
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
-        EllSersicCore.__init__(
+        SersicCore.__init__(
             self,
             centre=centre,
             elliptical_comps=(0.0, 0.0),
@@ -510,7 +508,7 @@ class SphSersicCore(EllSersicCore, LightMassProfile):
         )
 
 
-class EllChameleon(lp.EllChameleon, mp.EllChameleon, LightMassProfile):
+class Chameleon(lp.Chameleon, mp.Chameleon, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -521,7 +519,7 @@ class EllChameleon(lp.EllChameleon, mp.EllChameleon, LightMassProfile):
         mass_to_light_ratio: float = 1.0,
     ):
 
-        lp.EllChameleon.__init__(
+        lp.Chameleon.__init__(
             self,
             centre=centre,
             elliptical_comps=elliptical_comps,
@@ -529,7 +527,7 @@ class EllChameleon(lp.EllChameleon, mp.EllChameleon, LightMassProfile):
             core_radius_0=core_radius_0,
             core_radius_1=core_radius_1,
         )
-        mp.EllChameleon.__init__(
+        mp.Chameleon.__init__(
             self,
             centre=centre,
             elliptical_comps=elliptical_comps,
@@ -540,7 +538,7 @@ class EllChameleon(lp.EllChameleon, mp.EllChameleon, LightMassProfile):
         )
 
 
-class SphChameleon(EllChameleon, LightMassProfile):
+class ChameleonSph(Chameleon, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -550,7 +548,7 @@ class SphChameleon(EllChameleon, LightMassProfile):
         mass_to_light_ratio: float = 1.0,
     ):
         """
-        The SphChameleon mass profile, the mass profiles of the light profiles that are used to fit_normal and
+        The ChameleonSph mass profile, the mass profiles of the light profiles that are used to fit_normal and
         subtract the lens model_galaxy's light.
 
         Parameters
@@ -564,7 +562,7 @@ class SphChameleon(EllChameleon, LightMassProfile):
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
-        EllChameleon.__init__(
+        Chameleon.__init__(
             self,
             centre=centre,
             elliptical_comps=(0.0, 0.0),

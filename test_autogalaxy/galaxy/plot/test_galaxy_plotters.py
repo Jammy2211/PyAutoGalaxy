@@ -81,8 +81,8 @@ def test__figures_1d_decomposed__light_profiles_different_centres_making_offset_
     sub_grid_2d_7x7, mask_2d_7x7, include_1d_all, plot_path, plot_patch
 ):
 
-    lp_0 = ag.lp.SphSersic(centre=(0.0, 0.0))
-    lp_1 = ag.lp.SphSersic(centre=(1.0, 1.0))
+    lp_0 = ag.lp.SersicSph(centre=(0.0, 0.0))
+    lp_1 = ag.lp.SersicSph(centre=(1.0, 1.0))
 
     mp_0 = ag.mp.SphIsothermal(centre=(0.0, 0.0))
     mp_1 = ag.mp.SphIsothermal(centre=(1.0, 1.0))
@@ -101,8 +101,8 @@ def test__figures_1d_decomposed__light_profiles_different_centres_making_offset_
     assert path.join(plot_path, "convergence_1d_decomposed.png") in plot_patch.paths
     assert path.join(plot_path, "potential_1d_decomposed.png") in plot_patch.paths
 
-    lp_0 = ag.lp.SphSersic(centre=(0.0, 0.0))
-    lp_1 = ag.lp.SphSersic(centre=(1.0, 1.0))
+    lp_0 = ag.lp.SersicSph(centre=(0.0, 0.0))
+    lp_1 = ag.lp.SersicSph(centre=(1.0, 1.0))
 
     mp_0 = ag.mp.SphIsothermal(centre=(0.0, 0.0))
     mp_1 = ag.mp.SphIsothermal(centre=(1.0, 1.0))

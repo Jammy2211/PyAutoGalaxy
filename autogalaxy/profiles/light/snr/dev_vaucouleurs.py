@@ -4,7 +4,7 @@ from autogalaxy.profiles.light.snr.abstract import LightProfileSNR
 from autogalaxy.profiles.light import standard as lp
 
 
-class EllDevVaucouleurs(lp.EllDevVaucouleurs, LightProfileSNR):
+class DevVaucouleurs(lp.DevVaucouleurs, LightProfileSNR):
     def __init__(
         self,
         signal_to_noise_ratio: float = 10.0,
@@ -39,7 +39,7 @@ class EllDevVaucouleurs(lp.EllDevVaucouleurs, LightProfileSNR):
         LightProfileSNR.__init__(self, signal_to_noise_ratio=signal_to_noise_ratio)
 
 
-class SphDevVaucouleurs(lp.SphDevVaucouleurs, LightProfileSNR):
+class DevVaucouleursSph(lp.DevVaucouleursSph, LightProfileSNR):
     def __init__(
         self,
         signal_to_noise_ratio: float = 10.0,

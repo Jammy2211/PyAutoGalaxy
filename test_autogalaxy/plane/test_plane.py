@@ -187,8 +187,8 @@ def test__image_2d_from(sub_grid_2d_7x7, gal_x1_lp):
     # Overwrite one value so intensity in each pixel is different
     sub_grid_2d_7x7[5] = np.array([2.0, 2.0])
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.Sersic(intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.Sersic(intensity=2.0))
 
     g0_image = g0.image_2d_from(grid=sub_grid_2d_7x7)
 
@@ -213,8 +213,8 @@ def test__image_2d_list_from(sub_grid_2d_7x7):
     # Overwrite one value so intensity in each pixel is different
     sub_grid_2d_7x7[5] = np.array([2.0, 2.0])
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
-    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=2.0))
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.Sersic(intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.Sersic(intensity=2.0))
 
     lp0 = g0.cls_list_from(cls=ag.LightProfile)[0]
     lp1 = g1.cls_list_from(cls=ag.LightProfile)[0]
@@ -303,16 +303,14 @@ def test__image_2d_list_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_oper
 
 def test__galaxy_image_2d_dict_from(sub_grid_2d_7x7):
 
-    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.EllSersic(intensity=1.0))
+    g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.Sersic(intensity=1.0))
     g1 = ag.Galaxy(
         redshift=0.5,
         mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
-        light_profile=ag.lp.EllSersic(intensity=2.0),
+        light_profile=ag.lp.Sersic(intensity=2.0),
     )
 
-    g2 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp_operated.EllGaussian(intensity=3.0)
-    )
+    g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp_operated.Gaussian(intensity=3.0))
 
     g0_image = g0.image_2d_from(grid=sub_grid_2d_7x7)
     g1_image = g1.image_2d_from(grid=sub_grid_2d_7x7)
@@ -350,10 +348,10 @@ def test__light_profile_snr__signal_to_noise_via_simulator_correct():
 
     grid = ag.Grid2D.uniform(shape_native=(3, 3), pixel_scales=1.0)
 
-    sersic_0 = ag.lp_snr.EllSersic(
+    sersic_0 = ag.lp_snr.Sersic(
         signal_to_noise_ratio=10.0, centre=(1.0, 1.0), effective_radius=0.01
     )
-    sersic_1 = ag.lp_snr.EllSersic(
+    sersic_1 = ag.lp_snr.Sersic(
         signal_to_noise_ratio=20.0, centre=(-1.0, -1.0), effective_radius=0.01
     )
 
@@ -695,7 +693,7 @@ def test__hyper_noise_map_list_from():
 def test__plane_image_2d_from(sub_grid_2d_7x7):
     sub_grid_2d_7x7[1] = np.array([2.0, 2.0])
 
-    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=1.0))
+    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
 
     plane = ag.Plane(galaxies=[galaxy], redshift=None)
 
@@ -716,7 +714,7 @@ def test__plane_image_2d_from(sub_grid_2d_7x7):
     grid = ag.Grid2D.from_mask(mask=mask)
 
     g0 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp.EllSersic(centre=(1.6, -1.6), intensity=1.0)
+        redshift=0.5, light_profile=ag.lp.Sersic(centre=(1.6, -1.6), intensity=1.0)
     )
     plane = ag.Plane(galaxies=[g0], redshift=None)
 
@@ -728,7 +726,7 @@ def test__plane_image_2d_from(sub_grid_2d_7x7):
     ) == (0, 0)
 
     g0 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp.EllSersic(centre=(1.6, 1.6), intensity=1.0)
+        redshift=0.5, light_profile=ag.lp.Sersic(centre=(1.6, 1.6), intensity=1.0)
     )
     plane = ag.Plane(galaxies=[g0], redshift=None)
 
@@ -739,7 +737,7 @@ def test__plane_image_2d_from(sub_grid_2d_7x7):
     ) == (0, 4)
 
     g0 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp.EllSersic(centre=(-1.6, -1.6), intensity=1.0)
+        redshift=0.5, light_profile=ag.lp.Sersic(centre=(-1.6, -1.6), intensity=1.0)
     )
     plane = ag.Plane(galaxies=[g0], redshift=None)
 
@@ -750,7 +748,7 @@ def test__plane_image_2d_from(sub_grid_2d_7x7):
     ) == (4, 0)
 
     g0 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp.EllSersic(centre=(-1.6, 1.6), intensity=1.0)
+        redshift=0.5, light_profile=ag.lp.Sersic(centre=(-1.6, 1.6), intensity=1.0)
     )
     plane = ag.Plane(galaxies=[g0], redshift=None)
 
@@ -961,7 +959,7 @@ def test__grid_iterate_in__iterates_grid_correctly(gal_x1_lp):
     )
 
     galaxy = ag.Galaxy(
-        redshift=0.5, light=ag.lp.EllSersic(centre=(0.08, 0.08), intensity=1.0)
+        redshift=0.5, light=ag.lp.Sersic(centre=(0.08, 0.08), intensity=1.0)
     )
 
     plane = ag.Plane(galaxies=[galaxy])

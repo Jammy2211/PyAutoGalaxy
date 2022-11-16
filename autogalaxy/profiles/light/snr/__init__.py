@@ -1,13 +1,13 @@
 from .abstract import LightProfileSNR
-from .gaussian import EllGaussian, SphGaussian
+from .gaussian import Gaussian, GaussianSph
 from .sersic import (
-    EllSersic,
-    SphSersic,
+    Sersic,
+    SersicSph,
 )
-from .exponential import EllExponential, SphExponential
-from .dev_vaucouleurs import EllDevVaucouleurs, SphDevVaucouleurs
-from .chameleon import EllChameleon, SphChameleon
+from .exponential import Exponential, ExponentialSph
+from .dev_vaucouleurs import DevVaucouleurs, DevVaucouleursSph
+from .chameleon import Chameleon, ChameleonSph
 from .eff import (
-    EllEff,
-    SphEff,
+    ElsonFreeFall,
+    ElsonFreeFallSph,
 )

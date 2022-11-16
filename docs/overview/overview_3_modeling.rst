@@ -39,7 +39,7 @@ determined by a fitting procedure.
 .. code-block:: python
 
     galaxy = af.Model(
-        ag.Galaxy, redshift=0.5, bulge=ag.lp.EllSersic, disk=ag.lp.EllExponential
+        ag.Galaxy, redshift=0.5, bulge=ag.lp.Sersic, disk=ag.lp.Exponential
     )
 
 We put the model galaxy above into a `Collection`, which is the model we will fit. Note how we could easily 
@@ -55,8 +55,8 @@ can be extended to include other components than just galaxies.
 
 In this example we therefore fit a model where:
 
- - The galaxy's bulge is a parametric `EllSersic` bulge [7 parameters]. 
- - The galaxy's disk is a parametric `EllExponential` disk [6 parameters].
+ - The galaxy's bulge is a parametric `Sersic` bulge [7 parameters].
+ - The galaxy's disk is a parametric `Exponential` disk [6 parameters].
 
 The redshifts of the galaxy (z=0.5) is fixed.
 
@@ -171,8 +171,8 @@ This gives the following output:
     model                                          CollectionPriorModel (N=13)
         galaxies                                   CollectionPriorModel (N=13)
             galaxy                                 Galaxy (N=13)
-                bulge                              EllSersic (N=7)
-                disk                               EllExponential (N=6)
+                bulge                              Sersic (N=7)
+                disk                               Exponential (N=6)
     
     Maximum Log Likelihood Model:
     
@@ -310,11 +310,11 @@ using any combination of light profiles:
     galaxy_model = af.Model(
         ag.Galaxy,
         redshift=0.5,
-        bulge=ag.lp.EllDevVaucouleurs,
-        disk = ag.lp.EllSersic,
-        bar=ag.lp.EllGaussian,
-        clump_0=ag.lp.EllEff,
-        clump_1=ag.lp.EllEff,
+        bulge=ag.lp.DevVaucouleurs,
+        disk = ag.lp.Sersic,
+        bar=ag.lp.Gaussian,
+        clump_0=ag.lp.ElsonFreeFall,
+        clump_1=ag.lp.ElsonFreeFall,
     )
 
     """
@@ -352,14 +352,14 @@ model is inferred.
 
 .. code-block:: python
 
-    sersic_linear = ag.lp_linear.EllSersic()
+    sersic_linear = ag.lp_linear.Sersic()
     
     galaxy_model_linear = af.Model(
         ag.Galaxy,
         redshift=0.5,
-        bulge=ag.lp_linear.EllDevVaucouleurs,
-        disk=ag.lp_linear.EllSersic,
-        bar=ag.lp_linear.EllGaussian,
+        bulge=ag.lp_linear.DevVaucouleurs,
+        disk=ag.lp_linear.Sersic,
+        bar=ag.lp_linear.Gaussian,
     )
 
 Basis Functions
@@ -384,7 +384,7 @@ parameters!
     bulge_a = af.UniformPrior(lower_limit=0.0, upper_limit=0.2)
     bulge_b = af.UniformPrior(lower_limit=0.0, upper_limit=10.0)
 
-    gaussians_bulge = af.Collection(af.Model(ag.lp_linear.EllGaussian) for _ in range(10))
+    gaussians_bulge = af.Collection(af.Model(ag.lp_linear.Gaussian) for _ in range(10))
 
     for i, gaussian in enumerate(gaussians_bulge):
 
@@ -410,13 +410,13 @@ Below is a snippet of the model, showing that different Gaussians are in the mod
 
     model                                                                           Basis (N=6)
         light_profile_list                                                          CollectionPriorModel (N=6)
-            0                                                                       EllGaussian (N=6)
+            0                                                                       Gaussian (N=6)
                 sigma                                                               SumPrior (N=2)
                     other                                                           MultiplePrior (N=1)
-            1                                                                       EllGaussian (N=6)
+            1                                                                       Gaussian (N=6)
                 sigma                                                               SumPrior (N=2)
                     other                                                           MultiplePrior (N=1)
-            2                                                                       EllGaussian (N=6)
+            2                                                                       Gaussian (N=6)
             ...
             trimmed for conciseness
             ...

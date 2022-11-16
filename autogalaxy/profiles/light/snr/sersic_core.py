@@ -4,7 +4,7 @@ from autogalaxy.profiles.light.snr.abstract import LightProfileSNR
 from autogalaxy.profiles.light import standard as lp
 
 
-class EllSersicCore(lp.EllSersicCore, LightProfileSNR):
+class SersicCore(lp.SersicCore, LightProfileSNR):
     def __init__(
         self,
         signal_to_noise_ratio: float = 10.0,

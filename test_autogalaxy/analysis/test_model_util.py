@@ -141,7 +141,7 @@ def test__hyper_model_noise_from():
     model = af.Collection(
         galaxies=af.Collection(
             galaxy=af.Model(ag.Galaxy, redshift=0.5, pixelization=pixelization),
-            galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.EllSersic),
+            galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.Sersic),
         )
     )
 
@@ -185,7 +185,7 @@ def test__hyper_model_noise_from():
     model = af.Collection(
         galaxies=af.Collection(
             galaxy=af.Model(ag.Galaxy, redshift=0.5),
-            galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.EllSersic),
+            galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.Sersic),
         )
     )
 
@@ -204,7 +204,7 @@ def test__hyper_model_noise_from__adds_hyper_galaxies():
     model = af.Collection(
         galaxies=af.Collection(
             galaxy_0=af.Model(ag.Galaxy, redshift=0.5),
-            galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.EllSersic),
+            galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.Sersic),
         )
     )
 
@@ -260,7 +260,7 @@ def test__hyper_model_inversion_from():
     model = af.Collection(
         galaxies=af.Collection(
             galaxy=af.Model(ag.Galaxy, redshift=0.5, pixelization=pixelization),
-            galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.EllSersic),
+            galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.Sersic),
         )
     )
 
@@ -303,7 +303,7 @@ def test__hyper_model_inversion_from():
     model = af.Collection(
         galaxies=af.Collection(
             galaxy=af.Model(ag.Galaxy, redshift=0.5),
-            galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.EllSersic),
+            galaxy_1=af.Model(ag.Galaxy, redshift=1.0, bulge=ag.lp.Sersic),
         )
     )
 
@@ -328,7 +328,7 @@ def test__hyper_model_inversion_from__adds_hyper_galaxies():
             galaxy_1=af.Model(
                 ag.Galaxy,
                 redshift=1.0,
-                bulge=ag.lp.EllSersic,
+                bulge=ag.lp.Sersic,
                 pixelization=pixelization,
             ),
         )
@@ -402,7 +402,7 @@ def test__stochastic_model_from():
             lens=af.Model(
                 ag.Galaxy,
                 redshift=0.5,
-                light=ag.lp.SphSersic(),
+                light=ag.lp.SersicSph(),
                 mass=ag.mp.SphIsothermal(),
             ),
             source=af.Model(ag.Galaxy, redshift=1.0, pixelization=pixelization),

@@ -40,7 +40,7 @@
             }
         }
     },
-    "AbstractEllSersic": {
+    "AbstractSersic": {
         "centre_0": {
             "type": "Uniform",
             "lower_limit": -1.0,

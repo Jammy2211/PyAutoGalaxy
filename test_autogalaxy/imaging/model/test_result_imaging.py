@@ -46,7 +46,7 @@ def test___image_dict(analysis_imaging_7x7):
 def test___linear_light_profiles_in_result(analysis_imaging_7x7):
 
     galaxies = af.ModelInstance()
-    galaxies.galaxy = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.EllSersic())
+    galaxies.galaxy = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.Sersic())
 
     instance = af.ModelInstance()
     instance.galaxies = galaxies
