@@ -444,7 +444,7 @@ def test__stochastic_model_from():
     assert isinstance(model.galaxies.source.pixelization.mesh.pixels, af.UniformPrior)
     assert not isinstance(
         model.galaxies.source.pixelization.regularization.inner_coefficient,
-        af.UniformPrior,
+        af.LogUniformPrior,
     )
 
     model = ag.util.model.stochastic_model_from(
@@ -456,5 +456,5 @@ def test__stochastic_model_from():
     assert isinstance(model.galaxies.source.pixelization.mesh.pixels, int)
     assert isinstance(
         model.galaxies.source.pixelization.regularization.inner_coefficient,
-        af.UniformPrior,
+        af.LogUniformPrior,
     )
