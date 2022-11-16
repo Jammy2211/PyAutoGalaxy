@@ -1,12 +1,12 @@
 from .abstract.abstract import MassProfile
 from .total import (
     PointMass,
-    PowerLawCored,
-    PowerLawCoredSph,
+    PowerLawCore,
+    PowerLawCoreSph,
     PowerLawBroken,
     PowerLawBrokenSph,
-    IsothermalCored,
-    IsothermalCoredSph,
+    IsothermalCore,
+    IsothermalCoreSph,
     PowerLaw,
     PowerLawSph,
     Isothermal,

@@ -269,12 +269,12 @@ Mass Profiles
    :toctree: generated/
 
     PointMass
-    PowerLawCored
-    PowerLawCoredSph
+    PowerLawCore
+    PowerLawCoreSph
     PowerLawBroken
     PowerLawBrokenSph
-    IsothermalCored
-    IsothermalCoredSph
+    IsothermalCore
+    IsothermalCoreSph
     PowerLaw
     PowerLawSph
     Isothermal

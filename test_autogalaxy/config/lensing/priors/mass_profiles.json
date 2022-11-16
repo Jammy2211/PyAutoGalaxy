@@ -138,7 +138,7 @@
             "upper_limit": 1.0
         }
     },
-    "IsothermalCored": {
+    "IsothermalCore": {
         "einstein_radius": {
             "type": "Uniform",
             "lower_limit": 0.0,

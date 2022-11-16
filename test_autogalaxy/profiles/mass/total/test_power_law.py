@@ -205,7 +205,7 @@ def test__compare_to_cored_power_law():
         slope=2.3,
     )
 
-    cored_power_law = ag.mp.PowerLawCored(
+    cored_power_law = ag.mp.PowerLawCore(
         centre=(0.0, 0.0),
         elliptical_comps=(0.333333, 0.0),
         einstein_radius=1.0,

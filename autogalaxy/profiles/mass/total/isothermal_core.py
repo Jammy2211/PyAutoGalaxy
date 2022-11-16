@@ -1,10 +1,10 @@
 from typing import Tuple
 
-from autogalaxy.profiles.mass.total.power_law_cored import PowerLawCored
-from autogalaxy.profiles.mass.total.power_law_cored import PowerLawCoredSph
+from autogalaxy.profiles.mass.total.power_law_core import PowerLawCore
+from autogalaxy.profiles.mass.total.power_law_core import PowerLawCoreSph
 
 
-class IsothermalCored(PowerLawCored):
+class IsothermalCore(PowerLawCore):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -37,7 +37,7 @@ class IsothermalCored(PowerLawCored):
         )
 
 
-class IsothermalCoredSph(PowerLawCoredSph):
+class IsothermalCoreSph(PowerLawCoreSph):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

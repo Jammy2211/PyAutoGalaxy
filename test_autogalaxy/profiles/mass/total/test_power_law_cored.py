@@ -8,7 +8,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 def test__deflections_yx_2d_from():
 
-    power_law = ag.mp.PowerLawCoredSph(
+    power_law = ag.mp.PowerLawCoreSph(
         centre=(-0.7, 0.5), einstein_radius=1.0, slope=1.8, core_radius=0.2
     )
 
@@ -17,7 +17,7 @@ def test__deflections_yx_2d_from():
     assert deflections[0, 0] == pytest.approx(0.80677, 1e-3)
     assert deflections[0, 1] == pytest.approx(-0.30680, 1e-3)
 
-    power_law = ag.mp.PowerLawCoredSph(
+    power_law = ag.mp.PowerLawCoreSph(
         centre=(0.2, -0.2), einstein_radius=0.5, slope=2.4, core_radius=0.5
     )
 
@@ -26,7 +26,7 @@ def test__deflections_yx_2d_from():
     assert deflections[0, 0] == pytest.approx(-0.00321, 1e-3)
     assert deflections[0, 1] == pytest.approx(0.09316, 1e-3)
 
-    cored_power_law = ag.mp.PowerLawCored(
+    cored_power_law = ag.mp.PowerLawCore(
         centre=(-0.7, 0.5),
         elliptical_comps=(0.152828, -0.088235),
         einstein_radius=1.3,
@@ -41,7 +41,7 @@ def test__deflections_yx_2d_from():
     assert deflections[0, 0] == pytest.approx(0.9869, 1e-3)
     assert deflections[0, 1] == pytest.approx(-0.54882, 1e-3)
 
-    cored_power_law = ag.mp.PowerLawCored(
+    cored_power_law = ag.mp.PowerLawCore(
         centre=(0.2, -0.2),
         elliptical_comps=(-0.216506, -0.125),
         einstein_radius=0.5,
@@ -55,14 +55,14 @@ def test__deflections_yx_2d_from():
     assert deflections[0, 0] == pytest.approx(0.01111, 1e-3)
     assert deflections[0, 1] == pytest.approx(0.11403, 1e-3)
 
-    elliptical = ag.mp.PowerLawCored(
+    elliptical = ag.mp.PowerLawCore(
         centre=(1.1, 1.1),
         elliptical_comps=(0.0, 0.0),
         einstein_radius=3.0,
         slope=2.2,
         core_radius=0.1,
     )
-    spherical = ag.mp.PowerLawCoredSph(
+    spherical = ag.mp.PowerLawCoreSph(
         centre=(1.1, 1.1), einstein_radius=3.0, slope=2.2, core_radius=0.1
     )
 
@@ -73,7 +73,7 @@ def test__deflections_yx_2d_from():
 
 def test__convergence_2d_from():
 
-    cored_power_law = ag.mp.PowerLawCoredSph(
+    cored_power_law = ag.mp.PowerLawCoreSph(
         centre=(1, 1), einstein_radius=1.0, slope=2.2, core_radius=0.1
     )
 
@@ -81,7 +81,7 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(0.39762, 1e-4)
 
-    cored_power_law = ag.mp.PowerLawCored(
+    cored_power_law = ag.mp.PowerLawCore(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.333333),
         einstein_radius=1.0,
@@ -93,7 +93,7 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(0.45492, 1e-3)
 
-    cored_power_law = ag.mp.PowerLawCored(
+    cored_power_law = ag.mp.PowerLawCore(
         centre=(0.0, 0.0),
         elliptical_comps=(0.0, 0.333333),
         einstein_radius=2.0,
@@ -105,14 +105,14 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(1.3887, 1e-3)
 
-    elliptical = ag.mp.PowerLawCored(
+    elliptical = ag.mp.PowerLawCore(
         centre=(1.1, 1.1),
         elliptical_comps=(0.0, 0.0),
         einstein_radius=3.0,
         slope=2.2,
         core_radius=0.1,
     )
-    spherical = ag.mp.PowerLawCoredSph(
+    spherical = ag.mp.PowerLawCoreSph(
         centre=(1.1, 1.1), einstein_radius=3.0, slope=2.2, core_radius=0.1
     )
 
@@ -122,7 +122,7 @@ def test__convergence_2d_from():
 
 
 def test__potential_2d_from():
-    power_law = ag.mp.PowerLawCoredSph(
+    power_law = ag.mp.PowerLawCoreSph(
         centre=(-0.7, 0.5), einstein_radius=1.0, slope=1.8, core_radius=0.2
     )
 
@@ -130,7 +130,7 @@ def test__potential_2d_from():
 
     assert potential == pytest.approx(0.54913, 1e-3)
 
-    power_law = ag.mp.PowerLawCoredSph(
+    power_law = ag.mp.PowerLawCoreSph(
         centre=(0.2, -0.2), einstein_radius=0.5, slope=2.4, core_radius=0.5
     )
 
@@ -138,7 +138,7 @@ def test__potential_2d_from():
 
     assert potential == pytest.approx(0.01820, 1e-3)
 
-    cored_power_law = ag.mp.PowerLawCored(
+    cored_power_law = ag.mp.PowerLawCore(
         centre=(0.2, -0.2),
         elliptical_comps=(-0.216506, -0.125),
         einstein_radius=0.5,
@@ -150,7 +150,7 @@ def test__potential_2d_from():
 
     assert potential == pytest.approx(0.02319, 1e-3)
 
-    cored_power_law = ag.mp.PowerLawCored(
+    cored_power_law = ag.mp.PowerLawCore(
         centre=(-0.7, 0.5),
         elliptical_comps=(0.152828, -0.088235),
         einstein_radius=1.3,
@@ -162,14 +162,14 @@ def test__potential_2d_from():
 
     assert potential == pytest.approx(0.71185, 1e-3)
 
-    elliptical = ag.mp.PowerLawCored(
+    elliptical = ag.mp.PowerLawCore(
         centre=(1.1, 1.1),
         elliptical_comps=(0.0, 0.0),
         einstein_radius=3.0,
         slope=2.2,
         core_radius=0.1,
     )
-    spherical = ag.mp.PowerLawCoredSph(
+    spherical = ag.mp.PowerLawCoreSph(
         centre=(1.1, 1.1), einstein_radius=3.0, slope=2.2, core_radius=0.1
     )
 

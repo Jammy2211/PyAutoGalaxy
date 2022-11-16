@@ -4,10 +4,10 @@ from typing import Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles.mass.total.power_law_cored import PowerLawCored
+from autogalaxy.profiles.mass.total.power_law_core import PowerLawCore
 
 
-class PowerLaw(PowerLawCored):
+class PowerLaw(PowerLawCore):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

@@ -31,7 +31,7 @@ def test__mass_quantity_functions__output_is_autoarray_structure():
     assert isinstance(deflections, ag.VectorYX2D)
     assert deflections.shape_native == (2, 2)
 
-    cored_power_law = ag.mp.PowerLawCored()
+    cored_power_law = ag.mp.PowerLawCore()
 
     convergence = cored_power_law.convergence_2d_from(grid=grid)
     assert convergence.shape_native == (2, 2)
@@ -43,7 +43,7 @@ def test__mass_quantity_functions__output_is_autoarray_structure():
     assert isinstance(deflections, ag.VectorYX2D)
     assert deflections.shape_native == (2, 2)
 
-    cored_power_law = ag.mp.PowerLawCoredSph()
+    cored_power_law = ag.mp.PowerLawCoreSph()
 
     convergence = cored_power_law.convergence_2d_from(grid=grid)
     assert convergence.shape_native == (2, 2)
@@ -79,7 +79,7 @@ def test__mass_quantity_functions__output_is_autoarray_structure():
     assert isinstance(deflections, ag.VectorYX2D)
     assert deflections.shape_native == (2, 2)
 
-    cored_isothermal = ag.mp.IsothermalCored()
+    cored_isothermal = ag.mp.IsothermalCore()
 
     convergence = cored_isothermal.convergence_2d_from(grid=grid)
     assert convergence.shape_native == (2, 2)
@@ -91,7 +91,7 @@ def test__mass_quantity_functions__output_is_autoarray_structure():
     assert isinstance(deflections, ag.VectorYX2D)
     assert deflections.shape_native == (2, 2)
 
-    cored_isothermal = ag.mp.IsothermalCoredSph()
+    cored_isothermal = ag.mp.IsothermalCoreSph()
 
     convergence = cored_isothermal.convergence_2d_from(grid=grid)
     assert convergence.shape_native == (2, 2)

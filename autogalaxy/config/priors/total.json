@@ -508,7 +508,7 @@
             }
         }
     },
-    "isothermal_cored.IsothermalCoredSph": {
+    "isothermal_core.IsothermalCoreSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -566,7 +566,7 @@
             }
         }
     },
-    "isothermal_cored.IsothermalCored": {
+    "isothermal_core.IsothermalCore": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -654,7 +654,7 @@
             }
         }
     },
-    "power_law_cored.PowerLawCoredSph": {
+    "power_law_core.PowerLawCoreSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -725,7 +725,7 @@
             }
         }
     },
-    "power_law_cored.PowerLawCored": {
+    "power_law_core.PowerLawCore": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
