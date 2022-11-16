@@ -384,7 +384,7 @@ def test__extract_attribute():
     assert (
         sis.extract_attribute(cls=ag.mp.MassProfile, attr_name="einstein_radiu") == None
     )
-    sis.extract_attribute(cls=ag.lp.LightProfile, attr_name="einstein_radius")
+    sis.extract_attribute(cls=ag.LightProfile, attr_name="einstein_radius")
 
 
 def test__regression__centre_of_profile_in_right_place():

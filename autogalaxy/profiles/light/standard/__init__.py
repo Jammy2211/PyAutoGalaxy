@@ -1,4 +1,3 @@
-from .abstract import LightProfile
 from .gaussian import EllGaussian, SphGaussian
 from .moffat import EllMoffat, SphMoffat
 from .sersic import (

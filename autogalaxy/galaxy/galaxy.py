@@ -11,7 +11,7 @@ from autogalaxy import exc
 from autogalaxy.operate.deflections import OperateDeflections
 from autogalaxy.operate.image import OperateImageList
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
-from autogalaxy.profiles.light.standard.abstract import LightProfile
+from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
@@ -122,9 +122,9 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         For example:
 
-        - If the input is `cls=ag.lp.LightProfile`, a list containing all light profiles in the galaxy is returned.
+        - If the input is `cls=ag.LightProfile`, a list containing all light profiles in the galaxy is returned.
 
-        - If `cls=ag.lp.LightProfile` and `cls_filtered=ag.lp.LightProfileLinear`, a list of all light profiles
+        - If `cls=ag.LightProfile` and `cls_filtered=ag.LightProfileLinear`, a list of all light profiles
         excluding those which are linear light profiles will be returned.
 
         Parameters

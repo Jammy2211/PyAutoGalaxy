@@ -10,7 +10,7 @@ from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxy import HyperGalaxy
 from autogalaxy.profiles.light.basis import Basis
-from autogalaxy.profiles.light.standard.abstract import LightProfile
+from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.profiles.light.snr import LightProfileSNR
 from autogalaxy.operate.image import OperateImageGalaxies
@@ -82,7 +82,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         For example:
 
-        - If the input is `cls=ag.lp.LightProfile`, a list containing all light profiles in the plane is returned.
+        - If the input is `cls=ag.LightProfile`, a list containing all light profiles in the plane is returned.
 
         Returns
         -------

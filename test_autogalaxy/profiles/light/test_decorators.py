@@ -10,7 +10,7 @@ from autogalaxy.profiles.light.decorators import (
 )
 
 
-class MockLightProfile(ag.lp.LightProfile):
+class MockLightProfile(ag.LightProfile):
     @check_operated_only
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None

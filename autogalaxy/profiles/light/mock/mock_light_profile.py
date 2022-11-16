@@ -9,7 +9,7 @@ from autogalaxy.profiles.light.decorators import (
 import autogalaxy as ag
 
 
-class MockLightProfile(ag.lp.LightProfile):
+class MockLightProfile(ag.LightProfile):
     def __init__(
         self,
         image_2d=None,

@@ -10,7 +10,7 @@ def test__cls_list_from(lp_0, lp_linear_0):
 
     gal = ag.Galaxy(redshift=0.5, light_0=lp_0)
 
-    cls_list = gal.cls_list_from(cls=ag.lp.LightProfile)
+    cls_list = gal.cls_list_from(cls=ag.LightProfile)
 
     assert cls_list == [lp_0]
 
@@ -19,12 +19,12 @@ def test__cls_list_from(lp_0, lp_linear_0):
     )
 
     cls_list = gal.cls_list_from(
-        cls=ag.lp.LightProfile, cls_filtered=ag.lp_linear.LightProfileLinear
+        cls=ag.LightProfile, cls_filtered=ag.lp_linear.LightProfileLinear
     )
 
     assert cls_list == []
 
-    cls_list = gal.cls_list_from(cls=ag.lp.LightProfile)
+    cls_list = gal.cls_list_from(cls=ag.LightProfile)
 
     assert cls_list == [lp_linear_0, lp_linear_0]
 
@@ -306,15 +306,15 @@ def test__light_and_mass_profiles__contained_in_light_and_mass_profile_lists(
 ):
     gal_x1_lmp = ag.Galaxy(redshift=0.5, profile=lmp_0)
 
-    assert 1 == len(gal_x1_lmp.cls_list_from(cls=ag.lp.LightProfile))
+    assert 1 == len(gal_x1_lmp.cls_list_from(cls=ag.LightProfile))
     assert 1 == len(gal_x1_lmp.cls_list_from(cls=ag.mp.MassProfile))
 
     assert gal_x1_lmp.cls_list_from(cls=ag.mp.MassProfile)[0] == lmp_0
-    assert gal_x1_lmp.cls_list_from(cls=ag.lp.LightProfile)[0] == lmp_0
+    assert gal_x1_lmp.cls_list_from(cls=ag.LightProfile)[0] == lmp_0
 
     gal_multi_profiles = ag.Galaxy(redshift=0.5, profile=lmp_0, light=lp_0, sie=mp_0)
 
-    assert 2 == len(gal_multi_profiles.cls_list_from(cls=ag.lp.LightProfile))
+    assert 2 == len(gal_multi_profiles.cls_list_from(cls=ag.LightProfile))
     assert 2 == len(gal_multi_profiles.cls_list_from(cls=ag.mp.MassProfile))
 
 
@@ -367,7 +367,7 @@ def test__extract_attribute():
 
     galaxy = ag.Galaxy(redshift=0.5)
 
-    values = galaxy.extract_attribute(cls=ag.lp.LightProfile, attr_name="value")
+    values = galaxy.extract_attribute(cls=ag.LightProfile, attr_name="value")
 
     assert values == None
 
@@ -378,24 +378,24 @@ def test__extract_attribute():
         lp_2=ag.m.MockLightProfile(value=0.7, value1=(4.0, 5.0)),
     )
 
-    values = galaxy.extract_attribute(cls=ag.lp.LightProfile, attr_name="value")
+    values = galaxy.extract_attribute(cls=ag.LightProfile, attr_name="value")
 
     assert values.in_list == [0.9, 0.8, 0.7]
 
-    values = galaxy.extract_attribute(cls=ag.lp.LightProfile, attr_name="value1")
+    values = galaxy.extract_attribute(cls=ag.LightProfile, attr_name="value1")
 
     assert values.in_list == [(0.0, 1.0), (2.0, 3.0), (4.0, 5.0)]
 
     galaxy = ag.Galaxy(
         redshift=0.5,
-        lp_3=ag.lp.LightProfile(),
+        lp_3=ag.LightProfile(),
         lp_0=ag.m.MockLightProfile(value=1.0),
         lp_1=ag.m.MockLightProfile(value=2.0),
         mp_0=ag.m.MockMassProfile(value=5.0),
         lp_2=ag.m.MockLightProfile(value=3.0),
     )
 
-    values = galaxy.extract_attribute(cls=ag.lp.LightProfile, attr_name="value")
+    values = galaxy.extract_attribute(cls=ag.LightProfile, attr_name="value")
 
     assert values.in_list == [1.0, 2.0, 3.0]
 

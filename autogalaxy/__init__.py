@@ -84,6 +84,7 @@ from .profiles import (
     light_and_mass_profiles as lmp,
     scaling_relations as sr,
 )
+from .profiles.light.abstract import LightProfile
 from .profiles.light import standard as lp
 from .profiles.light import basis as lp_basis
 from .profiles.light.linear import LightProfileLinearObjFuncList

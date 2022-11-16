@@ -6,7 +6,7 @@ import autoarray.plot as aplt
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.plot.include.two_d import Include2D
 from autogalaxy.plot.visuals.two_d import Visuals2D
-from autogalaxy.profiles.light.standard.abstract import LightProfile
+from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane

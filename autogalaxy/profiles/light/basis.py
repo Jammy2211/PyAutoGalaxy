@@ -3,14 +3,15 @@ from typing import List, Optional
 
 import autoarray as aa
 
-from autogalaxy.profiles.light import standard as lp
+from autogalaxy.profiles.light.abstract import LightProfile
+
 from autogalaxy.profiles.light import linear as lp_linear
 
 
-class Basis(lp.LightProfile):
+class Basis(LightProfile):
     def __init__(
         self,
-        light_profile_list: List[lp.LightProfile],
+        light_profile_list: List[LightProfile],
         regularization: Optional[aa.AbstractRegularization] = None,
     ):
 

@@ -3,7 +3,7 @@ from typing import Dict, Optional
 
 import autoarray as aa
 
-from autogalaxy.profiles.light.standard.abstract import LightProfile
+from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
 
 

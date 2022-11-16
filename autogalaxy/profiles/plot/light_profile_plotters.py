@@ -5,7 +5,7 @@ import autoarray as aa
 import autoarray.plot as aplt
 
 
-from autogalaxy.profiles.light.standard.abstract import LightProfile
+from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_plot.one_d import MatPlot1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
