@@ -9,7 +9,7 @@ import autoarray as aa
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
-class EllPowerLawBroken(MassProfile):
+class PowerLawBroken(MassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -165,7 +165,7 @@ class EllPowerLawBroken(MassProfile):
         return mass_profile
 
 
-class SphPowerLawBroken(EllPowerLawBroken):
+class PowerLawBrokenSph(PowerLawBroken):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

@@ -115,7 +115,7 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
     galaxy_0 = ag.Galaxy(
         redshift=0.5,
         light=ag.lp.Sersic(centre=(0.1, 0.1), intensity=0.1),
-        mass=ag.mp.EllIsothermal(centre=(0.1, 0.1), einstein_radius=1.8),
+        mass=ag.mp.Isothermal(centre=(0.1, 0.1), einstein_radius=1.8),
     )
 
     pixelization = ag.Pixelization(

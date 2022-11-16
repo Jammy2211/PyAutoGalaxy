@@ -1,5 +1,5 @@
 {
-    "nfw.SphNFW": {
+    "nfw.NFWSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -57,7 +57,7 @@
             }
         }
     },
-    "nfw.EllNFW": {
+    "nfw.NFW": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -145,7 +145,7 @@
             }
         }
     },
-    "gnfw.SphNFWGeneralized": {
+    "gnfw.gNFWSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -216,7 +216,7 @@
             }
         }
     },
-    "gnfw.EllNFWGeneralized": {
+    "gnfw.gNFW": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -317,7 +317,7 @@
             }
         }
     },
-    "nfw_mcr.SphNFWMCRDuffy": {
+    "nfw_mcr.NFWMCRDuffySph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -388,7 +388,7 @@
             }
         }
     },
-    "nfw_mcr.EllNFWMCRLudlow": {
+    "nfw_mcr.NFWMCRLudlow": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -489,7 +489,7 @@
             }
         }
     },
-    "nfw_mcr.SphNFWMCRLudlow": {
+    "nfw_mcr.NFWMCRLudlowSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -560,7 +560,7 @@
             }
         }
     },
-    "nfw_mcr_scatter.SphNFWMCRScatterLudlow": {
+    "nfw_mcr_scatter.NFWMCRScatterLudlowSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -646,7 +646,7 @@
             }
         }
     },
-    "gnfw_mcr.EllNFWGeneralizedMCRLudlow": {
+    "gnfw_mcr.gNFWMCRLudlow": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -760,7 +760,7 @@
             }
         }
     },
-    "nfw_truncated.SphNFWTruncated": {
+    "nfw_truncated.NFWTruncatedSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -831,7 +831,7 @@
             }
         }
     },
-    "nfw_truncated_mcr.SphNFWTruncatedMCRDuffy": {
+    "nfw_truncated_mcr.NFWTruncatedMCRDuffySph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -902,7 +902,7 @@
             }
         }
     },
-    "nfw_truncated_mcr.SphNFWTruncatedMCRLudlow": {
+    "nfw_truncated_mcr.NFWTruncatedMCRLudlowSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -973,7 +973,7 @@
             }
         }
     },
-    "nfw_truncated_mcr_scatter.SphNFWTruncatedMCRScatterLudlow": {
+    "nfw_truncated_mcr_scatter.NFWTruncatedMCRScatterLudlowSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,

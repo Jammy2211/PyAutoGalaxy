@@ -1,15 +1,15 @@
 from typing import Tuple
 
-from autogalaxy.profiles.mass.dark.nfw import SphNFW
-from autogalaxy.profiles.mass.dark.nfw import EllNFW
+from autogalaxy.profiles.mass.dark.nfw import NFWSph
+from autogalaxy.profiles.mass.dark.nfw import NFW
 from autogalaxy.profiles.mass.dark.nfw_mcr_scatter import (
-    SphNFWMCRScatterLudlow,
+    NFWMCRScatterLudlowSph,
 )
 
 from autogalaxy.profiles.mass.dark import mcr_util
 
 
-class SphNFWMCRDuffy(SphNFW):
+class NFWMCRDuffySph(NFWSph):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -39,7 +39,7 @@ class SphNFWMCRDuffy(SphNFW):
         raise NotImplementedError()
 
 
-class EllNFWMCRLudlow(EllNFW):
+class NFWMCRLudlow(NFW):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -72,7 +72,7 @@ class EllNFWMCRLudlow(EllNFW):
         )
 
 
-class SphNFWMCRLudlow(SphNFWMCRScatterLudlow):
+class NFWMCRLudlowSph(NFWMCRScatterLudlowSph):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

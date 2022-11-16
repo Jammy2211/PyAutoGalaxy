@@ -57,12 +57,12 @@ def make_lp_operated_0():
 
 def make_mp_0():
     # noinspection PyTypeChecker
-    return ag.mp.SphIsothermal(einstein_radius=1.0)
+    return ag.mp.IsothermalSph(einstein_radius=1.0)
 
 
 def make_mp_1():
     # noinspection PyTypeChecker
-    return ag.mp.SphIsothermal(einstein_radius=2.0)
+    return ag.mp.IsothermalSph(einstein_radius=2.0)
 
 
 def make_lmp_0():
@@ -71,12 +71,12 @@ def make_lmp_0():
 
 def make_dmp_0():
     # noinspection PyTypeChecker
-    return ag.mp.SphNFW(kappa_s=1.0)
+    return ag.mp.NFWSph(kappa_s=1.0)
 
 
 def make_dmp_1():
     # noinspection PyTypeChecker
-    return ag.mp.SphNFW(kappa_s=2.0)
+    return ag.mp.NFWSph(kappa_s=2.0)
 
 
 def make_smp_0():

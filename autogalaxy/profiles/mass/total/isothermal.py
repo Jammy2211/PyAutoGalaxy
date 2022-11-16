@@ -3,7 +3,7 @@ from typing import Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles.mass.total.power_law import EllPowerLaw
+from autogalaxy.profiles.mass.total.power_law import PowerLaw
 
 
 def psi_from(grid, axis_ratio, core_radius):
@@ -40,7 +40,7 @@ def psi_from(grid, axis_ratio, core_radius):
     )
 
 
-class EllIsothermal(EllPowerLaw):
+class Isothermal(PowerLaw):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -141,7 +141,7 @@ class EllIsothermal(EllPowerLaw):
         return aa.VectorYX2DIrregular(vectors=shear_field, grid=grid)
 
 
-class SphIsothermal(EllIsothermal):
+class IsothermalSph(Isothermal):
     def __init__(
         self, centre: Tuple[float, float] = (0.0, 0.0), einstein_radius: float = 1.0
     ):

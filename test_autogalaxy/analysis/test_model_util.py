@@ -403,7 +403,7 @@ def test__stochastic_model_from():
                 ag.Galaxy,
                 redshift=0.5,
                 light=ag.lp.SersicSph(),
-                mass=ag.mp.SphIsothermal(),
+                mass=ag.mp.IsothermalSph(),
             ),
             source=af.Model(ag.Galaxy, redshift=1.0, pixelization=pixelization),
         )

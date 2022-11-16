@@ -5,10 +5,10 @@ import autoarray as aa
 
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
-from autogalaxy.profiles.mass.dark.abstract import AbstractEllNFWGeneralized
+from autogalaxy.profiles.mass.dark.abstract import AbstractgNFW
 
 
-class SphNFWTruncated(AbstractEllNFWGeneralized):
+class NFWTruncatedSph(AbstractgNFW):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

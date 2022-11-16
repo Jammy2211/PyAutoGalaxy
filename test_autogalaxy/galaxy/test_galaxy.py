@@ -109,7 +109,7 @@ def test__luminosity_within_circle(lp_0, lp_1, gal_x2_lp):
 
     assert lp_0_luminosity + lp_1_luminosity == gal_luminosity
 
-    gal_no_lp = ag.Galaxy(redshift=0.5, mass=ag.mp.SphIsothermal())
+    gal_no_lp = ag.Galaxy(redshift=0.5, mass=ag.mp.IsothermalSph())
 
     assert gal_no_lp.luminosity_within_circle_from(radius=1.0) == None
 
@@ -129,7 +129,7 @@ def test__convergence_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
 
     grid = ag.Grid2D.manual_native([[(1.05, -0.55), (2.05, -0.55)]], pixel_scales=1.0)
 
-    elliptical_mp = ag.mp.EllIsothermal(
+    elliptical_mp = ag.mp.Isothermal(
         centre=(0.5, 1.0), elliptical_comps=(0.2, 0.3), einstein_radius=1.0
     )
 
@@ -182,7 +182,7 @@ def test__potential_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
 
     grid = ag.Grid2D.manual_native([[(1.05, -0.55), (2.05, -0.55)]], pixel_scales=1.0)
 
-    elliptical_mp = ag.mp.EllIsothermal(
+    elliptical_mp = ag.mp.Isothermal(
         centre=(0.5, 1.0), elliptical_comps=(0.2, 0.3), einstein_radius=1.0
     )
 
@@ -486,9 +486,9 @@ def test__light_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric
 
 def test__mass_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric_results():
 
-    mp_0 = ag.mp.EllIsothermal(elliptical_comps=(0.333333, 0.0), einstein_radius=1.0)
+    mp_0 = ag.mp.Isothermal(elliptical_comps=(0.333333, 0.0), einstein_radius=1.0)
 
-    mp_1 = ag.mp.EllIsothermal(
+    mp_1 = ag.mp.Isothermal(
         centre=(100, 0), elliptical_comps=(0.333333, 0.0), einstein_radius=1.0
     )
 
@@ -522,13 +522,13 @@ def test__mass_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric_
         gal_x4_mp.deflections_yx_2d_from(grid=np.array([[51.0, 0.0]])), 1e-6
     )
 
-    mp_0 = ag.mp.SphIsothermal(einstein_radius=1.0)
+    mp_0 = ag.mp.IsothermalSph(einstein_radius=1.0)
 
-    mp_1 = ag.mp.SphIsothermal(centre=(100, 0), einstein_radius=1.0)
+    mp_1 = ag.mp.IsothermalSph(centre=(100, 0), einstein_radius=1.0)
 
-    mp_2 = ag.mp.SphIsothermal(centre=(0, 100), einstein_radius=1.0)
+    mp_2 = ag.mp.IsothermalSph(centre=(0, 100), einstein_radius=1.0)
 
-    mp_3 = ag.mp.SphIsothermal(centre=(100, 100), einstein_radius=1.0)
+    mp_3 = ag.mp.IsothermalSph(centre=(100, 100), einstein_radius=1.0)
 
     gal_x4_mp = ag.Galaxy(
         redshift=0.5,
@@ -629,8 +629,8 @@ def test__centre_of_profile_in_right_place():
 
     galaxy = ag.Galaxy(
         redshift=0.5,
-        mass=ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
-        mass_0=ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+        mass=ag.mp.Isothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+        mass_0=ag.mp.Isothermal(centre=(2.0, 1.0), einstein_radius=1.0),
     )
 
     convergence = galaxy.convergence_2d_from(grid=grid)
@@ -651,8 +651,8 @@ def test__centre_of_profile_in_right_place():
 
     galaxy = ag.Galaxy(
         redshift=0.5,
-        mass=ag.mp.SphIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
-        mass_0=ag.mp.SphIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+        mass=ag.mp.IsothermalSph(centre=(2.0, 1.0), einstein_radius=1.0),
+        mass_0=ag.mp.IsothermalSph(centre=(2.0, 1.0), einstein_radius=1.0),
     )
     convergence = galaxy.convergence_2d_from(grid=grid)
     max_indexes = np.unravel_index(
@@ -679,8 +679,8 @@ def test__centre_of_profile_in_right_place():
 
     galaxy = ag.Galaxy(
         redshift=0.5,
-        mass=ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
-        mass_0=ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+        mass=ag.mp.Isothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+        mass_0=ag.mp.Isothermal(centre=(2.0, 1.0), einstein_radius=1.0),
     )
     convergence = galaxy.convergence_2d_from(grid=grid)
     max_indexes = np.unravel_index(
@@ -699,7 +699,7 @@ def test__centre_of_profile_in_right_place():
     assert deflections.native[1, 3, 1] <= 0
 
     galaxy = ag.Galaxy(
-        redshift=0.5, mass=ag.mp.SphIsothermal(centre=(2.0, 1.0), einstein_radius=1.0)
+        redshift=0.5, mass=ag.mp.IsothermalSph(centre=(2.0, 1.0), einstein_radius=1.0)
     )
     convergence = galaxy.convergence_2d_from(grid=grid)
     max_indexes = np.unravel_index(
@@ -801,7 +801,7 @@ def test__decorator__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
     grid = ag.Grid2DIterate.from_mask(mask=mask, fractional_accuracy=1.0, sub_steps=[2])
 
     galaxy = ag.Galaxy(
-        redshift=0.5, mass=ag.mp.EllIsothermal(centre=(0.08, 0.08), einstein_radius=1.0)
+        redshift=0.5, mass=ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)
     )
 
     deflections = galaxy.deflections_yx_2d_from(grid=grid)
@@ -817,7 +817,7 @@ def test__decorator__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
     )
 
     galaxy = ag.Galaxy(
-        redshift=0.5, mass=ag.mp.EllIsothermal(centre=(0.08, 0.08), einstein_radius=1.0)
+        redshift=0.5, mass=ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)
     )
 
     deflections = galaxy.deflections_yx_2d_from(grid=grid)

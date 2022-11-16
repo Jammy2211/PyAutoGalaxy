@@ -10,7 +10,7 @@ def test__mass_and_concentration_consistent_with_normal_nfw():
 
     cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
-    nfw_mass = ag.mp.SphNFWMCRDuffy(
+    nfw_mass = ag.mp.NFWMCRDuffySph(
         centre=(1.0, 2.0),
         mass_at_200=1.0e9,
         redshift_object=0.6,
@@ -24,7 +24,7 @@ def test__mass_and_concentration_consistent_with_normal_nfw():
         redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
     )
 
-    nfw_kappa_s = ag.mp.SphNFW(
+    nfw_kappa_s = ag.mp.NFWSph(
         centre=(1.0, 2.0),
         kappa_s=nfw_mass.kappa_s,
         scale_radius=nfw_mass.scale_radius,
@@ -37,7 +37,7 @@ def test__mass_and_concentration_consistent_with_normal_nfw():
         redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
     )
 
-    # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
+    # We uare using the NFWTruncatedSph to check the mass gives a conosistnt kappa_s, given certain radii.
 
     assert mass_at_200_via_kappa_s == mass_at_200_via_mass
     assert concentration_via_kappa_s == concentration_via_mass
@@ -62,7 +62,7 @@ def test__mass_and_concentration_consistent_with_normal_nfw__scatter_0():
 
     cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
-    nfw_mass = ag.mp.SphNFWMCRLudlow(
+    nfw_mass = ag.mp.NFWMCRLudlowSph(
         centre=(1.0, 2.0),
         mass_at_200=1.0e9,
         redshift_object=0.6,
@@ -76,7 +76,7 @@ def test__mass_and_concentration_consistent_with_normal_nfw__scatter_0():
         redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
     )
 
-    nfw_kappa_s = ag.mp.SphNFW(
+    nfw_kappa_s = ag.mp.NFWSph(
         centre=(1.0, 2.0),
         kappa_s=nfw_mass.kappa_s,
         scale_radius=nfw_mass.scale_radius,
@@ -89,7 +89,7 @@ def test__mass_and_concentration_consistent_with_normal_nfw__scatter_0():
         redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
     )
 
-    # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
+    # We uare using the NFWTruncatedSph to check the mass gives a conosistnt kappa_s, given certain radii.
 
     assert mass_at_200_via_kappa_s == mass_at_200_via_mass
     assert concentration_via_kappa_s == concentration_via_mass
@@ -119,7 +119,7 @@ def test__same_as_above_but_elliptical():
 
     cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
-    nfw_mass = ag.mp.EllNFWMCRLudlow(
+    nfw_mass = ag.mp.NFWMCRLudlow(
         centre=(1.0, 2.0),
         elliptical_comps=(0.1, 0.2),
         mass_at_200=1.0e9,
@@ -134,7 +134,7 @@ def test__same_as_above_but_elliptical():
         redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
     )
 
-    nfw_kappa_s = ag.mp.EllNFW(
+    nfw_kappa_s = ag.mp.NFW(
         centre=(1.0, 2.0),
         elliptical_comps=(0.1, 0.2),
         kappa_s=nfw_mass.kappa_s,
@@ -148,7 +148,7 @@ def test__same_as_above_but_elliptical():
         redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
     )
 
-    # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
+    # We uare using the NFWTruncatedSph to check the mass gives a conosistnt kappa_s, given certain radii.
 
     assert mass_at_200_via_kappa_s == mass_at_200_via_mass
     assert concentration_via_kappa_s == concentration_via_mass
@@ -182,7 +182,7 @@ def test__same_as_above_but_generalized_elliptical():
 
     cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
-    nfw_mass = ag.mp.EllNFWGeneralizedMCRLudlow(
+    nfw_mass = ag.mp.gNFWMCRLudlow(
         centre=(1.0, 2.0),
         elliptical_comps=(0.1, 0.2),
         mass_at_200=1.0e9,
@@ -198,7 +198,7 @@ def test__same_as_above_but_generalized_elliptical():
         redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
     )
 
-    nfw_kappa_s = ag.mp.EllNFWGeneralized(
+    nfw_kappa_s = ag.mp.gNFW(
         centre=(1.0, 2.0),
         elliptical_comps=(0.1, 0.2),
         kappa_s=nfw_mass.kappa_s,
@@ -213,7 +213,7 @@ def test__same_as_above_but_generalized_elliptical():
         redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
     )
 
-    # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
+    # We uare using the NFWTruncatedSph to check the mass gives a conosistnt kappa_s, given certain radii.
 
     assert mass_at_200_via_kappa_s == mass_at_200_via_mass
     assert concentration_via_kappa_s == concentration_via_mass

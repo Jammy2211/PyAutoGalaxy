@@ -20,7 +20,7 @@ class DarkProfile:
     pass
 
 
-class AbstractEllNFWGeneralized(MassProfile, DarkProfile, MassProfileMGE):
+class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
     epsrel = 1.49e-5
 
     def __init__(

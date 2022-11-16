@@ -10,7 +10,7 @@ def test__duffy__mass_and_concentration_consistent_with_normal_truncated_nfw():
 
     cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
-    truncated_nfw_mass = ag.mp.SphNFWTruncatedMCRDuffy(
+    truncated_nfw_mass = ag.mp.NFWTruncatedMCRDuffySph(
         centre=(1.0, 2.0),
         mass_at_200=1.0e9,
         redshift_object=0.6,
@@ -24,7 +24,7 @@ def test__duffy__mass_and_concentration_consistent_with_normal_truncated_nfw():
         redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
     )
 
-    truncated_nfw_kappa_s = ag.mp.SphNFWTruncated(
+    truncated_nfw_kappa_s = ag.mp.NFWTruncatedSph(
         centre=(1.0, 2.0),
         kappa_s=truncated_nfw_mass.kappa_s,
         scale_radius=truncated_nfw_mass.scale_radius,
@@ -38,7 +38,7 @@ def test__duffy__mass_and_concentration_consistent_with_normal_truncated_nfw():
         redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
     )
 
-    # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
+    # We uare using the NFWTruncatedSph to check the mass gives a conosistnt kappa_s, given certain radii.
 
     assert mass_at_200_via_kappa_s == mass_at_200_via_mass
     assert concentration_via_kappa_s == concentration_via_mass
@@ -63,7 +63,7 @@ def test__ludlow__mass_and_concentration_consistent_with_normal_truncated_nfw__s
 
     cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
-    truncated_nfw_mass = ag.mp.SphNFWTruncatedMCRLudlow(
+    truncated_nfw_mass = ag.mp.NFWTruncatedMCRLudlowSph(
         centre=(1.0, 2.0),
         mass_at_200=1.0e9,
         redshift_object=0.6,
@@ -77,7 +77,7 @@ def test__ludlow__mass_and_concentration_consistent_with_normal_truncated_nfw__s
         redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
     )
 
-    truncated_nfw_kappa_s = ag.mp.SphNFWTruncated(
+    truncated_nfw_kappa_s = ag.mp.NFWTruncatedSph(
         centre=(1.0, 2.0),
         kappa_s=truncated_nfw_mass.kappa_s,
         scale_radius=truncated_nfw_mass.scale_radius,
@@ -91,7 +91,7 @@ def test__ludlow__mass_and_concentration_consistent_with_normal_truncated_nfw__s
         redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
     )
 
-    # We uare using the SphNFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
+    # We uare using the NFWTruncatedSph to check the mass gives a conosistnt kappa_s, given certain radii.
 
     assert mass_at_200_via_kappa_s == mass_at_200_via_mass
     assert concentration_via_kappa_s == concentration_via_mass

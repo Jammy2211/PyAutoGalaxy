@@ -1,12 +1,12 @@
 from typing import Tuple
 
-from autogalaxy.profiles.mass.dark.nfw import SphNFW
-from autogalaxy.profiles.mass.dark.nfw import EllNFW
+from autogalaxy.profiles.mass.dark.nfw import NFWSph
+from autogalaxy.profiles.mass.dark.nfw import NFW
 
 from autogalaxy.profiles.mass.dark import mcr_util
 
 
-class SphNFWMCRScatterLudlow(SphNFW):
+class NFWMCRScatterLudlowSph(NFWSph):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -35,7 +35,7 @@ class SphNFWMCRScatterLudlow(SphNFW):
         super().__init__(centre=centre, kappa_s=kappa_s, scale_radius=scale_radius)
 
 
-class EllNFWMCRScatterLudlow(EllNFW):
+class NFWMCRScatterLudlow(NFW):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

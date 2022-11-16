@@ -177,7 +177,7 @@
         },
         "mass_profile_list": {
             "total_mass_profiles": {
-                "EllIsothermalCored": {
+                "IsothermalCored": {
                     "core_radius": {
                         "type": "Uniform",
                         "lower_limit": 0.0,

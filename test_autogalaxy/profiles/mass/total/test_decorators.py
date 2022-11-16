@@ -14,7 +14,7 @@ def test__mass_quantity_functions__output_is_autoarray_structure():
     assert isinstance(deflections, ag.VectorYX2D)
     assert deflections.shape_native == (2, 2)
 
-    cored_power_law = ag.mp.EllPowerLawBroken()
+    cored_power_law = ag.mp.PowerLawBroken()
 
     convergence = cored_power_law.convergence_2d_from(grid=grid)
     assert convergence.shape_native == (2, 2)
@@ -22,7 +22,7 @@ def test__mass_quantity_functions__output_is_autoarray_structure():
     deflections = cored_power_law.deflections_yx_2d_from(grid=grid)
     assert deflections.shape_native == (2, 2)
 
-    cored_power_law = ag.mp.SphPowerLawBroken()
+    cored_power_law = ag.mp.PowerLawBrokenSph()
 
     convergence = cored_power_law.convergence_2d_from(grid=grid)
     assert convergence.shape_native == (2, 2)
@@ -31,19 +31,7 @@ def test__mass_quantity_functions__output_is_autoarray_structure():
     assert isinstance(deflections, ag.VectorYX2D)
     assert deflections.shape_native == (2, 2)
 
-    cored_power_law = ag.mp.EllPowerLawCored()
-
-    convergence = cored_power_law.convergence_2d_from(grid=grid)
-    assert convergence.shape_native == (2, 2)
-
-    potential = cored_power_law.potential_2d_from(grid=grid)
-    assert potential.shape_native == (2, 2)
-
-    deflections = cored_power_law.deflections_yx_2d_from(grid=grid)
-    assert isinstance(deflections, ag.VectorYX2D)
-    assert deflections.shape_native == (2, 2)
-
-    cored_power_law = ag.mp.SphPowerLawCored()
+    cored_power_law = ag.mp.PowerLawCored()
 
     convergence = cored_power_law.convergence_2d_from(grid=grid)
     assert convergence.shape_native == (2, 2)
@@ -55,7 +43,19 @@ def test__mass_quantity_functions__output_is_autoarray_structure():
     assert isinstance(deflections, ag.VectorYX2D)
     assert deflections.shape_native == (2, 2)
 
-    power_law = ag.mp.EllPowerLaw()
+    cored_power_law = ag.mp.PowerLawCoredSph()
+
+    convergence = cored_power_law.convergence_2d_from(grid=grid)
+    assert convergence.shape_native == (2, 2)
+
+    potential = cored_power_law.potential_2d_from(grid=grid)
+    assert potential.shape_native == (2, 2)
+
+    deflections = cored_power_law.deflections_yx_2d_from(grid=grid)
+    assert isinstance(deflections, ag.VectorYX2D)
+    assert deflections.shape_native == (2, 2)
+
+    power_law = ag.mp.PowerLaw()
 
     convergence = power_law.convergence_2d_from(grid=grid)
     assert convergence.shape_native == (2, 2)
@@ -67,7 +67,7 @@ def test__mass_quantity_functions__output_is_autoarray_structure():
     assert isinstance(deflections, ag.VectorYX2D)
     assert deflections.shape_native == (2, 2)
 
-    power_law = ag.mp.SphPowerLaw()
+    power_law = ag.mp.PowerLawSph()
 
     convergence = power_law.convergence_2d_from(grid=grid)
     assert convergence.shape_native == (2, 2)
@@ -79,7 +79,7 @@ def test__mass_quantity_functions__output_is_autoarray_structure():
     assert isinstance(deflections, ag.VectorYX2D)
     assert deflections.shape_native == (2, 2)
 
-    cored_isothermal = ag.mp.EllIsothermalCored()
+    cored_isothermal = ag.mp.IsothermalCored()
 
     convergence = cored_isothermal.convergence_2d_from(grid=grid)
     assert convergence.shape_native == (2, 2)
@@ -91,7 +91,7 @@ def test__mass_quantity_functions__output_is_autoarray_structure():
     assert isinstance(deflections, ag.VectorYX2D)
     assert deflections.shape_native == (2, 2)
 
-    cored_isothermal = ag.mp.SphIsothermalCored()
+    cored_isothermal = ag.mp.IsothermalCoredSph()
 
     convergence = cored_isothermal.convergence_2d_from(grid=grid)
     assert convergence.shape_native == (2, 2)
@@ -103,7 +103,7 @@ def test__mass_quantity_functions__output_is_autoarray_structure():
     assert isinstance(deflections, ag.VectorYX2D)
     assert deflections.shape_native == (2, 2)
 
-    isothermal = ag.mp.EllIsothermal()
+    isothermal = ag.mp.Isothermal()
 
     convergence = isothermal.convergence_2d_from(grid=grid)
     assert convergence.shape_native == (2, 2)
@@ -115,7 +115,7 @@ def test__mass_quantity_functions__output_is_autoarray_structure():
     assert isinstance(deflections, ag.VectorYX2D)
     assert deflections.shape_native == (2, 2)
 
-    isothermal = ag.mp.SphIsothermal()
+    isothermal = ag.mp.IsothermalSph()
 
     convergence = isothermal.convergence_2d_from(grid=grid)
     assert convergence.shape_native == (2, 2)

@@ -1,6 +1,6 @@
-from .isothermal import EllIsothermal, SphIsothermal
-from .isothermal_cored import EllIsothermalCored, SphIsothermalCored
+from .isothermal import Isothermal, IsothermalSph
+from .isothermal_cored import IsothermalCored, IsothermalCoredSph
 from .point import PointMass
-from .power_law import EllPowerLaw, SphPowerLaw
-from .power_law_broken import EllPowerLawBroken, SphPowerLawBroken
-from .power_law_cored import EllPowerLawCored, SphPowerLawCored
+from .power_law import PowerLaw, PowerLawSph
+from .power_law_broken import PowerLawBroken, PowerLawBrokenSph
+from .power_law_cored import PowerLawCored, PowerLawCoredSph

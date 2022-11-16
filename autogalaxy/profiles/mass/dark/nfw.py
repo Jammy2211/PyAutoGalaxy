@@ -4,11 +4,11 @@ from typing import Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles.mass.dark.gnfw import EllNFWGeneralized
+from autogalaxy.profiles.mass.dark.gnfw import gNFW
 from autogalaxy.profiles.mass.abstract.cse import MassProfileCSE
 
 
-class EllNFW(EllNFWGeneralized, MassProfileCSE):
+class NFW(gNFW, MassProfileCSE):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -260,7 +260,7 @@ class EllNFW(EllNFWGeneralized, MassProfileCSE):
             return 1
 
 
-class SphNFW(EllNFW):
+class NFWSph(NFW):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

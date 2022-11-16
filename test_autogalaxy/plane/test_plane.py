@@ -91,9 +91,9 @@ def test__cls_list_from():
 
     assert plane.cls_list_from(cls=ag.mp.MassProfile) == []
 
-    sis_0 = ag.mp.SphIsothermal(einstein_radius=1.0)
-    sis_1 = ag.mp.SphIsothermal(einstein_radius=2.0)
-    sis_2 = ag.mp.SphIsothermal(einstein_radius=3.0)
+    sis_0 = ag.mp.IsothermalSph(einstein_radius=1.0)
+    sis_1 = ag.mp.IsothermalSph(einstein_radius=2.0)
+    sis_2 = ag.mp.IsothermalSph(einstein_radius=3.0)
 
     plane = ag.Plane(
         galaxies=[ag.Galaxy(redshift=0.5, mass_profile=sis_0)], redshift=None
@@ -306,7 +306,7 @@ def test__galaxy_image_2d_dict_from(sub_grid_2d_7x7):
     g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.Sersic(intensity=1.0))
     g1 = ag.Galaxy(
         redshift=0.5,
-        mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
+        mass_profile=ag.mp.IsothermalSph(einstein_radius=1.0),
         light_profile=ag.lp.Sersic(intensity=2.0),
     )
 
@@ -376,8 +376,8 @@ def test__light_profile_snr__signal_to_noise_via_simulator_correct():
 
 def test__convergence_2d_from(sub_grid_2d_7x7):
 
-    g0 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0))
-    g1 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=2.0))
+    g0 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.IsothermalSph(einstein_radius=1.0))
+    g1 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.IsothermalSph(einstein_radius=2.0))
 
     g0_convergence = g0.convergence_2d_from(grid=sub_grid_2d_7x7)
 
@@ -408,8 +408,8 @@ def test__convergence_2d_from(sub_grid_2d_7x7):
 
 def test__potential_2d_from(sub_grid_2d_7x7):
 
-    g0 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0))
-    g1 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=2.0))
+    g0 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.IsothermalSph(einstein_radius=1.0))
+    g1 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.IsothermalSph(einstein_radius=2.0))
 
     g0_potential = g0.potential_2d_from(grid=sub_grid_2d_7x7)
 
@@ -442,8 +442,8 @@ def test__deflections_yx_2d_from(sub_grid_2d_7x7):
     # Overwrite one value so intensity in each pixel is different
     sub_grid_2d_7x7[5] = np.array([2.0, 2.0])
 
-    g0 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0))
-    g1 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=2.0))
+    g0 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.IsothermalSph(einstein_radius=1.0))
+    g1 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.IsothermalSph(einstein_radius=2.0))
 
     g0_deflections = g0.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
 
@@ -766,8 +766,8 @@ def test__traced_grid_from(sub_grid_2d_7x7, sub_grid_2d_7x7_simple, gal_x1_mp):
     # Overwrite one value so intensity in each pixel is different
     sub_grid_2d_7x7[5] = np.array([2.0, 2.0])
 
-    g0 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0))
-    g1 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.SphIsothermal(einstein_radius=2.0))
+    g0 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.IsothermalSph(einstein_radius=1.0))
+    g1 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.IsothermalSph(einstein_radius=2.0))
 
     g0_deflections = g0.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
 
@@ -995,7 +995,7 @@ def test__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
     grid = ag.Grid2DIterate.from_mask(mask=mask, fractional_accuracy=1.0, sub_steps=[2])
 
     galaxy = ag.Galaxy(
-        redshift=0.5, mass=ag.mp.EllIsothermal(centre=(0.08, 0.08), einstein_radius=1.0)
+        redshift=0.5, mass=ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)
     )
 
     plane = ag.Plane(galaxies=[galaxy], redshift=None)
@@ -1013,7 +1013,7 @@ def test__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
     )
 
     galaxy = ag.Galaxy(
-        redshift=0.5, mass=ag.mp.EllIsothermal(centre=(0.08, 0.08), einstein_radius=1.0)
+        redshift=0.5, mass=ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)
     )
 
     plane = ag.Plane(galaxies=[galaxy], redshift=None)
@@ -1041,8 +1041,8 @@ def test__centre_of_profile_in_right_place():
 
     galaxy = ag.Galaxy(
         redshift=0.5,
-        mass=ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
-        mass_0=ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+        mass=ag.mp.Isothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+        mass_0=ag.mp.Isothermal(centre=(2.0, 1.0), einstein_radius=1.0),
     )
 
     plane = ag.Plane(galaxies=[galaxy])
@@ -1065,8 +1065,8 @@ def test__centre_of_profile_in_right_place():
 
     galaxy = ag.Galaxy(
         redshift=0.5,
-        mass=ag.mp.SphIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
-        mass_0=ag.mp.SphIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+        mass=ag.mp.IsothermalSph(centre=(2.0, 1.0), einstein_radius=1.0),
+        mass_0=ag.mp.IsothermalSph(centre=(2.0, 1.0), einstein_radius=1.0),
     )
 
     plane = ag.Plane(galaxies=[galaxy])
@@ -1096,8 +1096,8 @@ def test__centre_of_profile_in_right_place():
 
     galaxy = ag.Galaxy(
         redshift=0.5,
-        mass=ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
-        mass_0=ag.mp.EllIsothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+        mass=ag.mp.Isothermal(centre=(2.0, 1.0), einstein_radius=1.0),
+        mass_0=ag.mp.Isothermal(centre=(2.0, 1.0), einstein_radius=1.0),
     )
 
     plane = ag.Plane(galaxies=[galaxy])
@@ -1119,7 +1119,7 @@ def test__centre_of_profile_in_right_place():
     assert deflections.native[1, 3, 1] <= 0
 
     galaxy = ag.Galaxy(
-        redshift=0.5, mass=ag.mp.SphIsothermal(centre=(2.0, 1.0), einstein_radius=1.0)
+        redshift=0.5, mass=ag.mp.IsothermalSph(centre=(2.0, 1.0), einstein_radius=1.0)
     )
 
     plane = ag.Plane(galaxies=[galaxy])

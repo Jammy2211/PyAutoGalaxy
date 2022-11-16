@@ -269,36 +269,36 @@ Mass Profiles
    :toctree: generated/
 
     PointMass
-    EllPowerLawCored
-    SphPowerLawCored
-    EllPowerLawBroken
-    SphPowerLawBroken
-    EllIsothermalCored
-    SphIsothermalCored
-    EllPowerLaw
-    SphPowerLaw
-    EllIsothermal
-    SphIsothermal
+    PowerLawCored
+    PowerLawCoredSph
+    PowerLawBroken
+    PowerLawBrokenSph
+    IsothermalCored
+    IsothermalCoredSph
+    PowerLaw
+    PowerLawSph
+    Isothermal
+    IsothermalSph
 
 **Dark Mass Profiles:**
 
 .. autosummary::
    :toctree: generated/
 
-    EllNFWGeneralized
-    SphNFWGeneralized
-    SphNFWTruncated
-    SphNFWTruncatedMCRDuffy
-    SphNFWTruncatedMCRLudlow
-    SphNFWTruncatedMCRScatterLudlow
-    EllNFW
-    SphNFW
-    SphNFWMCRDuffy
-    SphNFWMCRLudlow
-    EllNFWMCRScatterLudlow
-    SphNFWMCRScatterLudlow
-    EllNFWMCRLudlow
-    EllNFWGeneralizedMCRLudlow
+    gNFW
+    gNFWSph
+    NFWTruncatedSph
+    NFWTruncatedMCRDuffySph
+    NFWTruncatedMCRLudlowSph
+    NFWTruncatedMCRScatterLudlowSph
+    NFW
+    NFWSph
+    NFWMCRDuffySph
+    NFWMCRLudlowSph
+    NFWMCRScatterLudlow
+    NFWMCRScatterLudlowSph
+    NFWMCRLudlow
+    gNFWMCRLudlow
 
 **Stellar Mass Profiles:**
 

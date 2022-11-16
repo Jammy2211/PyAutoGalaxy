@@ -7,7 +7,7 @@ from typing import Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles.mass.dark.abstract import AbstractEllNFWGeneralized
+from autogalaxy.profiles.mass.dark.abstract import AbstractgNFW
 
 
 def jit_integrand(integrand_function):
@@ -83,7 +83,7 @@ def jit_integrand(integrand_function):
     return LowLevelCallable(cf(wrapped).ctypes)
 
 
-class EllNFWGeneralized(AbstractEllNFWGeneralized):
+class gNFW(AbstractgNFW):
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
 
         return self.deflections_2d_via_mge_from(grid=grid)
@@ -148,7 +148,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
                             tabulate_bins,
                             surface_density_integral,
                         ),
-                        epsrel=EllNFWGeneralized.epsrel,
+                        epsrel=gNFW.epsrel,
                     )[0]
                 )
 
@@ -172,7 +172,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
                 a=0.0,
                 b=1.0,
                 args=(eta, self.scale_radius, self.inner_slope),
-                epsrel=EllNFWGeneralized.epsrel,
+                epsrel=gNFW.epsrel,
             )[0]
 
             surface_density_integral[i] = (
@@ -222,7 +222,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
                 a=0.0,
                 b=1.0,
                 args=grid_radius[index],
-                epsrel=EllNFWGeneralized.epsrel,
+                epsrel=gNFW.epsrel,
             )[0]
 
             grid_radius[index] = (
@@ -279,7 +279,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
                 a=0.0,
                 b=1.0,
                 args=(eta, self.scale_radius, self.inner_slope),
-                epsrel=EllNFWGeneralized.epsrel,
+                epsrel=gNFW.epsrel,
             )[0]
 
             deflection_integral[i] = (
@@ -310,7 +310,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
                     tabulate_bins,
                     deflection_integral,
                 ),
-                epsrel=EllNFWGeneralized.epsrel,
+                epsrel=gNFW.epsrel,
             )[0]
 
         return potential_grid
@@ -337,7 +337,7 @@ class EllNFWGeneralized(AbstractEllNFWGeneralized):
         return eta_u * (angle / u) / (1.0 - (1.0 - axis_ratio**2) * u) ** 0.5
 
 
-class SphNFWGeneralized(EllNFWGeneralized):
+class gNFWSph(gNFW):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

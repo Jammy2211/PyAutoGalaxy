@@ -75,7 +75,7 @@ def test__uses_hyper_fit_correctly(masked_imaging_7x7):
 
     galaxies = af.ModelInstance()
     galaxies.galaxy = ag.Galaxy(
-        redshift=0.5, light=ag.lp.Sersic(intensity=1.0), mass=ag.mp.SphIsothermal
+        redshift=0.5, light=ag.lp.Sersic(intensity=1.0), mass=ag.mp.IsothermalSph
     )
     galaxies.source = ag.Galaxy(redshift=1.0, light=ag.lp.Sersic())
 

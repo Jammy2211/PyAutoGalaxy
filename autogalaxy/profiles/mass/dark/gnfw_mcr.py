@@ -1,11 +1,11 @@
 from typing import Tuple
 
-from autogalaxy.profiles.mass.dark.gnfw import EllNFWGeneralized
+from autogalaxy.profiles.mass.dark.gnfw import gNFW
 
 from autogalaxy.profiles.mass.dark import mcr_util
 
 
-class EllNFWGeneralizedMCRLudlow(EllNFWGeneralized):
+class gNFWMCRLudlow(gNFW):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

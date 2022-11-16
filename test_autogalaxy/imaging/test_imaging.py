@@ -109,7 +109,7 @@ def test__simulator__simulate_imaging_from_galaxy__source_galaxy__compare_to_ima
 
     galaxy_0 = ag.Galaxy(
         redshift=0.5,
-        mass=ag.mp.EllIsothermal(
+        mass=ag.mp.Isothermal(
             centre=(0.0, 0.0), einstein_radius=1.6, elliptical_comps=(0.17647, 0.0)
         ),
     )

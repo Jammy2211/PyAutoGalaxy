@@ -1,8 +1,8 @@
-from .gnfw import EllNFWGeneralized, SphNFWGeneralized
-from .gnfw_mcr import EllNFWGeneralizedMCRLudlow
-from .nfw import EllNFW, SphNFW
-from .nfw_mcr import SphNFWMCRLudlow, SphNFWMCRDuffy, EllNFWMCRLudlow
-from .nfw_mcr_scatter import EllNFWMCRScatterLudlow, SphNFWMCRScatterLudlow
-from .nfw_truncated import SphNFWTruncated
-from .nfw_truncated_mcr import SphNFWTruncatedMCRLudlow, SphNFWTruncatedMCRDuffy
-from .nfw_truncated_mcr_scatter import SphNFWTruncatedMCRScatterLudlow
+from .gnfw import gNFW, gNFWSph
+from .gnfw_mcr import gNFWMCRLudlow
+from .nfw import NFW, NFWSph
+from .nfw_mcr import NFWMCRLudlowSph, NFWMCRDuffySph, NFWMCRLudlow
+from .nfw_mcr_scatter import NFWMCRScatterLudlow, NFWMCRScatterLudlowSph
+from .nfw_truncated import NFWTruncatedSph
+from .nfw_truncated_mcr import NFWTruncatedMCRLudlowSph, NFWTruncatedMCRDuffySph
+from .nfw_truncated_mcr_scatter import NFWTruncatedMCRScatterLudlowSph

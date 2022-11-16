@@ -8,7 +8,7 @@ import autoarray as aa
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
-class EllPowerLawCored(MassProfile):
+class PowerLawCored(MassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -197,7 +197,7 @@ class EllPowerLawCored(MassProfile):
         return mass_profile
 
 
-class SphPowerLawCored(EllPowerLawCored):
+class PowerLawCoredSph(PowerLawCored):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

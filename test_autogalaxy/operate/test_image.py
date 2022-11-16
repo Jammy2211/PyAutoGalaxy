@@ -357,7 +357,7 @@ def test__galaxy_visibilities_dict_from(sub_grid_2d_7x7, transformer_7x7_7):
     g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.Sersic(intensity=1.0))
     g1 = ag.Galaxy(
         redshift=0.5,
-        mass_profile=ag.mp.SphIsothermal(einstein_radius=1.0),
+        mass_profile=ag.mp.IsothermalSph(einstein_radius=1.0),
         light_profile=ag.lp.Sersic(intensity=2.0),
     )
     g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.Sersic(intensity=3.0))

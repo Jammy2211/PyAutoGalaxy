@@ -299,7 +299,7 @@ class EllProfile(SphProfile):
         grid
             The (y, x) coordinates in the original reference frame of the grid.
         """
-        if self.__class__.__name__.startswith("Sph"):
+        if self.__class__.__name__.endswith("Sph"):
             return super().transform_grid_to_reference_frame(
                 grid=Grid2DTransformedNumpy(grid=grid)
             )

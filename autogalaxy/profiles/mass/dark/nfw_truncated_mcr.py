@@ -1,14 +1,14 @@
 from typing import Tuple
 
-from autogalaxy.profiles.mass.dark.nfw_truncated import SphNFWTruncated
+from autogalaxy.profiles.mass.dark.nfw_truncated import NFWTruncatedSph
 from autogalaxy.profiles.mass.dark.nfw_truncated_mcr_scatter import (
-    SphNFWTruncatedMCRScatterLudlow,
+    NFWTruncatedMCRScatterLudlowSph,
 )
 
 from autogalaxy.profiles.mass.dark import mcr_util
 
 
-class SphNFWTruncatedMCRDuffy(SphNFWTruncated):
+class NFWTruncatedMCRDuffySph(NFWTruncatedSph):
     """
     This function only applies for the lens configuration as follows:
     Cosmology: FlatLamdaCDM
@@ -51,7 +51,7 @@ class SphNFWTruncatedMCRDuffy(SphNFWTruncated):
         )
 
 
-class SphNFWTruncatedMCRLudlow(SphNFWTruncatedMCRScatterLudlow):
+class NFWTruncatedMCRLudlowSph(NFWTruncatedMCRScatterLudlowSph):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

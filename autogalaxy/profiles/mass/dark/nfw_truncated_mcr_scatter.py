@@ -1,11 +1,11 @@
 from typing import Tuple
 
-from autogalaxy.profiles.mass.dark.nfw_truncated import SphNFWTruncated
+from autogalaxy.profiles.mass.dark.nfw_truncated import NFWTruncatedSph
 
 from autogalaxy.profiles.mass.dark import mcr_util
 
 
-class SphNFWTruncatedMCRScatterLudlow(SphNFWTruncated):
+class NFWTruncatedMCRScatterLudlowSph(NFWTruncatedSph):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

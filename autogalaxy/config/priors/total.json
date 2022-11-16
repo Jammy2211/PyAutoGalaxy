@@ -44,7 +44,7 @@
             }
         }
     },
-    "isothermal.EllIsothermal": {
+    "isothermal.Isothermal": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -119,7 +119,7 @@
             }
         }
     },
-    "isothermal.SphIsothermal": {
+    "isothermal.IsothermalSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -164,7 +164,7 @@
             }
         }
     },
-    "power_law.EllPowerLaw": {
+    "power_law.PowerLaw": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -252,7 +252,7 @@
             }
         }
     },
-    "power_law.SphPowerLaw": {
+    "power_law.PowerLawSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -310,7 +310,7 @@
             }
         }
     },
-    "power_law_broken.EllPowerLawBroken": {
+    "power_law_broken.PowerLawBroken": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -424,7 +424,7 @@
             }
         }
     },
-    "power_law_broken.SphPowerLawBroken": {
+    "power_law_broken.PowerLawBrokenSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -508,7 +508,7 @@
             }
         }
     },
-    "isothermal_cored.SphIsothermalCored": {
+    "isothermal_cored.IsothermalCoredSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -566,7 +566,7 @@
             }
         }
     },
-    "isothermal_cored.EllIsothermalCored": {
+    "isothermal_cored.IsothermalCored": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -654,7 +654,7 @@
             }
         }
     },
-    "power_law_cored.SphPowerLawCored": {
+    "power_law_cored.PowerLawCoredSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -725,7 +725,7 @@
             }
         }
     },
-    "power_law_cored.EllPowerLawCored": {
+    "power_law_cored.PowerLawCored": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,

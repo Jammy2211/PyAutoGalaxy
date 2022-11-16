@@ -8,7 +8,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 def test__deflections_yx_2d_from():
 
-    truncated_nfw = ag.mp.SphNFWTruncated(
+    truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0, truncation_radius=2.0
     )
 
@@ -35,7 +35,7 @@ def test__deflections_yx_2d_from():
         (1.0 / np.sqrt(2)) * factor * 0.3125838, 1.0e-4
     )
 
-    truncated_nfw = ag.mp.SphNFWTruncated(
+    truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=2.0, scale_radius=1.0, truncation_radius=2.0
     )
 
@@ -45,7 +45,7 @@ def test__deflections_yx_2d_from():
     assert deflections[0, 0] == pytest.approx(factor * 0.38209715, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.0, 1.0e-4)
 
-    truncated_nfw = ag.mp.SphNFWTruncated(
+    truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0, truncation_radius=2.0
     )
 
@@ -59,7 +59,7 @@ def test__deflections_yx_2d_from():
 
 def test__convergence_2d_from():
 
-    truncated_nfw = ag.mp.SphNFWTruncated(
+    truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0, truncation_radius=2.0
     )
 
@@ -71,7 +71,7 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(2.0 * 0.10549515, 1.0e-4)
 
-    truncated_nfw = ag.mp.SphNFWTruncated(
+    truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=3.0, scale_radius=1.0, truncation_radius=2.0
     )
 
@@ -79,7 +79,7 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(6.0 * 0.046409642, 1.0e-4)
 
-    truncated_nfw = ag.mp.SphNFWTruncated(
+    truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=3.0, scale_radius=5.0, truncation_radius=2.0
     )
 
@@ -90,7 +90,7 @@ def test__convergence_2d_from():
 
 def test__mass_at_truncation_radius():
 
-    truncated_nfw = ag.mp.SphNFWTruncated(
+    truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0, truncation_radius=1.0
     )
 
@@ -107,7 +107,7 @@ def test__mass_at_truncation_radius():
 
     assert mass_at_truncation_radius == pytest.approx(0.00009792581, 1.0e-5)
 
-    # truncated_nfw = ag.mp.SphNFWTruncated(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0,
+    # truncated_nfw = ag.mp.NFWTruncatedSph(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0,
     #                                          truncation_radius=1.0)
     #
     # cosmology = ag.m.MockCosmology(arcsec_per_kpc=1.0, kpc_per_arcsec=1.0, critical_surface_density=2.0,
@@ -118,7 +118,7 @@ def test__mass_at_truncation_radius():
     #
     # assert mass_at_truncation_radius == pytest.approx(0.00008789978, 1.0e-5)
     #
-    # truncated_nfw = ag.mp.SphNFWTruncated(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=2.0,
+    # truncated_nfw = ag.mp.NFWTruncatedSph(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=2.0,
     #                                          truncation_radius=1.0)
     #
     # mass_at_truncation_radius = truncated_nfw.mass_at_truncation_radius(redshift_galaxy=0.5, redshift_source=1.0,
@@ -126,7 +126,7 @@ def test__mass_at_truncation_radius():
     #
     # assert mass_at_truncation_radius == pytest.approx(0.0000418378, 1.0e-5)
     #
-    # truncated_nfw = ag.mp.SphNFWTruncated(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=8.0,
+    # truncated_nfw = ag.mp.NFWTruncatedSph(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=8.0,
     #                                          truncation_radius=4.0)
     #
     # mass_at_truncation_radius = truncated_nfw.mass_at_truncation_radius(redshift_galaxy=0.5, redshift_source=1.0,
@@ -134,7 +134,7 @@ def test__mass_at_truncation_radius():
     #
     # assert mass_at_truncation_radius == pytest.approx(0.0000421512, 1.0e-4)
     #
-    # truncated_nfw = ag.mp.SphNFWTruncated(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=8.0,
+    # truncated_nfw = ag.mp.NFWTruncatedSph(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=8.0,
     #                                          truncation_radius=4.0)
     #
     # mass_at_truncation_radius = truncated_nfw.mass_at_truncation_radius(redshift_galaxy=0.5, redshift_source=1.0,
@@ -145,11 +145,11 @@ def test__mass_at_truncation_radius():
 
 def test__compare_nfw_and_truncated_nfw_with_large_truncation_radius():
 
-    truncated_nfw = ag.mp.SphNFWTruncated(
+    truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0, truncation_radius=50000.0
     )
 
-    nfw = ag.mp.SphNFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0)
+    nfw = ag.mp.NFWSph(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0)
 
     truncated_nfw_convergence = truncated_nfw.convergence_2d_from(
         grid=np.array([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])

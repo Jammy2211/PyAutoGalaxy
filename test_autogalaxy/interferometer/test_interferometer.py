@@ -11,7 +11,7 @@ class TestSimulatorInterferometer:
         galaxy_0 = ag.Galaxy(
             redshift=0.5,
             light=ag.lp.Sersic(intensity=1.0),
-            mass=ag.mp.EllIsothermal(einstein_radius=1.6),
+            mass=ag.mp.Isothermal(einstein_radius=1.6),
         )
 
         galaxy_1 = ag.Galaxy(redshift=1.0, light=ag.lp.Sersic(intensity=0.3))
@@ -45,7 +45,7 @@ class TestSimulatorInterferometer:
 
         galaxy_0 = ag.Galaxy(
             redshift=0.5,
-            mass=ag.mp.EllIsothermal(
+            mass=ag.mp.Isothermal(
                 centre=(0.0, 0.0), einstein_radius=1.6, elliptical_comps=(0.17647, 0.0)
             ),
         )
