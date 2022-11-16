@@ -1,5 +1,5 @@
 {
-    "EllGaussian": {
+    "gaussian.EllGaussian": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -87,7 +87,7 @@
             }
         }
     },
-    "EllMoffat": {
+    "moffat.EllMoffat": {
     "centre_0": {
         "type": "Gaussian",
         "mean": 0.0,
