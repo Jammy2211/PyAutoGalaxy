@@ -5,7 +5,7 @@ import autoarray as aa
 import autoarray.plot as aplt
 
 
-from autogalaxy.profiles.light_profiles.base.abstract import LightProfile
+from autogalaxy.profiles.light.base.abstract import LightProfile
 from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_plot.one_d import MatPlot1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
@@ -63,7 +63,7 @@ class LightProfilePlotter(Plotter):
             Specifies which attributes of the `LightProfile` are extracted and plotted as visuals for 2D plots.
         """
 
-        from autogalaxy.profiles.light_profiles.linear import (
+        from autogalaxy.profiles.light.linear import (
             LightProfileLinear,
         )
 

@@ -80,19 +80,19 @@ from .plane.to_inversion import PlaneToInversion
 from .profiles.geometry_profiles import EllProfile
 from .profiles import (
     point_sources as ps,
-    mass_profiles as mp,
+    mass as mp,
     light_and_mass_profiles as lmp,
     scaling_relations as sr,
 )
-from .profiles.light_profiles import base as lp
-from .profiles.light_profiles import basis as lp_basis
-from .profiles.light_profiles.linear import LightProfileLinearObjFuncList
-from .profiles.light_profiles import linear as lp_linear
-from .profiles.light_profiles import operated as lp_operated
-from .profiles.light_profiles import (
+from .profiles.light import base as lp
+from .profiles.light import basis as lp_basis
+from .profiles.light.linear import LightProfileLinearObjFuncList
+from .profiles.light import linear as lp_linear
+from .profiles.light import operated as lp_operated
+from .profiles.light import (
     linear_operated as lp_linear_operated,
 )
-from .profiles.light_profiles import snr as lp_snr
+from .profiles.light import snr as lp_snr
 from . import convert
 from . import mock as m  # noqa
 from .util.shear_field import ShearYX2D

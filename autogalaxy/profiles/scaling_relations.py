@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from autogalaxy.profiles import mass_profiles as mp
+from autogalaxy.profiles import mass as mp
 
 
 class MassLightRelation:

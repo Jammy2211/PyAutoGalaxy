@@ -6,8 +6,8 @@ import autoarray.plot as aplt
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plot.include.one_d import Include1D
 from autogalaxy.plot.visuals.one_d import Visuals1D
-from autogalaxy.profiles.light_profiles.base.abstract import LightProfile
-from autogalaxy.profiles.mass_profiles.abstract.abstract import MassProfile
+from autogalaxy.profiles.light.base.abstract import LightProfile
+from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 from autogalaxy.util import error_util
 

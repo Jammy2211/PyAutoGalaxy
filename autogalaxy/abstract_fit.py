@@ -3,8 +3,8 @@ from typing import Dict, Optional
 
 import autoarray as aa
 
-from autogalaxy.profiles.light_profiles.base.abstract import LightProfile
-from autogalaxy.profiles.light_profiles.linear import LightProfileLinear
+from autogalaxy.profiles.light.base.abstract import LightProfile
+from autogalaxy.profiles.light.linear import LightProfileLinear
 
 
 class AbstractFitInversion:

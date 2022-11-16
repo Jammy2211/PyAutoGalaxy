@@ -11,9 +11,9 @@ from autogalaxy import exc
 from autogalaxy.operate.deflections import OperateDeflections
 from autogalaxy.operate.image import OperateImageList
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
-from autogalaxy.profiles.light_profiles.base.abstract import LightProfile
-from autogalaxy.profiles.light_profiles.linear import LightProfileLinear
-from autogalaxy.profiles.mass_profiles.abstract.abstract import MassProfile
+from autogalaxy.profiles.light.base.abstract import LightProfile
+from autogalaxy.profiles.light.linear import LightProfileLinear
+from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
 class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):

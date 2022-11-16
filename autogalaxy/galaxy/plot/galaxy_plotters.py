@@ -13,8 +13,8 @@ from autogalaxy.plot.include.one_d import Include1D
 from autogalaxy.plot.include.two_d import Include2D
 from autogalaxy.plot.mass_plotter import MassPlotter
 
-from autogalaxy.profiles.light_profiles.base.abstract import LightProfile
-from autogalaxy.profiles.mass_profiles.abstract.abstract import MassProfile
+from autogalaxy.profiles.light.base.abstract import LightProfile
+from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
 from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePDFPlotter
@@ -70,7 +70,7 @@ class GalaxyPlotter(Plotter):
             Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 2D plots.
         """
 
-        from autogalaxy.profiles.light_profiles.linear import (
+        from autogalaxy.profiles.light.linear import (
             LightProfileLinear,
         )
 

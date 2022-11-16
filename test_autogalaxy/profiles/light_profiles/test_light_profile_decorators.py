@@ -5,7 +5,7 @@ from typing import Optional
 import autoarray as aa
 import autogalaxy as ag
 
-from autogalaxy.profiles.light_profiles.decorators import (
+from autogalaxy.profiles.light.decorators import (
     check_operated_only,
 )
 

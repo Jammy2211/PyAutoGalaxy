@@ -1,6 +1,6 @@
 from autogalaxy import exc
-from autogalaxy.profiles.mass_profiles.dark.abstract import DarkProfile
-from autogalaxy.profiles.mass_profiles.stellar.abstract import StellarProfile
+from autogalaxy.profiles.mass.dark.abstract import DarkProfile
+from autogalaxy.profiles.mass.stellar.abstract import StellarProfile
 
 
 class StellarDarkDecomp:

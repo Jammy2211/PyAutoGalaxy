@@ -3,8 +3,8 @@ import pytest
 
 import autogalaxy as ag
 
-from autogalaxy.profiles.light_profiles.linear import LightProfileLinear
-from autogalaxy.profiles.light_profiles.linear import (
+from autogalaxy.profiles.light.linear import LightProfileLinear
+from autogalaxy.profiles.light.linear import (
     LightProfileLinearObjFuncList,
 )
 
