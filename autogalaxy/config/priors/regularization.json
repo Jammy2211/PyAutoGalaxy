@@ -29,7 +29,7 @@
             }
         }
     },
-    "constant_zeorth.ConstantZeroth": {
+    "constant_zeroth.ConstantZeroth": {
         "coefficient_neighbor": {
             "type": "LogUniform",
             "lower_limit": 1e-06,
