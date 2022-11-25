@@ -254,15 +254,23 @@ This gives the following output:
         galaxy
             redshift                               0.5
 
-Below we print the maximum log likelihood model inferred.
+
+This result contains the full posterior information of our non-linear search, including all
+parameter samples, log likelihood values and tools to compute the errors on the lens model.
+
+This is contained in the ``Samples`` object. Below, we show how to print the median PDF parameter estimates, but
+many different results are available and illustrated in the `results package of the workspace <https://github.com/Jammy2211/autogalaxy_workspace/tree/release/notebooks/results>`_.
 
 .. code-block:: python
 
-    print(result.max_log_likelihood_instance.galaxies.galaxy.bulge)
-    print(result.max_log_likelihood_instance.galaxies.galaxy.disk)
+    samples = result.samples
 
-This result contains the full posterior information of our non-linear search, including all
-parameter samples, log likelihood values and tools to compute the errors on the lens model. 
+    median_pdf_instance = samples.median_pdf()
+
+    print("Median PDF Model Instances: \n")
+    print(median_pdf_instance, "\n")
+    print(median_pdf_instance.galaxies.galaxy.bulge)
+    print()
 
 **PyAutoGalaxy** includes many visualization tools for plotting the results of a non-linear search, for example we can
 make a corner plot of the probability density function (PDF):

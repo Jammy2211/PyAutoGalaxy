@@ -10,7 +10,7 @@ from autogalaxy.plane.plane import Plane
 
 
 class Result(af.Result):
-    def __init__(self, samples: af.PDFSamples, model: af.Collection, analysis):
+    def __init__(self, samples: af.SamplesPDF, model: af.Collection, analysis):
         """
         After the non-linear search of a fit to a dataset is complete it creates a `Result` object which includes:
 

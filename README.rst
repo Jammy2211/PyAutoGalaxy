@@ -169,7 +169,7 @@ simple analysis which fits a galaxy's light.
     The results contain information on the fit, for example the maximum likelihood
     model from the Dynesty parameter space search.
     """
-    print(result.samples.max_log_likelihood_instance)
+    print(result.samples.max_log_likelihood())
 
 
 Support
