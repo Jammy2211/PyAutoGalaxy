@@ -4,8 +4,8 @@ import autofit as af
 import autoarray as aa
 
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.profiles.light_profiles.light_profiles import LightProfile
-from autogalaxy.profiles.mass_profiles.mass_profiles import MassProfile
+from autogalaxy.profiles.light.abstract import LightProfile
+from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
 class ClumpModel:
@@ -42,7 +42,7 @@ class ClumpModel:
         mass_cls
             The mass profile given too all clumps; if omitted all clumps have no mass profile.
         einstein_radius_upper_limit
-            The upper limit given to any mass model's `einstein_radius` parameter (e.g. if `SphIsothermal` profiles
+            The upper limit given to any mass model's `einstein_radius` parameter (e.g. if `IsothermalSph` profiles
             are used to model clumps).
         """
         self.redshift = redshift

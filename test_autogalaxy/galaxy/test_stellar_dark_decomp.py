@@ -12,7 +12,7 @@ def test__stellar_mass_angular_within_galaxy__is_sum_of_individual_profiles(
     galaxy = ag.Galaxy(
         redshift=0.5,
         stellar_0=smp_0,
-        non_stellar_profile=ag.mp.EllIsothermal(einstein_radius=1.0),
+        non_stellar_profile=ag.mp.Isothermal(einstein_radius=1.0),
     )
     decomp = ag.StellarDarkDecomp(galaxy=galaxy)
 
@@ -26,7 +26,7 @@ def test__stellar_mass_angular_within_galaxy__is_sum_of_individual_profiles(
         redshift=0.5,
         stellar_0=smp_0,
         stellar_1=smp_1,
-        non_stellar_profile=ag.mp.EllIsothermal(einstein_radius=1.0),
+        non_stellar_profile=ag.mp.Isothermal(einstein_radius=1.0),
     )
     decomp = ag.StellarDarkDecomp(galaxy=galaxy)
 
@@ -89,7 +89,7 @@ def test__dark_mass_within_galaxy__is_sum_of_individual_profiles(dmp_0, dmp_1):
     galaxy = ag.Galaxy(
         redshift=0.5,
         dark_0=dmp_0,
-        non_dark_profile=ag.mp.EllIsothermal(einstein_radius=1.0),
+        non_dark_profile=ag.mp.Isothermal(einstein_radius=1.0),
     )
     decomp = ag.StellarDarkDecomp(galaxy=galaxy)
 
@@ -103,7 +103,7 @@ def test__dark_mass_within_galaxy__is_sum_of_individual_profiles(dmp_0, dmp_1):
         redshift=0.5,
         dark_0=dmp_0,
         dark_1=dmp_1,
-        non_dark_profile=ag.mp.EllIsothermal(einstein_radius=1.0),
+        non_dark_profile=ag.mp.Isothermal(einstein_radius=1.0),
     )
     decomp = ag.StellarDarkDecomp(galaxy=galaxy)
 

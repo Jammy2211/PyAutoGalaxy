@@ -118,7 +118,7 @@ We compose an initial galaxy model as per usual.
 
 .. code-block:: python
 
-    galaxy = af.Model(ag.Galaxy, redshift=0.5, bulge=ag.lp.EllSersic, disk=ag.lp.EllSersic)
+    galaxy = af.Model(ag.Galaxy, redshift=0.5, bulge=ag.lp.Sersic, disk=ag.lp.Sersic)
 
     model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 

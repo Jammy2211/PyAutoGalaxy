@@ -16,10 +16,10 @@ def test__perfect_fit__chi_squared_0():
     )
 
     galaxy_0 = ag.Galaxy(
-        redshift=0.5, light=ag.lp.EllSersic(centre=(0.1, 0.1), intensity=0.1)
+        redshift=0.5, light=ag.lp.Sersic(centre=(0.1, 0.1), intensity=0.1)
     )
     galaxy_1 = ag.Galaxy(
-        redshift=0.5, light=ag.lp.EllExponential(centre=(0.1, 0.1), intensity=0.5)
+        redshift=0.5, light=ag.lp.Exponential(centre=(0.1, 0.1), intensity=0.5)
     )
     plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
@@ -95,8 +95,8 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
 
     galaxy_0 = ag.Galaxy(
         redshift=0.5,
-        bulge=ag.lp.EllSersic(centre=(0.1, 0.1), intensity=0.1),
-        disk=ag.lp.EllSersic(centre=(0.2, 0.2), intensity=0.2),
+        bulge=ag.lp.Sersic(centre=(0.1, 0.1), intensity=0.1),
+        disk=ag.lp.Sersic(centre=(0.2, 0.2), intensity=0.2),
     )
 
     pixelization = ag.Pixelization(
@@ -126,8 +126,8 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
 
     basis = ag.lp_basis.Basis(
         light_profile_list=[
-            ag.lp.EllSersic(centre=(0.1, 0.1), intensity=0.1),
-            ag.lp.EllSersic(centre=(0.2, 0.2), intensity=0.2),
+            ag.lp.Sersic(centre=(0.1, 0.1), intensity=0.1),
+            ag.lp.Sersic(centre=(0.2, 0.2), intensity=0.2),
         ]
     )
 
@@ -154,8 +154,8 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
 
     galaxy = ag.Galaxy(
         redshift=0.5,
-        bulge=ag.lp.EllSersic(intensity=0.1, sersic_index=1.0),
-        disk=ag.lp.EllSersic(intensity=0.2, sersic_index=4.0),
+        bulge=ag.lp.Sersic(intensity=0.1, sersic_index=1.0),
+        disk=ag.lp.Sersic(intensity=0.2, sersic_index=4.0),
     )
 
     plane = ag.Plane(galaxies=[galaxy])
@@ -187,8 +187,8 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
 
     galaxy_linear = ag.Galaxy(
         redshift=0.5,
-        bulge=ag.lp_linear.EllSersic(sersic_index=1.0),
-        disk=ag.lp_linear.EllSersic(sersic_index=4.0),
+        bulge=ag.lp_linear.Sersic(sersic_index=1.0),
+        disk=ag.lp_linear.Sersic(sersic_index=4.0),
     )
 
     plane_linear = ag.Plane(galaxies=[galaxy_linear])

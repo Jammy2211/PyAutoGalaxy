@@ -6,13 +6,13 @@ from autogalaxy.profiles.geometry_profiles import GeometryProfile
 
 @pytest.fixture(name="ell_sersic")
 def make_ell_sersic():
-    return ag.mp.EllSersic()
+    return ag.mp.Sersic()
 
 
 @pytest.fixture(name="ell_sersic_dict")
 def make_ell_sersic_dict():
     return {
-        "type": "autogalaxy.profiles.mass_profiles.stellar_mass_profiles.EllSersic",
+        "type": "autogalaxy.profiles.mass.stellar.sersic.Sersic",
         "centre": (0.0, 0.0),
         "elliptical_comps": (0.0, 0.0),
         "intensity": 0.1,

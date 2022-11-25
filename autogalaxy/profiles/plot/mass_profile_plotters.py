@@ -6,7 +6,7 @@ import autoarray.plot as aplt
 
 from autogalaxy.plot.mass_plotter import MassPlotter
 from autogalaxy.plot.abstract_plotters import Plotter
-from autogalaxy.profiles.mass_profiles import MassProfile
+from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.plot.mat_plot.one_d import MatPlot1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 from autogalaxy.plot.visuals.one_d import Visuals1D

@@ -10,8 +10,8 @@ directory = path.dirname(path.realpath(__file__))
 
 def test__plane_via_instance(masked_imaging_7x7):
 
-    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=0.1))
-    clump = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=0.2))
+    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=0.1))
+    clump = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=0.2))
 
     model = af.Collection(
         galaxies=af.Collection(galaxy=galaxy), clumps=af.Collection(clump_0=clump)

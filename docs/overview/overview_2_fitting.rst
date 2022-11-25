@@ -82,7 +82,7 @@ It therefore produces a plane whose image looks exactly like the dataset.
 
     galaxy = ag.Galaxy(
         redshift=0.5,
-        bulge=ag.lp.EllSersic(
+        bulge=ag.lp.Sersic(
             centre=(0.0, 0.0),
             elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.9, angle=45.0),
             intensity=1.0,

@@ -55,7 +55,7 @@ def test__hessian_from():
 
     grid = ag.Grid2DIrregular(grid=[(0.5, 0.5), (1.0, 1.0)])
 
-    sie = ag.mp.EllIsothermal(
+    sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
@@ -83,7 +83,7 @@ def test__convergence_2d_via_hessian_from():
         grid=[(1.075, -0.125), (-0.875, -0.075), (-0.925, -0.075), (0.075, 0.925)]
     )
 
-    sis = ag.mp.EllIsothermal(
+    sis = ag.mp.Isothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.001, 0.001), einstein_radius=1.0
     )
 
@@ -94,7 +94,7 @@ def test__convergence_2d_via_hessian_from():
     assert convergence.in_list[2] == pytest.approx(0.538326, 1.0e-4)
     assert convergence.in_list[3] == pytest.approx(0.539390, 1.0e-4)
 
-    sis = ag.mp.EllIsothermal(
+    sis = ag.mp.Isothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.3, 0.4), einstein_radius=1.5
     )
 
@@ -110,7 +110,7 @@ def test__magnification_2d_via_hessian_from():
 
     grid = ag.Grid2DIrregular(grid=[(0.5, 0.5), (1.0, 1.0)])
 
-    sie = ag.mp.EllIsothermal(
+    sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
@@ -124,7 +124,7 @@ def test__critical_curves_from__tangential():
 
     grid = ag.Grid2D.uniform(shape_native=(15, 15), pixel_scales=0.3)
 
-    sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     critical_curves = sis.critical_curves_from(grid=grid)
 
@@ -141,7 +141,7 @@ def test__critical_curves_from__tangential():
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     critical_curves = sis.critical_curves_from(grid=grid)
 
@@ -153,7 +153,7 @@ def test__critical_curves_from__tangential():
     assert -0.03 < y_centre < 0.03
     assert -0.03 < x_centre < 0.03
 
-    sis = ag.mp.SphIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
+    sis = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
     critical_curves = sis.critical_curves_from(grid=grid)
 
@@ -169,7 +169,7 @@ def test__critical_curves_from__radial():
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     critical_curves = sis.critical_curves_from(grid=grid)
 
@@ -181,7 +181,7 @@ def test__critical_curves_from__radial():
     assert -0.05 < y_centre < 0.05
     assert -0.05 < x_centre < 0.05
 
-    sis = ag.mp.SphIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
+    sis = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
     critical_curves = sis.critical_curves_from(grid=grid)
 
@@ -195,7 +195,7 @@ def test__critical_curves_from__radial():
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     caustics = sis.caustics_from(grid=grid)
 
@@ -207,7 +207,7 @@ def test__critical_curves_from__radial():
     assert -0.03 < y_centre < 0.03
     assert -0.03 < x_centre < 0.03
 
-    sis = ag.mp.SphIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
+    sis = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
     caustics = sis.caustics_from(grid=grid)
 
@@ -224,7 +224,7 @@ def test__caustics_from__radial():
 
     grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.2)
 
-    sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     caustics = sis.caustics_from(grid=grid)
 
@@ -238,7 +238,7 @@ def test__caustics_from__radial():
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     caustics = sis.caustics_from(grid=grid)
 
@@ -250,7 +250,7 @@ def test__caustics_from__radial():
     assert -0.2 < y_centre < 0.2
     assert -0.35 < x_centre < 0.35
 
-    sis = ag.mp.SphIsothermal(centre=(0.5, 1.0), einstein_radius=2.0)
+    sis = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
     caustics = sis.caustics_from(grid=grid)
 
@@ -267,7 +267,7 @@ def test__area_within_tangential_critical_curve_from():
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     area_calc = np.pi * sis.einstein_radius**2
 
@@ -282,13 +282,13 @@ def test__einstein_radius_from():
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     einstein_radius = sis.einstein_radius_from(grid=grid)
 
     assert einstein_radius == pytest.approx(2.0, 1e-1)
 
-    sie = ag.mp.EllIsothermal(
+    sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), einstein_radius=2.0, elliptical_comps=(0.0, -0.25)
     )
 
@@ -301,7 +301,7 @@ def test__einstein_mass_from():
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     einstein_mass = sis.einstein_mass_angular_from(grid=grid)
 
@@ -312,7 +312,7 @@ def test__magnification_2d_from__compare_eigen_values_and_determinant():
 
     grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=1)
 
-    sie = ag.mp.EllIsothermal(
+    sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
@@ -330,7 +330,7 @@ def test__magnification_2d_from__compare_eigen_values_and_determinant():
 
     grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=2)
 
-    sie = ag.mp.EllIsothermal(
+    sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
@@ -353,7 +353,7 @@ def test__magnification_2d_from__compare_determinant_and_convergence_and_shear()
 
     grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=1)
 
-    sie = ag.mp.EllIsothermal(
+    sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
@@ -396,7 +396,7 @@ def test__tangential_critical_curve_from__compare_via_magnification():
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    sie = ag.mp.EllIsothermal(
+    sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
     )
 
@@ -429,7 +429,7 @@ def test__radial_critical_curve_from__compare_via_magnification():
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    sie = ag.mp.EllIsothermal(
+    sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
     )
 
@@ -448,7 +448,7 @@ def test__tangential_caustic_from___compare_via_magnification():
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    sie = ag.mp.EllIsothermal(
+    sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
     )
 
@@ -467,7 +467,7 @@ def test__radial_caustic_from___compare_via_magnification():
 
     grid = ag.Grid2D.uniform(shape_native=(60, 60), pixel_scales=0.08)
 
-    sie = ag.mp.EllIsothermal(
+    sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
     )
 
@@ -486,7 +486,7 @@ def test__jacobian_from():
 
     grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=1)
 
-    sie = ag.mp.EllIsothermal(
+    sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
@@ -515,7 +515,7 @@ def test__convergence_2d_via_jacobian_from__compare_via_jacobian_and_analytic():
 
     grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
 
-    sis = ag.mp.SphIsothermal(centre=(0.0, 0.0), einstein_radius=2.0)
+    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     convergence_via_analytic = sis.convergence_2d_from(grid=grid)
 
@@ -532,7 +532,7 @@ def test__convergence_2d_via_jacobian_from__compare_via_jacobian_and_analytic():
 
     grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
 
-    sie = ag.mp.EllIsothermal(
+    sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.111111, 0.0), einstein_radius=2.0
     )
 
@@ -609,7 +609,7 @@ def test__evaluation_grid__changes_to_uniform_and_zoomed_in_if_masked():
 
 
 def test__binning_works_on_all_from_grid_methods():
-    sie = ag.mp.EllIsothermal(
+    sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 

@@ -44,7 +44,7 @@ def test__figures_1d__all_are_output(
 
     plot_patch.paths = []
 
-    mp_offset_centre = ag.mp.SphIsothermal(centre=(5.0, 5.0))
+    mp_offset_centre = ag.mp.IsothermalSph(centre=(5.0, 5.0))
 
     mass_profile_plotter = aplt.MassProfilePDFPlotter(
         mass_profile_pdf_list=[mp_0, mp_1, mp_0, mp_1, mp_0, mp_offset_centre],

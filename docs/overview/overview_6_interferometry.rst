@@ -183,7 +183,7 @@ to the uv-plane via the Fourier transform discussed above:
 
 .. code-block:: python
 
-    galaxy = af.Model(ag.Galaxy, redshift=0.5, bulge=ag.lp.EllSersic)
+    galaxy = af.Model(ag.Galaxy, redshift=0.5, bulge=ag.lp.Sersic)
 
     galaxies = af.Collection(galaxy=galaxy)
     model = af.Collection(galaxies=galaxies)
