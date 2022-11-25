@@ -33,7 +33,7 @@ def test__deflections_2d_via_integral_from():
     gnfw = ag.mp.gNFW(
         centre=(0.0, 0.0),
         kappa_s=1.0,
-        elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.3, angle=100.0),
+        ell_comps=ag.convert.ell_comps_from(axis_ratio=0.3, angle=100.0),
         inner_slope=0.5,
         scale_radius=8.0,
     )
@@ -46,7 +46,7 @@ def test__deflections_2d_via_integral_from():
     gnfw = ag.mp.gNFW(
         centre=(0.3, 0.2),
         kappa_s=2.5,
-        elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, angle=100.0),
+        ell_comps=ag.convert.ell_comps_from(axis_ratio=0.5, angle=100.0),
         inner_slope=1.5,
         scale_radius=4.0,
     )
@@ -88,7 +88,7 @@ def test__deflections_2d_via_mge_from():
     gnfw = ag.mp.gNFW(
         centre=(0.0, 0.0),
         kappa_s=1.0,
-        elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.3, angle=100.0),
+        ell_comps=ag.convert.ell_comps_from(axis_ratio=0.3, angle=100.0),
         inner_slope=0.5,
         scale_radius=8.0,
     )
@@ -105,7 +105,7 @@ def test__deflections_2d_via_mge_from():
     gnfw = ag.mp.gNFW(
         centre=(0.3, 0.2),
         kappa_s=2.5,
-        elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, angle=100.0),
+        ell_comps=ag.convert.ell_comps_from(axis_ratio=0.5, angle=100.0),
         inner_slope=1.5,
         scale_radius=4.0,
     )
@@ -138,7 +138,7 @@ def test__deflections_yx_2d_from():
 
     elliptical = ag.mp.gNFW(
         centre=(0.1, 0.2),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         kappa_s=2.0,
         inner_slope=1.5,
         scale_radius=3.0,
@@ -173,7 +173,7 @@ def test__convergence_2d_via_mge_from():
     gnfw = ag.mp.gNFW(
         centre=(0.0, 0.0),
         kappa_s=1.0,
-        elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, angle=90.0),
+        ell_comps=ag.convert.ell_comps_from(axis_ratio=0.5, angle=90.0),
         inner_slope=1.5,
         scale_radius=1.0,
     )
@@ -184,7 +184,7 @@ def test__convergence_2d_via_mge_from():
     gnfw = ag.mp.gNFW(
         centre=(0.0, 0.0),
         kappa_s=2.0,
-        elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, angle=90.0),
+        ell_comps=ag.convert.ell_comps_from(axis_ratio=0.5, angle=90.0),
         inner_slope=1.5,
         scale_radius=1.0,
     )
@@ -205,7 +205,7 @@ def test__convergence_2d_from():
 
     elliptical = ag.mp.gNFW(
         centre=(0.1, 0.2),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         kappa_s=2.0,
         inner_slope=1.5,
         scale_radius=3.0,
@@ -240,7 +240,7 @@ def test__potential_2d_from():
     gnfw = ag.mp.gNFW(
         centre=(1.0, 1.0),
         kappa_s=5.0,
-        elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, angle=100.0),
+        ell_comps=ag.convert.ell_comps_from(axis_ratio=0.5, angle=100.0),
         inner_slope=1.0,
         scale_radius=10.0,
     )
@@ -250,7 +250,7 @@ def test__potential_2d_from():
 
     elliptical = ag.mp.gNFW(
         centre=(0.1, 0.2),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         kappa_s=2.0,
         inner_slope=1.5,
         scale_radius=3.0,
@@ -268,13 +268,13 @@ def test__compare_to_nfw():
 
     nfw = ag.mp.NFW(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.111111),
+        ell_comps=(0.0, 0.111111),
         kappa_s=1.0,
         scale_radius=20.0,
     )
     gnfw = ag.mp.gNFW(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.111111),
+        ell_comps=(0.0, 0.111111),
         kappa_s=1.0,
         inner_slope=1.0,
         scale_radius=20.0,

@@ -10,7 +10,7 @@ class Sersic(lp.Sersic, LightProfileLinear):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
     ):
@@ -23,7 +23,7 @@ class Sersic(lp.Sersic, LightProfileLinear):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         effective_radius
@@ -34,7 +34,7 @@ class Sersic(lp.Sersic, LightProfileLinear):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=1.0,
             effective_radius=effective_radius,
             sersic_index=sersic_index,

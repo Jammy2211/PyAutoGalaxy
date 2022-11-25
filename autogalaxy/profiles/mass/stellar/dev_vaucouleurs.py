@@ -7,7 +7,7 @@ class DevVaucouleurs(Sersic):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         mass_to_light_ratio: float = 1.0,
@@ -20,7 +20,7 @@ class DevVaucouleurs(Sersic):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -32,7 +32,7 @@ class DevVaucouleurs(Sersic):
         """
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=4.0,
@@ -65,7 +65,7 @@ class DevVaucouleursSph(DevVaucouleurs):
         """
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             mass_to_light_ratio=mass_to_light_ratio,

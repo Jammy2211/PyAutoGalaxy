@@ -364,7 +364,7 @@ class gNFWSph(gNFW):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             kappa_s=kappa_s,
             inner_slope=inner_slope,
             scale_radius=scale_radius,

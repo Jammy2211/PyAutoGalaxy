@@ -28,7 +28,7 @@ def test__deflections_yx_2d_from():
 
     cored_power_law = ag.mp.PowerLawCore(
         centre=(-0.7, 0.5),
-        elliptical_comps=(0.152828, -0.088235),
+        ell_comps=(0.152828, -0.088235),
         einstein_radius=1.3,
         slope=1.8,
         core_radius=0.2,
@@ -43,7 +43,7 @@ def test__deflections_yx_2d_from():
 
     cored_power_law = ag.mp.PowerLawCore(
         centre=(0.2, -0.2),
-        elliptical_comps=(-0.216506, -0.125),
+        ell_comps=(-0.216506, -0.125),
         einstein_radius=0.5,
         slope=2.4,
         core_radius=0.5,
@@ -57,7 +57,7 @@ def test__deflections_yx_2d_from():
 
     elliptical = ag.mp.PowerLawCore(
         centre=(1.1, 1.1),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         einstein_radius=3.0,
         slope=2.2,
         core_radius=0.1,
@@ -83,7 +83,7 @@ def test__convergence_2d_from():
 
     cored_power_law = ag.mp.PowerLawCore(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.333333),
+        ell_comps=(0.0, 0.333333),
         einstein_radius=1.0,
         slope=2.3,
         core_radius=0.2,
@@ -95,7 +95,7 @@ def test__convergence_2d_from():
 
     cored_power_law = ag.mp.PowerLawCore(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.333333),
+        ell_comps=(0.0, 0.333333),
         einstein_radius=2.0,
         slope=1.7,
         core_radius=0.2,
@@ -107,7 +107,7 @@ def test__convergence_2d_from():
 
     elliptical = ag.mp.PowerLawCore(
         centre=(1.1, 1.1),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         einstein_radius=3.0,
         slope=2.2,
         core_radius=0.1,
@@ -140,7 +140,7 @@ def test__potential_2d_from():
 
     cored_power_law = ag.mp.PowerLawCore(
         centre=(0.2, -0.2),
-        elliptical_comps=(-0.216506, -0.125),
+        ell_comps=(-0.216506, -0.125),
         einstein_radius=0.5,
         slope=2.4,
         core_radius=0.5,
@@ -152,7 +152,7 @@ def test__potential_2d_from():
 
     cored_power_law = ag.mp.PowerLawCore(
         centre=(-0.7, 0.5),
-        elliptical_comps=(0.152828, -0.088235),
+        ell_comps=(0.152828, -0.088235),
         einstein_radius=1.3,
         slope=1.8,
         core_radius=0.2,
@@ -164,7 +164,7 @@ def test__potential_2d_from():
 
     elliptical = ag.mp.PowerLawCore(
         centre=(1.1, 1.1),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         einstein_radius=3.0,
         slope=2.2,
         core_radius=0.1,

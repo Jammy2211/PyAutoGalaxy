@@ -110,7 +110,7 @@ def test__simulator__simulate_imaging_from_galaxy__source_galaxy__compare_to_ima
     galaxy_0 = ag.Galaxy(
         redshift=0.5,
         mass=ag.mp.Isothermal(
-            centre=(0.0, 0.0), einstein_radius=1.6, elliptical_comps=(0.17647, 0.0)
+            centre=(0.0, 0.0), einstein_radius=1.6, ell_comps=(0.17647, 0.0)
         ),
     )
 
@@ -118,7 +118,7 @@ def test__simulator__simulate_imaging_from_galaxy__source_galaxy__compare_to_ima
         redshift=1.0,
         light=ag.lp.Sersic(
             centre=(0.1, 0.1),
-            elliptical_comps=(0.096225, -0.055555),
+            ell_comps=(0.096225, -0.055555),
             intensity=0.3,
             effective_radius=1.0,
             sersic_index=2.5,

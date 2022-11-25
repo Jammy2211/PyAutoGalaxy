@@ -1,7 +1,7 @@
 import numpy as np
 
 
-def elliptical_comps_from(axis_ratio, angle):
+def ell_comps_from(axis_ratio, angle):
     """
     Convert an input axis ratio (0.0 > q > 1.0) and rotation position angle defined counter clockwise from the
     positive x-axis(0.0 > angle > 180) to the (y,x) ellipitical components e1 and e2.
@@ -20,20 +20,20 @@ def elliptical_comps_from(axis_ratio, angle):
     return (ellip_y, ellip_x)
 
 
-def axis_ratio_and_angle_from(elliptical_comps):
+def axis_ratio_and_angle_from(ell_comps):
     """
     Convert the ellipitical components e1 and e2 to an axis ratio (0.0 > q > 1.0) and rotation position angle
     defined counter clockwise from the positive x-axis(0.0 > angle > 180) to .
 
     Parameters
     ----------
-    elliptical_comps : (float, float)
+    ell_comps : (float, float)
         The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
     """
-    angle = np.arctan2(elliptical_comps[0], elliptical_comps[1]) / 2
+    angle = np.arctan2(ell_comps[0], ell_comps[1]) / 2
     angle *= 180.0 / np.pi
-    fac = np.sqrt(elliptical_comps[1] ** 2 + elliptical_comps[0] ** 2)
+    fac = np.sqrt(ell_comps[1] ** 2 + ell_comps[0] ** 2)
     if fac > 0.999:
         fac = 0.999  # avoid unphysical solution
     # if fac > 1: print('unphysical e1,e2')
@@ -41,37 +41,37 @@ def axis_ratio_and_angle_from(elliptical_comps):
     return axis_ratio, angle
 
 
-def axis_ratio_from(elliptical_comps):
+def axis_ratio_from(ell_comps):
     """
     Convert the ellipitical components e1 and e2 to an axis ratio (0.0 > q > 1.0) and rotation position angle
     defined counter clockwise from the positive x-axis(0.0 > angle > 180) to .
 
     Parameters
     ----------
-    elliptical_comps : (float, float)
+    ell_comps : (float, float)
         The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
     """
-    axis_ratio, angle = axis_ratio_and_angle_from(elliptical_comps=elliptical_comps)
+    axis_ratio, angle = axis_ratio_and_angle_from(ell_comps=ell_comps)
     return axis_ratio
 
 
-def angle_from(elliptical_comps):
+def angle_from(ell_comps):
     """
     Convert the ellipitical components e1 and e2 to an axis ratio (0.0 > q > 1.0) and rotation position angle
     defined counter clockwise from the positive x-axis(0.0 > angle > 180) to .
 
     Parameters
     ----------
-    elliptical_comps : (float, float)
+    ell_comps : (float, float)
         The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
     """
-    axis_ratio, angle = axis_ratio_and_angle_from(elliptical_comps=elliptical_comps)
+    axis_ratio, angle = axis_ratio_and_angle_from(ell_comps=ell_comps)
     return angle
 
 
-def shear_elliptical_comps_from(magnitude, angle):
+def shear_ell_comps_from(magnitude, angle):
     """
     :param angle: angel
     :param magnitude: ellipticity
@@ -82,34 +82,34 @@ def shear_elliptical_comps_from(magnitude, angle):
     return (ellip_y, ellip_x)
 
 
-def shear_magnitude_and_angle_from(elliptical_comps):
+def shear_magnitude_and_angle_from(ell_comps):
     """
     :param e1: ellipticity component
     :param e2: ellipticity component
     :return: angle and abs value of ellipticity
     """
-    angle = np.arctan2(elliptical_comps[0], elliptical_comps[1]) / 2 * 180.0 / np.pi
-    magnitude = np.sqrt(elliptical_comps[1] ** 2 + elliptical_comps[0] ** 2)
+    angle = np.arctan2(ell_comps[0], ell_comps[1]) / 2 * 180.0 / np.pi
+    magnitude = np.sqrt(ell_comps[1] ** 2 + ell_comps[0] ** 2)
     if angle < 0:
         return magnitude, angle + 180.0
     return magnitude, angle
 
 
-def shear_magnitude_from(elliptical_comps):
+def shear_magnitude_from(ell_comps):
     """
     :param e1: ellipticity component
     :param e2: ellipticity component
     :return: angle and abs value of ellipticity
     """
-    magnitude, angle = shear_magnitude_and_angle_from(elliptical_comps=elliptical_comps)
+    magnitude, angle = shear_magnitude_and_angle_from(ell_comps=ell_comps)
     return magnitude
 
 
-def shear_angle_from(elliptical_comps):
+def shear_angle_from(ell_comps):
     """
     :param e1: ellipticity component
     :param e2: ellipticity component
     :return: angle and abs value of ellipticity
     """
-    magnitude, angle = shear_magnitude_and_angle_from(elliptical_comps=elliptical_comps)
+    magnitude, angle = shear_magnitude_and_angle_from(ell_comps=ell_comps)
     return angle

@@ -13,7 +13,7 @@ class AbstractSersic(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
@@ -27,7 +27,7 @@ class AbstractSersic(LightProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -38,9 +38,7 @@ class AbstractSersic(LightProfile):
         sersic_index
             Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         """
-        super().__init__(
-            centre=centre, elliptical_comps=elliptical_comps, intensity=intensity
-        )
+        super().__init__(centre=centre, ell_comps=ell_comps, intensity=intensity)
         self.effective_radius = effective_radius
         self.sersic_index = sersic_index
 
@@ -92,7 +90,7 @@ class Sersic(AbstractSersic, LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
@@ -106,7 +104,7 @@ class Sersic(AbstractSersic, LightProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -119,7 +117,7 @@ class Sersic(AbstractSersic, LightProfile):
         """
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -204,7 +202,7 @@ class SersicSph(Sersic):
         """
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,

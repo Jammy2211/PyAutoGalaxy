@@ -7,7 +7,7 @@ class ExponentialCore(SersicCore):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         effective_radius: float = 0.6,
         radius_break: float = 0.01,
         intensity: float = 0.05,
@@ -23,7 +23,7 @@ class ExponentialCore(SersicCore):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         effective_radius
@@ -42,7 +42,7 @@ class ExponentialCore(SersicCore):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=1.0,
@@ -85,7 +85,7 @@ class ExponentialCoreSph(ExponentialCore):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             effective_radius=effective_radius,
             radius_break=radius_break,
             intensity=intensity,

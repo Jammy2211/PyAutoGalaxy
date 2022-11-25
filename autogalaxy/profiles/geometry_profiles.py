@@ -153,7 +153,7 @@ class EllProfile(SphProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
     ):
         """ An elliptical profile, which describes profiles with y and x centre Cartesian coordinates, an axis-ratio \
         and rotational angle.
@@ -162,7 +162,7 @@ class EllProfile(SphProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
 
@@ -175,15 +175,15 @@ class EllProfile(SphProfile):
         """
         super().__init__(centre=centre)
 
-        self.elliptical_comps = elliptical_comps
+        self.ell_comps = ell_comps
 
     @property
     def axis_ratio(self):
-        return convert.axis_ratio_from(elliptical_comps=self.elliptical_comps)
+        return convert.axis_ratio_from(ell_comps=self.ell_comps)
 
     @property
     def angle(self):
-        return convert.angle_from(elliptical_comps=self.elliptical_comps)
+        return convert.angle_from(ell_comps=self.ell_comps)
 
     @classmethod
     def from_axis_ratio_and_phi(
@@ -193,10 +193,8 @@ class EllProfile(SphProfile):
         angle: float = 0.0,
     ):
 
-        elliptical_comps = convert.elliptical_comps_from(
-            axis_ratio=axis_ratio, angle=angle
-        )
-        return cls(centre=centre, elliptical_comps=elliptical_comps)
+        ell_comps = convert.ell_comps_from(axis_ratio=axis_ratio, angle=angle)
+        return cls(centre=centre, ell_comps=ell_comps)
 
     @property
     def phi_radians(self):

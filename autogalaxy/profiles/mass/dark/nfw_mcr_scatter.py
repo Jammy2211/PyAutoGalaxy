@@ -39,7 +39,7 @@ class NFWMCRScatterLudlow(NFW):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         mass_at_200: float = 1e9,
         scatter_sigma: float = 0.0,
         redshift_object: float = 0.5,
@@ -64,7 +64,7 @@ class NFWMCRScatterLudlow(NFW):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             kappa_s=kappa_s,
             scale_radius=scale_radius,
         )

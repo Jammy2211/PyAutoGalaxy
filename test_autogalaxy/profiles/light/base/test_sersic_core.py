@@ -12,7 +12,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 def test__image_2d_from():
 
     core_sersic = ag.lp.SersicCore(
-        elliptical_comps=(0.0, 0.333333),
+        ell_comps=(0.0, 0.333333),
         effective_radius=5.0,
         sersic_index=4.0,
         radius_break=0.01,
@@ -26,7 +26,7 @@ def test__image_2d_from():
     assert image == pytest.approx(0.0255173, 1.0e-4)
 
     elliptical = ag.lp.SersicCore(
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         effective_radius=5.0,
         sersic_index=4.0,
         radius_break=0.01,

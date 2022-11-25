@@ -9,7 +9,7 @@ class SersicCore(lp.SersicCore, LightProfileSNR):
         self,
         signal_to_noise_ratio: float = 10.0,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
         radius_break: float = 0.01,
@@ -29,7 +29,7 @@ class SersicCore(lp.SersicCore, LightProfileSNR):
             The signal to noise of the light profile when it is used to simulate strong lens imaging.
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         effective_radius
@@ -47,7 +47,7 @@ class SersicCore(lp.SersicCore, LightProfileSNR):
         """
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
             radius_break=radius_break,

@@ -10,7 +10,7 @@ def test__deflections_via_integral_from():
 
     sersic = ag.mp.Sersic(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.2,
         sersic_index=2.0,
@@ -26,7 +26,7 @@ def test__deflections_via_integral_from():
 
     sersic = ag.mp.Sersic(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=10.0,
         effective_radius=0.2,
         sersic_index=3.0,
@@ -45,7 +45,7 @@ def test__deflections_2d_via_mge_from():
 
     sersic = ag.mp.Sersic(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.2,
         sersic_index=2.0,
@@ -63,7 +63,7 @@ def test__deflections_2d_via_mge_from():
 
     sersic = ag.mp.Sersic(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=10.0,
         effective_radius=0.2,
         sersic_index=3.0,
@@ -84,7 +84,7 @@ def test__deflections_2d_via_cse_from():
 
     sersic = ag.mp.Sersic(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.2,
         sersic_index=2.0,
@@ -102,7 +102,7 @@ def test__deflections_2d_via_cse_from():
 
     sersic = ag.mp.Sersic(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=10.0,
         effective_radius=0.2,
         sersic_index=3.0,
@@ -120,7 +120,7 @@ def test__deflections_2d_via_cse_from():
 
     sersic = ag.mp.Sersic(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.2,
         sersic_index=1.5,
@@ -159,7 +159,7 @@ def test__deflections_yx_2d_from():
 
     elliptical = ag.mp.Sersic(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=1.0,
         sersic_index=4.0,
@@ -219,7 +219,7 @@ def test__convergence_2d_via_mge_from():
 
     sersic = ag.mp.Sersic(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.333333),
+        ell_comps=(0.0, 0.333333),
         intensity=3.0,
         effective_radius=2.0,
         sersic_index=2.0,
@@ -270,7 +270,7 @@ def test__convergence_2d_via_cse_from():
 
     sersic = ag.mp.Sersic(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.333333),
+        ell_comps=(0.0, 0.333333),
         intensity=3.0,
         effective_radius=2.0,
         sersic_index=2.0,
@@ -322,7 +322,7 @@ def test__convergence_2d_from():
 
     sersic = ag.mp.Sersic(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.333333),
+        ell_comps=(0.0, 0.333333),
         intensity=3.0,
         effective_radius=2.0,
         sersic_index=2.0,
@@ -335,7 +335,7 @@ def test__convergence_2d_from():
 
     elliptical = ag.mp.Sersic(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=1.0,
         sersic_index=4.0,

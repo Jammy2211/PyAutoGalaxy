@@ -18,7 +18,7 @@ class MassSheet(MassProfile):
         kappa
             The magnitude of the convergence of the mass-sheet.
         """
-        super().__init__(centre=centre, elliptical_comps=(0.0, 0.0))
+        super().__init__(centre=centre, ell_comps=(0.0, 0.0))
         self.kappa = kappa
 
     def convergence_func(self, grid_radius: float) -> float:

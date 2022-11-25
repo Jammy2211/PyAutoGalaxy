@@ -9,7 +9,7 @@ from autogalaxy import convert
 
 
 class ExternalShear(MassProfile):
-    def __init__(self, elliptical_comps: Tuple[float, float] = (0.0, 0.0)):
+    def __init__(self, ell_comps: Tuple[float, float] = (0.0, 0.0)):
         """
         An `ExternalShear` term, to model the line-of-sight contribution of other galaxies / satellites.
 
@@ -24,15 +24,15 @@ class ExternalShear(MassProfile):
             The rotation axis of the shear.
         """
 
-        super().__init__(centre=(0.0, 0.0), elliptical_comps=elliptical_comps)
+        super().__init__(centre=(0.0, 0.0), ell_comps=ell_comps)
 
     @property
     def magnitude(self):
-        return convert.shear_magnitude_from(elliptical_comps=self.elliptical_comps)
+        return convert.shear_magnitude_from(ell_comps=self.ell_comps)
 
     @property
     def angle(self):
-        return convert.shear_angle_from(elliptical_comps=self.elliptical_comps)
+        return convert.shear_angle_from(ell_comps=self.ell_comps)
 
     def convergence_func(self, grid_radius: float) -> float:
         return 0.0

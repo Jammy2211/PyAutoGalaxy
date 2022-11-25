@@ -78,9 +78,9 @@ This gives the following output:
                 centre
                     centre_0                           GaussianPrior, mean = 0.0, sigma = 0.3
                     centre_1                           GaussianPrior, mean = 0.0, sigma = 0.3
-                elliptical_comps
-                    elliptical_comps_0                 GaussianPrior, mean = 0.0, sigma = 0.5
-                    elliptical_comps_1                 GaussianPrior, mean = 0.0, sigma = 0.5
+                ell_comps
+                    ell_comps_0                 GaussianPrior, mean = 0.0, sigma = 0.5
+                    ell_comps_1                 GaussianPrior, mean = 0.0, sigma = 0.5
                 intensity                              LogUniformPrior, lower_limit = 1e-06, upper_limit = 1000000.0
                 effective_radius                       UniformPrior, lower_limit = 0.0, upper_limit = 30.0
                 sersic_index                           UniformPrior, lower_limit = 0.8, upper_limit = 5.0
@@ -88,9 +88,9 @@ This gives the following output:
                 centre
                     centre_0                           GaussianPrior, mean = 0.0, sigma = 0.3
                     centre_1                           GaussianPrior, mean = 0.0, sigma = 0.3
-                elliptical_comps
-                    elliptical_comps_0                 GaussianPrior, mean = 0.0, sigma = 0.5
-                    elliptical_comps_1                 GaussianPrior, mean = 0.0, sigma = 0.5
+                ell_comps
+                    ell_comps_0                 GaussianPrior, mean = 0.0, sigma = 0.5
+                    ell_comps_1                 GaussianPrior, mean = 0.0, sigma = 0.5
                 intensity                              LogUniformPrior, lower_limit = 1e-06, upper_limit = 1000000.0
                 effective_radius                       UniformPrior, lower_limit = 0.0, upper_limit = 30.0
 
@@ -182,9 +182,9 @@ This gives the following output:
                 centre
                     centre_0                       -0.002
                     centre_1                       0.001
-                elliptical_comps
-                    elliptical_comps_0             0.056
-                    elliptical_comps_1             -0.009
+                ell_comps
+                    ell_comps_0             0.056
+                    ell_comps_1             -0.009
                 intensity                          0.757
                 effective_radius                   0.708
                 sersic_index                       3.554
@@ -192,9 +192,9 @@ This gives the following output:
                 centre
                     centre_0                       0.001
                     centre_1                       -0.004
-                elliptical_comps
-                    elliptical_comps_0             0.155
-                    elliptical_comps_1             0.091
+                ell_comps
+                    ell_comps_0             0.155
+                    ell_comps_1             0.091
                 intensity                          0.500
                 effective_radius                   1.554
     
@@ -207,9 +207,9 @@ This gives the following output:
                 centre
                     centre_0                       -0.0028 (-0.0051, 0.0005)
                     centre_1                       0.0014 (-0.0013, 0.0038)
-                elliptical_comps
-                    elliptical_comps_0             0.0542 (0.0411, 0.0641)
-                    elliptical_comps_1             -0.0066 (-0.0189, 0.0078)
+                ell_comps
+                    ell_comps_0             0.0542 (0.0411, 0.0641)
+                    ell_comps_1             -0.0066 (-0.0189, 0.0078)
                 intensity                          0.5153 (0.3576, 0.7726)
                 effective_radius                   0.8984 (0.7042, 1.1218)
                 sersic_index                       4.0917 (3.5170, 4.6985)
@@ -217,9 +217,9 @@ This gives the following output:
                 centre
                     centre_0                       0.0020 (-0.0062, 0.0095)
                     centre_1                       -0.0038 (-0.0122, 0.0061)
-                elliptical_comps
-                    elliptical_comps_0             0.1608 (0.1539, 0.1710)
-                    elliptical_comps_1             0.0942 (0.0874, 0.1027)
+                ell_comps
+                    ell_comps_0             0.1608 (0.1539, 0.1710)
+                    ell_comps_1             0.0942 (0.0874, 0.1027)
                 intensity                          0.4912 (0.4657, 0.5121)
                 effective_radius                   1.5250 (1.4828, 1.5636)
     
@@ -232,9 +232,9 @@ This gives the following output:
                 centre
                     centre_0                       -0.0028 (-0.0036, -0.0020)
                     centre_1                       0.0014 (0.0005, 0.0024)
-                elliptical_comps
-                    elliptical_comps_0             0.0542 (0.0503, 0.0577)
-                    elliptical_comps_1             -0.0066 (-0.0103, -0.0029)
+                ell_comps
+                    ell_comps_0             0.0542 (0.0503, 0.0577)
+                    ell_comps_1             -0.0066 (-0.0103, -0.0029)
                 intensity                          0.5153 (0.4382, 0.6041)
                 effective_radius                   0.8984 (0.8109, 0.9900)
                 sersic_index                       4.0917 (3.8877, 4.3431)
@@ -242,9 +242,9 @@ This gives the following output:
                 centre
                     centre_0                       0.0020 (-0.0004, 0.0046)
                     centre_1                       -0.0038 (-0.0068, -0.0009)
-                elliptical_comps
-                    elliptical_comps_0             0.1608 (0.1575, 0.1638)
-                    elliptical_comps_1             0.0942 (0.0916, 0.0967)
+                ell_comps
+                    ell_comps_0             0.1608 (0.1575, 0.1638)
+                    ell_comps_1             0.0942 (0.0916, 0.0967)
                 intensity                          0.4912 (0.4827, 0.4986)
                 effective_radius                   1.5250 (1.5058, 1.5399)
     
@@ -379,7 +379,7 @@ order to capture complex and irregular structures in a galaxy's emission.
 Using a clever model parameterization a basis can be composed which corresponds to just N = 5-10 parameters, making
 model-fitting efficient and robust.
 
-Below, we compose a basis of 10 Gaussians which all share the same `centre` and `elliptical_comps`. Their `sigma`
+Below, we compose a basis of 10 Gaussians which all share the same `centre` and `ell_comps`. Their `sigma`
 values are set via the relation `y = a + (log10(i+1) + b)`, where `i` is the  Gaussian index and `a` and `b` are free
 parameters.
 
@@ -397,7 +397,7 @@ parameters!
     for i, gaussian in enumerate(gaussians_bulge):
 
         gaussian.centre = gaussians_bulge[0].centre
-        gaussian.elliptical_comps = gaussians_bulge[0].elliptical_comps
+        gaussian.ell_comps = gaussians_bulge[0].ell_comps
         gaussian.sigma = bulge_a + (bulge_b * np.log10(i+1))
 
     bulge = af.Model(
@@ -435,9 +435,9 @@ Below is a snippet of the model, showing that different Gaussians are in the mod
             centre
                 centre_0                                                            GaussianPrior, mean = 0.0, sigma = 0.3
                 centre_1                                                            GaussianPrior, mean = 0.0, sigma = 0.3
-            elliptical_comps
-                elliptical_comps_0                                                  GaussianPrior, mean = 0.0, sigma = 0.3
-                elliptical_comps_1                                                  GaussianPrior, mean = 0.0, sigma = 0.3
+            ell_comps
+                ell_comps_0                                                  GaussianPrior, mean = 0.0, sigma = 0.3
+                ell_comps_1                                                  GaussianPrior, mean = 0.0, sigma = 0.3
             sigma
                 bulge_a                                                             UniformPrior, lower_limit = 0.0, upper_limit = 0.2
                 other
@@ -447,9 +447,9 @@ Below is a snippet of the model, showing that different Gaussians are in the mod
             centre
                 centre_0                                                            GaussianPrior, mean = 0.0, sigma = 0.3
                 centre_1                                                            GaussianPrior, mean = 0.0, sigma = 0.3
-            elliptical_comps
-                elliptical_comps_0                                                  GaussianPrior, mean = 0.0, sigma = 0.3
-                elliptical_comps_1                                                  GaussianPrior, mean = 0.0, sigma = 0.3
+            ell_comps
+                ell_comps_0                                                  GaussianPrior, mean = 0.0, sigma = 0.3
+                ell_comps_1                                                  GaussianPrior, mean = 0.0, sigma = 0.3
             sigma
                 bulge_a                                                             UniformPrior, lower_limit = 0.0, upper_limit = 0.2
                 other

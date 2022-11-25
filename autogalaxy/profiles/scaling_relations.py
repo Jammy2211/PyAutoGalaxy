@@ -37,7 +37,7 @@ class IsothermalMLR(mp.Isothermal):
         relation: MassLightRelation = MassLightRelation(),
         luminosity: float = 1.0,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
     ):
 
         self.luminosity = luminosity
@@ -47,6 +47,6 @@ class IsothermalMLR(mp.Isothermal):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             einstein_radius=einstein_radius,
         )

@@ -15,7 +15,7 @@ class MassProfile(EllProfile, OperateDeflections):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
     ):
         """
         Abstract class for elliptical mass profiles.
@@ -24,11 +24,11 @@ class MassProfile(EllProfile, OperateDeflections):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         """
-        super().__init__(centre=centre, elliptical_comps=elliptical_comps)
+        super().__init__(centre=centre, ell_comps=ell_comps)
 
     def deflections_yx_2d_from(self, grid):
         raise NotImplementedError

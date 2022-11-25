@@ -10,7 +10,7 @@ class Moffat(lp.Moffat, LightProfileLinear):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         alpha: float = 0.5,
         beta: float = 2.0,
     ):
@@ -27,7 +27,7 @@ class Moffat(lp.Moffat, LightProfileLinear):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
         alpha
             Scales the overall size of the Moffat profile and for a PSF typically corresponds to the FWHM / 2.
@@ -38,7 +38,7 @@ class Moffat(lp.Moffat, LightProfileLinear):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=1.0,
             alpha=alpha,
             beta=beta,

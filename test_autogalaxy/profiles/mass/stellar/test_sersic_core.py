@@ -10,7 +10,7 @@ def test__deflections_2d_via_mge_from():
 
     sersic = ag.mp.SersicCore(
         centre=(1.0, 2.0),
-        elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, angle=70.0),
+        ell_comps=ag.convert.ell_comps_from(axis_ratio=0.5, angle=70.0),
         intensity=0.45,
         effective_radius=0.5,
         radius_break=0.01,
@@ -26,7 +26,7 @@ def test__deflections_2d_via_mge_from():
 
     sersic = ag.mp.SersicCore(
         centre=(1.0, 2.0),
-        elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, angle=70.0),
+        ell_comps=ag.convert.ell_comps_from(axis_ratio=0.5, angle=70.0),
         intensity=2.0 * 0.45,
         effective_radius=0.5,
         radius_break=0.01,
@@ -42,7 +42,7 @@ def test__deflections_2d_via_mge_from():
 
     sersic = ag.mp.SersicCore(
         centre=(1.0, 2.0),
-        elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.5, angle=70.0),
+        ell_comps=ag.convert.ell_comps_from(axis_ratio=0.5, angle=70.0),
         intensity=0.45,
         effective_radius=0.5,
         radius_break=0.01,
@@ -80,7 +80,7 @@ def test__deflections_yx_2d_from():
 
     elliptical = ag.mp.SersicCore(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         effective_radius=1.0,
         sersic_index=4.0,
         mass_to_light_ratio=1.0,
@@ -102,7 +102,7 @@ def test__deflections_yx_2d_from():
 def test__convergence_2d_from():
 
     core_sersic = ag.mp.SersicCore(
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         effective_radius=5.0,
         sersic_index=4.0,
         radius_break=0.01,
@@ -117,7 +117,7 @@ def test__convergence_2d_from():
     assert convergence == pytest.approx(0.1, 1e-3)
 
     core_sersic = ag.mp.SersicCore(
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         effective_radius=5.0,
         sersic_index=4.0,
         radius_break=0.01,
@@ -133,7 +133,7 @@ def test__convergence_2d_from():
 
     elliptical = ag.mp.SersicCore(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         effective_radius=1.0,
         sersic_index=4.0,
         mass_to_light_ratio=1.0,
@@ -155,7 +155,7 @@ def test__convergence_2d_from():
 def test__convergence_2d_via_mge_from():
 
     core_sersic = ag.mp.SersicCore(
-        elliptical_comps=(0.2, 0.4),
+        ell_comps=(0.2, 0.4),
         effective_radius=5.0,
         sersic_index=4.0,
         radius_break=0.01,

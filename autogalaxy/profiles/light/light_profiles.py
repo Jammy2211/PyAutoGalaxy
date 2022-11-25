@@ -15,7 +15,7 @@ class LightProfile(EllProfile, OperateImage):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
     ):
         """
@@ -34,11 +34,11 @@ class LightProfile(EllProfile, OperateImage):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system (see the module
             `autogalaxy -> convert.py` for the convention).
         """
-        super().__init__(centre=centre, elliptical_comps=elliptical_comps)
+        super().__init__(centre=centre, ell_comps=ell_comps)
         self.intensity = intensity
 
     def image_2d_from(
@@ -143,7 +143,7 @@ class Gaussian(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         sigma: float = 1.0,
     ):
@@ -156,7 +156,7 @@ class Gaussian(LightProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -166,9 +166,7 @@ class Gaussian(LightProfile):
             The sigma value of the Gaussian, corresponding to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
 
-        super().__init__(
-            centre=centre, elliptical_comps=elliptical_comps, intensity=intensity
-        )
+        super().__init__(centre=centre, ell_comps=ell_comps, intensity=intensity)
         self.sigma = sigma
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
@@ -242,7 +240,7 @@ class GaussianSph(Gaussian):
             The sigma value of the Gaussian, corresponding to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
         super().__init__(
-            centre=centre, elliptical_comps=(0.0, 0.0), intensity=intensity, sigma=sigma
+            centre=centre, ell_comps=(0.0, 0.0), intensity=intensity, sigma=sigma
         )
 
 
@@ -250,7 +248,7 @@ class Moffat(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         alpha: float = 0.5,
         beta: float = 2.0,
@@ -268,7 +266,7 @@ class Moffat(LightProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -281,9 +279,7 @@ class Moffat(LightProfile):
             tends to a Gaussian as beta goes to infinity.
         """
 
-        super().__init__(
-            centre=centre, elliptical_comps=elliptical_comps, intensity=intensity
-        )
+        super().__init__(centre=centre, ell_comps=ell_comps, intensity=intensity)
         self.alpha = alpha
         self.beta = beta
 
@@ -356,7 +352,7 @@ class MoffatSph(Moffat):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -376,7 +372,7 @@ class AbstractSersic(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
@@ -390,7 +386,7 @@ class AbstractSersic(LightProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -401,9 +397,7 @@ class AbstractSersic(LightProfile):
         sersic_index
             Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
         """
-        super().__init__(
-            centre=centre, elliptical_comps=elliptical_comps, intensity=intensity
-        )
+        super().__init__(centre=centre, ell_comps=ell_comps, intensity=intensity)
         self.effective_radius = effective_radius
         self.sersic_index = sersic_index
 
@@ -455,7 +449,7 @@ class Sersic(AbstractSersic, LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
@@ -469,7 +463,7 @@ class Sersic(AbstractSersic, LightProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -482,7 +476,7 @@ class Sersic(AbstractSersic, LightProfile):
         """
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -567,7 +561,7 @@ class SersicSph(Sersic):
         """
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -578,7 +572,7 @@ class Exponential(Sersic):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
     ):
@@ -593,7 +587,7 @@ class Exponential(Sersic):
         ----------
         centre
             The (y,x) arc-second centre of the light profile.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -604,7 +598,7 @@ class Exponential(Sersic):
         """
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=1.0,
@@ -637,7 +631,7 @@ class ExponentialSph(Exponential):
         """
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
         )
@@ -647,7 +641,7 @@ class DevVaucouleurs(Sersic):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
     ):
@@ -662,7 +656,7 @@ class DevVaucouleurs(Sersic):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -673,7 +667,7 @@ class DevVaucouleurs(Sersic):
         """
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=4.0,
@@ -706,7 +700,7 @@ class DevVaucouleursSph(DevVaucouleurs):
         """
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
         )
@@ -716,7 +710,7 @@ class SersicCore(Sersic):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
         radius_break: float = 0.01,
@@ -733,7 +727,7 @@ class SersicCore(Sersic):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         effective_radius
@@ -752,7 +746,7 @@ class SersicCore(Sersic):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -862,7 +856,7 @@ class SersicCoreSph(SersicCore):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             effective_radius=effective_radius,
             sersic_index=sersic_index,
             radius_break=radius_break,
@@ -881,7 +875,7 @@ class ExponentialCore(SersicCore):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         effective_radius: float = 0.6,
         radius_break: float = 0.01,
         intensity: float = 0.05,
@@ -897,7 +891,7 @@ class ExponentialCore(SersicCore):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         effective_radius
@@ -916,7 +910,7 @@ class ExponentialCore(SersicCore):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=1.0,
@@ -959,7 +953,7 @@ class ExponentialCoreSph(ExponentialCore):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             effective_radius=effective_radius,
             radius_break=radius_break,
             intensity=intensity,
@@ -977,7 +971,7 @@ class Chameleon(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         core_radius_0: float = 0.01,
         core_radius_1: float = 0.05,
@@ -995,7 +989,7 @@ class Chameleon(LightProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -1007,9 +1001,7 @@ class Chameleon(LightProfile):
             The core size of the second elliptical cored Isothermal profile.
         """
 
-        super().__init__(
-            centre=centre, elliptical_comps=elliptical_comps, intensity=intensity
-        )
+        super().__init__(centre=centre, ell_comps=ell_comps, intensity=intensity)
         self.core_radius_0 = core_radius_0
         self.core_radius_1 = core_radius_1
 
@@ -1105,7 +1097,7 @@ class ChameleonSph(Chameleon):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -1119,7 +1111,7 @@ class ChameleonSph(Chameleon):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             intensity=intensity,
             core_radius_0=core_radius_0,
             core_radius_1=core_radius_1,
@@ -1130,7 +1122,7 @@ class ElsonFreeFall(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         eta: float = 1.5,
@@ -1143,7 +1135,7 @@ class ElsonFreeFall(LightProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -1155,9 +1147,7 @@ class ElsonFreeFall(LightProfile):
             Scales the intensity gradient of the profile.
         """
 
-        super().__init__(
-            centre=centre, elliptical_comps=elliptical_comps, intensity=intensity
-        )
+        super().__init__(centre=centre, ell_comps=ell_comps, intensity=intensity)
 
         self.effective_radius = effective_radius
         self.eta = eta
@@ -1235,7 +1225,7 @@ class ElsonFreeFallSph(ElsonFreeFall):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             eta=eta,

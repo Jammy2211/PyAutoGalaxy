@@ -44,7 +44,7 @@ class Isothermal(PowerLaw):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         einstein_radius: float = 1.0,
     ):
         """
@@ -55,7 +55,7 @@ class Isothermal(PowerLaw):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         einstein_radius
@@ -64,7 +64,7 @@ class Isothermal(PowerLaw):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             einstein_radius=einstein_radius,
             slope=2.0,
         )
@@ -157,7 +157,7 @@ class IsothermalSph(Isothermal):
             The arc-second Einstein radius.
         """
         super().__init__(
-            centre=centre, elliptical_comps=(0.0, 0.0), einstein_radius=einstein_radius
+            centre=centre, ell_comps=(0.0, 0.0), einstein_radius=einstein_radius
         )
 
     @property

@@ -60,12 +60,12 @@ class TestIsothermalMLR:
         sie = ag.sr.IsothermalMLR(
             relation=relation,
             luminosity=4.0,
-            elliptical_comps=(0.5, 0.5),
+            ell_comps=(0.5, 0.5),
             centre=(1.0, 1.0),
         )
 
         assert sie.relation == relation
         assert sie.luminosity == 4.0
         assert sie.centre == (1.0, 1.0)
-        assert sie.elliptical_comps == (0.5, 0.5)
+        assert sie.ell_comps == (0.5, 0.5)
         assert sie.einstein_radius == 128.0

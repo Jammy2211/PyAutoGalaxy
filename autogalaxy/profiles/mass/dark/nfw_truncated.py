@@ -18,7 +18,7 @@ class NFWTruncatedSph(AbstractgNFW):
     ):
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             kappa_s=kappa_s,
             inner_slope=1.0,
             scale_radius=scale_radius,

@@ -91,7 +91,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 0.6,
@@ -105,7 +105,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -117,12 +117,8 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles
         """
-        super(AbstractSersic, self).__init__(
-            centre=centre, elliptical_comps=elliptical_comps
-        )
-        super(MassProfile, self).__init__(
-            centre=centre, elliptical_comps=elliptical_comps
-        )
+        super(AbstractSersic, self).__init__(centre=centre, ell_comps=ell_comps)
+        super(MassProfile, self).__init__(centre=centre, ell_comps=ell_comps)
         super(MassProfileMGE, self).__init__()
         super(MassProfileCSE, self).__init__()
         self.mass_to_light_ratio = mass_to_light_ratio
@@ -455,7 +451,7 @@ class SersicSph(Sersic):
         """
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,

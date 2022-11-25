@@ -23,7 +23,7 @@ def test__deflections_yx_2d_from():
     assert deflections[0, 1] == pytest.approx(1.06214, 1e-4)
 
     isothermal = ag.mp.Isothermal(
-        centre=(0, 0), elliptical_comps=(0.0, 0.333333), einstein_radius=1.0
+        centre=(0, 0), ell_comps=(0.0, 0.333333), einstein_radius=1.0
     )
 
     deflections = isothermal.deflections_yx_2d_from(grid=np.array([[0.1625, 0.1625]]))
@@ -32,7 +32,7 @@ def test__deflections_yx_2d_from():
     assert deflections[0, 1] == pytest.approx(0.50734, 1e-3)
 
     isothermal = ag.mp.Isothermal(
-        centre=(0, 0), elliptical_comps=(0.0, 0.333333), einstein_radius=1.0
+        centre=(0, 0), ell_comps=(0.0, 0.333333), einstein_radius=1.0
     )
 
     deflections = isothermal.deflections_yx_2d_from(grid=np.array([[0.1625, 0.1625]]))
@@ -41,7 +41,7 @@ def test__deflections_yx_2d_from():
     assert deflections[0, 1] == pytest.approx(0.50734, 1e-3)
 
     elliptical = ag.mp.Isothermal(
-        centre=(1.1, 1.1), elliptical_comps=(0.0, 0.0), einstein_radius=3.0
+        centre=(1.1, 1.1), ell_comps=(0.0, 0.0), einstein_radius=3.0
     )
     spherical = ag.mp.IsothermalSph(centre=(1.1, 1.1), einstein_radius=3.0)
 
@@ -62,7 +62,7 @@ def test__convergence_2d_from():
     assert convergence == pytest.approx(0.5 * 2.0, 1e-3)
 
     isothermal = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), einstein_radius=1.0
+        centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=1.0
     )
 
     convergence = isothermal.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
@@ -70,7 +70,7 @@ def test__convergence_2d_from():
     assert convergence == pytest.approx(0.5, 1e-3)
 
     isothermal = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), einstein_radius=2.0
+        centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=2.0
     )
 
     convergence = isothermal.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
@@ -78,7 +78,7 @@ def test__convergence_2d_from():
     assert convergence == pytest.approx(0.5 * 2.0, 1e-3)
 
     isothermal = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.0, 0.333333), einstein_radius=1.0
+        centre=(0.0, 0.0), ell_comps=(0.0, 0.333333), einstein_radius=1.0
     )
 
     convergence = isothermal.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
@@ -86,7 +86,7 @@ def test__convergence_2d_from():
     assert convergence == pytest.approx(0.66666, 1e-3)
 
     elliptical = ag.mp.Isothermal(
-        centre=(1.1, 1.1), elliptical_comps=(0.0, 0.0), einstein_radius=3.0
+        centre=(1.1, 1.1), ell_comps=(0.0, 0.0), einstein_radius=3.0
     )
     spherical = ag.mp.IsothermalSph(centre=(1.1, 1.1), einstein_radius=3.0)
 
@@ -105,7 +105,7 @@ def test__potential_2d_from():
 
     isothermal = ag.mp.Isothermal(
         centre=(-0.7, 0.5),
-        elliptical_comps=(0.152828, -0.088235),
+        ell_comps=(0.152828, -0.088235),
         einstein_radius=1.3,
     )
 
@@ -114,7 +114,7 @@ def test__potential_2d_from():
     assert potential == pytest.approx(1.19268, 1e-3)
 
     elliptical = ag.mp.Isothermal(
-        centre=(1.1, 1.1), elliptical_comps=(0.0, 0.0), einstein_radius=3.0
+        centre=(1.1, 1.1), ell_comps=(0.0, 0.0), einstein_radius=3.0
     )
     spherical = ag.mp.IsothermalSph(centre=(1.1, 1.1), einstein_radius=3.0)
 
@@ -147,7 +147,7 @@ def test__shear_2d_from():
     assert shear[0, 1] == pytest.approx(-(16.0 / 34.0) * convergence, 1e-4)
 
     isothermal = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), einstein_radius=2.0
+        centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=2.0
     )
 
     convergence = isothermal.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
@@ -158,7 +158,7 @@ def test__shear_2d_from():
     assert shear[0, 1] == pytest.approx(-convergence, 1e-4)
 
     isothermal = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.3, 0.4), einstein_radius=2.0
+        centre=(0.0, 0.0), ell_comps=(0.3, 0.4), einstein_radius=2.0
     )
 
     shear = isothermal.shear_2d_from(grid=np.array([[0.0, 1.0]]))
@@ -169,11 +169,11 @@ def test__shear_2d_from():
 
 def test__compare_to_cored_power_law():
     isothermal = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.333333, 0.0), einstein_radius=1.0
+        centre=(0.0, 0.0), ell_comps=(0.333333, 0.0), einstein_radius=1.0
     )
     cored_power_law = ag.mp.PowerLawCore(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.333333, 0.0),
+        ell_comps=(0.333333, 0.0),
         einstein_radius=1.0,
         core_radius=0.0,
     )

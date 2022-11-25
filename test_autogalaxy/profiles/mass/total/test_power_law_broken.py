@@ -32,7 +32,7 @@ def test__deflections_yx_2d_from():
 
     broken_power_law = ag.mp.PowerLawBroken(
         centre=(0, 0),
-        elliptical_comps=(0.096225, 0.055555),
+        ell_comps=(0.096225, 0.055555),
         einstein_radius=1.0,
         inner_slope=1.5,
         outer_slope=2.5,
@@ -46,7 +46,7 @@ def test__deflections_yx_2d_from():
 
     broken_power_law = ag.mp.PowerLawBroken(
         centre=(0, 0),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         einstein_radius=1.0,
         inner_slope=1.5,
         outer_slope=2.5,
@@ -60,7 +60,7 @@ def test__deflections_yx_2d_from():
 
     broken_power_law = ag.mp.PowerLawBroken(
         centre=(0, 0),
-        elliptical_comps=(0.109423, 0.019294),
+        ell_comps=(0.109423, 0.019294),
         einstein_radius=1.0,
         inner_slope=1.5,
         outer_slope=2.5,
@@ -74,7 +74,7 @@ def test__deflections_yx_2d_from():
 
     broken_power_law = ag.mp.PowerLawBroken(
         centre=(0, 0),
-        elliptical_comps=(-0.216506, -0.125),
+        ell_comps=(-0.216506, -0.125),
         einstein_radius=1.0,
         inner_slope=1.5,
         outer_slope=2.5,
@@ -109,7 +109,7 @@ def test__convergence_2d_from():
 
     broken_power_law = ag.mp.PowerLawBroken(
         centre=(0, 0),
-        elliptical_comps=(0.096225, 0.055555),
+        ell_comps=(0.096225, 0.055555),
         einstein_radius=1.0,
         inner_slope=1.5,
         outer_slope=2.5,
@@ -122,7 +122,7 @@ def test__convergence_2d_from():
 
     broken_power_law = ag.mp.PowerLawBroken(
         centre=(0, 0),
-        elliptical_comps=(-0.113433, 0.135184),
+        ell_comps=(-0.113433, 0.135184),
         einstein_radius=1.0,
         inner_slope=1.8,
         outer_slope=2.2,
@@ -135,7 +135,7 @@ def test__convergence_2d_from():
 
     broken_power_law = ag.mp.PowerLawBroken(
         centre=(0, 0),
-        elliptical_comps=(0.113433, -0.135184),
+        ell_comps=(0.113433, -0.135184),
         einstein_radius=1.0,
         inner_slope=1.8,
         outer_slope=2.2,
@@ -148,7 +148,7 @@ def test__convergence_2d_from():
 
     broken_power_law = ag.mp.PowerLawBroken(
         centre=(0, 0),
-        elliptical_comps=(-0.173789, -0.030643),
+        ell_comps=(-0.173789, -0.030643),
         einstein_radius=1.0,
         inner_slope=1.8,
         outer_slope=2.2,

@@ -11,7 +11,7 @@ class PowerLaw(PowerLawCore):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         einstein_radius: float = 1.0,
         slope: float = 2.0,
     ):
@@ -22,7 +22,7 @@ class PowerLaw(PowerLawCore):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         einstein_radius
@@ -33,7 +33,7 @@ class PowerLaw(PowerLawCore):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             einstein_radius=einstein_radius,
             slope=slope,
             core_radius=0.0,
@@ -135,7 +135,7 @@ class PowerLawSph(PowerLaw):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             einstein_radius=einstein_radius,
             slope=slope,
         )

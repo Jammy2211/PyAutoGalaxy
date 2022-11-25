@@ -9,7 +9,7 @@ class ElsonFreeFall(lp.ElsonFreeFall, LightProfileSNR):
         self,
         signal_to_noise_ratio: float = 10.0,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         effective_radius: float = 0.6,
         eta: float = 1.5,
     ):
@@ -21,7 +21,7 @@ class ElsonFreeFall(lp.ElsonFreeFall, LightProfileSNR):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -35,7 +35,7 @@ class ElsonFreeFall(lp.ElsonFreeFall, LightProfileSNR):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=0.0,
             effective_radius=effective_radius,
             eta=eta,

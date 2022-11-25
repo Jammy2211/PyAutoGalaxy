@@ -11,7 +11,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 def test__image_2d_from():
     exponential = ag.lp.Exponential(
-        elliptical_comps=(0.0, 0.333333), intensity=3.0, effective_radius=2.0
+        ell_comps=(0.0, 0.333333), intensity=3.0, effective_radius=2.0
     )
 
     image = exponential.image_2d_from(grid=np.array([[1.0, 0.0]]))
@@ -19,7 +19,7 @@ def test__image_2d_from():
     assert image == pytest.approx(4.9047, 1e-3)
 
     exponential = ag.lp.Exponential(
-        elliptical_comps=(0.0, -0.333333), intensity=2.0, effective_radius=3.0
+        ell_comps=(0.0, -0.333333), intensity=2.0, effective_radius=3.0
     )
 
     image = exponential.image_2d_from(grid=np.array([[0.0, 1.0]]))
@@ -27,7 +27,7 @@ def test__image_2d_from():
     assert image == pytest.approx(4.8566, 1e-3)
 
     exponential = ag.lp.Exponential(
-        elliptical_comps=(0.0, -0.333333), intensity=4.0, effective_radius=3.0
+        ell_comps=(0.0, -0.333333), intensity=4.0, effective_radius=3.0
     )
 
     image = exponential.image_2d_from(grid=np.array([[0.0, 1.0]]))
@@ -39,7 +39,7 @@ def test__image_2d_from():
     assert value == pytest.approx(2.0 * 4.8566, 1e-3)
 
     elliptical = ag.lp.Exponential(
-        elliptical_comps=(0.0, 0.0), intensity=3.0, effective_radius=2.0
+        ell_comps=(0.0, 0.0), intensity=3.0, effective_radius=2.0
     )
 
     spherical = ag.lp.ExponentialSph(intensity=3.0, effective_radius=2.0)

@@ -12,7 +12,7 @@ class NFW(gNFW, MassProfileCSE):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         kappa_s: float = 0.05,
         scale_radius: float = 1.0,
     ):
@@ -23,7 +23,7 @@ class NFW(gNFW, MassProfileCSE):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         kappa_s
@@ -36,7 +36,7 @@ class NFW(gNFW, MassProfileCSE):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             kappa_s=kappa_s,
             inner_slope=1.0,
             scale_radius=scale_radius,
@@ -284,7 +284,7 @@ class NFWSph(NFW):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             kappa_s=kappa_s,
             scale_radius=scale_radius,
         )

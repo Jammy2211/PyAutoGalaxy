@@ -84,7 +84,7 @@ It therefore produces a plane whose image looks exactly like the dataset.
         redshift=0.5,
         bulge=ag.lp.Sersic(
             centre=(0.0, 0.0),
-            elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.9, angle=45.0),
+            ell_comps=ag.convert.ell_comps_from(axis_ratio=0.9, angle=45.0),
             intensity=1.0,
             effective_radius=0.8,
             sersic_index=4.0,

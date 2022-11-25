@@ -21,7 +21,7 @@ class PointMass(MassProfile):
         einstein_radius
             The arc-second Einstein radius of the point-mass.
         """
-        super().__init__(centre=centre, elliptical_comps=(0.0, 0.0))
+        super().__init__(centre=centre, ell_comps=(0.0, 0.0))
         self.einstein_radius = einstein_radius
 
     def convergence_2d_from(self, grid: aa.type.Grid2DLike):

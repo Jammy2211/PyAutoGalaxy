@@ -14,7 +14,7 @@ def make_ell_sersic_dict():
     return {
         "type": "autogalaxy.profiles.mass.stellar.sersic.Sersic",
         "centre": (0.0, 0.0),
-        "elliptical_comps": (0.0, 0.0),
+        "ell_comps": (0.0, 0.0),
         "intensity": 0.1,
         "effective_radius": 0.6,
         "sersic_index": 0.6,

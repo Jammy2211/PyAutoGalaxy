@@ -12,7 +12,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 def test__image_2d_from():
 
     chameleon = ag.lp.Chameleon(
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         core_radius_0=0.1,
         core_radius_1=0.3,
@@ -23,7 +23,7 @@ def test__image_2d_from():
     assert image == pytest.approx(0.018605, 1e-3)
 
     chameleon = ag.lp.Chameleon(
-        elliptical_comps=(0.5, 0.0),
+        ell_comps=(0.5, 0.0),
         intensity=3.0,
         core_radius_0=0.2,
         core_radius_1=0.4,
@@ -35,7 +35,7 @@ def test__image_2d_from():
     assert image == pytest.approx(0.0078149, 1e-3)
 
     chameleon = ag.lp.Chameleon(
-        elliptical_comps=(0.0, 0.333333),
+        ell_comps=(0.0, 0.333333),
         intensity=3.0,
         core_radius_0=0.2,
         core_radius_1=0.4,
@@ -46,7 +46,7 @@ def test__image_2d_from():
     assert image == pytest.approx(0.024993, 1e-3)
 
     elliptical = ag.lp.Chameleon(
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=3.0,
         core_radius_0=0.2,
         core_radius_1=0.4,

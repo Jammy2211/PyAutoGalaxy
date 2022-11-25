@@ -12,7 +12,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 def test__image_2d_from():
     eff = ag.lp.ElsonFreeFall(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=1.0,
     )
@@ -23,7 +23,7 @@ def test__image_2d_from():
 
     eff = ag.lp.ElsonFreeFall(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=2.0,
         effective_radius=1.0,
     )
@@ -34,7 +34,7 @@ def test__image_2d_from():
 
     eff = ag.lp.ElsonFreeFall(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=2.0,
     )
@@ -45,7 +45,7 @@ def test__image_2d_from():
 
     eff = ag.lp.ElsonFreeFall(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=2.0,
     )
@@ -55,7 +55,7 @@ def test__image_2d_from():
     assert image == pytest.approx(0.17067, 1e-2)
 
     elliptical = ag.lp.ElsonFreeFall(
-        elliptical_comps=(0.0, 0.0), intensity=3.0, effective_radius=2.0
+        ell_comps=(0.0, 0.0), intensity=3.0, effective_radius=2.0
     )
     spherical = ag.lp.ElsonFreeFallSph(intensity=3.0, effective_radius=2.0)
 

@@ -45,7 +45,7 @@ def test__deflections_2d_via_potential_2d_from():
     assert mean_error < 1e-4
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.111111, 0.0), einstein_radius=2.0
+        centre=(0.0, 0.0), ell_comps=(0.111111, 0.0), einstein_radius=2.0
     )
 
     grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
@@ -61,7 +61,7 @@ def test__deflections_2d_via_potential_2d_from():
     assert mean_error < 1e-4
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
+        centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
     grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
@@ -107,19 +107,19 @@ def test__average_convergence_of_1_radius():
     assert sis.average_convergence_of_1_radius == pytest.approx(2.0, 1e-4)
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), einstein_radius=1.0, elliptical_comps=(0.0, 0.111111)
+        centre=(0.0, 0.0), einstein_radius=1.0, ell_comps=(0.0, 0.111111)
     )
 
     assert sie.average_convergence_of_1_radius == pytest.approx(1.0, 1e-4)
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), einstein_radius=3.0, elliptical_comps=(0.0, 0.333333)
+        centre=(0.0, 0.0), einstein_radius=3.0, ell_comps=(0.0, 0.333333)
     )
 
     assert sie.average_convergence_of_1_radius == pytest.approx(3.0, 1e-4)
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), einstein_radius=8.0, elliptical_comps=(0.0, 0.666666)
+        centre=(0.0, 0.0), einstein_radius=8.0, ell_comps=(0.0, 0.666666)
     )
 
     assert sie.average_convergence_of_1_radius == pytest.approx(8.0, 1e-4)
@@ -149,7 +149,7 @@ def test__density_between_circular_annuli():
         density_between_annuli, 1e-4
     )
 
-    nfw = ag.mp.NFW(centre=(0.0, 0.0), elliptical_comps=(0.111111, 0.0), kappa_s=1.0)
+    nfw = ag.mp.NFW(centre=(0.0, 0.0), ell_comps=(0.111111, 0.0), kappa_s=1.0)
 
     inner_mass = nfw.mass_angular_within_circle_from(radius=1.0)
 
@@ -473,9 +473,7 @@ def test__decorators__convergence_1d_from__grid_2d_in__returns_1d_image_via_proj
 
     grid_2d = ag.Grid2D.uniform(shape_native=(5, 5), pixel_scales=1.0)
 
-    sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), einstein_radius=1.0
-    )
+    sie = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=1.0)
 
     convergence_1d = sie.convergence_1d_from(grid=grid_2d)
     convergence_2d = sie.convergence_2d_from(grid=grid_2d)
@@ -484,9 +482,7 @@ def test__decorators__convergence_1d_from__grid_2d_in__returns_1d_image_via_proj
     assert convergence_1d[1] == pytest.approx(convergence_2d.native[2, 3], 1.0e-4)
     assert convergence_1d[2] == pytest.approx(convergence_2d.native[2, 4], 1.0e-4)
 
-    sie = ag.mp.Isothermal(
-        centre=(0.2, 0.2), elliptical_comps=(0.3, 0.3), einstein_radius=1.0
-    )
+    sie = ag.mp.Isothermal(centre=(0.2, 0.2), ell_comps=(0.3, 0.3), einstein_radius=1.0)
 
     convergence_1d = sie.convergence_1d_from(grid=grid_2d)
 
@@ -504,9 +500,7 @@ def test__decorators__convergence_1d_from__grid_2d_irregular_in__returns_1d_quan
 
     grid_2d = ag.Grid2DIrregular(grid=[[1.0, 1.0], [2.0, 2.0], [4.0, 4.0]])
 
-    sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), einstein_radius=1.0
-    )
+    sie = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=1.0)
 
     convergence_1d = sie.convergence_1d_from(grid=grid_2d)
     convergence_2d = sie.convergence_2d_from(grid=grid_2d)
@@ -515,9 +509,7 @@ def test__decorators__convergence_1d_from__grid_2d_irregular_in__returns_1d_quan
     assert convergence_1d[1] == pytest.approx(convergence_2d[1], 1.0e-4)
     assert convergence_1d[2] == pytest.approx(convergence_2d[2], 1.0e-4)
 
-    sie = ag.mp.Isothermal(
-        centre=(0.2, 0.2), elliptical_comps=(0.3, 0.3), einstein_radius=1.0
-    )
+    sie = ag.mp.Isothermal(centre=(0.2, 0.2), ell_comps=(0.3, 0.3), einstein_radius=1.0)
 
     convergence_1d = sie.convergence_1d_from(grid=grid_2d)
     convergence_2d = sie.convergence_2d_from(grid=grid_2d)
@@ -531,9 +523,7 @@ def test__decorators__convergence_1d_from__grid_1d_in__returns_1d_quantities_via
 
     grid_1d = ag.Grid1D.manual_native(grid=[1.0, 2.0, 3.0], pixel_scales=1.0)
 
-    sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), einstein_radius=1.0
-    )
+    sie = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=1.0)
 
     convergence_1d = sie.convergence_1d_from(grid=grid_1d)
     convergence_2d = sie.convergence_2d_from(grid=grid_1d)
@@ -542,9 +532,7 @@ def test__decorators__convergence_1d_from__grid_1d_in__returns_1d_quantities_via
     assert convergence_1d[1] == pytest.approx(convergence_2d[1], 1.0e-4)
     assert convergence_1d[2] == pytest.approx(convergence_2d[2], 1.0e-4)
 
-    sie = ag.mp.Isothermal(
-        centre=(0.5, 0.5), elliptical_comps=(0.2, 0.2), einstein_radius=1.0
-    )
+    sie = ag.mp.Isothermal(centre=(0.5, 0.5), ell_comps=(0.2, 0.2), einstein_radius=1.0)
 
     convergence_1d = sie.convergence_1d_from(grid=grid_1d)
 
@@ -561,9 +549,7 @@ def test__decorators__potential_1d_from__grid_2d_in__returns_1d_image_via_projec
 
     grid_2d = ag.Grid2D.uniform(shape_native=(5, 5), pixel_scales=1.0)
 
-    sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.0, 0.0), einstein_radius=1.0
-    )
+    sie = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=1.0)
 
     potential_1d = sie.potential_1d_from(grid=grid_2d)
     potential_2d = sie.potential_2d_from(grid=grid_2d)
@@ -572,9 +558,7 @@ def test__decorators__potential_1d_from__grid_2d_in__returns_1d_image_via_projec
     assert potential_1d[1] == pytest.approx(potential_2d.native[2, 3], 1.0e-4)
     assert potential_1d[2] == pytest.approx(potential_2d.native[2, 4], 1.0e-4)
 
-    sie = ag.mp.Isothermal(
-        centre=(0.2, 0.2), elliptical_comps=(0.3, 0.3), einstein_radius=1.0
-    )
+    sie = ag.mp.Isothermal(centre=(0.2, 0.2), ell_comps=(0.3, 0.3), einstein_radius=1.0)
 
     potential_1d = sie.potential_1d_from(grid=grid_2d)
 

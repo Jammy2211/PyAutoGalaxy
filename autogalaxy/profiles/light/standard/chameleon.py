@@ -13,7 +13,7 @@ class Chameleon(LightProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         core_radius_0: float = 0.01,
         core_radius_1: float = 0.05,
@@ -31,7 +31,7 @@ class Chameleon(LightProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -43,9 +43,7 @@ class Chameleon(LightProfile):
             The core size of the second elliptical cored Isothermal profile.
         """
 
-        super().__init__(
-            centre=centre, elliptical_comps=elliptical_comps, intensity=intensity
-        )
+        super().__init__(centre=centre, ell_comps=ell_comps, intensity=intensity)
         self.core_radius_0 = core_radius_0
         self.core_radius_1 = core_radius_1
 
@@ -141,7 +139,7 @@ class ChameleonSph(Chameleon):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -155,7 +153,7 @@ class ChameleonSph(Chameleon):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             intensity=intensity,
             core_radius_0=core_radius_0,
             core_radius_1=core_radius_1,

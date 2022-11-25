@@ -69,7 +69,7 @@ represents a light distribution:
 
     sersic_light_profile = al.lp.Sersic(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.1, 0.1),
+        ell_comps=(0.1, 0.1),
         intensity=0.05,
         effective_radius=2.0,
         sersic_index=4.0,
@@ -109,7 +109,7 @@ The code below creates a galaxy which is made of two components, a bulge and dis
 
     bulge = ag.lp.Sersic(
         centre=(0.0, 0.0),
-        elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.9, angle=45.0),
+        ell_comps=ag.convert.ell_comps_from(axis_ratio=0.9, angle=45.0),
         intensity=1.0,
         effective_radius=0.6,
         sersic_index=3.0,
@@ -117,7 +117,7 @@ The code below creates a galaxy which is made of two components, a bulge and dis
 
     disk = ag.lp.Exponential(
         centre=(0.0, 0.0),
-        elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.7, angle=30.0),
+        ell_comps=ag.convert.ell_comps_from(axis_ratio=0.7, angle=30.0),
         intensity=0.5,
         effective_radius=1.6,
     )
@@ -158,7 +158,7 @@ By passing `Galaxy` objects to a `Plane`, **PyAutoGalaxy** groups them to indica
         redshift=0.5,
         bulge=ag.lp.Sersic(
             centre=(0.0, -1.0),
-            elliptical_comps=(0.25, 0.1),
+            ell_comps=(0.25, 0.1),
             intensity=0.1,
             effective_radius=0.8,
             sersic_index=2.5,
@@ -169,7 +169,7 @@ By passing `Galaxy` objects to a `Plane`, **PyAutoGalaxy** groups them to indica
         redshift=0.5,
         bulge=ag.lp.Sersic(
             centre=(0.0, 1.0),
-            elliptical_comps=(0.0, 0.1),
+            ell_comps=(0.0, 0.1),
             intensity=0.1,
             effective_radius=0.6,
             sersic_index=3.0,
@@ -218,7 +218,7 @@ To finish, lets create a `Plane` with 2 merging galaxies, where the second galax
         redshift=0.5,
         bulge=ag.lmp.Sersic(
             centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.05),
+            ell_comps=(0.0, 0.05),
             intensity=0.5,
             effective_radius=0.3,
             sersic_index=3.5,
@@ -226,7 +226,7 @@ To finish, lets create a `Plane` with 2 merging galaxies, where the second galax
         ),
         disk = ag.lmp.Exponential(
             centre=(0.0, 0.0),
-            elliptical_comps=(0.0, 0.1),
+            ell_comps=(0.0, 0.1),
             intensity=1.0,
             effective_radius=2.0,
             mass_to_light_ratio=0.2,
@@ -237,7 +237,7 @@ To finish, lets create a `Plane` with 2 merging galaxies, where the second galax
         redshift=1.0,
         bulge=ag.lp.Exponential(
             centre=(0.00, 0.00),
-            elliptical_comps=(0.05, 0.05),
+            ell_comps=(0.05, 0.05),
             intensity=1.2,
             effective_radius=0.1,
         ),

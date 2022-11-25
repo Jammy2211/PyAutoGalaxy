@@ -9,7 +9,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 def test__deflections_via_integral_from():
     sersic = ag.mp.SersicRadialGradient(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.2,
         sersic_index=2.0,
@@ -26,7 +26,7 @@ def test__deflections_via_integral_from():
 
     sersic = ag.mp.SersicRadialGradient(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.2,
         sersic_index=2.0,
@@ -46,7 +46,7 @@ def test__deflections_2d_via_mge_from():
 
     sersic = ag.mp.SersicRadialGradient(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.2,
         sersic_index=2.0,
@@ -68,7 +68,7 @@ def test__deflections_2d_via_cse_from():
 
     sersic = ag.mp.SersicRadialGradient(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.2,
         sersic_index=2.0,
@@ -87,7 +87,7 @@ def test__deflections_2d_via_cse_from():
 
     sersic = ag.mp.SersicRadialGradient(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.2,
         sersic_index=2.0,
@@ -127,7 +127,7 @@ def test__deflections_yx_2d_from():
 
     elliptical = ag.mp.SersicRadialGradient(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=1.0,
         sersic_index=4.0,
@@ -154,7 +154,7 @@ def test__convergence_2d_from():
     # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = (1/0.6)**-1.0 = 0.6
     sersic = ag.mp.SersicRadialGradient(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=0.6,
         sersic_index=4.0,
@@ -169,7 +169,7 @@ def test__convergence_2d_from():
     # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = (1.5/2.0)**1.0 = 0.75
 
     sersic = ag.mp.SersicRadialGradient(
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=3.0,
         effective_radius=2.0,
         sersic_index=2.0,
@@ -182,7 +182,7 @@ def test__convergence_2d_from():
     assert convergence == pytest.approx(0.75 * 4.90657319276, 1e-3)
 
     sersic = ag.mp.SersicRadialGradient(
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=6.0,
         effective_radius=2.0,
         sersic_index=2.0,
@@ -195,7 +195,7 @@ def test__convergence_2d_from():
     assert convergence == pytest.approx(2.0 * 0.75 * 4.90657319276, 1e-3)
 
     sersic = ag.mp.SersicRadialGradient(
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=3.0,
         effective_radius=2.0,
         sersic_index=2.0,
@@ -209,7 +209,7 @@ def test__convergence_2d_from():
 
     # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = ((0.5*1.41)/2.0)**-1.0 = 2.836
     sersic = ag.mp.SersicRadialGradient(
-        elliptical_comps=(0.0, 0.333333),
+        ell_comps=(0.0, 0.333333),
         intensity=3.0,
         effective_radius=2.0,
         sersic_index=2.0,
@@ -223,7 +223,7 @@ def test__convergence_2d_from():
 
     elliptical = ag.mp.SersicRadialGradient(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=1.0,
         sersic_index=4.0,
@@ -249,7 +249,7 @@ def test__convergence_2d_from():
 def test__compare_to_sersic():
     sersic = ag.mp.SersicRadialGradient(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.2,
         sersic_index=1.0,
@@ -263,7 +263,7 @@ def test__compare_to_sersic():
 
     exponential = ag.mp.Exponential(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.2,
         mass_to_light_ratio=1.0,
@@ -283,7 +283,7 @@ def test__compare_to_sersic():
 
     sersic = ag.mp.SersicRadialGradient(
         centre=(0.4, 0.2),
-        elliptical_comps=(0.0180010, 0.0494575),
+        ell_comps=(0.0180010, 0.0494575),
         intensity=2.0,
         effective_radius=0.8,
         sersic_index=4.0,
@@ -296,7 +296,7 @@ def test__compare_to_sersic():
 
     dev = ag.mp.DevVaucouleurs(
         centre=(0.4, 0.2),
-        elliptical_comps=(0.0180010, 0.0494575),
+        ell_comps=(0.0180010, 0.0494575),
         intensity=2.0,
         effective_radius=0.8,
         mass_to_light_ratio=3.0,
@@ -311,7 +311,7 @@ def test__compare_to_sersic():
 
     sersic_grad = ag.mp.SersicRadialGradient(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.2,
         sersic_index=2.0,
@@ -324,7 +324,7 @@ def test__compare_to_sersic():
 
     sersic = ag.mp.Sersic(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.2,
         sersic_index=2.0,

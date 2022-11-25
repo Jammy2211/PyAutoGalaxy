@@ -9,7 +9,7 @@ class ExponentialCore(lp.ExponentialCore, LightProfileLinear):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         effective_radius: float = 0.6,
         radius_break: float = 0.01,
         gamma: float = 0.25,
@@ -24,7 +24,7 @@ class ExponentialCore(lp.ExponentialCore, LightProfileLinear):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         effective_radius
@@ -41,7 +41,7 @@ class ExponentialCore(lp.ExponentialCore, LightProfileLinear):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             effective_radius=effective_radius,
             radius_break=radius_break,
             gamma=gamma,

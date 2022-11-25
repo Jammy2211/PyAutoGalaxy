@@ -14,7 +14,7 @@ class Gaussian(MassProfile, StellarProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         sigma: float = 1.0,
         mass_to_light_ratio: float = 1.0,
@@ -26,7 +26,7 @@ class Gaussian(MassProfile, StellarProfile):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -36,10 +36,8 @@ class Gaussian(MassProfile, StellarProfile):
             The sigma value of the Gaussian.
         """
 
-        super(Gaussian, self).__init__(centre=centre, elliptical_comps=elliptical_comps)
-        super(MassProfile, self).__init__(
-            centre=centre, elliptical_comps=elliptical_comps
-        )
+        super(Gaussian, self).__init__(centre=centre, ell_comps=ell_comps)
+        super(MassProfile, self).__init__(centre=centre, ell_comps=ell_comps)
         self.mass_to_light_ratio = mass_to_light_ratio
         self.intensity = intensity
         self.sigma = sigma

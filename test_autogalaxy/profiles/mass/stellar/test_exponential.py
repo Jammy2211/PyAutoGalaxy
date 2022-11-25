@@ -30,7 +30,7 @@ def test__deflections_yx_2d_from():
 def test__deflections_2d_via_integral_from():
     exponential = ag.mp.Exponential(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.2,
         mass_to_light_ratio=1.0,
@@ -45,7 +45,7 @@ def test__deflections_2d_via_integral_from():
 
     exponential = ag.mp.Exponential(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.2,
         mass_to_light_ratio=1.0,
@@ -62,7 +62,7 @@ def test__deflections_2d_via_integral_from():
 def test__deflections_2d_via_cse_from():
     exponential = ag.mp.Exponential(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.8,
         mass_to_light_ratio=1.0,
@@ -79,7 +79,7 @@ def test__deflections_2d_via_cse_from():
 
     exponential = ag.mp.Exponential(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         effective_radius=0.8,
         mass_to_light_ratio=1.0,
@@ -97,7 +97,7 @@ def test__deflections_2d_via_cse_from():
 
 def test__convergence_2d_via_mge_from():
     exponential = ag.mp.Exponential(
-        elliptical_comps=(0.0, 0.333333),
+        ell_comps=(0.0, 0.333333),
         intensity=3.0,
         effective_radius=2.0,
         mass_to_light_ratio=1.0,
@@ -108,7 +108,7 @@ def test__convergence_2d_via_mge_from():
     assert convergence == pytest.approx(4.9047, 1e-3)
 
     exponential = ag.mp.Exponential(
-        elliptical_comps=(0.0, -0.333333),
+        ell_comps=(0.0, -0.333333),
         intensity=2.0,
         effective_radius=3.0,
         mass_to_light_ratio=1.0,
@@ -119,7 +119,7 @@ def test__convergence_2d_via_mge_from():
     assert convergence == pytest.approx(4.8566, 1e-3)
 
     exponential = ag.mp.Exponential(
-        elliptical_comps=(0.0, -0.333333),
+        ell_comps=(0.0, -0.333333),
         intensity=4.0,
         effective_radius=3.0,
         mass_to_light_ratio=1.0,
@@ -129,7 +129,7 @@ def test__convergence_2d_via_mge_from():
     assert convergence == pytest.approx(2.0 * 4.8566, 1e-3)
 
     exponential = ag.mp.Exponential(
-        elliptical_comps=(0.0, -0.333333),
+        ell_comps=(0.0, -0.333333),
         intensity=2.0,
         effective_radius=3.0,
         mass_to_light_ratio=2.0,
@@ -140,7 +140,7 @@ def test__convergence_2d_via_mge_from():
     assert convergence == pytest.approx(2.0 * 4.8566, 1e-3)
 
     exponential = ag.mp.Exponential(
-        elliptical_comps=(0.0, -0.333333),
+        ell_comps=(0.0, -0.333333),
         intensity=2.0,
         effective_radius=3.0,
         mass_to_light_ratio=1.0,
@@ -153,7 +153,7 @@ def test__convergence_2d_via_mge_from():
 
 def test__convergence_2d_from():
     exponential = ag.mp.Exponential(
-        elliptical_comps=(0.0, 0.333333),
+        ell_comps=(0.0, 0.333333),
         intensity=3.0,
         effective_radius=2.0,
         mass_to_light_ratio=1.0,
@@ -164,7 +164,7 @@ def test__convergence_2d_from():
     assert convergence == pytest.approx(4.9047, 1e-3)
 
     exponential = ag.mp.Exponential(
-        elliptical_comps=(0.0, -0.333333),
+        ell_comps=(0.0, -0.333333),
         intensity=2.0,
         effective_radius=3.0,
         mass_to_light_ratio=1.0,
@@ -175,7 +175,7 @@ def test__convergence_2d_from():
     assert convergence == pytest.approx(4.8566, 1e-3)
 
     exponential = ag.mp.Exponential(
-        elliptical_comps=(0.0, -0.333333),
+        ell_comps=(0.0, -0.333333),
         intensity=4.0,
         effective_radius=3.0,
         mass_to_light_ratio=1.0,
@@ -185,7 +185,7 @@ def test__convergence_2d_from():
     assert convergence == pytest.approx(2.0 * 4.8566, 1e-3)
 
     exponential = ag.mp.Exponential(
-        elliptical_comps=(0.0, -0.333333),
+        ell_comps=(0.0, -0.333333),
         intensity=2.0,
         effective_radius=3.0,
         mass_to_light_ratio=2.0,
@@ -196,7 +196,7 @@ def test__convergence_2d_from():
     assert convergence == pytest.approx(2.0 * 4.8566, 1e-3)
 
     exponential = ag.mp.Exponential(
-        elliptical_comps=(0.0, -0.333333),
+        ell_comps=(0.0, -0.333333),
         intensity=2.0,
         effective_radius=3.0,
         mass_to_light_ratio=1.0,
@@ -208,7 +208,7 @@ def test__convergence_2d_from():
 
     elliptical = ag.mp.Exponential(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=1.0,
         mass_to_light_ratio=1.0,

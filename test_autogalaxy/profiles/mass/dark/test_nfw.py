@@ -27,7 +27,7 @@ def test__deflections_via_integral_from():
 
     nfw = ag.mp.NFW(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         kappa_s=1.0,
         scale_radius=1.0,
     )
@@ -41,7 +41,7 @@ def test__deflections_via_integral_from():
 
     nfw = ag.mp.NFW(
         centre=(0.3, 0.2),
-        elliptical_comps=(0.03669, 0.172614),
+        ell_comps=(0.03669, 0.172614),
         kappa_s=2.5,
         scale_radius=4.0,
     )
@@ -80,7 +80,7 @@ def test__deflections_2d_via_cse_from():
 
     nfw = ag.mp.NFW(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         kappa_s=1.0,
         scale_radius=1.0,
     )
@@ -96,7 +96,7 @@ def test__deflections_2d_via_cse_from():
 
     nfw = ag.mp.NFW(
         centre=(0.3, 0.2),
-        elliptical_comps=(0.03669, 0.172614),
+        ell_comps=(0.03669, 0.172614),
         kappa_s=2.5,
         scale_radius=4.0,
     )
@@ -154,7 +154,7 @@ def test__convergence_2d_via_mge_from():
 
     nfw = ag.mp.NFW(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.333333),
+        ell_comps=(0.0, 0.333333),
         kappa_s=1.0,
         scale_radius=1.0,
     )
@@ -196,7 +196,7 @@ def test__convergence_2d_via_cse_from():
 
     nfw = ag.mp.NFW(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.333333),
+        ell_comps=(0.0, 0.333333),
         kappa_s=1.0,
         scale_radius=1.0,
     )
@@ -238,7 +238,7 @@ def test__convergence_2d_from():
 
     nfw = ag.mp.NFW(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.333333),
+        ell_comps=(0.0, 0.333333),
         kappa_s=1.0,
         scale_radius=1.0,
     )
@@ -264,7 +264,7 @@ def test__potential_2d_from():
 
     nfw = ag.mp.NFW(
         centre=(0.3, 0.2),
-        elliptical_comps=(0.03669, 0.172614),
+        ell_comps=(0.03669, 0.172614),
         kappa_s=2.5,
         scale_radius=4.0,
     )
@@ -276,7 +276,7 @@ def test__potential_2d_from():
     nfw_spherical = ag.mp.NFWSph(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
     nfw_elliptical = ag.mp.NFW(
         centre=(0.3, 0.2),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         kappa_s=2.5,
         scale_radius=4.0,
     )

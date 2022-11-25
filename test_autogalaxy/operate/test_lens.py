@@ -56,7 +56,7 @@ def test__hessian_from():
     grid = ag.Grid2DIrregular(grid=[(0.5, 0.5), (1.0, 1.0)])
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
+        centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
     hessian_yy, hessian_xy, hessian_yx, hessian_xx = sie.hessian_from(grid=grid)
@@ -84,7 +84,7 @@ def test__convergence_2d_via_hessian_from():
     )
 
     sis = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.001, 0.001), einstein_radius=1.0
+        centre=(0.0, 0.0), ell_comps=(0.001, 0.001), einstein_radius=1.0
     )
 
     convergence = sis.convergence_2d_via_hessian_from(grid=grid, buffer=buffer)
@@ -94,9 +94,7 @@ def test__convergence_2d_via_hessian_from():
     assert convergence.in_list[2] == pytest.approx(0.538326, 1.0e-4)
     assert convergence.in_list[3] == pytest.approx(0.539390, 1.0e-4)
 
-    sis = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.3, 0.4), einstein_radius=1.5
-    )
+    sis = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.3, 0.4), einstein_radius=1.5)
 
     convergence = sis.convergence_2d_via_hessian_from(grid=grid, buffer=buffer)
 
@@ -111,7 +109,7 @@ def test__magnification_2d_via_hessian_from():
     grid = ag.Grid2DIrregular(grid=[(0.5, 0.5), (1.0, 1.0)])
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
+        centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
     magnification = sie.magnification_2d_via_hessian_from(grid=grid)
@@ -289,7 +287,7 @@ def test__einstein_radius_from():
     assert einstein_radius == pytest.approx(2.0, 1e-1)
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), einstein_radius=2.0, elliptical_comps=(0.0, -0.25)
+        centre=(0.0, 0.0), einstein_radius=2.0, ell_comps=(0.0, -0.25)
     )
 
     einstein_radius = sie.einstein_radius_from(grid=grid)
@@ -313,7 +311,7 @@ def test__magnification_2d_from__compare_eigen_values_and_determinant():
     grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=1)
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
+        centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
     magnification_via_determinant = sie.magnification_2d_from(grid=grid)
@@ -331,7 +329,7 @@ def test__magnification_2d_from__compare_eigen_values_and_determinant():
     grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=2)
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
+        centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
     magnification_via_determinant = sie.magnification_2d_from(grid=grid)
@@ -354,7 +352,7 @@ def test__magnification_2d_from__compare_determinant_and_convergence_and_shear()
     grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=1)
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
+        centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
     magnification_via_determinant = sie.magnification_2d_from(grid=grid)
@@ -397,7 +395,7 @@ def test__tangential_critical_curve_from__compare_via_magnification():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
+        centre=(0.0, 0.0), einstein_radius=2, ell_comps=(0.109423, -0.019294)
     )
 
     tangential_critical_curve_via_magnification = critical_curve_via_magnification_from(
@@ -430,7 +428,7 @@ def test__radial_critical_curve_from__compare_via_magnification():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
+        centre=(0.0, 0.0), einstein_radius=2, ell_comps=(0.109423, -0.019294)
     )
 
     critical_curve_radial_via_magnification = critical_curve_via_magnification_from(
@@ -449,7 +447,7 @@ def test__tangential_caustic_from___compare_via_magnification():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
+        centre=(0.0, 0.0), einstein_radius=2, ell_comps=(0.109423, -0.019294)
     )
 
     tangential_caustic_via_magnification = caustics_via_magnification_from(
@@ -468,7 +466,7 @@ def test__radial_caustic_from___compare_via_magnification():
     grid = ag.Grid2D.uniform(shape_native=(60, 60), pixel_scales=0.08)
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), einstein_radius=2, elliptical_comps=(0.109423, -0.019294)
+        centre=(0.0, 0.0), einstein_radius=2, ell_comps=(0.109423, -0.019294)
     )
 
     caustic_radial_via_magnification = caustics_via_magnification_from(
@@ -487,7 +485,7 @@ def test__jacobian_from():
     grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=1)
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
+        centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
     jacobian = sie.jacobian_from(grid=grid)
@@ -533,7 +531,7 @@ def test__convergence_2d_via_jacobian_from__compare_via_jacobian_and_analytic():
     grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
 
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.111111, 0.0), einstein_radius=2.0
+        centre=(0.0, 0.0), ell_comps=(0.111111, 0.0), einstein_radius=2.0
     )
 
     convergence_via_analytic = sie.convergence_2d_from(grid=grid)
@@ -610,7 +608,7 @@ def test__evaluation_grid__changes_to_uniform_and_zoomed_in_if_masked():
 
 def test__binning_works_on_all_from_grid_methods():
     sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), elliptical_comps=(0.0, -0.111111), einstein_radius=2.0
+        centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
     grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=2)

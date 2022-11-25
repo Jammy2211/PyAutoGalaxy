@@ -13,7 +13,7 @@ class PowerLawBroken(MassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         einstein_radius: float = 1.0,
         inner_slope: float = 1.5,
         outer_slope: float = 2.5,
@@ -30,7 +30,7 @@ class PowerLawBroken(MassProfile):
         coordinates respectively.~
         """
 
-        super().__init__(centre=centre, elliptical_comps=elliptical_comps)
+        super().__init__(centre=centre, ell_comps=ell_comps)
 
         self.einstein_radius = einstein_radius
         self.einstein_radius_elliptical = np.sqrt(self.axis_ratio) * einstein_radius
@@ -187,7 +187,7 @@ class PowerLawBrokenSph(PowerLawBroken):
 
         super().__init__(
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             einstein_radius=einstein_radius,
             inner_slope=inner_slope,
             outer_slope=outer_slope,

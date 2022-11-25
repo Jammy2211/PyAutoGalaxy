@@ -17,7 +17,7 @@ class Basis(LightProfile):
 
         super().__init__(
             centre=light_profile_list[0].centre,
-            elliptical_comps=light_profile_list[0].elliptical_comps,
+            ell_comps=light_profile_list[0].ell_comps,
         )
 
         self.light_profile_list = light_profile_list

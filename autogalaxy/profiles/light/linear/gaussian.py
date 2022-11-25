@@ -10,7 +10,7 @@ class Gaussian(lp.Gaussian, LightProfileLinear):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         sigma: float = 1.0,
     ):
         """
@@ -22,7 +22,7 @@ class Gaussian(lp.Gaussian, LightProfileLinear):
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
-        elliptical_comps
+        ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
@@ -32,9 +32,7 @@ class Gaussian(lp.Gaussian, LightProfileLinear):
             The sigma value of the Gaussian, corresponding to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
 
-        super().__init__(
-            centre=centre, elliptical_comps=elliptical_comps, intensity=1.0, sigma=sigma
-        )
+        super().__init__(centre=centre, ell_comps=ell_comps, intensity=1.0, sigma=sigma)
 
     @property
     def lp_cls(self):

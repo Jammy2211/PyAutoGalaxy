@@ -121,7 +121,7 @@ def test__same_as_above_but_elliptical():
 
     nfw_mass = ag.mp.NFWMCRLudlow(
         centre=(1.0, 2.0),
-        elliptical_comps=(0.1, 0.2),
+        ell_comps=(0.1, 0.2),
         mass_at_200=1.0e9,
         redshift_object=0.6,
         redshift_source=2.5,
@@ -136,7 +136,7 @@ def test__same_as_above_but_elliptical():
 
     nfw_kappa_s = ag.mp.NFW(
         centre=(1.0, 2.0),
-        elliptical_comps=(0.1, 0.2),
+        ell_comps=(0.1, 0.2),
         kappa_s=nfw_mass.kappa_s,
         scale_radius=nfw_mass.scale_radius,
     )
@@ -157,9 +157,7 @@ def test__same_as_above_but_elliptical():
 
     assert nfw_mass.centre == (1.0, 2.0)
 
-    axis_ratio, angle = ag.convert.axis_ratio_and_angle_from(
-        elliptical_comps=(0.1, 0.2)
-    )
+    axis_ratio, angle = ag.convert.axis_ratio_and_angle_from(ell_comps=(0.1, 0.2))
 
     assert nfw_mass.axis_ratio == axis_ratio
     assert isinstance(nfw_mass.axis_ratio, float)
@@ -184,7 +182,7 @@ def test__same_as_above_but_generalized_elliptical():
 
     nfw_mass = ag.mp.gNFWMCRLudlow(
         centre=(1.0, 2.0),
-        elliptical_comps=(0.1, 0.2),
+        ell_comps=(0.1, 0.2),
         mass_at_200=1.0e9,
         inner_slope=2.0,
         redshift_object=0.6,
@@ -200,7 +198,7 @@ def test__same_as_above_but_generalized_elliptical():
 
     nfw_kappa_s = ag.mp.gNFW(
         centre=(1.0, 2.0),
-        elliptical_comps=(0.1, 0.2),
+        ell_comps=(0.1, 0.2),
         kappa_s=nfw_mass.kappa_s,
         scale_radius=nfw_mass.scale_radius,
         inner_slope=2.0,
@@ -222,9 +220,7 @@ def test__same_as_above_but_generalized_elliptical():
 
     assert nfw_mass.centre == (1.0, 2.0)
 
-    axis_ratio, angle = ag.convert.axis_ratio_and_angle_from(
-        elliptical_comps=(0.1, 0.2)
-    )
+    axis_ratio, angle = ag.convert.axis_ratio_and_angle_from(ell_comps=(0.1, 0.2))
 
     assert nfw_mass.axis_ratio == axis_ratio
     assert isinstance(nfw_mass.axis_ratio, float)

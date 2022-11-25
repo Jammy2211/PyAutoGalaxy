@@ -31,7 +31,7 @@ def test__scatter_is_nonzero():
     assert nfw.scale_radius == pytest.approx(0.29886, 1.0e-4)
 
     nfw_ell = ag.mp.NFWMCRScatterLudlow(
-        elliptical_comps=(0.5, 0.5),
+        ell_comps=(0.5, 0.5),
         mass_at_200=1.0e9,
         scatter_sigma=1.0,
         redshift_object=0.6,
@@ -40,11 +40,11 @@ def test__scatter_is_nonzero():
 
     # We uare using the NFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
 
-    assert nfw_ell.elliptical_comps == (0.5, 0.5)
+    assert nfw_ell.ell_comps == (0.5, 0.5)
     assert nfw_ell.scale_radius == pytest.approx(0.14978, 1.0e-4)
 
     nfw_ell = ag.mp.NFWMCRScatterLudlow(
-        elliptical_comps=(0.5, 0.5),
+        ell_comps=(0.5, 0.5),
         mass_at_200=1.0e9,
         scatter_sigma=-1.0,
         redshift_object=0.6,
@@ -53,7 +53,7 @@ def test__scatter_is_nonzero():
 
     # We uare using the NFWTruncated to check the mass gives a conosistnt kappa_s, given certain radii.
 
-    assert nfw_ell.elliptical_comps == (0.5, 0.5)
+    assert nfw_ell.ell_comps == (0.5, 0.5)
     assert nfw_ell.scale_radius == pytest.approx(0.29886, 1.0e-4)
 
     deflections_sph = nfw.deflections_yx_2d_from(grid=grid)

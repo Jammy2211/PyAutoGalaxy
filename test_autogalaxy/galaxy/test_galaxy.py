@@ -130,7 +130,7 @@ def test__convergence_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
     grid = ag.Grid2D.manual_native([[(1.05, -0.55), (2.05, -0.55)]], pixel_scales=1.0)
 
     elliptical_mp = ag.mp.Isothermal(
-        centre=(0.5, 1.0), elliptical_comps=(0.2, 0.3), einstein_radius=1.0
+        centre=(0.5, 1.0), ell_comps=(0.2, 0.3), einstein_radius=1.0
     )
 
     galaxy = ag.Galaxy(redshift=0.5, mass=elliptical_mp)
@@ -183,7 +183,7 @@ def test__potential_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
     grid = ag.Grid2D.manual_native([[(1.05, -0.55), (2.05, -0.55)]], pixel_scales=1.0)
 
     elliptical_mp = ag.mp.Isothermal(
-        centre=(0.5, 1.0), elliptical_comps=(0.2, 0.3), einstein_radius=1.0
+        centre=(0.5, 1.0), ell_comps=(0.2, 0.3), einstein_radius=1.0
     )
 
     galaxy = ag.Galaxy(redshift=0.5, mass=elliptical_mp)
@@ -429,14 +429,14 @@ def test__light_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric
     )
 
     lp_0 = ag.lp.Sersic(
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=0.6,
         sersic_index=4.0,
     )
 
     lp_1 = ag.lp.Sersic(
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=0.6,
         sersic_index=4.0,
@@ -444,7 +444,7 @@ def test__light_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric
     )
 
     lp_2 = ag.lp.Sersic(
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=0.6,
         sersic_index=4.0,
@@ -452,7 +452,7 @@ def test__light_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric
     )
 
     lp_3 = ag.lp.Sersic(
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         effective_radius=0.6,
         sersic_index=4.0,
@@ -486,10 +486,10 @@ def test__light_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric
 
 def test__mass_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric_results():
 
-    mp_0 = ag.mp.Isothermal(elliptical_comps=(0.333333, 0.0), einstein_radius=1.0)
+    mp_0 = ag.mp.Isothermal(ell_comps=(0.333333, 0.0), einstein_radius=1.0)
 
     mp_1 = ag.mp.Isothermal(
-        centre=(100, 0), elliptical_comps=(0.333333, 0.0), einstein_radius=1.0
+        centre=(100, 0), ell_comps=(0.333333, 0.0), einstein_radius=1.0
     )
 
     gal_x4_mp = ag.Galaxy(redshift=0.5, mass_profile_0=mp_0, mass_profile_1=mp_1)

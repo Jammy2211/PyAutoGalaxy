@@ -19,7 +19,7 @@ class Gaussian(lp.Gaussian, mp.Gaussian, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         sigma: float = 1.0,
         mass_to_light_ratio: float = 1.0,
@@ -28,14 +28,14 @@ class Gaussian(lp.Gaussian, mp.Gaussian, LightMassProfile):
         lp.Gaussian.__init__(
             self,
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             sigma=sigma,
         )
         mp.Gaussian.__init__(
             self,
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             sigma=sigma,
             mass_to_light_ratio=mass_to_light_ratio,
@@ -46,7 +46,7 @@ class Sersic(lp.Sersic, mp.Sersic, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 0.6,
@@ -56,7 +56,7 @@ class Sersic(lp.Sersic, mp.Sersic, LightMassProfile):
         lp.Sersic.__init__(
             self,
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -64,7 +64,7 @@ class Sersic(lp.Sersic, mp.Sersic, LightMassProfile):
         mp.Sersic.__init__(
             self,
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -99,7 +99,7 @@ class SersicSph(Sersic, LightMassProfile):
         Sersic.__init__(
             self,
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -111,7 +111,7 @@ class Exponential(Sersic, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         mass_to_light_ratio: float = 1.0,
@@ -138,7 +138,7 @@ class Exponential(Sersic, LightMassProfile):
         Sersic.__init__(
             self,
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=1.0,
@@ -172,7 +172,7 @@ class ExponentialSph(Exponential, LightMassProfile):
         Exponential.__init__(
             self,
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             mass_to_light_ratio=mass_to_light_ratio,
@@ -183,7 +183,7 @@ class DevVaucouleurs(Sersic, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         mass_to_light_ratio: float = 1.0,
@@ -209,7 +209,7 @@ class DevVaucouleurs(Sersic, LightMassProfile):
         """
         super().__init__(
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=4.0,
@@ -243,7 +243,7 @@ class DevVaucouleursSph(DevVaucouleurs, LightMassProfile):
         DevVaucouleurs.__init__(
             self,
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             mass_to_light_ratio=mass_to_light_ratio,
@@ -254,7 +254,7 @@ class SersicRadialGradient(lp.Sersic, mp.SersicRadialGradient, LightMassProfile)
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         sersic_index: float = 0.6,
@@ -286,7 +286,7 @@ class SersicRadialGradient(lp.Sersic, mp.SersicRadialGradient, LightMassProfile)
         lp.Sersic.__init__(
             self,
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -294,7 +294,7 @@ class SersicRadialGradient(lp.Sersic, mp.SersicRadialGradient, LightMassProfile)
         mp.SersicRadialGradient.__init__(
             self,
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -335,7 +335,7 @@ class SphSersicRadialGradient(SersicRadialGradient, LightMassProfile):
         SersicRadialGradient.__init__(
             self,
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
@@ -348,7 +348,7 @@ class EllExponentialRadialGradient(SersicRadialGradient, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         effective_radius: float = 0.6,
         mass_to_light_ratio: float = 1.0,
@@ -378,7 +378,7 @@ class EllExponentialRadialGradient(SersicRadialGradient, LightMassProfile):
         SersicRadialGradient.__init__(
             self,
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=1.0,
@@ -432,7 +432,7 @@ class SersicCore(lp.SersicCore, mp.SersicCore, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
         radius_break: float = 0.01,
@@ -445,7 +445,7 @@ class SersicCore(lp.SersicCore, mp.SersicCore, LightMassProfile):
         lp.SersicCore.__init__(
             self,
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
             radius_break=radius_break,
@@ -456,7 +456,7 @@ class SersicCore(lp.SersicCore, mp.SersicCore, LightMassProfile):
         mp.SersicCore.__init__(
             self,
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
             radius_break=radius_break,
@@ -497,7 +497,7 @@ class SersicCoreSph(SersicCore, LightMassProfile):
         SersicCore.__init__(
             self,
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             effective_radius=effective_radius,
             sersic_index=sersic_index,
             radius_break=radius_break,
@@ -512,7 +512,7 @@ class Chameleon(lp.Chameleon, mp.Chameleon, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        elliptical_comps: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 0.1,
         core_radius_0: float = 0.01,
         core_radius_1: float = 0.005,
@@ -522,7 +522,7 @@ class Chameleon(lp.Chameleon, mp.Chameleon, LightMassProfile):
         lp.Chameleon.__init__(
             self,
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             core_radius_0=core_radius_0,
             core_radius_1=core_radius_1,
@@ -530,7 +530,7 @@ class Chameleon(lp.Chameleon, mp.Chameleon, LightMassProfile):
         mp.Chameleon.__init__(
             self,
             centre=centre,
-            elliptical_comps=elliptical_comps,
+            ell_comps=ell_comps,
             intensity=intensity,
             core_radius_0=core_radius_0,
             core_radius_1=core_radius_1,
@@ -565,7 +565,7 @@ class ChameleonSph(Chameleon, LightMassProfile):
         Chameleon.__init__(
             self,
             centre=centre,
-            elliptical_comps=(0.0, 0.0),
+            ell_comps=(0.0, 0.0),
             intensity=intensity,
             core_radius_0=core_radius_0,
             core_radius_1=core_radius_1,

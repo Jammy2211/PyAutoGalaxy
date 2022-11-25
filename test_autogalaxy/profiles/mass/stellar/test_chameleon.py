@@ -9,7 +9,7 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 def test__deflections_2d_via_analytic_from():
     chameleon = ag.mp.Chameleon(
         centre=(-0.4, -0.2),
-        elliptical_comps=(-0.07142, -0.085116),
+        ell_comps=(-0.07142, -0.085116),
         intensity=5.0,
         core_radius_0=0.2,
         core_radius_1=0.4,
@@ -49,7 +49,7 @@ def test__spherical_and_elliptical_identical():
 
     elliptical = ag.mp.Chameleon(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         mass_to_light_ratio=1.0,
     )
@@ -67,7 +67,7 @@ def test__spherical_and_elliptical_identical():
 def test__convergence_2d_from():
 
     chameleon = ag.mp.Chameleon(
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         core_radius_0=0.1,
         core_radius_1=0.3,
@@ -79,7 +79,7 @@ def test__convergence_2d_from():
     assert convergence == pytest.approx(2.0 * 0.018605, 1e-3)
 
     chameleon = ag.mp.Chameleon(
-        elliptical_comps=(0.5, 0.0),
+        ell_comps=(0.5, 0.0),
         intensity=3.0,
         core_radius_0=0.2,
         core_radius_1=0.4,
@@ -92,7 +92,7 @@ def test__convergence_2d_from():
 
     elliptical = ag.mp.Chameleon(
         centre=(0.0, 0.0),
-        elliptical_comps=(0.0, 0.0),
+        ell_comps=(0.0, 0.0),
         intensity=1.0,
         mass_to_light_ratio=1.0,
     )
