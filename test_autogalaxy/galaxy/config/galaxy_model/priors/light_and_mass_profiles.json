@@ -1,5 +1,5 @@
 {
-    "SphSersic": {
+    "SersicSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -70,7 +70,7 @@
             }
         }
     },
-    "EllSersic": {
+    "Sersic": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -171,7 +171,7 @@
             }
         }
     },
-    "SphExponential": {
+    "ExponentialSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -229,153 +229,7 @@
             }
         }
     },
-    "EllExponential": {
-        "centre_0": {
-            "type": "Gaussian",
-            "mean": 0.0,
-            "sigma": 0.3,
-            "lower_limit": "-inf",
-            "upper_limit": "inf",
-            "width_modifier": {
-                "type": "Absolute",
-                "value": 0.05
-            },
-            "gaussian_limits": {
-                "lower": "-inf",
-                "upper": "inf"
-            }
-        },
-        "centre_1": {
-            "type": "Gaussian",
-            "mean": 0.0,
-            "sigma": 0.3,
-            "lower_limit": "-inf",
-            "upper_limit": "inf",
-            "width_modifier": {
-                "type": "Absolute",
-                "value": 0.05
-            },
-            "gaussian_limits": {
-                "lower": "-inf",
-                "upper": "inf"
-            }
-        },
-         "elliptical_comps_0": {
-            "type": "Gaussian",
-            "lower_limit": -1.0,
-            "upper_limit": 1.0,
-            "width_modifier": {
-                "type": "Absolute",
-                "value": 0.2
-            },
-            "mean": 0.0,
-            "sigma": 0.3,
-            "gaussian_limits": {
-                "lower": -1.0,
-                "upper": 1.0
-            }
-        },
-        "elliptical_comps_1": {
-            "type": "Gaussian",
-            "lower_limit": -1.0,
-            "upper_limit": 1.0,
-            "width_modifier": {
-                "type": "Absolute",
-                "value": 0.2
-            },
-            "mean": 0.0,
-            "sigma": 0.3,
-            "gaussian_limits": {
-                "lower": "-1.0",
-                "upper": "1.0"
-            }
-        },
-        "intensity": {
-            "type": "LogUniform",
-            "lower_limit": 1.0e-6,
-            "upper_limit": 1000000.0,
-            "width_modifier": {
-                "type": "Relative",
-                "value": 0.5
-            },
-            "gaussian_limits": {
-                "lower": 0.0,
-                "upper": "inf"
-            }
-        },
-        "effective_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
-            "upper_limit": 30.0,
-            "width_modifier": {
-                "type": "Relative",
-                "value": 1.0
-            },
-            "gaussian_limits": {
-                "lower": 0.0,
-                "upper": "inf"
-            }
-        }
-    },
-    "SphDevVaucouleurs": {
-        "centre_0": {
-            "type": "Gaussian",
-            "mean": 0.0,
-            "sigma": 0.3,
-            "lower_limit": "-inf",
-            "upper_limit": "inf",
-            "width_modifier": {
-                "type": "Absolute",
-                "value": 0.05
-            },
-            "gaussian_limits": {
-                "lower": "-inf",
-                "upper": "inf"
-            }
-        },
-        "centre_1": {
-            "type": "Gaussian",
-            "mean": 0.0,
-            "sigma": 0.3,
-            "lower_limit": "-inf",
-            "upper_limit": "inf",
-            "width_modifier": {
-                "type": "Absolute",
-                "value": 0.05
-            },
-            "gaussian_limits": {
-                "lower": "-inf",
-                "upper": "inf"
-            }
-        },
-        "intensity": {
-            "type": "LogUniform",
-            "lower_limit": 1.0e-6,
-            "upper_limit": 1000000.0,
-            "width_modifier": {
-                "type": "Relative",
-                "value": 0.5
-            },
-            "gaussian_limits": {
-                "lower": 0.0,
-                "upper": "inf"
-            }
-        },
-        "effective_radius": {
-            "type": "Uniform",
-            "lower_limit": 0.0,
-            "upper_limit": 30.0,
-            "width_modifier": {
-                "type": "Relative",
-                "value": 1.0
-            },
-            "gaussian_limits": {
-                "lower": 0.0,
-                "upper": "inf"
-            }
-        }
-    },
-    "EllDevVaucouleurs": {
+    "Exponential": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -463,7 +317,153 @@
             }
         }
     },
-    "SphSersicCore": {
+    "DevVaucouleursSph": {
+        "centre_0": {
+            "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.3,
+            "lower_limit": "-inf",
+            "upper_limit": "inf",
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.05
+            },
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
+        },
+        "centre_1": {
+            "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.3,
+            "lower_limit": "-inf",
+            "upper_limit": "inf",
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.05
+            },
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
+        },
+        "intensity": {
+            "type": "LogUniform",
+            "lower_limit": 1.0e-6,
+            "upper_limit": 1000000.0,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 0.5
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
+            }
+        },
+        "effective_radius": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 30.0,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 1.0
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
+            }
+        }
+    },
+    "DevVaucouleurs": {
+        "centre_0": {
+            "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.3,
+            "lower_limit": "-inf",
+            "upper_limit": "inf",
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.05
+            },
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
+        },
+        "centre_1": {
+            "type": "Gaussian",
+            "mean": 0.0,
+            "sigma": 0.3,
+            "lower_limit": "-inf",
+            "upper_limit": "inf",
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.05
+            },
+            "gaussian_limits": {
+                "lower": "-inf",
+                "upper": "inf"
+            }
+        },
+         "elliptical_comps_0": {
+            "type": "Gaussian",
+            "lower_limit": -1.0,
+            "upper_limit": 1.0,
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.2
+            },
+            "mean": 0.0,
+            "sigma": 0.3,
+            "gaussian_limits": {
+                "lower": -1.0,
+                "upper": 1.0
+            }
+        },
+        "elliptical_comps_1": {
+            "type": "Gaussian",
+            "lower_limit": -1.0,
+            "upper_limit": 1.0,
+            "width_modifier": {
+                "type": "Absolute",
+                "value": 0.2
+            },
+            "mean": 0.0,
+            "sigma": 0.3,
+            "gaussian_limits": {
+                "lower": "-1.0",
+                "upper": "1.0"
+            }
+        },
+        "intensity": {
+            "type": "LogUniform",
+            "lower_limit": 1.0e-6,
+            "upper_limit": 1000000.0,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 0.5
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
+            }
+        },
+        "effective_radius": {
+            "type": "Uniform",
+            "lower_limit": 0.0,
+            "upper_limit": 30.0,
+            "width_modifier": {
+                "type": "Relative",
+                "value": 1.0
+            },
+            "gaussian_limits": {
+                "lower": 0.0,
+                "upper": "inf"
+            }
+        }
+    },
+    "SersicCoreSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -533,7 +533,7 @@
                 "upper": "inf"
             }
         },
-        "intensity_break": {
+        "intensity": {
             "type": "LogUniform",
             "lower_limit": 1e-05,
             "upper_limit": 1000.0,
@@ -573,7 +573,7 @@
             }
         }
     },
-    "EllSersicCore": {
+    "SersicCore": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -673,7 +673,7 @@
                 "upper": "inf"
             }
         },
-        "intensity_break": {
+        "intensity": {
             "type": "LogUniform",
             "lower_limit": 1e-05,
             "upper_limit": 1000.0,
@@ -713,7 +713,7 @@
             }
         }
     },
-    "SphExponentialCore": {
+    "ExponentialCoreSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -770,7 +770,7 @@
                 "upper": "inf"
             }
         },
-        "intensity_break": {
+        "intensity": {
             "type": "LogUniform",
             "lower_limit": 1e-05,
             "upper_limit": 1000.0,
@@ -810,7 +810,7 @@
             }
         }
     },
-    "EllExponentialCore": {
+    "ExponentialCore": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -897,7 +897,7 @@
                 "upper": "inf"
             }
         },
-        "intensity_break": {
+        "intensity": {
             "type": "LogUniform",
             "lower_limit": 1e-05,
             "upper_limit": 1000.0,
@@ -937,7 +937,7 @@
             }
         }
     },
-    "SphGaussian": {
+    "GaussianSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -995,7 +995,7 @@
             }
         }
     },
-    "EllGaussian": {
+    "Gaussian": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -1083,7 +1083,7 @@
             }
         }
     },
-    "SphMoffat": {
+    "MoffatSph": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -1154,7 +1154,7 @@
             }
         }
     },
-    "EllMoffat": {
+    "Moffat": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,
@@ -1255,7 +1255,7 @@
             }
         }
     },
-       "SphChameleon": {
+       "ChameleonSph": {
        "centre_0": {
            "type": "Gaussian",
            "lower_limit": "-inf",
@@ -1318,7 +1318,7 @@
            }
        }
    },
-   "EllChameleon": {
+   "Chameleon": {
         "centre_0": {
             "type": "Gaussian",
             "mean": 0.0,

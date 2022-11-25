@@ -37,56 +37,56 @@ def make_ps_1():
 
 def make_lp_0():
     # noinspection PyTypeChecker
-    return ag.lp.SphSersic(intensity=1.0, effective_radius=2.0, sersic_index=2.0)
+    return ag.lp.SersicSph(intensity=1.0, effective_radius=2.0, sersic_index=2.0)
 
 
 def make_lp_1():
     # noinspection PyTypeChecker
-    return ag.lp.SphSersic(intensity=2.0, effective_radius=2.0, sersic_index=2.0)
+    return ag.lp.SersicSph(intensity=2.0, effective_radius=2.0, sersic_index=2.0)
 
 
 def make_lp_linear_0():
     # noinspection PyTypeChecker
-    return ag.lp_linear.EllGaussian()
+    return ag.lp_linear.Gaussian()
 
 
 def make_lp_operated_0():
     # noinspection PyTypeChecker
-    return ag.lp_operated.EllGaussian(intensity=1.0)
+    return ag.lp_operated.Gaussian(intensity=1.0)
 
 
 def make_mp_0():
     # noinspection PyTypeChecker
-    return ag.mp.SphIsothermal(einstein_radius=1.0)
+    return ag.mp.IsothermalSph(einstein_radius=1.0)
 
 
 def make_mp_1():
     # noinspection PyTypeChecker
-    return ag.mp.SphIsothermal(einstein_radius=2.0)
+    return ag.mp.IsothermalSph(einstein_radius=2.0)
 
 
 def make_lmp_0():
-    return ag.lmp.EllSersicRadialGradient()
+    return ag.lmp.SersicRadialGradient()
 
 
 def make_dmp_0():
     # noinspection PyTypeChecker
-    return ag.mp.SphNFW(kappa_s=1.0)
+    return ag.mp.NFWSph(kappa_s=1.0)
 
 
 def make_dmp_1():
     # noinspection PyTypeChecker
-    return ag.mp.SphNFW(kappa_s=2.0)
+    return ag.mp.NFWSph(kappa_s=2.0)
 
 
 def make_smp_0():
     # noinspection PyTypeChecker
-    return ag.lmp.EllSersic(intensity=1.0, mass_to_light_ratio=1.0)
+    return ag.lmp.Sersic(intensity=1.0, mass_to_light_ratio=1.0)
 
 
 def make_smp_1():
     # noinspection PyTypeChecker
-    return ag.lmp.EllSersic(intensity=2.0, mass_to_light_ratio=2.0)
+    return ag.lmp.Sersic(intensity=2.0, mass_to_light_ratio=2.0)
 
 
 # GALAXY #
@@ -258,8 +258,8 @@ def make_fit_interferometer_x2_galaxy_inversion_7x7():
 
 def make_samples_with_result():
     galaxies = [
-        ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=1.0)),
-        ag.Galaxy(redshift=1.0, light=ag.lp.EllSersic(intensity=2.0)),
+        ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0)),
+        ag.Galaxy(redshift=1.0, light=ag.lp.Sersic(intensity=2.0)),
     ]
 
     plane = ag.Plane(galaxies=galaxies)

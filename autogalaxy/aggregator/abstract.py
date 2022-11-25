@@ -154,7 +154,7 @@ class AbstractAgg(ABC):
             return [
                 self.make_object_for_gen(
                     fit=fit,
-                    galaxies=samples.instance_drawn_randomly_from_pdf().galaxies,
+                    galaxies=samples.draw_randomly_via_pdf().galaxies,
                 )
                 for i in range(total_samples)
             ]

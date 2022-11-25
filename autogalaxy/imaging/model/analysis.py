@@ -360,7 +360,7 @@ class AnalysisImaging(AnalysisDataset):
 
     def make_result(
         self,
-        samples: af.PDFSamples,
+        samples: af.SamplesPDF,
         model: af.Collection,
         sigma=1.0,
         use_errors=True,

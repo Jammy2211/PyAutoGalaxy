@@ -22,8 +22,8 @@ mass_profile_list
      analytic
      manual ((e.g. potential, etc, not from lensing module).
 
-al.mp.EllIsothermal ( e.g. from total_mass_profiles)
-al.mp.EllSersic
+al.mp.Isothermal ( e.g. from total_mass_profiles)
+al.mp.Sersic
 al._mp_integrate
 al._mp_manual.potential_2d_from
 

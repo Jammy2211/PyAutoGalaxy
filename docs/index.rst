@@ -87,7 +87,7 @@ and `PyNUFFT` [@pynufft].
     """
     The galaxy has an elliptical sersic light profile representing its bulge.
     """
-    bulge=ag.lp.EllSersic(
+    bulge=ag.lp.Sersic(
         centre=(0.0, 0.0),
         elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.9, angle=45.0),
         intensity=1.0,
@@ -98,7 +98,7 @@ and `PyNUFFT` [@pynufft].
     """
     The galaxy also has an elliptical exponential disk
     """
-    disk = ag.lp.EllExponential(
+    disk = ag.lp.Exponential(
         centre=(0.0, 0.0),
         elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.7, angle=30.0),
         intensity=0.5,
@@ -158,9 +158,9 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
     )
 
     """
-    We model the galaxy using an EllSersic LightProfile.
+    We model the galaxy using an Sersic LightProfile.
     """
-    light_profile = ag.lp.EllSersic
+    light_profile = ag.lp.Sersic
 
     """
     We next setup this profile as model components whose parameters are free & fitted for
@@ -190,7 +190,7 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
     The results contain information on the fit, for example the maximum likelihood
     model from the Dynesty parameter space search.
     """
-    print(result.samples.max_log_likelihood_instance)
+    print(result.samples.max_log_likelihood())
 
 .. toctree::
    :caption: Overview:

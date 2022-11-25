@@ -11,7 +11,7 @@ from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.plane.plane import Plane
 from autogalaxy.plane.to_inversion import PlaneToInversion
-from autogalaxy.profiles.light_profiles.light_profiles_linear import LightProfileLinear
+from autogalaxy.profiles.light.linear import LightProfileLinear
 
 
 class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):

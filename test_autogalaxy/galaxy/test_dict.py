@@ -75,9 +75,7 @@ def test_pixelization_equality():
 
 @pytest.fixture(name="profiles_galaxy")
 def make_profiles_galaxy():
-    return ag.Galaxy(
-        redshift=2.0, light=ag.lp.EllChameleon(), mass=ag.mp.EllDevVaucouleurs()
-    )
+    return ag.Galaxy(redshift=2.0, light=ag.lp.Chameleon(), mass=ag.mp.DevVaucouleurs())
 
 
 @pytest.fixture(name="profiles_galaxy_dict")
@@ -90,7 +88,7 @@ def make_profiles_galaxy_dict():
             "core_radius_1": 0.05,
             "elliptical_comps": (0.0, 0.0),
             "intensity": 0.1,
-            "type": "autogalaxy.profiles.light_profiles.light_profiles.EllChameleon",
+            "type": "autogalaxy.profiles.light.standard.chameleon.Chameleon",
         },
         "mass": {
             "centre": (0.0, 0.0),
@@ -98,7 +96,7 @@ def make_profiles_galaxy_dict():
             "elliptical_comps": (0.0, 0.0),
             "intensity": 0.1,
             "mass_to_light_ratio": 1.0,
-            "type": "autogalaxy.profiles.mass_profiles.stellar_mass_profiles.EllDevVaucouleurs",
+            "type": "autogalaxy.profiles.mass.stellar.dev_vaucouleurs.DevVaucouleurs",
         },
         "redshift": 2.0,
         "type": "autogalaxy.galaxy.galaxy.Galaxy",

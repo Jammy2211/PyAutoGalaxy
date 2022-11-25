@@ -10,8 +10,8 @@ def test__result_contains_instance_with_galaxies(
 
     model = af.Collection(
         galaxies=af.Collection(
-            galaxy=af.Model(ag.Galaxy, redshift=0.5, light=ag.lp.EllSersic),
-            source=af.Model(ag.Galaxy, redshift=1.0, light=ag.lp.EllSersic),
+            galaxy=af.Model(ag.Galaxy, redshift=0.5, light=ag.lp.Sersic),
+            source=af.Model(ag.Galaxy, redshift=1.0, light=ag.lp.Sersic),
         )
     )
 
@@ -25,8 +25,8 @@ def test__result_contains_instance_with_galaxies(
 
 def test__max_log_likelihood_plane_available_as_result(analysis_imaging_7x7):
 
-    galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=1.0))
-    galaxy_1 = ag.Galaxy(redshift=0.5, light=ag.lp.EllSersic(intensity=2.0))
+    galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
+    galaxy_1 = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=2.0))
 
     model = af.Collection(galaxies=af.Collection(galaxy_0=galaxy_0, galaxy_1=galaxy_1))
 

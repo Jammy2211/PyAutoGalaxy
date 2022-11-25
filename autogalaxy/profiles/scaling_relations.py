@@ -1,6 +1,6 @@
 from typing import Tuple
 
-from autogalaxy.profiles import mass_profiles as mp
+from autogalaxy.profiles import mass as mp
 
 
 class MassLightRelation:
@@ -15,7 +15,7 @@ class MassLightRelation:
         return self.gradient * ((luminosity / self.denominator) ** self.power)
 
 
-class SphIsothermalMLR(mp.SphIsothermal):
+class SphIsothermalMLR(mp.IsothermalSph):
     def __init__(
         self,
         relation: MassLightRelation = MassLightRelation(),
@@ -31,7 +31,7 @@ class SphIsothermalMLR(mp.SphIsothermal):
         super().__init__(centre=centre, einstein_radius=einstein_radius)
 
 
-class EllIsothermalMLR(mp.EllIsothermal):
+class IsothermalMLR(mp.Isothermal):
     def __init__(
         self,
         relation: MassLightRelation = MassLightRelation(),

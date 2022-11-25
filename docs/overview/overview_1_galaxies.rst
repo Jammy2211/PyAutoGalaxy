@@ -62,12 +62,12 @@ Light Profiles
 We will use this `Grid2D`'s coordinates to evaluate the galaxy's morphology. We therefore need analytic
 functions representing a galaxy's light distribution(s).
 
-For this,  **PyAutoGalaxy** uses `LightProfile` objects, for example the `EllSersic` `LightProfile` object which
+For this,  **PyAutoGalaxy** uses `LightProfile` objects, for example the `Sersic` `LightProfile` object which
 represents a light distribution:
 
 .. code-block:: python
 
-    sersic_light_profile = al.lp.EllSersic(
+    sersic_light_profile = al.lp.Sersic(
         centre=(0.0, 0.0),
         elliptical_comps=(0.1, 0.1),
         intensity=0.05,
@@ -107,7 +107,7 @@ The code below creates a galaxy which is made of two components, a bulge and dis
 
 .. code-block:: python
 
-    bulge = ag.lp.EllSersic(
+    bulge = ag.lp.Sersic(
         centre=(0.0, 0.0),
         elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.9, angle=45.0),
         intensity=1.0,
@@ -115,7 +115,7 @@ The code below creates a galaxy which is made of two components, a bulge and dis
         sersic_index=3.0,
     )
 
-    disk = ag.lp.EllExponential(
+    disk = ag.lp.Exponential(
         centre=(0.0, 0.0),
         elliptical_comps=ag.convert.elliptical_comps_from(axis_ratio=0.7, angle=30.0),
         intensity=0.5,
@@ -156,7 +156,7 @@ By passing `Galaxy` objects to a `Plane`, **PyAutoGalaxy** groups them to indica
 
     galaxy_0 = ag.Galaxy(
         redshift=0.5,
-        bulge=ag.lp.EllSersic(
+        bulge=ag.lp.Sersic(
             centre=(0.0, -1.0),
             elliptical_comps=(0.25, 0.1),
             intensity=0.1,
@@ -167,7 +167,7 @@ By passing `Galaxy` objects to a `Plane`, **PyAutoGalaxy** groups them to indica
 
     galaxy_1 = ag.Galaxy(
         redshift=0.5,
-        bulge=ag.lp.EllSersic(
+        bulge=ag.lp.Sersic(
             centre=(0.0, 1.0),
             elliptical_comps=(0.0, 0.1),
             intensity=0.1,
@@ -216,7 +216,7 @@ To finish, lets create a `Plane` with 2 merging galaxies, where the second galax
 
     galaxy_0 = ag.Galaxy(
         redshift=0.5,
-        bulge=ag.lmp.EllSersic(
+        bulge=ag.lmp.Sersic(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.05),
             intensity=0.5,
@@ -224,7 +224,7 @@ To finish, lets create a `Plane` with 2 merging galaxies, where the second galax
             sersic_index=3.5,
             mass_to_light_ratio=0.6,
         ),
-        disk = ag.lmp.EllExponential(
+        disk = ag.lmp.Exponential(
             centre=(0.0, 0.0),
             elliptical_comps=(0.0, 0.1),
             intensity=1.0,
@@ -235,15 +235,15 @@ To finish, lets create a `Plane` with 2 merging galaxies, where the second galax
 
     galaxy_1 = ag.Galaxy(
         redshift=1.0,
-        bulge=ag.lp.EllExponential(
+        bulge=ag.lp.Exponential(
             centre=(0.00, 0.00),
             elliptical_comps=(0.05, 0.05),
             intensity=1.2,
             effective_radius=0.1,
         ),
-        clump_0=ag.lp.EllSersic(centre=(1.0, 1.0), intensity=0.5, effective_radius=0.2),
-        clump_1=ag.lp.EllSersic(centre=(0.5, 0.8), intensity=0.5, effective_radius=0.2),
-        clump_2=ag.lp.EllSersic(centre=(-1.0, -0.7), intensity=0.5, effective_radius=0.2),
+        clump_0=ag.lp.Sersic(centre=(1.0, 1.0), intensity=0.5, effective_radius=0.2),
+        clump_1=ag.lp.Sersic(centre=(0.5, 0.8), intensity=0.5, effective_radius=0.2),
+        clump_2=ag.lp.Sersic(centre=(-1.0, -0.7), intensity=0.5, effective_radius=0.2),
     )
 
     plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])

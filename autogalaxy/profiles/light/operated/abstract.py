@@ -1,0 +1,3 @@
+class LightProfileOperated:
+
+    pass

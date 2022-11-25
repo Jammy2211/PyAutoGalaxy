@@ -7,7 +7,7 @@ def test__clumps():
     centres = ag.Grid2DIrregular(grid=[(1.0, 1.0)])
 
     clump_model = ag.ClumpModel(
-        redshift=0.5, centres=centres, light_cls=ag.lp.SphSersic
+        redshift=0.5, centres=centres, light_cls=ag.lp.SersicSph
     )
 
     clumps = clump_model.clumps
@@ -18,7 +18,7 @@ def test__clumps():
     assert clumps["clump_0"].mass == None
 
     clump_model = ag.ClumpModel(
-        redshift=0.5, centres=centres, mass_cls=ag.mp.SphIsothermal
+        redshift=0.5, centres=centres, mass_cls=ag.mp.IsothermalSph
     )
 
     clumps = clump_model.clumps
@@ -31,8 +31,8 @@ def test__clumps():
     clump_model = ag.ClumpModel(
         redshift=0.5,
         centres=centres,
-        light_cls=ag.lp.SphSersic,
-        mass_cls=ag.mp.SphIsothermal,
+        light_cls=ag.lp.SersicSph,
+        mass_cls=ag.mp.IsothermalSph,
     )
 
     clumps = clump_model.clumps
@@ -51,8 +51,8 @@ def test__clumps_light_only():
     clump_model = ag.ClumpModel(
         redshift=0.5,
         centres=centres,
-        light_cls=ag.lp.SphSersic,
-        mass_cls=ag.mp.SphIsothermal,
+        light_cls=ag.lp.SersicSph,
+        mass_cls=ag.mp.IsothermalSph,
     )
 
     clumps_light_only = clump_model.clumps_light_only
@@ -70,8 +70,8 @@ def test__clumps_mass_only():
     clump_model = ag.ClumpModel(
         redshift=0.5,
         centres=centres,
-        light_cls=ag.lp.SphSersic,
-        mass_cls=ag.mp.SphIsothermal,
+        light_cls=ag.lp.SersicSph,
+        mass_cls=ag.mp.IsothermalSph,
     )
 
     clumps_mass_only = clump_model.clumps_mass_only
@@ -89,7 +89,7 @@ def test__einstein_radius_max():
     clump_model = ag.ClumpModel(
         redshift=0.5,
         centres=centres,
-        mass_cls=ag.mp.SphIsothermal,
+        mass_cls=ag.mp.IsothermalSph,
         einstein_radius_upper_limit=1.0,
     )
 
