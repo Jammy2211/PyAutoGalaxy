@@ -435,11 +435,15 @@ class AnalysisDataset(Analysis):
         Parameters
         ----------
         paths
-            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
-            and pickled objects used by the database and aggregator.
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored, 
+            visualization, and pickled objects used by the database and aggregator.
         result
             The result containing the maximum log likelihood fit of the model.
         """
+
+        if os.environ.get("PYAUTOFIT_TEST_MODE") == "1":
+            return
+
         figure_of_merit = result.max_log_likelihood_fit.figure_of_merit
 
         figure_of_merit_sanity_file = path.join(
@@ -456,7 +460,7 @@ class AnalysisDataset(Analysis):
             with open(figure_of_merit_sanity_file) as json_file:
                 figure_of_merit_sanity = json.load(json_file)
 
-            if conf.instance["general"]["test"]["check_figure_of_merit_sanity"]:
+            if:
 
                 if not np.isclose(figure_of_merit, figure_of_merit_sanity):
 
