@@ -460,7 +460,7 @@ class AnalysisDataset(Analysis):
             with open(figure_of_merit_sanity_file) as json_file:
                 figure_of_merit_sanity = json.load(json_file)
 
-            if:
+            if conf.instance["general"]["test"]["check_figure_of_merit_sanity"]:
 
                 if not np.isclose(figure_of_merit, figure_of_merit_sanity):
 
