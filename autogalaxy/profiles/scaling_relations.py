@@ -15,7 +15,7 @@ class MassLightRelation:
         return self.gradient * ((luminosity / self.denominator) ** self.power)
 
 
-class SphIsothermalMLR(mp.IsothermalSph):
+class IsothermalSphMLR(mp.IsothermalSph):
     def __init__(
         self,
         relation: MassLightRelation = MassLightRelation(),

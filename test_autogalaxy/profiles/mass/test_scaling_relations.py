@@ -46,7 +46,7 @@ class TestIsothermalMLR:
 
         relation = ag.sr.MassLightRelation(gradient=2.0, denominator=0.5, power=2.0)
 
-        sis = ag.sr.SphIsothermalMLR(
+        sis = ag.sr.IsothermalSphMLR(
             relation=relation, luminosity=4.0, centre=(1.0, 1.0)
         )
 
