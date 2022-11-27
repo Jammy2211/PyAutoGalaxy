@@ -27,11 +27,6 @@ is straight forward.
 .. code-block:: python
 
     color_list = ["g", "r"]
-
-pixel_scales_list = [0.08, 0.12]
-
-.. code-block:: python
-
     pixel_scales_list = [0.08, 0.12]
 
 Multi-wavelength imaging datasets do not use any new objects or class in **PyAutoGalaxy**.
