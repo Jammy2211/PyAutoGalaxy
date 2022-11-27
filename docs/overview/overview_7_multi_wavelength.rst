@@ -136,7 +136,7 @@ We do this using the combined analysis object as follows:
 .. code-block:: python
 
     analysis = analysis.with_free_parameters(
-        *[model.galaxies.galaxy.bulge.intensity, model.galaxies.galaxy.disk.intensity]
+        model.galaxies.galaxy.bulge.intensity, model.galaxies.galaxy.disk.intensity
     )
 
 In this simple overview, this has added two additional free parameters to the model whereby:
