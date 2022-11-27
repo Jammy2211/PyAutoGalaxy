@@ -191,7 +191,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         the `LightProfileOperated` object, which signifies that the light profile represents emission that has
         already had the instrument operations (e.g. PSF convolution, a Fourier transform) applied to it.
 
-        See the `autogalaxy.profiles.light_profiles` package for details of how images are computed from a light
+        See the `autogalaxy.profiles.light` package for details of how images are computed from a light
         profile.
 
         The decorator `grid_2d_to_structure` converts the output arrays from ndarrays to an `Array2D` data structure
@@ -229,7 +229,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         the `LightProfileOperated` object, which signifies that the light profile represents emission that has
         already had the instrument operations (e.g. PSF convolution, a Fourier transform) applied to it.
 
-        See the `autogalaxy.profiles.light_profiles` package for details of how images are computed from a light
+        See the `autogalaxy.profiles.light` package for details of how images are computed from a light
         profile.
 
         Parameters
@@ -256,7 +256,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         If the galaxy has no light profiles, a grid of zeros is returned.
 
-        See `profiles.light_profiles` module for details of how this is performed.
+        See `profiles.light` module for details of how this is performed.
 
         The decorator `grid_1d_output_structure` converts the output arrays from ndarrays to an `Array1D` data
         structure using the input `grid`'s attributes.
@@ -293,7 +293,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         If the galaxy has no mass profiles, a numpy array of zeros is returned.
 
-        See the `autogalaxy.profiles.mass_profiles` package for details of how deflection angles are computed from a
+        See the `autogalaxy.profiles.mass` package for details of how deflection angles are computed from a
         mass profile.
 
         The decorator `grid_2d_to_vector_yx` converts the output arrays from ndarrays to a `VectorYX2D` data structure
@@ -320,7 +320,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         If the galaxy has no mass profiles, a numpy array of zeros is returned.
 
-        See the `autogalaxy.profiles.mass_profiles` package for details of how convergences are computed from a mass
+        See the `autogalaxy.profiles.mass` package for details of how convergences are computed from a mass
         profile.
 
         The decorator `grid_2d_to_structure` converts the output arrays from ndarrays to an `Array2D` data structure
@@ -347,7 +347,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         If the galaxy has no mass profiles, a grid of zeros is returned.
 
-        See `profiles.mass_profiles` module for details of how this is performed.
+        See `profiles.mass` module for details of how this is performed.
 
         The decorator `grid_1d_output_structure` converts the output arrays from ndarrays to an `Array1D` data
         structure using the input `grid`'s attributes.
@@ -382,7 +382,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         If the galaxy has no mass profiles, a numpy array of zeros is returned.
 
-        See the `autogalaxy.profiles.mass_profiles` package for details of how potentials are computed from a mass
+        See the `autogalaxy.profiles.mass` package for details of how potentials are computed from a mass
         profile.
 
         The decorator `grid_2d_to_structure` converts the output arrays from ndarrays to an `Array2D` data structure
@@ -409,7 +409,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         If the galaxy has no mass profiles, a grid of zeros is returned.
 
-        See `profiles.mass_profiles` module for details of how this is performed.
+        See `profiles.mass` module for details of how this is performed.
 
         The decorator `grid_1d_output_structure` converts the output arrays from ndarrays to an `Array1D` data
         structure using the input `grid`'s attributes.
