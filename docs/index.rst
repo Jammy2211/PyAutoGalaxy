@@ -226,7 +226,6 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
    general/configs
    general/likelihood_function
    general/citations
-   general/papers
    general/credits
 
 .. toctree::
