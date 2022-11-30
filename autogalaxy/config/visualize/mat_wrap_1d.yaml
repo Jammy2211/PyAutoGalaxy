@@ -1,44 +1,20 @@
-# Config files which specify the default matplotlib settings when 1D figures and subplots are plotted.
+# These settings specify the default matplotlib settings when 1D figures and subplots are plotted.
 
-# For example, the `Figure:` config file has the following lines:
+# For example, the `EinsteinRadiusAXVLine` section has the following lines:
 
-.. code-block:: bash
+# EinsteinRadiusAXVLine:
+#    figure:
+#      c: b
+#    subplot:
+#      c: b
 
-    [figure]
-    figsize=(7, 7)
-    aspect=square
-
-    [subplot]
-    figsize=auto
-    aspect=square
-
-This means that when a figure (e.g. a single image) is plotted it will use ``figsize=(7,7)`` and ``aspect="square`` if
-the values of these parameters are not manually set by the user via the ``mat_plot_2d``.
-
-Subplots (e.g. more than one image) will always use ``figsize="auto`` by default.
-
-These configuration files can be customized such that the appearance of figures and subplots for a user is optimal for
-your computer set up.Config files which specify the default matplotlib settings when figures and subplots are plotted.
-
-For example, the ``Figure.ini`` config file has the following lines:
-
-    .. code-block:: bash
-
-  [ figure ]
-      figsize=(7, 7)
-      aspect=square
-
-  [ subplot ]
-      figsize=auto
-      aspect=square
-
-      This means that when a figure (e.g. a single image) is plotted it will use ``figsize=(7,7)`` and ``aspect="square`` if
-      the values of these parameters are not manually set by the user via the ``mat_plot_2d``.
-
-      Subplots (e.g. more than one image) will always use ``figsize="auto`` by default.
-
-      These configuration files can be customized such that the appearance of figures and subplots for a user is optimal for
-      your computer set up.
+# This means that when a figure of y vs x data is plotted it will use `c=k`, meaning the line appears blue,
+# provided the values of these parameters are not manually set by the user via a `MatPlot1D` object.
+#
+# In the above example, subplots (e.g. more than one image) will always use `c=b` by default as well.
+#
+# These configuration options can be customized such that the appearance of figures and subplots for a user is
+# optimal for your computer set up.
 
 EinsteinRadiusAXVLine:              # wrapper for `plt.axvline()`: customize verticals lines plotted to represent the Einstein radius on 1D figures.
   figure:

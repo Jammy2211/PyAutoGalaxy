@@ -1,3 +1,8 @@
+# The `include` settings customize every feature that appears on plotted images by default (e.g. a mask, the
+# coordinate system's origin, etc.).
+
+# For example, if `include_2d -> mask:true`, the mask will not be plotted on any applicable figure by default.
+
 include_1d:
   einstein_radius: true             # Include a vertical line at the lens mass model's Einstein radius?
   half_light_radius: true           # Include a vertical line at the lens light model's half-light radius (same as effective radius)?

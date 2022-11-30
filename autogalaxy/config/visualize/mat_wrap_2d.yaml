@@ -1,3 +1,21 @@
+# These settings specify the default matplotlib settings when "D figures and subplots are plotted.
+
+# For example, the `CriticalCurvePlot` section has the following lines:
+
+# CriticalCurvePlot:
+#    figure:
+#      c: k,r,g,b,m,y
+#    subplot:
+#      c: k
+
+# This means that when critical curves are plotted, each one cycles through the colors black, red, green, etc.,
+# provided the values of these parameters are not manually set by the user via a `MatPlot2D` object.
+#
+# In the above example, subplots (e.g. more than one image) will always use `c=k` by default as well.
+#
+# These configuration options can be customized such that the appearance of figures and subplots for a user is
+# optimal for your computer set up.
+
 CausticsPlot:                       # wrapper for `plt.plot()`: customize plots caustics in the source-plane.
   figure:
     c: k,r,g,b,m,y
