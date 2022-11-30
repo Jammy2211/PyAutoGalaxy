@@ -234,7 +234,7 @@ class SersicRadialGradient(AbstractSersic):
         )
 
 
-class SphSersicRadialGradient(SersicRadialGradient):
+class SersicRadialGradientSph(SersicRadialGradient):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

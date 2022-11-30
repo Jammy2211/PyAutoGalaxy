@@ -39,7 +39,7 @@ from .stellar import (
     SersicCore,
     SersicCoreSph,
     SersicRadialGradient,
-    SphSersicRadialGradient,
+    SersicRadialGradientSph,
     Chameleon,
     ChameleonSph,
 )

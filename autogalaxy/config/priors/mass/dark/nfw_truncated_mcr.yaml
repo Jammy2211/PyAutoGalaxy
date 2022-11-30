@@ -1,0 +1,177 @@
+NFWTruncatedMCRDuffySph:
+  centre_0:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.1
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  centre_1:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.1
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  mass_at_200:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 100000000.0
+    type: LogUniform
+    upper_limit: 1000000000000000.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+  redshift_object:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 0.0
+    type: Uniform
+    upper_limit: 1.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+  redshift_source:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 0.0
+    type: Uniform
+    upper_limit: 1.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+NFWTruncatedMCRLudlowSph:
+  centre_0:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.1
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  centre_1:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.1
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  mass_at_200:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 100000000.0
+    type: LogUniform
+    upper_limit: 1000000000000000.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+  redshift_object:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 0.0
+    type: Uniform
+    upper_limit: 1.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+  redshift_source:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 0.0
+    type: Uniform
+    upper_limit: 1.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+NFWTruncatedMCRScatterLudlowSph:
+  centre_0:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.1
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  centre_1:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.1
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  mass_at_200:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 100000000.0
+    type: LogUniform
+    upper_limit: 1000000000000000.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+  redshift_object:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 0.0
+    type: Uniform
+    upper_limit: 1.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+  redshift_source:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 0.0
+    type: Uniform
+    upper_limit: 1.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+  scatter:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 3.0
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 1.0

@@ -58,5 +58,5 @@ radial_minimum:
     SersicRadialGradient: 1.0e-06
     SersicSph: 1.0e-06
     SphexponentialRadialGradient: 1.0e-06
-    SphSersicRadialGradient: 1.0e-06
+    SersicRadialGradientSph: 1.0e-06
     EllProfile: 1.0e-08

@@ -1,11 +1,11 @@
-gNFW:
+Chameleon:
   centre_0:
     gaussian_limits:
       lower: -inf
       upper: inf
     lower_limit: -inf
     mean: 0.0
-    sigma: 0.1
+    sigma: 0.3
     type: Gaussian
     upper_limit: inf
     width_modifier:
@@ -17,12 +17,32 @@ gNFW:
       upper: inf
     lower_limit: -inf
     mean: 0.0
-    sigma: 0.1
+    sigma: 0.3
     type: Gaussian
     upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
+  core_radius_0:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 0.0
+    type: Uniform
+    upper_limit: 30.0
+    width_modifier:
+      type: Absolute
+      value: 0.3
+  core_radius_1:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 0.0
+    type: Uniform
+    upper_limit: 30.0
+    width_modifier:
+      type: Absolute
+      value: 0.3
   ell_comps_0:
     gaussian_limits:
       lower: -1.0
@@ -47,44 +67,34 @@ gNFW:
     width_modifier:
       type: Absolute
       value: 0.2
-  inner_slope:
+  intensity:
     gaussian_limits:
-      lower: -1.0
-      upper: 3.0
-    lower_limit: 0.0
-    type: Uniform
-    upper_limit: 2.0
+      lower: 0.0
+      upper: inf
+    lower_limit: 1.0e-06
+    type: LogUniform
+    upper_limit: 1000000.0
     width_modifier:
-      type: Absolute
+      type: Relative
+      value: 0.5
+  mass_to_light_ratio:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 1.0e-06
+    type: LogUniform
+    upper_limit: 1000000.0
+    width_modifier:
+      type: Relative
       value: 0.3
-  kappa_s:
-    gaussian_limits:
-      lower: 0.0
-      upper: inf
-    lower_limit: 0.0
-    type: Uniform
-    upper_limit: 1.0
-    width_modifier:
-      type: Relative
-      value: 0.2
-  scale_radius:
-    gaussian_limits:
-      lower: 0.0
-      upper: inf
-    lower_limit: 0.0
-    type: Uniform
-    upper_limit: 30.0
-    width_modifier:
-      type: Relative
-      value: 0.2
-gNFWSph:
+ChameleonSph:
   centre_0:
     gaussian_limits:
       lower: -inf
       upper: inf
     lower_limit: -inf
     mean: 0.0
-    sigma: 0.1
+    sigma: 0.3
     type: Gaussian
     upper_limit: inf
     width_modifier:
@@ -96,33 +106,13 @@ gNFWSph:
       upper: inf
     lower_limit: -inf
     mean: 0.0
-    sigma: 0.1
+    sigma: 0.3
     type: Gaussian
     upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-  inner_slope:
-    gaussian_limits:
-      lower: -1.0
-      upper: 3.0
-    lower_limit: 0.0
-    type: Uniform
-    upper_limit: 2.0
-    width_modifier:
-      type: Absolute
-      value: 0.3
-  kappa_s:
-    gaussian_limits:
-      lower: 0.0
-      upper: inf
-    lower_limit: 0.0
-    type: Uniform
-    upper_limit: 1.0
-    width_modifier:
-      type: Relative
-      value: 0.2
-  scale_radius:
+  core_radius_0:
     gaussian_limits:
       lower: 0.0
       upper: inf
@@ -130,5 +120,35 @@ gNFWSph:
     type: Uniform
     upper_limit: 30.0
     width_modifier:
+      type: Absolute
+      value: 0.3
+  core_radius_1:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 0.0
+    type: Uniform
+    upper_limit: 30.0
+    width_modifier:
+      type: Absolute
+      value: 0.3
+  intensity:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 1.0e-06
+    type: LogUniform
+    upper_limit: 1000000.0
+    width_modifier:
       type: Relative
-      value: 0.2
+      value: 0.5
+  mass_to_light_ratio:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 1.0e-06
+    type: LogUniform
+    upper_limit: 1000000.0
+    width_modifier:
+      type: Relative
+      value: 0.3

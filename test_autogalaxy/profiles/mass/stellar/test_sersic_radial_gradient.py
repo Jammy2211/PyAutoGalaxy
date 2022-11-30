@@ -116,7 +116,7 @@ def test__deflections_yx_2d_from():
 
     assert deflections == pytest.approx(deflections_via_integral, 1.0e-4)
 
-    gaussian = ag.mp.SphSersicRadialGradient()
+    gaussian = ag.mp.SersicRadialGradientSph()
 
     deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
     deflections_via_integral = gaussian.deflections_2d_via_cse_from(

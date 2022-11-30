@@ -303,7 +303,7 @@ class SersicRadialGradient(lp.Sersic, mp.SersicRadialGradient, LightMassProfile)
         )
 
 
-class SphSersicRadialGradient(SersicRadialGradient, LightMassProfile):
+class SersicRadialGradientSph(SersicRadialGradient, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -387,7 +387,7 @@ class ExponentialRadialGradient(SersicRadialGradient, LightMassProfile):
         )
 
 
-class SphExponentialRadialGradient(SphSersicRadialGradient, LightMassProfile):
+class SphExponentialRadialGradient(SersicRadialGradientSph, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -417,7 +417,7 @@ class SphExponentialRadialGradient(SphSersicRadialGradient, LightMassProfile):
             The mass-to-light radial gradient.
         """
 
-        SphSersicRadialGradient.__init__(
+        SersicRadialGradientSph.__init__(
             self,
             centre=centre,
             intensity=intensity,

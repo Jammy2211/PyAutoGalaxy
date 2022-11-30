@@ -313,7 +313,7 @@ Mass Profiles
     DevVaucouleurs
     DevVaucouleursSph
     SersicRadialGradient
-    SphSersicRadialGradient
+    SersicRadialGradientSph
     Chameleon
     ChameleonSph
 
