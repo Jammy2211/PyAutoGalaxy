@@ -1,42 +1,11 @@
 analysis:
-  n_cores: 1
-  preload_attempts: 250
+  preload_attempts: 250                # For preloading, the number of attempts performed before an exception is thrown and preloading is disabled.
 fits:
-  flip_for_ds9: true
-grid:
-  remove_projected_centre: false
-hpc:
-  hpc_mode: false
-  iterations_per_update: 5000
+  flip_for_ds9: true                   # If True, a np.flipud() is applied to images before loading so visualization is the same orientation as ds9
 hyper:
-  hyper_minimum_percent: 0.01
-  hyper_noise_limit: 100000000.0
-  stochastic_outputs: false
-model:
-  ignore_prior_limits: false
-numba:
-  cache: false
-  nopython: true
-  parallel: false
-  use_numba: true
-output:
-  force_pickle_overwrite: false
-  identifier_version: 4
-  info_whitespace_length: 80
-  log_file: output.log
-  log_level: INFO
-  log_to_file: false
-  model_results_decimal_places: 3
-  remove_files: false
-  samples_to_csv: false
-pixelization:
-  voronoi_nn_max_interpolation_neighbors: 100
-profiling:
-  parallel_profile: false
-  repeats: 1
-  should_profile: false
-structures:
-  use_dataset_grids: true
+  hyper_minimum_percent: 0.01         # When creating hyper images, the minimum value as a percentage of the max value in that image (this prevents hyper images having negative values).
+  hyper_noise_limit: 100000000.0      # The maximum noise value allowed by hyper noise scaling.
+  stochastic_outputs: false           # If True, stocahstic visualization is performed (e.g. a histogram of 250 log likelihood evaluations for different kmeans seeds).
 test:
-  check_figure_of_merit_sanity: false
-  check_preloads: false
+  check_figure_of_merit_sanity: false # If True, when a model-fit run is resumed the likelihood value of each model is compared to saved value from the previous run, to ensure the likelihood function is identical.
+  check_preloads: false               # If True, perform a sanity check that the likelihood using preloads is identical to the likelihood not using preloads.

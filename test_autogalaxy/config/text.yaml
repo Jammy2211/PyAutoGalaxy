@@ -1,0 +1,11 @@
+label_format:
+  format:
+    mass: '{:.4e}'
+    mass_value: mass_value
+    param0: '{:.2f}'
+    param00: '{:.2f}'
+    param000: '{:.2f}'
+    param11: '{:.4f}'
+    param12: '{:.2e}'
+    radius: '{:.2f}'
+    radius_value: radius_value

@@ -185,14 +185,14 @@ class TestExponentialRadialGradient:
         sersic_lp = ag.lmp.Exponential(
             ell_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
         )
-        sersic_mp = ag.lmp.EllExponentialRadialGradient(
+        sersic_mp = ag.lmp.ExponentialRadialGradient(
             ell_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,
             mass_to_light_ratio=2.0,
             mass_to_light_gradient=0.5,
         )
-        sersic_lmp = ag.lmp.EllExponentialRadialGradient(
+        sersic_lmp = ag.lmp.ExponentialRadialGradient(
             ell_comps=(0.1, 0.05),
             intensity=1.0,
             effective_radius=0.6,

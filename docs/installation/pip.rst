@@ -21,7 +21,7 @@ the installation has clean dependencies):
 
 .. code-block:: bash
 
-    pip install autogalaxy==2022.11.26.11
+    pip install autogalaxy
 
 You may get warnings which state something like:
 

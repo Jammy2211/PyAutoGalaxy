@@ -101,7 +101,5 @@ def test__fit_sub_plot__all_types_of_fit(
 
     fit_quantity_plotter.subplot_fit_quantity()
 
-    print(plot_patch.paths)
-
     assert path.join(plot_path, "subplot_fit_quantity_y.png") in plot_patch.paths
     assert path.join(plot_path, "subplot_fit_quantity_x.png") in plot_patch.paths

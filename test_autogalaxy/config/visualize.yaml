@@ -1,0 +1,431 @@
+general:
+  general:
+    backend: default
+    imshow_origin: upper
+    zoom_around_mask: true
+  units:
+    in_kpc: true
+include:
+  include_1d:
+    einstein_radius: true
+    half_light_radius: true
+  include_2d:
+    border: true
+    caustics: false
+    critical_curves: false
+    grid: false
+    light_profile_centres: true
+    mapper_data_mesh_grid: true
+    mapper_source_grid_slim: false
+    mapper_source_mesh_grid: false
+    mask: true
+    mass_profile_centres: true
+    multiple_images: false
+    origin: true
+    parallel_overscan: true
+    positions: true
+    serial_overscan: true
+    serial_prescan: true
+mat_wrap:
+  Axis:
+    figure:
+      emit: true
+    subplot:
+      emit: false
+  Cmap:
+    figure:
+      cmap: default
+      linscale: 2.0
+      linthresh: 1.0
+      norm: linear
+      vmax: null
+      vmin: null
+    subplot:
+      cmap: default
+      linscale: 2.0
+      linthresh: 1.0
+      norm: linear
+      vmax: null
+      vmin: null
+  Colorbar:
+    figure:
+      fraction: 3.0
+      pad: 4.0
+    subplot:
+      fraction: 0.1
+      pad: 0.2
+  ColorbarTickParams:
+    figure:
+      labelsize: 1
+    subplot:
+      labelsize: 1
+  Figure:
+    figure:
+      aspect: square
+      figsize: (7,7)
+    subplot:
+      aspect: square
+      figsize: auto
+  Legend:
+    figure:
+      fontsize: 12
+      include: true
+    subplot:
+      fontsize: 13
+      include: false
+  Text:
+    figure:
+      fontsize: 16
+    subplot:
+      fontsize: 10
+  TickParams:
+    figure:
+      labelsize: 16
+    subplot:
+      labelsize: 10
+  Title:
+    figure:
+      fontsize: 11
+    subplot:
+      fontsize: 15
+  XLabel:
+    figure:
+      fontsize: 3
+    subplot:
+      fontsize: 4
+  XTicks:
+    figure:
+      fontsize: 17
+    subplot:
+      fontsize: 11
+  YLabel:
+    figure:
+      fontsize: 1
+    subplot:
+      fontsize: 2
+  YTicks:
+    figure:
+      fontsize: 16
+    subplot:
+      fontsize: 10
+mat_wrap_1d:
+  AXVLine:
+    figure:
+      c: k
+      ymin: 0.5
+    subplot:
+      c: k
+      ymin: 0.6
+  FillBetween:
+    figure:
+      alpha: 0.6
+      color: k
+    subplot:
+      alpha: 0.5
+      color: k
+  YXPlot:
+    figure:
+      c: k
+      linestyle: '-'
+      linewidth: 3
+    subplot:
+      c: k
+      linestyle: '-'
+      linewidth: 1
+  YXScatter:
+    figure:
+      c: k
+      marker: .
+    subplot:
+      c: k
+      marker: x
+  EinsteinRadiusAXVLine:
+    figure: {}
+    subplot: {}
+  HalfLightRadiusAXVLine:
+    figure: {}
+    subplot: {}
+mat_wrap_2d:
+  ArrayOverlay:
+    figure:
+      alpha: 0.5
+    subplot:
+      alpha: 0.7
+  BorderScatter:
+    figure:
+      c: c
+      marker: +
+      s: 13
+    subplot:
+      c: k
+      marker: .
+      s: 7
+  GridErrorbar:
+    figure:
+      c: k
+      marker: o
+    subplot:
+      c: b
+      marker: .
+  GridPlot:
+    figure:
+      c: k
+      linestyle: '-'
+      linewidth: 3
+    subplot:
+      c: k
+      linestyle: '-'
+      linewidth: 1
+  GridScatter:
+    figure:
+      c: y
+      marker: x
+      s: 14
+    subplot:
+      c: r
+      marker: .
+      s: 6
+  IndexScatter:
+    figure:
+      c: r,g,b,y,k,w
+      marker: .
+      s: 20
+    subplot:
+      c: r,g,b,y,w,k
+      marker: +
+      s: 21
+  MaskScatter:
+    figure:
+      c: g
+      marker: .
+      s: 12
+    subplot:
+      c: w
+      marker: .
+      s: 8
+  MeshGridScatter:
+    figure:
+      c: r
+      marker: .
+      s: 5
+    subplot:
+      c: g
+      marker: o
+      s: 6
+  OriginScatter:
+    figure:
+      c: k
+      marker: x
+      s: 80
+    subplot:
+      c: r
+      marker: .
+      s: 81
+  ParallelOverscanPlot:
+    figure:
+      c: k
+      linestyle: '-'
+      linewidth: 1
+    subplot:
+      c: k
+      linestyle: '-'
+      linewidth: 1
+  PatchOverlay:
+    figure:
+      edgecolor: c
+      facecolor: null
+    subplot:
+      edgecolor: y
+      facecolor: null
+  PositionsScatter:
+    figure:
+      c: r,g,b
+      marker: o
+      s: 15
+    subplot:
+      c: c,g,b
+      marker: .
+      s: 5
+  SerialOverscanPlot:
+    figure:
+      c: k
+      linestyle: '-'
+      linewidth: 2
+    subplot:
+      c: k
+      linestyle: '-'
+      linewidth: 1
+  SerialPrescanPlot:
+    figure:
+      c: k
+      linestyle: '-'
+      linewidth: 3
+    subplot:
+      c: k
+      linestyle: '-'
+      linewidth: 1
+  VectorYXQuiver:
+    figure:
+      alpha: 1.0
+      angles: xy
+      headlength: 0
+      headwidth: 1
+      linewidth: 5
+      pivot: middle
+      units: xy
+    subplot:
+      alpha: 1.1
+      angles: xy1
+      headlength: 0.1
+      headwidth: 11
+      linewidth: 51
+      pivot: middle1
+      units: xy1
+  VoronoiDrawer:
+    figure:
+      alpha: 0.7
+      edgecolor: k
+      linewidth: 0.3
+    subplot:
+      alpha: 0.5
+      edgecolor: r
+      linewidth: 1.0
+  CausticsPlot:
+    figure:
+      c: w,g
+      pointsize: 21
+      style: --
+      width: 5
+    subplot:
+      c: g
+      pointsize: 23
+      style: --
+      width: 7
+  CriticalCurvesPlot:
+    figure:
+      c: w,k
+      pointsize: 20
+      style: '-'
+      width: 4
+    subplot:
+      c: b
+      pointsize: 22
+      style: '-'
+      width: 6
+  LightProfileCentresScatter:
+    figure:
+      c: k,r
+      marker: +
+      s: 1
+    subplot:
+      c: b
+      marker: .
+      s: 15
+  MassProfileCentresScatter:
+    figure:
+      c: r,k
+      marker: x
+      s: 2
+    subplot:
+      c: k
+      marker: o
+      s: 16
+  MultipleImagesScatter:
+    figure:
+      c: k,w
+      marker: o
+      s: 3
+    subplot:
+      c: g
+      marker: .
+      s: 17
+plots:
+  dataset:
+    absolute_signal_to_noise_map: false
+    data: true
+    inverse_noise_map: true
+    noise_map: false
+    potential_chi_squared_map: true
+    signal_to_noise_map: false
+    subplot_dataset: true
+  fit:
+    all_at_end_fits: true
+    all_at_end_png: false
+    chi_squared_map: true
+    data: true
+    model_data: true
+    model_images_of_galaxies: false
+    noise_map: false
+    normalized_residual_map: true
+    residual_map: false
+    signal_to_noise_map: false
+    subplot_fit: true
+    subplot_of_galaxies_fits: false
+    subtracted_images_of_galaxies: true
+  fit_imaging: {}
+  fit_interferometer:
+    amplitudes_vs_uv_distances: false
+    dirty_chi_squared_map: false
+    dirty_image: false
+    dirty_inverse_noise_map: false
+    dirty_noise_map: false
+    dirty_normalized_residual_map: false
+    dirty_residual_map: false
+    dirty_signal_to_noise_map: false
+    phases_vs_uv_distances: false
+    uv_wavelengths: false
+  fit_quantity:
+    all_at_end_fits: true
+    all_at_end_png: true
+    chi_squared_map: true
+    image: true
+    model_image: true
+    noise_map: false
+    normalized_residual_map: true
+    residual_map: false
+    subplot_fit: true
+  galaxies:
+    convergence: false
+    image: true
+    potential: true
+  hyper:
+    contribution_map_list: true
+    fit_no_hyper: true
+    images_of_galaxies: true
+    model_image: true
+  imaging:
+    psf: true
+  interferometer:
+    amplitudes_vs_uv_distances: false
+    dirty_image: false
+    dirty_inverse_noise_map: false
+    dirty_noise_map: false
+    dirty_signal_to_noise_map: false
+    phases_vs_uv_distances: false
+    uv_wavelengths: false
+  inversion:
+    all_at_end_png: false
+    chi_squared_map: true
+    errors: false
+    interpolated_errors: true
+    interpolated_reconstruction: true
+    normalized_residual_map: false
+    reconstructed_image: true
+    reconstruction: true
+    regularization_weights: false
+    residual_map: false
+    subplot_inversion: true
+  other:
+    stochastic_histogram: false
+  plane:
+    all_at_end_fits: true
+    all_at_end_png: false
+    convergence: true
+    deflections: false
+    image: true
+    magnification: true
+    potential: false
+    source_plane_image: true
+    subplot_plane: true
+  positions:
+    image_with_positions: true

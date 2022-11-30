@@ -1,3 +1,16 @@
+# The notation configs define the labels of every model parameter and its derived quantities, which are used when
+# visualizing results (for example labeling the axis of the PDF triangle plots output by a non-linear search).
+
+
+# label: The label given to the each parameter, for plots like PDF corner plots.
+
+# For example, if `einstein_radius=\theta_{\rm Ein}`, the plot axis will be labeled '\theta_{\rm Ein}' using LaTex.
+
+
+# superscript: the superscript used on certain plots that show the results of different model-components.
+
+# For example, if `Gaussian=g`, plots where the parameters of the Gaussian model-component have superscript `g`.
+
 label:
   label:
     alpha: \alpha
@@ -48,15 +61,20 @@ label:
     weight_floor: W_{\rm f}
     weight_power: W_{\rm p}
   superscript:
-    externalshear: ext
-    hyperbackgroundnoise: hyper
-    hypergalaxy: hyper
-    hyperimagesky: hyper
-    inputdeflections: defl
-    pixelization: pix
-    point: point
-    redshift: ''
-    regularization: reg
+    ExternalShear: ext
+    Mesh: mesh
+    Point: point
+    Redshift: z
+    Regularization: reg
+    HyperBackgroundNoise: hyper
+    HyperGalaxy: hyper
+    HyperImagSsky: hyper
+    InputDeflections: defl
+
+# label_format: The format certain parameters are output as in output files like the `model.results` file.
+
+# For example, if `centre_0={:.f4}`, the format of the centre parameter in results files will use this Python format.
+
 label_format:
   format:
     alpha: '{:.4f}'

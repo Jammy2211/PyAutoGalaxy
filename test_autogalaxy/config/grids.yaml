@@ -1,0 +1,68 @@
+interpolate:
+  convergence_2d_from:
+    Isothermal: false
+    IsothermalSph: true
+  deflections_yx_2d_from:
+    Isothermal: false
+    IsothermalSph: true
+  image_2d_from:
+    sersic: false
+    sersicSph: true
+  potential_2d_from:
+    Isothermal: false
+    IsothermalSph: true
+radial_minimum:
+  radial_minimum:
+    MockGridRadialMinimum: 2.5
+    MockIsothermal: 0.0001
+    MockIsothermalSph: 0.03
+    Chameleon: 0.0001
+    ChameleonSph: 0.0001
+    DevVaucouleurs: 0.0001
+    DevVaucouleursSph: 0.0001
+    ExponentialRadialGradient: 0.0001
+    ElsonFreeFall: 0.0001
+    ElsonFreeFallSph: 0.0001
+    Exponential: 0.0001
+    ExponentialCore: 0.0001
+    ExponentialCoreSph: 0.0001
+    ExponentialSph: 0.0001
+    ExternalShear: 0.0001
+    Gaussian: 0.0001
+    GaussianSph: 0.0001
+    gNFW: 0.0001
+    gNFWMCRLudlow: 0.0001
+    gNFWSph: 0.0001
+    Isothermal: 0.0001
+    IsothermalCore: 0.0001
+    IsothermalCoreSph: 0.0001
+    IsothermalSph: 0.0001
+    MassSheet: 0.0001
+    Moffat: 0.0001
+    MoffatSph: 0.0001
+    NFW: 0.0001
+    NFWMCRDuffySph: 0.0001
+    NFWMCRLudlow: 0.0001
+    NFWMCRLudlowSph: 0.0001
+    NFWMCRScatterLudlow: 0.0001
+    NFWMCRScatterLudlowSph: 0.0001
+    NFWSph: 0.0001
+    NFWTruncatedMCRDuffySph: 0.0001
+    NFWTruncatedMCRLudlowSph: 0.0001
+    NFWTruncatedMCRScatterLudlowSph: 0.0001
+    NFWTruncatedSph: 0.0001
+    PointMass: 0.0001
+    PowerLaw: 0.0001
+    PowerLawBroken: 0.0001
+    PowerLawBrokenSph: 0.0001
+    PowerLawCore: 0.0001
+    PowerLawCoreSph: 0.0001
+    PowerLawSph: 0.0001
+    Sersic: 0.0001
+    SersicCore: 0.0001
+    SersicCoreSph: 0.0001
+    SersicRadialGradient: 0.0001
+    SersicSph: 0.0001
+    SphexponentialRadialGradient: 0.0001
+    SphSersicRadialGradient: 0.0001
+    EllProfile: 0.0001

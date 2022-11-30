@@ -344,7 +344,7 @@ class SphSersicRadialGradient(SersicRadialGradient, LightMassProfile):
         )
 
 
-class EllExponentialRadialGradient(SersicRadialGradient, LightMassProfile):
+class ExponentialRadialGradient(SersicRadialGradient, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

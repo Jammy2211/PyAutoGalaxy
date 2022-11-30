@@ -1,0 +1,11 @@
+general:
+  calculation_grid:
+    convergence_threshold: 0.1
+    pixels: 81
+grids:
+  radial_minimum:
+    radial_minimum:
+      isothermal: 0.01
+      isothermalsph: 0.01
+      mockisothermal: 0.01
+      mockisothermalsph: 0.01

@@ -1,0 +1,216 @@
+GridSearch:
+  general:
+    number_of_cores: 2
+    step_size: 0.1
+mcmc:
+  Emcee:
+    auto_correlations:
+      change_threshold: 0.01
+      check_for_convergence: true
+      check_size: 100
+      required_length: 50
+    initialize:
+      ball_lower_limit: 0.49
+      ball_upper_limit: 0.51
+      method: ball
+    parallel:
+      number_of_cores: 1
+    printing:
+      silence: false
+    prior_passer:
+      sigma: 3.0
+      use_errors: true
+      use_widths: true
+    run:
+      nsteps: 2000
+    search:
+      nwalkers: 50
+    updates:
+      iterations_per_update: 2500
+      log_every_update: 1
+      model_results_every_update: 1
+      remove_state_files_at_end: true
+      visualize_every_update: 1
+mock:
+  MockOptimizer:
+    initialize:
+      method: prior
+    printing:
+      silence: false
+    prior_passer:
+      sigma: 3.0
+      use_errors: true
+      use_widths: true
+    updates:
+      iterations_per_update: 2500
+      log_every_update: 1
+      model_results_every_update: 1
+      remove_state_files_at_end: true
+      visualize_every_update: 1
+  MockSearch:
+    initialize:
+      method: prior
+    printing:
+      silence: false
+    prior_passer:
+      sigma: 3.0
+      use_errors: true
+      use_widths: true
+    search: {}
+    updates:
+      iterations_per_update: 2500
+      log_every_update: 1
+      model_results_every_update: 1
+      remove_state_files_at_end: true
+      visualize_every_update: 1
+nest:
+  DynestyDynamic:
+    initialize:
+      method: prior
+    parallel:
+      force_x1_cpu: false
+      number_of_cores: 1
+    printing:
+      silence: false
+    prior_passer:
+      sigma: 3.0
+      use_errors: true
+      use_widths: true
+    search:
+      bootstrap: null
+      bound: multi
+      enlarge: null
+      evidence_tolerance: 0.01
+      first_update: null
+      fmove: 0.9
+      logl_max: .inf
+      max_move: 100
+      maxcall: null
+      maxcall_init: null
+      maxiter: null
+      maxiter_init: null
+      n_effective_init: 0
+      sample: auto
+      sampling_efficiency: 0.5
+      slices: 5
+      update_interval: null
+      walks: 25
+    settings:
+      stagger_resampling_likelihood: false
+    updates:
+      iterations_per_update: 2500
+      log_every_update: 1
+      model_results_every_update: 1
+      remove_state_files_at_end: true
+      visualize_every_update: 1
+  DynestyStatic:
+    initialize:
+      method: prior
+    parallel:
+      number_of_cores: 1
+    printing:
+      silence: false
+    prior_passer:
+      sigma: 3.0
+      use_errors: true
+      use_widths: true
+    search:
+      bootstrap: null
+      bound: multi
+      dlogz: -1.0
+      enlarge: null
+      facc: 0.5
+      first_update: null
+      fmove: 0.9
+      logl_max: .inf
+      max_move: 0
+      maxcall: null
+      maxiter: null
+      n_effective: 0
+      nlive: 150
+      sample: auto
+      slices: 5
+      update_interval: null
+      walks: 5
+    settings:
+      stagger_resampling_likelihood: false
+    updates:
+      iterations_per_update: 2500
+      log_every_update: 1
+      model_results_every_update: 1
+      remove_state_files_at_end: true
+      visualize_every_update: 1
+  MultiNest:
+    hyper_combined:
+      acceptance_ratio_threshold: 0.05
+      const_efficiency_mode: true
+      evidence_tolerance: 10.0
+      multimodal: false
+      n_live_points: 50
+      sampling_efficiency: 0.3
+      terminate_at_acceptance_ratio: false
+    hyper_galaxy:
+      const_efficiency_mode: false
+      evidence_tolerance: 0.1
+      multimodal: false
+      n_live_points: 30
+      sampling_efficiency: 0.5
+    initialize:
+      method: prior
+    inversion:
+      acceptance_ratio_threshold: 0.05
+      const_efficiency_mode: true
+      evidence_tolerance: 100.0
+      multimodal: false
+      n_live_points: 50
+      sampling_efficiency: 0.3
+      terminate_at_acceptance_ratio: false
+    printing:
+      silence: false
+    prior_passer:
+      sigma: 3.0
+      use_errors: true
+      use_widths: true
+    search:
+      const_efficiency_mode: false
+      evidence_tolerance: 0.5
+      importance_nested_sampling: false
+      max_iter: 0
+      max_modes: 100
+      mode_tolerance: -1.0e+90
+      multimodal: false
+      n_live_points: 50
+      sampling_efficiency: 0.5
+    settings:
+      context: 0
+      init_mpi: false
+      log_zero: -1.0e+100
+      n_iter_before_update: 5
+      null_log_evidence: -1.0e+90
+      resume: true
+      seed: -1.0
+      stagger_resampling_likelihood: true
+      verbose: false
+      write_output: true
+    updates:
+      iterations_per_update: 2500
+      log_every_update: 1
+      model_results_every_update: 1
+      remove_state_files_at_end: true
+      visualize_every_update: 1
+optimize:
+  DownhillSimplex:
+    search:
+      disp: 1
+      ftol: 0.0001
+      full_output: 0
+      maxfun: null
+      maxiter: null
+      retall: 0
+      xtol: 0.0001
+    updates:
+      iterations_per_update: 2500
+      log_every_update: 1
+      model_results_every_update: 1
+      remove_state_files_at_end: true
+      visualize_every_update: 1
