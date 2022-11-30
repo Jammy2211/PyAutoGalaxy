@@ -1,0 +1,21 @@
+Rectangular:
+  shape_0:
+    gaussian_limits:
+      lower: 3.0
+      upper: inf
+    lower_limit: 20.0
+    type: Uniform
+    upper_limit: 45.0
+    width_modifier:
+      type: Absolute
+      value: 8.0
+  shape_1:
+    gaussian_limits:
+      lower: 3.0
+      upper: inf
+    lower_limit: 20.0
+    type: Uniform
+    upper_limit: 45.0
+    width_modifier:
+      type: Absolute
+      value: 8.0

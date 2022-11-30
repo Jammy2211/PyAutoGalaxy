@@ -1,0 +1,35 @@
+MassSheet:
+  centre_0:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.1
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  centre_1:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.1
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  kappa:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -1.0
+    type: Uniform
+    upper_limit: 1.0
+    width_modifier:
+      type: Absolute
+      value: 0.05
