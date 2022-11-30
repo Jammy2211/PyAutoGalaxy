@@ -1,0 +1,45 @@
+CausticsPlot:                       # wrapper for `plt.plot()`: customize plots caustics in the source-plane.
+  figure:
+    c: k,r,g,b,m,y
+    linestyle: '-'
+    linewidth: 2
+  subplot:
+    c: k,r,g,b,m,y
+    linestyle: '-'
+    linewidth: 2
+CriticalCurvesPlot:                 # wrapper for `plt.plot()`: customize plots critical curves in the image-plane.
+  figure:
+    c: k,r,g,b,m,y
+    linestyle: '-'
+    linewidth: 2
+  subplot:
+    c: k,r,g,b,m,y
+    linestyle: '-'
+    linewidth: 2
+LightProfileCentresScatter:        # wrapper for `plt.scatter()`: customize the appearance of points showing the light profile centres.
+  figure:
+    c: k,r,g,b,m,y
+    marker: +
+    s: 20
+  subplot:
+    c: r,g,b,m,y,k
+    marker: +
+    s: 26
+MassProfileCentresScatter:         # wrapper for `plt.scatter()`: customize the appearance of points showing the mass profile centres.
+  figure:
+    c: k,r,g,b,m,y
+    marker: x
+    s: 20
+  subplot:
+    c: r,g,b,m,y,k
+    marker: x
+    s: 26
+MultipleImagesScatter:            # wrapper for `plt.scatter()`: customize the appearance of points showing the multiple images of a point source model.
+  figure:
+    c: k,r,g,b,m,y
+    marker: o
+    s: 16
+  subplot:
+    c: r,g,b,m,y,k
+    marker: o
+    s: 16

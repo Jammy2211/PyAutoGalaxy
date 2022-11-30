@@ -1,0 +1,61 @@
+# Config files which specify the default matplotlib settings when 1D figures and subplots are plotted.
+
+# For example, the `Figure:` config file has the following lines:
+
+.. code-block:: bash
+
+    [figure]
+    figsize=(7, 7)
+    aspect=square
+
+    [subplot]
+    figsize=auto
+    aspect=square
+
+This means that when a figure (e.g. a single image) is plotted it will use ``figsize=(7,7)`` and ``aspect="square`` if
+the values of these parameters are not manually set by the user via the ``mat_plot_2d``.
+
+Subplots (e.g. more than one image) will always use ``figsize="auto`` by default.
+
+These configuration files can be customized such that the appearance of figures and subplots for a user is optimal for
+your computer set up.Config files which specify the default matplotlib settings when figures and subplots are plotted.
+
+For example, the ``Figure.ini`` config file has the following lines:
+
+    .. code-block:: bash
+
+  [ figure ]
+      figsize=(7, 7)
+      aspect=square
+
+  [ subplot ]
+      figsize=auto
+      aspect=square
+
+      This means that when a figure (e.g. a single image) is plotted it will use ``figsize=(7,7)`` and ``aspect="square`` if
+      the values of these parameters are not manually set by the user via the ``mat_plot_2d``.
+
+      Subplots (e.g. more than one image) will always use ``figsize="auto`` by default.
+
+      These configuration files can be customized such that the appearance of figures and subplots for a user is optimal for
+      your computer set up.
+
+EinsteinRadiusAXVLine:              # wrapper for `plt.axvline()`: customize verticals lines plotted to represent the Einstein radius on 1D figures.
+  figure:
+    c: b
+    linestyle: --
+  subplot:
+    c: b
+    linestyle: --
+HalfLightRadiusAXVLine:             # wrapper for `plt.axvline()`: customize verticals lines plotted to represent the half-light radius on 1D figures.
+  figure:
+    c: g
+    linestyle: -.
+  subplot:
+    c: kg
+    linestyle: -.
+ModelFluxesYXScatter:               # wrapper for `plt.scatter()`: customize 1D plot of fluxes for point-source modeling.
+  figure:
+    c: c
+  subplot:
+    c: c

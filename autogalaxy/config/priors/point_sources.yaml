@@ -1,0 +1,85 @@
+Point:
+  centre_0:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.3
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  centre_1:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.3
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+PointFlux:
+  centre_0:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.3
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  centre_1:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.3
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  flux:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 1.0e-06
+    type: LogUniform
+    upper_limit: 1000000.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+PointSourceChi:
+  centre_0:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.3
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  centre_1:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.3
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05

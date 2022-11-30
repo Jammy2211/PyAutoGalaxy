@@ -1,0 +1,8 @@
+general:
+  backend: default                  # The matploblib backend used for visualization. `default` uses the system default, can specifiy specific backend (e.g. TKAgg, Qt5Agg, WXAgg).
+  imshow_origin: upper              # The `origin` input of `imshow`, determining if pixel values are ascending or descending on the y-axis.
+  zoom_around_mask: true            # If True, plots of data structures with a mask automatically zoom in the masked region.
+inversion:
+  reconstruction_vmax_factor: 0.5   # Plots of an Inversion's reconstruction use the reconstructed data's bright value multiplied by this factor.
+units:
+  in_kpc: false                     # If True, plots that are normally in arc-seconds are instead plotted using kiloparsecs.

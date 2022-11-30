@@ -1,0 +1,42 @@
+HyperGalaxy:
+  contribution_factor:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 0.0
+    type: Uniform
+    upper_limit: 20.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+  noise_factor:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 0.0001
+    type: LogUniform
+    upper_limit: 1000.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+  noise_power:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -10.0
+    type: Uniform
+    upper_limit: 10.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+Redshift:
+  redshift:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 0.0
+    type: Uniform
+    upper_limit: 3.0
+    width_modifier:
+      type: Absolute
+      value: 1.0

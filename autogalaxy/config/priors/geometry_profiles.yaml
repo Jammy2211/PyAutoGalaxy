@@ -1,0 +1,89 @@
+EllProfile:
+  centre_0:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.1
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  centre_1:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.1
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  e1:
+    gaussian_limits:
+      lower: -1.0
+      upper: 1.0
+    lower_limit: -1.0
+    type: Uniform
+    upper_limit: 1.0
+    width_modifier:
+      type: Absolute
+      value: 0.2
+  e2:
+    gaussian_limits:
+      lower: '-1.0'
+      upper: '1.0'
+    lower_limit: -1.0
+    type: Uniform
+    upper_limit: 1.0
+    width_modifier:
+      type: Absolute
+      value: 20.0
+GeometryProfile:
+  centre_0:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.1
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  centre_1:
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.1
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+SphProfile:
+  centre_0:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.1
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  centre_1:
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.1
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05

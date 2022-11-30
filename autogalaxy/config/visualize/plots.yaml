@@ -1,0 +1,92 @@
+# The `plots` section customizes every image that is output to hard-disk during a model-fit.
+
+# For example, if `plots: fit: subplot_fit=True``, the ``fit_imaging.png`` subplot file will be plotted every time visualization is performed.
+
+dataset:
+  subplot_dataset: true
+  absolute_signal_to_noise_map: false
+  data: false
+  inverse_noise_map: false
+  noise_map: false
+  potential_chi_squared_map: false
+  signal_to_noise_map: false
+fit:
+  subplot_fit: true
+  subplot_of_galaxies: true
+  subplot_galaxy_images: true
+  subtracted_images_of_galaxies: true
+  chi_squared_map: false
+  data: false
+  model_data: false
+  model_images_of_galaxies: true
+  noise_map: false
+  normalized_residual_map: false
+  residual_map: false
+  signal_to_noise_map: false
+  all_at_end_fits: false
+  all_at_end_png: false
+fit_imaging: {}
+fit_interferometer:
+  amplitudes_vs_uv_distances: false
+  dirty_chi_squared_map: false
+  dirty_image: false
+  dirty_inverse_noise_map: false
+  dirty_noise_map: false
+  dirty_normalized_residual_map: false
+  dirty_residual_map: false
+  dirty_signal_to_noise_map: false
+  phases_vs_uv_distances: false
+  uv_wavelengths: false
+fit_quantity:
+  subplot_fit: true
+  chi_squared_map: false
+  image: true
+  model_image: false
+  noise_map: false
+  residual_map: false
+  all_at_end_fits: true
+  all_at_end_png: true
+galaxies:
+  convergence: false
+  image: false
+  potential: false
+hyper:
+  fit_no_hyper: true
+  images_of_galaxies: true
+  contribution_map_list: true
+  model_image: true
+imaging:
+  psf: false
+interferometer:
+  amplitudes_vs_uv_distances: false
+  dirty_image: false
+  dirty_inverse_noise_map: false
+  dirty_noise_map: false
+  dirty_signal_to_noise_map: false
+  phases_vs_uv_distances: false
+  uv_wavelengths: false
+inversion:
+  subplot_inversion: true
+  chi_squared_map: false
+  errors: false
+  normalized_residual_map: false
+  reconstructed_image: false
+  reconstruction: false
+  regularization_weights: false
+  residual_map: false
+  all_at_end_png: false
+other:
+  stochastic_histogram: false
+plane:
+  subplot_plane: true
+  subplot_galaxy_images: true
+  convergence: false
+  deflections: false
+  image: false
+  magnification: false
+  potential: false
+  source_plane_image: false
+  all_at_end_fits: false
+  all_at_end_png: false
+positions:
+  image_with_positions: true
