@@ -1,0 +1,35 @@
+PointMass:
+  centre_0:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.1
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  centre_1:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.1
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  einstein_radius:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 0.0
+    type: Uniform
+    upper_limit: 8.0
+    width_modifier:
+      type: Relative
+      value: 0.25

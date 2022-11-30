@@ -1,0 +1,114 @@
+Moffat:
+  alpha:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 0.0
+    type: Uniform
+    upper_limit: 1.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+  beta:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 1.0
+    type: Uniform
+    upper_limit: 5.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+  centre_0:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.3
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  centre_1:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.3
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  ell_comps_0:
+    gaussian_limits:
+      lower: -1.0
+      upper: 1.0
+    lower_limit: -1.0
+    mean: 0.0
+    sigma: 0.3
+    type: Gaussian
+    upper_limit: 1.0
+    width_modifier:
+      type: Absolute
+      value: 0.2
+  ell_comps_1:
+    gaussian_limits:
+      lower: '-1.0'
+      upper: '1.0'
+    lower_limit: -1.0
+    mean: 0.0
+    sigma: 0.3
+    type: Gaussian
+    upper_limit: 1.0
+    width_modifier:
+      type: Absolute
+      value: 0.2
+MoffatSph:
+  alpha:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 0.0
+    type: Uniform
+    upper_limit: 1.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+  beta:
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+    lower_limit: 1.0
+    type: Uniform
+    upper_limit: 5.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+  centre_0:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.3
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+  centre_1:
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+    lower_limit: -inf
+    mean: 0.0
+    sigma: 0.3
+    type: Gaussian
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
