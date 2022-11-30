@@ -360,7 +360,7 @@ plots:
     residual_map: false
     signal_to_noise_map: false
     subplot_fit: true
-    subplot_of_galaxies_fits: false
+    subplot_of_galaxies: false
     subtracted_images_of_galaxies: true
   fit_imaging: {}
   fit_interferometer:
@@ -427,5 +427,6 @@ plots:
     potential: false
     source_plane_image: true
     subplot_plane: true
+    subplot_galaxy_images: true
   positions:
     image_with_positions: true

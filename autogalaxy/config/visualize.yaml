@@ -35,6 +35,7 @@ plots:
   fit:
     subplot_fit: true
     subplot_of_galaxies: true
+    subplot_galaxy_images: true
     subtracted_images_of_galaxies: true
     chi_squared_map: false
     data: false
@@ -72,7 +73,7 @@ plots:
     image: false
     potential: false
   hyper:
-      fit_no_hyper: true
+    fit_no_hyper: true
     images_of_galaxies: true
     contribution_map_list: true
     model_image: true
