@@ -1,14 +1,9 @@
-# The `include` settings customize every feature that appears on plotted images by default (e.g. a mask, the
-# coordinate system's origin, etc.).
-
-# For example, if `include_2d -> mask:true`, the mask will not be plotted on any applicable figure by default.
-
 include_1d:
-  einstein_radius: true             # Include a vertical line at the lens mass model's Einstein radius?
-  half_light_radius: true           # Include a vertical line at the lens light model's half-light radius (same as effective radius)?
+  einstein_radius: true
+  half_light_radius: true
 include_2d:
-  caustics: true                    # Include the lens mass model's caustics on source-plane figures?
-  critical_curves: true             # Include the lens mass model's critical curves on image-plane figures?
-  light_profile_centres: true       # Include the centres of the lens light models on image-plane and source-plane figures?
-  mass_profile_centres: true        # Include the centres of the lens mass models on image-plane and source-plane figures?
-  multiple_images: true             # Include the multiple images of the lensed source for point-source based models (e.g. using a PositionsSolver)?
+  caustics: true
+  critical_curves: true
+  light_profile_centres: true
+  mass_profile_centres: true
+  multiple_images: true

@@ -1,11 +1,11 @@
 analysis:
-  preload_attempts: 250                # For preloading, the number of attempts performed before an exception is thrown and preloading is disabled.
+  preload_attempts: 250
 fits:
-  flip_for_ds9: true                   # If True, a np.flipud() is applied to images before loading so visualization is the same orientation as ds9
+  flip_for_ds9: true
 hyper:
-  hyper_minimum_percent: 0.01         # When creating hyper images, the minimum value as a percentage of the max value in that image (this prevents hyper images having negative values).
-  hyper_noise_limit: 100000000.0      # The maximum noise value allowed by hyper noise scaling.
-  stochastic_outputs: false           # If True, stocahstic visualization is performed (e.g. a histogram of 250 log likelihood evaluations for different kmeans seeds).
+  hyper_minimum_percent: 0.01
+  hyper_noise_limit: 100000000.0
+  stochastic_outputs: false
 test:
-  check_figure_of_merit_sanity: false # If True, when a model-fit run is resumed the likelihood value of each model is compared to saved value from the previous run, to ensure the likelihood function is identical.
-  check_preloads: false               # If True, perform a sanity check that the likelihood using preloads is identical to the likelihood not using preloads.
+  check_figure_of_merit_sanity: false
+  check_preloads: false

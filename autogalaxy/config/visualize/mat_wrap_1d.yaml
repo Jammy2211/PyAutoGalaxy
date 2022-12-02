@@ -1,36 +1,18 @@
-# These settings specify the default matplotlib settings when 1D figures and subplots are plotted.
-
-# For example, the `EinsteinRadiusAXVLine` section has the following lines:
-
-# EinsteinRadiusAXVLine:
-#    figure:
-#      c: b
-#    subplot:
-#      c: b
-
-# This means that when a figure of y vs x data is plotted it will use `c=k`, meaning the line appears blue,
-# provided the values of these parameters are not manually set by the user via a `MatPlot1D` object.
-#
-# In the above example, subplots (e.g. more than one image) will always use `c=b` by default as well.
-#
-# These configuration options can be customized such that the appearance of figures and subplots for a user is
-# optimal for your computer set up.
-
-EinsteinRadiusAXVLine:              # wrapper for `plt.axvline()`: customize verticals lines plotted to represent the Einstein radius on 1D figures.
+EinsteinRadiusAXVLine:
   figure:
     c: b
     linestyle: --
   subplot:
     c: b
     linestyle: --
-HalfLightRadiusAXVLine:             # wrapper for `plt.axvline()`: customize verticals lines plotted to represent the half-light radius on 1D figures.
+HalfLightRadiusAXVLine:
   figure:
     c: g
     linestyle: -.
   subplot:
     c: kg
     linestyle: -.
-ModelFluxesYXScatter:               # wrapper for `plt.scatter()`: customize 1D plot of fluxes for point-source modeling.
+ModelFluxesYXScatter:
   figure:
     c: c
   subplot:

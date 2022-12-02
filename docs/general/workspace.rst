@@ -41,7 +41,7 @@ Here, you'll find the configuration files used by **PyAutoGalaxy** which customi
     - Visualization, including the backend used by *matplotlib*.
     - The priors and notation configs associated with the light and mass profiles used for lens modeling.
     - The behaviour of different (y,x) Cartesian grids used to perform lens calculations.
-    - The general.ini config which customizes other aspects of **PyAutoGalaxy**.
+    - The generaltrue config which customizes other aspects of **PyAutoGalaxy**.
 
 Descriptions of every configuration file and their input parameters are provided in the ``README.rst`` in
 the `config directory of the workspace <https://github.com/Jammy2211/autogalaxy_workspace/tree/release/config>`_

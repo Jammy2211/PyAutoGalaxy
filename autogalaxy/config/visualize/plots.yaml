@@ -1,7 +1,3 @@
-# The `plots` section customizes every image that is output to hard-disk during a model-fit.
-
-# For example, if `plots: fit: subplot_fit=True``, the ``fit_imaging.png`` subplot file will be plotted every time visualization is performed.
-
 dataset:
   subplot_dataset: true
   absolute_signal_to_noise_map: false

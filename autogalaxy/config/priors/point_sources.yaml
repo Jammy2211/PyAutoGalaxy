@@ -1,85 +1,85 @@
 Point:
   centre_0:
-    gaussian_limits:
-      lower: -inf
-      upper: inf
-    lower_limit: -inf
+    type: Gaussian
     mean: 0.0
     sigma: 0.3
-    type: Gaussian
+    lower_limit: -inf
     upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
+    gaussian_limits:
+      lower: -inf
+      upper: inf
   centre_1:
-    gaussian_limits:
-      lower: -inf
-      upper: inf
-    lower_limit: -inf
+    type: Gaussian
     mean: 0.0
     sigma: 0.3
-    type: Gaussian
+    lower_limit: -inf
     upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
+    gaussian_limits:
+      lower: -inf
+      upper: inf
 PointFlux:
   centre_0:
-    gaussian_limits:
-      lower: -inf
-      upper: inf
-    lower_limit: -inf
+    type: Gaussian
     mean: 0.0
     sigma: 0.3
-    type: Gaussian
+    lower_limit: -inf
     upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
+    gaussian_limits:
+      lower: -inf
+      upper: inf
   centre_1:
-    gaussian_limits:
-      lower: -inf
-      upper: inf
-    lower_limit: -inf
+    type: Gaussian
     mean: 0.0
     sigma: 0.3
-    type: Gaussian
+    lower_limit: -inf
     upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-  flux:
     gaussian_limits:
-      lower: 0.0
+      lower: -inf
       upper: inf
-    lower_limit: 1.0e-06
+  flux:
     type: LogUniform
+    lower_limit: 1.0e-06
     upper_limit: 1000000.0
     width_modifier:
       type: Relative
       value: 0.5
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
 PointSourceChi:
   centre_0:
-    gaussian_limits:
-      lower: -inf
-      upper: inf
-    lower_limit: -inf
+    type: Gaussian
     mean: 0.0
     sigma: 0.3
-    type: Gaussian
+    lower_limit: -inf
     upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
+    gaussian_limits:
+      lower: -inf
+      upper: inf
   centre_1:
-    gaussian_limits:
-      lower: -inf
-      upper: inf
-    lower_limit: -inf
+    type: Gaussian
     mean: 0.0
     sigma: 0.3
-    type: Gaussian
+    lower_limit: -inf
     upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
+    gaussian_limits:
+      lower: -inf
+      upper: inf

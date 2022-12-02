@@ -91,7 +91,7 @@ Matplotlib uses the default backend on your computer, as set in the config file:
 
 .. code-block:: bash
 
-    autogalaxy_workspace/config/visualize/general.ini
+    autogalaxy_workspace/config/visualize/generaltrue
 
 If unchanged, the backend is set to 'default', meaning it will use the backend automatically set up for Python on
 your system.
