@@ -40,6 +40,7 @@ fit_quantity:
   model_image: false
   noise_map: false
   residual_map: false
+  normalized_residual_map: false
   all_at_end_fits: true
   all_at_end_png: true
 galaxies:
