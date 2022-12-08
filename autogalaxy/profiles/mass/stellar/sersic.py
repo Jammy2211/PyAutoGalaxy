@@ -413,13 +413,13 @@ class Sersic(AbstractSersic, MassProfileMGE, MassProfileCSE):
     def deflection_func(
         u, y, x, npow, axis_ratio, sersic_index, effective_radius, sersic_constant
     ):
-        eta_u = np.sqrt(axis_ratio) * np.sqrt(
+        _eta_u = np.sqrt(axis_ratio) * np.sqrt(
             (u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u))))
         )
 
         return np.exp(
             -sersic_constant
-            * (((eta_u / effective_radius) ** (1.0 / sersic_index)) - 1)
+            * (((_eta_u / effective_radius) ** (1.0 / sersic_index)) - 1)
         ) / ((1 - (1 - axis_ratio**2) * u) ** (npow + 0.5))
 
 

@@ -199,14 +199,14 @@ class gNFW(AbstractgNFW):
         surface_density_integral,
     ):
 
-        eta_u = np.sqrt((u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u)))))
+        _eta_u = np.sqrt((u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u)))))
         bin_size = (maximum_log_eta - minimum_log_eta) / (tabulate_bins - 1)
-        i = 1 + int((np.log10(eta_u) - minimum_log_eta) / bin_size)
+        i = 1 + int((np.log10(_eta_u) - minimum_log_eta) / bin_size)
         r1 = 10.0 ** (minimum_log_eta + (i - 1) * bin_size)
         r2 = r1 * 10.0**bin_size
         kap = surface_density_integral[i] + (
             surface_density_integral[i + 1] - surface_density_integral[i]
-        ) * (eta_u - r1) / (r2 - r1)
+        ) * (_eta_u - r1) / (r2 - r1)
         return kap / (1.0 - (1.0 - axis_ratio**2) * u) ** (npow + 0.5)
 
     def convergence_func(self, grid_radius: float) -> float:
@@ -326,15 +326,15 @@ class gNFW(AbstractgNFW):
         tabulate_bins,
         potential_integral,
     ):
-        eta_u = np.sqrt((u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u)))))
+        _eta_u = np.sqrt((u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u)))))
         bin_size = (maximum_log_eta - minimum_log_eta) / (tabulate_bins - 1)
-        i = 1 + int((np.log10(eta_u) - minimum_log_eta) / bin_size)
+        i = 1 + int((np.log10(_eta_u) - minimum_log_eta) / bin_size)
         r1 = 10.0 ** (minimum_log_eta + (i - 1) * bin_size)
         r2 = r1 * 10.0**bin_size
         angle = potential_integral[i] + (
             potential_integral[i + 1] - potential_integral[i]
-        ) * (eta_u - r1) / (r2 - r1)
-        return eta_u * (angle / u) / (1.0 - (1.0 - axis_ratio**2) * u) ** 0.5
+        ) * (_eta_u - r1) / (r2 - r1)
+        return _eta_u * (angle / u) / (1.0 - (1.0 - axis_ratio**2) * u) ** 0.5
 
 
 class gNFWSph(gNFW):

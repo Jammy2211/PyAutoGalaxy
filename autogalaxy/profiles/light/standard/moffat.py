@@ -25,8 +25,6 @@ class Moffat(LightProfile):
         This form of the MOffat profile is a reparameterizaiton of the original formalism given by
         https://ui.adsabs.harvard.edu/abs/1969A%26A.....3..455M/abstract. The actual profile itself is identical.
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre
@@ -110,8 +108,6 @@ class MoffatSph(Moffat):
 
         This form of the MOffat profile is a reparameterizaiton of the original formalism given by
         https://ui.adsabs.harvard.edu/abs/1969A%26A.....3..455M/abstract. The actual profile itself is identical.
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------

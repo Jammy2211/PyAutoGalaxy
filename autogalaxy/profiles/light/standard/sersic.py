@@ -21,8 +21,6 @@ class AbstractSersic(LightProfile):
         """
         Abstract base class for elliptical Sersic light profiles.
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre
@@ -97,8 +95,6 @@ class Sersic(AbstractSersic, LightProfile):
     ):
         """
         The elliptical Sersic light profile.
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
@@ -185,8 +181,6 @@ class SersicSph(Sersic):
     ):
         """
         The spherical Sersic light profile.
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------

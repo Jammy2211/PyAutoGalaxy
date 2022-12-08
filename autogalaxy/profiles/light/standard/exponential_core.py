@@ -17,8 +17,6 @@ class ExponentialCore(SersicCore):
         """
         The elliptical cored-Exponential light profile.
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre
@@ -64,8 +62,6 @@ class ExponentialCoreSph(ExponentialCore):
     ):
         """
         The elliptical cored-Exponential light profile.
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------

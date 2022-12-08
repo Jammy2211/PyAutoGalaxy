@@ -177,8 +177,8 @@ class PowerLawCore(MassProfile):
 
     @staticmethod
     def deflection_func(u, y, x, npow, axis_ratio, slope, core_radius):
-        eta_u = np.sqrt((u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u)))))
-        return (core_radius**2 + eta_u**2) ** (-(slope - 1) / 2.0) / (
+        _eta_u = np.sqrt((u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u)))))
+        return (core_radius**2 + _eta_u**2) ** (-(slope - 1) / 2.0) / (
             (1 - (1 - axis_ratio**2) * u) ** (npow + 0.5)
         )
 

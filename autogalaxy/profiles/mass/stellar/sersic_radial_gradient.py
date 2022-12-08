@@ -112,15 +112,15 @@ class SersicRadialGradient(AbstractSersic):
         mass_to_light_gradient,
         sersic_constant,
     ):
-        eta_u = np.sqrt(axis_ratio) * np.sqrt(
+        _eta_u = np.sqrt(axis_ratio) * np.sqrt(
             (u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u))))
         )
 
         return (
-            (((axis_ratio * eta_u) / effective_radius) ** -mass_to_light_gradient)
+            (((axis_ratio * _eta_u) / effective_radius) ** -mass_to_light_gradient)
             * np.exp(
                 -sersic_constant
-                * (((eta_u / effective_radius) ** (1.0 / sersic_index)) - 1)
+                * (((_eta_u / effective_radius) ** (1.0 / sersic_index)) - 1)
             )
             / ((1 - (1 - axis_ratio**2) * u) ** (npow + 0.5))
         )

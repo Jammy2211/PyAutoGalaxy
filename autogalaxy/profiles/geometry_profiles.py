@@ -17,6 +17,7 @@ class GeometryProfile(Dictable):
     centre
         The (y,x) arc-second coordinates of the profile centre.
     """
+
     def __init__(self, centre: Tuple[float, float] = (0.0, 0.0)):
 
         self.centre = centre
@@ -45,7 +46,7 @@ class GeometryProfile(Dictable):
     def transform_grid_from_reference_frame(self, grid):
         raise NotImplemented()
 
-    def radial_projected_shape_slim_from(self, grid: aa.type.Grid1D2DLike) -> int:
+    def _radial_projected_shape_slim_from(self, grid: aa.type.Grid1D2DLike) -> int:
         """
         To make 1D plots (e.g. `image_1d_from()`) from an input 2D grid, one uses that 2D grid to radially project
         the coordinates across the profile's major-axis.
@@ -65,7 +66,7 @@ class GeometryProfile(Dictable):
         elif isinstance(grid, aa.Grid2DIrregular):
             return grid.slim.shape[0]
 
-        return grid.grid_2d_radial_projected_shape_slim_from(centre=self.centre)
+        return grid.grid_2d__radial_projected_shape_slim_from(centre=self.centre)
 
 
 class SphProfile(GeometryProfile):
@@ -77,6 +78,7 @@ class SphProfile(GeometryProfile):
     centre
         The (y,x) arc-second coordinates of the profile centre.
     """
+
     def __init__(self, centre: Tuple[float, float] = (0.0, 0.0)):
 
         super().__init__(centre=centre)
@@ -191,30 +193,19 @@ class EllProfile(SphProfile):
     def angle(self):
         return convert.angle_from(ell_comps=self.ell_comps)
 
-    @classmethod
-    def from_axis_ratio_and_phi(
-        cls,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        axis_ratio: float = 1.0,
-        angle: float = 0.0,
-    ):
-
-        ell_comps = convert.ell_comps_from(axis_ratio=axis_ratio, angle=angle)
-        return cls(centre=centre, ell_comps=ell_comps)
-
     @property
     def phi_radians(self):
         return np.radians(self.angle)
 
     @property
     def cos_phi(self):
-        return self.cos_and_sin_to_x_axis()[0]
+        return self._cos_and_sin_to_x_axis()[0]
 
     @property
     def sin_phi(self):
-        return self.cos_and_sin_to_x_axis()[1]
+        return self._cos_and_sin_to_x_axis()[1]
 
-    def cos_and_sin_to_x_axis(self):
+    def _cos_and_sin_to_x_axis(self):
         """
         Determine the sin and cosine of the angle between the profile's ellipse and the positive x-axis, \
         counter-clockwise.
@@ -317,8 +308,10 @@ class EllProfile(SphProfile):
     @aa.grid_dec.grid_2d_to_structure
     def transform_grid_from_reference_frame(self, grid):
         """
-        Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer \
-        reference frame, including a rotation to its original orientation and a translation from the profile's centre.
+        Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer
+        reference frame.
+
+        This includes a translation from the profile's `centre` and a rotation using its `angle`.
 
         Parameters
         ----------
@@ -334,7 +327,7 @@ class EllProfile(SphProfile):
             grid_2d=grid, centre=self.centre, angle=self.angle
         )
 
-    def eta_u(self, u, coordinates):
+    def _eta_u(self, u, coordinates):
         return np.sqrt(
             (
                 u

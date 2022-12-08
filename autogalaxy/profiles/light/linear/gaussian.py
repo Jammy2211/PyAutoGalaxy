@@ -16,8 +16,6 @@ class Gaussian(lp.Gaussian, LightProfileLinear):
         """
         The elliptical Gaussian light profile.
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre

@@ -4,13 +4,13 @@ from autogalaxy.profiles.light import standard as lp
 from autogalaxy.profiles import mass as mp
 
 
-
 class LightMassProfile:
     """
     Mass and light profiles describe both mass distributions and light distributions with a single set of parameters. This
     means that the light and mass of these profiles are tied together. Galaxy instances interpret these
     objects as being both mass and light profiles.
     """
+
     pass
 
 
@@ -562,6 +562,7 @@ class SersicCoreSph(SersicCore, LightMassProfile):
     mass_to_light_ratio
         The mass-to-light ratio of the light profiles.
     """
+
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -612,8 +613,6 @@ class Chameleon(lp.Chameleon, mp.Chameleon, LightMassProfile):
     elliptical isothermal profiles. This is convenient for lensing calculations, because the deflection angles of
     an isothermal profile can be evaluated analyticially efficiently.
 
-    See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
     Parameters
     ----------
     centre
@@ -629,6 +628,7 @@ class Chameleon(lp.Chameleon, mp.Chameleon, LightMassProfile):
     core_radius_1
         The core size of the second elliptical cored Isothermal profile.
     """
+
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -668,8 +668,6 @@ class ChameleonSph(Chameleon, LightMassProfile):
     elliptical isothermal profiles. This is convenient for lensing calculations, because the deflection angles of
     an isothermal profile can be evaluated analyticially efficiently.
 
-    See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
     Parameters
     ----------
     centre
@@ -682,6 +680,7 @@ class ChameleonSph(Chameleon, LightMassProfile):
     core_radius_1
         The core size of the second elliptical cored Isothermal profile.
     """
+
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

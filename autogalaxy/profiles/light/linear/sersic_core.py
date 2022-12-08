@@ -20,8 +20,6 @@ class SersicCore(lp.SersicCore, LightProfileLinear):
         """
         The elliptical cored-Sersic light profile.
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre

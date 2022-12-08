@@ -99,8 +99,6 @@ class ElsonFreeFallSph(ElsonFreeFall):
         The spherical Elson, Fall and Freeman (EFF) light profile, which is commonly used to represent the clumps of
         Lyman-alpha emitter galaxies (see https://arxiv.org/abs/1708.08854).
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre

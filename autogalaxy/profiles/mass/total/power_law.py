@@ -104,11 +104,11 @@ class PowerLaw(PowerLawCore):
 
     @staticmethod
     def potential_func(u, y, x, axis_ratio, slope, core_radius):
-        eta_u = np.sqrt((u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u)))))
+        _eta_u = np.sqrt((u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u)))))
         return (
-            (eta_u / u)
-            * ((3.0 - slope) * eta_u) ** -1.0
-            * eta_u ** (3.0 - slope)
+            (_eta_u / u)
+            * ((3.0 - slope) * _eta_u) ** -1.0
+            * _eta_u ** (3.0 - slope)
             / ((1 - (1 - axis_ratio**2) * u) ** 0.5)
         )
 

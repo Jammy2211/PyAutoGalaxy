@@ -12,21 +12,6 @@ from autogalaxy.profiles.light.decorators import (
 class Gaussian(LightProfile):
     """
     The elliptical Gaussian light profile.
-
-    See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
-    Parameters
-    ----------
-    centre
-        The (y,x) arc-second coordinates of the profile centre.
-    ell_comps
-        The first and second ellipticity components of the elliptical coordinate system, (see the module
-        `autogalaxy -> convert.py` for the convention).
-    intensity
-        Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
-        the light profile's image is compared too, which is expected to be electrons per second).
-    sigma
-        The sigma value of the Gaussian, corresponding to ~ 1 / sqrt(2 log(2)) the full width half maximum.
     """
 
     def __init__(
@@ -36,7 +21,24 @@ class Gaussian(LightProfile):
         intensity: float = 0.1,
         sigma: float = 1.0,
     ):
+        """
+        The elliptical Gaussian light profile, which is of the form:
 
+        .. math:: I(\\xi) = a * I
+
+        Parameters
+        ----------
+        centre
+            The (y,x) arc-second coordinates of the profile centre.
+        ell_comps
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
+        intensity
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
+        sigma
+            The sigma value of the Gaussian, corresponding to ~ 1 / sqrt(2 log(2)) the full width half maximum.
+        """
         super().__init__(centre=centre, ell_comps=ell_comps, intensity=intensity)
         self.sigma = sigma
 
@@ -97,8 +99,6 @@ class GaussianSph(Gaussian):
     ):
         """
         The spherical Gaussian light profile.
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------

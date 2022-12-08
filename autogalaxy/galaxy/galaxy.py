@@ -142,7 +142,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             values=self.__dict__.values(), cls=cls, cls_filtered=cls_filtered
         )
 
-    def radial_projected_shape_slim_from(self, grid: aa.type.Grid1D2DLike) -> int:
+    def _radial_projected_shape_slim_from(self, grid: aa.type.Grid1D2DLike) -> int:
         """
         To make 1D plots (e.g. `image_1d_from()`) from an input 2D grid, one uses that 2D grid to radially project
         the coordinates across the profile's major-axis.
@@ -162,7 +162,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         """
         return max(
             [
-                profile.radial_projected_shape_slim_from(grid=grid)
+                profile._radial_projected_shape_slim_from(grid=grid)
                 for key, profile in self.profile_dict.items()
             ]
         )
@@ -172,7 +172,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         if isinstance(grid, aa.Grid1D) or isinstance(grid, aa.Grid2DIrregular):
             return grid
 
-        radial_projected_shape_slim = self.radial_projected_shape_slim_from(grid=grid)
+        radial_projected_shape_slim = self._radial_projected_shape_slim_from(grid=grid)
 
         return grid.grid_2d_radial_projected_from(
             centre=centre, angle=angle + 90, shape_slim=radial_projected_shape_slim

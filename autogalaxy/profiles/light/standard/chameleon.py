@@ -25,8 +25,6 @@ class Chameleon(LightProfile):
         elliptical isothermal profiles. This is convenient for lensing calculations, because the deflection angles of
         an isothermal profile can be evaluated analyticially efficiently.
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre
@@ -132,8 +130,6 @@ class ChameleonSph(Chameleon):
         This light profile closely approximes the Elliptical Sersic light profile, by representing it as two cored
         elliptical isothermal profiles. This is convenient for lensing calculations, because the deflection angles of
         an isothermal profile can be evaluated analyticially efficiently.
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------

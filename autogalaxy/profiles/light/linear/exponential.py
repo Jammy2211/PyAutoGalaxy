@@ -16,8 +16,6 @@ class Exponential(lp.Exponential, LightProfileLinear):
         """
         The elliptical Exponential light profile.
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre

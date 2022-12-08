@@ -105,7 +105,7 @@ autosummary_generate = True
 autodoc_member_order = "bysource"
 autodoc_default_flags = ["members"]
 
-autoclass_content = 'both'
+autoclass_content = "both"
 
 numpydoc_show_class_members = False
 numpydoc_show_inherited_class_members = False

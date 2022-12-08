@@ -132,11 +132,11 @@ class Gaussian(MassProfile, StellarProfile):
 
     @staticmethod
     def deflection_func(u, y, x, npow, axis_ratio, sigma):
-        eta_u = np.sqrt(axis_ratio) * np.sqrt(
+        _eta_u = np.sqrt(axis_ratio) * np.sqrt(
             (u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u))))
         )
 
-        return np.exp(-0.5 * np.square(np.divide(eta_u, sigma))) / (
+        return np.exp(-0.5 * np.square(np.divide(_eta_u, sigma))) / (
             (1 - (1 - axis_ratio**2) * u) ** (npow + 0.5)
         )
 

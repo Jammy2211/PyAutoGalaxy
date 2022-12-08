@@ -16,8 +16,6 @@ class Exponential(Sersic):
 
         This is a specific case of the elliptical Sersic profile where `sersic_index=1.0`.
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre
@@ -51,8 +49,6 @@ class ExponentialSph(Exponential):
         The spherical exponential profile.
 
         This is a specific case of the elliptical Sersic profile where `sersic_index=1.0`.
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------

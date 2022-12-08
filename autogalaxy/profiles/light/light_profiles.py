@@ -150,8 +150,6 @@ class Gaussian(LightProfile):
         """
         The elliptical Gaussian light profile.
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre
@@ -227,8 +225,6 @@ class GaussianSph(Gaussian):
         """
         The spherical Gaussian light profile.
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre
@@ -259,8 +255,6 @@ class Moffat(LightProfile):
 
         This form of the MOffat profile is a reparameterizaiton of the original formalism given by
         https://ui.adsabs.harvard.edu/abs/1969A%26A.....3..455M/abstract. The actual profile itself is identical.
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
@@ -346,8 +340,6 @@ class MoffatSph(Moffat):
         This form of the MOffat profile is a reparameterizaiton of the original formalism given by
         https://ui.adsabs.harvard.edu/abs/1969A%26A.....3..455M/abstract. The actual profile itself is identical.
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre
@@ -379,8 +371,6 @@ class AbstractSersic(LightProfile):
     ):
         """
         Abstract base class for elliptical Sersic light profiles.
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
@@ -456,8 +446,6 @@ class Sersic(AbstractSersic, LightProfile):
     ):
         """
         The elliptical Sersic light profile.
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
@@ -545,8 +533,6 @@ class SersicSph(Sersic):
         """
         The spherical Sersic light profile.
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre
@@ -580,8 +566,6 @@ class Exponential(Sersic):
         The elliptical exponential profile.
 
         This is a specific case of the elliptical Sersic profile where `sersic_index=1.0`.
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
@@ -617,8 +601,6 @@ class ExponentialSph(Exponential):
 
         This is a specific case of the elliptical Sersic profile where `sersic_index=1.0`.
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre
@@ -649,8 +631,6 @@ class DevVaucouleurs(Sersic):
         The elliptical Dev Vaucouleurs light profile.
 
         This is a specific case of the elliptical Sersic profile where `sersic_index=4.0`.
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
@@ -686,8 +666,6 @@ class DevVaucouleursSph(DevVaucouleurs):
 
         This is a specific case of the elliptical Sersic profile where `sersic_index=4.0`.
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre
@@ -720,8 +698,6 @@ class SersicCore(Sersic):
     ):
         """
         The elliptical cored-Sersic light profile.
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
@@ -834,8 +810,6 @@ class SersicCoreSph(SersicCore):
         """
         The elliptical cored-Sersic light profile.
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre
@@ -885,8 +859,6 @@ class ExponentialCore(SersicCore):
         """
         The elliptical cored-Exponential light profile.
 
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
-
         Parameters
         ----------
         centre
@@ -932,8 +904,6 @@ class ExponentialCoreSph(ExponentialCore):
     ):
         """
         The elliptical cored-Exponential light profile.
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
@@ -982,8 +952,6 @@ class Chameleon(LightProfile):
         This light profile closely approximes the Elliptical Sersic light profile, by representing it as two cored
         elliptical isothermal profiles. This is convenient for lensing calculations, because the deflection angles of
         an isothermal profile can be evaluated analyticially efficiently.
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
@@ -1090,8 +1058,6 @@ class ChameleonSph(Chameleon):
         This light profile closely approximes the Elliptical Sersic light profile, by representing it as two cored
         elliptical isothermal profiles. This is convenient for lensing calculations, because the deflection angles of
         an isothermal profile can be evaluated analyticially efficiently.
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------
@@ -1207,8 +1173,6 @@ class ElsonFreeFallSph(ElsonFreeFall):
         """
         The spherical Elson, Fall and Freeman (EFF) light profile, which is commonly used to represent the clumps of
         Lyman-alpha emitter galaxies (see https://arxiv.org/abs/1708.08854).
-
-        See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
 
         Parameters
         ----------

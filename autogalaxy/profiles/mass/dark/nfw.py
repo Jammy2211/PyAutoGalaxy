@@ -98,25 +98,25 @@ class NFW(gNFW, MassProfileCSE):
 
     @staticmethod
     def deflection_func(u, y, x, npow, axis_ratio, scale_radius):
-        eta_u = (1.0 / scale_radius) * np.sqrt(
+        _eta_u = (1.0 / scale_radius) * np.sqrt(
             (u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u))))
         )
 
-        if eta_u > 1:
-            eta_u_2 = (1.0 / np.sqrt(eta_u**2 - 1)) * np.arctan(
-                np.sqrt(eta_u**2 - 1)
+        if _eta_u > 1:
+            _eta_u_2 = (1.0 / np.sqrt(_eta_u**2 - 1)) * np.arctan(
+                np.sqrt(_eta_u**2 - 1)
             )
-        elif eta_u < 1:
-            eta_u_2 = (1.0 / np.sqrt(1 - eta_u**2)) * np.arctanh(
-                np.sqrt(1 - eta_u**2)
+        elif _eta_u < 1:
+            _eta_u_2 = (1.0 / np.sqrt(1 - _eta_u**2)) * np.arctanh(
+                np.sqrt(1 - _eta_u**2)
             )
         else:
-            eta_u_2 = 1
+            _eta_u_2 = 1
 
         return (
             2.0
-            * (1 - eta_u_2)
-            / (eta_u**2 - 1)
+            * (1 - _eta_u_2)
+            / (_eta_u**2 - 1)
             / ((1 - (1 - axis_ratio**2) * u) ** (npow + 0.5))
         )
 
@@ -182,28 +182,28 @@ class NFW(gNFW, MassProfileCSE):
 
     @staticmethod
     def potential_func(u, y, x, axis_ratio, kappa_s, scale_radius):
-        eta_u = (1.0 / scale_radius) * np.sqrt(
+        _eta_u = (1.0 / scale_radius) * np.sqrt(
             (u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u))))
         )
 
-        if eta_u > 1:
-            eta_u_2 = (1.0 / np.sqrt(eta_u**2 - 1)) * np.arctan(
-                np.sqrt(eta_u**2 - 1)
+        if _eta_u > 1:
+            _eta_u_2 = (1.0 / np.sqrt(_eta_u**2 - 1)) * np.arctan(
+                np.sqrt(_eta_u**2 - 1)
             )
-        elif eta_u < 1:
-            eta_u_2 = (1.0 / np.sqrt(1 - eta_u**2)) * np.arctanh(
-                np.sqrt(1 - eta_u**2)
+        elif _eta_u < 1:
+            _eta_u_2 = (1.0 / np.sqrt(1 - _eta_u**2)) * np.arctanh(
+                np.sqrt(1 - _eta_u**2)
             )
         else:
-            eta_u_2 = 1
+            _eta_u_2 = 1
 
         return (
             4.0
             * kappa_s
             * scale_radius
             * (axis_ratio / 2.0)
-            * (eta_u / u)
-            * ((np.log(eta_u / 2.0) + eta_u_2) / eta_u)
+            * (_eta_u / u)
+            * ((np.log(_eta_u / 2.0) + _eta_u_2) / _eta_u)
             / ((1 - (1 - axis_ratio**2) * u) ** 0.5)
         )
 
