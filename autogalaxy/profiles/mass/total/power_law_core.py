@@ -241,7 +241,7 @@ class PowerLawCoreSph(PowerLawCore):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
-        eta = self.grid_to_grid_radii(grid=grid)
+        eta = self.radial_grid_from(grid=grid)
         deflection = np.multiply(
             2.0 * self.einstein_radius_rescaled,
             np.divide(

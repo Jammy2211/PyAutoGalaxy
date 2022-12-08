@@ -85,22 +85,21 @@ class SphProfile(GeometryProfile):
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
-    def grid_to_grid_radii(self, grid):
+    def radial_grid_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
-        Convert a grid of (y, x) coordinates to a grid of their circular radii.
-
-        If the coordinates have not been transformed to the profile's centre, this is performed automatically.
+        Convert a grid of (y, x) coordinates, to their radial distances from the profile
+        centre (e.g. :math: r = x**2 + y**2).
 
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the reference frame of the profile.
+            The grid of (y, x) coordinates which are converted to radial distances.
         """
         return np.sqrt(np.add(np.square(grid[:, 0]), np.square(grid[:, 1])))
 
-    def angle_to_profile_grid_from(self, grid_angles : aa.type.Grid2DLike) -> Tuple[np.ndarray, np.ndarray]:
+    def angle_to_profile_grid_from(self, grid_angles : np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
         """
-        Converts an input grid of angles, defined in degrees counter-clockwise from the positive x-axis, to a grid of
+        Convert a grid of angles, defined in degrees counter-clockwise from the positive x-axis, to a grid of
         angles between the input angles and the profile.
 
         Parameters
