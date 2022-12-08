@@ -106,6 +106,7 @@ autodoc_member_order = "bysource"
 autodoc_default_flags = ["members"]
 
 autoclass_content = "init"
+autodoc_class_signature = "separated"
 
 numpydoc_show_class_members = False
 numpydoc_show_inherited_class_members = False

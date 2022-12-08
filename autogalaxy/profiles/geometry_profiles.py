@@ -40,10 +40,10 @@ class GeometryProfile(Dictable):
         """
         return aa.util.misc.has(values=self.__dict__.values(), cls=cls)
 
-    def grid_transformed_to_profile_reference_frame_from(self, grid):
+    def transformed_to_reference_frame_grid_from(self, grid):
         raise NotImplemented()
 
-    def grid_transformed_from_profile_reference_frame_from(self, grid):
+    def transformed_from_reference_frame_grid_from(self, grid):
         raise NotImplemented()
 
     def _radial_projected_shape_slim_from(self, grid: aa.type.Grid1D2DLike) -> int:
@@ -131,7 +131,7 @@ class SphProfile(GeometryProfile):
         return np.multiply(radius[:, None], np.vstack((sin_theta, cos_theta)).T)
 
     @aa.grid_dec.grid_2d_to_structure
-    def grid_transformed_to_profile_reference_frame_from(self, grid):
+    def transformed_to_reference_frame_grid_from(self, grid):
         """
         Transform a grid of (y,x) coordinates to the reference frame of the profile.
 
@@ -146,7 +146,7 @@ class SphProfile(GeometryProfile):
         return Grid2DTransformedNumpy(grid=transformed)
 
     @aa.grid_dec.grid_2d_to_structure
-    def grid_transformed_from_profile_reference_frame_from(self, grid):
+    def transformed_from_reference_frame_grid_from(self, grid):
         """
         Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer
         reference frame.
@@ -238,12 +238,12 @@ class EllProfile(SphProfile):
         return np.cos(theta_coordinate_to_profile), np.sin(theta_coordinate_to_profile)
 
     @aa.grid_dec.grid_2d_to_structure
-    def rotate_grid_from_reference_frame(self, grid):
+    def rotated_grid_from_reference_frame_from(self, grid):
         """
         Rotate a grid of (y,x) coordinates which have been transformed to the elliptical reference frame of a profile
         back to the original unrotated coordinate grid reference frame.
 
-        Note that unlike the method `grid_transformed_from_profile_reference_frame_from` the the coordinates are not
+        Note that unlike the method `transformed_from_reference_frame_grid_from` the the coordinates are not
         translated back to the profile's original centre.
 
         This routine is used after computing deflection angles in the reference frame of the profile, so that the
@@ -301,7 +301,7 @@ class EllProfile(SphProfile):
         ).view(np.ndarray)
 
     @aa.grid_dec.grid_2d_to_structure
-    def grid_transformed_to_profile_reference_frame_from(
+    def transformed_to_reference_frame_grid_from(
         self, grid: aa.type.Grid2DLike
     ) -> Grid2DTransformedNumpy:
         """
@@ -315,7 +315,7 @@ class EllProfile(SphProfile):
             The (y, x) coordinates in the original reference frame of the grid.
         """
         if self.__class__.__name__.endswith("Sph"):
-            return super().grid_transformed_to_profile_reference_frame_from(
+            return super().transformed_to_reference_frame_grid_from(
                 grid=Grid2DTransformedNumpy(grid=grid)
             )
         transformed = aa.util.geometry.transform_grid_2d_to_reference_frame(
@@ -324,7 +324,7 @@ class EllProfile(SphProfile):
         return Grid2DTransformedNumpy(grid=transformed)
 
     @aa.grid_dec.grid_2d_to_structure
-    def grid_transformed_from_profile_reference_frame_from(
+    def transformed_from_reference_frame_grid_from(
         self, grid: aa.type.Grid2DLike
     ) -> aa.type.Grid2DLike:
         """
@@ -339,7 +339,7 @@ class EllProfile(SphProfile):
             The (y, x) coordinates in the reference frame of the profile.
         """
         if self.__class__.__name__.startswith("Sph"):
-            return super().grid_transformed_from_profile_reference_frame_from(
+            return super().transformed_from_reference_frame_grid_from(
                 grid=Grid2DTransformedNumpy(grid=grid)
             )
 

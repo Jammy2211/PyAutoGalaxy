@@ -182,7 +182,7 @@ class gNFW(AbstractgNFW):
         deflection_y = calculate_deflection_component(npow=1.0, yx_index=0)
         deflection_x = calculate_deflection_component(npow=0.0, yx_index=1)
 
-        return self.rotate_grid_from_reference_frame(
+        return self.rotated_grid_from_reference_frame_from(
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 

@@ -279,6 +279,6 @@ class MassProfileMGE:
 
         angle *= np.sqrt((2.0 * np.pi) / (1.0 - axis_ratio**2.0))
 
-        return self.rotate_grid_from_reference_frame(
+        return self.rotated_grid_from_reference_frame_from(
             np.vstack((-angle.imag, angle.real)).T
         )

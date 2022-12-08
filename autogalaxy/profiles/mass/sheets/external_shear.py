@@ -62,6 +62,6 @@ class ExternalShear(MassProfile):
         """
         deflection_y = -np.multiply(self.magnitude, grid[:, 0])
         deflection_x = np.multiply(self.magnitude, grid[:, 1])
-        return self.rotate_grid_from_reference_frame(
+        return self.rotated_grid_from_reference_frame_from(
             np.vstack((deflection_y, deflection_x)).T
         )

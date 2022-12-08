@@ -21,11 +21,11 @@ class Gaussian(LightProfile):
         """
         The elliptical Gaussian light profile.
 
-        This uses an elliptical coordinate system where:
+        This uses an elliptical coordinate system where for input coordinates (y,x):
 
-        \\xi = q^0.5 * ((y-centre[0]^2 + x-centre[0]^2 / q^2)^0.5
+        .. math:: \\xi = axis_ratio^0.5 * ((y-centre[0]^2 + x-centre[0]^2 / axis_ratio^2)^0.5
 
-        The intensity distribution of this profile is of the form:
+        The intensity distribution of the profile is given by:
 
         .. math:: I(\\xi) = I \exp (-0.5 \\xi / (\sigma / q^0.5))^2
 

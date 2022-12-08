@@ -93,7 +93,7 @@ class PowerLaw(PowerLawCore):
         deflection_y *= rescale_factor
         deflection_x *= rescale_factor
 
-        return self.rotate_grid_from_reference_frame(
+        return self.rotated_grid_from_reference_frame_from(
             grid=np.vstack((deflection_y, deflection_x)).T
         )
 

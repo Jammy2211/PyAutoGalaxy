@@ -405,7 +405,7 @@ class Sersic(AbstractSersic, MassProfileMGE, MassProfileCSE):
         deflection_y = calculate_deflection_component(1.0, 0)
         deflection_x = calculate_deflection_component(0.0, 1)
 
-        return self.rotate_grid_from_reference_frame(
+        return self.rotated_grid_from_reference_frame_from(
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 

@@ -121,7 +121,7 @@ class Chameleon(MassProfile, StellarProfile):
         deflection_y = np.subtract(deflection_y0, deflection_y1)
         deflection_x = np.subtract(deflection_x0, deflection_x1)
 
-        return self.rotate_grid_from_reference_frame(
+        return self.rotated_grid_from_reference_frame_from(
             np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)
         )
 

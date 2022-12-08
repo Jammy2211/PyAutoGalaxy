@@ -185,4 +185,4 @@ class MassProfileCSE(ABC):
             for amplitude, core_radius in zip(amplitude_list, core_radius_list)
         )
 
-        return self.rotate_grid_from_reference_frame(deflections_2d.T)
+        return self.rotated_grid_from_reference_frame_from(deflections_2d.T)

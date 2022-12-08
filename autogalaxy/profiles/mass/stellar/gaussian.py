@@ -76,7 +76,7 @@ class Gaussian(MassProfile, StellarProfile):
             * self.zeta_from(grid=grid)
         )
 
-        return self.rotate_grid_from_reference_frame(
+        return self.rotated_grid_from_reference_frame_from(
             np.multiply(
                 1.0, np.vstack((-1.0 * np.imag(deflections), np.real(deflections))).T
             )
@@ -126,7 +126,7 @@ class Gaussian(MassProfile, StellarProfile):
         deflection_y = calculate_deflection_component(1.0, 0)
         deflection_x = calculate_deflection_component(0.0, 1)
 
-        return self.rotate_grid_from_reference_frame(
+        return self.rotated_grid_from_reference_frame_from(
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 

@@ -106,7 +106,7 @@ class Isothermal(PowerLaw):
         deflection_x = np.arctan(
             np.divide(np.multiply(np.sqrt(1 - self.axis_ratio**2), grid[:, 1]), psi)
         )
-        return self.rotate_grid_from_reference_frame(
+        return self.rotated_grid_from_reference_frame_from(
             grid=np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)
         )
 
@@ -134,7 +134,7 @@ class Isothermal(PowerLaw):
             grid[:, 1] ** 2 - grid[:, 0] ** 2, grid[:, 1] ** 2 + grid[:, 0] ** 2
         )
 
-        shear_field = self.rotate_grid_from_reference_frame(
+        shear_field = self.rotated_grid_from_reference_frame_from(
             grid=np.vstack((shear_y, shear_x)).T
         )
 
