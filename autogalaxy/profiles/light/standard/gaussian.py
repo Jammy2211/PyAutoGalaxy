@@ -21,13 +21,14 @@ class Gaussian(LightProfile):
         sigma: float = 1.0,
     ):
         """
-        The elliptical Gaussian light profile uses an elliptical coordinate system where:
+        For the follow convention:
 
+        :math: y_c = y centre of profile = `centre[0]`
+        :math: x_c = x centre of profile = `centre[1]`
 
+        The elliptical Gaussian light profile uses an elliptical coordinate system where for input coordinates (y,x):
 
-         for input coordinates (y,x):
-
-        .. math:: \\xi = q^{0.5} * ((y-y_c^2 + x-x_c[0]^2 / q^2)^{0.5}
+        .. math:: \\xi = q^{0.5} * ((y-y_c^2 + x-x_c^2 / q^2)^{0.5}
 
         The intensity distribution of the profile is given by:
 
@@ -36,15 +37,15 @@ class Gaussian(LightProfile):
         Parameters
         ----------
         centre
-            The (y,x) arc-second coordinates of the profile centre :math: [y_c, x_c].
+            The (y,x) arc-second coordinates of the profile centre.
         ell_comps
             The first and second ellipticity components of the elliptical coordinate system, (see the module
             `autogalaxy -> convert.py` for the convention).
         intensity
             Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
-            the light profile's image is compared too, which is expected to be electrons per second) :math: [I].
+            the light profile's image is compared too, which is expected to be electrons per second).
         sigma
-            The sigma value of the Gaussian, corresponding to ~ 1 / sqrt(2 log(2)) the full width half maximum :math: [\sigma].
+            The sigma value of the Gaussian, corresponding to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
         super().__init__(centre=centre, ell_comps=ell_comps, intensity=intensity)
         self.sigma = sigma
