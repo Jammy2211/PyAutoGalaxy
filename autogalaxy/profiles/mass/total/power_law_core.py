@@ -255,4 +255,4 @@ class PowerLawCoreSph(PowerLawCore):
                 np.multiply((3.0 - self.slope), eta),
             ),
         )
-        return self.grid_to_grid_cartesian(grid=grid, radius=deflection)
+        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection)

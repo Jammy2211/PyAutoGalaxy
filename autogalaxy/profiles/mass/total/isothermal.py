@@ -192,7 +192,7 @@ class IsothermalSph(Isothermal):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        return self.grid_to_grid_cartesian(
+        return self._cartesian_grid_via_radial_from(
             grid=grid,
             radius=np.full(grid.shape[0], 2.0 * self.einstein_radius_rescaled),
         )

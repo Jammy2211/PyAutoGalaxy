@@ -392,7 +392,7 @@ class gNFWSph(gNFW):
                 4.0 * self.kappa_s * self.scale_radius, self.deflection_func_sph(eta[i])
             )
 
-        return self.grid_to_grid_cartesian(grid, deflection_grid)
+        return self._cartesian_grid_via_radial_from(grid, deflection_grid)
 
     @staticmethod
     def deflection_integrand(y, eta, inner_slope):

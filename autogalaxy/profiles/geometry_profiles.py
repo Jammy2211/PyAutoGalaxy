@@ -110,15 +110,15 @@ class SphProfile(GeometryProfile):
         return np.cos(grid_angles), np.sin(grid_angles)
 
     @aa.grid_dec.grid_2d_to_structure
-    def grid_to_grid_cartesian(self, grid, radius):
+    def _cartesian_grid_via_radial_from(self, grid : aa.type.Grid2DLike, radius : np.ndarray) -> aa.type.Grid2DLike:
         """
-        Convert a grid of (y,x) coordinates with their specified circular radii to their original (y,x) Cartesian
-        coordinates.
+        Convert a grid of (y,x) coordinates with their specified radial distances (e.g. :math: r = x**2 + y**2) to
+        their original (y,x) Cartesian coordinates.
 
         Parameters
         ----------
         grid
-            The (y, x) coordinates in the reference frame of the profile.
+            The (y, x) coordinates already translated to the reference frame of the profile.
         radius
             The circular radius of each coordinate from the profile center.
         """
@@ -129,8 +129,9 @@ class SphProfile(GeometryProfile):
     @aa.grid_dec.grid_2d_to_structure
     def transform_grid_to_reference_frame(self, grid):
         """
-        Transform a grid of (y,x) coordinates to the reference frame of the profile, including a translation to \
-        its centre.
+        Transform a grid of (y,x) coordinates to the reference frame of the profile.
+
+        This performs a translation to the profile's `centre`.
 
         Parameters
         ----------
@@ -143,8 +144,10 @@ class SphProfile(GeometryProfile):
     @aa.grid_dec.grid_2d_to_structure
     def transform_grid_from_reference_frame(self, grid):
         """
-        Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer \
-        reference frame, including a translation from the profile's centre.
+        Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer
+        reference frame.
+
+        This performs a translation from the profile's `centre`.
 
         Parameters
         ----------
@@ -289,8 +292,9 @@ class EllProfile(SphProfile):
     @aa.grid_dec.grid_2d_to_structure
     def transform_grid_to_reference_frame(self, grid):
         """
-        Transform a grid of (y,x) coordinates to the reference frame of the profile, including a translation to \
-        its centre and a rotation to it orientation.
+        Transform a grid of (y,x) coordinates to the reference frame of the profile.
+
+        This includes a translation to the profile's `centre` and a rotation using its `angle`.
 
         Parameters
         ----------

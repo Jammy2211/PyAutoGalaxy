@@ -155,4 +155,4 @@ class PowerLawSph(PowerLaw):
             )
         )
 
-        return self.grid_to_grid_cartesian(grid, deflection_r)
+        return self._cartesian_grid_via_radial_from(grid, deflection_r)

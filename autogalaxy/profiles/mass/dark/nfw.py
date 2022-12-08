@@ -312,7 +312,7 @@ class NFWSph(NFW):
             self.deflection_func_sph(grid_radius=eta),
         )
 
-        return self.grid_to_grid_cartesian(grid, deflection_grid)
+        return self._cartesian_grid_via_radial_from(grid, deflection_grid)
 
     def deflection_func_sph(self, grid_radius):
         grid_radius = grid_radius + 0j
