@@ -156,7 +156,8 @@ class Sersic(AbstractSersic, LightProfile):
         """
         Returns the Sersic light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
 
-        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+        If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
+        profile `centre`), this is performed automatically.
 
         Parameters
         ----------
@@ -168,7 +169,7 @@ class Sersic(AbstractSersic, LightProfile):
         image
             The image of the Sersic evaluated at every (y,x) coordinate on the transformed grid.
         """
-        return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
+        return self.image_2d_via_radii_from(self.eccentric_radii_grid_from(grid))
 
 
 class SersicSph(Sersic):

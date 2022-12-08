@@ -45,7 +45,8 @@ class LightProfile(EllProfile, OperateImage):
         Returns the light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates, which may have been
         transformed using the light profile's geometry.
 
-        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+        If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
+        profile `centre`), this is performed automatically.
 
         Parameters
         ----------

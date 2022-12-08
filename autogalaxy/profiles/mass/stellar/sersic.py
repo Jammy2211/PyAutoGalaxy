@@ -181,7 +181,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
-        return self.convergence_func(self.grid_to_eccentric_radii(grid))
+        return self.convergence_func(self.eccentric_radii_grid_from(grid))
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
@@ -197,7 +197,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
 
         """
 
-        eccentric_radii = self.grid_to_eccentric_radii(grid=grid)
+        eccentric_radii = self.eccentric_radii_grid_from(grid=grid)
 
         return self._convergence_2d_via_mge_from(grid_radii=eccentric_radii)
 
@@ -219,7 +219,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
 
-        elliptical_radii = self.grid_to_elliptical_radii(grid=grid)
+        elliptical_radii = self.elliptical_radii_grid_from(grid=grid)
 
         return self._convergence_2d_via_cse_from(grid_radii=elliptical_radii)
 

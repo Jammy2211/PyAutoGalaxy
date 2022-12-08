@@ -58,8 +58,7 @@ def axis_ratio_from(ell_comps):
 
 def angle_from(ell_comps):
     """
-    Convert the ellipitical components e1 and e2 to an axis ratio (0.0 > q > 1.0) and rotation position angle
-    defined counter clockwise from the positive x-axis(0.0 > angle > 180) to .
+    Convert the ellipitical components e1 and e2 to an rotation position angle in degrees (0.0 > angle > 18-.0).
 
     Parameters
     ----------

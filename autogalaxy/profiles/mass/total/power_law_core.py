@@ -69,7 +69,7 @@ class PowerLawCore(MassProfile):
 
         covnergence_grid = np.zeros(grid.shape[0])
 
-        grid_eta = self.grid_to_elliptical_radii(grid)
+        grid_eta = self.elliptical_radii_grid_from(grid)
 
         for i in range(grid.shape[0]):
             covnergence_grid[i] = self.convergence_func(grid_eta[i])

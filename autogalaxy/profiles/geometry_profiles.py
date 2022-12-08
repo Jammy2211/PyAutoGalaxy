@@ -174,13 +174,6 @@ class EllProfile(SphProfile):
     ell_comps
         The first and second ellipticity components of the elliptical coordinate system, (see the module
         `autogalaxy -> convert.py` for the convention).
-
-    Attributes
-    ----------
-    axis_ratio
-        Ratio of light profiles ellipse's minor and major axes (b/a).
-    angle
-        Rotation angle of light profile counter-clockwise from positive x-axis.
     """
 
     def __init__(
@@ -194,23 +187,34 @@ class EllProfile(SphProfile):
         self.ell_comps = ell_comps
 
     @property
-    def axis_ratio(self):
+    def axis_ratio(self) -> float:
+        """
+        The ratio of the minor-axis to major-axis (b/a) of the ellipse defined by profile (0.0 > q > 1.0).
+        """
         return convert.axis_ratio_from(ell_comps=self.ell_comps)
 
     @property
-    def angle(self):
+    def angle(self) -> float:
+        """
+        The position angle in degrees of the major-axis of the ellipse defined by profile, defined counter clockwise
+        from the positive x-axis (0.0 > angle > 180.0).
+        """
         return convert.angle_from(ell_comps=self.ell_comps)
 
     @property
-    def phi_radians(self):
+    def angle_radians(self) -> float:
+        """
+        The position angle in radians of the major-axis of the ellipse defined by profile, defined counter clockwise
+        from the positive x-axis (0.0 > angle > 2pi).
+        """
         return np.radians(self.angle)
 
     @property
-    def cos_phi(self):
+    def _cos_angle(self) -> float:
         return self._cos_and_sin_to_x_axis()[0]
 
     @property
-    def sin_phi(self):
+    def _sin_angle(self) -> float:
         return self._cos_and_sin_to_x_axis()[1]
 
     def _cos_and_sin_to_x_axis(self):
@@ -218,8 +222,8 @@ class EllProfile(SphProfile):
         Determine the sin and cosine of the angle between the profile's ellipse and the positive x-axis,
         counter-clockwise.
         """
-        phi_radians = np.radians(self.angle)
-        return np.cos(phi_radians), np.sin(phi_radians)
+        angle_radians = np.radians(self.angle)
+        return np.cos(angle_radians), np.sin(angle_radians)
 
     def angle_to_profile_grid_from(self, grid_angles):
         """
@@ -230,7 +234,7 @@ class EllProfile(SphProfile):
         grid_angles
             The angle theta counter-clockwise from the positive x-axis to each coordinate in radians.
         """
-        theta_coordinate_to_profile = np.add(grid_angles, -self.phi_radians)
+        theta_coordinate_to_profile = np.add(grid_angles, -self.angle_radians)
         return np.cos(theta_coordinate_to_profile), np.sin(theta_coordinate_to_profile)
 
     @aa.grid_dec.grid_2d_to_structure
@@ -257,11 +261,12 @@ class EllProfile(SphProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def grid_to_elliptical_radii(self, grid):
+    def elliptical_radii_grid_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
-        Convert a grid of (y,x) coordinates to an elliptical radius.
+        Convert a grid of (y,x) coordinates to their elliptical radii values: :math: (x^2 + (y^2/q))^0.5
 
-        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+        If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
+        profile `centre`), this is performed automatically.
 
         Parameters
         ----------
@@ -277,12 +282,14 @@ class EllProfile(SphProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def grid_to_eccentric_radii(self, grid):
+    def eccentric_radii_grid_from(self, grid : aa.type.Grid2DLike) -> np.ndarray:
         """
-        Convert a grid of (y,x) coordinates to an eccentric radius, which is (1.0/axis_ratio) * elliptical radius \
-        and used to define light profile half-light radii using circular radii.
+        Convert a grid of (y,x) coordinates to an eccentric radius: :math: axis_ratio^0.5 (x^2 + (y^2/q))^0.5
 
-        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+        This is used in certain light profiles define their half-light radii as a circular radius.
+
+        If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
+        profile `centre`), this is performed automatically.
 
         Parameters
         ----------
@@ -290,7 +297,7 @@ class EllProfile(SphProfile):
             The (y, x) coordinates in the reference frame of the elliptical profile.
         """
         return np.multiply(
-            np.sqrt(self.axis_ratio), self.grid_to_elliptical_radii(grid)
+            np.sqrt(self.axis_ratio), self.elliptical_radii_grid_from(grid)
         ).view(np.ndarray)
 
     @aa.grid_dec.grid_2d_to_structure

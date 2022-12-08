@@ -22,7 +22,7 @@ class Gaussian(LightProfile):
         The elliptical Gaussian light profile.
 
         This uses an elliptical coordinate system where:
-                
+
         \\xi = q^0.5 * ((y-centre[0]^2 + x-centre[0]^2 / q^2)^0.5
 
         The intensity distribution of this profile is of the form:
@@ -77,7 +77,8 @@ class Gaussian(LightProfile):
         """
         Returns the Gaussian light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
 
-        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+        If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
+        profile `centre`), this is performed automatically.
 
         Parameters
         ----------
@@ -90,7 +91,7 @@ class Gaussian(LightProfile):
             The image of the Gaussian evaluated at every (y,x) coordinate on the transformed grid.
         """
 
-        return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
+        return self.image_2d_via_radii_from(self.eccentric_radii_grid_from(grid))
 
 
 class GaussianSph(Gaussian):

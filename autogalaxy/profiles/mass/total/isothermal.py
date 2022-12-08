@@ -176,7 +176,7 @@ class IsothermalSph(Isothermal):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        eta = self.grid_to_elliptical_radii(grid)
+        eta = self.elliptical_radii_grid_from(grid)
         return 2.0 * self.einstein_radius_rescaled * eta
 
     @aa.grid_dec.grid_2d_to_vector_yx

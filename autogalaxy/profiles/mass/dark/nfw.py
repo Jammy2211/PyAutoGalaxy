@@ -138,7 +138,7 @@ class NFW(gNFW, MassProfileCSE):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
 
-        elliptical_radii = self.grid_to_elliptical_radii(grid)
+        elliptical_radii = self.elliptical_radii_grid_from(grid)
 
         return self._convergence_2d_via_cse_from(grid_radii=elliptical_radii)
 

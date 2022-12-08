@@ -101,7 +101,8 @@ class Chameleon(LightProfile):
         """
         Returns the Chameleon light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
 
-        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+        If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
+        profile `centre`), this is performed automatically.
 
         Parameters
         ----------
@@ -113,7 +114,7 @@ class Chameleon(LightProfile):
         image
             The image of the Chameleon evaluated at every (y,x) coordinate on the transformed grid.
         """
-        return self.image_2d_via_radii_from(self.grid_to_elliptical_radii(grid))
+        return self.image_2d_via_radii_from(self.elliptical_radii_grid_from(grid))
 
 
 class ChameleonSph(Chameleon):

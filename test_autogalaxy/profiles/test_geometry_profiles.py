@@ -17,10 +17,10 @@ def test__cos_and_sin_from_x():
         centre=(1.0, 1.0), ell_comps=(0.0, 0.0)
     )
 
-    cos_phi, sin_phi = elliptical_profile._cos_and_sin_to_x_axis()
+    _cos_angle, _sin_angle = elliptical_profile._cos_and_sin_to_x_axis()
 
-    assert cos_phi == 1.0
-    assert sin_phi == 0.0
+    assert _cos_angle == 1.0
+    assert _sin_angle == 0.0
 
     # axis_ratio=0.1, angle=45.0
 
@@ -28,10 +28,10 @@ def test__cos_and_sin_from_x():
         centre=(1, 1), ell_comps=(0.8181, 0.0)
     )
 
-    cos_phi, sin_phi = elliptical_profile._cos_and_sin_to_x_axis()
+    _cos_angle, _sin_angle = elliptical_profile._cos_and_sin_to_x_axis()
 
-    assert cos_phi == pytest.approx(0.707, 1e-3)
-    assert sin_phi == pytest.approx(0.707, 1e-3)
+    assert _cos_angle == pytest.approx(0.707, 1e-3)
+    assert _sin_angle == pytest.approx(0.707, 1e-3)
 
     # axis_ratio=0.1, angle=60.0
 
@@ -39,23 +39,23 @@ def test__cos_and_sin_from_x():
         centre=(1, 1), ell_comps=(0.70856, -0.4090909)
     )
 
-    cos_phi, sin_phi = elliptical_profile._cos_and_sin_to_x_axis()
+    _cos_angle, _sin_angle = elliptical_profile._cos_and_sin_to_x_axis()
 
-    assert cos_phi == pytest.approx(0.5, 1e-3)
-    assert sin_phi == pytest.approx(0.866, 1e-3)
+    assert _cos_angle == pytest.approx(0.5, 1e-3)
+    assert _sin_angle == pytest.approx(0.866, 1e-3)
 
 
-def test__grid_to_eccentric_radii():
+def test__eccentric_radii_grid_from():
 
     elliptical_profile = geometry_profiles.EllProfile(ell_comps=(0.0, 0.0))
 
-    eccentric_radius = elliptical_profile.grid_to_eccentric_radii(
+    eccentric_radius = elliptical_profile.eccentric_radii_grid_from(
         grid=np.array([[1.0, 1.0]])
     )
 
     assert eccentric_radius == pytest.approx(2.0**0.5, 1e-3)
 
-    eccentric_radius = elliptical_profile.grid_to_eccentric_radii(
+    eccentric_radius = elliptical_profile.eccentric_radii_grid_from(
         grid=np.array([[1.0, 1.0]])
     )
 
@@ -69,7 +69,7 @@ def test__grid_to_eccentric_radii():
 
     elliptical_profile = geometry_profiles.EllProfile(ell_comps=(0.0, 0.333333))
 
-    eccentric_radius = elliptical_profile.grid_to_eccentric_radii(
+    eccentric_radius = elliptical_profile.eccentric_radii_grid_from(
         np.array([[1.0, 1.0]])
     )
 

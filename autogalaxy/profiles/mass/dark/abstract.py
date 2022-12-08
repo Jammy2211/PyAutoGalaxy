@@ -71,7 +71,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         """
 
-        grid_eta = self.grid_to_elliptical_radii(grid=grid)
+        grid_eta = self.elliptical_radii_grid_from(grid=grid)
 
         return self.convergence_func(grid_radius=grid_eta)
 
@@ -88,7 +88,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         """
 
-        elliptical_radii = self.grid_to_elliptical_radii(grid)
+        elliptical_radii = self.elliptical_radii_grid_from(grid)
 
         return self._convergence_2d_via_mge_from(grid_radii=elliptical_radii)
 
@@ -104,7 +104,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
             The number of bins to tabulate the inner integral of this profile.
         """
         eta_min = 1.0e-4
-        eta_max = 1.05 * np.max(self.grid_to_elliptical_radii(grid))
+        eta_max = 1.05 * np.max(self.elliptical_radii_grid_from(grid))
 
         minimum_log_eta = np.log10(eta_min)
         maximum_log_eta = np.log10(eta_max)

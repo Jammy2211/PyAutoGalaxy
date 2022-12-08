@@ -48,7 +48,8 @@ class LightProfile(EllProfile, OperateImage):
         Returns the light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates, which may have been
         transformed using the light profile's geometry.
 
-        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+        If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
+        profile `centre`), this is performed automatically.
 
         Parameters
         ----------
@@ -199,7 +200,8 @@ class Gaussian(LightProfile):
         """
         Returns the Gaussian light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
 
-        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+        If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
+        profile `centre`), this is performed automatically.
 
         Parameters
         ----------
@@ -212,7 +214,7 @@ class Gaussian(LightProfile):
             The image of the Gaussian evaluated at every (y,x) coordinate on the transformed grid.
         """
 
-        return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
+        return self.image_2d_via_radii_from(self.eccentric_radii_grid_from(grid))
 
 
 class GaussianSph(Gaussian):
@@ -310,7 +312,8 @@ class Moffat(LightProfile):
         """
         Returns the Moffat light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
 
-        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+        If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
+        profile `centre`), this is performed automatically.
 
         Parameters
         ----------
@@ -323,7 +326,7 @@ class Moffat(LightProfile):
             The image of the Moffat evaluated at every (y,x) coordinate on the transformed grid.
         """
 
-        return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
+        return self.image_2d_via_radii_from(self.eccentric_radii_grid_from(grid))
 
 
 class MoffatSph(Moffat):
@@ -507,7 +510,8 @@ class Sersic(AbstractSersic, LightProfile):
         """
         Returns the Sersic light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
 
-        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+        If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
+        profile `centre`), this is performed automatically.
 
         Parameters
         ----------
@@ -519,7 +523,7 @@ class Sersic(AbstractSersic, LightProfile):
         image
             The image of the Sersic evaluated at every (y,x) coordinate on the transformed grid.
         """
-        return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
+        return self.image_2d_via_radii_from(self.eccentric_radii_grid_from(grid))
 
 
 class SersicSph(Sersic):
@@ -1029,7 +1033,8 @@ class Chameleon(LightProfile):
         """
         Returns the Chameleon light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
 
-        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+        If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
+        profile `centre`), this is performed automatically.
 
         Parameters
         ----------
@@ -1041,7 +1046,7 @@ class Chameleon(LightProfile):
         image
             The image of the Chameleon evaluated at every (y,x) coordinate on the transformed grid.
         """
-        return self.image_2d_via_radii_from(self.grid_to_elliptical_radii(grid))
+        return self.image_2d_via_radii_from(self.elliptical_radii_grid_from(grid))
 
 
 class ChameleonSph(Chameleon):
@@ -1143,7 +1148,8 @@ class ElsonFreeFall(LightProfile):
         """
         Returns the Eff light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
 
-        If the coordinates have not been transformed to the profile's geometry, this is performed automatically.
+        If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
+        profile `centre`), this is performed automatically.
 
         Parameters
         ----------
@@ -1155,7 +1161,7 @@ class ElsonFreeFall(LightProfile):
         image
             The image of the Eff evaluated at every (y,x) coordinate on the transformed grid.
         """
-        return self.image_2d_via_radii_from(self.grid_to_eccentric_radii(grid))
+        return self.image_2d_via_radii_from(self.eccentric_radii_grid_from(grid))
 
     @property
     def half_light_radius(self) -> float:
