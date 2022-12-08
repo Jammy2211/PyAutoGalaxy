@@ -27,10 +27,7 @@ mcmc:
       nwalkers: 50
     updates:
       iterations_per_update: 2500
-      log_every_update: 1
-      model_results_every_update: 1
       remove_state_files_at_end: true
-      visualize_every_update: 1
 mock:
   MockOptimizer:
     initialize:
@@ -43,10 +40,7 @@ mock:
       use_widths: true
     updates:
       iterations_per_update: 2500
-      log_every_update: 1
-      model_results_every_update: 1
       remove_state_files_at_end: true
-      visualize_every_update: 1
   MockSearch:
     initialize:
       method: prior
@@ -59,10 +53,7 @@ mock:
     search: {}
     updates:
       iterations_per_update: 2500
-      log_every_update: 1
-      model_results_every_update: 1
       remove_state_files_at_end: true
-      visualize_every_update: 1
 nest:
   DynestyDynamic:
     initialize:
@@ -99,10 +90,7 @@ nest:
       stagger_resampling_likelihood: false
     updates:
       iterations_per_update: 2500
-      log_every_update: 1
-      model_results_every_update: 1
       remove_state_files_at_end: true
-      visualize_every_update: 1
   DynestyStatic:
     initialize:
       method: prior
@@ -136,10 +124,7 @@ nest:
       stagger_resampling_likelihood: false
     updates:
       iterations_per_update: 2500
-      log_every_update: 1
-      model_results_every_update: 1
       remove_state_files_at_end: true
-      visualize_every_update: 1
 optimize:
   DownhillSimplex:
     search:
@@ -152,7 +137,4 @@ optimize:
       xtol: 0.0001
     updates:
       iterations_per_update: 2500
-      log_every_update: 1
-      model_results_every_update: 1
       remove_state_files_at_end: true
-      visualize_every_update: 1

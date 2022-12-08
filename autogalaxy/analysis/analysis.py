@@ -435,7 +435,7 @@ class AnalysisDataset(Analysis):
         Parameters
         ----------
         paths
-            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored, 
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
             visualization, and pickled objects used by the database and aggregator.
         result
             The result containing the maximum log likelihood fit of the model.

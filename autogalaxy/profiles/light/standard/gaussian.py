@@ -28,6 +28,7 @@ class Gaussian(LightProfile):
     sigma
         The sigma value of the Gaussian, corresponding to ~ 1 / sqrt(2 log(2)) the full width half maximum.
     """
+
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
