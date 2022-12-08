@@ -99,6 +99,7 @@ Light Profiles
    ChameleonSph
    ElsonFreeFall
    ElsonFreeFallSph
+   EllProfile
 
 ----------
 Inversions
