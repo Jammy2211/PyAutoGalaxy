@@ -105,12 +105,11 @@ autosummary_generate = True
 autodoc_member_order = "bysource"
 autodoc_default_flags = ["members"]
 
-autoclass_content = "init"
-autodoc_class_signature = "separated"
+autoclass_content = "both"
 
 numpydoc_show_class_members = False
 numpydoc_show_inherited_class_members = False
-numpydoc_class_members_toctree = False
+numpydoc_class_members_toctree = True
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
