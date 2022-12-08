@@ -21,18 +21,11 @@ class Gaussian(LightProfile):
         sigma: float = 1.0,
     ):
         """
-        For the follow convention:
-
-        :math: y_c = y centre of profile = `centre[0]`
-        :math: x_c = x centre of profile = `centre[1]`
-
-        The elliptical Gaussian light profile uses an elliptical coordinate system where for input coordinates (y,x):
-
-        .. math:: \\xi = q^{0.5} * ((y-y_c^2 + x-x_c^2 / q^2)^{0.5}
-
         The intensity distribution of the profile is given by:
 
         .. math:: I(\\xi) = I \exp (-0.5 \\xi / (\sigma / q^{0.5}))^2
+
+        Where \\xi are elliptical coordinates calculated according to :class: GaussianSph.
 
         Parameters
         ----------
