@@ -9,15 +9,16 @@ from autoconf.dictable import Dictable
 
 
 class GeometryProfile(Dictable):
-    def __init__(self, centre: Tuple[float, float] = (0.0, 0.0)):
-        """
-        An abstract geometry profile, which describes profiles with y and x centre Cartesian coordinates
+    """
+    An abstract geometry profile, which describes profiles with y and x centre Cartesian coordinates
 
-        Parameters
-        -----------
-        centre
-            The (y,x) arc-second coordinates of the profile centre.
-        """
+    Parameters
+    -----------
+    centre
+        The (y,x) arc-second coordinates of the profile centre.
+    """
+    def __init__(self, centre: Tuple[float, float] = (0.0, 0.0)):
+
         self.centre = centre
 
     def __hash__(self):
@@ -68,14 +69,16 @@ class GeometryProfile(Dictable):
 
 
 class SphProfile(GeometryProfile):
-    def __init__(self, centre: Tuple[float, float] = (0.0, 0.0)):
-        """A spherical profile, which describes profiles with y and x centre Cartesian coordinates.
+    """
+    A spherical profile, which describes profiles with y and x centre Cartesian coordinates.
 
-        Parameters
-        ----------
-        centre
-            The (y,x) arc-second coordinates of the profile centre.
-        """
+    Parameters
+    ----------
+    centre
+        The (y,x) arc-second coordinates of the profile centre.
+    """
+    def __init__(self, centre: Tuple[float, float] = (0.0, 0.0)):
+
         super().__init__(centre=centre)
 
     @aa.grid_dec.grid_2d_to_structure
@@ -150,29 +153,32 @@ class SphProfile(GeometryProfile):
 
 
 class EllProfile(SphProfile):
+    """
+    An elliptical profile, which describes profiles with y and x centre Cartesian coordinates, an axis-ratio
+    and rotational angle.
+
+    Parameters
+    ----------
+    centre
+        The (y,x) arc-second coordinates of the profile centre.
+    ell_comps
+        The first and second ellipticity components of the elliptical coordinate system, (see the module
+        `autogalaxy -> convert.py` for the convention).
+
+    Attributes
+    ----------
+    axis_ratio
+        Ratio of light profiles ellipse's minor and major axes (b/a).
+    angle
+        Rotation angle of light profile counter-clockwise from positive x-axis.
+    """
+
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
         ell_comps: Tuple[float, float] = (0.0, 0.0),
     ):
-        """ An elliptical profile, which describes profiles with y and x centre Cartesian coordinates, an axis-ratio \
-        and rotational angle.
 
-        Parameters
-        ----------
-        centre
-            The (y,x) arc-second coordinates of the profile centre.
-        ell_comps
-            The first and second ellipticity components of the elliptical coordinate system, (see the module
-            `autogalaxy -> convert.py` for the convention).
-
-        Attributes
-        ----------
-        axis_ratio
-            Ratio of light profiles ellipse's minor and major axes (b/a).
-        angle
-            Rotation angle of light profile counter-clockwise from positive x-axis.
-        """
         super().__init__(centre=centre)
 
         self.ell_comps = ell_comps
@@ -209,8 +215,10 @@ class EllProfile(SphProfile):
         return self.cos_and_sin_to_x_axis()[1]
 
     def cos_and_sin_to_x_axis(self):
-        """ Determine the sin and cosine of the angle between the profile's ellipse and the positive x-axis, \
-        counter-clockwise. """
+        """
+        Determine the sin and cosine of the angle between the profile's ellipse and the positive x-axis, \
+        counter-clockwise.
+        """
         phi_radians = np.radians(self.angle)
         return np.cos(phi_radians), np.sin(phi_radians)
 

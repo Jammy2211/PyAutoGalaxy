@@ -3,15 +3,14 @@ from typing import Tuple
 from autogalaxy.profiles.light import standard as lp
 from autogalaxy.profiles import mass as mp
 
-"""
-Mass and light profiles describe both mass distributions and light distributions with a single set of parameters. This
-means that the light and mass of these profiles are tied together. Galaxy instances interpret these
-objects as being both mass and light profiles. 
-"""
 
 
 class LightMassProfile:
-
+    """
+    Mass and light profiles describe both mass distributions and light distributions with a single set of parameters. This
+    means that the light and mass of these profiles are tied together. Galaxy instances interpret these
+    objects as being both mass and light profiles.
+    """
     pass
 
 
@@ -24,7 +23,25 @@ class Gaussian(lp.Gaussian, mp.Gaussian, LightMassProfile):
         sigma: float = 1.0,
         mass_to_light_ratio: float = 1.0,
     ):
+        """
+        The elliptical Gaussian light and mass profile.
 
+        This simultaneously represents the luminous emission and stellar mass of a galaxy.
+
+        Parameters
+        ----------
+        centre
+            The grid of The (y,x) arc-second coordinates of the profile centre.
+        ell_comps
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
+        intensity
+            Overall flux intensity normalisation in the light profiles (electrons per second).
+        effective_radius
+            The radius containing half the light of this light profile.
+        mass_to_light_ratio
+            The mass-to-light ratio of the light profiles.
+        """
         lp.Gaussian.__init__(
             self,
             centre=centre,
@@ -52,7 +69,25 @@ class Sersic(lp.Sersic, mp.Sersic, LightMassProfile):
         sersic_index: float = 0.6,
         mass_to_light_ratio: float = 1.0,
     ):
+        """
+        The elliptical Sersic light and mass profile.
 
+        This simultaneously represents the luminous emission and stellar mass of a galaxy.
+
+        Parameters
+        ----------
+        centre
+            The grid of The (y,x) arc-second coordinates of the profile centre.
+        ell_comps
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
+        intensity
+            Overall flux intensity normalisation in the light profiles (electrons per second).
+        effective_radius
+            The radius containing half the light of this light profile.
+        mass_to_light_ratio
+            The mass-to-light ratio of the light profiles.
+        """
         lp.Sersic.__init__(
             self,
             centre=centre,
@@ -82,19 +117,20 @@ class SersicSph(Sersic, LightMassProfile):
         mass_to_light_ratio: float = 1.0,
     ):
         """
-        The SersicSph mass profile, the mass profiles of the light profiles that are used to fit_normal and
-        subtract the lens model_galaxy's light.
+        The spherical Sersic light and mass profile.
+
+        This simultaneously represents the luminous emission and stellar mass of a galaxy.
 
         Parameters
         ----------
         centre
-            The grid of the origin of the profiles
+            The grid of The (y,x) arc-second coordinates of the profile centre..
         intensity
-            Overall flux intensity normalisation in the light profiles (electrons per second)
+            Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius
             The radius containing half the light of this light profile.
         mass_to_light_ratio
-            The mass-to-light ratio of the light profiles
+            The mass-to-light ratio of the light profiles.
         """
         Sersic.__init__(
             self,
@@ -117,17 +153,17 @@ class Exponential(Sersic, LightMassProfile):
         mass_to_light_ratio: float = 1.0,
     ):
         """
-        The Exponential mass profile, the mass profiles of the light profiles that are used to fit_normal and
-        subtract the lens model_galaxy's light.
+        The elliptical Exponential light and mass profile.
+
+        This simultaneously represents the luminous emission and stellar mass of a galaxy.
 
         Parameters
         ----------
         centre
-            The grid of the origin of the profiles
-        axis_ratio
-            Ratio of profiles ellipse's minor and major axes (b/a)
-        angle
-            Rotational angle of profiles ellipse counter-clockwise from positive x-axis
+            The grid of The (y,x) arc-second coordinates of the profile centre.
+        ell_comps
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
@@ -155,13 +191,14 @@ class ExponentialSph(Exponential, LightMassProfile):
         mass_to_light_ratio: float = 1.0,
     ):
         """
-        The ExponentialSph mass profile, the mass profiles of the light profiles that are used to fit_normal and
-        subtract the lens model_galaxy's light.
+        The spherical Exponential light and mass profile.
+
+        This simultaneously represents the luminous emission and stellar mass of a galaxy.
 
         Parameters
         ----------
         centre
-            The grid of the origin of the profiles
+            The grid of The (y,x) arc-second coordinates of the profile centre.
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
@@ -189,17 +226,17 @@ class DevVaucouleurs(Sersic, LightMassProfile):
         mass_to_light_ratio: float = 1.0,
     ):
         """
-        The DevVaucouleurs mass profile, the mass profiles of the light profiles that are used to fit_normal and
-        subtract the lens model_galaxy's light.
+        The elliptical Dev Vaucouleurs light and mass profile.
+
+        This simultaneously represents the luminous emission and stellar mass of a galaxy.
 
         Parameters
         ----------
         centre
-            The grid of the origin of the profiles
-        axis_ratio
-            Ratio of profiles ellipse's minor and major axes (b/a)
-        angle
-            Rotational angle of profiles ellipse counter-clockwise from positive x-axis
+            The grid of The (y,x) arc-second coordinates of the profile centre.
+        ell_comps
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
@@ -226,13 +263,14 @@ class DevVaucouleursSph(DevVaucouleurs, LightMassProfile):
         mass_to_light_ratio: float = 1.0,
     ):
         """
-        The DevVaucouleursSph mass profile, the mass profiles of the light profiles that are used to fit_normal and
-        subtract the lens model_galaxy's light.
+        The spherical Dev Vaucouleurs light and mass profile.
+
+        This simultaneously represents the luminous emission and stellar mass of a galaxy.
 
         Parameters
         ----------
         centre
-            The grid of the origin of the profiles
+            The grid of The (y,x) arc-second coordinates of the profile centre.
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
@@ -262,24 +300,25 @@ class SersicRadialGradient(lp.Sersic, mp.SersicRadialGradient, LightMassProfile)
         mass_to_light_gradient: float = 0.0,
     ):
         """
-        Setup a Sersic mass and light profiles.
+        The elliptical Sersic light and mass profile, with a radial gradient in the conversion of light to mass..
+
+        This simultaneously represents the luminous emission and stellar mass of a galaxy.
 
         Parameters
         ----------
         centre
-            The origin of the profiles
-        axis_ratio
-            Ratio of profiles ellipse's minor and major axes (b/a)
-        angle
-            Rotational angle of profiles ellipse counter-clockwise from positive x-axis
+            The (y,x) arc-second coordinates of the profile centre..
+        ell_comps
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
             The radius containing half the light of this light profile.
         sersic_index
-            The concentration of the light profiles
+            The concentration of the light profiles.
         mass_to_light_ratio
-            The mass-to-light ratio of the light profiles
+            The mass-to-light ratio of the light profiles.
         mass_to_light_gradient
             The mass-to-light radial gradient.
         """
@@ -314,12 +353,14 @@ class SersicRadialGradientSph(SersicRadialGradient, LightMassProfile):
         mass_to_light_gradient: float = 0.0,
     ):
         """
-        Setup a Sersic mass and light profiles.
+        The spherical Sersic light and mass profile, with a radial gradient in the conversion of light to mass..
+
+        This simultaneously represents the luminous emission and stellar mass of a galaxy.
 
         Parameters
         ----------
         centre
-            The origin of the profiles
+            The (y,x) arc-second coordinates of the profile centre.
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
@@ -355,16 +396,17 @@ class ExponentialRadialGradient(SersicRadialGradient, LightMassProfile):
         mass_to_light_gradient: float = 0.0,
     ):
         """
-        Setup an Exponential mass and light profiles.
+        The elliptical Exponential light and mass profile, with a radial gradient in the conversion of light to mass..
+
+        This simultaneously represents the luminous emission and stellar mass of a galaxy.
 
         Parameters
         ----------
         centre
-            The origin of the profiles
-        axis_ratio
-            Ratio of profiles ellipse's minor and major axes (b/a)
-        angle
-            Rotational angle of profiles ellipse counter-clockwise from positive x-axis
+            The (y,x) arc-second coordinates of the profile centre.
+        ell_comps
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
@@ -397,16 +439,17 @@ class SphExponentialRadialGradient(SersicRadialGradientSph, LightMassProfile):
         mass_to_light_gradient: float = 0.0,
     ):
         """
-        Setup an Exponential mass and light profiles.
+        The spherical Exponential light and mass profile, with a radial gradient in the conversion of light to mass..
+
+        This simultaneously represents the luminous emission and stellar mass of a galaxy.
 
         Parameters
         ----------
         centre
-            The origin of the profiles
-        axis_ratio
-            Ratio of profiles ellipse's minor and major axes (b/a)
-        angle
-            Rotational angle of profiles ellipse counter-clockwise from positive x-axis
+            The (y,x) arc-second coordinates of the profile centre.
+        ell_comps
+            The first and second ellipticity components of the elliptical coordinate system, (see the module
+            `autogalaxy -> convert.py` for the convention).
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
@@ -429,6 +472,32 @@ class SphExponentialRadialGradient(SersicRadialGradientSph, LightMassProfile):
 
 
 class SersicCore(lp.SersicCore, mp.SersicCore, LightMassProfile):
+    """
+    The elliptical cored-Sersic light and mass profile.
+
+    This simultaneously represents the luminous emission and stellar mass of a galaxy.
+
+    Parameters
+    ----------
+    centre
+        The grid of The (y,x) arc-second coordinates of the profile centre.
+    ell_comps
+        The first and second ellipticity components of the elliptical coordinate system, (see the module
+        `autogalaxy -> convert.py` for the convention).
+    intensity
+        Overall flux intensity normalisation in the light profiles (electrons per second).
+    effective_radius
+        The radius containing half the light of this light profile.
+    radius_break
+        The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
+    gamma
+        The logarithmic power-law slope of the inner core profiles
+    alpha
+        Controls the sharpness of the transition between the inner core / outer Sersic profiles.
+    mass_to_light_ratio
+        The mass-to-light ratio of the light profiles.
+    """
+
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -468,6 +537,31 @@ class SersicCore(lp.SersicCore, mp.SersicCore, LightMassProfile):
 
 
 class SersicCoreSph(SersicCore, LightMassProfile):
+    """
+    The spherical cored-Sersic light and mass profile.
+
+    This simultaneously represents the luminous emission and stellar mass of a galaxy.
+
+    Parameters
+    ----------
+    centre
+        The grid of The (y,x) arc-second coordinates of the profile centre.
+    ell_comps
+        The first and second ellipticity components of the elliptical coordinate system, (see the module
+        `autogalaxy -> convert.py` for the convention).
+    intensity
+        Overall flux intensity normalisation in the light profiles (electrons per second).
+    effective_radius
+        The radius containing half the light of this light profile.
+    radius_break
+        The break radius separating the inner power-law (with logarithmic slope gamma) and outer Sersic function.
+    gamma
+        The logarithmic power-law slope of the inner core profiles
+    alpha
+        Controls the sharpness of the transition between the inner core / outer Sersic profiles.
+    mass_to_light_ratio
+        The mass-to-light ratio of the light profiles.
+    """
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -486,7 +580,7 @@ class SersicCoreSph(SersicCore, LightMassProfile):
         Parameters
         ----------
         centre
-            The grid of the origin of the profiles
+            The grid of The (y,x) arc-second coordinates of the profile centre.
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
@@ -509,6 +603,32 @@ class SersicCoreSph(SersicCore, LightMassProfile):
 
 
 class Chameleon(lp.Chameleon, mp.Chameleon, LightMassProfile):
+    """
+    The elliptical Chameleon light and mass profile.
+
+    This simultaneously represents the luminous emission and stellar mass of a galaxy.
+
+    This light profile closely approximates the Elliptical Sersic light profile, by representing it as two cored
+    elliptical isothermal profiles. This is convenient for lensing calculations, because the deflection angles of
+    an isothermal profile can be evaluated analyticially efficiently.
+
+    See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
+
+    Parameters
+    ----------
+    centre
+        The (y,x) arc-second coordinates of the profile centre.
+    ell_comps
+        The first and second ellipticity components of the elliptical coordinate system, (see the module
+        `autogalaxy -> convert.py` for the convention).
+    intensity
+        Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+        the light profile's image is compared too, which is expected to be electrons per second).
+    core_radius_0
+        The core size of the first elliptical cored Isothermal profile.
+    core_radius_1
+        The core size of the second elliptical cored Isothermal profile.
+    """
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -539,6 +659,29 @@ class Chameleon(lp.Chameleon, mp.Chameleon, LightMassProfile):
 
 
 class ChameleonSph(Chameleon, LightMassProfile):
+    """
+    The spherical Chameleon light and mass profile.
+
+    This simultaneously represents the luminous emission and stellar mass of a galaxy.
+
+    This light profile closely approximates the Elliptical Sersic light profile, by representing it as two cored
+    elliptical isothermal profiles. This is convenient for lensing calculations, because the deflection angles of
+    an isothermal profile can be evaluated analyticially efficiently.
+
+    See `autogalaxy.profiles.light.light_profiles.LightProfile` for a description of light profile objects.
+
+    Parameters
+    ----------
+    centre
+        The (y,x) arc-second coordinates of the profile centre.
+    intensity
+        Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+        the light profile's image is compared too, which is expected to be electrons per second).
+    core_radius_0
+        The core size of the first elliptical cored Isothermal profile.
+    core_radius_1
+        The core size of the second elliptical cored Isothermal profile.
+    """
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -554,7 +697,7 @@ class ChameleonSph(Chameleon, LightMassProfile):
         Parameters
         ----------
         centre
-            The grid of the origin of the profiles
+            The grid of The (y,x) arc-second coordinates of the profile centre.
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
