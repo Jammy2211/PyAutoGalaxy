@@ -86,7 +86,8 @@ class SphProfile(GeometryProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     def grid_to_grid_radii(self, grid):
-        """Convert a grid of (y, x) coordinates to a grid of their circular radii.
+        """
+        Convert a grid of (y, x) coordinates to a grid of their circular radii.
 
         If the coordinates have not been transformed to the profile's centre, this is performed automatically.
 
@@ -97,16 +98,17 @@ class SphProfile(GeometryProfile):
         """
         return np.sqrt(np.add(np.square(grid[:, 0]), np.square(grid[:, 1])))
 
-    def grid_angle_to_profile(self, grid_thetas):
+    def angle_to_profile_grid_from(self, grid_angles : aa.type.Grid2DLike) -> Tuple[np.ndarray, np.ndarray]:
         """
-        The angle between each (y,x) coordinate on the grid and the profile, in radians.
+        Converts an input grid of angles, defined in degrees counter-clockwise from the positive x-axis, to a grid of
+        angles between the input angles and the profile.
 
         Parameters
         -----------
-        grid_thetas
+        grid_angles
             The angle theta counter-clockwise from the positive x-axis to each coordinate in radians.
         """
-        return np.cos(grid_thetas), np.sin(grid_thetas)
+        return np.cos(grid_angles), np.sin(grid_angles)
 
     @aa.grid_dec.grid_2d_to_structure
     def grid_to_grid_cartesian(self, grid, radius):
@@ -121,8 +123,8 @@ class SphProfile(GeometryProfile):
         radius
             The circular radius of each coordinate from the profile center.
         """
-        grid_thetas = np.arctan2(grid[:, 0], grid[:, 1])
-        cos_theta, sin_theta = self.grid_angle_to_profile(grid_thetas=grid_thetas)
+        grid_angles = np.arctan2(grid[:, 0], grid[:, 1])
+        cos_theta, sin_theta = self.angle_to_profile_grid_from(grid_angles=grid_angles)
         return np.multiply(radius[:, None], np.vstack((sin_theta, cos_theta)).T)
 
     @aa.grid_dec.grid_2d_to_structure
@@ -213,16 +215,16 @@ class EllProfile(SphProfile):
         phi_radians = np.radians(self.angle)
         return np.cos(phi_radians), np.sin(phi_radians)
 
-    def grid_angle_to_profile(self, grid_thetas):
+    def angle_to_profile_grid_from(self, grid_angles):
         """
         The angle between each angle theta on the grid and the profile, in radians.
 
         Parameters
         -----------
-        grid_thetas
+        grid_angles
             The angle theta counter-clockwise from the positive x-axis to each coordinate in radians.
         """
-        theta_coordinate_to_profile = np.add(grid_thetas, -self.phi_radians)
+        theta_coordinate_to_profile = np.add(grid_angles, -self.phi_radians)
         return np.cos(theta_coordinate_to_profile), np.sin(theta_coordinate_to_profile)
 
     @aa.grid_dec.grid_2d_to_structure
