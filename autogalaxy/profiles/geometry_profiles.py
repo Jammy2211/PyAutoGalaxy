@@ -66,7 +66,7 @@ class GeometryProfile(Dictable):
         elif isinstance(grid, aa.Grid2DIrregular):
             return grid.slim.shape[0]
 
-        return grid.grid_2d__radial_projected_shape_slim_from(centre=self.centre)
+        return grid.grid_2d_radial_projected_shape_slim_from(centre=self.centre)
 
 
 class SphProfile(GeometryProfile):
