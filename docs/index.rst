@@ -245,7 +245,8 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
    :maxdepth: 1
    :hidden:
 
-   api/api
+   api/data
+   api/light
 
 .. toctree::
    :caption: Advanced:

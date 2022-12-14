@@ -1,22 +1,6 @@
-===============
-Data Structures
-===============
 
-.. toctree::
-   :maxdepth: 1
 
-   data/structures HELP
-   data/imaging
-   data/interferometer
 
-==============
-Light Profiles
-==============
-
-.. toctree::
-   :maxdepth: 1
-
-   light/standard
 
 ========
 Galaxies
