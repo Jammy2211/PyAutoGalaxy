@@ -1,3 +1,20 @@
+========
+Modeling
+========
+
+Analysis
+========
+
+.. currentmodule:: autogalaxy
+
+.. autosummary::
+   :toctree: _autosummary
+   :template: custom-class-template.rst
+   :recursive:
+
+   AnalysisImaging
+   AnalysisInterferometer
+
 Non-linear Searches
 -------------------
 

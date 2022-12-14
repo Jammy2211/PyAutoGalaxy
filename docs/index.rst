@@ -247,6 +247,12 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
 
    api/data
    api/light
+   api/galaxy
+   api/fitting
+   api/modeling
+   api/pixelization
+   api/plot
+   api/source
 
 .. toctree::
    :caption: Advanced:

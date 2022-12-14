@@ -1,5 +1,9 @@
-Pixelization
-------------
+=======
+Fitting
+=======
+
+Fitting
+-------
 
 .. currentmodule:: autogalaxy
 
@@ -8,4 +12,5 @@ Pixelization
    :template: custom-class-template.rst
    :recursive:
 
-   Pixelization
+   FitImaging
+   FitInterferometer
