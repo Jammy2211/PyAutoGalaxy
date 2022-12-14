@@ -1,5 +1,5 @@
-Imaging
-=======
+Pixelization
+------------
 
 .. currentmodule:: autogalaxy
 
@@ -8,6 +8,4 @@ Imaging
    :template: custom-class-template.rst
    :recursive:
 
-   Imaging
-   SettingsImaging
-   SimulatorImaging
+   Pixelization

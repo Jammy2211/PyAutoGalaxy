@@ -4,10 +4,8 @@ Interferometer
 .. currentmodule:: autogalaxy
 
 .. autosummary::
-   :toctree: generated/
+   :toctree: _autosummary
 
    SettingsInterferometer
    Interferometer
    SimulatorInterferometer
-   FitInterferometer
-   AnalysisInterferometer

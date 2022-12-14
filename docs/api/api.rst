@@ -9,15 +9,6 @@ Data Structures
    data/imaging
    data/interferometer
 
-========
-Modeling
-========
-
-.. toctree::
-   :maxdepth: 1
-
-   searches/searches
-
 ==============
 Light Profiles
 ==============
@@ -36,6 +27,25 @@ Galaxies
 
    galaxy/galaxy
 
+=======
+Fitting
+=======
+
+.. toctree::
+   :maxdepth: 1
+
+   fitting/fitting
+
+========
+Modeling
+========
+
+.. toctree::
+   :maxdepth: 1
+
+   modeling/analysis
+   modeling/searches
+
 ==========
 Inversions
 ==========
@@ -48,9 +58,9 @@ Inversions
    inversion/mapper
    inversion/settings
 
-=====
-Plots
-=====
+========
+Plotting
+========
 
 Example scripts illustrating all plotting objects are provided in the `plot` module of the `autogalaxy_workspace`:
 
@@ -68,9 +78,9 @@ The following objects model the mass of galaxies.
 
 They are used by the child project PyAutoLens, but currently do not have a use in PyAutoGalaxy.
 
-=============
-Mass Profiles
-=============
+===========
+Source Code
+===========
 
 .. toctree::
    :maxdepth: 1
@@ -79,10 +89,6 @@ Mass Profiles
    mass/stellar
    mass/dark
    mass/sheets
-
-===========
-Source Code
-===========
 
 .. toctree::
    :maxdepth: 1
