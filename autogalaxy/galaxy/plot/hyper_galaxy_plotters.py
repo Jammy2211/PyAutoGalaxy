@@ -29,7 +29,7 @@ class HyperPlotter(Plotter):
         Plot the hyper model image of a hyper galaxy.
 
         Parameters
-        -----------
+        ----------
         hyper_model_image
             The hyper model image that is plotted.
         """
@@ -47,7 +47,7 @@ class HyperPlotter(Plotter):
         Plot the hyper galaxy image of a hyper galaxy.
 
         Parameters
-        -----------
+        ----------
         galaxy_image
             The hyper galaxy image that is plotted.
         """
@@ -64,7 +64,7 @@ class HyperPlotter(Plotter):
         Plot the contribution map of a hyper galaxy.
 
         Parameters
-        -----------
+        ----------
         contribution_map
             The contribution map that is plotted.
         """

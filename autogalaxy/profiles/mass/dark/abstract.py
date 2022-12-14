@@ -97,7 +97,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         the GeneralizedNFW profile classes to speed up the integration procedure.
 
         Parameters
-        -----------
+        ----------
         grid
             The grid of (y,x) arc-second coordinates the potential / deflection_stacks are computed on.
         tabulate_bins

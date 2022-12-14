@@ -10,9 +10,7 @@ from autogalaxy.profiles.light.decorators import (
 
 
 class Gaussian(LightProfile):
-    """
-    The elliptical Gaussian light profile.
-    """
+
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -21,6 +19,8 @@ class Gaussian(LightProfile):
         sigma: float = 1.0,
     ):
         """
+        The elliptical Gaussian light profile.
+
         The intensity distribution of the profile is given by:
 
         .. math:: I(\\xi) = I \exp (-0.5 \\xi / (\sigma / q^{0.5}))^2

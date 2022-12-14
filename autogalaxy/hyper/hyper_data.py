@@ -3,7 +3,7 @@ class HyperImageSky:
         """Class for scaling the background sky map and background noise_map of an grid.
 
         Parameters
-        -----------
+        ----------
         sky_scale
             The value by which the background scale is increased or decreased (electrons per second).
         noise_scale
@@ -17,7 +17,7 @@ class HyperImageSky:
         (assuming a uniform background sky) because the is in units electrons per second.
 
         Parameters
-        -----------
+        ----------
         image
             The before scaling (electrons per second).
         """
@@ -29,7 +29,7 @@ class HyperBackgroundNoise:
         """Class for scaling the background sky map and background noise_map of an grid.
 
         Parameters
-        -----------
+        ----------
         sky_scale
             The value by which the background scale is increased or decreased (electrons per second).
         noise_scale
@@ -42,7 +42,7 @@ class HyperBackgroundNoise:
         Returns a hyper noise_maps from the background noise_maps grid.
 
             Parameters
-            -----------
+        ----------
             noise_map
                 The noise_maps before scaling (electrons per second).
             background_noise
@@ -55,7 +55,7 @@ class HyperBackgroundNoise:
         Returns a hyper noise_maps from the background noise_maps grid.
 
             Parameters
-            -----------
+        ----------
             noise_map
                 The noise_maps before scaling (electrons per second).
             background_noise

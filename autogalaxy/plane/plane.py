@@ -31,7 +31,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         A plane of galaxies where all galaxies are at the same redshift.
 
         Parameters
-        -----------
+        ----------
         redshift or None
             The redshift of the plane.
         galaxies : [Galaxy]
@@ -116,7 +116,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         sub-grid is returned.
 
         Parameters
-        -----------
+        ----------
         grid
             The 2D (y, x) coordinates where values of the image are evaluated.
         operated_only
@@ -202,7 +202,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         the output to an `Array2D` using the input `grid`'s attributes.
 
         Parameters
-        -----------
+        ----------
         grid : Grid2D
             The grid (or sub) of (y,x) arc-second coordinates at the centre of every unmasked pixel which the \
             potential is calculated on.
@@ -229,7 +229,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         the output to an `Array2D` using the input `grid`'s attributes.
 
         Parameters
-        -----------
+        ----------
         grid : Grid2D
             The grid (or sub) of (y,x) arc-second coordinates at the centre of every unmasked pixel which the \
             potential is calculated on.
@@ -261,7 +261,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         For a contribution map and noise-map, use the model hyper_galaxy galaxies to compute a hyper noise-map.
 
         Parameters
-        -----------
+        ----------
         noise_map : imaging.NoiseMap or ndarray
             An arrays describing the RMS standard deviation error in each pixel, preferably in units of electrons per
             second.

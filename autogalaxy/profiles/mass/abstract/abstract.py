@@ -95,7 +95,7 @@ class MassProfile(EllProfile, OperateDeflections):
         (e.g. the critical surface mass density).
 
         Parameters
-        -----------
+        ----------
         inner_annuli_radius
             The radius of the inner annulus outside of which the density are estimated.
         outer_annuli_radius

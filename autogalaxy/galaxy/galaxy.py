@@ -449,7 +449,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         ranges between 0 and 1.
 
         Parameters
-        -----------
+        ----------
 
         """
         return self.hyper_galaxy.contribution_map_from(
@@ -589,7 +589,7 @@ class HyperGalaxy:
         with this galaxy for scaling the noise-map.
         
         Parameters
-        -----------
+        ----------
         contribution_factor
             Factor that adjusts how much of the galaxy's light is attributed to the
             contribution map.
@@ -629,7 +629,7 @@ class HyperGalaxy:
         ranges between 0 and 1.
 
         Parameters
-        -----------
+        ----------
         hyper_model_image
             The best-fit model image to the observed image from a previous analysis
             search. This provides the total light attributed to each image pixel by the
@@ -670,7 +670,7 @@ class HyperGalaxy:
             hyper_galaxies-parameters.
 
             Parameters
-            -----------
+        ----------
             noise_map
                 The observed noise-map (before scaling).
             contribution_map

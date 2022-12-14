@@ -52,7 +52,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         this `FitInterferometer` object is called and returned in the `log_likelihood_function`.
 
         Parameters
-        -----------
+        ----------
         dataset
             The interfometer dataset which is fitted by the galaxies in the plane.
         plane

@@ -72,6 +72,7 @@ extensions = [
     "sphinx.ext.todo",
     "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
+    'sphinx_autodoc_typehints',  # Automatically document param types (less noise in class signature)
     "numpydoc",
     # External stuff
     "myst_parser",
@@ -79,6 +80,10 @@ extensions = [
     "sphinx_design",
     "sphinx_inline_tabs",
 ]
+
+set_type_checking_flag = True  # Enable 'expensive' imports for sphinx_autodoc_typehints
+add_module_names = False # Remove namespaces from class/method signatures
+
 templates_path = ["_templates"]
 
 # -- Options for extlinks ----------------------------------------------------
@@ -102,9 +107,11 @@ myst_enable_extensions = ["colon_fence", "deflist"]
 myst_heading_anchors = 3
 
 autosummary_generate = True
+autosummary_imported_members = True
 autodoc_member_order = "bysource"
 autodoc_default_flags = ["members"]
 autodoc_class_signature = "separated"
+autoclass_content = "init"
 
 numpydoc_show_class_members = False
 numpydoc_show_inherited_class_members = False

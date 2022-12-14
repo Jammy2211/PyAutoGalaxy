@@ -105,7 +105,7 @@ class SphProfile(GeometryProfile):
         angles between the input angles and the profile.
 
         Parameters
-        -----------
+        ----------
         grid_angles
             The angle theta counter-clockwise from the positive x-axis to each coordinate in radians.
         """
@@ -258,7 +258,7 @@ class EllProfile(SphProfile):
         The angle between each angle theta on the grid and the profile, in radians.
 
         Parameters
-        -----------
+        ----------
         grid_angles
             The angle theta counter-clockwise from the positive x-axis to each coordinate in radians.
         """
