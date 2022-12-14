@@ -5,7 +5,7 @@ Data Structures
 .. toctree::
    :maxdepth: 1
 
-   data/structures
+   data/structures HELP
    data/imaging
    data/interferometer
 
@@ -74,13 +74,13 @@ https://github.com/Jammy2211/autogalaxy_workspace/tree/release/notebooks/plot
    plot/customize
    plot/mat_wrap
 
-The following objects model the mass of galaxies.
-
-They are used by the child project PyAutoLens, but currently do not have a use in PyAutoGalaxy.
-
 ===========
 Source Code
 ===========
+
+The following objects model the mass of galaxies.
+
+They are used by the child project PyAutoLens, but currently do not have a use in PyAutoGalaxy.
 
 .. toctree::
    :maxdepth: 1
