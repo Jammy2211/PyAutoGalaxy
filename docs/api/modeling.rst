@@ -30,3 +30,26 @@ Non-linear Searches
    Emcee
    PySwarmsLocal
    PySwarmsGlobal
+
+Priors
+------
+
+.. autosummary::
+   :toctree: _autosummary
+   :template: custom-class-template.rst
+   :recursive:
+
+   UniformPrior
+   GaussianPrior
+   LogUniformPrior
+   LogGaussianPrior
+
+Hyper
+-----
+
+.. currentmodule:: autolens
+
+.. autosummary::
+   :toctree: generated/
+
+   SetupHyper

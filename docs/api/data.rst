@@ -50,6 +50,6 @@ Interferometer
 .. autosummary::
    :toctree: _autosummary
 
-   SettingsInterferometer
    Interferometer
+   SettingsInterferometer
    SimulatorInterferometer
