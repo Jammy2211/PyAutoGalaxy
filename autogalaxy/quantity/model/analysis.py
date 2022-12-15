@@ -1,3 +1,5 @@
+import os
+
 import autofit as af
 
 from autogalaxy.analysis.analysis import Analysis
@@ -147,6 +149,9 @@ class AnalysisQuantity(Analysis):
             If True the visualization is being performed midway through the non-linear search before it is finished,
             which may change which images are output.
         """
+
+        if os.environ.get("PYAUTOFIT_TEST_MODE") == "1":
+            return
 
         fit = self.fit_quantity_for_instance(instance=instance)
 

@@ -80,10 +80,8 @@ def test__spherical__transform_to_reference_frame__coordinate_shifts_using_centr
 
     spherical_profile = geometry_profiles.SphProfile(centre=(0.0, 0.0))
 
-    transformed_grid = (
-        spherical_profile.transformed_from_reference_frame_grid_from(
-            np.array([[1.0, 1.0]])
-        )
+    transformed_grid = spherical_profile.transformed_from_reference_frame_grid_from(
+        np.array([[1.0, 1.0]])
     )
 
     assert (transformed_grid == np.array([[1.0, 1.0]])).all()
@@ -120,9 +118,7 @@ def test__spherical__transform_to_and_from_reference_frame():
 
     grid = np.array([[1.0, 1.0]])
 
-    transformed_grid = (
-        spherical_profile.transformed_to_reference_frame_grid_from(grid)
-    )
+    transformed_grid = spherical_profile.transformed_to_reference_frame_grid_from(grid)
 
     assert transformed_grid == pytest.approx(np.array([[1.0, 1.0]]), 1e-3)
 
@@ -134,10 +130,8 @@ def test__spherical__transform_to_and_from_reference_frame():
         grid_original
     )
 
-    transformed_grid = (
-        spherical_profile.transformed_from_reference_frame_grid_from(
-            grid_spherical
-        )
+    transformed_grid = spherical_profile.transformed_from_reference_frame_grid_from(
+        grid_spherical
     )
 
     assert transformed_grid == pytest.approx(grid_original, 1e-5)
@@ -147,26 +141,20 @@ def test__elliptical__transform_grid_to_and_from_reference_frame():
 
     elliptical_profile = geometry_profiles.EllProfile(ell_comps=(0.0, 0.0))
 
-    transformed_grid = (
-        elliptical_profile.transformed_to_reference_frame_grid_from(
-            grid=np.array([[1.0, 1.0]])
-        )
+    transformed_grid = elliptical_profile.transformed_to_reference_frame_grid_from(
+        grid=np.array([[1.0, 1.0]])
     )
 
     assert transformed_grid == pytest.approx(np.array([[1.0, 1.0]]), 1e-3)
 
     transformed_back_grid = (
-        elliptical_profile.transformed_from_reference_frame_grid_from(
-            transformed_grid
-        )
+        elliptical_profile.transformed_from_reference_frame_grid_from(transformed_grid)
     )
 
     assert transformed_back_grid == pytest.approx(np.array([[1.0, 1.0]]), 1e-3)
 
     transformed_back_grid = (
-        elliptical_profile.transformed_from_reference_frame_grid_from(
-            transformed_grid
-        )
+        elliptical_profile.transformed_from_reference_frame_grid_from(transformed_grid)
     )
 
     assert transformed_back_grid == pytest.approx(np.array([[1.0, 1.0]]), 1e-3)
@@ -177,18 +165,14 @@ def test__elliptical__transform_grid_to_and_from_reference_frame():
         centre=(2.0, 3.0), ell_comps=(0.0, -0.81818181)
     )
 
-    transformed_grid = (
-        elliptical_profile.transformed_to_reference_frame_grid_from(
-            grid=np.array([[3.0, 4.0]])
-        )
+    transformed_grid = elliptical_profile.transformed_to_reference_frame_grid_from(
+        grid=np.array([[3.0, 4.0]])
     )
 
     assert transformed_grid == pytest.approx(np.array([[-1.0, 1.0]]), 1e-3)
 
     transformed_back_grid = (
-        elliptical_profile.transformed_from_reference_frame_grid_from(
-            transformed_grid
-        )
+        elliptical_profile.transformed_from_reference_frame_grid_from(transformed_grid)
     )
 
     assert transformed_back_grid == pytest.approx(np.array([[3.0, 4.0]]), 1e-3)
@@ -197,16 +181,12 @@ def test__elliptical__transform_grid_to_and_from_reference_frame():
 
     grid_original = np.array([[5.2221, 2.6565]])
 
-    grid_elliptical = (
-        elliptical_profile.transformed_to_reference_frame_grid_from(
-            grid_original
-        )
+    grid_elliptical = elliptical_profile.transformed_to_reference_frame_grid_from(
+        grid_original
     )
 
-    transformed_grid = (
-        elliptical_profile.transformed_from_reference_frame_grid_from(
-            grid_elliptical
-        )
+    transformed_grid = elliptical_profile.transformed_from_reference_frame_grid_from(
+        grid_elliptical
     )
 
     assert transformed_grid == pytest.approx(grid_original, 1e-5)

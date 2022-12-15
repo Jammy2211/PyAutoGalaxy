@@ -163,7 +163,6 @@ class SphProfile(GeometryProfile):
 
 
 class EllProfile(SphProfile):
-
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -310,7 +309,7 @@ class EllProfile(SphProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def eccentric_radii_grid_from(self, grid : aa.type.Grid2DLike) -> np.ndarray:
+    def eccentric_radii_grid_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Convert a grid of (y,x) coordinates to an eccentric radius: :math: axis_ratio^0.5 (x^2 + (y^2/q))^0.5
 

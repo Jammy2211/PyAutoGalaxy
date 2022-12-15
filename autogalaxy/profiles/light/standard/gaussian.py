@@ -10,7 +10,6 @@ from autogalaxy.profiles.light.decorators import (
 
 
 class Gaussian(LightProfile):
-
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
