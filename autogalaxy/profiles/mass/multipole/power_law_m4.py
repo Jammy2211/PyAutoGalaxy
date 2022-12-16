@@ -7,7 +7,7 @@ import autoarray as aa
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
-def polar_grid_from(grid, centre=(0.0, 0.0)):
+def polar_grid_from(grid : aa.type.Grid2DLike, centre : Tuple[float, float] = (0.0, 0.0)) -> Tuple[np.ndarray, np.ndarray]:
 
     y, x = grid.T
 
@@ -21,7 +21,7 @@ def polar_grid_from(grid, centre=(0.0, 0.0)):
     return r, phi
 
 
-def multipole_parameters_from(ell_comps):
+def multipole_parameters_from(ell_comps : Tuple[float, float]) -> Tuple[float, float]:
     """
     :param e1: ellipticity component
     :param e2: ellipticity component
@@ -56,7 +56,7 @@ class MultipolePowerLawM4(MassProfile):
         self.k_m, self.phi_m = multipole_parameters_from(ell_comps=ell_comps_multipole)
         self.phi_m *= units.deg.to(units.rad)
 
-    def jacobian(self, a_r, a_phi, phi):
+    def jacobian(self, a_r: float, a_phi, phi):
         """
         The Jacobian transformation from polar to cartesian coordinates
         """
@@ -68,7 +68,7 @@ class MultipolePowerLawM4(MassProfile):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from(self, grid):
+    def convergence_2d_from(self, grid : aa.type.Grid1D2DLike) -> np.ndarray:
 
         r, phi = polar_grid_from(grid=grid)
 
@@ -81,10 +81,14 @@ class MultipolePowerLawM4(MassProfile):
         )
 
     @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         return np.zeros(shape=grid.shape[0])
 
-    def deflections(self, grid, return_condition=False):
+    @aa.grid_dec.grid_2d_to_vector_yx
+    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def deflections_yx_2d_from(self, grid : aa.type.Grid1D2DLike) -> np.ndarray:
 
         r, phi = polar_grid_from(grid=grid)
 
@@ -109,16 +113,5 @@ class MultipolePowerLawM4(MassProfile):
             * self.k_m
             * np.sin(self.m * (phi - self.phi_m))
         )
-
-        if return_condition:
-            return a_r, a_phi, phi
-        return a_r, a_phi
-
-    @aa.grid_dec.grid_2d_to_vector_yx
-    @aa.grid_dec.grid_2d_to_structure
-    @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_yx_2d_from(self, grid):
-        a_r, a_phi, phi = self.deflections(grid=grid, return_condition=True)
 
         return np.stack(self.jacobian(a_r=a_r, a_phi=a_phi, phi=phi), axis=-1)
