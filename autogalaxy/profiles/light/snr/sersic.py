@@ -26,8 +26,7 @@ class Sersic(lp.Sersic, LightProfileSNR):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         ell_comps
-            The first and second ellipticity components of the elliptical coordinate system, (see the module
-            `autogalaxy -> convert.py` for the convention).
+            The first and second ellipticity components of the elliptical coordinate system.
         effective_radius
             The circular radius containing half the light of this profile.
         sersic_index

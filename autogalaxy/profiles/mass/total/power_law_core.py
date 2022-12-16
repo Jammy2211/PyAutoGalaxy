@@ -25,8 +25,7 @@ class PowerLawCore(MassProfile):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         ell_comps
-            The first and second ellipticity components of the elliptical coordinate system, (see the module
-            `autogalaxy -> convert.py` for the convention).
+            The first and second ellipticity components of the elliptical coordinate system.
         einstein_radius
             The arc-second Einstein radius.
         slope
@@ -57,14 +56,13 @@ class PowerLawCore(MassProfile):
         """
         Calculate the projected convergence on a grid of (y,x) arc-second coordinates.
 
-        The `grid_2d_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See \
+        The `grid_2d_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See
         *aa.grid_2d_to_structure* for a description of the output.
 
         Parameters
         ----------
         grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
-
         """
 
         covnergence_grid = np.zeros(grid.shape[0])
@@ -87,7 +85,6 @@ class PowerLawCore(MassProfile):
         ----------
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-
         """
 
         potential_grid = np.zeros(grid.shape[0])
