@@ -28,8 +28,7 @@ class SersicRadialGradient(AbstractSersic):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         ell_comps
-            The first and second ellipticity components of the elliptical coordinate system, (see the module
-            `autogalaxy -> convert.py` for the convention).
+            The first and second ellipticity components of the elliptical coordinate system.
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius

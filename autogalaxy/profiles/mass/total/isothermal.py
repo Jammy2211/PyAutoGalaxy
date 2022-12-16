@@ -56,8 +56,7 @@ class Isothermal(PowerLaw):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         ell_comps
-            The first and second ellipticity components of the elliptical coordinate system, (see the module
-            `autogalaxy -> convert.py` for the convention).
+            The first and second ellipticity components of the elliptical coordinate system.
         einstein_radius
             The arc-second Einstein radius.
         """
@@ -82,7 +81,7 @@ class Isothermal(PowerLaw):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
-        For coordinates (0.0, 0.0) the analytic calculation of the deflection angle gives a NaN. Therefore, \
+        For coordinates (0.0, 0.0) the analytic calculation of the deflection angle gives a NaN. Therefore,
         coordinates at (0.0, 0.0) are shifted slightly to (1.0e-8, 1.0e-8).
 
         Parameters

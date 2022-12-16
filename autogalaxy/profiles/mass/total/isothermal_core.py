@@ -21,8 +21,7 @@ class IsothermalCore(PowerLawCore):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         ell_comps
-            The first and second ellipticity components of the elliptical coordinate system, (see the module
-            `autogalaxy -> convert.py` for the convention).
+            The first and second ellipticity components of the elliptical coordinate system.
         einstein_radius
             The arc-second Einstein radius.
         core_radius

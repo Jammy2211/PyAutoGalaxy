@@ -28,8 +28,7 @@ def axis_ratio_and_angle_from(ell_comps):
     Parameters
     ----------
     ell_comps : (float, float)
-        The first and second ellipticity components of the elliptical coordinate system, (see the module
-        `autogalaxy -> convert.py` for the convention).
+        The first and second ellipticity components of the elliptical coordinate system.
     """
     angle = np.arctan2(ell_comps[0], ell_comps[1]) / 2
     angle *= 180.0 / np.pi
@@ -49,8 +48,7 @@ def axis_ratio_from(ell_comps):
     Parameters
     ----------
     ell_comps : (float, float)
-        The first and second ellipticity components of the elliptical coordinate system, (see the module
-        `autogalaxy -> convert.py` for the convention).
+        The first and second ellipticity components of the elliptical coordinate system.
     """
     axis_ratio, angle = axis_ratio_and_angle_from(ell_comps=ell_comps)
     return axis_ratio
@@ -63,8 +61,7 @@ def angle_from(ell_comps):
     Parameters
     ----------
     ell_comps : (float, float)
-        The first and second ellipticity components of the elliptical coordinate system, (see the module
-        `autogalaxy -> convert.py` for the convention).
+        The first and second ellipticity components of the elliptical coordinate system.
     """
     axis_ratio, angle = axis_ratio_and_angle_from(ell_comps=ell_comps)
     return angle

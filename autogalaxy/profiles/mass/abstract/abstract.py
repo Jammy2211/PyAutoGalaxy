@@ -25,8 +25,7 @@ class MassProfile(EllProfile, OperateDeflections):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         ell_comps
-            The first and second ellipticity components of the elliptical coordinate system, (see the module
-            `autogalaxy -> convert.py` for the convention).
+            The first and second ellipticity components of the elliptical coordinate system.
         """
         super().__init__(centre=centre, ell_comps=ell_comps)
 

@@ -33,8 +33,7 @@ class Gaussian(lp.Gaussian, mp.Gaussian, LightMassProfile):
         centre
             The grid of The (y,x) arc-second coordinates of the profile centre.
         ell_comps
-            The first and second ellipticity components of the elliptical coordinate system, (see the module
-            `autogalaxy -> convert.py` for the convention).
+            The first and second ellipticity components of the elliptical coordinate system.
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius
@@ -79,8 +78,7 @@ class Sersic(lp.Sersic, mp.Sersic, LightMassProfile):
         centre
             The grid of The (y,x) arc-second coordinates of the profile centre.
         ell_comps
-            The first and second ellipticity components of the elliptical coordinate system, (see the module
-            `autogalaxy -> convert.py` for the convention).
+            The first and second ellipticity components of the elliptical coordinate system.
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second).
         effective_radius
@@ -162,8 +160,7 @@ class Exponential(Sersic, LightMassProfile):
         centre
             The grid of The (y,x) arc-second coordinates of the profile centre.
         ell_comps
-            The first and second ellipticity components of the elliptical coordinate system, (see the module
-            `autogalaxy -> convert.py` for the convention).
+            The first and second ellipticity components of the elliptical coordinate system.
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
@@ -235,8 +232,7 @@ class DevVaucouleurs(Sersic, LightMassProfile):
         centre
             The grid of The (y,x) arc-second coordinates of the profile centre.
         ell_comps
-            The first and second ellipticity components of the elliptical coordinate system, (see the module
-            `autogalaxy -> convert.py` for the convention).
+            The first and second ellipticity components of the elliptical coordinate system.
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
@@ -309,8 +305,7 @@ class SersicRadialGradient(lp.Sersic, mp.SersicRadialGradient, LightMassProfile)
         centre
             The (y,x) arc-second coordinates of the profile centre..
         ell_comps
-            The first and second ellipticity components of the elliptical coordinate system, (see the module
-            `autogalaxy -> convert.py` for the convention).
+            The first and second ellipticity components of the elliptical coordinate system.
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
@@ -405,8 +400,7 @@ class ExponentialRadialGradient(SersicRadialGradient, LightMassProfile):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         ell_comps
-            The first and second ellipticity components of the elliptical coordinate system, (see the module
-            `autogalaxy -> convert.py` for the convention).
+            The first and second ellipticity components of the elliptical coordinate system.
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
@@ -448,8 +442,7 @@ class SphExponentialRadialGradient(SersicRadialGradientSph, LightMassProfile):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         ell_comps
-            The first and second ellipticity components of the elliptical coordinate system, (see the module
-            `autogalaxy -> convert.py` for the convention).
+            The first and second ellipticity components of the elliptical coordinate system.
         intensity
             Overall flux intensity normalisation in the light profiles (electrons per second)
         effective_radius
@@ -482,8 +475,7 @@ class SersicCore(lp.SersicCore, mp.SersicCore, LightMassProfile):
     centre
         The grid of The (y,x) arc-second coordinates of the profile centre.
     ell_comps
-        The first and second ellipticity components of the elliptical coordinate system, (see the module
-        `autogalaxy -> convert.py` for the convention).
+        The first and second ellipticity components of the elliptical coordinate system.
     intensity
         Overall flux intensity normalisation in the light profiles (electrons per second).
     effective_radius
@@ -547,8 +539,7 @@ class SersicCoreSph(SersicCore, LightMassProfile):
     centre
         The grid of The (y,x) arc-second coordinates of the profile centre.
     ell_comps
-        The first and second ellipticity components of the elliptical coordinate system, (see the module
-        `autogalaxy -> convert.py` for the convention).
+        The first and second ellipticity components of the elliptical coordinate system.
     intensity
         Overall flux intensity normalisation in the light profiles (electrons per second).
     effective_radius
@@ -618,8 +609,7 @@ class Chameleon(lp.Chameleon, mp.Chameleon, LightMassProfile):
     centre
         The (y,x) arc-second coordinates of the profile centre.
     ell_comps
-        The first and second ellipticity components of the elliptical coordinate system, (see the module
-        `autogalaxy -> convert.py` for the convention).
+        The first and second ellipticity components of the elliptical coordinate system.
     intensity
         Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
         the light profile's image is compared too, which is expected to be electrons per second).
