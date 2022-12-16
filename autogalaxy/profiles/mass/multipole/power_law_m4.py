@@ -1,12 +1,13 @@
 from astropy import units
 import numpy as np
+from typing import Tuple
 
 import autoarray as aa
 
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
-def polar_coordinate_grid_from(grid, centre=(0.0, 0.0)):
+def polar_grid_from(grid, centre=(0.0, 0.0)):
 
     y, x = grid.T
 
@@ -33,13 +34,13 @@ def multipole_parameters_from(ell_comps):
     return k_m, phi_m
 
 
-class Multipole(MassProfile):
+class MultipolePowerLawM4(MassProfile):
     def __init__(
         self,
-        centre=(0.0, 0.0),
-        einstein_radius=1.0,
-        slope=2.0,
-        ell_comps_multipole=(0.0, 0.0),
+        centre: Tuple[float, float] = (0.0, 0.0),
+        einstein_radius: float = 1.0,
+        slope: float = 2.0,
+        ell_comps_multipole: Tuple[float, float] = (0.0, 0.0),
     ):
         """
         phi_m: [rad]
@@ -69,7 +70,7 @@ class Multipole(MassProfile):
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid):
 
-        r, phi = polar_coordinate_grid_from(grid=grid)
+        r, phi = polar_grid_from(grid=grid)
 
         return (
             1.0
@@ -85,7 +86,7 @@ class Multipole(MassProfile):
 
     def deflections(self, grid, return_condition=False):
 
-        r, phi = polar_coordinate_grid_from(grid=grid)
+        r, phi = polar_grid_from(grid=grid)
 
         a_r = (
             -(
