@@ -74,7 +74,7 @@ class MultipolePowerLawM4(MassProfile):
         slope: float = 2.0,
         ell_comps_multipole: Tuple[float, float] = (0.0, 0.0),
     ):
-        """
+        r"""
         A multipole extension with multipole order M=4 to the power-law total mass distribution.
 
         Quantities computed from this profile (e.g. deflections, convergence) are of only the multipole, and not the
