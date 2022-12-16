@@ -47,7 +47,7 @@ Priors
 Hyper
 -----
 
-.. currentmodule:: autolens
+.. currentmodule:: autogalaxy
 
 .. autosummary::
    :toctree: generated/
