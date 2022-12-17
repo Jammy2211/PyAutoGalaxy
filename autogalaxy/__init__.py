@@ -99,6 +99,8 @@ from . import mock as m  # noqa
 from .util.shear_field import ShearYX2D
 from .util.shear_field import ShearYX2DIrregular
 from . import cosmology as cosmo
+from .gui.clicker import Clicker
+from .gui.scribbler import Scribbler
 
 from .analysis.clump_model import ClumpModel
 

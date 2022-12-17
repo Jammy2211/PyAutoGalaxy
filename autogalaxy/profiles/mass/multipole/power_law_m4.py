@@ -116,16 +116,16 @@ class MultipolePowerLawM4(MassProfile):
 
         mass = al.mp.PowerLaw(
             centre=(0.0, 0.0),
+            ell_comps=(-0.1, 0.2),
             einstein_radius=1.0,
-            ell_comps=(-0.1, 0.2)
-            slope=2.2,
+            slope=2.2
         )
 
         multipole = al.mp.MultipolePowerLawM4(
             centre=(0.0, 0.0),
             einstein_radius=1.0,
             slope=2.2,
-            ell_comps_multipole=(0.3, 0.2),
+            ell_comps_multipole=(0.3, 0.2)
         )
 
         galaxy = al.Galaxy(
