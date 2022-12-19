@@ -52,11 +52,11 @@ Note how in the r-band the galaxy bulge is brighter than the disk, whereas in th
 The different variation of the colors of the galaxy is a powerful tool for galaxy modeling as it provides a lot more
 information on the galaxy's morphology.
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/multiwavelength/r_image.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/multiwavelength/r_image.png
   :width: 400
   :alt: Alternative text
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/multiwavelength/g_image.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/multiwavelength/g_image.png
   :width: 400
   :alt: Alternative text
 
@@ -170,11 +170,11 @@ different intensities.
         )
         galaxy_plotter.subplot_of_light_profiles(image=True)
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/multiwavelength/r_decomposed_image.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/multiwavelength/r_decomposed_image.png
   :width: 400
   :alt: Alternative text
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/multiwavelength/g_decomposed_image.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/multiwavelength/g_decomposed_image.png
   :width: 400
   :alt: Alternative text
 
@@ -246,11 +246,11 @@ sub millimeter wavelengths.
 The galaxy appears completely different in the g-band and at sub-millimeter wavelengths, allowing us to contrast
 where a galaxy emits ultraviolet to where dust is heated.
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/multiwavelength/dirty_image.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/multiwavelength/dirty_image.png
   :width: 400
   :alt: Alternative text
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/multiwavelength/g_image.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/multiwavelength/g_image.png
   :width: 400
   :alt: Alternative text
 

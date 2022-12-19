@@ -9,7 +9,7 @@ Unlike `LightProfile`'s, they are able to reconstruct the light of non-symmetric
 
 We will demonstrate this using a complex galaxy with multiple star forming clumps:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/pixelizations/image.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/pixelizations/image.png
   :width: 400
   :alt: Alternative text
 
@@ -54,7 +54,7 @@ object.
 
 Here is what our reconstructed galaxy looks like:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/pixelizations/rectangular.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/pixelizations/rectangular.png
   :width: 400
   :alt: Alternative text
 

@@ -30,15 +30,15 @@ demonstrate fitting.
 
 Here's what our ``image``, ``noise_map`` and ``psf`` (point-spread function) look like:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/fitting/image.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/fitting/image.png
   :width: 400
   :alt: Alternative text
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/fitting/noise_map.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/fitting/noise_map.png
   :width: 400
   :alt: Alternative text
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/fitting/psf.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/fitting/psf.png
   :width: 400
   :alt: Alternative text
 
@@ -63,7 +63,7 @@ To do this we can use a ``Mask2D`` object, which for this example we'll create a
 Here is what our image looks like with the mask applied, where **PyAutoGalaxy** has automatically zoomed around the
 ``Mask2D`` to make the lensed source appear bigger:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/fitting/masked_image.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/fitting/masked_image.png
   :width: 400
   :alt: Alternative text
 
@@ -110,11 +110,11 @@ Here is how the ``Plane``'s image of the galaxy and the ``FitImaging``'s model-i
 
 Note how the model-image has been blurred with the PSF of our dataset:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/fitting/plane_image.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/fitting/plane_image.png
   :width: 400
   :alt: Alternative text
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/fitting/model_image.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/fitting/model_image.png
   :width: 400
   :alt: Alternative text
 
@@ -139,15 +139,15 @@ We can plot all three of these quantities
 For a good model where the model image and plane are representative of the galaxy system the
 residuals, normalized residuals and chi-squared are minimized:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/fitting/residual_map.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/fitting/residual_map.png
   :width: 400
   :alt: Alternative text
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/fitting/normalized_residual_map.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/fitting/normalized_residual_map.png
   :width: 400
   :alt: Alternative text
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/fitting/chi_squared_map.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/fitting/chi_squared_map.png
   :width: 400
   :alt: Alternative text
 
@@ -162,15 +162,15 @@ Bad Fit
 
 In contrast, a bad lens model will show features in the residual-map and chi-squareds:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/fitting/bad_residual_map.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/fitting/bad_residual_map.png
   :width: 400
   :alt: Alternative text
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/fitting/bad_normalized_residual_map.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/fitting/bad_normalized_residual_map.png
   :width: 400
   :alt: Alternative text
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/fitting/bad_chi_squared_map.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/fitting/bad_chi_squared_map.png
   :width: 400
   :alt: Alternative text
 

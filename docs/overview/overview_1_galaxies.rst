@@ -52,7 +52,7 @@ units to arc-seconds):
 
 This is what our ``Grid2D`` looks like:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/galaxies/grid_2d.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/galaxies/grid_2d.png
   :width: 400
   :alt: Alternative text
 
@@ -94,7 +94,7 @@ the `LightProfile`'s image.
 
 The light profile's image appears as shown below:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/galaxies/sersic_light_profile.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/galaxies/sersic_light_profile.png
   :width: 400
   :alt: Alternative text
 
@@ -141,7 +141,7 @@ Below, we plot its image, which is the sum of the bulge and disk components.
 
 The galaxy, with both a bulge and disk, appears as follows
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/galaxies/galaxy.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/galaxies/galaxy.png
   :width: 400
   :alt: Alternative text
 
@@ -192,7 +192,7 @@ The image of the plane consists of all galaxies.
 
 The plane image shows both galaxies:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/galaxies/plane.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/galaxies/plane.png
   :width: 400
   :alt: Alternative text
 
@@ -200,7 +200,7 @@ Whereas the subplot has panels for each individual galaxy:
 
 The galaxy, with both a bulge and disk, appears as follows
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/galaxies/subplot_galaxies.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/galaxies/subplot_galaxies.png
   :width: 400
   :alt: Alternative text
 
@@ -250,7 +250,7 @@ To finish, lets create a `Plane` with 2 merging galaxies, where the second galax
 
 This is what the merging galaxies look like:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/master/docs/overview/images/galaxies/merging_galaxies.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/galaxies/merging_galaxies.png
   :width: 400
   :alt: Alternative text
 
