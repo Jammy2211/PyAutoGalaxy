@@ -7,12 +7,9 @@ PyAutoGalaxy: Open-Source Multi Wavelength Galaxy Structure & Morphology
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
         :target: https://github.com/psf/black
 
-`Installation Guide <https://pyautogalaxy.readthedocs.io/en/latest/installation/overview.html>`_
-
-`readthedocs <https://pyautogalaxy.readthedocs.io/en/latest/index.html>`_
-
-`Introduction on Binder <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=introduction.ipynb>`_
-
+`Installation Guide <https://pyautogalaxy.readthedocs.io/en/latest/installation/overview.html>`_ |
+`readthedocs <https://pyautogalaxy.readthedocs.io/en/latest/index.html>`_ |
+`Introduction on Binder <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=introduction.ipynb>`_ |
 `HowToGalaxy <https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/howtogalaxy.html>`_
 
 The study of a galaxy's structure and morphology is at the heart of modern day Astrophysical research.
