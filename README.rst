@@ -4,9 +4,9 @@ PyAutoGalaxy: Open-Source Multi Wavelength Galaxy Structure & Morphology
 .. image:: https://mybinder.org/badge_logo.svg
         :target: https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/HEAD
 
-.. image:: https://pyautogalaxy.readthedocs.io/en/latest/?badge=latest
-        :target: https://pyautogalaxy.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
+.. image:: https://readthedocs.org/projects/pyautogalaxy/badge/?version=latest
+    :target: https://pyautogalaxy.readthedocs.io/en/latest/?badge=latest
+    :alt: Documentation Status
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
         :target: https://github.com/psf/black
