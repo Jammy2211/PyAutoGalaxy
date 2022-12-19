@@ -1,20 +1,18 @@
 PyAutoGalaxy: Open-Source Multi Wavelength Galaxy Structure & Morphology
 ========================================================================
 
-.. |nbsp| unicode:: 0xA0
-    :trim:
+.. image:: https://mybinder.org/badge_logo.svg
+        :target: https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/HEAD
 
-.. |binder| image:: https://mybinder.org/badge_logo.svg
-   :target: https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/HEAD
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+        :target: https://github.com/psf/black
 
-.. |code-style| image:: https://img.shields.io/badge/code%20style-black-000000.svg
-    :target: https://github.com/psf/black
+`Installation Guide <https://pyautogalaxy.readthedocs.io/en/latest/installation/overview.html>`_
 
-|binder| |code-style|
+`readthedocs <https://pyautogalaxy.readthedocs.io/en/latest/index.html>`_
 
-`Installation Guide <https://pyautogalaxy.readthedocs.io/en/latest/installation/overview.html>`_ |
-`readthedocs <https://pyautogalaxy.readthedocs.io/en/latest/index.html>`_ |
-`Introduction on Binder <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=introduction.ipynb>`_ |
+`Introduction on Binder <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=introduction.ipynb>`_
+
 `HowToGalaxy <https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/howtogalaxy.html>`_
 
 The study of a galaxy's structure and morphology is at the heart of modern day Astrophysical research.
@@ -22,16 +20,13 @@ The study of a galaxy's structure and morphology is at the heart of modern day A
 **PyAutoGalaxy** makes it simple to model galaxies, for example this Hubble Space Telescope imaging of a spiral
 galaxy:
 
-|pic1|
-
-.. |pic1| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/paper/hstcombined.png
+.. image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/hstcombined.png
+        :target: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/hstcombined.png
 
 **PyAutoGalaxy** also fits interferometer data from observatories such as ALMA:
 
-
-|pic2|
-
-.. |pic2| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/paper/almacombined.png
+.. image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/almacombined.png
+        :target: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/almacombined.png
 
 Getting Started
 ---------------

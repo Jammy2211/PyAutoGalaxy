@@ -12,13 +12,13 @@ Telescope imaging of a spiral galaxy:
 
 |pic1|
 
-.. |pic1| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/paper/hstcombined.png
+.. |pic1| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/hstcombined.png
 
 **PyAutoGalaxy** also fits interferometer data from observatories such as ALMA:
 
 |pic2|
 
-.. |pic2| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/master/paper/almacombined.png
+.. |pic2| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/almacombined.png
 
 Core features include fully automated Bayesian model-fitting of galaxy two-dimensional surface brightness profiles,
 support for imaging and interferometer datasets and comprehensive tools for simulating galaxy images. The software

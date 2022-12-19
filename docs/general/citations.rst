@@ -4,9 +4,9 @@ Citations & References
 ======================
 
 The bibtex entries for **PyAutoGalaxy** and its affiliated software packages can be found
-`here <https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/citations.bib>`_, with example text for citing **PyAutoGalaxy**
-in `.tex format here <https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/citations.tex>`_ format here and
-`.md format here <https://github.com/Jammy2211/PyAutoGalaxy/blob/master/files/citations.md>`_.
+`here <https://github.com/Jammy2211/PyAutoGalaxy/blob/main/files/citations.bib>`_, with example text for citing **PyAutoGalaxy**
+in `.tex format here <https://github.com/Jammy2211/PyAutoGalaxy/blob/main/files/citations.tex>`_ format here and
+`.md format here <https://github.com/Jammy2211/PyAutoGalaxy/blob/main/files/citations.md>`_.
 
 As shown in the examples, we would greatly appreciate it if you mention **PyAutoGalaxy** by name and include a link to
 our GitHub page!
