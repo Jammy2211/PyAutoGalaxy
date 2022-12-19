@@ -148,9 +148,6 @@ html_context = {
 }
 language = "en"
 
-html_static_path = ["_static"]
-html_css_files = ["pied-piper-admonition.css"]
-
 from sphinx.builders.html import StandaloneHTMLBuilder
 
 StandaloneHTMLBuilder.supported_image_types = ["image/gif", "image/png", "image/jpeg"]

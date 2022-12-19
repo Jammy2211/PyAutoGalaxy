@@ -168,8 +168,8 @@ This gives the following output:
     Maximum Log Likelihood                         5010.64422962
     Maximum Log Posterior                          975179.18825227
     
-    model                                          CollectionPriorModel (N=13)
-        galaxies                                   CollectionPriorModel (N=13)
+    model                                          Collection (N=13)
+        galaxies                                   Collection (N=13)
             galaxy                                 Galaxy (N=13)
                 bulge                              Sersic (N=7)
                 disk                               Exponential (N=6)
@@ -417,7 +417,7 @@ Below is a snippet of the model, showing that different Gaussians are in the mod
     Total Free Parameters = 6
 
     model                                                                           Basis (N=6)
-        light_profile_list                                                          CollectionPriorModel (N=6)
+        light_profile_list                                                          Collection (N=6)
             0                                                                       Gaussian (N=6)
                 sigma                                                               SumPrior (N=2)
                     other                                                           MultiplePrior (N=1)
