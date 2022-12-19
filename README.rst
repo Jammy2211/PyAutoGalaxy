@@ -11,6 +11,9 @@ PyAutoGalaxy: Open-Source Multi Wavelength Galaxy Structure & Morphology
 .. image:: https://github.com/Jammy2211/PyAutoGalaxy/actions/workflows/main.yml/badge.svg
    :target: https://github.com/Jammy2211/PyAutoGalaxy/actions
 
+.. image:: https://github.com/Jammy2211/PyAutoBuild/actions/workflows/release.yml/badge.svg
+   :target: https://github.com/Jammy2211/PyAutoBuild/actions
+
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
    :target: https://github.com/psf/black
 
