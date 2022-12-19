@@ -12,7 +12,7 @@ with open(join(this_dir, "README.rst"), encoding="utf-8") as file:
 with open(join(this_dir, "requirements.txt")) as f:
     requirements = f.read().split("\n")
 
-version = environ.get("VERSION", "0.0.0.1")
+version = environ.get("VERSION", "2022.12.19.3")
 requirements.extend(
     [f"autoconf=={version}", f"autoarray=={version}", f"autofit=={version}"]
 )
@@ -31,7 +31,7 @@ setup(
     version=version,
     description="Open-Source Multi Wavelength Galaxy Structure & Morphology",
     long_description=long_description,
-    long_description_content_type="text/rst",
+    long_description_content_type="text/x-rst",
     url="https://github.com/Jammy2211/PyAutoGalaxy",
     author="James Nightingale and Richard Hayes",
     author_email="james.w.nightingale@durham.ac.uk",

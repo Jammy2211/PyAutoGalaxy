@@ -17,12 +17,12 @@ The study of a galaxy's structure and morphology is at the heart of modern day A
 **PyAutoGalaxy** makes it simple to model galaxies, for example this Hubble Space Telescope imaging of a spiral
 galaxy:
 
-.. image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/hstcombined.png
+.. image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/hstcombined.png?raw=true
         :target: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/hstcombined.png
 
 **PyAutoGalaxy** also fits interferometer data from observatories such as ALMA:
 
-.. image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/almacombined.png
+.. image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/almacombined.png?raw=true
         :target: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/almacombined.png
 
 Getting Started
