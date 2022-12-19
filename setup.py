@@ -12,7 +12,7 @@ with open(join(this_dir, "README.rst"), encoding="utf-8") as file:
 with open(join(this_dir, "requirements.txt")) as f:
     requirements = f.read().split("\n")
 
-version = environ.get("VERSION", "1.0.dev0")
+version = environ.get("VERSION", "0.0.0.1")
 requirements.extend(
     [f"autoconf=={version}", f"autoarray=={version}", f"autofit=={version}"]
 )
@@ -29,9 +29,9 @@ def config_packages(directory):
 setup(
     name="autogalaxy",
     version=version,
-    description="Open Source Galaxy Model-Fitting",
+    description="Open-Source Multi Wavelength Galaxy Structure & Morphology",
     long_description=long_description,
-    long_description_content_type="text/markdown",
+    long_description_content_type="text/rst",
     url="https://github.com/Jammy2211/PyAutoGalaxy",
     author="James Nightingale and Richard Hayes",
     author_email="james.w.nightingale@durham.ac.uk",
@@ -52,6 +52,7 @@ setup(
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
     ],
     keywords="cli",
     packages=find_packages(exclude=["docs", "test_autogalaxy", "test_autogalaxy*"])
