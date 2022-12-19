@@ -8,7 +8,7 @@ PyAutoGalaxy: Open-Source Multi Wavelength Galaxy Structure & Morphology
    :target: https://pyautogalaxy.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
 
-.. image:: https://github.com/Jammy2211/PyAutoGalaxy/actions/workflows/main/badge.svg
+.. image:: https://github.com/Jammy2211/PyAutoGalaxy/actions/workflows/main.yml/badge.svg
    :target: https://github.com/Jammy2211/PyAutoGalaxy/actions
 
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
