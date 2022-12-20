@@ -563,7 +563,3 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             raise exc.GalaxyException(
                 "You cannot perform a mass-based calculation on a galaxy which does not have a mass-profile"
             )
-
-
-
-

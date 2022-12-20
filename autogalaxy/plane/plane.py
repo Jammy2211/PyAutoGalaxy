@@ -8,7 +8,7 @@ from autoconf.dictable import Dictable
 
 from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.galaxy.galaxy import HyperGalaxy
+from autogalaxy.galaxy.hyper import HyperGalaxy
 from autogalaxy.profiles.light.basis import Basis
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
@@ -266,21 +266,23 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             An arrays describing the RMS standard deviation error in each pixel, preferably in units of electrons per
             second.
         """
-        hyper_noise_maps = []
+        hyper_noise_map_list = []
 
         for galaxy in self.galaxies:
 
             if galaxy.has(cls=HyperGalaxy):
 
-                hyper_noise_map_1d = (
-                    galaxy.hyper_galaxy.hyper_noise_map_via_hyper_images_from(
-                        noise_map=noise_map,
-                        hyper_model_image=galaxy.hyper_model_image,
-                        hyper_galaxy_image=galaxy.hyper_galaxy_image,
-                    )
+                contribution_map = galaxy.hyper_galaxy.contribution_map_from(
+                    hyper_model_image=galaxy.hyper_model_image,
+                    hyper_galaxy_image=galaxy.hyper_galaxy_image,
                 )
 
-                hyper_noise_maps.append(hyper_noise_map_1d)
+                hyper_noise_map = galaxy.hyper_galaxy.hyper_noise_map_from(
+                    contribution_map=contribution_map,
+                    noise_map=noise_map,
+                )
+
+                hyper_noise_map_list.append(hyper_noise_map)
 
             else:
 
@@ -289,9 +291,9 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
                     mask=noise_map.mask.mask_sub_1,
                 )
 
-                hyper_noise_maps.append(hyper_noise_map)
+                hyper_noise_map_list.append(hyper_noise_map)
 
-        return hyper_noise_maps
+        return hyper_noise_map_list
 
     @property
     def contribution_map(self) -> Optional[aa.Array2D]:

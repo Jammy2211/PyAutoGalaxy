@@ -1,5 +1,4 @@
 from itertools import count
-from typing import Dict, List, Optional, Type, Union
 
 import numpy as np
 
@@ -10,10 +9,10 @@ class HyperGalaxy:
     _ids = count()
 
     def __init__(
-            self,
-            contribution_factor: float = 0.0,
-            noise_factor: float = 0.0,
-            noise_power: float = 1.0,
+        self,
+        contribution_factor: float = 0.0,
+        noise_factor: float = 0.0,
+        noise_power: float = 1.0,
     ):
         """
         By using a ``HyperGalaxy``, the noise-map value in the regions of the image that the galaxy is located
@@ -55,16 +54,18 @@ class HyperGalaxy:
     def __eq__(self, other):
         if isinstance(other, HyperGalaxy):
             return (
-                    self.contribution_factor == other.contribution_factor
-                    and self.noise_factor == other.noise_factor
-                    and self.noise_power == other.noise_power
+                self.contribution_factor == other.contribution_factor
+                and self.noise_factor == other.noise_factor
+                and self.noise_power == other.noise_power
             )
         return False
 
     def __str__(self):
         return "\n".join(["{}: {}".format(k, v) for k, v in self.__dict__.items()])
 
-    def contribution_map_from(self, hyper_model_image : aa.Array2D, hyper_galaxy_image : aa.Array2D) -> aa.Array2D:
+    def contribution_map_from(
+        self, hyper_model_image: aa.Array2D, hyper_galaxy_image: aa.Array2D
+    ) -> aa.Array2D:
         """
         Returns the contribution map of a galaxy, which represents the fraction of
         flux in each pixel that the galaxy is attributed to contain. This uses the
@@ -98,23 +99,8 @@ class HyperGalaxy:
         except TypeError:
             raise
 
-    def hyper_noise_map_via_hyper_images_from(
-            self,
-            hyper_model_image: aa.Array2D,
-            hyper_galaxy_image: aa.Array2D,
-            noise_map: aa.Array2D,
-    ) -> aa.Array2D:
-
-        contribution_map = self.contribution_map_from(
-            hyper_model_image=hyper_model_image, hyper_galaxy_image=hyper_galaxy_image
-        )
-
-        return self.hyper_noise_map_from(
-            noise_map=noise_map, contribution_map=contribution_map
-        )
-
     def hyper_noise_map_from(
-            self, noise_map: aa.Array2D, contribution_map: aa.Array2D
+        self, noise_map: aa.Array2D, contribution_map: aa.Array2D
     ) -> aa.Array2D:
         """
         Returns a hyper noise-map from an input noise-map, which is a noise-map where certain noise map values
@@ -130,6 +116,3 @@ class HyperGalaxy:
             is attributed to contain.
         """
         return self.noise_factor * (noise_map * contribution_map) ** self.noise_power
-
-
-

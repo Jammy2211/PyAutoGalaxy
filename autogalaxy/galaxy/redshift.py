@@ -1,4 +1,3 @@
-
 class Redshift(float):
     """
     Class used when assigning a redshift to a `Galaxy` object.
@@ -25,6 +24,7 @@ class Redshift(float):
 
     model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
     """
+
     def __new__(cls, redshift):
         # noinspection PyArgumentList
         return float.__new__(cls, redshift)
