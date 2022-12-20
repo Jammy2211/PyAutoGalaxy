@@ -679,10 +679,4 @@ class HyperGalaxy:
         return self.noise_factor * (noise_map * contribution_map) ** self.noise_power
 
 
-class Redshift(float):
-    def __new__(cls, redshift):
-        # noinspection PyArgumentList
-        return float.__new__(cls, redshift)
 
-    def __init__(self, redshift):
-        float.__init__(redshift)
