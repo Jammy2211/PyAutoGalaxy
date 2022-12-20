@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional, List
 
 if TYPE_CHECKING:
+    from autogalaxy.galaxy.galaxy import Galaxy
     from autogalaxy.imaging.fit_imaging import FitImaging
 
 import autofit as af
@@ -15,7 +16,7 @@ from autogalaxy.aggregator.plane import _plane_from
 
 def _fit_imaging_from(
     fit: af.Fit,
-    galaxies: List["Galaxy"],
+    galaxies: List[Galaxy],
     settings_imaging: aa.SettingsImaging = None,
     settings_pixelization: aa.SettingsPixelization = None,
     settings_inversion: aa.SettingsInversion = None,
