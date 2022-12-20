@@ -13,7 +13,7 @@ class GeometryProfile(Dictable):
     An abstract geometry profile, which describes profiles with y and x centre Cartesian coordinates
 
     Parameters
-    -----------
+    ----------
     centre
         The (y,x) arc-second coordinates of the profile centre.
     """

@@ -5,6 +5,9 @@ Fitting
 Fitting
 -------
 
+For fitting a model (composed from a combination of ``Galaxy`` and / or ``Plane`` objects) to a
+dataset.
+
 .. currentmodule:: autogalaxy
 
 .. autosummary::

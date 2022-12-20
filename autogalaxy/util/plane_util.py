@@ -36,7 +36,7 @@ def ordered_plane_redshifts_from(galaxies):
     If two or more galaxies have the same redshift that redshift is not double counted.
 
     Parameters
-    -----------
+    ----------
     galaxies : [Galaxy]
         The list of galaxies in the ray-tracing calculation.
     """
@@ -76,7 +76,7 @@ def ordered_plane_redshifts_with_slicing_from(
     z=2.0
 
     Parameters
-    -----------
+    ----------
     lens_redshifts : [float]
         The redshifts of the main-planes (e.g. the lens galaxy), which determine where redshift intervals are placed.
     planes_between_lenses : [int]
@@ -119,7 +119,7 @@ def galaxies_in_redshift_ordered_planes_from(galaxies, plane_redshifts):
     of galaxies at the same redshift in ascending redshift order.
 
     Parameters
-    -----------
+    ----------
     galaxies : [Galaxy]
         The list of galaxies in the ray-tracing calculation.
     """

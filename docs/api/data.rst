@@ -21,8 +21,6 @@ grids of (y,x) Cartesian coordinates (which are used for evaluating light profil
    Grid2DIterate
    Grid2DIrregular
 
-
-
 Imaging
 -------
 
@@ -39,7 +37,6 @@ For datasets taken with a CCD (or similar imaging device), including objects whi
    SimulatorImaging
    Kernel2D
    Convolver
-
 
 Interferometer
 --------------
