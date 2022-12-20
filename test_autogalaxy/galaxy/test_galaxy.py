@@ -318,51 +318,6 @@ def test__light_and_mass_profiles__contained_in_light_and_mass_profile_lists(
     assert 2 == len(gal_multi_profiles.cls_list_from(cls=ag.mp.MassProfile))
 
 
-def test__contribution_map_from():
-
-    hyper_image = np.ones((3,))
-
-    hyp = ag.HyperGalaxy(contribution_factor=0.0)
-    contribution_map = hyp.contribution_map_from(
-        hyper_model_image=hyper_image, hyper_galaxy_image=hyper_image
-    )
-
-    assert (contribution_map == np.ones((3,))).all()
-
-    hyper_image = np.ones((3,))
-
-    hyp = ag.HyperGalaxy(contribution_factor=0.0)
-
-    galaxy = ag.Galaxy(
-        redshift=0.5,
-        hyper_galaxy=hyp,
-        hyper_galaxy_image=hyper_image,
-        hyper_model_image=hyper_image,
-    )
-
-    contribution_map = hyp.contribution_map_from(
-        hyper_model_image=hyper_image, hyper_galaxy_image=hyper_image
-    )
-
-    assert (contribution_map == galaxy.contribution_map).all()
-
-
-def test__hyper_noise_map_from():
-
-    noise_map = np.array([1.0, 2.0, 3.0])
-    contribution_map = np.array([[0.0, 0.5, 1.0]])
-
-    hyper_galaxy = ag.HyperGalaxy(
-        contribution_factor=0.0, noise_factor=2.0, noise_power=2.0
-    )
-
-    hyper_noise_map = hyper_galaxy.hyper_noise_map_from(
-        noise_map=noise_map, contribution_map=contribution_map
-    )
-
-    assert (hyper_noise_map == np.array([0.0, 2.0, 18.0])).all()
-
-
 def test__extract_attribute():
 
     galaxy = ag.Galaxy(redshift=0.5)
