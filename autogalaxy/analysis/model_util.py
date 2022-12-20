@@ -1,13 +1,20 @@
+from __future__ import annotations
 import logging
 import numpy as np
 from scipy.stats import norm
-from typing import ClassVar, Dict, List
+from typing import TYPE_CHECKING, ClassVar, Dict, List
+
+if TYPE_CHECKING:
+    from autogalaxy.analysis.analysis import AnalysisDataset
+    from autogalaxy.analysis.result import ResultDataset
+
 
 import autofit as af
 import autoarray as aa
 
 from autoarray.inversion.pixelization.mesh.abstract import AbstractMesh
 from autoarray.inversion.regularization.abstract import AbstractRegularization
+
 
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
@@ -657,8 +664,8 @@ def stochastic_fit(
     stochastic_model: af.Collection,
     search_cls: ClassVar[af.NonLinearSearch],
     search_pixelization_dict: Dict,
-    result: "ResultDataset",
-    analysis: "AnalysisDataset",
+    result: ResultDataset,
+    analysis: AnalysisDataset,
     search_previous: af.NonLinearSearch,
     info: Dict = None,
     pickle_files: List[str] = None,
