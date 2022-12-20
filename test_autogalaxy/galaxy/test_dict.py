@@ -1,4 +1,5 @@
 import pytest
+from typing import Optional
 
 import autogalaxy as ag
 from autoarray.inversion.pixelization.mesh.voronoi import Voronoi
@@ -28,9 +29,21 @@ def test_trivial__from_dict(trivial_galaxy, trivial_galaxy_dict):
     assert Dictable.from_dict(trivial_galaxy_dict) == trivial_galaxy
 
 
+class PixelizationGalaxy(ag.Galaxy):
+    def __init__(
+        self,
+        redshift: float,
+        hyper_galaxy: Optional[ag.HyperGalaxy] = None,
+        pixelization: Optional[ag.Pixelization] = None,
+        **kwargs
+    ):
+        super().__init__(redshift, hyper_galaxy=hyper_galaxy, **kwargs)
+        self.pixelization = pixelization
+
+
 @pytest.fixture(name="pixelization_galaxy")
 def make_pixelization_galaxy():
-    return ag.PixelizationGalaxy(
+    return PixelizationGalaxy(
         redshift=1.0,
         pixelization=ag.Pixelization(
             mesh=Voronoi(), regularization=AdaptiveBrightness()
@@ -53,7 +66,7 @@ def make_pixelization_galaxy_dict():
             "type": "autoarray.inversion.pixelization.pixelization.Pixelization",
         },
         "redshift": 1.0,
-        "type": "autogalaxy.galaxy.galaxy.PixelizationGalaxy",
+        "type": "test_autogalaxy.galaxy.test_dict.PixelizationGalaxy",
     }
 
 

@@ -254,7 +254,7 @@ def hyper_noise_model_from(
         model components now free parameters.
     """
 
-    from autogalaxy.galaxy.galaxy import HyperGalaxy
+    from autogalaxy.galaxy.hyper import HyperGalaxy
 
     if setup_hyper is None:
         return None
@@ -537,7 +537,7 @@ def hyper_model_from(
         model components now free parameters.
     """
 
-    from autogalaxy.galaxy.galaxy import HyperGalaxy
+    from autogalaxy.galaxy.hyper import HyperGalaxy
 
     model = result.instance.as_model((AbstractMesh, AbstractRegularization))
 
