@@ -13,6 +13,7 @@ grids of (y,x) Cartesian coordinates (which are used for evaluating light profil
 .. autosummary::
    :toctree: _autosummary
    :template: custom-class-template.rst
+   :inherited-members: ndarray
    :recursive:
 
    Mask2D
