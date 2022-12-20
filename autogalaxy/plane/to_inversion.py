@@ -1,4 +1,8 @@
-from typing import Dict, List, Optional, Type, Union
+from __future__ import annotations
+from typing import TYPE_CHECKING, Dict, List, Optional, Type, Union
+
+if TYPE_CHECKING:
+    from autogalaxy.plane.plane import Plane
 
 from autoconf import cached_property
 
@@ -92,7 +96,7 @@ class AbstractToInversion:
 class PlaneToInversion(AbstractToInversion):
     def __init__(
         self,
-        plane: "Plane",
+        plane: Plane,
         dataset: Optional[Union[aa.Imaging, aa.Interferometer]] = None,
         data: Optional[Union[aa.Array2D, aa.Visibilities]] = None,
         noise_map: Optional[Union[aa.Array2D, aa.VisibilitiesNoiseMap]] = None,
