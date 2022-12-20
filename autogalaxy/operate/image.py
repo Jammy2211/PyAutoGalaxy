@@ -1,5 +1,9 @@
+from __future__ import annotations
 import numpy as np
-from typing import Dict, List, Optional
+from typing import TYPE_CHECKING, Dict, List, Optional
+
+if TYPE_CHECKING:
+    from autogalaxy.galaxy.galaxy import Galaxy
 
 import autoarray as aa
 
@@ -372,12 +376,12 @@ class OperateImageGalaxies(OperateImageList):
 
     def galaxy_image_2d_dict_from(
         self, grid: aa.Grid2D, operated_only: Optional[bool] = None
-    ) -> Dict["Galaxy", aa.Array2D]:
+    ) -> Dict[Galaxy, aa.Array2D]:
         raise NotImplementedError
 
     def galaxy_blurred_image_2d_dict_from(
         self, grid, convolver, blurring_grid
-    ) -> Dict["Galaxy", aa.Array2D]:
+    ) -> Dict[Galaxy, aa.Array2D]:
         """
         Evaluate the light object's dictionary mapping galaixes to their corresponding 2D images and convolve each
         image with a PSF.
@@ -434,7 +438,7 @@ class OperateImageGalaxies(OperateImageList):
 
     def galaxy_visibilities_dict_from(
         self, grid, transformer
-    ) -> Dict["Galaxy", aa.Visibilities]:
+    ) -> Dict[Galaxy, aa.Visibilities]:
         """
         Evaluate the light object's dictionary mapping galaixes to their corresponding 2D images and transform each
         image to arrays of visibilities using a `autoarray.operators.transformer.Transformer` object and therefore a
