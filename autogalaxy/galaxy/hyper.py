@@ -90,6 +90,28 @@ class HyperGalaxy:
         hyper_galaxy_image
             A model image of the galaxy (from light profiles or an inversion) from a
             previous analysis search.
+            
+        Examples
+        --------
+        import autogalaxy as ag
+        
+        # For realistic use, input accurate image from a model-fit to all of the data.
+        hyper_model_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
+        
+        # For realistic use, input accurate image from a model-fit to just one galaxy in the data.
+        hyper_galaxu_image= ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
+        
+        hyper_galaxy = ag.HyperGalaxy(contribution_factor=1.0)
+        
+        galaxy = ag.Galaxy(
+            redshift=1.0,
+            hyper_galaxy=hyper_galaxy,
+        )
+
+        contribution_map = galaxy.hyper_galaxy.contribution_map_from(
+            hyper_galaxy_image=hyper_galaxu_image,
+            hyper_model_image=hyper_model_image,
+        )
         """
         try:
             contribution_map = np.divide(
@@ -114,5 +136,35 @@ class HyperGalaxy:
         contribution_map
             The contribution map of the galaxy, which represents the fraction of flux in each pixel that the galaxy
             is attributed to contain.
+            
+        Examples
+        --------
+        import autogalaxy as ag
+
+        # For realistic use, input noise-map of observed data.
+        hyper_model_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
+
+        # For realistic use, input accurate image of a model-fit to all galaxies in the data.
+        hyper_model_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
+        
+        # For realistic use, input accurate image from a model-fit of only this galaxy.
+        hyper_galaxy_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
+        
+        hyper_galaxy = ag.HyperGalaxy(contribution_factor=1.0)
+        
+        galaxy = ag.Galaxy(
+            redshift=1.0,
+            hyper_galaxy=hyper_galaxy,
+        )
+
+        contribution_map = galaxy.hyper_galaxy.contribution_map_from(
+            hyper_galaxy_image=hyper_galaxu_image,
+            hyper_model_image=hyper_model_image,
+        )            
+        
+        hyper_noise_map = galaxy.hyper_galaxy.hyper_noise_map_from(
+            noise_map=noise_map,
+            contribution_map=contribution_map
+        )
         """
         return self.noise_factor * (noise_map * contribution_map) ** self.noise_power
