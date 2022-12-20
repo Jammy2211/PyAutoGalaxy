@@ -1,11 +1,16 @@
-from typing import List
+from __future__ import annotations
+from typing import TYPE_CHECKING, List
+
+if TYPE_CHECKING:
+    from autogalaxy.galaxy.galaxy import Galaxy
+    from autogalaxy.plane.plane import Plane
 
 import autofit as af
 
 from autogalaxy.aggregator.abstract import AbstractAgg
 
 
-def _plane_from(fit: af.Fit, galaxies: List["Galaxy"]) -> "Plane":
+def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> Plane:
     """
     Returns a `Plane` object from a PyAutoFit database `Fit` object and an instance of galaxies from a non-linear
     search model-fit.
@@ -59,7 +64,7 @@ class PlaneAgg(AbstractAgg):
     search model-fit.
     """
 
-    def make_object_for_gen(self, fit, galaxies) -> "Plane":
+    def make_object_for_gen(self, fit, galaxies) -> Plane:
         """
         Creates a `Plane` object from a `ModelInstance` that contains the galaxies of a sample from a non-linear
         search.

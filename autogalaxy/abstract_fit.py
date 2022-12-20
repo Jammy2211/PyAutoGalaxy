@@ -1,5 +1,9 @@
+from __future__ import annotations
 import copy
-from typing import Dict, Optional
+from typing import TYPE_CHECKING, Dict, Optional
+
+if TYPE_CHECKING:
+    from autogalaxy.galaxy.galaxy import Galaxy
 
 import autoarray as aa
 
@@ -110,7 +114,7 @@ class AbstractFitInversion:
 
     def galaxy_linear_obj_data_dict_from(
         self, use_image: bool = False
-    ) -> Dict["Galaxy", aa.Array2D]:
+    ) -> Dict[Galaxy, aa.Array2D]:
         """
         Returns a dictionary mapping every galaxy containing a linear
         object (e.g. a linear light profile / pixelization) in the `model_obj` to the `model_data` of its linear

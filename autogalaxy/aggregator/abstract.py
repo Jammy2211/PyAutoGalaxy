@@ -1,6 +1,10 @@
+from __future__ import annotations
 from abc import ABC, abstractmethod
 from functools import partial
-from typing import List, Generator
+from typing import TYPE_CHECKING, List, Generator
+
+if TYPE_CHECKING:
+    from autogalaxy.galaxy.galaxy import Galaxy
 
 import autofit as af
 
@@ -21,7 +25,7 @@ class AbstractAgg(ABC):
         self.aggregator = aggregator
 
     @abstractmethod
-    def make_object_for_gen(self, fit: af.Fit, galaxies: List["Galaxy"]) -> object:
+    def make_object_for_gen(self, fit: af.Fit, galaxies: List[Galaxy]) -> object:
         """
         For example, in the `PlaneAgg` object, this function is overwritten such that it creates a `Plane` from a
         `ModelInstance` that contains the galaxies of a sample from a non-linear search.

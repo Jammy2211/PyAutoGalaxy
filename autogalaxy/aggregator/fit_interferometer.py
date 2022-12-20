@@ -1,4 +1,9 @@
-from typing import Optional, List
+from __future__ import annotations
+from typing import TYPE_CHECKING, Optional, List
+
+if TYPE_CHECKING:
+    from autogalaxy.galaxy.galaxy import Galaxy
+    from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 
 import autofit as af
 import autoarray as aa
@@ -11,13 +16,13 @@ from autogalaxy.aggregator.plane import _plane_from
 
 def _fit_interferometer_from(
     fit: af.Fit,
-    galaxies: List["Galaxy"],
+    galaxies: List[Galaxy],
     real_space_mask: Optional[aa.Mask2D] = None,
     settings_interferometer: aa.SettingsInterferometer = None,
     settings_pixelization: aa.SettingsPixelization = None,
     settings_inversion: aa.SettingsInversion = None,
     use_preloaded_grid: bool = True,
-) -> "FitInterferometer":
+) -> FitInterferometer:
     """
     Returns a `FitInterferometer` object from a PyAutoFit database `Fit` object and an instance of galaxies from a non-linear
     search model-fit.
@@ -92,7 +97,7 @@ class FitInterferometerAgg(AbstractAgg):
         self.use_preloaded_grid = use_preloaded_grid
         self.real_space_mask = real_space_mask
 
-    def make_object_for_gen(self, fit, galaxies) -> "FitInterferometer":
+    def make_object_for_gen(self, fit, galaxies) -> FitInterferometer:
         """
         Creates a `FitInterferometer` object from a `ModelInstance` that contains the galaxies of a sample from a non-linear
         search.
