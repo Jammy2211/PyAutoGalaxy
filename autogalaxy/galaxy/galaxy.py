@@ -679,18 +679,6 @@ class HyperGalaxy:
         return self.noise_factor * (noise_map * contribution_map) ** self.noise_power
 
 
-class PixelizationGalaxy(Galaxy):
-    def __init__(
-        self,
-        redshift: float,
-        hyper_galaxy: Optional["HyperGalaxy"] = None,
-        pixelization: Optional[Pixelization] = None,
-        **kwargs
-    ):
-        super().__init__(redshift, hyper_galaxy=hyper_galaxy, **kwargs)
-        self.pixelization = pixelization
-
-
 class Redshift(float):
     def __new__(cls, redshift):
         # noinspection PyArgumentList
