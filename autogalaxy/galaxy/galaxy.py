@@ -1,13 +1,13 @@
-from itertools import count
 from typing import Dict, List, Optional, Type, Union
 
 import numpy as np
 
 import autoarray as aa
 import autofit as af
-from autoarray.inversion.pixelization.pixelization import Pixelization
+
 from autoconf.dictable import Dictable
 from autogalaxy import exc
+from autogalaxy.galaxy.hyper import HyperGalaxy
 from autogalaxy.operate.deflections import OperateDeflections
 from autogalaxy.operate.image import OperateImageList
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
@@ -22,7 +22,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     """
 
     def __init__(
-        self, redshift: float, hyper_galaxy: Optional["HyperGalaxy"] = None, **kwargs
+        self, redshift: float, hyper_galaxy: Optional[HyperGalaxy] = None, **kwargs
     ):
         """
         Class representing a galaxy, which is composed of attributes used for fitting hyper_galaxies (e.g. light profiles, \
