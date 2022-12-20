@@ -1,7 +1,7 @@
 .. _database:
 
 Database
---------
+========
 
 The default behaviour of **PyAutoGalaxy** is for model-fitting results to be output to hard-disc in folders, which are
 straight forward to navigate and manually check the modeling results. For small samples of galaxies this is
@@ -103,7 +103,7 @@ inferred value of the ``effective_radius`` for the ``Sersic`` is above 1.0:
 Advanced queries can be constructed using logic, for example we below we combine the two queries above to find all
 results which fitted an ``Sersic`` AND (using the & symbol) inferred a value of sigma less than 3.0.
 
-The OR logical clause is also supported via the symbol |.
+The OR logical clause is also supported via the symbol "|".
 
 .. code-block:: python
 
