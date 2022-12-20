@@ -8,7 +8,6 @@ if TYPE_CHECKING:
     from autogalaxy.analysis.analysis import AnalysisDataset
     from autogalaxy.analysis.result import ResultDataset
 
-
 import autofit as af
 import autoarray as aa
 
