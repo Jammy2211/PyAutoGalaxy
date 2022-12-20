@@ -1,4 +1,8 @@
-from typing import Optional, List
+from __future__ import annotations
+from typing import TYPE_CHECKING, Optional, List
+
+if TYPE_CHECKING:
+    from autogalaxy.imaging.fit_imaging import FitImaging
 
 import autofit as af
 import autoarray as aa
@@ -17,7 +21,7 @@ def _fit_imaging_from(
     settings_inversion: aa.SettingsInversion = None,
     use_preloaded_grid: bool = True,
     use_hyper_scaling: bool = True,
-) -> "FItImaging":
+) -> FItImaging:
     """
     Returns a `FitImaging` object from a PyAutoFit database `Fit` object and an instance of galaxies from a non-linear
     search model-fit.
@@ -100,7 +104,7 @@ class FitImagingAgg(AbstractAgg):
         self.use_preloaded_grid = use_preloaded_grid
         self.use_hyper_scaling = use_hyper_scaling
 
-    def make_object_for_gen(self, fit, galaxies) -> "FItImaging":
+    def make_object_for_gen(self, fit, galaxies) -> FItImaging:
         """
         Creates a `FitImaging` object from a `ModelInstance` that contains the galaxies of a sample from a non-linear
         search.
