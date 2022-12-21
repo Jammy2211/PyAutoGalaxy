@@ -220,7 +220,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
 
         - The images of all ordinary light profiles in that plane summed and convolved with the imaging data's PSF.
         - The images of all linear objects (e.g. linear light profiles / pixelizations), where the images are solved
-        for first via the inversion.
+          for first via the inversion.
 
         For modeling, this dictionary is used to set up the `hyper_images` that adapt certain pixelizations to the
         data being fitted.

@@ -125,7 +125,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         - If the input is `cls=ag.LightProfile`, a list containing all light profiles in the galaxy is returned.
 
         - If `cls=ag.LightProfile` and `cls_filtered=ag.LightProfileLinear`, a list of all light profiles
-        excluding those which are linear light profiles will be returned.
+          excluding those which are linear light profiles will be returned.
 
         Parameters
         ----------

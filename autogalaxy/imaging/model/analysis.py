@@ -282,13 +282,13 @@ class AnalysisImaging(AnalysisDataset):
         - Images of the best-fit `Plane`, including the images of each of its galaxies.
 
         - Images of the best-fit `FitImaging`, including the model-image, residuals and chi-squared of its fit to
-        the imaging data.
+          the imaging data.
 
         - The hyper-images of the model-fit showing how the hyper galaxies are used to represent different galaxies in
-        the dataset.
+          the dataset.
 
         - If hyper features are used to scale the noise or background sky, a `FitImaging` with these features turned
-        off may be output, to indicate how much these features are altering the dataset.
+          off may be output, to indicate how much these features are altering the dataset.
 
         The images output by this function are customized using the file `config/visualize/plots.ini`.
 

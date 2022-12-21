@@ -191,7 +191,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
 
         - The images of all ordinary light profiles in that plane summed.
         - The images of all linear objects (e.g. linear light profiles / pixelizations), where the images are solved
-        for first via the inversion.
+          for first via the inversion.
 
         For modeling, this dictionary is used to set up the `hyper_images` that adapt certain pixelizations to the
         data being fitted.
@@ -212,9 +212,9 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         These visibilities are the sum of:
 
         - The visibilities of all ordinary light profiles in that plane summed and Fourier transformed to visibilities
-        space.
+          space.
         - The visibilities of all linear objects (e.g. linear light profiles / pixelizations), where the visibilities
-        are solved for first via the inversion.
+          are solved for first via the inversion.
 
         For modeling, this dictionary is used to set up the `hyper_visibilities` that adapt certain pixelizations to the
         data being fitted.
