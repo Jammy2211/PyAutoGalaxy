@@ -12,7 +12,9 @@ Groups all of the individual components used to reconstruct a galaxy via a
 pixelization (a ``Mesh`` and ``Regularization``)
 
 The ``Pixelization`` API documentation provides a comprehensive description of how pixelizaiton objects work and
-their associated API. **It is recommended you read this documentation before using pixelizations).
+their associated API.
+
+**It is recommended you read this documentation before using pixelizations**.
 
 .. currentmodule:: autogalaxy
 
