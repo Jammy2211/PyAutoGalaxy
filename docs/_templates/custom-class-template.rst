@@ -14,7 +14,6 @@
 
    .. autosummary::
       :nosignatures:
-      :exclude-members: ndarray
    {% for item in methods %}
       {%- if not item.startswith('_') %}
       ~{{ name }}.{{ item }}
@@ -28,7 +27,6 @@
    .. rubric:: {{ _('Attributes') }}
 
    .. autosummary::
-      :exclude-members: ndarray
    {% for item in attributes %}
       {%- if not item.startswith('_') %}
       ~{{ name }}.{{ item }}
