@@ -293,6 +293,6 @@ def make_include_2d_all():
         critical_curves=False,
         caustics=False,
         multiple_images=False,
-        mapper_source_mesh_grid=True,
-        mapper_data_mesh_grid=True,
+        mapper_source_plane_mesh_grid=True,
+        mapper_image_plane_mesh_grid=True,
     )

@@ -63,7 +63,7 @@ def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
 def test__sparse_image_plane_grid_list(masked_imaging_7x7):
 
     pixelization = ag.m.MockPixelization(
-        mesh=ag.m.MockMesh(data_mesh_grid=np.array([1.0, 1.0]))
+        mesh=ag.m.MockMesh(image_plane_mesh_grid=np.array([1.0, 1.0]))
     )
 
     galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)

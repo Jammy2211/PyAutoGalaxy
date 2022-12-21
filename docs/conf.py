@@ -128,7 +128,7 @@ exclude_patterns = [
     "CONTRIBUTING.md",
     "CITATIONS.rst",
     "README.rst",
-    "README.md"
+    "README.md",
 ]
 
 

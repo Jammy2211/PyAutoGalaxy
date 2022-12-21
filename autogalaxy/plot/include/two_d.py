@@ -16,9 +16,9 @@ class Include2D(aplt.Include2D):
         critical_curves=None,
         caustics=None,
         multiple_images=None,
-        mapper_source_mesh_grid: Optional[bool] = None,
-        mapper_source_grid_slim: Optional[bool] = None,
-        mapper_data_mesh_grid=None,
+        mapper_source_plane_mesh_grid: Optional[bool] = None,
+        mapper_source_plane_data_grid: Optional[bool] = None,
+        mapper_image_plane_mesh_grid=None,
     ):
 
         super().__init__(
@@ -26,9 +26,9 @@ class Include2D(aplt.Include2D):
             mask=mask,
             border=border,
             grid=grid,
-            mapper_source_mesh_grid=mapper_source_mesh_grid,
-            mapper_source_grid_slim=mapper_source_grid_slim,
-            mapper_data_mesh_grid=mapper_data_mesh_grid,
+            mapper_source_plane_mesh_grid=mapper_source_plane_mesh_grid,
+            mapper_source_plane_data_grid=mapper_source_plane_data_grid,
+            mapper_image_plane_mesh_grid=mapper_image_plane_mesh_grid,
         )
 
         self._positions = positions

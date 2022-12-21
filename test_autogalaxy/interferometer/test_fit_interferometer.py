@@ -304,7 +304,7 @@ def test___galaxy_model_image_dict(interferometer_7):
     )
 
     mapper_grids = pixelization.mesh.mapper_grids_from(
-        source_grid_slim=interferometer_7.grid, source_mesh_grid=None
+        source_plane_data_grid=interferometer_7.grid, source_plane_mesh_grid=None
     )
 
     mapper = ag.Mapper(
@@ -434,7 +434,7 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     )
 
     mapper_grids = pixelization.mesh.mapper_grids_from(
-        source_grid_slim=interferometer_7.grid, source_mesh_grid=None
+        source_plane_data_grid=interferometer_7.grid, source_plane_mesh_grid=None
     )
 
     mapper = ag.Mapper(
