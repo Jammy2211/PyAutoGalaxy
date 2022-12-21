@@ -5,7 +5,7 @@ Non Parametric Models
 
 Non parametric models use a pixelizations reconstruct a galaxy's light on a pixel-grid.
 
-Unlike `LightProfile`'s, they are able to reconstruct the light of non-symmetric and irregular galaxies.
+Unlike ``LightProfile``'s, they are able to reconstruct the light of non-symmetric and irregular galaxies.
 
 We will demonstrate this using a complex galaxy with multiple star forming clumps:
 

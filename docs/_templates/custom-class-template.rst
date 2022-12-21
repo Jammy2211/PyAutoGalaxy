@@ -5,7 +5,7 @@
 .. autoclass:: {{ objname }}
    :members:
    :show-inheritance:
-   :inherited-members: ndarray
+   :exclude-members: ndarray
    :special-members: __call__, __add__, __mul__
 
    {% block methods %}
