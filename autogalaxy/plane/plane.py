@@ -449,7 +449,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         - Blur this image with a PSF, if included.
         - Take the value of the brightest pixel.
         - Use an input `exposure_time` and `background_sky` (e.g. from the `SimulatorImaging` object) to determine
-        what value of `intensity` gives the desired signal to noise ratio for the image.
+          what value of `intensity` gives the desired signal to noise ratio for the image.
 
         Parameters
         ----------

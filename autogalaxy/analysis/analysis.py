@@ -123,8 +123,8 @@ class AnalysisDataset(Analysis):
         This function:
 
         - Checks if the model has a pixelization which uses a KMeans clustering algorithm (e.g. DelaunayBrightnessImage,
-        VoronoiBrightnessImage) and makes sure that the upper limit on the prior on its `pixels` is below the number
-        pixels in the mask. If it is not, the `pixels` prior upper limit is reduced.
+          VoronoiBrightnessImage) and makes sure that the upper limit on the prior on its `pixels` is below the number
+          pixels in the mask. If it is not, the `pixels` prior upper limit is reduced.
 
         Parameters
         ----------
