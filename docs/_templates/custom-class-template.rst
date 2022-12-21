@@ -14,7 +14,6 @@
 
    .. autosummary::
       :nosignatures:
-      :exclude-members: __init__
    {% for item in methods %}
       {%- if not item.startswith('_') %}
       ~{{ name }}.{{ item }}
