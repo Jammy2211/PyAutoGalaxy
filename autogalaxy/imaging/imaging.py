@@ -83,7 +83,7 @@ class SimulatorImaging(aa.SimulatorImaging):
         """
         Simulate imaging data for this data, as follows:
 
-        1)  Setup the image-plane grid of the Imaging arrays, which defines the coordinates used for the ray-tracing.
+        1) Setup the image-plane grid of the Imaging arrays, which defines the coordinates used for the ray-tracing.
 
         2) Use this grid and the lens and source galaxies to setup a plane, which generates the image of \
            the simulated imaging data.
@@ -95,7 +95,7 @@ class SimulatorImaging(aa.SimulatorImaging):
 
         5) Output the dataset to .fits format if a dataset_path and data_name are specified. Otherwise, return the simulated \
            imaging data instance.
-           """
+        """
 
         plane = Plane(
             redshift=float(np.mean([galaxy.redshift for galaxy in galaxies])),

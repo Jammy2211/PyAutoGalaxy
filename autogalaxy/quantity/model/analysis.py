@@ -64,10 +64,10 @@ class AnalysisQuantity(Analysis):
         For this analysis class, this function performs the following steps:
 
         1) Use the input quantity of the analysis to determine the function that is passed to `FitQuantity`, which
-        generates the quantity from the model which is compared to data.
+           generates the quantity from the model which is compared to data.
 
         2) Use this function to create a `FitQuantity` object, which performs steps such as creating the `model_data`
-        of the quantity and computing residuals, a chi-squared statistic and the log likelihood.
+           of the quantity and computing residuals, a chi-squared statistic and the log likelihood.
 
         Certain models will fail to fit the dataset and raise an exception. For example if extreme values of the model
         create numerical infinities. In such circumstances the model is discarded and its likelihood value is passed to

@@ -411,7 +411,7 @@ class OperateDeflections(Dictable):
         1) Compute the tangential eigen values for every coordinate on the input grid via the Jacobian.
         2) Find contours of all values in the tangential eigen values that are zero using a marching squares algorithm.
         3) Compute the lensing objects deflection angle's at the (y,x) coordinates of this tangential critical curve
-        contour and ray-trace it to the source-plane, therefore forming the tangential caustic.
+           contour and ray-trace it to the source-plane, therefore forming the tangential caustic.
 
         Due to the use of a marching squares algorithm that requires the zero values of the tangential eigen values to
         be computed, caustics can only be calculated using the Jacobian and a uniform 2D grid.
@@ -448,7 +448,7 @@ class OperateDeflections(Dictable):
         1) Compute the radial eigen values for every coordinate on the input grid via the Jacobian.
         2) Find contours of all values in the radial eigen values that are zero using a marching squares algorithm.
         3) Compute the lensing objects deflection angle's at the (y,x) coordinates of this radial critical curve
-        contour and ray-trace it to the source-plane, therefore forming the radial caustic.
+           contour and ray-trace it to the source-plane, therefore forming the radial caustic.
 
         Due to the use of a marching squares algorithm that requires the zero values of the radial eigen values to
         be computed, this caustics can only be calculated using the Jacobian and a uniform 2D grid.

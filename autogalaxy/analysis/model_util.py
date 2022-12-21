@@ -233,7 +233,7 @@ def hyper_noise_model_from(
     2) The `Regularization` of any `Galaxy` in the model.
     3) Hyper data components like a `HyperImageSky` or `HyperBackgroundNoise` if input into the function.
     4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
-    data which are fit poorly.
+       data which are fit poorly.
 
     The hyper model is typically used in pipelines to refine and improve an `LEq` after model-fits that fit the
     `Galaxy` light and mass components.
@@ -301,7 +301,7 @@ def hyper_inversion_model_from(
     2) The `Regularization` of any `Galaxy` in the model.
     3) Hyper data components like a `HyperImageSky` or `HyperBackgroundNoise` if input into the function.
     4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
-    data which are fit poorly.
+       data which are fit poorly.
 
     The hyper model is typically used in pipelines to refine and improve an `LEq` after model-fits that fit the
     `Galaxy` light and mass components.
@@ -416,7 +416,7 @@ def hyper_fit(
     2) The `Regularization` of any `Galaxy` in the model.
     3) Hyper data components like a `HyperImageSky` or `HyperBackgroundNoise` if input into the function.
     4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
-    data which are fit poorly.
+       data which are fit poorly.
 
     The hyper model is typically used in pipelines to refine and improve an `LEq` after model-fits that fit the
     `Galaxy` light and mass components.
@@ -519,9 +519,11 @@ def hyper_model_from(
     2) The `Regularization` of any `Galaxy` in the model.
     3) Hyper data components like a `HyperImageSky` or `HyperBackgroundNoise` if input into the function.
     4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
-    data which are fit poorly.
+       data which are fit poorly.
+
     The hyper model is typically used in pipelines to refine and improve an `LEq` after model-fits that fit the
     `Galaxy` light and mass components.
+
     Parameters
     ----------
     setup_hyper

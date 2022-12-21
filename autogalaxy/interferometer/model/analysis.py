@@ -202,15 +202,15 @@ class AnalysisInterferometer(AnalysisDataset):
         For this analysis class, this function performs the following steps:
 
         1) If the analysis has a hyper dataset, associated the model galaxy images of this dataset to the galaxies in
-        the model instance.
+           the model instance.
 
         2) Extract attributes which model aspects of the data reductions, like scaling the background background noise.
 
         3) Extracts all galaxies from the model instance and set up a `Plane`.
 
         4) Use the `Plane` and other attributes to create a `FitInterferometer` object, which performs steps such as
-        creating model images of every galaxy in the plane, transforming them to the uv-plane via a Fourier transform
-        and computing residuals, a chi-squared statistic and the log likelihood.
+           creating model images of every galaxy in the plane, transforming them to the uv-plane via a Fourier transform
+           and computing residuals, a chi-squared statistic and the log likelihood.
 
         Certain models will fail to fit the dataset and raise an exception. For example if an `Inversion` is used, the
         linear algebra calculation may be invalid and raise an Exception. In such circumstances the model is discarded

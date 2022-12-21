@@ -34,19 +34,19 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         1) Compute the sum of all images of galaxy light profiles in the `Plane`.
 
         2) Fourier transform this image with the transformer object and `uv_wavelengths` to create
-        the `profile_visibilities`.
+           the `profile_visibilities`.
 
         3) Subtract these visibilities from the `data` to create the `profile_subtracted_visibilities`.
 
         4) If the `Plane` has any linear algebra objects (e.g. linear light profiles, a pixelization / regulariation)
-        fit the `profile_subtracted_visibilities` with these objects via an inversion.
+           fit the `profile_subtracted_visibilities` with these objects via an inversion.
 
         5) Compute the `model_data` as the sum of the `profile_visibilities` and `reconstructed_data` of the inversion
-        (if an inversion is not performed the `model_data` is only the `profile_visibilities`.
+           (if an inversion is not performed the `model_data` is only the `profile_visibilities`.
 
         6) Subtract the `model_data` from the data and compute the residuals, chi-squared and likelihood via the
-        noise-map (if an inversion is performed the `log_evidence`, including addition terms describing the linear
-        algebra solution, is computed).
+           noise-map (if an inversion is performed the `log_evidence`, including addition terms describing the linear
+           algebra solution, is computed).
 
         When performing a model-fit` via ` AnalysisInterferometer` object the `figure_of_merit` of
         this `FitInterferometer` object is called and returned in the `log_likelihood_function`.

@@ -30,8 +30,8 @@ class HyperGalaxy:
         Using ``HyperGalaxy``'s to perform noise-scaling is described fully in the following ``HowToGalaxy``
         and ``HowToLens`` chapters:
 
-        https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/chapter_optional.html
-        https://pyautolens.readthedocs.io/en/latest/howtolens/chapter_5_hyper_mode.html
+        - https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/chapter_optional.html
+        - https://pyautolens.readthedocs.io/en/latest/howtolens/chapter_5_hyper_mode.html
 
         Parameters
         ----------
@@ -78,8 +78,8 @@ class HyperGalaxy:
         The contribution map is described in full in the following ``HowToGalaxy``
         and ``HowToLens`` chapters:
 
-        https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/chapter_optional.html
-        https://pyautolens.readthedocs.io/en/latest/howtolens/chapter_5_hyper_mode.html
+        - https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/chapter_optional.html
+        - https://pyautolens.readthedocs.io/en/latest/howtolens/chapter_5_hyper_mode.html
 
         Parameters
         ----------
@@ -93,25 +93,28 @@ class HyperGalaxy:
 
         Examples
         --------
-        import autogalaxy as ag
 
-        # For realistic use, input accurate image from a model-fit to all of the data.
-        hyper_model_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
+        .. code-block:: python
 
-        # For realistic use, input accurate image from a model-fit to just one galaxy in the data.
-        hyper_galaxu_image= ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
+            import autogalaxy as ag
 
-        hyper_galaxy = ag.HyperGalaxy(contribution_factor=1.0)
+            # For realistic use, input accurate image from a model-fit to all of the data.
+            hyper_model_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
 
-        galaxy = ag.Galaxy(
-            redshift=1.0,
-            hyper_galaxy=hyper_galaxy,
-        )
+            # For realistic use, input accurate image from a model-fit to just one galaxy in the data.
+            hyper_galaxu_image= ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
 
-        contribution_map = galaxy.hyper_galaxy.contribution_map_from(
-            hyper_galaxy_image=hyper_galaxu_image,
-            hyper_model_image=hyper_model_image,
-        )
+            hyper_galaxy = ag.HyperGalaxy(contribution_factor=1.0)
+
+            galaxy = ag.Galaxy(
+                redshift=1.0,
+                hyper_galaxy=hyper_galaxy,
+            )
+
+            contribution_map = galaxy.hyper_galaxy.contribution_map_from(
+                hyper_galaxy_image=hyper_galaxu_image,
+                hyper_model_image=hyper_model_image,
+            )
         """
         try:
             contribution_map = np.divide(
@@ -139,32 +142,35 @@ class HyperGalaxy:
 
         Examples
         --------
-        import autogalaxy as ag
 
-        # For realistic use, input noise-map of observed data.
-        hyper_model_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
+        .. code-block:: python
 
-        # For realistic use, input accurate image of a model-fit to all galaxies in the data.
-        hyper_model_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
+            import autogalaxy as ag
 
-        # For realistic use, input accurate image from a model-fit of only this galaxy.
-        hyper_galaxy_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
+            # For realistic use, input noise-map of observed data.
+            hyper_model_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
 
-        hyper_galaxy = ag.HyperGalaxy(contribution_factor=1.0)
+            # For realistic use, input accurate image of a model-fit to all galaxies in the data.
+            hyper_model_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
 
-        galaxy = ag.Galaxy(
-            redshift=1.0,
-            hyper_galaxy=hyper_galaxy,
-        )
+            # For realistic use, input accurate image from a model-fit of only this galaxy.
+            hyper_galaxy_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
 
-        contribution_map = galaxy.hyper_galaxy.contribution_map_from(
-            hyper_galaxy_image=hyper_galaxu_image,
-            hyper_model_image=hyper_model_image,
-        )
+            hyper_galaxy = ag.HyperGalaxy(contribution_factor=1.0)
 
-        hyper_noise_map = galaxy.hyper_galaxy.hyper_noise_map_from(
-            noise_map=noise_map,
-            contribution_map=contribution_map
-        )
+            galaxy = ag.Galaxy(
+                redshift=1.0,
+                hyper_galaxy=hyper_galaxy,
+            )
+
+            contribution_map = galaxy.hyper_galaxy.contribution_map_from(
+                hyper_galaxy_image=hyper_galaxu_image,
+                hyper_model_image=hyper_model_image,
+            )
+
+            hyper_noise_map = galaxy.hyper_galaxy.hyper_noise_map_from(
+                noise_map=noise_map,
+                contribution_map=contribution_map
+            )
         """
         return self.noise_factor * (noise_map * contribution_map) ** self.noise_power
