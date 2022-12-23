@@ -10,6 +10,33 @@ from autogalaxy.util.shear_field import ShearYX2D
 from autogalaxy.util.shear_field import ShearYX2DIrregular
 
 
+def grid_scaled_2d_for_marching_squares_from(
+        grid_pixels_2d : aa.Grid2D,
+        shape_native : Tuple[int, int],
+        mask: aa.Mask2D,
+) -> aa.Grid2D:
+    from autoarray.structures.grids.uniform_2d import Grid2D
+
+    pixel_scales = mask.pixel_scales
+    sub_size = mask.sub_size
+    origin = mask.origin
+
+    grid_scaled_1d = aa.util.geometry.grid_scaled_2d_slim_from(
+        grid_pixels_2d_slim=grid_pixels_2d,
+        shape_native=shape_native,
+        pixel_scales=(
+            pixel_scales[0] / sub_size,
+            pixel_scales[1] / sub_size,
+        ),
+        origin=origin,
+    )
+
+    grid_scaled_1d[:, 0] -= pixel_scales[0] / (2.0 * sub_size)
+    grid_scaled_1d[:, 1] += pixel_scales[1] / (2.0 * sub_size)
+
+    return Grid2D(grid=grid_scaled_1d, mask=mask)
+
+
 def precompute_jacobian(func):
     @wraps(func)
     def wrapper(lensing_obj, grid, jacobian=None):
@@ -315,9 +342,10 @@ class OperateDeflections(Dictable):
         if len(tangential_critical_curve_indices) == 0:
             return []
 
-        tangential_critical_curve = grid.mask.grid_scaled_for_marching_squares_from(
-            grid_pixels_1d=tangential_critical_curve_indices[0],
+        tangential_critical_curve = grid_scaled_2d_for_marching_squares_from(
+            grid_pixels_2d=tangential_critical_curve_indices[0],
             shape_native=tangential_eigen_values.sub_shape_native,
+            mask=grid.mask,
         )
 
         try:
@@ -356,9 +384,10 @@ class OperateDeflections(Dictable):
         if len(radial_critical_curve_indices) == 0:
             return []
 
-        radial_critical_curve = grid.mask.grid_scaled_for_marching_squares_from(
-            grid_pixels_1d=radial_critical_curve_indices[0],
+        radial_critical_curve = grid_scaled_2d_for_marching_squares_from(
+            grid_pixels_2d=radial_critical_curve_indices[0],
             shape_native=radial_eigen_values.sub_shape_native,
+            mask=grid.mask,
         )
 
         try:

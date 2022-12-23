@@ -5,6 +5,8 @@ from skimage import measure
 
 import autogalaxy as ag
 
+from autogalaxy.operate.deflections import grid_scaled_2d_for_marching_squares_from
+
 
 def critical_curve_via_magnification_from(mass_profile, grid):
 
@@ -23,8 +25,10 @@ def critical_curve_via_magnification_from(mass_profile, grid):
         contour_x, contour_y = contours[jj].T
         pixel_coord = np.stack((contour_x, contour_y), axis=-1)
 
-        critical_curve = grid.mask.grid_scaled_for_marching_squares_from(
-            grid_pixels_1d=pixel_coord, shape_native=magnification.sub_shape_native
+        critical_curve = grid_scaled_2d_for_marching_squares_from(
+            grid_pixels_2d=pixel_coord,
+            shape_native=magnification.sub_shape_native,
+            mask=grid.mask
         )
 
         critical_curves.append(critical_curve)
