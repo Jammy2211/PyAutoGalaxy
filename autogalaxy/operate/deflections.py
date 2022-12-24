@@ -11,9 +11,9 @@ from autogalaxy.util.shear_field import ShearYX2DIrregular
 
 
 def grid_scaled_2d_for_marching_squares_from(
-        grid_pixels_2d : aa.Grid2D,
-        shape_native : Tuple[int, int],
-        mask: aa.Mask2D,
+    grid_pixels_2d: aa.Grid2D,
+    shape_native: Tuple[int, int],
+    mask: aa.Mask2D,
 ) -> aa.Grid2D:
     from autoarray.structures.grids.uniform_2d import Grid2D
 

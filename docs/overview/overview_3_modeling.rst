@@ -291,7 +291,7 @@ plotted.
 
 .. code-block:: python
 
-    plane_plotter = aplt.PlanePlotter(plane=result.max_log_likelihood_plane, grid=mask.masked_grid)
+    plane_plotter = aplt.PlanePlotter(plane=result.max_log_likelihood_plane, grid=mask.derived_grids.masked_grid)
     plane_plotter.subplot_plane()
 
     fit_imaging_plotter = aplt.FitImagingPlotter(fit=result.max_log_likelihood_fit)

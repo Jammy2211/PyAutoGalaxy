@@ -698,7 +698,9 @@ def test__plane_image_2d_from(sub_grid_2d_7x7):
     plane = ag.Plane(galaxies=[galaxy], redshift=None)
 
     plane_image_from_func = ag.plane.plane.plane_util.plane_image_of_galaxies_from(
-        shape=(7, 7), grid=sub_grid_2d_7x7.mask.unmasked_grid_sub_1, galaxies=[galaxy]
+        shape=(7, 7),
+        grid=sub_grid_2d_7x7.mask.derived_grids.unmasked_sub_1,
+        galaxies=[galaxy],
     )
 
     plane_image_from_plane = plane.plane_image_2d_from(grid=sub_grid_2d_7x7)

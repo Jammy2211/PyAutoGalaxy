@@ -173,7 +173,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     def plane_image_2d_from(self, grid: aa.type.Grid2DLike) -> "PlaneImage":
         return plane_util.plane_image_of_galaxies_from(
             shape=grid.mask.shape,
-            grid=grid.mask.unmasked_grid_sub_1,
+            grid=grid.mask.derived_grids.unmasked_sub_1,
             galaxies=self.galaxies,
         )
 

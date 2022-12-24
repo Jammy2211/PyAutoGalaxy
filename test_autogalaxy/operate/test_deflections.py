@@ -28,7 +28,7 @@ def critical_curve_via_magnification_from(mass_profile, grid):
         critical_curve = grid_scaled_2d_for_marching_squares_from(
             grid_pixels_2d=pixel_coord,
             shape_native=magnification.sub_shape_native,
-            mask=grid.mask
+            mask=grid.mask,
         )
 
         critical_curves.append(critical_curve)
