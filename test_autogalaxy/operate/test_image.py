@@ -104,7 +104,7 @@ def test__unmasked_blurred_image_2d_from():
         pixel_scales=1.0,
     )
 
-    mask = ag.Mask2D.manual(
+    mask = ag.Mask2D(
         mask=[[True, True, True], [True, False, True], [True, True, True]],
         pixel_scales=1.0,
         sub_size=1,
@@ -253,7 +253,7 @@ def test__unmasked_blurred_image_2d_list_from():
         pixel_scales=1.0,
     )
 
-    mask = ag.Mask2D.manual(
+    mask = ag.Mask2D(
         mask=[[True, True, True], [True, False, True], [True, True, True]],
         pixel_scales=1.0,
         sub_size=1,

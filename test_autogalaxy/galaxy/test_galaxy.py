@@ -694,7 +694,7 @@ def test__cannot_pass_light_or_mass_list():
 
 def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp):
 
-    mask = ag.Mask2D.manual(
+    mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True],
             [True, False, False, False, True],
@@ -742,7 +742,7 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
 
 def test__decorator__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
 
-    mask = ag.Mask2D.manual(
+    mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True],
             [True, False, False, False, True],

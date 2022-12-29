@@ -574,7 +574,7 @@ def test__decorators__potential_1d_from__grid_2d_in__returns_1d_image_via_projec
 
 def test__decorators__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
 
-    mask = ag.Mask2D.manual(
+    mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True],
             [True, False, False, False, True],

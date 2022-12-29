@@ -699,7 +699,7 @@ def test__plane_image_2d_from(sub_grid_2d_7x7):
 
     plane_image_from_func = ag.plane.plane.plane_util.plane_image_of_galaxies_from(
         shape=(7, 7),
-        grid=sub_grid_2d_7x7.mask.derived_grids.unmasked_sub_1,
+        grid=sub_grid_2d_7x7.mask.derive_grid.all_false_sub_1,
         galaxies=[galaxy],
     )
 
@@ -711,7 +711,7 @@ def test__plane_image_2d_from(sub_grid_2d_7x7):
     # -1.6, -0.8, 0.0, 0.8, 1.6. The origin -1.6, -1.6 of the model_galaxy means its brighest pixel should be
     # index 0 of the 1D grid and (0,0) of the 2d plane data.
 
-    mask = ag.Mask2D.unmasked(shape_native=(5, 5), pixel_scales=1.0, sub_size=1)
+    mask = ag.Mask2D.all_false(shape_native=(5, 5), pixel_scales=1.0, sub_size=1)
 
     grid = ag.Grid2D.from_mask(mask=mask)
 
@@ -932,7 +932,7 @@ def test__galaxy_redshifts_gives_list_of_redshifts():
 
 def test__grid_iterate_in__iterates_grid_correctly(gal_x1_lp):
 
-    mask = ag.Mask2D.manual(
+    mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True],
             [True, False, False, False, True],
@@ -983,7 +983,7 @@ def test__grid_iterate_in__iterates_grid_correctly(gal_x1_lp):
 
 def test__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
 
-    mask = ag.Mask2D.manual(
+    mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True],
             [True, False, False, False, True],

@@ -173,7 +173,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     def plane_image_2d_from(self, grid: aa.type.Grid2DLike) -> "PlaneImage":
         return plane_util.plane_image_of_galaxies_from(
             shape=grid.mask.shape,
-            grid=grid.mask.derived_grids.unmasked_sub_1,
+            grid=grid.mask.derive_grid.all_false_sub_1,
             galaxies=self.galaxies,
         )
 
@@ -287,8 +287,8 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             else:
 
                 hyper_noise_map = aa.Array2D.manual_mask(
-                    array=np.zeros(noise_map.mask.derived_masks.sub_1.pixels_in_mask),
-                    mask=noise_map.mask.derived_masks.sub_1,
+                    array=np.zeros(noise_map.mask.derive_mask.sub_1.pixels_in_mask),
+                    mask=noise_map.mask.derive_mask.sub_1,
                 )
 
                 hyper_noise_map_list.append(hyper_noise_map)
