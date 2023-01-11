@@ -91,8 +91,8 @@ def test__deflections_yx_2d_from():
     mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
     deflections = mass_sheet.deflections_yx_2d_from(
-        grid=ag.Grid2D.manual_native(
-            [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
+        grid=ag.Grid2D.without_mask(
+            grid=[[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
             sub_size=2,
             pixel_scales=(1.0, 1.0),
         )
@@ -142,8 +142,8 @@ def test__convergence_2d_from():
     mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
     convergence = mass_sheet.convergence_2d_from(
-        grid=ag.Grid2D.manual_native(
-            [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
+        grid=ag.Grid2D.without_mask(
+            grid=[[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
             sub_size=2,
             pixel_scales=(1.0, 1.0),
         )
@@ -173,8 +173,8 @@ def test__potential_2d_from():
     mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
     potential = mass_sheet.potential_2d_from(
-        grid=ag.Grid2D.manual_native(
-            [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
+        grid=ag.Grid2D.without_mask(
+            grid=[[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
             sub_size=2,
             pixel_scales=(1.0, 1.0),
         )

@@ -39,7 +39,7 @@ class MassProfile(EllProfile, OperateDeflections):
         deflections_y_2d = np.gradient(potential.native, grid.native[:, 0, 0], axis=0)
         deflections_x_2d = np.gradient(potential.native, grid.native[0, :, 1], axis=1)
 
-        return aa.Grid2D.manual_mask(
+        return aa.Grid2D(
             grid=np.stack((deflections_y_2d, deflections_x_2d), axis=-1), mask=grid.mask
         )
 

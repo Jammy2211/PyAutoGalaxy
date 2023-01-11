@@ -89,7 +89,7 @@ class MassPlotter(Plotter):
         if deflections_y:
 
             deflections = self.mass_obj.deflections_yx_2d_from(grid=self.grid)
-            deflections_y = aa.Array2D.manual_mask(
+            deflections_y = aa.Array2D(
                 array=deflections.slim[:, 0], mask=self.grid.mask
             )
 
@@ -105,7 +105,7 @@ class MassPlotter(Plotter):
         if deflections_x:
 
             deflections = self.mass_obj.deflections_yx_2d_from(grid=self.grid)
-            deflections_x = aa.Array2D.manual_mask(
+            deflections_x = aa.Array2D(
                 array=deflections.slim[:, 1], mask=self.grid.mask
             )
 

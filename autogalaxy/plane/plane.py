@@ -286,7 +286,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
             else:
 
-                hyper_noise_map = aa.Array2D.manual_mask(
+                hyper_noise_map = aa.Array2D(
                     array=np.zeros(noise_map.mask.derive_mask.sub_1.pixels_in_mask),
                     mask=noise_map.mask.derive_mask.sub_1,
                 )

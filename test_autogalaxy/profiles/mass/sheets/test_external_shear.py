@@ -18,8 +18,8 @@ def test__deflections_yx_2d_from():
     assert deflections[0, 1] == pytest.approx(-0.011895, 1e-3)
 
     deflections = shear.deflections_yx_2d_from(
-        grid=ag.Grid2D.manual_native(
-            [
+        grid=ag.Grid2D.without_mask(
+            grid=[
                 [[0.1625, 0.1625], [0.1625, 0.1625]],
                 [[0.1625, 0.1625], [0.1625, 0.1625]],
             ],
@@ -56,8 +56,8 @@ def test__convergence_returns_zeros():
     assert (convergence == np.array([0.0, 0.0, 0.0])).all()
 
     convergence = shear.convergence_2d_from(
-        grid=ag.Grid2D.manual_native(
-            [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
+        grid=ag.Grid2D.without_mask(
+            grid=[[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
             sub_size=2,
             pixel_scales=(1.0, 1.0),
         )
@@ -85,8 +85,8 @@ def test__potential_returns_zeros():
     assert (potential == np.array([0.0, 0.0, 0.0])).all()
 
     potential = shear.potential_2d_from(
-        grid=ag.Grid2D.manual_native(
-            [[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
+        grid=ag.Grid2D.without_mask(
+            grid=[[[1.0, 0.0], [1.0, 0.0]], [[1.0, 0.0], [1.0, 0.0]]],
             sub_size=2,
             pixel_scales=(1.0, 1.0),
         )

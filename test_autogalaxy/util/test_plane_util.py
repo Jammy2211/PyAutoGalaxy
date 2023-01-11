@@ -26,7 +26,7 @@ class TestPlaneImageFromGrid:
             mask=np.full(shape=(3, 3), fill_value=False), pixel_scales=1.0, sub_size=1
         )
 
-        grid = ag.Grid2D.manual_mask(
+        grid = ag.Grid2D(
             grid=np.array(
                 [
                     [-1.0, -1.0],
@@ -71,7 +71,7 @@ class TestPlaneImageFromGrid:
             mask=np.full(shape=(3, 3), fill_value=False), pixel_scales=1.0, sub_size=1
         )
 
-        grid = ag.Grid2D.manual_mask(
+        grid = ag.Grid2D(
             grid=np.array(
                 [
                     [-1.0, -1.0],
@@ -105,7 +105,7 @@ class TestPlaneImageFromGrid:
             mask=np.full(shape=(2, 3), fill_value=False), pixel_scales=1.0, sub_size=1
         )
 
-        grid = ag.Grid2D.manual_mask(
+        grid = ag.Grid2D(
             grid=np.array(
                 [
                     [-0.75, -1.0],
@@ -136,7 +136,7 @@ class TestPlaneImageFromGrid:
             mask=np.full(shape=(3, 2), fill_value=False), pixel_scales=1.0, sub_size=1
         )
 
-        grid = ag.Grid2D.manual_mask(
+        grid = ag.Grid2D(
             grid=np.array(
                 [
                     [-1.0, -0.75],
@@ -167,7 +167,7 @@ class TestPlaneImageFromGrid:
             mask=np.full(shape=(3, 3), fill_value=False), pixel_scales=1.0, sub_size=1
         )
 
-        grid = ag.Grid2D.manual_mask(
+        grid = ag.Grid2D(
             grid=np.array(
                 [
                     [-1.0, -1.0],

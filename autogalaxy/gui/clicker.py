@@ -51,7 +51,7 @@ class Clicker:
                         x_pixels_max = x
 
             grid_arcsec = self.image.mask.grid_scaled_2d_from(
-                grid_pixels_2d=aa.Grid2D.manual_native(
+                grid_pixels_2d=aa.Grid2D(
                     grid=[[[y_pixels_max + 0.5, x_pixels_max + 0.5]]],
                     pixel_scales=self.pixel_scales,
                 )

@@ -34,7 +34,7 @@ def grid_scaled_2d_for_marching_squares_from(
     grid_scaled_1d[:, 0] -= pixel_scales[0] / (2.0 * sub_size)
     grid_scaled_1d[:, 1] += pixel_scales[1] / (2.0 * sub_size)
 
-    return Grid2D(grid=grid_scaled_1d, mask=mask)
+    return grid_scaled_1d
 
 
 def precompute_jacobian(func):
@@ -659,25 +659,25 @@ class OperateDeflections(Dictable):
 
         # TODO : Can probably make this work on irregular grid? Is there any point?
 
-        a11 = aa.Array2D.manual_mask(
+        a11 = aa.Array2D(
             array=1.0
             - np.gradient(deflections.native[:, :, 1], grid.native[0, :, 1], axis=1),
             mask=grid.mask,
         )
 
-        a12 = aa.Array2D.manual_mask(
+        a12 = aa.Array2D(
             array=-1.0
             * np.gradient(deflections.native[:, :, 1], grid.native[:, 0, 0], axis=0),
             mask=grid.mask,
         )
 
-        a21 = aa.Array2D.manual_mask(
+        a21 = aa.Array2D(
             array=-1.0
             * np.gradient(deflections.native[:, :, 0], grid.native[0, :, 1], axis=1),
             mask=grid.mask,
         )
 
-        a22 = aa.Array2D.manual_mask(
+        a22 = aa.Array2D(
             array=1
             - np.gradient(deflections.native[:, :, 0], grid.native[:, 0, 0], axis=0),
             mask=grid.mask,
