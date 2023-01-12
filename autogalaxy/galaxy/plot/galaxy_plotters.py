@@ -779,7 +779,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
             visuals_1d = visuals_1d_via_light_obj_list + visuals_1d_with_shaded_region
 
-            median_image_1d = aa.Array1D.manual_slim(
+            median_image_1d = aa.Array1D.without_mask(
                 array=median_image_1d, pixel_scales=self.grid.pixel_scale
             )
 
@@ -829,7 +829,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
             visuals_1d = visuals_1d_via_lensing_obj_list + visuals_1d_with_shaded_region
 
-            median_convergence_1d = aa.Array1D.manual_slim(
+            median_convergence_1d = aa.Array1D.without_mask(
                 array=median_convergence_1d, pixel_scales=self.grid.pixel_scale
             )
 
@@ -879,7 +879,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
             visuals_1d = visuals_1d_via_lensing_obj_list + visuals_1d_with_shaded_region
 
-            median_potential_1d = aa.Array1D.manual_slim(
+            median_potential_1d = aa.Array1D.without_mask(
                 array=median_potential_1d, pixel_scales=self.grid.pixel_scale
             )
 
