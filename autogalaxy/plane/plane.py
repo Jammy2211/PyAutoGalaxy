@@ -173,7 +173,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     def plane_image_2d_from(self, grid: aa.type.Grid2DLike) -> "PlaneImage":
         return plane_util.plane_image_of_galaxies_from(
             shape=grid.mask.shape,
-            grid=grid.mask.unmasked_grid_sub_1,
+            grid=grid.mask.derive_grid.all_false_sub_1,
             galaxies=self.galaxies,
         )
 
@@ -286,9 +286,9 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
             else:
 
-                hyper_noise_map = aa.Array2D.manual_mask(
-                    array=np.zeros(noise_map.mask.derived_masks.sub_1.pixels_in_mask),
-                    mask=noise_map.mask.derived_masks.sub_1,
+                hyper_noise_map = aa.Array2D(
+                    values=np.zeros(noise_map.mask.derive_mask.sub_1.pixels_in_mask),
+                    mask=noise_map.mask.derive_mask.sub_1,
                 )
 
                 hyper_noise_map_list.append(hyper_noise_map)
@@ -357,7 +357,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         would return:
 
-        ValuesIrregular(values=[axis_ratio_0, axis_ratio_1])
+        ArrayIrregular(values=[axis_ratio_0, axis_ratio_1])
 
         If a galaxy has three mass profiles and we want their centres, the following:
 
@@ -387,9 +387,9 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         if attributes == []:
             return None
         elif isinstance(attributes[0], float):
-            return aa.ValuesIrregular(values=attributes)
+            return aa.ArrayIrregular(values=attributes)
         elif isinstance(attributes[0], tuple):
-            return aa.Grid2DIrregular(grid=attributes)
+            return aa.Grid2DIrregular(values=attributes)
 
     def extract_attributes_of_galaxies(self, cls, attr_name, filter_nones=False):
         """
@@ -402,7 +402,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         would return:
 
-        [ValuesIrregular(values=[axis_ratio_0]), ValuesIrregular(values=[axis_ratio_1])]
+        [ArrayIrregular(values=[axis_ratio_0]), ArrayIrregular(values=[axis_ratio_1])]
 
         If a plane has two galaxies, the first with a mass profile and the second with two mass profiles ,the following:
 
@@ -410,8 +410,8 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         would return:
         [
-            Grid2DIrregular(grid=[(centre_y_0, centre_x_0)]),
-            Grid2DIrregular(grid=[(centre_y_0, centre_x_0), (centre_y_1, centre_x_1)])
+            Grid2DIrregular(values=[(centre_y_0, centre_x_0)]),
+            Grid2DIrregular(values=[(centre_y_0, centre_x_0), (centre_y_1, centre_x_1)])
         ]
 
         If a Profile does not have a certain entry, it is replaced with a None. Nones can be removed by

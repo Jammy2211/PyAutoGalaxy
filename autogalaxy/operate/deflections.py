@@ -11,9 +11,9 @@ from autogalaxy.util.shear_field import ShearYX2DIrregular
 
 
 def grid_scaled_2d_for_marching_squares_from(
-        grid_pixels_2d : aa.Grid2D,
-        shape_native : Tuple[int, int],
-        mask: aa.Mask2D,
+    grid_pixels_2d: aa.Grid2D,
+    shape_native: Tuple[int, int],
+    mask: aa.Mask2D,
 ) -> aa.Grid2D:
     from autoarray.structures.grids.uniform_2d import Grid2D
 
@@ -34,7 +34,7 @@ def grid_scaled_2d_for_marching_squares_from(
     grid_scaled_1d[:, 0] -= pixel_scales[0] / (2.0 * sub_size)
     grid_scaled_1d[:, 1] += pixel_scales[1] / (2.0 * sub_size)
 
-    return Grid2D(grid=grid_scaled_1d, mask=mask)
+    return grid_scaled_1d
 
 
 def precompute_jacobian(func):
@@ -122,7 +122,7 @@ class OperateDeflections(Dictable):
 
         shear_yx = self.shear_yx_2d_via_jacobian_from(grid=grid, jacobian=jacobian)
 
-        return aa.Array2D(array=1 - convergence - shear_yx.magnitudes, mask=grid.mask)
+        return aa.Array2D(values=1 - convergence - shear_yx.magnitudes, mask=grid.mask)
 
     @precompute_jacobian
     def radial_eigen_value_from(self, grid, jacobian=None) -> aa.Array2D:
@@ -144,7 +144,7 @@ class OperateDeflections(Dictable):
 
         shear = self.shear_yx_2d_via_jacobian_from(grid=grid, jacobian=jacobian)
 
-        return aa.Array2D(array=1 - convergence + shear.magnitudes, mask=grid.mask)
+        return aa.Array2D(values=1 - convergence + shear.magnitudes, mask=grid.mask)
 
     def magnification_2d_from(self, grid) -> aa.Array2D:
         """
@@ -160,7 +160,7 @@ class OperateDeflections(Dictable):
 
         det_jacobian = jacobian[0][0] * jacobian[1][1] - jacobian[0][1] * jacobian[1][0]
 
-        return aa.Array2D(array=1 / det_jacobian, mask=grid.mask)
+        return aa.Array2D(values=1 / det_jacobian, mask=grid.mask)
 
     def hessian_from(self, grid, buffer: float = 0.01, deflections_func=None) -> Tuple:
         """
@@ -220,7 +220,7 @@ class OperateDeflections(Dictable):
 
     def convergence_2d_via_hessian_from(
         self, grid, buffer: float = 0.01
-    ) -> aa.ValuesIrregular:
+    ) -> aa.ArrayIrregular:
         """
         Returns the convergence of the lensing object, which is computed from the 2D deflection angle map via the
         Hessian using the expression (see equation 56 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
@@ -279,11 +279,11 @@ class OperateDeflections(Dictable):
         shear_yx_2d[:, 0] = hessian_xy
         shear_yx_2d[:, 1] = 0.5 * (hessian_xx - hessian_yy)
 
-        return ShearYX2DIrregular(vectors=shear_yx_2d, grid=grid)
+        return ShearYX2DIrregular(values=shear_yx_2d, grid=grid)
 
     def magnification_2d_via_hessian_from(
         self, grid, buffer: float = 0.01, deflections_func=None
-    ) -> aa.ValuesIrregular:
+    ) -> aa.ArrayIrregular:
         """
         Returns the 2D magnification map of lensing object, which is computed from the 2D deflection angle map
         via the Hessian using the expressions (see equation 60 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
@@ -659,26 +659,26 @@ class OperateDeflections(Dictable):
 
         # TODO : Can probably make this work on irregular grid? Is there any point?
 
-        a11 = aa.Array2D.manual_mask(
-            array=1.0
+        a11 = aa.Array2D(
+            values=1.0
             - np.gradient(deflections.native[:, :, 1], grid.native[0, :, 1], axis=1),
             mask=grid.mask,
         )
 
-        a12 = aa.Array2D.manual_mask(
-            array=-1.0
+        a12 = aa.Array2D(
+            values=-1.0
             * np.gradient(deflections.native[:, :, 1], grid.native[:, 0, 0], axis=0),
             mask=grid.mask,
         )
 
-        a21 = aa.Array2D.manual_mask(
-            array=-1.0
+        a21 = aa.Array2D(
+            values=-1.0
             * np.gradient(deflections.native[:, :, 0], grid.native[0, :, 1], axis=1),
             mask=grid.mask,
         )
 
-        a22 = aa.Array2D.manual_mask(
-            array=1
+        a22 = aa.Array2D(
+            values=1
             - np.gradient(deflections.native[:, :, 0], grid.native[:, 0, 0], axis=0),
             mask=grid.mask,
         )
@@ -707,7 +707,7 @@ class OperateDeflections(Dictable):
         """
         convergence = 1 - 0.5 * (jacobian[0][0] + jacobian[1][1])
 
-        return aa.Array2D(array=convergence, mask=grid.mask)
+        return aa.Array2D(values=convergence, mask=grid.mask)
 
     @precompute_jacobian
     def shear_yx_2d_via_jacobian_from(
@@ -738,5 +738,5 @@ class OperateDeflections(Dictable):
         shear_yx_2d[:, 1] = 0.5 * (jacobian[1][1] - jacobian[0][0])
 
         if isinstance(grid, aa.Grid2DIrregular):
-            return ShearYX2DIrregular(vectors=shear_yx_2d, grid=grid)
-        return ShearYX2D(vectors=shear_yx_2d, grid=grid, mask=grid.mask)
+            return ShearYX2DIrregular(values=shear_yx_2d, grid=grid)
+        return ShearYX2D(values=shear_yx_2d, grid=grid, mask=grid.mask)

@@ -779,8 +779,8 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
             visuals_1d = visuals_1d_via_light_obj_list + visuals_1d_with_shaded_region
 
-            median_image_1d = aa.Array1D.manual_slim(
-                array=median_image_1d, pixel_scales=self.grid.pixel_scale
+            median_image_1d = aa.Array1D.no_mask(
+                values=median_image_1d, pixel_scales=self.grid.pixel_scale
             )
 
             self.mat_plot_1d.plot_yx(
@@ -829,8 +829,8 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
             visuals_1d = visuals_1d_via_lensing_obj_list + visuals_1d_with_shaded_region
 
-            median_convergence_1d = aa.Array1D.manual_slim(
-                array=median_convergence_1d, pixel_scales=self.grid.pixel_scale
+            median_convergence_1d = aa.Array1D.no_mask(
+                values=median_convergence_1d, pixel_scales=self.grid.pixel_scale
             )
 
             self.mat_plot_1d.plot_yx(
@@ -879,8 +879,8 @@ class GalaxyPDFPlotter(GalaxyPlotter):
 
             visuals_1d = visuals_1d_via_lensing_obj_list + visuals_1d_with_shaded_region
 
-            median_potential_1d = aa.Array1D.manual_slim(
-                array=median_potential_1d, pixel_scales=self.grid.pixel_scale
+            median_potential_1d = aa.Array1D.no_mask(
+                values=median_potential_1d, pixel_scales=self.grid.pixel_scale
             )
 
             self.mat_plot_1d.plot_yx(

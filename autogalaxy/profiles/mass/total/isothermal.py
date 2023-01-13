@@ -137,7 +137,7 @@ class Isothermal(PowerLaw):
             grid=np.vstack((shear_y, shear_x)).T
         )
 
-        return aa.VectorYX2DIrregular(vectors=shear_field, grid=grid)
+        return aa.VectorYX2DIrregular(values=shear_field, grid=grid)
 
 
 class IsothermalSph(Isothermal):

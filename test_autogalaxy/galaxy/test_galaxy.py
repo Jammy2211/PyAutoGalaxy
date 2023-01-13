@@ -35,7 +35,7 @@ def test__cls_list_from(lp_0, lp_linear_0):
 
 def test__image_1d_from(sub_grid_1d_7, lp_0, lp_1, gal_x2_lp):
 
-    grid = ag.Grid2D.manual_native([[[1.05, -0.55]]], pixel_scales=1.0)
+    grid = ag.Grid2D.no_mask(values=[[[1.05, -0.55]]], pixel_scales=1.0)
 
     lp_image = lp_0.image_1d_from(grid=grid)
     lp_image += lp_1.image_1d_from(grid=grid)
@@ -116,7 +116,7 @@ def test__luminosity_within_circle(lp_0, lp_1, gal_x2_lp):
 
 def test__convergence_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
 
-    grid = ag.Grid2D.manual_native([[[1.05, -0.55], [2.05, -0.55]]], pixel_scales=1.0)
+    grid = ag.Grid2D.no_mask(values=[[[1.05, -0.55], [2.05, -0.55]]], pixel_scales=1.0)
 
     mp_convergence = mp_0.convergence_1d_from(grid=grid)
     mp_convergence += mp_1.convergence_1d_from(grid=grid)
@@ -127,7 +127,7 @@ def test__convergence_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
 
     # Test explicitly for a profile with an offset centre and ellipticity, given the 1D to 2D projections are nasty.
 
-    grid = ag.Grid2D.manual_native([[(1.05, -0.55), (2.05, -0.55)]], pixel_scales=1.0)
+    grid = ag.Grid2D.no_mask(values=[[(1.05, -0.55), (2.05, -0.55)]], pixel_scales=1.0)
 
     elliptical_mp = ag.mp.Isothermal(
         centre=(0.5, 1.0), ell_comps=(0.2, 0.3), einstein_radius=1.0
@@ -169,7 +169,7 @@ def test__convergence_2d_from(sub_grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp)
 
 def test__potential_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
 
-    grid = ag.Grid2D.manual_native([[[1.05, -0.55]]], pixel_scales=1.0)
+    grid = ag.Grid2D.no_mask(values=[[[1.05, -0.55]]], pixel_scales=1.0)
 
     mp_potential = mp_0.potential_1d_from(grid=grid)
     mp_potential += mp_1.potential_1d_from(grid=grid)
@@ -180,7 +180,7 @@ def test__potential_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
 
     # Test explicitly for a profile with an offset centre and ellipticity, given the 1D to 2D projections are nasty.
 
-    grid = ag.Grid2D.manual_native([[(1.05, -0.55), (2.05, -0.55)]], pixel_scales=1.0)
+    grid = ag.Grid2D.no_mask(values=[[(1.05, -0.55), (2.05, -0.55)]], pixel_scales=1.0)
 
     elliptical_mp = ag.mp.Isothermal(
         centre=(0.5, 1.0), ell_comps=(0.2, 0.3), einstein_radius=1.0
@@ -269,8 +269,6 @@ def test__deflections_yx_2d_from(sub_grid_2d_7x7, gal_x2_mp):
 def test__no_mass_profile__quantities_returned_as_0s_of_shape_grid(
     sub_grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp
 ):
-
-    grid = ag.Grid2D.manual_native(grid=[[[1.05, -0.55]]], pixel_scales=1.0)
 
     galaxy = ag.Galaxy(redshift=0.5)
 
@@ -694,7 +692,7 @@ def test__cannot_pass_light_or_mass_list():
 
 def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp):
 
-    mask = ag.Mask2D.manual(
+    mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True],
             [True, False, False, False, True],
@@ -742,7 +740,7 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
 
 def test__decorator__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
 
-    mask = ag.Mask2D.manual(
+    mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True],
             [True, False, False, False, True],

@@ -39,8 +39,9 @@ class MassProfile(EllProfile, OperateDeflections):
         deflections_y_2d = np.gradient(potential.native, grid.native[:, 0, 0], axis=0)
         deflections_x_2d = np.gradient(potential.native, grid.native[0, :, 1], axis=1)
 
-        return aa.Grid2D.manual_mask(
-            grid=np.stack((deflections_y_2d, deflections_x_2d), axis=-1), mask=grid.mask
+        return aa.Grid2D(
+            values=np.stack((deflections_y_2d, deflections_x_2d), axis=-1),
+            mask=grid.mask,
         )
 
     def convergence_2d_from(self, grid):
@@ -261,7 +262,7 @@ class MassProfile(EllProfile, OperateDeflections):
 
         would return:
 
-        ValuesIrregular(values=[axis_ratio_0, axis_ratio_1])
+        ArrayIrregular(values=[axis_ratio_0, axis_ratio_1])
 
         If a galaxy has three mass profiles and we want the `MassProfile` centres, the following:
 
@@ -280,6 +281,6 @@ class MassProfile(EllProfile, OperateDeflections):
                 attribute = getattr(self, attr_name)
 
                 if isinstance(attribute, float):
-                    return aa.ValuesIrregular(values=[attribute])
+                    return aa.ArrayIrregular(values=[attribute])
                 if isinstance(attribute, tuple):
-                    return aa.Grid2DIrregular(grid=[attribute])
+                    return aa.Grid2DIrregular(values=[attribute])

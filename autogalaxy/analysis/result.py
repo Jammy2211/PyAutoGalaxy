@@ -158,9 +158,9 @@ class ResultDataset(Result):
 
         The hyper model image is the sum of the hyper galaxy image of every individual galaxy.
         """
-        hyper_model_image = aa.Array2D.manual_mask(
-            array=np.zeros(self.mask.derived_masks.sub_1.pixels_in_mask),
-            mask=self.mask.derived_masks.sub_1,
+        hyper_model_image = aa.Array2D(
+            values=np.zeros(self.mask.derive_mask.sub_1.pixels_in_mask),
+            mask=self.mask.derive_mask.sub_1,
         )
 
         for path, galaxy in self.path_galaxy_tuples:

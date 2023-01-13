@@ -143,7 +143,7 @@ class SphProfile(GeometryProfile):
             The (y, x) coordinates in the original reference frame of the grid.
         """
         transformed = np.subtract(grid, self.centre)
-        return Grid2DTransformedNumpy(grid=transformed)
+        return Grid2DTransformedNumpy(values=transformed)
 
     @aa.grid_dec.grid_2d_to_structure
     def transformed_from_reference_frame_grid_from(self, grid):
@@ -343,12 +343,12 @@ class EllProfile(SphProfile):
         """
         if self.__class__.__name__.endswith("Sph"):
             return super().transformed_to_reference_frame_grid_from(
-                grid=Grid2DTransformedNumpy(grid=grid)
+                grid=Grid2DTransformedNumpy(values=grid)
             )
         transformed = aa.util.geometry.transform_grid_2d_to_reference_frame(
             grid_2d=grid, centre=self.centre, angle=self.angle
         )
-        return Grid2DTransformedNumpy(grid=transformed)
+        return Grid2DTransformedNumpy(values=transformed)
 
     @aa.grid_dec.grid_2d_to_structure
     def transformed_from_reference_frame_grid_from(
@@ -367,7 +367,7 @@ class EllProfile(SphProfile):
         """
         if self.__class__.__name__.startswith("Sph"):
             return super().transformed_from_reference_frame_grid_from(
-                grid=Grid2DTransformedNumpy(grid=grid)
+                grid=Grid2DTransformedNumpy(values=grid)
             )
 
         return aa.util.geometry.transform_grid_2d_from_reference_frame(

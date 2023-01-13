@@ -406,6 +406,7 @@ class OperateImageGalaxies(OperateImageList):
         galaxy_image_2d_not_operated_dict = self.galaxy_image_2d_dict_from(
             grid=grid, operated_only=False
         )
+
         galaxy_blurring_image_2d_not_operated_dict = self.galaxy_image_2d_dict_from(
             grid=blurring_grid, operated_only=False
         )

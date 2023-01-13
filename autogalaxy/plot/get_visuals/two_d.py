@@ -69,7 +69,7 @@ class GetVisuals2D(aplt.GetVisuals2D):
         if isinstance(light_obj, LightProfile):
 
             light_profile_centres = self.get(
-                "light_profile_centres", aa.Grid2DIrregular(grid=[light_obj.centre])
+                "light_profile_centres", aa.Grid2DIrregular(values=[light_obj.centre])
             )
 
         else:
@@ -121,7 +121,7 @@ class GetVisuals2D(aplt.GetVisuals2D):
         if isinstance(mass_obj, MassProfile):
 
             mass_profile_centres = self.get(
-                "mass_profile_centres", aa.Grid2DIrregular(grid=[mass_obj.centre])
+                "mass_profile_centres", aa.Grid2DIrregular(values=[mass_obj.centre])
             )
 
         else:
@@ -222,7 +222,7 @@ class GetVisuals2D(aplt.GetVisuals2D):
         vis.Visuals2D
             A collection of attributes that can be plotted by a `Plotter` object.
         """
-        origin = self.get("origin", value=aa.Grid2DIrregular(grid=[grid.origin]))
+        origin = self.get("origin", value=aa.Grid2DIrregular(values=[grid.origin]))
 
         light_profile_centres = self.get(
             "light_profile_centres",

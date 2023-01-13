@@ -473,8 +473,8 @@ def test__deflections_yx_2d_from(sub_grid_2d_7x7):
 
 def test__contribution_map_list():
 
-    hyper_model_image = ag.Array2D.manual_native([[2.0, 4.0, 10.0]], pixel_scales=1.0)
-    hyper_galaxy_image = ag.Array2D.manual_native([[1.0, 5.0, 8.0]], pixel_scales=1.0)
+    hyper_model_image = ag.Array2D.no_mask([[2.0, 4.0, 10.0]], pixel_scales=1.0)
+    hyper_galaxy_image = ag.Array2D.no_mask([[1.0, 5.0, 8.0]], pixel_scales=1.0)
 
     hyper_galaxy_0 = ag.HyperGalaxy(contribution_factor=5.0)
     hyper_galaxy_1 = ag.HyperGalaxy(contribution_factor=10.0)
@@ -523,8 +523,8 @@ def test__contribution_map_list():
 
     assert (sum(plane.contribution_map_list) == plane.contribution_map).all()
 
-    hyper_model_image = ag.Array2D.manual_native([[2.0, 4.0, 10.0]], pixel_scales=1.0)
-    hyper_galaxy_image = ag.Array2D.manual_native([[1.0, 5.0, 8.0]], pixel_scales=1.0)
+    hyper_model_image = ag.Array2D.no_mask([[2.0, 4.0, 10.0]], pixel_scales=1.0)
+    hyper_galaxy_image = ag.Array2D.no_mask([[1.0, 5.0, 8.0]], pixel_scales=1.0)
 
     hyper_galaxy = ag.HyperGalaxy(contribution_factor=5.0)
 
@@ -562,7 +562,7 @@ def test__contribution_map_list():
 
 
 def test__hyper_noise_map_list_from():
-    noise_map = ag.Array2D.manual_native(array=[[1.0, 2.0, 3.0]], pixel_scales=1.0)
+    noise_map = ag.Array2D.no_mask(values=[[1.0, 2.0, 3.0]], pixel_scales=1.0)
 
     hyper_galaxy_0 = ag.HyperGalaxy(
         contribution_factor=0.0, noise_factor=1.0, noise_power=1.0
@@ -571,15 +571,13 @@ def test__hyper_noise_map_list_from():
         contribution_factor=3.0, noise_factor=1.0, noise_power=2.0
     )
 
-    hyper_model_image = ag.Array2D.manual_native(
-        array=[[0.5, 1.0, 1.5]], pixel_scales=1.0
-    )
+    hyper_model_image = ag.Array2D.no_mask(values=[[0.5, 1.0, 1.5]], pixel_scales=1.0)
 
-    hyper_galaxy_image_0 = ag.Array2D.manual_native(
-        array=[[0.0, 1.0, 1.5]], pixel_scales=1.0
+    hyper_galaxy_image_0 = ag.Array2D.no_mask(
+        values=[[0.0, 1.0, 1.5]], pixel_scales=1.0
     )
-    hyper_galaxy_image_1 = ag.Array2D.manual_native(
-        array=[[1.0, 1.0, 1.5]], pixel_scales=1.0
+    hyper_galaxy_image_1 = ag.Array2D.no_mask(
+        values=[[1.0, 1.0, 1.5]], pixel_scales=1.0
     )
 
     galaxy_0 = ag.Galaxy(
@@ -605,14 +603,10 @@ def test__hyper_noise_map_list_from():
         np.array([0.73468, (2.0 * 0.75) ** 2.0, 3.0**2.0]), 1.0e-4
     )
 
-    noise_map = ag.Array2D.manual_native(array=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
+    noise_map = ag.Array2D.no_mask(values=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
 
-    hyper_model_image = ag.Array2D.manual_native(
-        array=[[2.0, 4.0, 10.0]], pixel_scales=1.0
-    )
-    hyper_galaxy_image = ag.Array2D.manual_native(
-        array=[[1.0, 5.0, 8.0]], pixel_scales=1.0
-    )
+    hyper_model_image = ag.Array2D.no_mask(values=[[2.0, 4.0, 10.0]], pixel_scales=1.0)
+    hyper_galaxy_image = ag.Array2D.no_mask(values=[[1.0, 5.0, 8.0]], pixel_scales=1.0)
 
     hyper_galaxy_0 = ag.HyperGalaxy(contribution_factor=5.0)
     hyper_galaxy_1 = ag.HyperGalaxy(contribution_factor=10.0)
@@ -682,7 +676,7 @@ def test__hyper_noise_map_list_from():
 
     # No Galaxies
 
-    noise_map = ag.Array2D.manual_native(array=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
+    noise_map = ag.Array2D.no_mask(values=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
 
     plane = ag.Plane(redshift=0.5, galaxies=[ag.Galaxy(redshift=0.5)])
     hyper_noise_map = plane.hyper_noise_map_from(noise_map=noise_map)
@@ -698,7 +692,9 @@ def test__plane_image_2d_from(sub_grid_2d_7x7):
     plane = ag.Plane(galaxies=[galaxy], redshift=None)
 
     plane_image_from_func = ag.plane.plane.plane_util.plane_image_of_galaxies_from(
-        shape=(7, 7), grid=sub_grid_2d_7x7.mask.unmasked_grid_sub_1, galaxies=[galaxy]
+        shape=(7, 7),
+        grid=sub_grid_2d_7x7.mask.derive_grid.all_false_sub_1,
+        galaxies=[galaxy],
     )
 
     plane_image_from_plane = plane.plane_image_2d_from(grid=sub_grid_2d_7x7)
@@ -709,7 +705,7 @@ def test__plane_image_2d_from(sub_grid_2d_7x7):
     # -1.6, -0.8, 0.0, 0.8, 1.6. The origin -1.6, -1.6 of the model_galaxy means its brighest pixel should be
     # index 0 of the 1D grid and (0,0) of the 2d plane data.
 
-    mask = ag.Mask2D.unmasked(shape_native=(5, 5), pixel_scales=1.0, sub_size=1)
+    mask = ag.Mask2D.all_false(shape_native=(5, 5), pixel_scales=1.0, sub_size=1)
 
     grid = ag.Grid2D.from_mask(mask=mask)
 
@@ -930,7 +926,7 @@ def test__galaxy_redshifts_gives_list_of_redshifts():
 
 def test__grid_iterate_in__iterates_grid_correctly(gal_x1_lp):
 
-    mask = ag.Mask2D.manual(
+    mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True],
             [True, False, False, False, True],
@@ -981,7 +977,7 @@ def test__grid_iterate_in__iterates_grid_correctly(gal_x1_lp):
 
 def test__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
 
-    mask = ag.Mask2D.manual(
+    mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True],
             [True, False, False, False, True],
