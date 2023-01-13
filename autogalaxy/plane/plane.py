@@ -357,7 +357,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         would return:
 
-        ValuesIrregular(values=[axis_ratio_0, axis_ratio_1])
+        ArrayIrregular(values=[axis_ratio_0, axis_ratio_1])
 
         If a galaxy has three mass profiles and we want their centres, the following:
 
@@ -387,7 +387,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         if attributes == []:
             return None
         elif isinstance(attributes[0], float):
-            return aa.ValuesIrregular(values=attributes)
+            return aa.ArrayIrregular(values=attributes)
         elif isinstance(attributes[0], tuple):
             return aa.Grid2DIrregular(values=attributes)
 
@@ -402,7 +402,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         would return:
 
-        [ValuesIrregular(values=[axis_ratio_0]), ValuesIrregular(values=[axis_ratio_1])]
+        [ArrayIrregular(values=[axis_ratio_0]), ArrayIrregular(values=[axis_ratio_1])]
 
         If a plane has two galaxies, the first with a mass profile and the second with two mass profiles ,the following:
 

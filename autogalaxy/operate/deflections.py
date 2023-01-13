@@ -220,7 +220,7 @@ class OperateDeflections(Dictable):
 
     def convergence_2d_via_hessian_from(
         self, grid, buffer: float = 0.01
-    ) -> aa.ValuesIrregular:
+    ) -> aa.ArrayIrregular:
         """
         Returns the convergence of the lensing object, which is computed from the 2D deflection angle map via the
         Hessian using the expression (see equation 56 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
@@ -283,7 +283,7 @@ class OperateDeflections(Dictable):
 
     def magnification_2d_via_hessian_from(
         self, grid, buffer: float = 0.01, deflections_func=None
-    ) -> aa.ValuesIrregular:
+    ) -> aa.ArrayIrregular:
         """
         Returns the 2D magnification map of lensing object, which is computed from the 2D deflection angle map
         via the Hessian using the expressions (see equation 60 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):

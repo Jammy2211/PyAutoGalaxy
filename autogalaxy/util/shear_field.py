@@ -11,38 +11,38 @@ logger = logging.getLogger(__name__)
 
 class AbstractShearField:
     @property
-    def ellipticities(self) -> aa.ValuesIrregular:
+    def ellipticities(self) -> aa.ArrayIrregular:
         """
         If we treat this vector field as a set of weak lensing shear measurements, the galaxy ellipticity each vector
         corresponds too.
         """
-        return aa.ValuesIrregular(
+        return aa.ArrayIrregular(
             values=np.sqrt(self.slim[:, 0] ** 2 + self.slim[:, 1] ** 2.0)
         )
 
     @property
-    def semi_major_axes(self) -> aa.ValuesIrregular:
+    def semi_major_axes(self) -> aa.ArrayIrregular:
         """
         If we treat this vector field as a set of weak lensing shear measurements, the semi-major axis of each
         galaxy ellipticity that each vector corresponds too.
         """
-        return aa.ValuesIrregular(values=3 * (1 + self.ellipticities))
+        return aa.ArrayIrregular(values=3 * (1 + self.ellipticities))
 
     @property
-    def semi_minor_axes(self) -> aa.ValuesIrregular:
+    def semi_minor_axes(self) -> aa.ArrayIrregular:
         """
         If we treat this vector field as a set of weak lensing shear measurements, the semi-minor axis of each
         galaxy ellipticity that each vector corresponds too.
         """
-        return aa.ValuesIrregular(values=3 * (1 - self.ellipticities))
+        return aa.ArrayIrregular(values=3 * (1 - self.ellipticities))
 
     @property
-    def phis(self) -> aa.ValuesIrregular:
+    def phis(self) -> aa.ArrayIrregular:
         """
         If we treat this vector field as a set of weak lensing shear measurements, the position angle defined
         counter clockwise from the positive x-axis of each galaxy ellipticity that each vector corresponds too.
         """
-        return aa.ValuesIrregular(
+        return aa.ArrayIrregular(
             values=np.arctan2(self.slim[:, 0], self.slim[:, 1]) * 180.0 / np.pi / 2.0
         )
 

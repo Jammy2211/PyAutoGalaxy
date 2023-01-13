@@ -70,5 +70,5 @@ the intensity versus radius in 1D).
 
    Mask1D
    Array1D
-   ValuesIrregular
+   ArrayIrregular
    Grid1D

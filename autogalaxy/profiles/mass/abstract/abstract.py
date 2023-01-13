@@ -262,7 +262,7 @@ class MassProfile(EllProfile, OperateDeflections):
 
         would return:
 
-        ValuesIrregular(values=[axis_ratio_0, axis_ratio_1])
+        ArrayIrregular(values=[axis_ratio_0, axis_ratio_1])
 
         If a galaxy has three mass profiles and we want the `MassProfile` centres, the following:
 
@@ -281,6 +281,6 @@ class MassProfile(EllProfile, OperateDeflections):
                 attribute = getattr(self, attr_name)
 
                 if isinstance(attribute, float):
-                    return aa.ValuesIrregular(values=[attribute])
+                    return aa.ArrayIrregular(values=[attribute])
                 if isinstance(attribute, tuple):
                     return aa.Grid2DIrregular(values=[attribute])
