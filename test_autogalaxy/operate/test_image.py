@@ -99,8 +99,8 @@ def test__x1_plane__padded_image__compare_to_galaxy_images_using_padded_grid_sta
 
 def test__unmasked_blurred_image_2d_from():
 
-    psf = ag.Kernel2D.without_mask(
-        array=(np.array([[0.0, 3.0, 0.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0]])),
+    psf = ag.Kernel2D.no_mask(
+        values=(np.array([[0.0, 3.0, 0.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0]])),
         pixel_scales=1.0,
     )
 
@@ -248,8 +248,8 @@ def test__blurred_image_2d_list_from(
 
 
 def test__unmasked_blurred_image_2d_list_from():
-    psf = ag.Kernel2D.without_mask(
-        array=(np.array([[0.0, 3.0, 0.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0]])),
+    psf = ag.Kernel2D.no_mask(
+        values=(np.array([[0.0, 3.0, 0.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0]])),
         pixel_scales=1.0,
     )
 

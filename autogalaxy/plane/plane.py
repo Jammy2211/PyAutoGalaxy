@@ -287,7 +287,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             else:
 
                 hyper_noise_map = aa.Array2D(
-                    array=np.zeros(noise_map.mask.derive_mask.sub_1.pixels_in_mask),
+                    values=np.zeros(noise_map.mask.derive_mask.sub_1.pixels_in_mask),
                     mask=noise_map.mask.derive_mask.sub_1,
                 )
 
@@ -389,7 +389,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         elif isinstance(attributes[0], float):
             return aa.ValuesIrregular(values=attributes)
         elif isinstance(attributes[0], tuple):
-            return aa.Grid2DIrregular(grid=attributes)
+            return aa.Grid2DIrregular(values=attributes)
 
     def extract_attributes_of_galaxies(self, cls, attr_name, filter_nones=False):
         """
@@ -410,8 +410,8 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         would return:
         [
-            Grid2DIrregular(grid=[(centre_y_0, centre_x_0)]),
-            Grid2DIrregular(grid=[(centre_y_0, centre_x_0), (centre_y_1, centre_x_1)])
+            Grid2DIrregular(values=[(centre_y_0, centre_x_0)]),
+            Grid2DIrregular(values=[(centre_y_0, centre_x_0), (centre_y_1, centre_x_1)])
         ]
 
         If a Profile does not have a certain entry, it is replaced with a None. Nones can be removed by

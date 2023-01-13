@@ -7,8 +7,8 @@ import autogalaxy as ag
 
 def test__elliptical_properties_and_patches():
 
-    vectors = ag.ShearYX2D._manual_slim(
-        vectors=[(0.0, 1.0), (1.0, 0.0), (1.0, 1.0), (0.0, 0.0)],
+    vectors = ag.ShearYX2D.no_mask(
+        values=[(0.0, 1.0), (1.0, 0.0), (1.0, 1.0), (0.0, 0.0)],
         shape_native=(2, 2),
         pixel_scales=1.0,
     )
@@ -36,7 +36,7 @@ def test__elliptical_properties_and_patches():
     assert vectors.elliptical_patches[1].angle == pytest.approx(45.0, 1.0e-4)
 
     vectors = ag.ShearYX2DIrregular(
-        vectors=[(0.0, 1.0), (1.0, 0.0), (1.0, 1.0)],
+        values=[(0.0, 1.0), (1.0, 0.0), (1.0, 1.0)],
         grid=[[1.0, -1.0], [1.0, 1.0], [0.0, 0.0]],
     )
 

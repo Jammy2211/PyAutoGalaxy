@@ -505,7 +505,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         elif isinstance(attributes[0], float):
             return aa.ValuesIrregular(values=attributes)
         elif isinstance(attributes[0], tuple):
-            return aa.Grid2DIrregular(grid=attributes)
+            return aa.Grid2DIrregular(values=attributes)
 
     def luminosity_within_circle_from(self, radius: float):
         """

@@ -570,9 +570,15 @@ def test__subtracted_images_of_galaxies(masked_imaging_7x7_no_blur):
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7_no_blur, plane=plane)
 
-    assert fit.subtracted_images_of_galaxies_list[0].slim[0] == pytest.approx(0.520383, 1.0e-4)
-    assert fit.subtracted_images_of_galaxies_list[1].slim[0] == pytest.approx(0.360511, 1.0e-4)
-    assert fit.subtracted_images_of_galaxies_list[2].slim[0] == pytest.approx(0.840127, 1.0e-4)
+    assert fit.subtracted_images_of_galaxies_list[0].slim[0] == pytest.approx(
+        0.520383, 1.0e-4
+    )
+    assert fit.subtracted_images_of_galaxies_list[1].slim[0] == pytest.approx(
+        0.360511, 1.0e-4
+    )
+    assert fit.subtracted_images_of_galaxies_list[2].slim[0] == pytest.approx(
+        0.840127, 1.0e-4
+    )
 
 
 def test__light_profile_linear__intensity_dict(masked_imaging_7x7):

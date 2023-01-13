@@ -473,8 +473,8 @@ def test__deflections_yx_2d_from(sub_grid_2d_7x7):
 
 def test__contribution_map_list():
 
-    hyper_model_image = ag.Array2D.without_mask([[2.0, 4.0, 10.0]], pixel_scales=1.0)
-    hyper_galaxy_image = ag.Array2D.without_mask([[1.0, 5.0, 8.0]], pixel_scales=1.0)
+    hyper_model_image = ag.Array2D.no_mask([[2.0, 4.0, 10.0]], pixel_scales=1.0)
+    hyper_galaxy_image = ag.Array2D.no_mask([[1.0, 5.0, 8.0]], pixel_scales=1.0)
 
     hyper_galaxy_0 = ag.HyperGalaxy(contribution_factor=5.0)
     hyper_galaxy_1 = ag.HyperGalaxy(contribution_factor=10.0)
@@ -523,8 +523,8 @@ def test__contribution_map_list():
 
     assert (sum(plane.contribution_map_list) == plane.contribution_map).all()
 
-    hyper_model_image = ag.Array2D.without_mask([[2.0, 4.0, 10.0]], pixel_scales=1.0)
-    hyper_galaxy_image = ag.Array2D.without_mask([[1.0, 5.0, 8.0]], pixel_scales=1.0)
+    hyper_model_image = ag.Array2D.no_mask([[2.0, 4.0, 10.0]], pixel_scales=1.0)
+    hyper_galaxy_image = ag.Array2D.no_mask([[1.0, 5.0, 8.0]], pixel_scales=1.0)
 
     hyper_galaxy = ag.HyperGalaxy(contribution_factor=5.0)
 
@@ -562,7 +562,7 @@ def test__contribution_map_list():
 
 
 def test__hyper_noise_map_list_from():
-    noise_map = ag.Array2D.without_mask(array=[[1.0, 2.0, 3.0]], pixel_scales=1.0)
+    noise_map = ag.Array2D.no_mask(values=[[1.0, 2.0, 3.0]], pixel_scales=1.0)
 
     hyper_galaxy_0 = ag.HyperGalaxy(
         contribution_factor=0.0, noise_factor=1.0, noise_power=1.0
@@ -571,15 +571,13 @@ def test__hyper_noise_map_list_from():
         contribution_factor=3.0, noise_factor=1.0, noise_power=2.0
     )
 
-    hyper_model_image = ag.Array2D.without_mask(
-        array=[[0.5, 1.0, 1.5]], pixel_scales=1.0
-    )
+    hyper_model_image = ag.Array2D.no_mask(values=[[0.5, 1.0, 1.5]], pixel_scales=1.0)
 
-    hyper_galaxy_image_0 = ag.Array2D.without_mask(
-        array=[[0.0, 1.0, 1.5]], pixel_scales=1.0
+    hyper_galaxy_image_0 = ag.Array2D.no_mask(
+        values=[[0.0, 1.0, 1.5]], pixel_scales=1.0
     )
-    hyper_galaxy_image_1 = ag.Array2D.without_mask(
-        array=[[1.0, 1.0, 1.5]], pixel_scales=1.0
+    hyper_galaxy_image_1 = ag.Array2D.no_mask(
+        values=[[1.0, 1.0, 1.5]], pixel_scales=1.0
     )
 
     galaxy_0 = ag.Galaxy(
@@ -605,14 +603,10 @@ def test__hyper_noise_map_list_from():
         np.array([0.73468, (2.0 * 0.75) ** 2.0, 3.0**2.0]), 1.0e-4
     )
 
-    noise_map = ag.Array2D.without_mask(array=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
+    noise_map = ag.Array2D.no_mask(values=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
 
-    hyper_model_image = ag.Array2D.without_mask(
-        array=[[2.0, 4.0, 10.0]], pixel_scales=1.0
-    )
-    hyper_galaxy_image = ag.Array2D.without_mask(
-        array=[[1.0, 5.0, 8.0]], pixel_scales=1.0
-    )
+    hyper_model_image = ag.Array2D.no_mask(values=[[2.0, 4.0, 10.0]], pixel_scales=1.0)
+    hyper_galaxy_image = ag.Array2D.no_mask(values=[[1.0, 5.0, 8.0]], pixel_scales=1.0)
 
     hyper_galaxy_0 = ag.HyperGalaxy(contribution_factor=5.0)
     hyper_galaxy_1 = ag.HyperGalaxy(contribution_factor=10.0)
@@ -682,7 +676,7 @@ def test__hyper_noise_map_list_from():
 
     # No Galaxies
 
-    noise_map = ag.Array2D.without_mask(array=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
+    noise_map = ag.Array2D.no_mask(values=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
 
     plane = ag.Plane(redshift=0.5, galaxies=[ag.Galaxy(redshift=0.5)])
     hyper_noise_map = plane.hyper_noise_map_from(noise_map=noise_map)

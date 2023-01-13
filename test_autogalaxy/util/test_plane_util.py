@@ -27,7 +27,7 @@ class TestPlaneImageFromGrid:
         )
 
         grid = ag.Grid2D(
-            grid=np.array(
+            values=np.array(
                 [
                     [-1.0, -1.0],
                     [-1.0, 0.0],
@@ -72,7 +72,7 @@ class TestPlaneImageFromGrid:
         )
 
         grid = ag.Grid2D(
-            grid=np.array(
+            values=np.array(
                 [
                     [-1.0, -1.0],
                     [-1.0, 0.0],
@@ -106,7 +106,7 @@ class TestPlaneImageFromGrid:
         )
 
         grid = ag.Grid2D(
-            grid=np.array(
+            values=np.array(
                 [
                     [-0.75, -1.0],
                     [-0.75, 0.0],
@@ -137,7 +137,7 @@ class TestPlaneImageFromGrid:
         )
 
         grid = ag.Grid2D(
-            grid=np.array(
+            values=np.array(
                 [
                     [-1.0, -0.75],
                     [-1.0, 0.75],
@@ -168,7 +168,7 @@ class TestPlaneImageFromGrid:
         )
 
         grid = ag.Grid2D(
-            grid=np.array(
+            values=np.array(
                 [
                     [-1.0, -1.0],
                     [-1.0, 0.0],

@@ -57,7 +57,7 @@ def caustics_via_magnification_from(mass_profile, grid):
 
 def test__hessian_from():
 
-    grid = ag.Grid2DIrregular(grid=[(0.5, 0.5), (1.0, 1.0)])
+    grid = ag.Grid2DIrregular(values=[(0.5, 0.5), (1.0, 1.0)])
 
     sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
@@ -70,7 +70,7 @@ def test__hessian_from():
     assert hessian_yx == pytest.approx(np.array([-1.388165, -0.694099]), 1.0e-4)
     assert hessian_xx == pytest.approx(np.array([1.3883824, 0.694127]), 1.0e-4)
 
-    grid = ag.Grid2DIrregular(grid=[(1.0, 0.0), (0.0, 1.0)])
+    grid = ag.Grid2DIrregular(values=[(1.0, 0.0), (0.0, 1.0)])
 
     hessian_yy, hessian_xy, hessian_yx, hessian_xx = sie.hessian_from(grid=grid)
 
@@ -84,7 +84,7 @@ def test__convergence_2d_via_hessian_from():
 
     buffer = 0.0001
     grid = ag.Grid2DIrregular(
-        grid=[(1.075, -0.125), (-0.875, -0.075), (-0.925, -0.075), (0.075, 0.925)]
+        values=[(1.075, -0.125), (-0.875, -0.075), (-0.925, -0.075), (0.075, 0.925)]
     )
 
     sis = ag.mp.Isothermal(
@@ -110,7 +110,7 @@ def test__convergence_2d_via_hessian_from():
 
 def test__magnification_2d_via_hessian_from():
 
-    grid = ag.Grid2DIrregular(grid=[(0.5, 0.5), (1.0, 1.0)])
+    grid = ag.Grid2DIrregular(values=[(0.5, 0.5), (1.0, 1.0)])
 
     sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0

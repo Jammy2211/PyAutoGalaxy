@@ -498,7 +498,7 @@ def test__decorators__convergence_1d_from__grid_2d_in__returns_1d_image_via_proj
 
 def test__decorators__convergence_1d_from__grid_2d_irregular_in__returns_1d_quantities():
 
-    grid_2d = ag.Grid2DIrregular(grid=[[1.0, 1.0], [2.0, 2.0], [4.0, 4.0]])
+    grid_2d = ag.Grid2DIrregular(values=[[1.0, 1.0], [2.0, 2.0], [4.0, 4.0]])
 
     sie = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=1.0)
 
@@ -521,7 +521,7 @@ def test__decorators__convergence_1d_from__grid_2d_irregular_in__returns_1d_quan
 
 def test__decorators__convergence_1d_from__grid_1d_in__returns_1d_quantities_via_projection():
 
-    grid_1d = ag.Grid1D.manual_native(grid=[1.0, 2.0, 3.0], pixel_scales=1.0)
+    grid_1d = ag.Grid1D.no_mask(values=[1.0, 2.0, 3.0], pixel_scales=1.0)
 
     sie = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=1.0)
 

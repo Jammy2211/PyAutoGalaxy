@@ -40,7 +40,8 @@ class MassProfile(EllProfile, OperateDeflections):
         deflections_x_2d = np.gradient(potential.native, grid.native[0, :, 1], axis=1)
 
         return aa.Grid2D(
-            grid=np.stack((deflections_y_2d, deflections_x_2d), axis=-1), mask=grid.mask
+            values=np.stack((deflections_y_2d, deflections_x_2d), axis=-1),
+            mask=grid.mask,
         )
 
     def convergence_2d_from(self, grid):
@@ -282,4 +283,4 @@ class MassProfile(EllProfile, OperateDeflections):
                 if isinstance(attribute, float):
                     return aa.ValuesIrregular(values=[attribute])
                 if isinstance(attribute, tuple):
-                    return aa.Grid2DIrregular(grid=[attribute])
+                    return aa.Grid2DIrregular(values=[attribute])
