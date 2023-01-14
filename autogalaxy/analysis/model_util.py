@@ -11,10 +11,6 @@ if TYPE_CHECKING:
 import autofit as af
 import autoarray as aa
 
-from autoarray.inversion.pixelization.mesh.abstract import AbstractMesh
-from autoarray.inversion.regularization.abstract import AbstractRegularization
-
-
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
@@ -39,7 +35,7 @@ def isinstance_or_prior(obj, cls):
     return False
 
 
-def mesh_list_from(model: af.Collection) -> List[AbstractMesh]:
+def mesh_list_from(model: af.Collection) -> List[aa.AbstractMesh]:
     """
     For a model containing one or more galaxies, inspect its attributes and return the list of `mesh`'s of each
     `pixelization` of all galaxies. If no galaxy has pixelization an empty list is returned.
@@ -103,6 +99,7 @@ def has_pixelization_from(model: af.Collection) -> bool:
     return len(mesh_list) > 0
 
 
+
 def set_upper_limit_of_pixelization_pixels_prior(
     model: af.Collection,
     pixels_in_mask: int,
@@ -111,9 +108,7 @@ def set_upper_limit_of_pixelization_pixels_prior(
     """
     If the mesh(es) of pixelizations being fitted in the hyper-model fit is a `VoronoiBrightnessImage` pixelization,
     this function sets the upper limit of its `pixels` prior to the number of data points in the mask.
-
     This ensures the KMeans algorithm does not raise an exception due to having fewer data points than source pixels.
-
     Parameters
     ----------
     model
@@ -286,7 +281,7 @@ def hyper_noise_model_from(
     return model
 
 
-def hyper_inversion_model_from(
+def hyper_pix_model_from(
     setup_hyper,
     result: af.Result,
     include_hyper_image_sky: bool = False,
@@ -325,7 +320,7 @@ def hyper_inversion_model_from(
     if setup_hyper is None:
         return None
 
-    model = result.instance.as_model((AbstractMesh, AbstractRegularization))
+    model = result.instance.as_model((aa.AbstractMesh, aa.AbstractRegularization))
 
     if not has_pixelization_from(model=model):
         return None
@@ -373,27 +368,27 @@ def hyper_fit_no_noise(
 
     analysis.set_hyper_dataset(result=result)
 
-    hyper_model_inversion = hyper_inversion_model_from(
+    hyper_model_pix = hyper_pix_model_from(
         setup_hyper=setup_hyper,
         result=result,
         include_hyper_image_sky=include_hyper_image_sky,
     )
 
-    if hyper_model_inversion is None:
+    if hyper_model_pix is None:
 
         return result
 
-    search = setup_hyper.search_inversion_cls(
+    search = setup_hyper.search_pix_cls(
         path_prefix=search_previous.path_prefix_no_unique_tag,
-        name=f"{search_previous.paths.name}__hyper_inversion",
+        name=f"{search_previous.paths.name}__hyper_pix",
         unique_tag=search_previous.paths.unique_tag,
         number_of_cores=search_previous.number_of_cores,
-        **setup_hyper.search_pixelization_dict,
+        **setup_hyper.search_pix_dict,
     )
 
-    hyper_inversion_result = search.fit(model=hyper_model_inversion, analysis=analysis)
+    hyper_pix_result = search.fit(model=hyper_model_pix, analysis=analysis)
 
-    result.hyper = hyper_inversion_result
+    result.hyper = hyper_pix_result
 
     return result
 
@@ -473,7 +468,7 @@ def hyper_fit(
 
     analysis.set_hyper_dataset(result=result)
 
-    hyper_inversion_model = hyper_inversion_model_from(
+    hyper_pix_model = hyper_pix_model_from(
         setup_hyper=setup_hyper,
         result=hyper_noise_result,
         include_hyper_image_sky=include_hyper_image_sky,
@@ -481,7 +476,7 @@ def hyper_fit(
         regularization_overwrite=regularization_overwrite,
     )
 
-    if hyper_inversion_model is None:
+    if hyper_pix_model is None:
 
         result.hyper = hyper_noise_result
 
@@ -489,22 +484,22 @@ def hyper_fit(
 
     try:
         set_upper_limit_of_pixelization_pixels_prior(
-            model=hyper_inversion_model, pixels_in_mask=result.mask.pixels_in_mask
+            model=hyper_pix_model, pixels_in_mask=result.mask.pixels_in_mask
         )
     except AttributeError:
         pass
 
-    search = setup_hyper.search_inversion_cls(
+    search = setup_hyper.search_pix_cls(
         path_prefix=search_previous.path_prefix_no_unique_tag,
-        name=f"{search_previous.paths.name}__hyper_inversion",
+        name=f"{search_previous.paths.name}__hyper_pix",
         unique_tag=search_previous.paths.unique_tag,
         number_of_cores=search_previous.number_of_cores,
-        **setup_hyper.search_pixelization_dict,
+        **setup_hyper.search_pix_dict,
     )
 
-    hyper_inversion_result = search.fit(model=hyper_inversion_model, analysis=analysis)
+    hyper_pix_result = search.fit(model=hyper_pix_model, analysis=analysis)
 
-    result.hyper = hyper_inversion_result
+    result.hyper = hyper_pix_result
 
     return result
 
@@ -541,7 +536,7 @@ def hyper_model_from(
 
     from autogalaxy.galaxy.hyper import HyperGalaxy
 
-    model = result.instance.as_model((AbstractMesh, AbstractRegularization))
+    model = result.instance.as_model((aa.AbstractMesh, aa.AbstractRegularization))
 
     model = clean_model_of_hyper_images(model=model)
 
@@ -630,10 +625,10 @@ def stochastic_model_from(
         model_classes.append(LightProfile)
 
     if include_pixelization:
-        model_classes.append(AbstractMesh)
+        model_classes.append(aa.AbstractMesh)
 
     if include_regularization:
-        model_classes.append(AbstractRegularization)
+        model_classes.append(aa.AbstractRegularization)
 
     model = result.instance.as_model(model_classes)
 
@@ -664,7 +659,7 @@ def stochastic_model_from(
 def stochastic_fit(
     stochastic_model: af.Collection,
     search_cls: ClassVar[af.NonLinearSearch],
-    search_pixelization_dict: Dict,
+    search_pix_dict: Dict,
     result: ResultDataset,
     analysis: AnalysisDataset,
     search_previous: af.NonLinearSearch,
@@ -711,7 +706,7 @@ def stochastic_fit(
         name=name,
         unique_tag=search_previous.paths.unique_tag,
         number_of_cores=search_previous.number_of_cores,
-        **search_pixelization_dict,
+        **search_pix_dict,
     )
 
     stochastic_result = search.fit(

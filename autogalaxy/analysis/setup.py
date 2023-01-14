@@ -12,12 +12,10 @@ class SetupHyper:
         hyper_galaxies: bool = False,
         hyper_image_sky: Optional[type(HyperImageSky)] = None,
         hyper_background_noise: Optional[type(HyperBackgroundNoise)] = None,
-        search_inversion_cls: Optional[af.NonLinearSearch] = None,
+        search_pix_cls: Optional[af.NonLinearSearch] = None,
         search_noise_cls: Optional[af.NonLinearSearch] = None,
-        search_bc_cls: Optional[af.NonLinearSearch] = None,
-        search_pixelization_dict: Optional[dict] = None,
+        search_pix_dict: Optional[dict] = None,
         search_noise_dict: Optional[dict] = None,
-        search_bc_dict: Optional[dict] = None,
     ):
         """
         The hyper setup of a pipeline, which controls how hyper-features in PyAutoGalaxy template pipelines run,
@@ -37,9 +35,9 @@ class SetupHyper:
         hyper_background_noise
             If a hyper-pipeline is being used, this determines if hyper-galaxy functionality is used include the
             noise-map's background component in the model.
-        search_inversion_cls
+        search_pix_cls
             The non-linear search used by every hyper model-fit search.
-        search_pixelization_dict
+        search_pix_dict
             The dictionary of search options for the hyper inversion model-fit searches.
         search_noise_dict
             The dictionary of search options for the hyper noise model-fit searches.
@@ -49,8 +47,8 @@ class SetupHyper:
 
         self.hyper_galaxy_names = None
 
-        self.search_inversion_cls = search_inversion_cls or af.DynestyStatic
-        self.search_pixelization_dict = search_pixelization_dict or {
+        self.search_pix_cls = search_pix_cls or af.DynestyStatic
+        self.search_pix_dict = search_pix_dict or {
             "nlive": 50,
             "sample": "rwalk",
             "dlogz": 10,
@@ -58,13 +56,6 @@ class SetupHyper:
 
         self.search_noise_cls = search_noise_cls or af.DynestyStatic
         self.search_noise_dict = search_noise_dict or {"nlive": 50, "sample": "rwalk"}
-
-        self.search_bc_cls = search_bc_cls or af.DynestyStatic
-        self.search_bc_dict = search_bc_dict or {
-            "nlive": 50,
-            "sample": "rwalk",
-            "dlogz": 10,
-        }
 
         self.hyper_image_sky = hyper_image_sky
         self.hyper_background_noise = hyper_background_noise

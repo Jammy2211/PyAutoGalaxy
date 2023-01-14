@@ -268,7 +268,7 @@ def test__hyper_model_inversion_from():
 
     result = ag.m.MockResult(instance=instance)
 
-    model = ag.util.model.hyper_inversion_model_from(
+    model = ag.util.model.hyper_pix_model_from(
         setup_hyper=ag.SetupHyper(), result=result
     )
 
@@ -280,11 +280,11 @@ def test__hyper_model_inversion_from():
     assert model.hyper_image_sky is None
     assert model.hyper_background_noise is None
 
-    model = ag.util.model.hyper_inversion_model_from(result=result, setup_hyper=None)
+    model = ag.util.model.hyper_pix_model_from(result=result, setup_hyper=None)
 
     assert model == None
 
-    model = ag.util.model.hyper_inversion_model_from(
+    model = ag.util.model.hyper_pix_model_from(
         setup_hyper=ag.SetupHyper(
             hyper_image_sky=ag.hyper_data.HyperImageSky,
             hyper_background_noise=ag.hyper_data.HyperBackgroundNoise,
@@ -311,7 +311,7 @@ def test__hyper_model_inversion_from():
 
     result = ag.m.MockResult(instance=instance)
 
-    model = ag.util.model.hyper_inversion_model_from(
+    model = ag.util.model.hyper_pix_model_from(
         result=result, setup_hyper=ag.SetupHyper()
     )
 
@@ -365,9 +365,7 @@ def test__hyper_model_inversion_from__adds_hyper_galaxies():
     setup_hyper = ag.SetupHyper()
     setup_hyper.hyper_galaxy_names = ["galaxy_0"]
 
-    model = ag.util.model.hyper_inversion_model_from(
-        result=result, setup_hyper=setup_hyper
-    )
+    model = ag.util.model.hyper_pix_model_from(result=result, setup_hyper=setup_hyper)
 
     assert isinstance(model.galaxies.galaxy_0, af.Model)
     assert model.galaxies.galaxy_0.redshift == 0.5
@@ -377,9 +375,7 @@ def test__hyper_model_inversion_from__adds_hyper_galaxies():
     setup_hyper = ag.SetupHyper()
     setup_hyper.hyper_galaxy_names = ["galaxy_0", "galaxy_1"]
 
-    model = ag.util.model.hyper_inversion_model_from(
-        result=result, setup_hyper=setup_hyper
-    )
+    model = ag.util.model.hyper_pix_model_from(result=result, setup_hyper=setup_hyper)
 
     assert isinstance(model.galaxies.galaxy_0, af.Model)
     assert model.galaxies.galaxy_0.redshift == 0.5
