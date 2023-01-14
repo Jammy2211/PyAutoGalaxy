@@ -52,13 +52,12 @@ class HyperGalaxy:
         self.component_number = next(self._ids)
 
     def __eq__(self, other):
-        if isinstance(other, HyperGalaxy):
-            return (
-                self.contribution_factor == other.contribution_factor
+        return (
+                isinstance(other, HyperGalaxy)
+                and self.contribution_factor == other.contribution_factor
                 and self.noise_factor == other.noise_factor
                 and self.noise_power == other.noise_power
-            )
-        return False
+        )
 
     def __str__(self):
         return "\n".join(["{}: {}".format(k, v) for k, v in self.__dict__.items()])
@@ -116,13 +115,10 @@ class HyperGalaxy:
                 hyper_model_image=hyper_model_image,
             )
         """
-        try:
-            contribution_map = np.divide(
-                hyper_galaxy_image, np.add(hyper_model_image, self.contribution_factor)
-            )
-            return np.divide(contribution_map, np.max(contribution_map))
-        except TypeError:
-            raise
+        contribution_map = np.divide(
+            hyper_galaxy_image, np.add(hyper_model_image, self.contribution_factor)
+        )
+        return np.divide(contribution_map, np.max(contribution_map))
 
     def hyper_noise_map_from(
         self, noise_map: aa.Array2D, contribution_map: aa.Array2D

@@ -94,6 +94,7 @@ class DatasetQuantity(AbstractDataset):
                 noise_map = aa.VectorYX2D.no_mask(
                     values=np.stack((noise_map, noise_map), axis=-1),
                     pixel_scales=data.pixel_scales,
+                    shape_native=data.shape_native,
                     sub_size=data.sub_size,
                     origin=data.origin,
                 )
@@ -187,8 +188,8 @@ class DatasetQuantity(AbstractDataset):
         else:
             unmasked_dataset = self.unmasked
 
-        data = self.data.apply_mask(mask=mask.derive_mask.sub_1)
-        noise_map = self.noise_map.apply_mask(mask=mask.derive_mask.sub_1)
+        data = self.data.apply_mask(mask=mask.derive_mask.sub_1).native
+        noise_map = self.noise_map.apply_mask(mask=mask.derive_mask.sub_1).native
 
         dataset = DatasetQuantity(
             data=data, noise_map=noise_map, settings=self.settings
