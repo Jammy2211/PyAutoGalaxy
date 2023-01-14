@@ -51,8 +51,6 @@ class FitQuantityPlotter(Plotter):
 
         self.fit = fit
 
-    #       self.subplot = self._fit_imaging_meta_plotter.subplot
-
     def get_visuals_2d(self) -> Visuals2D:
         return self.get_2d.via_fit_imaging_from(fit=self.fit)
 
