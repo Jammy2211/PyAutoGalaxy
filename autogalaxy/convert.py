@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Tuple
 
 
 def ell_comps_from(axis_ratio, angle):
@@ -67,45 +68,47 @@ def angle_from(ell_comps):
     return angle
 
 
-def shear_ell_comps_from(magnitude, angle):
+def shear_gamma_1_2_from(magnitude: float, angle: float) -> Tuple[float, float]:
     """
     :param angle: angel
     :param magnitude: ellipticity
     :return:
     """
-    ellip_y = magnitude * np.sin(2 * angle * np.pi / 180.0)
-    ellip_x = magnitude * np.cos(2 * angle * np.pi / 180.0)
-    return (ellip_y, ellip_x)
+    gamma_1 = magnitude * np.cos(2 * angle * np.pi / 180.0)
+    gamma_2 = magnitude * np.sin(2 * angle * np.pi / 180.0)
+    return (gamma_1, gamma_2)
 
 
-def shear_magnitude_and_angle_from(ell_comps):
+def shear_magnitude_and_angle_from(
+    gamma_1: float, gamma_2: float
+) -> Tuple[float, float]:
     """
     :param e1: ellipticity component
     :param e2: ellipticity component
     :return: angle and abs value of ellipticity
     """
-    angle = np.arctan2(ell_comps[0], ell_comps[1]) / 2 * 180.0 / np.pi
-    magnitude = np.sqrt(ell_comps[1] ** 2 + ell_comps[0] ** 2)
+    angle = np.arctan2(gamma_2, gamma_1) / 2 * 180.0 / np.pi
+    magnitude = np.sqrt(gamma_1**2 + gamma_2**2)
     if angle < 0:
         return magnitude, angle + 180.0
     return magnitude, angle
 
 
-def shear_magnitude_from(ell_comps):
+def shear_magnitude_from(gamma_1: float, gamma_2: float) -> float:
     """
     :param e1: ellipticity component
     :param e2: ellipticity component
     :return: angle and abs value of ellipticity
     """
-    magnitude, angle = shear_magnitude_and_angle_from(ell_comps=ell_comps)
+    magnitude, angle = shear_magnitude_and_angle_from(gamma_1=gamma_1, gamma_2=gamma_2)
     return magnitude
 
 
-def shear_angle_from(ell_comps):
+def shear_angle_from(gamma_1: float, gamma_2: float) -> float:
     """
     :param e1: ellipticity component
     :param e2: ellipticity component
     :return: angle and abs value of ellipticity
     """
-    magnitude, angle = shear_magnitude_and_angle_from(ell_comps=ell_comps)
+    magnitude, angle = shear_magnitude_and_angle_from(gamma_1=gamma_1, gamma_2=gamma_2)
     return angle

@@ -1,5 +1,4 @@
 import numpy as np
-from typing import Tuple
 
 import autoarray as aa
 
@@ -9,7 +8,7 @@ from autogalaxy import convert
 
 
 class ExternalShear(MassProfile):
-    def __init__(self, gamma: Tuple[float, float] = (0.0, 0.0)):
+    def __init__(self, gamma_1: float = 0.0, gamma_2: float = 0.0):
         """
         An `ExternalShear` term, to model the line-of-sight contribution of other galaxies / satellites.
 
@@ -21,16 +20,17 @@ class ExternalShear(MassProfile):
         gamma
         """
 
-        super().__init__(centre=(0.0, 0.0), ell_comps=gamma)
-        self.gamma = gamma
+        super().__init__(centre=(0.0, 0.0), ell_comps=(0.0, 0.0))
+        self.gamma_1 = gamma_1
+        self.gamma_2 = gamma_2
 
     @property
     def magnitude(self):
-        return convert.shear_magnitude_from(ell_comps=self.gamma)
+        return convert.shear_magnitude_from(gamma_1=self.gamma_1, gamma_2=self.gamma_2)
 
     @property
     def angle(self):
-        return convert.shear_angle_from(ell_comps=self.gamma)
+        return convert.shear_angle_from(gamma_1=self.gamma_1, gamma_2=self.gamma_2)
 
     def convergence_func(self, grid_radius: float) -> float:
         return 0.0

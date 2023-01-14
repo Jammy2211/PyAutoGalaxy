@@ -53,10 +53,10 @@ class HyperGalaxy:
 
     def __eq__(self, other):
         return (
-                isinstance(other, HyperGalaxy)
-                and self.contribution_factor == other.contribution_factor
-                and self.noise_factor == other.noise_factor
-                and self.noise_power == other.noise_power
+            isinstance(other, HyperGalaxy)
+            and self.contribution_factor == other.contribution_factor
+            and self.noise_factor == other.noise_factor
+            and self.noise_power == other.noise_power
         )
 
     def __str__(self):

@@ -7,12 +7,12 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 def test__deflections_yx_2d_from():
 
-    shear = ag.mp.ExternalShear(gamma=(0.1, 0.0))
+    shear = ag.mp.ExternalShear(gamma_1=0.0, gamma_2=0.1)
     deflections = shear.deflections_yx_2d_from(grid=np.array([[0.1625, 0.1625]]))
     assert deflections[0, 0] == pytest.approx(0.01625, 1e-3)
     assert deflections[0, 1] == pytest.approx(0.01625, 1e-3)
 
-    shear = ag.mp.ExternalShear(gamma=(0.1, -0.17320))
+    shear = ag.mp.ExternalShear(gamma_1=-0.17320, gamma_2=0.1)
     deflections = shear.deflections_yx_2d_from(grid=np.array([[0.1625, 0.1625]]))
     assert deflections[0, 0] == pytest.approx(0.04439, 1e-3)
     assert deflections[0, 1] == pytest.approx(-0.011895, 1e-3)
@@ -45,11 +45,11 @@ def test__deflections_yx_2d_from():
 
 def test__convergence_returns_zeros():
 
-    shear = ag.mp.ExternalShear(gamma=(0.1, 0.0))
+    shear = ag.mp.ExternalShear(gamma_1=0.0, gamma_2=0.1)
     convergence = shear.convergence_2d_from(grid=np.array([[0.1, 0.1]]))
     assert (convergence == np.array([0.0])).all()
 
-    shear = ag.mp.ExternalShear(gamma=(0.1, 0.0))
+    shear = ag.mp.ExternalShear(gamma_1=0.0, gamma_2=0.1)
     convergence = shear.convergence_2d_from(
         grid=np.array([[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]])
     )
@@ -74,11 +74,11 @@ def test__convergence_returns_zeros():
 
 
 def test__potential_returns_zeros():
-    shear = ag.mp.ExternalShear(gamma=(0.1, 0.0))
+    shear = ag.mp.ExternalShear(gamma_1=0.0, gamma_2=0.1)
     potential = shear.potential_2d_from(grid=np.array([[0.1, 0.1]]))
     assert (potential == np.array([[0.0, 0.0]])).all()
 
-    shear = ag.mp.ExternalShear(gamma=(0.1, 0.0))
+    shear = ag.mp.ExternalShear(gamma_1=0.0, gamma_2=0.1)
     potential = shear.potential_2d_from(
         grid=np.array([[0.1, 0.1], [0.2, 0.2], [0.3, 0.3]])
     )

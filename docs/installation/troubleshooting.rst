@@ -73,7 +73,7 @@ that, when you run an example script, you should run it from the ``autogalaxy_wo
 .. code-block:: bash
 
     cd path/to/autogalaxy_workspace (if you are not already in the autogalaxy_workspace).
-    python3 examples/model/beginner/mass_total__source_parametric.py
+    python3 examples/model/beginner/mass_total__source_lp.py
 
 The reasons for this are so that **PyAutoGalaxy** can:
 
