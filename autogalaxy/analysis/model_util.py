@@ -98,8 +98,6 @@ def has_pixelization_from(model: af.Collection) -> bool:
 
     return len(mesh_list) > 0
 
-
-
 def set_upper_limit_of_pixelization_pixels_prior(
     model: af.Collection,
     pixels_in_mask: int,
@@ -108,7 +106,9 @@ def set_upper_limit_of_pixelization_pixels_prior(
     """
     If the mesh(es) of pixelizations being fitted in the hyper-model fit is a `VoronoiBrightnessImage` pixelization,
     this function sets the upper limit of its `pixels` prior to the number of data points in the mask.
+
     This ensures the KMeans algorithm does not raise an exception due to having fewer data points than source pixels.
+
     Parameters
     ----------
     model
@@ -126,79 +126,49 @@ def set_upper_limit_of_pixelization_pixels_prior(
     if not hasattr(model, "galaxies"):
         return
 
-    instance = model.instance_from_prior_medians()
-
-    galaxy_key_list_dict = {}
-
-    for galaxy in instance.galaxies:
-
-        key_list = []
-
-        for key, value in galaxy.__dict__.items():
-
-            if isinstance(value, aa.Pixelization):
-                key_list.append(key)
-
-            elif isinstance(value, af.Model):
-                if type(value.cls) == type(aa.Pixelization):
-                    key_list.append(key)
-
-        galaxy_key_list_dict[galaxy] = key_list
-
     for galaxy in model.galaxies:
 
-        if galaxy in galaxy_key_list_dict:
+        if hasattr(galaxy, "pixelization"):
 
-            key_list = galaxy_key_list_dict[galaxy]
+            mesh = galaxy.pixelization.mesh
 
-            for key in key_list:
+            if (
+                    mesh.cls is aa.mesh.DelaunayBrightnessImage
+                    or aa.mesh.VoronoiBrightnessImage
+                    or aa.mesh.VoronoiNNBrightnessImage
+            ):
 
-                pixelization = getattr(galaxy, key)
+                if pixels_in_mask < mesh.pixels.upper_limit:
 
-                if pixelization is not None:
+                    lower_limit = mesh.pixels.lower_limit
 
-                    mesh = pixelization.mesh
+                    log_str = (
+                        "MODIFY BEFORE FIT -  A pixelization mesh's pixel UniformPrior upper limit"
+                        "was greater than the number of pixels in the mask. It has been "
+                        "reduced to the number of pixels in the mask.\,"
+                    )
 
-                    if hasattr(mesh, "pixels"):
+                    if lower_limit > pixels_in_mask:
 
-                        if hasattr(mesh.pixels, "upper_limit"):
+                        lower_limit = (
+                            pixels_in_mask
+                            - lower_limit_no_pixels_below_mask
+                        )
 
-                            if pixels_in_mask < mesh.pixels.upper_limit:
+                        logger.info(
+                            log_str
+                            + "MODIFY BEFORE FIT - The pixelization's mesh's pixel UniformPrior lower_limit was "
+                            "also above the number of pixels in the mask, and has been reduced"
+                            "to the number of pixels in the mask minus 10."
+                        )
+                    else:
+                        logger.info(log_str)
 
-                                if (
-                                    mesh.cls is aa.mesh.DelaunayBrightnessImage
-                                    or aa.mesh.VoronoiBrightnessImage
-                                    or aa.mesh.VoronoiNNBrightnessImage
-                                ):
+                    mesh.pixels = af.UniformPrior(
+                        lower_limit=lower_limit,
+                        upper_limit=pixels_in_mask,
+                    )
 
-                                    lower_limit = mesh.pixels.lower_limit
-
-                                    log_str = (
-                                        "MODIFY BEFORE FIT -  A pixelization mesh's pixel UniformPrior upper limit"
-                                        "was greater than the number of pixels in the mask. It has been "
-                                        "reduced to the number of pixels in the mask.\,"
-                                    )
-
-                                    if lower_limit > pixels_in_mask:
-
-                                        lower_limit = (
-                                            pixels_in_mask
-                                            - lower_limit_no_pixels_below_mask
-                                        )
-
-                                        logger.info(
-                                            log_str
-                                            + "MODIFY BEFORE FIT - The pixelization's mesh's pixel UniformPrior lower_limit was "
-                                            "also above the number of pixels in the mask, and has been reduced"
-                                            "to the number of pixels in the mask minus 10."
-                                        )
-                                    else:
-                                        logger.info(log_str)
-
-                                    mesh.pixels = af.UniformPrior(
-                                        lower_limit=lower_limit,
-                                        upper_limit=pixels_in_mask,
-                                    )
 
 
 def clean_model_of_hyper_images(model):

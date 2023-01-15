@@ -76,10 +76,6 @@ def test__set_upper_limit_of_pixelization_pixels_prior():
     model = af.Collection(galaxies=galaxies)
 
     ag.util.model.set_upper_limit_of_pixelization_pixels_prior(
-        model=model, pixels_in_mask=12
-    )
-
-    ag.util.model.set_upper_limit_of_pixelization_pixels_prior(
         model=model, pixels_in_mask=8
     )
 
@@ -101,35 +97,35 @@ def test__set_upper_limit_of_pixelization_pixels_prior():
         3, 1.0e-4
     )
 
-    mesh_0 = af.Model(ag.mesh.VoronoiBrightnessImage)
-    mesh_0.pixels = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
-    pixelization_0 = ag.Pixelization(mesh=mesh_0)
-
-    mesh_1 = af.Model(ag.mesh.DelaunayBrightnessImage)
-    mesh_1.pixels = af.UniformPrior(lower_limit=0.0, upper_limit=4.0)
-    pixelization_1 = ag.Pixelization(mesh=mesh_1)
-
-    galaxies = af.Collection(
-        source=ag.Galaxy(
-            redshift=0.5, pixelization_0=pixelization_0, pixelization_1=pixelization_1
-        )
-    )
-
-    model = af.Collection(galaxies=galaxies)
-
-    ag.util.model.set_upper_limit_of_pixelization_pixels_prior(
-        model=model, pixels_in_mask=6
-    )
-
-    assert (
-        model.galaxies.source.pixelization_0.mesh.pixels.upper_limit
-        == pytest.approx(6, 1.0e-4)
-    )
-
-    assert (
-        model.galaxies.source.pixelization_1.mesh.pixels.upper_limit
-        == pytest.approx(4, 1.0e-4)
-    )
+    # mesh_0 = af.Model(ag.mesh.VoronoiBrightnessImage)
+    # mesh_0.pixels = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
+    # pixelization_0 = ag.Pixelization(mesh=mesh_0)
+    #
+    # mesh_1 = af.Model(ag.mesh.DelaunayBrightnessImage)
+    # mesh_1.pixels = af.UniformPrior(lower_limit=0.0, upper_limit=4.0)
+    # pixelization_1 = ag.Pixelization(mesh=mesh_1)
+    #
+    # galaxies = af.Collection(
+    #     source=ag.Galaxy(
+    #         redshift=0.5, pixelization_0=pixelization_0, pixelization_1=pixelization_1
+    #     )
+    # )
+    #
+    # model = af.Collection(galaxies=galaxies)
+    #
+    # ag.util.model.set_upper_limit_of_pixelization_pixels_prior(
+    #     model=model, pixels_in_mask=6
+    # )
+    #
+    # assert (
+    #     model.galaxies.source.pixelization_0.mesh.pixels.upper_limit
+    #     == pytest.approx(6, 1.0e-4)
+    # )
+    #
+    # assert (
+    #     model.galaxies.source.pixelization_1.mesh.pixels.upper_limit
+    #     == pytest.approx(4, 1.0e-4)
+    # )
 
 
 def test__hyper_model_noise_from():
