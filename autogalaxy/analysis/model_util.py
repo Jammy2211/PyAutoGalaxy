@@ -130,48 +130,50 @@ def set_upper_limit_of_pixelization_pixels_prior(
 
         if hasattr(galaxy, "pixelization"):
 
-            mesh = galaxy.pixelization.mesh
+            if hasattr(galaxy.pixelization, "mesh"):
 
-            if hasattr(mesh, "cls"):
+                mesh = galaxy.pixelization.mesh
 
-                if (
-                        mesh.cls is aa.mesh.DelaunayBrightnessImage
-                        or aa.mesh.VoronoiBrightnessImage
-                        or aa.mesh.VoronoiNNBrightnessImage
-                ):
+                if hasattr(mesh, "cls"):
 
-                    if hasattr(mesh, "pixels"):
+                    if (
+                            mesh.cls is aa.mesh.DelaunayBrightnessImage
+                            or aa.mesh.VoronoiBrightnessImage
+                            or aa.mesh.VoronoiNNBrightnessImage
+                    ):
 
-                        if pixels_in_mask < mesh.pixels.upper_limit:
+                        if hasattr(mesh, "pixels"):
 
-                            lower_limit = mesh.pixels.lower_limit
+                            if pixels_in_mask < mesh.pixels.upper_limit:
 
-                            log_str = (
-                                "MODIFY BEFORE FIT -  A pixelization mesh's pixel UniformPrior upper limit"
-                                "was greater than the number of pixels in the mask. It has been "
-                                "reduced to the number of pixels in the mask.\,"
-                            )
+                                lower_limit = mesh.pixels.lower_limit
 
-                            if lower_limit > pixels_in_mask:
-
-                                lower_limit = (
-                                    pixels_in_mask
-                                    - lower_limit_no_pixels_below_mask
+                                log_str = (
+                                    "MODIFY BEFORE FIT -  A pixelization mesh's pixel UniformPrior upper limit"
+                                    "was greater than the number of pixels in the mask. It has been "
+                                    "reduced to the number of pixels in the mask.\,"
                                 )
 
-                                logger.info(
-                                    log_str
-                                    + "MODIFY BEFORE FIT - The pixelization's mesh's pixel UniformPrior lower_limit was "
-                                    "also above the number of pixels in the mask, and has been reduced"
-                                    "to the number of pixels in the mask minus 10."
-                                )
-                            else:
-                                logger.info(log_str)
+                                if lower_limit > pixels_in_mask:
 
-                            mesh.pixels = af.UniformPrior(
-                                lower_limit=lower_limit,
-                                upper_limit=pixels_in_mask,
-                            )
+                                    lower_limit = (
+                                        pixels_in_mask
+                                        - lower_limit_no_pixels_below_mask
+                                    )
+
+                                    logger.info(
+                                        log_str
+                                        + "MODIFY BEFORE FIT - The pixelization's mesh's pixel UniformPrior lower_limit was "
+                                        "also above the number of pixels in the mask, and has been reduced"
+                                        "to the number of pixels in the mask minus 10."
+                                    )
+                                else:
+                                    logger.info(log_str)
+
+                                mesh.pixels = af.UniformPrior(
+                                    lower_limit=lower_limit,
+                                    upper_limit=pixels_in_mask,
+                                )
 
 
 
