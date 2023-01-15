@@ -30,7 +30,7 @@ class Clicker:
                 np.rint(event.xdata / self.pixel_scales[1]) * self.pixel_scales[1]
             )
 
-            (y_pixels, x_pixels) = self.image.mask.pixel_coordinates_2d_from(
+            (y_pixels, x_pixels) = self.image.geometry.pixel_coordinates_2d_from(
                 scaled_coordinates_2d=(y_arcsec, x_arcsec)
             )
 
@@ -50,8 +50,8 @@ class Clicker:
                         y_pixels_max = y
                         x_pixels_max = x
 
-            grid_arcsec = self.image.mask.grid_scaled_2d_from(
-                grid_pixels_2d=aa.Grid2D(
+            grid_arcsec = self.image.geometry.grid_scaled_2d_from(
+                grid_pixels_2d=aa.Grid2D.no_mask(
                     values=[[[y_pixels_max + 0.5, x_pixels_max + 0.5]]],
                     pixel_scales=self.pixel_scales,
                 )
