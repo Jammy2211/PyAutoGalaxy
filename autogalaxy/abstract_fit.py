@@ -10,7 +10,7 @@ import autoarray as aa
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
 
-
+ 
 class AbstractFitInversion:
     def __init__(self, model_obj, settings_inversion: aa.SettingsInversion):
         """
