@@ -59,7 +59,7 @@ class Clicker:
             y_arcsec = grid_arcsec[0, 0]
             x_arcsec = grid_arcsec[0, 1]
 
-            print("clicked on:", y_pixels, x_pixels)
+            print("clicked on the pixel:", y_pixels, x_pixels)
             print("Max flux pixel:", y_pixels_max, x_pixels_max)
             print("Arc-sec Coordinate", y_arcsec, x_arcsec)
 
