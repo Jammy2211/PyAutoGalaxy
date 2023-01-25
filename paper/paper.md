@@ -17,7 +17,7 @@ authors:
     affiliation: 1
   - name: Qiuhan He
     orcid: 0000-0003-3672-9365
-    affiliation: 1   
+    affiliation: 1
   - name: Amy Etherington
     affiliation: 1 
   - name: XiaoYue Cao
@@ -161,7 +161,7 @@ taken without a local `PyAutoGalaxy` installation.
 
 # Software Citations
 
-`PyAutoGalaxy` is written in Python 3.8+ [@python] and uses the following software packages:
+`PyAutoGalaxy` is written in Python 3.8+ and uses the following software packages:
 
 - `Astropy` [@astropy1; @astropy2]
 - `COLOSSUS` [@colossus]
