@@ -1,0 +1,75 @@
+{
+    "description": "Release which is tied to the publication of PyAutoGalaxy in the Journal of Open Source software (JOSS).",
+    "license": "other-open",
+    "title": "PyAutoGalaxy: Open-Source Multiwavelength Galaxy Structure & Morphology",
+    "version": "2023.1.15.1",
+    "upload_type": "software",
+    "publication_date": "2023-01-19",
+    "creators": [
+        {
+            "affiliation": "Institute for Computational Cosmology, Stockton Rd, Durham DH1 3LE",
+            "name": "James W. Nightingale"
+        },
+        {
+            "affiliation": "Institute for Computational Cosmology, Stockton Rd, Durham DH1 3LE",
+            "name": "Aristeidis Amvrosiadis"
+        },
+        {
+            "affiliation": "Institute for Computational Cosmology, Stockton Rd, Durham DH1 3LE",
+            "name": "Richard G. Hayes"
+        },
+        {
+            "affiliation": "Institute for Computational Cosmology, Stockton Rd, Durham DH1 3LE",
+            "name": "Qiuhan He"
+        },
+        {
+            "affiliation": "Institute for Computational Cosmology, Stockton Rd, Durham DH1 3LE",
+            "name": "Amy Etherington"
+        },
+        {
+            "affiliation": "National Astronomical Observatories, Chinese Academy of Sciences, 20A Datun Road, Chaoyang District, Beijing 100012, China",
+            "name": "XiaoYue Cao"
+        },
+        {
+            "affiliation": "Institute for Computational Cosmology, Stockton Rd, Durham DH1 3LE",
+            "name": "Shaun Cole"
+        },        
+        {
+            "affiliation": "Advanced Research Computing, Durham University, Durham DH1 3LE",
+            "name": "Jonathan Frawley"
+        },
+        {
+            "affiliation": "Institute for Computational Cosmology, Stockton Rd, Durham DH1 3LE",
+            "name": "Carlos S. Frenk"
+        },             
+        {
+            "affiliation": "National Astronomical Observatories, Chinese Academy of Sciences, 20A Datun Road, Chaoyang District, Beijing 100012, China",
+            "name": "Ran Li"
+        },             
+        {
+            "affiliation": "Institute for Computational Cosmology, Stockton Rd, Durham DH1 3LE",
+            "name": "Richard J. Massey"
+        },
+        {
+            "affiliation": "School of Physics and Astronomy, Cardiff University, The Parade, Cardiff CF24 3AA, UK",
+            "name": "Mattia Negrello"
+        },
+        {
+            "affiliation": "Institute for Computational Cosmology, Stockton Rd, Durham DH1 3LE",
+            "name": "Andrew Robertson"
+        }        
+    ],
+    "access_right": "open",
+    "related_identifiers": [
+        {
+            "scheme": "url",
+            "identifier": "https://github.com/Jammy2211/PyAutoGalaxy/tree/2023.1.15.1",
+            "relation": "isSupplementTo"
+        },
+        {
+            "scheme": "doi",
+            "identifier": "10.5281/zenodo.7546914",
+            "relation": "isVersionOf"
+        }
+    ]
+}
