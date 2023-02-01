@@ -54,15 +54,15 @@ class MassPlotter(Plotter):
         Parameters
         ----------
         convergence
-            Whether or not to make a 2D plot (via `imshow`) of the convergence.
+            Whether to make a 2D plot (via `imshow`) of the convergence.
         potential
-            Whether or not to make a 2D plot (via `imshow`) of the potential.
+            Whether to make a 2D plot (via `imshow`) of the potential.
         deflections_y
-            Whether or not to make a 2D plot (via `imshow`) of the y component of the deflection angles.
+            Whether to make a 2D plot (via `imshow`) of the y component of the deflection angles.
         deflections_x
-            Whether or not to make a 2D plot (via `imshow`) of the x component of the deflection angles.
+            Whether to make a 2D plot (via `imshow`) of the x component of the deflection angles.
         magnification
-            Whether or not to make a 2D plot (via `imshow`) of the magnification.
+            Whether to make a 2D plot (via `imshow`) of the magnification.
         """
         if convergence:
 

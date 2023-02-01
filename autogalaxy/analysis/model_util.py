@@ -98,6 +98,7 @@ def has_pixelization_from(model: af.Collection) -> bool:
 
     return len(mesh_list) > 0
 
+
 def set_upper_limit_of_pixelization_pixels_prior(
     model: af.Collection,
     pixels_in_mask: int,
@@ -166,7 +167,6 @@ def set_upper_limit_of_pixelization_pixels_prior(
     #             upper_limit=pixels_in_mask,
     #         )
 
-
     if not hasattr(model, "galaxies"):
         return
 
@@ -181,9 +181,9 @@ def set_upper_limit_of_pixelization_pixels_prior(
                 if hasattr(mesh, "cls"):
 
                     if (
-                            mesh.cls is aa.mesh.DelaunayBrightnessImage
-                            or aa.mesh.VoronoiBrightnessImage
-                            or aa.mesh.VoronoiNNBrightnessImage
+                        mesh.cls is aa.mesh.DelaunayBrightnessImage
+                        or aa.mesh.VoronoiBrightnessImage
+                        or aa.mesh.VoronoiNNBrightnessImage
                     ):
 
                         if hasattr(mesh, "pixels"):
@@ -220,7 +220,6 @@ def set_upper_limit_of_pixelization_pixels_prior(
                                         lower_limit=lower_limit,
                                         upper_limit=pixels_in_mask,
                                     )
-
 
 
 def clean_model_of_hyper_images(model):
