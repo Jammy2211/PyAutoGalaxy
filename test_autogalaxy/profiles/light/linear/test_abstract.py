@@ -21,7 +21,7 @@ def test__mapping_matrix_from(sub_grid_2d_7x7, blurring_grid_2d_7x7, convolver_7
         light_profile_list=[lp_0, lp_1],
     )
 
-    assert lp_linear_obj_func_list.parameters == 2
+    assert lp_linear_obj_func_list.params == 2
 
     lp_0_image = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
     lp_1_image = lp_1.image_2d_from(grid=sub_grid_2d_7x7)
