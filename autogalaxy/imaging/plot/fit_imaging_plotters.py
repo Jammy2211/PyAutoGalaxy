@@ -130,11 +130,11 @@ class FitImagingPlotter(Plotter):
         Parameters
         ----------
         subtracted_image
-            Whether or not to make a 2D plot (via `imshow`) of the subtracted image of a galaxy, where this image is
+            Whether to make a 2D plot (via `imshow`) of the subtracted image of a galaxy, where this image is
             the fit's `data` minus the model images of all other galaxies, thereby showing an individual galaxy in the
             data.
         model_image
-            Whether or not to make a 2D plot (via `imshow`) of the model image of a galaxy, where this image is the
+            Whether to make a 2D plot (via `imshow`) of the model image of a galaxy, where this image is the
             model image of one galaxy, thereby showing how much it contributes to the overall model image.
         galaxy_index
             If input, plots for only a single galaxy based on its index in the plane are created.

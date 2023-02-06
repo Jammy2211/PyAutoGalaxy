@@ -108,7 +108,7 @@ class LightProfilePlotter(Plotter):
         Parameters
         ----------
         image
-            Whether or not to make a 1D plot (via `plot`) of the image.
+            Whether to make a 1D plot (via `plot`) of the image.
         """
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
             plot_axis_type_override = "semilogy"
@@ -144,7 +144,7 @@ class LightProfilePlotter(Plotter):
         Parameters
         ----------
         image
-            Whether or not to make a 2D plot (via `imshow`) of the image.
+            Whether to make a 2D plot (via `imshow`) of the image.
         """
         if image:
 
@@ -242,11 +242,11 @@ class LightProfilePDFPlotter(LightProfilePlotter):
         Parameters
         ----------
         image
-            Whether or not to make a 1D plot (via `plot`) of the image.
+            Whether to make a 1D plot (via `plot`) of the image.
         convergence
-            Whether or not to make a 1D plot (via `imshow`) of the convergence.
+            Whether to make a 1D plot (via `imshow`) of the convergence.
         potential
-            Whether or not to make a 1D plot (via `imshow`) of the potential.
+            Whether to make a 1D plot (via `imshow`) of the potential.
         """
         if self.mat_plot_1d.yx_plot.plot_axis_type is None:
             plot_axis_type_override = "semilogy"

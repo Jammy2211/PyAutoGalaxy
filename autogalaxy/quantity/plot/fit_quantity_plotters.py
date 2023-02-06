@@ -79,19 +79,19 @@ class FitQuantityPlotter(Plotter):
         Parameters
         ----------
         image
-            Whether or not to make a 2D plot (via `imshow`) of the image data.
+            Whether to make a 2D plot (via `imshow`) of the image data.
         noise_map
-            Whether or not to make a 2D plot (via `imshow`) of the noise map.
+            Whether to make a 2D plot (via `imshow`) of the noise map.
         signal_to_noise_map
-            Whether or not to make a 2D plot (via `imshow`) of the signal-to-noise map.
+            Whether to make a 2D plot (via `imshow`) of the signal-to-noise map.
         model_image
-            Whether or not to make a 2D plot (via `imshow`) of the model image.
+            Whether to make a 2D plot (via `imshow`) of the model image.
         residual_map
-            Whether or not to make a 2D plot (via `imshow`) of the residual map.
+            Whether to make a 2D plot (via `imshow`) of the residual map.
         normalized_residual_map
-            Whether or not to make a 2D plot (via `imshow`) of the normalized residual map.
+            Whether to make a 2D plot (via `imshow`) of the normalized residual map.
         chi_squared_map
-            Whether or not to make a 2D plot (via `imshow`) of the chi-squared map.
+            Whether to make a 2D plot (via `imshow`) of the chi-squared map.
         """
 
         if isinstance(self.fit.dataset.data, aa.Array2D):

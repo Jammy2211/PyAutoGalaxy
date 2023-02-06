@@ -16,7 +16,7 @@ def test__set_blurred_image():
     preloads = ag.Preloads(blurred_image=1)
     preloads.set_blurred_image(fit_0=fit_0, fit_1=fit_1)
 
-    assert (preloads.blurred_image == np.zeros(2)).all()
+    assert preloads.blurred_image is None
 
     # Blurred image are different, indicating the model parameters change the grid, so no preloading.
 

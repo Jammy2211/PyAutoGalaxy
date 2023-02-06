@@ -471,7 +471,11 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
 
     masked_imaging_7x7.image[0] = 3.0
 
-    fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7,
+        plane=plane,
+        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
+    )
 
     assert (fit.galaxy_model_image_dict[g3] == np.zeros(9)).all()
 

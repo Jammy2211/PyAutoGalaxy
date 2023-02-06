@@ -145,23 +145,23 @@ class PlanePlotter(Plotter):
         Parameters
         ----------
         image
-            Whether or not to make a 2D plot (via `imshow`) of the image of plane in its image-plane (e.g. after
+            Whether to make a 2D plot (via `imshow`) of the image of plane in its image-plane (e.g. after
             lensing).
         plane_image
-            Whether or not to make a 2D plot (via `imshow`) of the image of the plane in the soure-plane (e.g. its
+            Whether to make a 2D plot (via `imshow`) of the image of the plane in the soure-plane (e.g. its
             unlensed light).
         convergence
-            Whether or not to make a 2D plot (via `imshow`) of the convergence.
+            Whether to make a 2D plot (via `imshow`) of the convergence.
         potential
-            Whether or not to make a 2D plot (via `imshow`) of the potential.
+            Whether to make a 2D plot (via `imshow`) of the potential.
         deflections_y
-            Whether or not to make a 2D plot (via `imshow`) of the y component of the deflection angles.
+            Whether to make a 2D plot (via `imshow`) of the y component of the deflection angles.
         deflections_x
-            Whether or not to make a 2D plot (via `imshow`) of the x component of the deflection angles.
+            Whether to make a 2D plot (via `imshow`) of the x component of the deflection angles.
         magnification
-            Whether or not to make a 2D plot (via `imshow`) of the magnification.
+            Whether to make a 2D plot (via `imshow`) of the magnification.
         contribution_map
-            Whether or not to make a 2D plot (via `imshow`) of the contribution map.
+            Whether to make a 2D plot (via `imshow`) of the contribution map.
         title_suffix
             Add a suffix to the end of the matplotlib title label.
         filename_suffix
@@ -249,7 +249,7 @@ class PlanePlotter(Plotter):
         Parameters
         ----------
         image
-            Whether or not to make a 2D plot (via `imshow`) of the image of the galaxy in the soure-galaxy (e.g. its
+            Whether to make a 2D plot (via `imshow`) of the image of the galaxy in the soure-galaxy (e.g. its
             unlensed light).
         galaxy_index
             If input, plots for only a single galaxy based on its index in the plane are created.
