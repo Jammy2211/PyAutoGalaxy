@@ -159,8 +159,10 @@ class Preloads(aa.Preloads):
         """
         self.blurred_image = None
 
-        if (np.max(abs(fit_0.blurred_image - fit_1.blurred_image)) < 1e-8) and (
-            np.sum(fit_0.blurred_image) > 1e-8
+        precision = 1e-8
+
+        if (np.max(abs(fit_0.blurred_image - fit_1.blurred_image)) < precision) and (
+            np.sum(fit_0.blurred_image) > precision
         ):
 
             self.blurred_image = fit_0.blurred_image
