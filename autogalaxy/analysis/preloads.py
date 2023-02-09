@@ -229,7 +229,9 @@ class Preloads(aa.Preloads):
             f"Curvature Matrix Sparse = {self.curvature_matrix_preload is not None}\n"
         ]
         line += [f"Curvature Matrix = {self.curvature_matrix is not None}\n"]
-        line += [f"Curvature Matrix Mapper Diag = {self.curvature_matrix_mapper_diag is not None}\n"]
+        line += [
+            f"Curvature Matrix Mapper Diag = {self.curvature_matrix_mapper_diag is not None}\n"
+        ]
         line += [f"Regularization Matrix = {self.regularization_matrix is not None}\n"]
         line += [
             f"Log Det Regularization Matrix Term = {self.log_det_regularization_matrix_term is not None}\n"
