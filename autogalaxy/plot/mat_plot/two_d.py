@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional, Union
 
 import autoarray.plot as aplt
 from autogalaxy.plot import wrap as w
@@ -19,7 +19,8 @@ class MatPlot2D(aplt.MatPlot2D):
         title: Optional[aplt.Title] = None,
         ylabel: Optional[aplt.YLabel] = None,
         xlabel: Optional[aplt.XLabel] = None,
-        text: Optional[aplt.Text] = None,
+        text: Optional[Union[aplt.Text, List[aplt.Text]]] = None,
+        annotate: Optional[Union[aplt.Annotate, List[aplt.Annotate]]] = None,
         legend: Optional[aplt.Legend] = None,
         output: Optional[aplt.Output] = None,
         array_overlay: Optional[aplt.ArrayOverlay] = None,
@@ -89,6 +90,10 @@ class MatPlot2D(aplt.MatPlot2D):
           Sets the figure ylabel and customizes its appearance using `plt.ylabel`.
         xlabel
           Sets the figure xlabel and customizes its appearance using `plt.xlabel`.
+        text
+            Sets any text on the figure and customizes its appearance using `plt.text`.
+        annotate
+            Sets any annotations on the figure and customizes its appearance using `plt.annotate`.
         legend
           Sets whether the plot inclues a legend and customizes its appearance and labels using `plt.legend`.
         output
@@ -162,6 +167,7 @@ class MatPlot2D(aplt.MatPlot2D):
             ylabel=ylabel,
             xlabel=xlabel,
             text=text,
+            annotate=annotate,
             output=output,
             origin_scatter=origin_scatter,
             mask_scatter=mask_scatter,
