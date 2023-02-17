@@ -444,6 +444,9 @@ class AnalysisDataset(Analysis):
         if os.environ.get("PYAUTOFIT_TEST_MODE") == "1":
             return
 
+        if conf.instance["general"]["test"]["bypass_figure_of_merit_sanity"]:
+           return
+
         figure_of_merit = result.max_log_likelihood_fit.figure_of_merit
 
         figure_of_merit_sanity_file = path.join(
