@@ -34,4 +34,5 @@ structures:
   use_dataset_grids: true
 test:
   check_figure_of_merit_sanity: false
+  bypass_figure_of_merit_sanity: false
   check_preloads: false
