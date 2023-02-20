@@ -12,6 +12,8 @@ hyper:
   hyper_minimum_percent: 0.01
   hyper_noise_limit: 100000000.0
   stochastic_outputs: false
+inversion:
+  check_solution_default: false        # When an Inversion checks solutions in case they are numerically unstable by default or not (e.g. InversionSettings.check_solution).
 model:
   ignore_prior_limits: true
 numba:
