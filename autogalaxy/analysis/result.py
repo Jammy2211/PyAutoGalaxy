@@ -62,6 +62,7 @@ class Result(af.Result):
         -------
         A deep copy of the instance of the max log likelihood result.
         """
+
         if self.__instance is None:
 
             self.__instance = copy.deepcopy(self.instance)
