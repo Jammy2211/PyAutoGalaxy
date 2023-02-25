@@ -51,4 +51,5 @@ radial_minimum:
     SersicSph: 1.0e-06
     SersicRadialGradientSph: 1.0e-06
     ShapeletCartesian: 1.0e-8
+    ShapeletCartesianEll: 1.0e-8
     EllProfile: 1.0e-08

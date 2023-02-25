@@ -9,6 +9,7 @@ class AbstractShapelet(LightProfileLinear):
         n_y: int,
         n_x: int,
         centre: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         beta: float = 1.0,
     ):
         """
@@ -32,6 +33,8 @@ class AbstractShapelet(LightProfileLinear):
             The order of the shapelets basis function in the x-direction.
         centre
             The (y,x) arc-second coordinates of the profile (shapelet) centre.
+        ell_comps
+            The first and second ellipticity components of the elliptical coordinate system.
         beta
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.
         """
@@ -40,4 +43,4 @@ class AbstractShapelet(LightProfileLinear):
         self.n_x = n_x
         self.beta = beta
 
-        super().__init__(centre=centre, intensity=1.0)
+        super().__init__(centre=centre, ell_comps=ell_comps, intensity=1.0)
