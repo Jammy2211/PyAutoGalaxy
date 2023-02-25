@@ -54,4 +54,6 @@ radial_minimum:
     ShapeletCartesianEll: 1.0e-8
     ShapeletPolar: 1.0e-8
     ShapeletPolarEll: 1.0e-8
+    ShapeletExponential: 1.0e-8
+    ShapeletExponentialEll: 1.0e-8
     EllProfile: 1.0e-08
