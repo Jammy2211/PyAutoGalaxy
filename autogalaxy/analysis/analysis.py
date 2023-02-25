@@ -445,7 +445,7 @@ class AnalysisDataset(Analysis):
             return
 
         if conf.instance["general"]["test"]["bypass_figure_of_merit_sanity"]:
-           return
+            return
 
         figure_of_merit = result.max_log_likelihood_fit.figure_of_merit
 
