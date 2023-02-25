@@ -6,8 +6,6 @@ from autogalaxy.profiles.light.linear.abstract import LightProfileLinear
 class AbstractShapelet(LightProfileLinear):
     def __init__(
         self,
-        n_y: int,
-        n_x: int,
         centre: Tuple[float, float] = (0.0, 0.0),
         ell_comps: Tuple[float, float] = (0.0, 0.0),
         beta: float = 1.0,
@@ -27,10 +25,6 @@ class AbstractShapelet(LightProfileLinear):
 
         Parameters
         ----------
-        n_y
-            The order of the shapelets basis function in the y-direction.
-        n_x
-            The order of the shapelets basis function in the x-direction.
         centre
             The (y,x) arc-second coordinates of the profile (shapelet) centre.
         ell_comps
@@ -39,8 +33,6 @@ class AbstractShapelet(LightProfileLinear):
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.
         """
 
-        self.n_y = n_y
-        self.n_x = n_x
         self.beta = beta
 
         super().__init__(centre=centre, ell_comps=ell_comps, intensity=1.0)
