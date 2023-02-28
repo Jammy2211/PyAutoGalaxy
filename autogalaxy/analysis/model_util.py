@@ -352,6 +352,10 @@ def hyper_pix_model_from(
     if regularization_overwrite:
         model.galaxies.source.regularization = af.Model(regularization_overwrite)
 
+    if not setup_hyper.mesh_pixels_fixed:
+        if hasattr(model.galaxies.source.pixelization.mesh, "pixels"):
+            model.pixelization.mesh.pixels = setup_hyper.mesh_pixels_fixed
+
     model = clean_model_of_hyper_images(model=model)
 
     model.hyper_image_sky = None
