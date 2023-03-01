@@ -341,7 +341,16 @@ def hyper_pix_model_from(
     if setup_hyper is None:
         return None
 
-    model = result.instance.as_model((aa.AbstractMesh, aa.AbstractRegularization))
+    # TODO : Add not to as_model.
+
+    model = result.instance.as_model((
+        aa.AbstractMesh,
+        aa.reg.ConstantSplit,
+        aa.reg.AdaptiveBrightnessSplit,
+        aa.reg.ConstantSplit,
+        aa.reg.AdaptiveBrightness,
+        aa.reg.ConstantSplit)
+    )
 
     if not has_pixelization_from(model=model):
         return None
@@ -352,9 +361,9 @@ def hyper_pix_model_from(
     if regularization_overwrite:
         model.galaxies.source.regularization = af.Model(regularization_overwrite)
 
-    if not setup_hyper.mesh_pixels_fixed:
+    if setup_hyper.mesh_pixels_fixed is not None:
         if hasattr(model.galaxies.source.pixelization.mesh, "pixels"):
-            model.pixelization.mesh.pixels = setup_hyper.mesh_pixels_fixed
+            model.galaxies.source.pixelization.mesh.pixels = setup_hyper.mesh_pixels_fixed
 
     model = clean_model_of_hyper_images(model=model)
 
