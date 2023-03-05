@@ -397,10 +397,15 @@ def hyper_fit_no_noise(
     result: af.Result,
     analysis,
     search_previous,
+    use_positive_only_solver: bool = False,
     include_hyper_image_sky: bool = False,
 ):
 
     analysis.set_hyper_dataset(result=result)
+
+    if use_positive_only_solver:
+
+        analysis.settings_inversion.use_positive_only_solver = True
 
     hyper_model_pix = hyper_pix_model_from(
         setup_hyper=setup_hyper,
