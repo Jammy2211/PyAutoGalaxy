@@ -437,6 +437,7 @@ def hyper_fit(
     result: af.Result,
     analysis,
     search_previous: af.NonLinearSearch,
+    use_positive_only_solver: bool = False,
     include_hyper_image_sky: bool = False,
     pixelization_overwrite=None,
     regularization_overwrite=None,
@@ -465,6 +466,9 @@ def hyper_fit(
         The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
     analysis : Analysis
         An analysis class used to fit imaging or interferometer data with a model.
+    use_positive_only_solver
+        Use a positive-only solver for the linear algebra, which does not allow negative values in the lens light /
+        source reconstructions.
 
     Returns
     -------
@@ -492,6 +496,9 @@ def hyper_fit(
             search_previous=search_previous,
             include_hyper_image_sky=include_hyper_image_sky,
         )
+
+    if use_positive_only_solver:
+        analysis.settings_inversion.use_positive_only_solver = True
 
     if hyper_noise_model is not None:
 
