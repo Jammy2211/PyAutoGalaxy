@@ -494,6 +494,7 @@ def hyper_fit(
             result=result,
             analysis=analysis,
             search_previous=search_previous,
+            use_positive_only_solver=use_positive_only_solver,
             include_hyper_image_sky=include_hyper_image_sky,
         )
 
