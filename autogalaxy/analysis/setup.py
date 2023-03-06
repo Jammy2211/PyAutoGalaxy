@@ -16,7 +16,7 @@ class SetupHyper:
         search_noise_cls: Optional[af.NonLinearSearch] = None,
         search_pix_dict: Optional[dict] = None,
         search_noise_dict: Optional[dict] = None,
-        mesh_pixels_fixed: Optional[int] = None
+        mesh_pixels_fixed: Optional[int] = None,
     ):
         """
         The hyper setup of a pipeline, which controls how hyper-features in PyAutoGalaxy template pipelines run,
