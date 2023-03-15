@@ -316,7 +316,7 @@ class OperateDeflections(Dictable):
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ) -> aa.Grid2DIrregular:
         """
-        Returns the tangential critical curve of lensing object, which is computed as follows:
+        Returns all tangential critical curves of the lensing system, which are computed as follows:
 
         1) Compute the tangential eigen values for every coordinate on the input grid via the Jacobian.
         2) Find contours of all values in the tangential eigen values that are zero using a marching squares algorithm.
@@ -341,12 +341,15 @@ class OperateDeflections(Dictable):
 
         if len(tangential_critical_curve_indices) == 0:
             return []
-
-        tangential_critical_curve = grid_scaled_2d_for_marching_squares_from(
-            grid_pixels_2d=tangential_critical_curve_indices[0],
-            shape_native=tangential_eigen_values.sub_shape_native,
-            mask=grid.mask,
-        )
+        else:
+            tangential_critical_curve = []
+            for i in range(len(tangential_critical_curve_indices)):
+                curve = grid_scaled_2d_for_marching_squares_from(
+                    grid_pixels_2d=tangential_critical_curve_indices[i],
+                    shape_native=tangential_eigen_values.sub_shape_native,
+                    mask=grid.mask,
+                )
+                tangential_critical_curve.append(curve)
 
         try:
             return aa.Grid2DIrregular(tangential_critical_curve)
@@ -358,7 +361,7 @@ class OperateDeflections(Dictable):
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ) -> aa.Grid2DIrregular:
         """
-        Returns the radial critical curve of lensing object, which is computed as follows:
+        Returns all radial critical curves of the lensing system, which are computed as follows:
 
         1) Compute the radial eigen values for every coordinate on the input grid via the Jacobian.
         2) Find contours of all values in the radial eigen values that are zero using a marching squares algorithm.
@@ -383,12 +386,15 @@ class OperateDeflections(Dictable):
 
         if len(radial_critical_curve_indices) == 0:
             return []
-
-        radial_critical_curve = grid_scaled_2d_for_marching_squares_from(
-            grid_pixels_2d=radial_critical_curve_indices[0],
-            shape_native=radial_eigen_values.sub_shape_native,
-            mask=grid.mask,
-        )
+        else:
+            radial_critical_curve = []
+            for i in range(len(radial_critical_curve_indices)):
+                curve = grid_scaled_2d_for_marching_squares_from(
+                    grid_pixels_2d=radial_critical_curve_indices[i],
+                    shape_native=radial_eigen_values.sub_shape_native,
+                    mask=grid.mask,
+                )
+                radial_critical_curve.append(curve)
 
         try:
             return aa.Grid2DIrregular(radial_critical_curve)
@@ -400,8 +406,9 @@ class OperateDeflections(Dictable):
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ) -> List[aa.Grid2DIrregular]:
         """
-        Returns the both the tangential and radial critical curves of lensing object as a two entry list of
-        irregular 2D grids.
+        Returns both the tangential and radial critical curves of the lensing system as a two entry list where
+        the first entry is a list of irregular 2D grid(s) corresponding to each tangential critical curve and
+        the second entry is a list of irregular 2D grid(s) corresponding to each radial critical curve.
 
         The calculation of each critical curve is described in the functions `tangential_critical_curve_from()` and
         `radial_critical_curve_from()`.
@@ -435,12 +442,12 @@ class OperateDeflections(Dictable):
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ) -> aa.Grid2DIrregular:
         """
-        Returns the tangential caustic of lensing object, which is computed as follows:
+        Returns all tangential caustics of the lensing system, which are computed as follows:
 
         1) Compute the tangential eigen values for every coordinate on the input grid via the Jacobian.
         2) Find contours of all values in the tangential eigen values that are zero using a marching squares algorithm.
-        3) Compute the lensing objects deflection angle's at the (y,x) coordinates of this tangential critical curve
-           contour and ray-trace it to the source-plane, therefore forming the tangential caustic.
+        3) Compute the lensing system's deflection angles at the (y,x) coordinates of the tangential critical curve
+           contours and ray-trace it to the source-plane, therefore forming the tangential caustics.
 
         Due to the use of a marching squares algorithm that requires the zero values of the tangential eigen values to
         be computed, caustics can only be calculated using the Jacobian and a uniform 2D grid.
@@ -460,24 +467,27 @@ class OperateDeflections(Dictable):
 
         if len(tangential_critical_curve) == 0:
             return []
+        else:
+            tangential_caustic = []
+            for i in range(len(tangential_critical_curve)):
+                deflections_critical_curve = self.deflections_yx_2d_from(
+                    grid=tangential_critical_curve[i]
+                )
+                tangential_caustic.append(tangential_critical_curve[i] - deflections_critical_curve)
 
-        deflections_critical_curve = self.deflections_yx_2d_from(
-            grid=tangential_critical_curve
-        )
-
-        return tangential_critical_curve - deflections_critical_curve
+        return tangential_caustic
 
     @evaluation_grid
     def radial_caustic_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ) -> aa.Grid2DIrregular:
         """
-        Returns the radial caustic of lensing object, which is computed as follows:
+        Returns all radial caustics of the lensing system, which are computed as follows:
 
         1) Compute the radial eigen values for every coordinate on the input grid via the Jacobian.
         2) Find contours of all values in the radial eigen values that are zero using a marching squares algorithm.
-        3) Compute the lensing objects deflection angle's at the (y,x) coordinates of this radial critical curve
-           contour and ray-trace it to the source-plane, therefore forming the radial caustic.
+        3) Compute the lensing system's deflection angles at the (y,x) coordinates of the radial critical curve
+           contours and ray-trace it to the source-plane, therefore forming the radial caustics.
 
         Due to the use of a marching squares algorithm that requires the zero values of the radial eigen values to
         be computed, this caustics can only be calculated using the Jacobian and a uniform 2D grid.
@@ -497,20 +507,24 @@ class OperateDeflections(Dictable):
 
         if len(radial_critical_curve) == 0:
             return []
+        else:
+            radial_caustic = []
+            for i in range(len(radial_critical_curve)):
+                deflections_critical_curve = self.deflections_yx_2d_from(
+                    grid=radial_critical_curve[i]
+                )
+                radial_caustic.append(radial_critical_curve[i] - deflections_critical_curve)
 
-        deflections_critical_curve = self.deflections_yx_2d_from(
-            grid=radial_critical_curve
-        )
-
-        return radial_critical_curve - deflections_critical_curve
+        return radial_caustic
 
     @evaluation_grid
     def caustics_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ) -> List[aa.Grid2DIrregular]:
         """
-        Returns the both the tangential and radial caustics of lensing object as a two entry list of
-        irregular 2D grids.
+        Returns both the tangential and radial caustics of the lensing system as a two entry list where
+        the first entry is a list of irregular 2D grid(s) corresponding to each tangential caustic and
+        the second entry is a list of irregular 2D grid(s) corresponding to each radial caustic.
 
         The calculation of each caustic is described in the functions `tangential_caustic_from()` and
         `radial_caustic_from()`.
@@ -542,8 +556,8 @@ class OperateDeflections(Dictable):
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ) -> float:
         """
-        Returns the surface area within the tangential critical curve, the calculation of whihc is described in the
-        function `tangential_critical_curve_from()`
+        Returns the surface area within each tangential critical curve as a list, the calculation of which is
+        described in the function `tangential_critical_curve_from()`.
 
         The area is computed via a line integral.
 
@@ -562,22 +576,28 @@ class OperateDeflections(Dictable):
         tangential_critical_curve = self.tangential_critical_curve_from(
             grid=grid, pixel_scale=pixel_scale
         )
-        x, y = tangential_critical_curve[:, 0], tangential_critical_curve[:, 1]
 
-        return np.abs(0.5 * np.sum(y[:-1] * np.diff(x) - x[:-1] * np.diff(y)))
+        area_within_each_curve = []
+        for curve in tangential_critical_curve:
+            x, y = curve[:, 0], curve[:, 1]
+            area = np.abs(0.5 * np.sum(y[:-1] * np.diff(x) - x[:-1] * np.diff(y)))
+            area_within_each_curve.append(area)
+
+        return area_within_each_curve
 
     @evaluation_grid
     def einstein_radius_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ):
         """
-        Returns the Einstein radius, which is defined as the radius of the circle which contains the same area as the
-        area within the tangential critical curve.
+        Returns the Einstein radius corresponding to each tangential critical curve as a list. The Einstein
+        radius is defined as the radius of the circle which contains the same area as the area within the tangential
+        critical curve.
 
         This definition is sometimes referred to as the "effective Einstein radius" in the literature and is commonly
         adopted in studies, for example the SLACS series of papers.
 
-        The calculation of the tangential critical curve and its are is described in the functions
+        The calculation of the tangential critical curves and their areas is described in the functions
          `tangential_critical_curve_from()` and `area_within_tangential_critical_curve_from()`.
 
         Due to the use of a marching squares algorithm to estimate the critical curve, this function can only use the
@@ -593,12 +613,9 @@ class OperateDeflections(Dictable):
             caustic to be computed more accurately using a higher resolution grid.
         """
         try:
-            return np.sqrt(
-                self.area_within_tangential_critical_curve_from(
-                    grid=grid, pixel_scale=pixel_scale
-                )
-                / np.pi
-            )
+            area_within_each_curve = self.area_within_tangential_critical_curve_from(grid=grid, pixel_scale=pixel_scale)
+            einstein_radii = [np.sqrt(area)/np.pi for area in area_within_each_curve]
+            return einstein_radii
         except TypeError:
             raise TypeError("The grid input was unable to estimate the Einstein Radius")
 
@@ -607,8 +624,8 @@ class OperateDeflections(Dictable):
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ):
         """
-        Returns the angular Einstein Mass, which is defined as:
-
+        Returns the angular Einstein Mass corresponding to each Einstein radius as a list. The angular Einstein mass
+        is defined as:
         `einstein_mass = pi * einstein_radius ** 2.0`
 
         where the Einstein radius is the radius of the circle which contains the same area as the area within the
@@ -634,9 +651,9 @@ class OperateDeflections(Dictable):
             If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
             caustic to be computed more accurately using a higher resolution grid.
         """
-        return np.pi * (
-            self.einstein_radius_from(grid=grid, pixel_scale=pixel_scale) ** 2
-        )
+        einstein_radii = self.einstein_radius_from(grid=grid, pixel_scale=pixel_scale)
+        einstein_mass_angular = [np.pi * R** 2 for R in einstein_radii]
+        return einstein_mass_angular
 
     def jacobian_from(self, grid):
         """
