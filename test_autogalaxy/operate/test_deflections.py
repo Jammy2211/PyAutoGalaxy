@@ -277,8 +277,6 @@ def test__einstein_radius_list_from():
 
     einstein_radius_list = sis.einstein_radius_list_from(grid=grid)
 
-    print(einstein_radius_list)
-
     assert einstein_radius_list[0] == pytest.approx(2.0, 1e-1)
 
     sie = ag.mp.Isothermal(
@@ -288,6 +286,25 @@ def test__einstein_radius_list_from():
     einstein_radius_list = sie.einstein_radius_list_from(grid=grid)
 
     assert einstein_radius_list[0] == pytest.approx(1.9360, 1e-1)
+
+
+def test__einstein_radius_from():
+
+    grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
+
+    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
+
+    einstein_radius = sis.einstein_radius_from(grid=grid)
+
+    assert einstein_radius == pytest.approx(2.0, 1e-1)
+
+    sie = ag.mp.Isothermal(
+        centre=(0.0, 0.0), einstein_radius=2.0, ell_comps=(0.0, -0.25)
+    )
+
+    einstein_radius = sie.einstein_radius_from(grid=grid)
+
+    assert einstein_radius == pytest.approx(1.9360, 1e-1)
 
 
 def test__einstein_mass_from():
