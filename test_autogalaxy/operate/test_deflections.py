@@ -307,15 +307,26 @@ def test__einstein_radius_from():
     assert einstein_radius == pytest.approx(1.9360, 1e-1)
 
 
-def test__einstein_mass_from():
+def test__einstein_mass_angular_list_from():
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    einstein_mass = sis.einstein_mass_angular_from(grid=grid)
+    einstein_mass_angular_list = sis.einstein_mass_angular_list_from(grid=grid)
 
-    assert einstein_mass == pytest.approx(np.pi * 2.0**2.0, 1e-1)
+    assert einstein_mass_angular_list[0] == pytest.approx(np.pi * 2.0**2.0, 1e-1)
+
+
+def test__einstein_mass_angular_from():
+
+    grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
+
+    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
+
+    einstein_mass_angular = sis.einstein_mass_angular_from(grid=grid)
+
+    assert einstein_mass_angular == pytest.approx(np.pi * 2.0**2.0, 1e-1)
 
 
 def test__magnification_2d_from__compare_eigen_values_and_determinant():

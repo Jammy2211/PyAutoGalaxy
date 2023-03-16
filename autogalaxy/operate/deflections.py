@@ -529,7 +529,7 @@ class OperateDeflections(Dictable):
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ):
         """
-        Returns the Einstein radius corresponding to each tangential critical curve as a list.
+        Returns a list of the Einstein radii corresponding to the area within each tangential critical curve.
 
         Each Einstein radius is defined as the radius of the circle which contains the same area as the area within
         each tangential critical curve.
@@ -602,16 +602,15 @@ class OperateDeflections(Dictable):
         return einstein_radii_list[0]
 
     @evaluation_grid
-    def einstein_mass_angular_from(
+    def einstein_mass_angular_list_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
-    ):
+    ) -> List[float]:
         """
-        Returns the angular Einstein Mass corresponding to each Einstein radius as a list. The angular Einstein mass
-        is defined as:
-        `einstein_mass = pi * einstein_radius ** 2.0`
+        Returns a list of the angular Einstein massses corresponding to the area within each tangential critical curve.
 
-        where the Einstein radius is the radius of the circle which contains the same area as the area within the
-        tangential critical curve.
+        The angular Einstein mass is defined as: `einstein_mass = pi * einstein_radius ** 2.0` where the Einstein
+        radius is the radius of the circle which contains the same area as the area within the tangential critical
+        curve.
 
         The Einstein mass is returned in units of arcsecond**2.0 and requires division by the lensing critical surface
         density \sigma_cr to be converted to physical units like solar masses (see `autogalaxy.util.cosmology_util`).
@@ -633,9 +632,54 @@ class OperateDeflections(Dictable):
             If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
             caustic to be computed more accurately using a higher resolution grid.
         """
-        einstein_radii = self.einstein_radius_from(grid=grid, pixel_scale=pixel_scale)
-        einstein_mass_angular = [np.pi * R**2 for R in einstein_radii]
-        return einstein_mass_angular
+        einstein_radius_list = self.einstein_radius_list_from(
+            grid=grid, pixel_scale=pixel_scale
+        )
+        return [
+            np.pi * einstein_radius**2 for einstein_radius in einstein_radius_list
+        ]
+
+    @evaluation_grid
+    def einstein_mass_angular_from(
+        self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
+    ) -> float:
+        """
+        Returns the Einstein radius corresponding to the area within the tangential critical curve.
+
+        The angular Einstein mass is defined as: `einstein_mass = pi * einstein_radius ** 2.0` where the Einstein
+        radius is the radius of the circle which contains the same area as the area within the tangential critical
+        curve.
+
+        The Einstein mass is returned in units of arcsecond**2.0 and requires division by the lensing critical surface
+        density \sigma_cr to be converted to physical units like solar masses (see `autogalaxy.util.cosmology_util`).
+
+        This definition of Eisntein radius (and therefore mass) is sometimes referred to as the "effective Einstein
+        radius" in the literature and is commonly adopted in studies, for example the SLACS series of papers.
+
+        The calculation of the einstein radius is described in the function `einstein_radius_from()`.
+
+        Due to the use of a marching squares algorithm to estimate the critical curve, this function can only use the
+        Jacobian and a uniform 2D grid.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles used to calculate the tangential critical
+            curve are computed on.
+        pixel_scale
+            If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
+            caustic to be computed more accurately using a higher resolution grid.
+        """
+        einstein_mass_angular_list = self.einstein_mass_angular_list_from(
+            grid=grid, pixel_scale=pixel_scale
+        )
+
+        if len(einstein_mass_angular_list) > 1:
+            raise exc.ProfileException(
+                "The Einstein radius cannot be computed as there are multiple tangential critical curves."
+            )
+
+        return einstein_mass_angular_list[0]
 
     def jacobian_from(self, grid):
         """
