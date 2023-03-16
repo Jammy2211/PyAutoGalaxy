@@ -312,7 +312,7 @@ class OperateDeflections(Dictable):
         return grid.values_from(array_slim=1.0 / det_A)
 
     @evaluation_grid
-    def tangential_critical_curve_from(
+    def tangential_critical_curve_list_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ) -> aa.Grid2DIrregular:
         """
@@ -357,7 +357,7 @@ class OperateDeflections(Dictable):
             return []
 
     @evaluation_grid
-    def radial_critical_curve_from(
+    def radial_critical_curve_list_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ) -> aa.Grid2DIrregular:
         """
@@ -402,7 +402,7 @@ class OperateDeflections(Dictable):
             return []
 
     @evaluation_grid
-    def tangential_caustic_from(
+    def tangential_caustic_list_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ) -> aa.Grid2DIrregular:
         """
@@ -425,7 +425,7 @@ class OperateDeflections(Dictable):
             If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
             caustic to be computed more accurately using a higher resolution grid.
         """
-        tangential_critical_curve = self.tangential_critical_curve_from(
+        tangential_critical_curve = self.tangential_critical_curve_list_from(
             grid=grid, pixel_scale=pixel_scale
         )
 
@@ -437,12 +437,14 @@ class OperateDeflections(Dictable):
                 deflections_critical_curve = self.deflections_yx_2d_from(
                     grid=tangential_critical_curve[i]
                 )
-                tangential_caustic.append(tangential_critical_curve[i] - deflections_critical_curve)
+                tangential_caustic.append(
+                    tangential_critical_curve[i] - deflections_critical_curve
+                )
 
         return tangential_caustic
 
     @evaluation_grid
-    def radial_caustic_from(
+    def radial_caustic_list_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ) -> aa.Grid2DIrregular:
         """
@@ -465,7 +467,7 @@ class OperateDeflections(Dictable):
             If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
             caustic to be computed more accurately using a higher resolution grid.
         """
-        radial_critical_curve = self.radial_critical_curve_from(
+        radial_critical_curve = self.radial_critical_curve_list_from(
             grid=grid, pixel_scale=pixel_scale
         )
 
@@ -477,17 +479,19 @@ class OperateDeflections(Dictable):
                 deflections_critical_curve = self.deflections_yx_2d_from(
                     grid=radial_critical_curve[i]
                 )
-                radial_caustic.append(radial_critical_curve[i] - deflections_critical_curve)
+                radial_caustic.append(
+                    radial_critical_curve[i] - deflections_critical_curve
+                )
 
         return radial_caustic
 
     @evaluation_grid
-    def area_within_tangential_critical_curve_from(
+    def area_within_tangential_critical_curve_list_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ) -> float:
         """
         Returns the surface area within each tangential critical curve as a list, the calculation of which is
-        described in the function `tangential_critical_curve_from()`.
+        described in the function `tangential_critical_curve_list_from()`.
 
         The area is computed via a line integral.
 
@@ -503,7 +507,7 @@ class OperateDeflections(Dictable):
             If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
             caustic to be computed more accurately using a higher resolution grid.
         """
-        tangential_critical_curve = self.tangential_critical_curve_from(
+        tangential_critical_curve = self.tangential_critical_curve_list_from(
             grid=grid, pixel_scale=pixel_scale
         )
 
@@ -528,7 +532,7 @@ class OperateDeflections(Dictable):
         adopted in studies, for example the SLACS series of papers.
 
         The calculation of the tangential critical curves and their areas is described in the functions
-         `tangential_critical_curve_from()` and `area_within_tangential_critical_curve_from()`.
+         `tangential_critical_curve_list_from()` and `area_within_tangential_critical_curve_list_from()`.
 
         Due to the use of a marching squares algorithm to estimate the critical curve, this function can only use the
         Jacobian and a uniform 2D grid.
@@ -543,8 +547,12 @@ class OperateDeflections(Dictable):
             caustic to be computed more accurately using a higher resolution grid.
         """
         try:
-            area_within_each_curve = self.area_within_tangential_critical_curve_from(grid=grid, pixel_scale=pixel_scale)
-            einstein_radii = [np.sqrt(area)/np.pi for area in area_within_each_curve]
+            area_within_each_curve = (
+                self.area_within_tangential_critical_curve_list_from(
+                    grid=grid, pixel_scale=pixel_scale
+                )
+            )
+            einstein_radii = [np.sqrt(area) / np.pi for area in area_within_each_curve]
             return einstein_radii
         except TypeError:
             raise TypeError("The grid input was unable to estimate the Einstein Radius")
@@ -582,7 +590,7 @@ class OperateDeflections(Dictable):
             caustic to be computed more accurately using a higher resolution grid.
         """
         einstein_radii = self.einstein_radius_from(grid=grid, pixel_scale=pixel_scale)
-        einstein_mass_angular = [np.pi * R** 2 for R in einstein_radii]
+        einstein_mass_angular = [np.pi * R**2 for R in einstein_radii]
         return einstein_mass_angular
 
     def jacobian_from(self, grid):

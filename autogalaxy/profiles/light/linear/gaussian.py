@@ -53,9 +53,7 @@ class GaussianSph(Gaussian):
         sigma
             The sigma value of the Gaussian, corresponding to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
-        super().__init__(
-            centre=centre, ell_comps=(0.0, 0.0), sigma=sigma
-        )
+        super().__init__(centre=centre, ell_comps=(0.0, 0.0), sigma=sigma)
 
     @property
     def lp_cls(self):

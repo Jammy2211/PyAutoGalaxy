@@ -128,7 +128,7 @@ def test__tangential_critical_curves_from():
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    tangential_critical_curve_list = sis.tangential_critical_curve_from(grid=grid)
+    tangential_critical_curve_list = sis.tangential_critical_curve_list_from(grid=grid)
 
     tangential_critical_curve = np.asarray(tangential_critical_curve_list[0])
 
@@ -145,7 +145,7 @@ def test__tangential_critical_curves_from():
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    tangential_critical_curve_list = sis.tangential_critical_curve_from(grid=grid)
+    tangential_critical_curve_list = sis.tangential_critical_curve_list_from(grid=grid)
 
     tangential_critical_curve = np.asarray(tangential_critical_curve_list[0])
 
@@ -157,7 +157,7 @@ def test__tangential_critical_curves_from():
 
     sis = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
-    tangential_critical_curve_list = sis.tangential_critical_curve_from(grid=grid)
+    tangential_critical_curve_list = sis.tangential_critical_curve_list_from(grid=grid)
 
     tangential_critical_curve = np.asarray(tangential_critical_curve_list[0])
     y_centre = np.mean(tangential_critical_curve[:, 0])
@@ -173,7 +173,7 @@ def test__radial_critical_curve_from__radial():
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    radial_critical_curve_list = sis.radial_critical_curve_from(grid=grid)
+    radial_critical_curve_list = sis.radial_critical_curve_list_from(grid=grid)
 
     radial_critical_curve = np.asarray(radial_critical_curve_list[0])
 
@@ -195,13 +195,14 @@ def test__radial_critical_curve_from__radial():
     assert 0.45 < y_centre < 0.55
     assert 0.95 < x_centre < 1.05
 
+
 def test__tangential_caustic_list_from():
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    tangential_caustic_list = sis.tangential_caustic_from(grid=grid)
+    tangential_caustic_list = sis.tangential_caustic_list_from(grid=grid)
 
     tangential_caustic = np.asarray(tangential_caustic_list[0])
 
@@ -213,7 +214,7 @@ def test__tangential_caustic_list_from():
 
     sis = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
-    tangential_caustic_list = sis.tangential_caustic_from(grid=grid)
+    tangential_caustic_list = sis.tangential_caustic_list_from(grid=grid)
 
     tangential_caustic = np.asarray(tangential_caustic_list[0])
 
@@ -230,7 +231,7 @@ def test__radial_caustic_list_from():
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    radial_caustic_list = sis.radial_caustic_from(grid=grid)
+    radial_caustic_list = sis.radial_caustic_list_from(grid=grid)
 
     caustic_radial = np.asarray(radial_caustic_list[1])
 
@@ -244,7 +245,7 @@ def test__radial_caustic_list_from():
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    radial_caustic_list = sis.radial_caustic_from(grid=grid)
+    radial_caustic_list = sis.radial_caustic_list_from(grid=grid)
 
     radial_caustic = np.asarray(radial_caustic_list[1])
 
@@ -256,7 +257,7 @@ def test__radial_caustic_list_from():
 
     sis = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
-    radial_caustic_list = sis.radial_caustic_from(grid=grid)
+    radial_caustic_list = sis.radial_caustic_list_from(grid=grid)
 
     radial_caustic = np.asarray(radial_caustic_list[1])
 
@@ -276,7 +277,7 @@ def test__area_within_tangential_critical_curve_from():
     area_calc = np.pi * sis.einstein_radius**2
 
     area_within_tangential_critical_curve = (
-        sis.area_within_tangential_critical_curve_from(grid=grid)
+        sis.area_within_tangential_critical_curve_list_from(grid=grid)
     )
 
     assert area_within_tangential_critical_curve == pytest.approx(area_calc, 1e-1)
@@ -408,7 +409,7 @@ def test__tangential_critical_curve_from__compare_via_magnification():
         mass_profile=sie, grid=grid
     )[0]
 
-    tangential_critical_curve = sie.tangential_critical_curve_from(
+    tangential_critical_curve = sie.tangential_critical_curve_list_from(
         grid=grid, pixel_scale=0.2
     )
 
@@ -420,7 +421,7 @@ def test__tangential_critical_curve_from__compare_via_magnification():
         mass_profile=sie, grid=grid
     )[0]
 
-    tangential_critical_curve = sie.tangential_critical_curve_from(
+    tangential_critical_curve = sie.tangential_critical_curve_list_from(
         grid=grid, pixel_scale=0.2
     )
 
@@ -441,7 +442,7 @@ def test__radial_critical_curve_from__compare_via_magnification():
         mass_profile=sie, grid=grid
     )[1]
 
-    radial_critical_curve = sie.radial_critical_curve_from(grid=grid)
+    radial_critical_curve = sie.radial_critical_curve_list_from(grid=grid)
 
     assert sum(critical_curve_radial_via_magnification) == pytest.approx(
         sum(radial_critical_curve), abs=0.7
@@ -460,7 +461,7 @@ def test__tangential_caustic_from___compare_via_magnification():
         mass_profile=sie, grid=grid
     )[0]
 
-    tangential_caustic = sie.tangential_caustic_from(grid=grid, pixel_scale=0.2)
+    tangential_caustic = sie.tangential_caustic_list_from(grid=grid, pixel_scale=0.2)
 
     assert sum(tangential_caustic) == pytest.approx(
         sum(tangential_caustic_via_magnification), 5e-1
@@ -479,7 +480,7 @@ def test__radial_caustic_from___compare_via_magnification():
         mass_profile=sie, grid=grid
     )[1]
 
-    radial_caustic = sie.radial_caustic_from(grid=grid, pixel_scale=0.08)
+    radial_caustic = sie.radial_caustic_list_from(grid=grid, pixel_scale=0.08)
 
     assert sum(radial_caustic) == pytest.approx(
         sum(caustic_radial_via_magnification), 7e-1
