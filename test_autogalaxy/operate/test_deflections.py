@@ -220,7 +220,10 @@ def test__radial_caustic_list_from():
 
     radial_caustic_list = sis.radial_caustic_list_from(grid=grid)
 
-    x_caustic_radial, y_caustic_radial = (radial_caustic_list[0][:, 1], radial_caustic_list[0][:, 0])
+    x_caustic_radial, y_caustic_radial = (
+        radial_caustic_list[0][:, 1],
+        radial_caustic_list[0][:, 0],
+    )
 
     assert np.mean(x_caustic_radial**2 + y_caustic_radial**2) == pytest.approx(
         sis.einstein_radius**2, 5e-1
@@ -261,26 +264,30 @@ def test__area_within_tangential_critical_curve_list_from():
         sis.area_within_tangential_critical_curve_list_from(grid=grid)
     )
 
-    assert area_within_tangential_critical_curve_list[0] == pytest.approx(area_calc, 1e-1)
+    assert area_within_tangential_critical_curve_list[0] == pytest.approx(
+        area_calc, 1e-1
+    )
 
 
-def test__einstein_radius_from():
+def test__einstein_radius_list_from():
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    einstein_radius = sis.einstein_radius_from(grid=grid)
+    einstein_radius_list = sis.einstein_radius_list_from(grid=grid)
 
-    assert einstein_radius == pytest.approx(2.0, 1e-1)
+    print(einstein_radius_list)
+
+    assert einstein_radius_list[0] == pytest.approx(2.0, 1e-1)
 
     sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), einstein_radius=2.0, ell_comps=(0.0, -0.25)
     )
 
-    einstein_radius = sie.einstein_radius_from(grid=grid)
+    einstein_radius_list = sie.einstein_radius_list_from(grid=grid)
 
-    assert einstein_radius == pytest.approx(1.9360, 1e-1)
+    assert einstein_radius_list[0] == pytest.approx(1.9360, 1e-1)
 
 
 def test__einstein_mass_from():

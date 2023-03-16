@@ -9,6 +9,8 @@ from autoconf.dictable import Dictable
 from autogalaxy.util.shear_field import ShearYX2D
 from autogalaxy.util.shear_field import ShearYX2DIrregular
 
+from autogalaxy import exc
+
 
 def grid_scaled_2d_for_marching_squares_from(
     grid_pixels_2d: aa.Grid2D,
@@ -523,13 +525,14 @@ class OperateDeflections(Dictable):
         return area_within_each_curve_list
 
     @evaluation_grid
-    def einstein_radius_from(
+    def einstein_radius_list_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ):
         """
-        Returns the Einstein radius corresponding to each tangential critical curve as a list. The Einstein
-        radius is defined as the radius of the circle which contains the same area as the area within the tangential
-        critical curve.
+        Returns the Einstein radius corresponding to each tangential critical curve as a list.
+
+        Each Einstein radius is defined as the radius of the circle which contains the same area as the area within
+        each tangential critical curve.
 
         This definition is sometimes referred to as the "effective Einstein radius" in the literature and is commonly
         adopted in studies, for example the SLACS series of papers.
@@ -550,15 +553,53 @@ class OperateDeflections(Dictable):
             caustic to be computed more accurately using a higher resolution grid.
         """
         try:
-            area_within_each_curve = (
-                self.area_within_tangential_critical_curve_list_from(
-                    grid=grid, pixel_scale=pixel_scale
-                )
+            area_list = self.area_within_tangential_critical_curve_list_from(
+                grid=grid, pixel_scale=pixel_scale
             )
-            einstein_radii = [np.sqrt(area) / np.pi for area in area_within_each_curve]
-            return einstein_radii
+            return [np.sqrt(area / np.pi) for area in area_list]
         except TypeError:
             raise TypeError("The grid input was unable to estimate the Einstein Radius")
+
+    @evaluation_grid
+    def einstein_radius_from(
+        self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
+    ):
+        """
+        Returns the Einstein radius corresponding to the area within the tangential critical curve.
+
+        The Einstein radius is defined as the radius of the circle which contains the same area as the area within
+        the tangential critical curve.
+
+        This definition is sometimes referred to as the "effective Einstein radius" in the literature and is commonly
+        adopted in studies, for example the SLACS series of papers.
+
+        If there are multiple tangential critical curves (e.g. because the mass distribution is complex) this function
+        raises an error, and the function `einstein_radius_list_from()` should be used instead.
+
+        The calculation of the tangential critical curves and their areas is described in the functions
+         `tangential_critical_curve_list_from()` and `area_within_tangential_critical_curve_list_from()`.
+
+        Due to the use of a marching squares algorithm to estimate the critical curve, this function can only use the
+        Jacobian and a uniform 2D grid.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles used to calculate the tangential
+            critical curve are computed on.
+        pixel_scale
+            If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
+            caustic to be computed more accurately using a higher resolution grid.
+        """
+
+        einstein_radii_list = self.einstein_radius_list_from(grid=grid)
+
+        if len(einstein_radii_list) > 1:
+            raise exc.ProfileException(
+                "The Einstein radius cannot be computed as there are multiple tangential critical curves."
+            )
+
+        return einstein_radii_list[0]
 
     @evaluation_grid
     def einstein_mass_angular_from(
