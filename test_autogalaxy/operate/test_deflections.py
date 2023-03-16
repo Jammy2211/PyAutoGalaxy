@@ -195,10 +195,8 @@ def test__tangential_caustic_list_from():
 
     tangential_caustic_list = sis.tangential_caustic_list_from(grid=grid)
 
-    tangential_caustic = np.asarray(tangential_caustic_list[0])
-
-    y_centre = np.mean(tangential_caustic[:, 0])
-    x_centre = np.mean(tangential_caustic[:, 1])
+    y_centre = np.mean(tangential_caustic_list[0][:, 0])
+    x_centre = np.mean(tangential_caustic_list[0][:, 1])
 
     assert -0.03 < y_centre < 0.03
     assert -0.03 < x_centre < 0.03
@@ -207,10 +205,8 @@ def test__tangential_caustic_list_from():
 
     tangential_caustic_list = sis.tangential_caustic_list_from(grid=grid)
 
-    tangential_caustic = np.asarray(tangential_caustic_list[0])
-
-    y_centre = np.mean(tangential_caustic[:, 0])
-    x_centre = np.mean(tangential_caustic[:, 1])
+    y_centre = np.mean(tangential_caustic_list[0][:, 0])
+    x_centre = np.mean(tangential_caustic_list[0][:, 1])
 
     assert 0.47 < y_centre < 0.53
     assert 0.97 < x_centre < 1.03
@@ -224,9 +220,7 @@ def test__radial_caustic_list_from():
 
     radial_caustic_list = sis.radial_caustic_list_from(grid=grid)
 
-    caustic_radial = np.asarray(radial_caustic_list[1])
-
-    x_caustic_radial, y_caustic_radial = (caustic_radial[:, 1], caustic_radial[:, 0])
+    x_caustic_radial, y_caustic_radial = (radial_caustic_list[0][:, 1], radial_caustic_list[0][:, 0])
 
     assert np.mean(x_caustic_radial**2 + y_caustic_radial**2) == pytest.approx(
         sis.einstein_radius**2, 5e-1
@@ -238,10 +232,8 @@ def test__radial_caustic_list_from():
 
     radial_caustic_list = sis.radial_caustic_list_from(grid=grid)
 
-    radial_caustic = np.asarray(radial_caustic_list[1])
-
-    y_centre = np.mean(radial_caustic[:, 0])
-    x_centre = np.mean(radial_caustic[:, 1])
+    y_centre = np.mean(radial_caustic_list[0][:, 0])
+    x_centre = np.mean(radial_caustic_list[0][:, 1])
 
     assert -0.2 < y_centre < 0.2
     assert -0.35 < x_centre < 0.35
@@ -250,10 +242,8 @@ def test__radial_caustic_list_from():
 
     radial_caustic_list = sis.radial_caustic_list_from(grid=grid)
 
-    radial_caustic = np.asarray(radial_caustic_list[1])
-
-    y_centre = np.mean(radial_caustic[:, 0])
-    x_centre = np.mean(radial_caustic[:, 1])
+    y_centre = np.mean(radial_caustic_list[0][:, 0])
+    x_centre = np.mean(radial_caustic_list[0][:, 1])
 
     assert 0.3 < y_centre < 0.7
     assert 0.7 < x_centre < 1.2

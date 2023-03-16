@@ -424,23 +424,24 @@ class OperateDeflections(Dictable):
             If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
             caustic to be computed more accurately using a higher resolution grid.
         """
-        tangential_critical_curve = self.tangential_critical_curve_list_from(
+
+        tangential_critical_curve_list = self.tangential_critical_curve_list_from(
             grid=grid, pixel_scale=pixel_scale
         )
 
-        if len(tangential_critical_curve) == 0:
-            return []
-        else:
-            tangential_caustic = []
-            for i in range(len(tangential_critical_curve)):
-                deflections_critical_curve = self.deflections_yx_2d_from(
-                    grid=tangential_critical_curve[i]
-                )
-                tangential_caustic.append(
-                    tangential_critical_curve[i] - deflections_critical_curve
-                )
+        tangential_caustic_list = []
 
-        return tangential_caustic
+        for tangential_critical_curve in tangential_critical_curve_list:
+
+            deflections_critical_curve = self.deflections_yx_2d_from(
+                grid=tangential_critical_curve
+            )
+
+            tangential_caustic_list.append(
+                tangential_critical_curve - deflections_critical_curve
+            )
+
+        return tangential_caustic_list
 
     @evaluation_grid
     def radial_caustic_list_from(
@@ -466,23 +467,24 @@ class OperateDeflections(Dictable):
             If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
             caustic to be computed more accurately using a higher resolution grid.
         """
-        radial_critical_curve = self.radial_critical_curve_list_from(
+
+        radial_critical_curve_list = self.radial_critical_curve_list_from(
             grid=grid, pixel_scale=pixel_scale
         )
 
-        if len(radial_critical_curve) == 0:
-            return []
-        else:
-            radial_caustic = []
-            for i in range(len(radial_critical_curve)):
-                deflections_critical_curve = self.deflections_yx_2d_from(
-                    grid=radial_critical_curve[i]
-                )
-                radial_caustic.append(
-                    radial_critical_curve[i] - deflections_critical_curve
-                )
+        radial_caustic_list = []
 
-        return radial_caustic
+        for radial_critical_curve in radial_critical_curve_list:
+
+            deflections_critical_curve = self.deflections_yx_2d_from(
+                grid=radial_critical_curve
+            )
+
+            radial_caustic_list.append(
+                radial_critical_curve - deflections_critical_curve
+            )
+
+        return radial_caustic_list
 
     @evaluation_grid
     def area_within_tangential_critical_curve_list_from(
