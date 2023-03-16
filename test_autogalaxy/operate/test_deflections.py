@@ -122,7 +122,7 @@ def test__magnification_2d_via_hessian_from():
     assert magnification.in_list[1] == pytest.approx(-2.57591, 1.0e-4)
 
 
-def test__tangential_critical_curves_from():
+def test__tangential_critical_curve_list_from():
 
     grid = ag.Grid2D.uniform(shape_native=(15, 15), pixel_scales=0.3)
 
@@ -130,11 +130,9 @@ def test__tangential_critical_curves_from():
 
     tangential_critical_curve_list = sis.tangential_critical_curve_list_from(grid=grid)
 
-    tangential_critical_curve = np.asarray(tangential_critical_curve_list[0])
-
     x_critical_tangential, y_critical_tangential = (
-        tangential_critical_curve[:, 1],
-        tangential_critical_curve[:, 0],
+        tangential_critical_curve_list[0][:, 1],
+        tangential_critical_curve_list[0][:, 0],
     )
 
     assert np.mean(
@@ -147,10 +145,8 @@ def test__tangential_critical_curves_from():
 
     tangential_critical_curve_list = sis.tangential_critical_curve_list_from(grid=grid)
 
-    tangential_critical_curve = np.asarray(tangential_critical_curve_list[0])
-
-    y_centre = np.mean(tangential_critical_curve[:, 0])
-    x_centre = np.mean(tangential_critical_curve[:, 1])
+    y_centre = np.mean(tangential_critical_curve_list[0][:, 0])
+    x_centre = np.mean(tangential_critical_curve_list[0][:, 1])
 
     assert -0.03 < y_centre < 0.03
     assert -0.03 < x_centre < 0.03
@@ -159,9 +155,8 @@ def test__tangential_critical_curves_from():
 
     tangential_critical_curve_list = sis.tangential_critical_curve_list_from(grid=grid)
 
-    tangential_critical_curve = np.asarray(tangential_critical_curve_list[0])
-    y_centre = np.mean(tangential_critical_curve[:, 0])
-    x_centre = np.mean(tangential_critical_curve[:, 1])
+    y_centre = np.mean(tangential_critical_curve_list[0][:, 0])
+    x_centre = np.mean(tangential_critical_curve_list[0][:, 1])
 
     assert 0.47 < y_centre < 0.53
     assert 0.97 < x_centre < 1.03
@@ -175,22 +170,18 @@ def test__radial_critical_curve_from__radial():
 
     radial_critical_curve_list = sis.radial_critical_curve_list_from(grid=grid)
 
-    radial_critical_curve = np.asarray(radial_critical_curve_list[0])
-
-    y_centre = np.mean(radial_critical_curve[:, 0])
-    x_centre = np.mean(radial_critical_curve[:, 1])
+    y_centre = np.mean(radial_critical_curve_list[0][:, 0])
+    x_centre = np.mean(radial_critical_curve_list[0][:, 1])
 
     assert -0.05 < y_centre < 0.05
     assert -0.05 < x_centre < 0.05
 
     sis = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
-    radial_critical_curve_list = sis.critical_curves_from(grid=grid)
+    radial_critical_curve_list = sis.radial_critical_curve_list_from(grid=grid)
 
-    radial_critical_curve = np.asarray(radial_critical_curve_list[0])
-
-    y_centre = np.mean(radial_critical_curve[:, 0])
-    x_centre = np.mean(radial_critical_curve[:, 1])
+    y_centre = np.mean(radial_critical_curve_list[0][:, 0])
+    x_centre = np.mean(radial_critical_curve_list[0][:, 1])
 
     assert 0.45 < y_centre < 0.55
     assert 0.95 < x_centre < 1.05

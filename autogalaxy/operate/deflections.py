@@ -14,8 +14,7 @@ def grid_scaled_2d_for_marching_squares_from(
     grid_pixels_2d: aa.Grid2D,
     shape_native: Tuple[int, int],
     mask: aa.Mask2D,
-) -> aa.Grid2D:
-    from autoarray.structures.grids.uniform_2d import Grid2D
+) -> aa.Grid2DIrregular:
 
     pixel_scales = mask.pixel_scales
     sub_size = mask.sub_size
@@ -34,7 +33,7 @@ def grid_scaled_2d_for_marching_squares_from(
     grid_scaled_1d[:, 0] -= pixel_scales[0] / (2.0 * sub_size)
     grid_scaled_1d[:, 1] += pixel_scales[1] / (2.0 * sub_size)
 
-    return grid_scaled_1d
+    return aa.Grid2DIrregular(values=grid_scaled_1d)
 
 
 def precompute_jacobian(func):
@@ -314,7 +313,7 @@ class OperateDeflections(Dictable):
     @evaluation_grid
     def tangential_critical_curve_list_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
-    ) -> aa.Grid2DIrregular:
+    ) -> List[aa.Grid2DIrregular]:
         """
         Returns all tangential critical curves of the lensing system, which are computed as follows:
 
@@ -335,31 +334,31 @@ class OperateDeflections(Dictable):
         """
         tangential_eigen_values = self.tangential_eigen_value_from(grid=grid)
 
-        tangential_critical_curve_indices = measure.find_contours(
+        tangential_critical_curve_indices_list = measure.find_contours(
             tangential_eigen_values.native, 0
         )
 
-        if len(tangential_critical_curve_indices) == 0:
+        if len(tangential_critical_curve_indices_list) == 0:
             return []
-        else:
-            tangential_critical_curve = []
-            for i in range(len(tangential_critical_curve_indices)):
-                curve = grid_scaled_2d_for_marching_squares_from(
-                    grid_pixels_2d=tangential_critical_curve_indices[i],
-                    shape_native=tangential_eigen_values.sub_shape_native,
-                    mask=grid.mask,
-                )
-                tangential_critical_curve.append(curve)
 
-        try:
-            return aa.Grid2DIrregular(tangential_critical_curve)
-        except IndexError:
-            return []
+        tangential_critical_curve_list = []
+
+        for tangential_critical_curve_indices in tangential_critical_curve_indices_list:
+
+            curve = grid_scaled_2d_for_marching_squares_from(
+                grid_pixels_2d=tangential_critical_curve_indices,
+                shape_native=tangential_eigen_values.sub_shape_native,
+                mask=grid.mask,
+            )
+
+            tangential_critical_curve_list.append(curve)
+
+        return tangential_critical_curve_list
 
     @evaluation_grid
     def radial_critical_curve_list_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
-    ) -> aa.Grid2DIrregular:
+    ) -> List[aa.Grid2DIrregular]:
         """
         Returns all radial critical curves of the lensing system, which are computed as follows:
 
@@ -380,31 +379,31 @@ class OperateDeflections(Dictable):
         """
         radial_eigen_values = self.radial_eigen_value_from(grid=grid)
 
-        radial_critical_curve_indices = measure.find_contours(
+        radial_critical_curve_indices_list = measure.find_contours(
             radial_eigen_values.native, 0
         )
 
-        if len(radial_critical_curve_indices) == 0:
+        if len(radial_critical_curve_indices_list) == 0:
             return []
-        else:
-            radial_critical_curve = []
-            for i in range(len(radial_critical_curve_indices)):
-                curve = grid_scaled_2d_for_marching_squares_from(
-                    grid_pixels_2d=radial_critical_curve_indices[i],
-                    shape_native=radial_eigen_values.sub_shape_native,
-                    mask=grid.mask,
-                )
-                radial_critical_curve.append(curve)
 
-        try:
-            return aa.Grid2DIrregular(radial_critical_curve)
-        except IndexError:
-            return []
+        radial_critical_curve_list = []
+
+        for radial_critical_curve_indices in radial_critical_curve_indices_list:
+
+            curve = grid_scaled_2d_for_marching_squares_from(
+                grid_pixels_2d=radial_critical_curve_indices,
+                shape_native=radial_eigen_values.sub_shape_native,
+                mask=grid.mask,
+            )
+
+            radial_critical_curve_list.append(curve)
+
+        return radial_critical_curve_list
 
     @evaluation_grid
     def tangential_caustic_list_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
-    ) -> aa.Grid2DIrregular:
+    ) -> List[aa.Grid2DIrregular]:
         """
         Returns all tangential caustics of the lensing system, which are computed as follows:
 
@@ -446,7 +445,7 @@ class OperateDeflections(Dictable):
     @evaluation_grid
     def radial_caustic_list_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
-    ) -> aa.Grid2DIrregular:
+    ) -> List[aa.Grid2DIrregular]:
         """
         Returns all radial caustics of the lensing system, which are computed as follows:
 
@@ -488,7 +487,7 @@ class OperateDeflections(Dictable):
     @evaluation_grid
     def area_within_tangential_critical_curve_list_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
-    ) -> float:
+    ) -> List[float]:
         """
         Returns the surface area within each tangential critical curve as a list, the calculation of which is
         described in the function `tangential_critical_curve_list_from()`.
@@ -512,7 +511,9 @@ class OperateDeflections(Dictable):
         )
 
         area_within_each_curve = []
+
         for curve in tangential_critical_curve:
+
             x, y = curve[:, 0], curve[:, 1]
             area = np.abs(0.5 * np.sum(y[:-1] * np.diff(x) - x[:-1] * np.diff(y)))
             area_within_each_curve.append(area)
