@@ -249,7 +249,7 @@ def test__radial_caustic_list_from():
     assert 0.7 < x_centre < 1.2
 
 
-def test__area_within_tangential_critical_curve_from():
+def test__area_within_tangential_critical_curve_list_from():
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
@@ -257,11 +257,11 @@ def test__area_within_tangential_critical_curve_from():
 
     area_calc = np.pi * sis.einstein_radius**2
 
-    area_within_tangential_critical_curve = (
+    area_within_tangential_critical_curve_list = (
         sis.area_within_tangential_critical_curve_list_from(grid=grid)
     )
 
-    assert area_within_tangential_critical_curve == pytest.approx(area_calc, 1e-1)
+    assert area_within_tangential_critical_curve_list[0] == pytest.approx(area_calc, 1e-1)
 
 
 def test__einstein_radius_from():

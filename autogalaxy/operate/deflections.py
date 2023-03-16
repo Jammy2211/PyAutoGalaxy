@@ -508,19 +508,19 @@ class OperateDeflections(Dictable):
             If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
             caustic to be computed more accurately using a higher resolution grid.
         """
-        tangential_critical_curve = self.tangential_critical_curve_list_from(
+        tangential_critical_curve_list = self.tangential_critical_curve_list_from(
             grid=grid, pixel_scale=pixel_scale
         )
 
-        area_within_each_curve = []
+        area_within_each_curve_list = []
 
-        for curve in tangential_critical_curve:
+        for curve in tangential_critical_curve_list:
 
             x, y = curve[:, 0], curve[:, 1]
             area = np.abs(0.5 * np.sum(y[:-1] * np.diff(x) - x[:-1] * np.diff(y)))
-            area_within_each_curve.append(area)
+            area_within_each_curve_list.append(area)
 
-        return area_within_each_curve
+        return area_within_each_curve_list
 
     @evaluation_grid
     def einstein_radius_from(
