@@ -402,42 +402,6 @@ class OperateDeflections(Dictable):
             return []
 
     @evaluation_grid
-    def critical_curves_from(
-        self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
-    ) -> List[aa.Grid2DIrregular]:
-        """
-        Returns both the tangential and radial critical curves of the lensing system as a two entry list where
-        the first entry is a list of irregular 2D grid(s) corresponding to each tangential critical curve and
-        the second entry is a list of irregular 2D grid(s) corresponding to each radial critical curve.
-
-        The calculation of each critical curve is described in the functions `tangential_critical_curve_from()` and
-        `radial_critical_curve_from()`.
-
-        Due to the use of a marching squares algorithm used in each function, critical curves can only be calculated
-        using the Jacobian and a uniform 2D grid.
-
-        Parameters
-        ----------
-        grid
-            The 2D grid of (y,x) arc-second coordinates the deflection angles used to calculate the critical curves are
-            computed on.
-        pixel_scale
-            If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
-            critical curve to be computed more accurately using a higher resolution grid.
-        """
-        try:
-            return aa.Grid2DIrregular(
-                [
-                    self.tangential_critical_curve_from(
-                        grid=grid, pixel_scale=pixel_scale
-                    ),
-                    self.radial_critical_curve_from(grid=grid, pixel_scale=pixel_scale),
-                ]
-            )
-        except (IndexError, ValueError):
-            return []
-
-    @evaluation_grid
     def tangential_caustic_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ) -> aa.Grid2DIrregular:
@@ -516,40 +480,6 @@ class OperateDeflections(Dictable):
                 radial_caustic.append(radial_critical_curve[i] - deflections_critical_curve)
 
         return radial_caustic
-
-    @evaluation_grid
-    def caustics_from(
-        self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
-    ) -> List[aa.Grid2DIrregular]:
-        """
-        Returns both the tangential and radial caustics of the lensing system as a two entry list where
-        the first entry is a list of irregular 2D grid(s) corresponding to each tangential caustic and
-        the second entry is a list of irregular 2D grid(s) corresponding to each radial caustic.
-
-        The calculation of each caustic is described in the functions `tangential_caustic_from()` and
-        `radial_caustic_from()`.
-
-        Due to the use of a marching squares algorithm used in each function, caustics can only be calculated
-        using the Jacobian and a uniform 2D grid.
-
-        Parameters
-        ----------
-        grid
-            The 2D grid of (y,x) arc-second coordinates the deflection angles used to calculate the caustics are
-            computed on.
-        pixel_scale
-            If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
-            caustic to be computed more accurately using a higher resolution grid.
-        """
-        try:
-            return aa.Grid2DIrregular(
-                [
-                    self.tangential_caustic_from(grid=grid, pixel_scale=pixel_scale),
-                    self.radial_caustic_from(grid=grid, pixel_scale=pixel_scale),
-                ]
-            )
-        except (IndexError, ValueError):
-            return []
 
     @evaluation_grid
     def area_within_tangential_critical_curve_from(

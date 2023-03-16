@@ -122,15 +122,15 @@ def test__magnification_2d_via_hessian_from():
     assert magnification.in_list[1] == pytest.approx(-2.57591, 1.0e-4)
 
 
-def test__critical_curves_from__tangential():
+def test__tangential_critical_curves_from():
 
     grid = ag.Grid2D.uniform(shape_native=(15, 15), pixel_scales=0.3)
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    critical_curves = sis.critical_curves_from(grid=grid)
+    tangential_critical_curve_list = sis.tangential_critical_curve_from(grid=grid)
 
-    tangential_critical_curve = np.asarray(critical_curves[0])
+    tangential_critical_curve = np.asarray(tangential_critical_curve_list[0])
 
     x_critical_tangential, y_critical_tangential = (
         tangential_critical_curve[:, 1],
@@ -145,9 +145,9 @@ def test__critical_curves_from__tangential():
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    critical_curves = sis.critical_curves_from(grid=grid)
+    tangential_critical_curve_list = sis.tangential_critical_curve_from(grid=grid)
 
-    tangential_critical_curve = np.asarray(critical_curves[0])
+    tangential_critical_curve = np.asarray(tangential_critical_curve_list[0])
 
     y_centre = np.mean(tangential_critical_curve[:, 0])
     x_centre = np.mean(tangential_critical_curve[:, 1])
@@ -157,9 +157,9 @@ def test__critical_curves_from__tangential():
 
     sis = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
-    critical_curves = sis.critical_curves_from(grid=grid)
+    tangential_critical_curve_list = sis.tangential_critical_curve_from(grid=grid)
 
-    tangential_critical_curve = np.asarray(critical_curves[0])
+    tangential_critical_curve = np.asarray(tangential_critical_curve_list[0])
     y_centre = np.mean(tangential_critical_curve[:, 0])
     x_centre = np.mean(tangential_critical_curve[:, 1])
 
@@ -167,15 +167,15 @@ def test__critical_curves_from__tangential():
     assert 0.97 < x_centre < 1.03
 
 
-def test__critical_curves_from__radial():
+def test__radial_critical_curve_from__radial():
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    critical_curves = sis.critical_curves_from(grid=grid)
+    radial_critical_curve_list = sis.radial_critical_curve_from(grid=grid)
 
-    radial_critical_curve = np.asarray(critical_curves[0])
+    radial_critical_curve = np.asarray(radial_critical_curve_list[0])
 
     y_centre = np.mean(radial_critical_curve[:, 0])
     x_centre = np.mean(radial_critical_curve[:, 1])
@@ -185,9 +185,9 @@ def test__critical_curves_from__radial():
 
     sis = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
-    critical_curves = sis.critical_curves_from(grid=grid)
+    radial_critical_curve_list = sis.critical_curves_from(grid=grid)
 
-    radial_critical_curve = np.asarray(critical_curves[0])
+    radial_critical_curve = np.asarray(radial_critical_curve_list[0])
 
     y_centre = np.mean(radial_critical_curve[:, 0])
     x_centre = np.mean(radial_critical_curve[:, 1])
@@ -195,13 +195,15 @@ def test__critical_curves_from__radial():
     assert 0.45 < y_centre < 0.55
     assert 0.95 < x_centre < 1.05
 
+def test__tangential_caustic_list_from():
+
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    caustics = sis.caustics_from(grid=grid)
+    tangential_caustic_list = sis.tangential_caustic_from(grid=grid)
 
-    tangential_caustic = np.asarray(caustics[0])
+    tangential_caustic = np.asarray(tangential_caustic_list[0])
 
     y_centre = np.mean(tangential_caustic[:, 0])
     x_centre = np.mean(tangential_caustic[:, 1])
@@ -211,9 +213,9 @@ def test__critical_curves_from__radial():
 
     sis = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
-    caustics = sis.caustics_from(grid=grid)
+    tangential_caustic_list = sis.tangential_caustic_from(grid=grid)
 
-    tangential_caustic = np.asarray(caustics[0])
+    tangential_caustic = np.asarray(tangential_caustic_list[0])
 
     y_centre = np.mean(tangential_caustic[:, 0])
     x_centre = np.mean(tangential_caustic[:, 1])
@@ -222,15 +224,15 @@ def test__critical_curves_from__radial():
     assert 0.97 < x_centre < 1.03
 
 
-def test__caustics_from__radial():
+def test__radial_caustic_list_from():
 
     grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.2)
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    caustics = sis.caustics_from(grid=grid)
+    radial_caustic_list = sis.radial_caustic_from(grid=grid)
 
-    caustic_radial = np.asarray(caustics[1])
+    caustic_radial = np.asarray(radial_caustic_list[1])
 
     x_caustic_radial, y_caustic_radial = (caustic_radial[:, 1], caustic_radial[:, 0])
 
@@ -242,9 +244,9 @@ def test__caustics_from__radial():
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    caustics = sis.caustics_from(grid=grid)
+    radial_caustic_list = sis.radial_caustic_from(grid=grid)
 
-    radial_caustic = np.asarray(caustics[1])
+    radial_caustic = np.asarray(radial_caustic_list[1])
 
     y_centre = np.mean(radial_caustic[:, 0])
     x_centre = np.mean(radial_caustic[:, 1])
@@ -254,9 +256,9 @@ def test__caustics_from__radial():
 
     sis = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
-    caustics = sis.caustics_from(grid=grid)
+    radial_caustic_list = sis.radial_caustic_from(grid=grid)
 
-    radial_caustic = np.asarray(caustics[1])
+    radial_caustic = np.asarray(radial_caustic_list[1])
 
     y_centre = np.mean(radial_caustic[:, 0])
     x_centre = np.mean(radial_caustic[:, 1])
