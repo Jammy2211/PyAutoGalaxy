@@ -153,7 +153,8 @@ def test__2d__via_mass_obj(mp_0, grid_2d_7x7):
         mask=True,
         border=True,
         mass_profile_centres=True,
-        critical_curves=True,
+        tangential_critical_curves=True,
+        radial_critical_curves=True,
     )
 
     get_visuals = GetVisuals2D(include=include_2d, visuals=visuals_2d)
@@ -167,8 +168,8 @@ def test__2d__via_mass_obj(mp_0, grid_2d_7x7):
     ).all()
     assert visuals_2d_via.mass_profile_centres.in_list == [mp_0.centre]
     assert (
-        visuals_2d_via.critical_curves[0]
-        == mp_0.critical_curves_from(grid=grid_2d_7x7)[0]
+        visuals_2d_via.tangential_critical_curves[0]
+        == mp_0.tangential_critical_curve_list_from(grid=grid_2d_7x7)[0]
     ).all()
     assert visuals_2d_via.vectors == 2
 
@@ -177,7 +178,8 @@ def test__2d__via_mass_obj(mp_0, grid_2d_7x7):
         mask=False,
         border=False,
         mass_profile_centres=False,
-        critical_curves=False,
+        tangential_critical_curves=False,
+        radial_critical_curves=False,
     )
 
     get_visuals = GetVisuals2D(include=include_2d, visuals=visuals_2d)
@@ -188,7 +190,8 @@ def test__2d__via_mass_obj(mp_0, grid_2d_7x7):
     assert visuals_2d_via.mask is None
     assert visuals_2d_via.border is None
     assert visuals_2d_via.mass_profile_centres is None
-    assert visuals_2d_via.critical_curves is None
+    assert visuals_2d_via.tangential_critical_curves is None
+    assert visuals_2d_via.radial_critical_curves is None
     assert visuals_2d_via.vectors == 2
 
 
@@ -201,7 +204,8 @@ def test__2d__via_light_mass_obj(gal_x1_lp_x1_mp, grid_2d_7x7):
         border=True,
         light_profile_centres=True,
         mass_profile_centres=True,
-        critical_curves=True,
+        tangential_critical_curves=True,
+        radial_critical_curves=True,
     )
 
     get_visuals = GetVisuals2D(include=include_2d, visuals=visuals_2d)
@@ -233,7 +237,8 @@ def test__2d__via_light_mass_obj(gal_x1_lp_x1_mp, grid_2d_7x7):
         border=False,
         light_profile_centres=False,
         mass_profile_centres=False,
-        critical_curves=False,
+        tangential_critical_curves=False,
+        radial_critical_curves=False,
     )
 
     get_visuals = GetVisuals2D(include=include_2d, visuals=visuals_2d)
@@ -260,7 +265,8 @@ def test__via_fit_imaging_from(fit_imaging_x2_galaxy_7x7, grid_2d_7x7):
         border=True,
         light_profile_centres=True,
         mass_profile_centres=True,
-        critical_curves=True,
+        tangential_critical_curves=True,
+        radial_critical_curves=True,
     )
 
     get_visuals = GetVisuals2D(include=include_2d, visuals=visuals_2d)
@@ -287,7 +293,8 @@ def test__via_fit_imaging_from(fit_imaging_x2_galaxy_7x7, grid_2d_7x7):
         border=False,
         light_profile_centres=False,
         mass_profile_centres=False,
-        critical_curves=False,
+        tangential_critical_curves=False,
+        radial_critical_curves=False,
     )
 
     get_visuals = GetVisuals2D(include=include_2d, visuals=visuals_2d)
