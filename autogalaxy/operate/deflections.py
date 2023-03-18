@@ -1,4 +1,5 @@
 from functools import wraps
+import logging
 import numpy as np
 from skimage import measure
 from typing import Callable, List, Tuple, Union
@@ -10,6 +11,8 @@ from autogalaxy.util.shear_field import ShearYX2D
 from autogalaxy.util.shear_field import ShearYX2DIrregular
 
 from autogalaxy import exc
+
+logger = logging.getLogger(__name__)
 
 
 def grid_scaled_2d_for_marching_squares_from(
@@ -595,11 +598,14 @@ class OperateDeflections(Dictable):
         einstein_radii_list = self.einstein_radius_list_from(grid=grid)
 
         if len(einstein_radii_list) > 1:
-            raise exc.ProfileException(
-                "The Einstein radius cannot be computed as there are multiple tangential critical curves."
+            logger.info(
+                """
+                There are multiple tangential critical curves, and the computed Einstein radius is the sum of 
+                all of them. Check the `einstein_radius_list_from` function for the individual Einstein. 
+            """
             )
 
-        return einstein_radii_list[0]
+        return sum(einstein_radii_list)
 
     @evaluation_grid
     def einstein_mass_angular_list_from(

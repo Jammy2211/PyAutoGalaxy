@@ -85,7 +85,7 @@ class Visuals2D(aplt.Visuals2D):
 
         if self.tangential_critical_curves is not None:
             try:
-                plotter.critical_curves_plot.plot_grid(
+                plotter.tangential_critical_curves_plot.plot_grid(
                     grid=self.tangential_critical_curves
                 )
             except TypeError:
@@ -93,18 +93,18 @@ class Visuals2D(aplt.Visuals2D):
 
         if self.radial_critical_curves is not None:
             try:
-                plotter.critical_curves_plot.plot_grid(grid=self.radial_critical_curves)
+                plotter.radial_critical_curves_plot.plot_grid(grid=self.radial_critical_curves)
             except TypeError:
                 pass
 
         if self.tangential_caustics is not None:
             try:
-                plotter.caustics_plot.plot_grid(grid=self.tangential_caustics)
+                plotter.tangential_caustics_plot.plot_grid(grid=self.tangential_caustics)
             except TypeError:
                 pass
 
         if self.radial_caustics is not None:
             try:
-                plotter.caustics_plot.plot_grid(grid=self.radial_caustics)
+                plotter.radial_caustics_plot.plot_grid(grid=self.radial_caustics)
             except TypeError:
                 pass

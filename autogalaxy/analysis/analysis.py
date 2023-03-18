@@ -217,10 +217,7 @@ class AnalysisDataset(Analysis):
 
             if conf.instance["general"]["test"]["check_preloads"]:
 
-                try:
-                    self.preloads.check_via_fit(fit=fit_0)
-                except (aa.exc.InversionException, exc.InversionException):
-                    pass
+                self.preloads.check_via_fit(fit=fit_0)
 
         self.preloads.output_info_to_summary(file_path=paths.profile_path)
 
