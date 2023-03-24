@@ -15,6 +15,7 @@ from autogalaxy.plane.plane import Plane
 from autogalaxy.plane.to_inversion import PlaneToInversion
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
+from autogalaxy.profiles.light.operated.abstract import LightProfileOperated
 
 
 class FitImaging(aa.FitImaging, AbstractFitInversion):
@@ -147,7 +148,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         altogether.
         """
 
-        if not self.plane.has(cls=LightProfile):
+        if len(self.plane.cls_list_from(cls=LightProfile)) == len(self.plane.cls_list_from(cls=LightProfileOperated)):
 
             return self.plane.image_2d_from(
                 grid=self.dataset.grid,
