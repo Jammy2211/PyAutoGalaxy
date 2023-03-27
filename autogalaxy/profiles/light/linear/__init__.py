@@ -2,9 +2,9 @@ from .abstract import LightProfile, LightProfileLinear, LightProfileLinearObjFun
 from .gaussian import Gaussian, GaussianSph
 from .moffat import Moffat
 from .sersic import (
-    Sersic,
+    Sersic, SersicSph
 )
-from .exponential import Exponential
-from .dev_vaucouleurs import DevVaucouleurs
+from .exponential import Exponential, ExponentialSph
+from .dev_vaucouleurs import DevVaucouleurs, DevVaucouleursSph
 from .sersic_core import SersicCore
 from .exponential_core import ExponentialCore

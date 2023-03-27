@@ -39,3 +39,25 @@ class Exponential(lp.Exponential, LightProfileLinear):
     @property
     def lmp_cls(self):
         return lmp.Exponential
+
+class ExponentialSph(Exponential):
+    def __init__(
+        self,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        effective_radius: float = 0.6,
+    ):
+        """
+        The spherical Exponential light profile.
+
+        Parameters
+        ----------
+        centre
+            The (y,x) arc-second coordinates of the profile centre.
+        effective_radius
+            The circular radius containing half the light of this profile.
+        """
+        super().__init__(
+            centre=centre,
+            ell_comps=(0.0, 0.0),
+            effective_radius=effective_radius,
+        )

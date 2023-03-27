@@ -44,3 +44,30 @@ class Sersic(lp.Sersic, LightProfileLinear):
     @property
     def lmp_cls(self):
         return lmp.Sersic
+
+class SersicSph(Sersic):
+    def __init__(
+        self,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        effective_radius: float = 0.6,
+        sersic_index: float = 4.0,
+    ):
+        """
+        The spherical Sersic light profile.
+
+        Parameters
+        ----------
+        centre
+            The (y,x) arc-second coordinates of the profile centre.
+        effective_radius
+            The circular radius containing half the light of this profile.
+        sersic_index
+            Controls the concentration of the profile (lower -> less concentrated, higher -> more concentrated).
+        """
+
+        super().__init__(
+            centre=centre,
+            ell_comps=(0.0, 0.0),
+            effective_radius=effective_radius,
+            sersic_index=sersic_index,
+        )

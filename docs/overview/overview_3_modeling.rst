@@ -79,8 +79,8 @@ This gives the following output:
                     centre_0                           GaussianPrior, mean = 0.0, sigma = 0.3
                     centre_1                           GaussianPrior, mean = 0.0, sigma = 0.3
                 ell_comps
-                    ell_comps_0                 GaussianPrior, mean = 0.0, sigma = 0.5
-                    ell_comps_1                 GaussianPrior, mean = 0.0, sigma = 0.5
+                    ell_comps_0                        GaussianPrior, mean = 0.0, sigma = 0.5
+                    ell_comps_1                        GaussianPrior, mean = 0.0, sigma = 0.5
                 intensity                              LogUniformPrior, lower_limit = 1e-06, upper_limit = 1000000.0
                 effective_radius                       UniformPrior, lower_limit = 0.0, upper_limit = 30.0
                 sersic_index                           UniformPrior, lower_limit = 0.8, upper_limit = 5.0
@@ -89,8 +89,8 @@ This gives the following output:
                     centre_0                           GaussianPrior, mean = 0.0, sigma = 0.3
                     centre_1                           GaussianPrior, mean = 0.0, sigma = 0.3
                 ell_comps
-                    ell_comps_0                 GaussianPrior, mean = 0.0, sigma = 0.5
-                    ell_comps_1                 GaussianPrior, mean = 0.0, sigma = 0.5
+                    ell_comps_0                        GaussianPrior, mean = 0.0, sigma = 0.5
+                    ell_comps_1                        GaussianPrior, mean = 0.0, sigma = 0.5
                 intensity                              LogUniformPrior, lower_limit = 1e-06, upper_limit = 1000000.0
                 effective_radius                       UniformPrior, lower_limit = 0.0, upper_limit = 30.0
 

@@ -38,9 +38,9 @@ class ClumpModel:
             The centre of every clump in the model, whose light and mass profile centres are fixed to this value
             throughout the model-fit.
         light_cls
-            The light profile given too all clumps; if omitted all clumps have no light profile.
+            The light profile given to all clumps; if omitted all clumps have no light profile.
         mass_cls
-            The mass profile given too all clumps; if omitted all clumps have no mass profile.
+            The mass profile given to all clumps; if omitted all clumps have no mass profile.
         einstein_radius_upper_limit
             The upper limit given to any mass model's `einstein_radius` parameter (e.g. if `IsothermalSph` profiles
             are used to model clumps).

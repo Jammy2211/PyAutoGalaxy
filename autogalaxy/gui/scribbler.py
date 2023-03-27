@@ -14,7 +14,7 @@ class Scribbler:
         segment_names=None,
         title="Draw mask",
         cmap=None,
-        brush_width=0.02,
+        brush_width=0.05,
         backend="TkAgg",
     ):
         """
@@ -40,8 +40,8 @@ class Scribbler:
             plt.imshow(image, cmap=cmap.config_dict["cmap"], norm=norm)
         plt.axis([0, image.shape[1], image.shape[0], 0])
         plt.axis("off")
-        if title:
-            self.figure.canvas.set_window_title(title)
+        # if title:
+        #     self.figure.canvas.set_window_title(title)
 
         # disable default keybindings
         manager, canvas = self.figure.canvas.manager, self.figure.canvas

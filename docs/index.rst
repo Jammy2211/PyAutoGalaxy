@@ -224,6 +224,7 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
 
    general/workspace
    general/configs
+   general/model_cookbook
    general/likelihood_function
    general/citations
    general/credits
