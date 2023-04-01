@@ -188,6 +188,16 @@ We can customize the model parameters in a number of different ways, as shown be
     # Assert that the bulge effetive radius is below 3.0":
     model.add_assertion(model.galaxies.bulge.effective_radius < 3.0)
 
+Available Model Components
+--------------------------
+
+The light profiles, mass profiles and other components that can be used for galaxy modeling are given at the following
+API documentation pages:
+
+ - https://pyautogalaxy.readthedocs.io/en/latest/api/light.html
+ - https://pyautogalaxy.readthedocs.io/en/latest/api/mass.html
+ - https://pyautogalaxy.readthedocs.io/en/latest/api/pixelization.html
+
 JSon Outputs
 ------------
 

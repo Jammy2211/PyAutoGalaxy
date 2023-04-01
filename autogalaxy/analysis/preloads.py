@@ -22,8 +22,6 @@ class Preloads(aa.Preloads):
         mapper_list: Optional[aa.AbstractMapper] = None,
         mapper_galaxy_dict: Optional[Dict[aa.AbstractMapper, "Galaxy"]] = None,
         linear_func_operated_mapping_matrix_dict=None,
-        linear_func_weighted_mapping_vectors_dict=None,
-        linear_func_curvature_vectors_dict=None,
         operated_mapping_matrix: Optional[np.ndarray] = None,
         curvature_matrix_preload: Optional[np.ndarray] = None,
         curvature_matrix_counts: Optional[np.ndarray] = None,
@@ -91,8 +89,6 @@ class Preloads(aa.Preloads):
             sparse_image_plane_grid_pg_list=sparse_image_plane_grid_pg_list,
             mapper_list=mapper_list,
             linear_func_operated_mapping_matrix_dict=linear_func_operated_mapping_matrix_dict,
-            linear_func_weighted_mapping_vectors_dict=linear_func_weighted_mapping_vectors_dict,
-            linear_func_curvature_vectors_dict=linear_func_curvature_vectors_dict,
             operated_mapping_matrix=operated_mapping_matrix,
             curvature_matrix_preload=curvature_matrix_preload,
             curvature_matrix_counts=curvature_matrix_counts,
@@ -211,8 +207,6 @@ class Preloads(aa.Preloads):
         self.mapper = None
         self.operated_mapping_matrix = None
         self.linear_func_operated_mapping_matrix_dict = None
-        self.linear_func_weighted_mapping_vectors_dict = None
-        self.linear_func_curvature_vectors_dict = None
         self.curvature_matrix_preload = None
         self.curvature_matrix_counts = None
         self.curvature_matrix = None
