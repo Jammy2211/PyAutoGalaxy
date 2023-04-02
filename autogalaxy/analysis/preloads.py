@@ -197,24 +197,6 @@ class Preloads(aa.Preloads):
                 file=file_preloads, list_of_strings=self.info
             )
 
-    def reset_all(self):
-        """
-        Reset all preloads, typically done at the end of a model-fit to save memory.
-        """
-        self.w_tilde = None
-
-        self.blurred_image = None
-        self.sparse_image_plane_grid_pg_list = None
-        self.relocated_grid = None
-        self.mapper = None
-        self.operated_mapping_matrix = None
-        self.linear_func_operated_mapping_matrix_dict = None
-        self.curvature_matrix_preload = None
-        self.curvature_matrix_counts = None
-        self.curvature_matrix = None
-        self.regularization_matrix = None
-        self.log_det_regularization_matrix_term = None
-
     @property
     def info(self) -> List[str]:
         """

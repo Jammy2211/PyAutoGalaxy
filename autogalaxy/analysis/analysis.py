@@ -241,7 +241,6 @@ class AnalysisDataset(Analysis):
         """
 
         self.output_or_check_figure_of_merit_sanity(paths=paths, result=result)
-        self.preloads.reset_all()
 
         return self
 
