@@ -45,6 +45,7 @@ class Sersic(lp.Sersic, LightProfileLinear):
     def lmp_cls(self):
         return lmp.Sersic
 
+
 class SersicSph(Sersic):
     def __init__(
         self,

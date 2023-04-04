@@ -148,7 +148,9 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         altogether.
         """
 
-        if len(self.plane.cls_list_from(cls=LightProfile)) == len(self.plane.cls_list_from(cls=LightProfileOperated)):
+        if len(self.plane.cls_list_from(cls=LightProfile)) == len(
+            self.plane.cls_list_from(cls=LightProfileOperated)
+        ):
 
             return self.plane.image_2d_from(
                 grid=self.dataset.grid,

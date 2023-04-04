@@ -40,6 +40,7 @@ class Exponential(lp.Exponential, LightProfileLinear):
     def lmp_cls(self):
         return lmp.Exponential
 
+
 class ExponentialSph(Exponential):
     def __init__(
         self,
