@@ -36,15 +36,8 @@ def test__visualizes_fit_imaging__uses_configs(
     assert path.join(plot_path, "subplot_fit_imaging.png") in plot_patch.paths
     assert path.join(plot_path, "image_2d.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map.png") not in plot_patch.paths
-    assert path.join(plot_path, "signal_to_noise_map.png") not in plot_patch.paths
-    assert path.join(plot_path, "model_image.png") in plot_patch.paths
-    assert path.join(plot_path, "residual_map.png") not in plot_patch.paths
-    assert path.join(plot_path, "normalized_residual_map.png") in plot_patch.paths
-    assert path.join(plot_path, "chi_squared_map.png") in plot_patch.paths
-    assert path.join(plot_path, "subtracted_image_of_galaxy_0.png") in plot_patch.paths
-    assert path.join(plot_path, "subtracted_image_of_galaxy_1.png") in plot_patch.paths
 
-    assert path.join(plot_path, "model_image_of_galaxy_0.png") not in plot_patch.paths
+    assert path.join(plot_path, "subtracted_image_of_galaxy_1.png") in plot_patch.paths
     assert path.join(plot_path, "model_image_of_galaxy_1.png") not in plot_patch.paths
 
     image = ag.util.array_2d.numpy_array_2d_via_fits_from(

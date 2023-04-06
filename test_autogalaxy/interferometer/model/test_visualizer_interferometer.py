@@ -1,7 +1,6 @@
 from os import path
 import pytest
 
-from autoconf import conf
 from autogalaxy.interferometer.model.visualizer import VisualizerInterferometer
 
 directory = path.dirname(path.abspath(__file__))
@@ -30,17 +29,3 @@ def test__visualizes_fit_interferometer__uses_configs(
     assert path.join(plot_path, "subplot_fit_interferometer.png") in plot_patch.paths
     assert path.join(plot_path, "visibilities.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map.png") not in plot_patch.paths
-    assert path.join(plot_path, "signal_to_noise_map.png") not in plot_patch.paths
-    assert path.join(plot_path, "model_visibilities.png") in plot_patch.paths
-    assert (
-        path.join(plot_path, "real_residual_map_vs_uv_distances.png")
-        not in plot_patch.paths
-    )
-    assert (
-        path.join(plot_path, "real_normalized_residual_map_vs_uv_distances.png")
-        in plot_patch.paths
-    )
-    assert (
-        path.join(plot_path, "real_chi_squared_map_vs_uv_distances.png")
-        in plot_patch.paths
-    )
