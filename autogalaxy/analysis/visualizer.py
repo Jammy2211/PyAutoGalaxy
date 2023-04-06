@@ -141,7 +141,7 @@ class Visualizer:
         )
 
         imaging_plotter.figures_2d(
-            image=should_plot("data"),
+            data=should_plot("data"),
             noise_map=should_plot("noise_map"),
             psf=should_plot("psf"),
             inverse_noise_map=should_plot("inverse_noise_map"),
@@ -188,7 +188,7 @@ class Visualizer:
             interferometer_plotter.subplot_interferometer()
 
         interferometer_plotter.figures_2d(
-            visibilities=should_plot("data"),
+            data=should_plot("data"),
             u_wavelengths=should_plot("uv_wavelengths"),
             v_wavelengths=should_plot("uv_wavelengths"),
             amplitudes_vs_uv_distances=should_plot("amplitudes_vs_uv_distances"),

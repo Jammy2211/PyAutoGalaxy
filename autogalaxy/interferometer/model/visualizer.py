@@ -58,7 +58,7 @@ class VisualizerInterferometer(Visualizer):
             fit_interferometer_plotter.subplot_fit_real_space()
 
         fit_interferometer_plotter.figures_2d(
-            visibilities=should_plot("data"),
+            data=should_plot("data"),
             noise_map=should_plot("noise_map"),
             signal_to_noise_map=should_plot("signal_to_noise_map"),
             model_visibilities=should_plot("model_data"),

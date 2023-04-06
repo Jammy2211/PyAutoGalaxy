@@ -128,7 +128,7 @@ simple analysis which fits a galaxy's light.
     Load Imaging data of the strong galaxy from the dataset folder of the workspace.
     """
     imaging = ag.Imaging.from_fits(
-        image_path="/path/to/dataset/image.fits",
+        data_path="/path/to/dataset/image.fits",
         noise_map_path="/path/to/dataset/noise_map.fits",
         psf_path="/path/to/dataset/psf.fits",
         pixel_scales=0.1,

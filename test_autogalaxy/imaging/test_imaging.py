@@ -43,7 +43,7 @@ def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
     create_fits(fits_path=psf_path, array=[[1.0, 1.0], [0.0, 0.0]])
 
     imaging = ag.Imaging.from_fits(
-        image_path=image_path,
+        data_path=image_path,
         noise_map_path=noise_map_path,
         psf_path=psf_path,
         pixel_scales=0.1,
@@ -54,7 +54,7 @@ def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
     assert (imaging.psf.native == np.array([[0.0, 0.0], [0.5, 0.5]])).all()
 
     imaging.output_to_fits(
-        image_path=image_path,
+        data_path=image_path,
         noise_map_path=noise_map_path,
         psf_path=psf_path,
         overwrite=True,

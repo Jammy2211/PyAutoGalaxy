@@ -201,7 +201,7 @@ class FitImagingPlotter(Plotter):
 
             self.open_subplot_figure(number_subplots=4)
 
-            self.figures_2d(image=True)
+            self.figures_2d(data=True)
             self.figures_2d_of_galaxies(
                 galaxy_index=galaxy_index, subtracted_image=True
             )

@@ -25,7 +25,7 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
     )
 
     fit_imaging_plotter.figures_2d(
-        image=True,
+        data=True,
         noise_map=False,
         signal_to_noise_map=False,
         model_image=True,

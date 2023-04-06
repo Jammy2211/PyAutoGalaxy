@@ -36,7 +36,7 @@ def _interferometer_from(
     )
 
     interferometer = aa.Interferometer(
-        visibilities=data,
+        data=data,
         noise_map=noise_map,
         uv_wavelengths=uv_wavelengths,
         real_space_mask=real_space_mask,

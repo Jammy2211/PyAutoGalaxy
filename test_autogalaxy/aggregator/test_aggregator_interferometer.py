@@ -24,7 +24,7 @@ def test__interferometer_generator_from_aggregator(
     clean(database_file=database_file, result_path=result_path)
 
     interferometer_7 = ag.Interferometer(
-        visibilities=visibilities_7,
+        data=visibilities_7,
         noise_map=visibilities_noise_map_7,
         uv_wavelengths=uv_wavelengths_7x2,
         real_space_mask=mask_2d_7x7,

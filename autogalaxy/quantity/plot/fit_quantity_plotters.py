@@ -105,7 +105,7 @@ class FitQuantityPlotter(Plotter):
             )
 
             fit_plotter.figures_2d(
-                image=image,
+                data=image,
                 noise_map=noise_map,
                 signal_to_noise_map=signal_to_noise_map,
                 model_image=model_image,
@@ -125,7 +125,7 @@ class FitQuantityPlotter(Plotter):
             )
 
             fit_plotter_y.figures_2d(
-                image=image,
+                data=image,
                 noise_map=noise_map,
                 signal_to_noise_map=signal_to_noise_map,
                 model_image=model_image,
@@ -144,7 +144,7 @@ class FitQuantityPlotter(Plotter):
             )
 
             fit_plotter_x.figures_2d(
-                image=image,
+                data=image,
                 noise_map=noise_map,
                 signal_to_noise_map=signal_to_noise_map,
                 model_image=model_image,
@@ -170,7 +170,7 @@ class FitQuantityPlotter(Plotter):
             )
 
             fit_plotter.subplot(
-                image=True,
+                data=True,
                 signal_to_noise_map=True,
                 model_image=True,
                 residual_map=True,
@@ -190,7 +190,7 @@ class FitQuantityPlotter(Plotter):
             )
 
             fit_plotter_y.subplot(
-                image=True,
+                data=True,
                 signal_to_noise_map=True,
                 model_image=True,
                 residual_map=True,
@@ -208,7 +208,7 @@ class FitQuantityPlotter(Plotter):
             )
 
             fit_plotter_x.subplot(
-                image=True,
+                data=True,
                 signal_to_noise_map=True,
                 model_image=True,
                 residual_map=True,

@@ -36,7 +36,7 @@ def _imaging_from(fit: af.Fit, settings_imaging: Optional[aa.SettingsImaging] = 
         settings_imaging.grid_pixelization_class = settings_imaging.grid_inversion_class
 
     imaging = aa.Imaging(
-        image=data,
+        data=data,
         noise_map=noise_map,
         psf=psf,
         settings=settings_imaging,
