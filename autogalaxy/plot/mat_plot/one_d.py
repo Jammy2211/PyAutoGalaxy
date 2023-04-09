@@ -115,7 +115,7 @@ class MatPlot1D(aplt.MatPlot1D):
         Sets the `is_for_subplot` attribute for every `MatWrap` object in this `MatPlot` object by updating
         the `is_for_subplot`. By changing this tag:
 
-            - The [subplot] section of the config file of every `MatWrap` object is used instead of [figure].
+            - The subplot: section of the config file of every `MatWrap` object is used instead of figure:.
             - Calls which output or close the matplotlib figure are over-ridden so that the subplot is not removed.
 
         Parameters
