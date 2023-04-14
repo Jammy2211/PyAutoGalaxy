@@ -7,7 +7,6 @@ from matplotlib import pyplot
 from autoconf import conf
 from autogalaxy import fixtures
 
-
 class PlotPatch:
     def __init__(self):
         self.paths = []

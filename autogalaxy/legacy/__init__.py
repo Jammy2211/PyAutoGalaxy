@@ -1,1 +1,1 @@
-from setup import SetupHyper
+from autogalaxy.legacy.setup import SetupHyper
