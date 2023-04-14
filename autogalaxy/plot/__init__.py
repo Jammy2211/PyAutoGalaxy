@@ -90,4 +90,4 @@ from autogalaxy.interferometer.plot.fit_interferometer_plotters import (
     FitInterferometerPlotter,
 )
 from autogalaxy.plane.plot.plane_plotters import PlanePlotter
-from autogalaxy.galaxy.plot.hyper_galaxy_plotters import HyperPlotter
+from autogalaxy.galaxy.plot.hyper_galaxy_plotters import AdaptPlotter

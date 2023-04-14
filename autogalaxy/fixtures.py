@@ -118,10 +118,6 @@ def make_gal_x1_lp_x1_mp():
     )
 
 
-def make_hyper_galaxy():
-    return ag.HyperGalaxy(noise_factor=1.0, noise_power=1.0, contribution_factor=1.0)
-
-
 # Plane #
 
 

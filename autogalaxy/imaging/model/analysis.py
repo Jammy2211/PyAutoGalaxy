@@ -12,8 +12,6 @@ from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.imaging.model.visualizer import VisualizerImaging
-from autogalaxy.hyper.hyper_data import HyperImageSky
-from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.imaging.model.result import ResultImaging
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.plane.plane import Plane
@@ -101,7 +99,7 @@ class AnalysisImaging(AnalysisDataset):
 
                 visualizer.visualize_imaging(imaging=self.imaging)
 
-                visualizer.visualize_hyper_images(
+                visualizer.visualize_adapt_images(
                     hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
                     hyper_model_image=self.hyper_model_image,
                 )
@@ -164,7 +162,6 @@ class AnalysisImaging(AnalysisDataset):
     def fit_imaging_via_instance_from(
         self,
         instance: af.ModelInstance,
-        use_hyper_scaling: bool = True,
         preload_overwrite: Optional[Preloads] = None,
         profiling_dict: Optional[Dict] = None,
     ) -> FitImaging:
@@ -194,19 +191,10 @@ class AnalysisImaging(AnalysisDataset):
         """
         instance = self.instance_with_associated_hyper_images_from(instance=instance)
 
-        hyper_image_sky = self.hyper_image_sky_via_instance_from(instance=instance)
-
-        hyper_background_noise = self.hyper_background_noise_via_instance_from(
-            instance=instance
-        )
-
         plane = self.plane_via_instance_from(instance=instance)
 
         return self.fit_imaging_via_plane_from(
             plane=plane,
-            hyper_image_sky=hyper_image_sky,
-            hyper_background_noise=hyper_background_noise,
-            use_hyper_scaling=use_hyper_scaling,
             preload_overwrite=preload_overwrite,
             profiling_dict=profiling_dict,
         )
@@ -214,9 +202,6 @@ class AnalysisImaging(AnalysisDataset):
     def fit_imaging_via_plane_from(
         self,
         plane: Plane,
-        hyper_image_sky: Optional[HyperImageSky],
-        hyper_background_noise: Optional[HyperBackgroundNoise],
-        use_hyper_scaling: bool = True,
         preload_overwrite: Optional[Preloads] = None,
         profiling_dict: Optional[Dict] = None,
     ) -> FitImaging:
@@ -230,10 +215,6 @@ class AnalysisImaging(AnalysisDataset):
         ----------
         plane
             The plane of galaxies whose model images are used to fit the imaging data.
-        hyper_image_sky
-            A model component which scales the background sky level of the data before computing the log likelihood.
-        hyper_background_noise
-            A model component which scales the background noise level of the data before computing the log likelihood.
         use_hyper_scaling
             If false, the scaling of the background sky and noise are not performed irrespective of the model components
             themselves.
@@ -253,9 +234,6 @@ class AnalysisImaging(AnalysisDataset):
         return FitImaging(
             dataset=self.dataset,
             plane=plane,
-            hyper_image_sky=hyper_image_sky,
-            hyper_background_noise=hyper_background_noise,
-            use_hyper_scaling=use_hyper_scaling,
             settings_pixelization=self.settings_pixelization,
             settings_inversion=self.settings_inversion,
             preloads=preloads,
@@ -287,9 +265,6 @@ class AnalysisImaging(AnalysisDataset):
         - The hyper-images of the model-fit showing how the hyper galaxies are used to represent different galaxies in
           the dataset.
 
-        - If hyper features are used to scale the noise or background sky, a `FitImaging` with these features turned
-          off may be output, to indicate how much these features are altering the dataset.
-
         The images output by this function are customized using the file `config/visualize/plots.ini`.
 
         Parameters
@@ -311,15 +286,8 @@ class AnalysisImaging(AnalysisDataset):
         instance = self.instance_with_associated_hyper_images_from(instance=instance)
         plane = self.plane_via_instance_from(instance=instance)
 
-        hyper_image_sky = self.hyper_image_sky_via_instance_from(instance=instance)
-        hyper_background_noise = self.hyper_background_noise_via_instance_from(
-            instance=instance
-        )
-
         fit = self.fit_imaging_via_plane_from(
             plane=plane,
-            hyper_image_sky=hyper_image_sky,
-            hyper_background_noise=hyper_background_noise,
         )
 
         visualizer = VisualizerImaging(visualize_path=paths.image_path)
@@ -343,26 +311,10 @@ class AnalysisImaging(AnalysisDataset):
                 inversion=fit.inversion, during_analysis=during_analysis
             )
 
-        visualizer.visualize_hyper_images(
+        visualizer.visualize_adapt_images(
             hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
             hyper_model_image=self.hyper_model_image,
         )
-
-        if visualizer.plot_fit_no_hyper:
-
-            fit = self.fit_imaging_via_plane_from(
-                plane=plane,
-                hyper_image_sky=None,
-                hyper_background_noise=None,
-                use_hyper_scaling=False,
-            )
-
-            try:
-                visualizer.visualize_fit_imaging(
-                    fit=fit, during_analysis=during_analysis, subfolders="fit_no_hyper"
-                )
-            except (exc.InversionException, np.linalg.LinAlgError):
-                pass
 
     def make_result(
         self,

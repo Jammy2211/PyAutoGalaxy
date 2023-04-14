@@ -21,7 +21,6 @@ def _fit_imaging_from(
     settings_pixelization: aa.SettingsPixelization = None,
     settings_inversion: aa.SettingsInversion = None,
     use_preloaded_grid: bool = True,
-    use_hyper_scaling: bool = True,
 ) -> FItImaging:
     """
     Returns a `FitImaging` object from a PyAutoFit database `Fit` object and an instance of galaxies from a non-linear
@@ -79,7 +78,6 @@ def _fit_imaging_from(
         settings_pixelization=settings_pixelization,
         settings_inversion=settings_inversion,
         preloads=preloads,
-        use_hyper_scaling=use_hyper_scaling,
     )
 
 
@@ -91,7 +89,6 @@ class FitImagingAgg(AbstractAgg):
         settings_pixelization: Optional[aa.SettingsPixelization] = None,
         settings_inversion: Optional[aa.SettingsInversion] = None,
         use_preloaded_grid: bool = True,
-        use_hyper_scaling: bool = True,
     ):
         """
         Wraps a PyAutoFit aggregator in order to create generators of fits to imaging data, corresponding to the
@@ -103,7 +100,6 @@ class FitImagingAgg(AbstractAgg):
         self.settings_pixelization = settings_pixelization
         self.settings_inversion = settings_inversion
         self.use_preloaded_grid = use_preloaded_grid
-        self.use_hyper_scaling = use_hyper_scaling
 
     def make_object_for_gen(self, fit, galaxies) -> FItImaging:
         """
@@ -129,5 +125,4 @@ class FitImagingAgg(AbstractAgg):
             settings_pixelization=self.settings_pixelization,
             settings_inversion=self.settings_inversion,
             use_preloaded_grid=self.use_preloaded_grid,
-            use_hyper_scaling=self.use_hyper_scaling,
         )

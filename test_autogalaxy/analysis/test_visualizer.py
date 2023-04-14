@@ -133,7 +133,7 @@ def test__visualize_inversion__uses_configs(
     assert path.join(plot_path, "regularization_weights.png") not in plot_patch.paths
 
 
-def test__visualize_hyper_images__uses_config(
+def test__visualize_adapt_images__uses_config(
     masked_imaging_7x7,
     hyper_model_image_7x7,
     include_2d_all,
@@ -145,7 +145,7 @@ def test__visualize_hyper_images__uses_config(
 
     visualizer = vis.Visualizer(visualize_path=plot_path)
 
-    visualizer.visualize_hyper_images(
+    visualizer.visualize_adapt_images(
         hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict_7x7,
         hyper_model_image=hyper_model_image_7x7,
     )

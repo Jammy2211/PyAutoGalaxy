@@ -10,7 +10,7 @@ from autogalaxy.plot.visuals.two_d import Visuals2D
 from autogalaxy.plot.include.two_d import Include2D
 
 
-class HyperPlotter(Plotter):
+class AdaptPlotter(Plotter):
     def __init__(
         self,
         mat_plot_2d: MatPlot2D = MatPlot2D(),
@@ -56,23 +56,6 @@ class HyperPlotter(Plotter):
             visuals_2d=self.get_visuals_2d(),
             auto_labels=aplt.AutoLabels(
                 title="Hyper Galaxy Image", filename="hyper_galaxy_image"
-            ),
-        )
-
-    def figure_contribution_map(self, contribution_map: aa.Array2D):
-        """
-        Plot the contribution map of a hyper galaxy.
-
-        Parameters
-        ----------
-        contribution_map
-            The contribution map that is plotted.
-        """
-        self.mat_plot_2d.plot_array(
-            array=contribution_map,
-            visuals_2d=self.get_visuals_2d(),
-            auto_labels=aplt.AutoLabels(
-                title="Contribution Map", filename="contribution_map_2d"
             ),
         )
 
@@ -140,3 +123,20 @@ class HyperPlotter(Plotter):
         )
 
         self.close_subplot_figure()
+
+    def figure_contribution_map(self, contribution_map: aa.Array2D):
+        """
+        Plot the contribution map of a hyper galaxy.
+
+        Parameters
+        ----------
+        contribution_map
+            The contribution map that is plotted.
+        """
+        self.mat_plot_2d.plot_array(
+            array=contribution_map,
+            visuals_2d=self.get_visuals_2d(),
+            auto_labels=aplt.AutoLabels(
+                title="Contribution Map", filename="contribution_map_2d"
+            ),
+        )

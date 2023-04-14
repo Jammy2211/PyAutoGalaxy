@@ -2,9 +2,10 @@ from typing import Optional
 
 import autofit as af
 
-from autogalaxy.hyper.hyper_data import HyperImageSky
-from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
+from autogalaxy.legacy.hyper_data import HyperImageSky
+from autogalaxy.legacy.hyper_data import HyperBackgroundNoise
 from autogalaxy.analysis.setup import SetupHyper as SetupHyperBase
+
 
 class SetupHyper(SetupHyperBase):
     def __init__(
@@ -45,7 +46,10 @@ class SetupHyper(SetupHyperBase):
         """
 
         super().__init__(
-            search_pix_cls=search_pix_cls, search_pix_dict=search_pix_dict, mesh_pixels_fixed=mesh_pixels_fixed)
+            search_pix_cls=search_pix_cls,
+            search_pix_dict=search_pix_dict,
+            mesh_pixels_fixed=mesh_pixels_fixed,
+        )
 
         self.hyper_galaxies = hyper_galaxies
 

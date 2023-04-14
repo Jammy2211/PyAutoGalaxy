@@ -16,7 +16,6 @@ from autogalaxy.interferometer.model.result import ResultInterferometer
 from autogalaxy.interferometer.model.visualizer import VisualizerInterferometer
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.plane.plane import Plane
 
 from autogalaxy import exc
@@ -179,7 +178,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
                 visualizer.visualize_interferometer(interferometer=self.interferometer)
 
-                visualizer.visualize_hyper_images(
+                visualizer.visualize_adapt_images(
                     hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
                     hyper_model_image=self.hyper_model_image,
                 )
@@ -247,7 +246,6 @@ class AnalysisInterferometer(AnalysisDataset):
     def fit_interferometer_via_instance_from(
         self,
         instance: af.ModelInstance,
-        use_hyper_scaling: bool = True,
         preload_overwrite: Optional[Preloads] = None,
     ) -> FitInterferometer:
         """
@@ -276,23 +274,15 @@ class AnalysisInterferometer(AnalysisDataset):
         """
         instance = self.instance_with_associated_hyper_images_from(instance=instance)
 
-        hyper_background_noise = self.hyper_background_noise_via_instance_from(
-            instance=instance
-        )
-
         plane = self.plane_via_instance_from(instance=instance)
 
         return self.fit_interferometer_via_plane_from(
             plane=plane,
-            hyper_background_noise=hyper_background_noise,
-            use_hyper_scaling=use_hyper_scaling,
         )
 
     def fit_interferometer_via_plane_from(
         self,
         plane: Plane,
-        hyper_background_noise: Optional[HyperBackgroundNoise],
-        use_hyper_scaling: bool = True,
         preload_overwrite: Optional[Preloads] = None,
     ) -> FitInterferometer:
         """
@@ -305,11 +295,6 @@ class AnalysisInterferometer(AnalysisDataset):
         ----------
         plane
             The plane of galaxies whose model images are used to fit the interferometer data.
-        hyper_background_noise
-            A model component which scales the background noise level of the data before computing the log likelihood.
-        use_hyper_scaling
-            If false, the scaling of the background noise is not performed irrespective of the model components
-            themselves.
 
         Returns
         -------
@@ -322,8 +307,6 @@ class AnalysisInterferometer(AnalysisDataset):
         return FitInterferometer(
             dataset=self.dataset,
             plane=plane,
-            hyper_background_noise=hyper_background_noise,
-            use_hyper_scaling=use_hyper_scaling,
             settings_pixelization=self.settings_pixelization,
             settings_inversion=self.settings_inversion,
             preloads=preloads,
@@ -372,12 +355,9 @@ class AnalysisInterferometer(AnalysisDataset):
 
         instance = self.instance_with_associated_hyper_images_from(instance=instance)
         plane = self.plane_via_instance_from(instance=instance)
-        hyper_background_noise = self.hyper_background_noise_via_instance_from(
-            instance=instance
-        )
 
         fit = self.fit_interferometer_via_plane_from(
-            plane=plane, hyper_background_noise=hyper_background_noise
+            plane=plane,
         )
 
         visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
@@ -407,19 +387,10 @@ class AnalysisInterferometer(AnalysisDataset):
             except IndexError:
                 pass
 
-        visualizer.visualize_hyper_images(
+        visualizer.visualize_adapt_images(
             hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
             hyper_model_image=self.hyper_model_image,
         )
-
-        if visualizer.plot_fit_no_hyper:
-            fit = self.fit_interferometer_via_plane_from(
-                plane=plane, hyper_background_noise=None, use_hyper_scaling=False
-            )
-
-            visualizer.visualize_fit_interferometer(
-                fit=fit, during_analysis=during_analysis, subfolders="fit_no_hyper"
-            )
 
     def make_result(
         self,

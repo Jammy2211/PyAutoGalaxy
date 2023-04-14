@@ -8,7 +8,7 @@ import autoarray.plot as aplt
 
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.plot.galaxy_plotters import GalaxyPlotter
-from autogalaxy.galaxy.plot.hyper_galaxy_plotters import HyperPlotter
+from autogalaxy.galaxy.plot.hyper_galaxy_plotters import AdaptPlotter
 from autogalaxy.plane.plane import Plane
 from autogalaxy.plane.plot.plane_plotters import PlanePlotter
 
@@ -407,7 +407,7 @@ class Visualizer:
                     regularization_weights=True,
                 )
 
-    def visualize_hyper_images(
+    def visualize_adapt_images(
         self,
         hyper_galaxy_image_path_dict: {str, aa.Array2D},
         hyper_model_image: aa.Array2D,
@@ -437,7 +437,7 @@ class Visualizer:
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="hyper")
 
-        hyper_plotter = HyperPlotter(
+        hyper_plotter = AdaptPlotter(
             mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
@@ -476,7 +476,7 @@ class Visualizer:
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="hyper")
 
-        hyper_plotter = HyperPlotter(
+        hyper_plotter = AdaptPlotter(
             mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 

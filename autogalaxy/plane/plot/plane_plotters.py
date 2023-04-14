@@ -131,7 +131,6 @@ class PlanePlotter(Plotter):
         deflections_y: bool = False,
         deflections_x: bool = False,
         magnification: bool = False,
-        contribution_map: bool = False,
         title_suffix: str = "",
         filename_suffix: str = "",
     ):
@@ -160,8 +159,6 @@ class PlanePlotter(Plotter):
             Whether to make a 2D plot (via `imshow`) of the x component of the deflection angles.
         magnification
             Whether to make a 2D plot (via `imshow`) of the magnification.
-        contribution_map
-            Whether to make a 2D plot (via `imshow`) of the contribution map.
         title_suffix
             Add a suffix to the end of the matplotlib title label.
         filename_suffix
@@ -206,16 +203,6 @@ class PlanePlotter(Plotter):
             deflections_x=deflections_x,
             magnification=magnification,
         )
-
-        if contribution_map:
-
-            self.mat_plot_2d.plot_array(
-                array=self.plane.contribution_map,
-                visuals_2d=self.get_visuals_2d(),
-                auto_labels=aplt.AutoLabels(
-                    title="Contribution Map", filename="contribution_map_2d"
-                ),
-            )
 
     def galaxy_indexes_from(self, galaxy_index: Optional[int]) -> List[int]:
         """
@@ -278,7 +265,6 @@ class PlanePlotter(Plotter):
         deflections_y: bool = False,
         deflections_x: bool = False,
         magnification: bool = False,
-        contribution_map: bool = False,
         auto_filename: str = "subplot_plane",
     ):
         """
@@ -306,8 +292,6 @@ class PlanePlotter(Plotter):
             Whether or not to  include a 2D plot (via `imshow`) of the x component of the deflection angles.
         magnification
             Whether or not to  include a 2D plot (via `imshow`) of the magnification.
-        contribution_map
-            Whether or not to  include a 2D plot (via `imshow`) of the contribution map.
         auto_filename
             The default filename of the output subplot if written to hard-disk.
         """
@@ -320,7 +304,6 @@ class PlanePlotter(Plotter):
             deflections_y=deflections_y,
             deflections_x=deflections_x,
             magnification=magnification,
-            contribution_map=contribution_map,
             auto_labels=aplt.AutoLabels(filename=auto_filename),
         )
 

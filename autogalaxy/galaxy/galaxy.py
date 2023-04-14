@@ -7,7 +7,6 @@ import autofit as af
 
 from autoconf.dictable import Dictable
 from autogalaxy import exc
-from autogalaxy.galaxy.hyper import HyperGalaxy
 from autogalaxy.operate.deflections import OperateDeflections
 from autogalaxy.operate.image import OperateImageList
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
@@ -21,13 +20,11 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
     @DynamicAttrs
     """
 
-    def __init__(
-        self, redshift: float, hyper_galaxy: Optional[HyperGalaxy] = None, **kwargs
-    ):
+    def __init__(self, redshift: float, **kwargs):
         """
-        Class representing a galaxy, which is composed of attributes used for fitting hyper_galaxies (e.g. light profiles, \
+        Class representing a galaxy, which is composed of attributes used for fitting galaxies (e.g. light profiles,
         mass profiles, pixelizations, etc.).
-        
+
         All *has_* methods retun `True` if galaxy has that attribute, `False` if not.
 
         Parameters
@@ -36,7 +33,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             The redshift of the galaxy.
         pixelization
             The pixelization of the galaxy used to reconstruct an observed image using an inversion.
-            
+
         Attributes
         ----------
         hyper_model_image
@@ -71,8 +68,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
             setattr(self, name, val)
 
-        self.hyper_galaxy = hyper_galaxy
-
     def __hash__(self):
         return int(self.id)
 
@@ -91,9 +86,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         if self.has(cls=aa.Pixelization):
             string += "\nPixelization:\n{}".format(str(self.pixelization))
-
-        if self.hyper_galaxy:
-            string += "\nHyper Galaxy:\n{}".format(str(self.hyper_galaxy))
 
         return string
 
@@ -436,26 +428,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             return sum(potential_1d_list)
 
         return np.zeros((grid.shape[0],))
-
-    @property
-    def contribution_map(self) -> aa.Array2D:
-        """
-        Returns the contribution map of a galaxy, which represents the fraction of
-        flux in each pixel that the galaxy is attributed to contain, hyper to the
-        *contribution_factor* hyper_galaxies-parameter.
-
-        This is computed by dividing that galaxy's flux by the total flux in that \
-        pixel and then scaling by the maximum flux such that the contribution map \
-        ranges between 0 and 1.
-
-        Parameters
-        ----------
-
-        """
-        return self.hyper_galaxy.contribution_map_from(
-            hyper_model_image=self.hyper_model_image,
-            hyper_galaxy_image=self.hyper_galaxy_image,
-        )
 
     @property
     def half_light_radius(self):

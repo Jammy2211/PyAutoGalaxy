@@ -45,10 +45,6 @@ class ResultInterferometer(ResultDataset):
         An instance of a `FitInterferometer` corresponding to the maximum log likelihood model inferred by the
         non-linear search.
         """
-        hyper_background_noise = self.analysis.hyper_background_noise_via_instance_from(
-            instance=self.instance_copy
-        )
-
         instance = self.analysis.instance_with_associated_hyper_images_from(
             instance=self.instance_copy
         )
@@ -56,7 +52,7 @@ class ResultInterferometer(ResultDataset):
         plane = self.analysis.plane_via_instance_from(instance=instance)
 
         return self.analysis.fit_interferometer_via_plane_from(
-            plane=plane, hyper_background_noise=hyper_background_noise
+            plane=plane,
         )
 
     @property
