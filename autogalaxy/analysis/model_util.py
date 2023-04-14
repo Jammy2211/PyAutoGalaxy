@@ -204,7 +204,7 @@ def hyper_noise_model_from(
     Parameters
     ----------
     setup_hyper
-        The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
+        The setup of the hyper analysis if used.
     result
         The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
     include_hyper_image_sky
@@ -272,7 +272,7 @@ def hyper_pix_model_from(
     Parameters
     ----------
     setup_hyper
-        The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
+        The setup of the hyper analysis if used.
     result
         The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
     include_hyper_image_sky
@@ -340,7 +340,7 @@ def hyper_fit_no_noise(
     result: af.Result,
     analysis,
     search_previous,
-    use_positive_only_solver: bool = False,
+    use_positive_only_solver: bool = True,
     include_hyper_image_sky: bool = False,
 ):
 
@@ -380,7 +380,7 @@ def hyper_fit(
     result: af.Result,
     analysis,
     search_previous: af.NonLinearSearch,
-    use_positive_only_solver: bool = False,
+    use_positive_only_solver: bool = True,
     include_hyper_image_sky: bool = False,
     pixelization_overwrite=None,
     regularization_overwrite=None,
@@ -404,7 +404,7 @@ def hyper_fit(
     hyper_model : Collection
         The hyper model used by the hyper-fit, which models hyper-components like a `Pixelization` or `HyperGalaxy`'s.
     setup_hyper : SetupHyper
-        The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
+        The setup of the hyper analysis if used.
     result : af.Result
         The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
     analysis : Analysis
@@ -512,7 +512,7 @@ def hyper_model_from(
     Parameters
     ----------
     setup_hyper
-        The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
+        The setup of the hyper analysis if used.
     result
         The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
     include_hyper_image_sky
@@ -674,7 +674,7 @@ def stochastic_fit(
     Parameters
     ----------
     setup_hyper : SetupHyper
-        The setup of the hyper analysis if used (e.g. hyper-galaxy noise scaling).
+        The setup of the hyper analysis if used.
     result : af.Result
         The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
     include_hyper_image_sky : hd.HyperImageSky
