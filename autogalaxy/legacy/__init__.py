@@ -1,4 +1,4 @@
-from autogalaxy.legacy.setup import SetupHyper
+from autogalaxy.legacy.setup import SetupAdapt
 from autogalaxy.legacy.hyper import HyperGalaxy
 from autogalaxy.legacy import hyper_data
 from autogalaxy.legacy.galaxy import Galaxy

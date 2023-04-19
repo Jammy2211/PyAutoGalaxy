@@ -4,7 +4,6 @@ import pytest
 
 import autogalaxy as ag
 
-from autoconf import conf
 from autogalaxy.analysis import visualizer as vis
 
 directory = path.dirname(path.abspath(__file__))
@@ -80,7 +79,7 @@ def test__visualizes_imaging__uses_configs(
     plot_path = path.join(plot_path, "imaging")
 
     assert path.join(plot_path, "subplot_imaging.png") in plot_patch.paths
-    assert path.join(plot_path, "image_2d.png") in plot_patch.paths
+    assert path.join(plot_path, "data.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map.png") not in plot_patch.paths
     assert path.join(plot_path, "psf.png") in plot_patch.paths
     assert path.join(plot_path, "inverse_noise_map.png") in plot_patch.paths
@@ -135,9 +134,9 @@ def test__visualize_inversion__uses_configs(
 
 def test__visualize_adapt_images__uses_config(
     masked_imaging_7x7,
-    hyper_model_image_7x7,
+    adapt_model_image_7x7,
     include_2d_all,
-    hyper_galaxy_image_path_dict_7x7,
+    adapt_galaxy_image_path_dict_7x7,
     fit_imaging_x2_galaxy_inversion_7x7,
     plot_path,
     plot_patch,
@@ -146,15 +145,15 @@ def test__visualize_adapt_images__uses_config(
     visualizer = vis.Visualizer(visualize_path=plot_path)
 
     visualizer.visualize_adapt_images(
-        hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict_7x7,
-        hyper_model_image=hyper_model_image_7x7,
+        adapt_galaxy_image_path_dict=adapt_galaxy_image_path_dict_7x7,
+        adapt_model_image=adapt_model_image_7x7,
     )
 
-    plot_path = path.join(plot_path, "hyper")
+    plot_path = path.join(plot_path, "adapt")
 
-    assert path.join(plot_path, "hyper_model_image.png") in plot_patch.paths
+    assert path.join(plot_path, "adapt_model_image.png") in plot_patch.paths
     assert (
-        path.join(plot_path, "subplot_hyper_images_of_galaxies.png") in plot_patch.paths
+        path.join(plot_path, "subplot_adapt_images_of_galaxies.png") in plot_patch.paths
     )
 
     visualizer.visualize_contribution_maps(

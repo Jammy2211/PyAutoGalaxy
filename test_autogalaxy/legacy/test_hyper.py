@@ -9,7 +9,7 @@ def test__contribution_map_from():
 
     hyp = ag.legacy.HyperGalaxy(contribution_factor=0.0)
     contribution_map = hyp.contribution_map_from(
-        hyper_model_image=hyper_image, hyper_galaxy_image=hyper_image
+        adapt_model_image=hyper_image, adapt_galaxy_image=hyper_image
     )
 
     assert (contribution_map == np.ones((3,))).all()
@@ -21,12 +21,12 @@ def test__contribution_map_from():
     galaxy = ag.legacy.Galaxy(
         redshift=0.5,
         hyper_galaxy=hyp,
-        hyper_galaxy_image=hyper_image,
-        hyper_model_image=hyper_image,
+        adapt_galaxy_image=hyper_image,
+        adapt_model_image=hyper_image,
     )
 
     contribution_map = hyp.contribution_map_from(
-        hyper_model_image=hyper_image, hyper_galaxy_image=hyper_image
+        adapt_model_image=hyper_image, adapt_galaxy_image=hyper_image
     )
 
     assert (contribution_map == galaxy.contribution_map).all()

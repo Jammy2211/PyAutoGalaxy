@@ -46,10 +46,10 @@ def test__all_individual_plotter__output_file_with_default_name(
     )
 
     plane_7x7.galaxies[0].hyper_galaxy = ag.legacy.HyperGalaxy()
-    plane_7x7.galaxies[0].hyper_model_image = ag.Array2D.ones(
+    plane_7x7.galaxies[0].adapt_model_image = ag.Array2D.ones(
         shape_native=(7, 7), pixel_scales=0.1
     )
-    plane_7x7.galaxies[0].hyper_galaxy_image = ag.Array2D.ones(
+    plane_7x7.galaxies[0].adapt_galaxy_image = ag.Array2D.ones(
         shape_native=(7, 7), pixel_scales=0.1
     )
 

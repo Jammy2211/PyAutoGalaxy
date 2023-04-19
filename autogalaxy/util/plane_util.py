@@ -135,7 +135,7 @@ def galaxies_in_redshift_ordered_planes_from(galaxies, plane_redshifts):
     return galaxies_in_redshift_ordered_planes
 
 
-def planes_via_galaxies_from(galaxies, profiling_dict=None):
+def planes_via_galaxies_from(galaxies, profiling_dict=None, plane_cls=Plane):
 
     plane_redshifts = ordered_plane_redshifts_from(galaxies=galaxies)
 
@@ -147,7 +147,7 @@ def planes_via_galaxies_from(galaxies, profiling_dict=None):
 
     for plane_index in range(0, len(plane_redshifts)):
         planes.append(
-            Plane(
+            plane_cls(
                 galaxies=galaxies_in_planes[plane_index], profiling_dict=profiling_dict
             )
         )

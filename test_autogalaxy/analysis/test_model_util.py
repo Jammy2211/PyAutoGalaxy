@@ -139,7 +139,7 @@ def test__hyper_model_from():
 
     result = ag.m.MockResult(instance=instance)
 
-    model = ag.util.model.hyper_model_from(setup_hyper=ag.SetupHyper(), result=result)
+    model = ag.util.model.hyper_model_from(setup_adapt=ag.SetupAdapt(), result=result)
 
     assert isinstance(model.galaxies.galaxy.pixelization.mesh, af.Model)
 
@@ -157,6 +157,6 @@ def test__hyper_model_from():
 
     result = ag.m.MockResult(instance=instance)
 
-    model = ag.util.model.hyper_model_from(result=result, setup_hyper=ag.SetupHyper())
+    model = ag.util.model.hyper_model_from(result=result, setup_adapt=ag.SetupAdapt())
 
     assert model == None

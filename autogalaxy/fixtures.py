@@ -187,33 +187,33 @@ def make_fit_quantity_7x7_vector_yx_2d():
     )
 
 
-# HYPER galaxies #
+# galaxies #
 
 
-def make_hyper_model_image_7x7():
+def make_adapt_model_image_7x7():
     return ag.Array2D(
         np.full(fill_value=5.0, shape=make_mask_2d_7x7().pixels_in_mask),
         mask=make_mask_2d_7x7(),
     )
 
 
-def make_hyper_galaxy_image_0_7x7():
+def make_adapt_galaxy_image_0_7x7():
     return ag.Array2D(
         np.full(fill_value=2.0, shape=make_mask_2d_7x7().pixels_in_mask),
         mask=make_mask_2d_7x7(),
     )
 
 
-def make_hyper_galaxy_image_path_dict_7x7():
-    hyper_galaxy_image_path_dict = {
-        ("g0",): make_hyper_galaxy_image_0_7x7(),
-        ("g1",): make_hyper_galaxy_image_1_7x7(),
+def make_adapt_galaxy_image_path_dict_7x7():
+    adapt_galaxy_image_path_dict = {
+        ("g0",): make_adapt_galaxy_image_0_7x7(),
+        ("g1",): make_adapt_galaxy_image_1_7x7(),
     }
 
-    return hyper_galaxy_image_path_dict
+    return adapt_galaxy_image_path_dict
 
 
-def make_hyper_galaxy_image_1_7x7():
+def make_adapt_galaxy_image_1_7x7():
     return ag.Array2D(
         np.full(fill_value=3.0, shape=make_mask_2d_7x7().pixels_in_mask),
         mask=make_mask_2d_7x7(),

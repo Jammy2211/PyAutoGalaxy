@@ -62,7 +62,7 @@ class AnalysisImaging(AnalysisImagingBase):
         FitImaging
             The fit of the plane to the imaging dataset, which includes the log likelihood.
         """
-        instance = self.instance_with_associated_hyper_images_from(instance=instance)
+        instance = self.instance_with_associated_adapt_images_from(instance=instance)
 
         hyper_image_sky = self.hyper_image_sky_via_instance_from(instance=instance)
 
@@ -152,7 +152,7 @@ class AnalysisImaging(AnalysisImagingBase):
         - The non-linear search used to perform the model fit.
 
         The `ResultImaging` object contains a number of methods which use the above objects to create the max
-        log likelihood `Plane`, `FitImaging`, hyper-galaxy images,etc.
+        log likelihood `Plane`, `FitImaging`, adapt-galaxy images,etc.
 
         Parameters
         ----------

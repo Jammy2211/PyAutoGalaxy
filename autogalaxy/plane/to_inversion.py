@@ -210,12 +210,12 @@ class PlaneToInversion(AbstractToInversion):
         return [
             pixelization.mesh.image_plane_mesh_grid_from(
                 image_plane_data_grid=self.grid_pixelization,
-                hyper_data=hyper_galaxy_image,
+                hyper_data=adapt_galaxy_image,
                 settings=self.settings_pixelization,
             )
-            for pixelization, hyper_galaxy_image in zip(
+            for pixelization, adapt_galaxy_image in zip(
                 self.plane.cls_list_from(cls=aa.Pixelization),
-                self.plane.hyper_galaxies_with_pixelization_image_list,
+                self.plane.adapt_galaxies_with_pixelization_image_list,
             )
         ]
 
@@ -224,7 +224,7 @@ class PlaneToInversion(AbstractToInversion):
         mesh: aa.AbstractMesh,
         regularization: aa.AbstractRegularization,
         source_plane_mesh_grid: aa.Grid2DSparse,
-        hyper_galaxy_image: aa.Array2D,
+        adapt_galaxy_image: aa.Array2D,
         image_plane_mesh_grid: aa.Grid2DSparse = None,
     ) -> aa.AbstractMapper:
 
@@ -232,7 +232,7 @@ class PlaneToInversion(AbstractToInversion):
             source_plane_data_grid=self.grid_pixelization,
             source_plane_mesh_grid=source_plane_mesh_grid,
             image_plane_mesh_grid=image_plane_mesh_grid,
-            hyper_data=hyper_galaxy_image,
+            hyper_data=adapt_galaxy_image,
             settings=self.settings_pixelization,
             preloads=self.preloads,
             profiling_dict=self.plane.profiling_dict,
@@ -254,7 +254,7 @@ class PlaneToInversion(AbstractToInversion):
         galaxies_with_pixelization_list = self.plane.galaxies_with_cls_list_from(
             cls=aa.Pixelization
         )
-        hyper_galaxy_image_list = self.plane.hyper_galaxies_with_pixelization_image_list
+        adapt_galaxy_image_list = self.plane.adapt_galaxies_with_pixelization_image_list
 
         for mapper_index in range(len(sparse_grid_list)):
 
@@ -262,7 +262,7 @@ class PlaneToInversion(AbstractToInversion):
                 mesh=pixelization_list[mapper_index].mesh,
                 regularization=pixelization_list[mapper_index].regularization,
                 source_plane_mesh_grid=sparse_grid_list[mapper_index],
-                hyper_galaxy_image=hyper_galaxy_image_list[mapper_index],
+                adapt_galaxy_image=adapt_galaxy_image_list[mapper_index],
                 image_plane_mesh_grid=sparse_grid_list[mapper_index],
             )
 

@@ -37,7 +37,7 @@ def test__figure_of_merit__includes_hyper_image_and_noise__matches_fit(
     assert fit.log_likelihood == fit_figure_of_merit
 
 
-def test__uses_hyper_fit_correctly(masked_imaging_7x7):
+def test__uses_adapt_fit_correctly(masked_imaging_7x7):
 
     galaxies = af.ModelInstance()
     galaxies.galaxy = ag.legacy.Galaxy(
@@ -50,19 +50,19 @@ def test__uses_hyper_fit_correctly(masked_imaging_7x7):
 
     galaxy_hyper_image = ag.Array2D.ones(shape_native=(3, 3), pixel_scales=0.1)
     galaxy_hyper_image[4] = 10.0
-    hyper_model_image = ag.Array2D.full(
+    adapt_model_image = ag.Array2D.full(
         fill_value=0.5, shape_native=(3, 3), pixel_scales=0.1
     )
 
-    hyper_galaxy_image_path_dict = {("galaxies", "galaxy"): galaxy_hyper_image}
+    adapt_galaxy_image_path_dict = {("galaxies", "galaxy"): galaxy_hyper_image}
 
     result = ag.m.MockResult(
-        hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
-        hyper_model_image=hyper_model_image,
+        adapt_galaxy_image_path_dict=adapt_galaxy_image_path_dict,
+        adapt_model_image=adapt_model_image,
     )
 
     analysis = ag.legacy.AnalysisImaging(
-        dataset=masked_imaging_7x7, hyper_dataset_result=result
+        dataset=masked_imaging_7x7, adapt_result=result
     )
 
     hyper_galaxy = ag.legacy.HyperGalaxy(
@@ -78,8 +78,8 @@ def test__uses_hyper_fit_correctly(masked_imaging_7x7):
         light_profile=instance.galaxies.galaxy.light,
         mass_profile=instance.galaxies.galaxy.mass,
         hyper_galaxy=hyper_galaxy,
-        hyper_model_image=hyper_model_image,
-        hyper_galaxy_image=galaxy_hyper_image,
+        adapt_model_image=adapt_model_image,
+        adapt_galaxy_image=galaxy_hyper_image,
         hyper_minimum_value=0.0,
     )
     g1 = ag.legacy.Galaxy(redshift=1.0, light_profile=instance.galaxies.source.light)
@@ -88,5 +88,5 @@ def test__uses_hyper_fit_correctly(masked_imaging_7x7):
 
     fit = ag.legacy.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
-    assert (fit.plane.galaxies[0].hyper_galaxy_image == galaxy_hyper_image).all()
+    assert (fit.plane.galaxies[0].adapt_galaxy_image == galaxy_hyper_image).all()
     assert fit_likelihood == fit.log_likelihood

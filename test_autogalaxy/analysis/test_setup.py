@@ -4,15 +4,14 @@ import autogalaxy as ag
 
 def test__hyper_search():
 
-    setup = ag.SetupHyper(search_pix_cls=None, search_pix_dict=None)
+    setup = ag.SetupAdapt(search_pix_cls=None, search_pix_dict=None)
     assert setup.search_pix_cls == af.DynestyStatic
     assert setup.search_pix_dict == {
         "nlive": 50,
         "sample": "rwalk",
-        "dlogz": 10,
     }
 
-    setup = ag.SetupHyper(
+    setup = ag.SetupAdapt(
         search_pix_cls=af.DynestyDynamic,
         search_pix_dict={"hello": "there"},
     )

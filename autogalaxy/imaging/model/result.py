@@ -21,7 +21,7 @@ class ResultImaging(ResultDataset):
     - The non-linear search used to perform the model fit.
 
     This class contains a number of methods which use the above objects to create the max log likelihood `Plane`,
-    `FitImaging`, hyper-galaxy images,etc.
+    `FitImaging`, adapt-galaxy images,etc.
 
     Parameters
     ----------
@@ -46,7 +46,7 @@ class ResultImaging(ResultDataset):
         An instance of a `FitImaging` corresponding to the maximum log likelihood model inferred by the non-linear
         search.
         """
-        instance = self.analysis.instance_with_associated_hyper_images_from(
+        instance = self.analysis.instance_with_associated_adapt_images_from(
             instance=self.instance_copy
         )
 

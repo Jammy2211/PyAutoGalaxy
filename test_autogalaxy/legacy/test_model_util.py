@@ -22,17 +22,17 @@ def test__hyper_model_noise_from():
     result = ag.m.MockResult(instance=instance)
 
     model = ag.util.model_legacy.hyper_noise_model_from(
-        setup_hyper=ag.legacy.SetupHyper(), result=result
+        setup_adapt=ag.legacy.SetupAdapt(), result=result
     )
 
     assert model is None
 
-    model = ag.util.model_legacy.hyper_noise_model_from(result=result, setup_hyper=None)
+    model = ag.util.model_legacy.hyper_noise_model_from(result=result, setup_adapt=None)
 
     assert model == None
 
     model = ag.util.model_legacy.hyper_noise_model_from(
-        setup_hyper=ag.legacy.SetupHyper(
+        setup_adapt=ag.legacy.SetupAdapt(
             hyper_image_sky=ag.legacy.hyper_data.HyperImageSky,
             hyper_background_noise=ag.legacy.hyper_data.HyperBackgroundNoise,
         ),
@@ -66,7 +66,7 @@ def test__hyper_model_noise_from():
     result = ag.m.MockResult(instance=instance)
 
     model = ag.util.model_legacy.hyper_noise_model_from(
-        result=result, setup_hyper=ag.legacy.SetupHyper()
+        result=result, setup_adapt=ag.legacy.SetupAdapt()
     )
 
     assert model == None
@@ -87,7 +87,7 @@ def test__hyper_model_noise_from__adds_hyper_galaxies():
         (("galaxies", "galaxy_1"), ag.legacy.Galaxy(redshift=1.0)),
     ]
 
-    hyper_galaxy_image_path_dict = {
+    adapt_galaxy_image_path_dict = {
         ("galaxies", "galaxy_0"): ag.Array2D.ones(
             shape_native=(3, 3), pixel_scales=1.0
         ),
@@ -99,14 +99,14 @@ def test__hyper_model_noise_from__adds_hyper_galaxies():
     result = ag.m.MockResult(
         instance=instance,
         path_galaxy_tuples=path_galaxy_tuples,
-        hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
+        adapt_galaxy_image_path_dict=adapt_galaxy_image_path_dict,
     )
 
-    setup_hyper = ag.legacy.SetupHyper()
-    setup_hyper.hyper_galaxy_names = ["galaxy_0"]
+    setup_adapt = ag.legacy.SetupAdapt()
+    setup_adapt.hyper_galaxy_names = ["galaxy_0"]
 
     model = ag.util.model_legacy.hyper_noise_model_from(
-        result=result, setup_hyper=setup_hyper
+        result=result, setup_adapt=setup_adapt
     )
 
     assert isinstance(model.galaxies.galaxy_0, af.Model)
@@ -114,11 +114,11 @@ def test__hyper_model_noise_from__adds_hyper_galaxies():
     assert model.galaxies.galaxy_0.hyper_galaxy.cls is ag.legacy.HyperGalaxy
     assert model.galaxies.galaxy_1.hyper_galaxy is None
 
-    setup_hyper = ag.legacy.SetupHyper()
-    setup_hyper.hyper_galaxy_names = ["galaxy_0", "galaxy_1"]
+    setup_adapt = ag.legacy.SetupAdapt()
+    setup_adapt.hyper_galaxy_names = ["galaxy_0", "galaxy_1"]
 
     model = ag.util.model_legacy.hyper_noise_model_from(
-        result=result, setup_hyper=setup_hyper
+        result=result, setup_adapt=setup_adapt
     )
 
     assert isinstance(model.galaxies.galaxy_0, af.Model)
@@ -145,7 +145,7 @@ def test__hyper_model_inversion_from():
     result = ag.m.MockResult(instance=instance)
 
     model = ag.util.model_legacy.hyper_pix_model_from(
-        setup_hyper=ag.legacy.SetupHyper(), result=result
+        setup_adapt=ag.legacy.SetupAdapt(), result=result
     )
 
     assert isinstance(model.galaxies.galaxy.pixelization.mesh, af.Model)
@@ -156,12 +156,12 @@ def test__hyper_model_inversion_from():
     assert model.hyper_image_sky is None
     assert model.hyper_background_noise is None
 
-    model = ag.util.model_legacy.hyper_pix_model_from(result=result, setup_hyper=None)
+    model = ag.util.model_legacy.hyper_pix_model_from(result=result, setup_adapt=None)
 
     assert model == None
 
     model = ag.util.model_legacy.hyper_pix_model_from(
-        setup_hyper=ag.legacy.SetupHyper(
+        setup_adapt=ag.legacy.SetupAdapt(
             hyper_image_sky=ag.legacy.hyper_data.HyperImageSky,
             hyper_background_noise=ag.legacy.hyper_data.HyperBackgroundNoise,
         ),
@@ -188,7 +188,7 @@ def test__hyper_model_inversion_from():
     result = ag.m.MockResult(instance=instance)
 
     model = ag.util.model_legacy.hyper_pix_model_from(
-        result=result, setup_hyper=ag.legacy.SetupHyper()
+        result=result, setup_adapt=ag.legacy.SetupAdapt()
     )
 
     assert model == None
@@ -227,7 +227,7 @@ def test__hyper_model_inversion_from__adds_hyper_galaxies():
         ),
     ]
 
-    hyper_galaxy_image_path_dict = {
+    adapt_galaxy_image_path_dict = {
         ("galaxies", "galaxy_0"): ag.Array2D.ones(
             shape_native=(3, 3), pixel_scales=1.0
         ),
@@ -239,14 +239,14 @@ def test__hyper_model_inversion_from__adds_hyper_galaxies():
     result = ag.m.MockResult(
         instance=instance,
         path_galaxy_tuples=path_galaxy_tuples,
-        hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
+        adapt_galaxy_image_path_dict=adapt_galaxy_image_path_dict,
     )
 
-    setup_hyper = ag.legacy.SetupHyper()
-    setup_hyper.hyper_galaxy_names = ["galaxy_0"]
+    setup_adapt = ag.legacy.SetupAdapt()
+    setup_adapt.hyper_galaxy_names = ["galaxy_0"]
 
     model = ag.util.model_legacy.hyper_pix_model_from(
-        result=result, setup_hyper=setup_hyper
+        result=result, setup_adapt=setup_adapt
     )
 
     assert isinstance(model.galaxies.galaxy_0, af.Model)
@@ -254,11 +254,11 @@ def test__hyper_model_inversion_from__adds_hyper_galaxies():
     assert model.galaxies.galaxy_0.hyper_galaxy.contribution_factor == 1
     assert model.galaxies.galaxy_1.hyper_galaxy is None
 
-    setup_hyper = ag.legacy.SetupHyper()
-    setup_hyper.hyper_galaxy_names = ["galaxy_0", "galaxy_1"]
+    setup_adapt = ag.legacy.SetupAdapt()
+    setup_adapt.hyper_galaxy_names = ["galaxy_0", "galaxy_1"]
 
     model = ag.util.model_legacy.hyper_pix_model_from(
-        result=result, setup_hyper=setup_hyper
+        result=result, setup_adapt=setup_adapt
     )
 
     assert isinstance(model.galaxies.galaxy_0, af.Model)

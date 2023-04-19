@@ -73,7 +73,7 @@ from .quantity.dataset_quantity import DatasetQuantity
 from .galaxy.galaxy import Galaxy
 from .galaxy.redshift import Redshift
 from .galaxy.stellar_dark_decomp import StellarDarkDecomp
-from .analysis.setup import SetupHyper
+from .analysis.setup import SetupAdapt
 from .plane.plane import Plane
 from .plane.to_inversion import AbstractToInversion
 from .plane.to_inversion import PlaneToInversion

@@ -221,7 +221,7 @@ def hyper_noise_map_from(
 
     if hyper_noise_map is not None:
         noise_map = noise_map + hyper_noise_map
-        noise_map_limit = conf.instance["general"]["hyper"]["hyper_noise_limit"]
+        noise_map_limit = conf.instance["general"]["adapt"]["adapt_noise_limit"]
         noise_map[noise_map > noise_map_limit] = noise_map_limit
 
     return noise_map

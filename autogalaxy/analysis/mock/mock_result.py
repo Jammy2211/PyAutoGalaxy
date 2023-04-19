@@ -13,10 +13,10 @@ class MockResult(af.m.MockResult):
         mask=None,
         model_image=None,
         path_galaxy_tuples=None,
-        hyper_galaxy_image_path_dict=None,
-        hyper_model_image=None,
-        hyper_galaxy_visibilities_path_dict=None,
-        hyper_model_visibilities=None,
+        adapt_galaxy_image_path_dict=None,
+        adapt_model_image=None,
+        adapt_galaxy_visibilities_path_dict=None,
+        adapt_model_visibilities=None,
         pixelization=None,
     ):
         super().__init__(
@@ -28,11 +28,11 @@ class MockResult(af.m.MockResult):
         )
 
         self.mask = mask
-        self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict
-        self.hyper_model_image = hyper_model_image
+        self.adapt_galaxy_image_path_dict = adapt_galaxy_image_path_dict
+        self.adapt_model_image = adapt_model_image
         self.path_galaxy_tuples = path_galaxy_tuples
-        self.hyper_galaxy_visibilities_path_dict = hyper_galaxy_visibilities_path_dict
-        self.hyper_model_visibilities = hyper_model_visibilities
+        self.adapt_galaxy_visibilities_path_dict = adapt_galaxy_visibilities_path_dict
+        self.adapt_model_visibilities = adapt_model_visibilities
         self.model_image = model_image
         self.unmasked_model_image = model_image
         self.pixelization = pixelization
@@ -54,10 +54,10 @@ class MockResults(af.ResultsCollection):
         search=None,
         mask=None,
         model_image=None,
-        hyper_galaxy_image_path_dict=None,
-        hyper_model_image=None,
-        hyper_galaxy_visibilities_path_dict=None,
-        hyper_model_visibilities=None,
+        adapt_galaxy_image_path_dict=None,
+        adapt_model_image=None,
+        adapt_galaxy_visibilities_path_dict=None,
+        adapt_model_visibilities=None,
         pixelization=None,
     ):
         """
@@ -75,10 +75,10 @@ class MockResults(af.ResultsCollection):
             search=search,
             mask=mask,
             model_image=model_image,
-            hyper_galaxy_image_path_dict=hyper_galaxy_image_path_dict,
-            hyper_model_image=hyper_model_image,
-            hyper_galaxy_visibilities_path_dict=hyper_galaxy_visibilities_path_dict,
-            hyper_model_visibilities=hyper_model_visibilities,
+            adapt_galaxy_image_path_dict=adapt_galaxy_image_path_dict,
+            adapt_model_image=adapt_model_image,
+            adapt_galaxy_visibilities_path_dict=adapt_galaxy_visibilities_path_dict,
+            adapt_model_visibilities=adapt_model_visibilities,
             pixelization=pixelization,
         )
 

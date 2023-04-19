@@ -36,19 +36,19 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
         Attributes
         ----------
-        hyper_model_image
+        adapt_model_image
             The best-fit model image to the observed image from a previous analysis
             search. This provides the total light attributed to each image pixel by the
             model.
-        hyper_galaxy_image
+        adapt_galaxy_image
             A model image of the galaxy (from light profiles or an inversion) from a
             previous analysis search.
         """
         super().__init__()
         self.redshift = redshift
 
-        self.hyper_model_image = None
-        self.hyper_galaxy_image = None
+        self.adapt_model_image = None
+        self.adapt_galaxy_image = None
 
         for name, val in kwargs.items():
 

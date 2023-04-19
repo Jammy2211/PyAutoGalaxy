@@ -24,24 +24,24 @@ logger = logging.getLogger(__name__)
 logger.setLevel(level="INFO")
 
 
-def clean_model_of_hyper_images(model):
+def clean_model_of_adapt_images(model):
 
     for galaxy in model.galaxies:
 
-        del galaxy.hyper_model_image
-        del galaxy.hyper_galaxy_image
+        del galaxy.adapt_model_image
+        del galaxy.adapt_galaxy_image
 
     if hasattr(model, "clumps"):
         for clump in model.clumps:
 
-            del clump.hyper_model_image
-            del clump.hyper_galaxy_image
+            del clump.adapt_model_image
+            del clump.adapt_galaxy_image
 
     return model
 
 
 def hyper_noise_model_from(
-    setup_hyper, result: af.Result, include_hyper_image_sky: bool = False
+    setup_adapt, result: af.Result, include_hyper_image_sky: bool = False
 ) -> af.Collection:
     """
     Make a hyper model from the `Result` of a model-fit, where the hyper-model is the maximum log likelihood instance
@@ -49,53 +49,52 @@ def hyper_noise_model_from(
 
     1) The `Pixelization` of any `Galaxy` in the model.
     2) The `Regularization` of any `Galaxy` in the model.
-    3) Hyper data components like a `HyperImageSky` or `HyperBackgroundNoise` if input into the function.
     4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
        data which are fit poorly.
 
-    The hyper model is typically used in pipelines to refine and improve an `LEq` after model-fits that fit the
+    The adapt model is typically used in pipelines to refine and improve an `LEq` after model-fits that fit the
     `Galaxy` light and mass components.
 
     Parameters
     ----------
-    setup_hyper
-        The setup of the hyper analysis if used.
+    setup_adapt
+        The setup of the adapt fit.
     result
-        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
+        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the adapt model.
     include_hyper_image_sky
-        This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_hyper`.
+        This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_adapt`.
 
     Returns
     -------
     af.Collection
-        The hyper model, which has an instance of the input results maximum log likelihood model with certain hyper
+        The adapt model, which has an instance of the input results maximum log likelihood model with certain hyper
         model components now free parameters.
     """
 
     from autogalaxy.legacy.hyper import HyperGalaxy
 
-    if setup_hyper is None:
+    if setup_adapt is None:
         return None
 
-    if setup_hyper.hyper_galaxy_names is None:
-        if setup_hyper.hypers_all_off:
+    if setup_adapt.hyper_galaxy_names is None:
+        if setup_adapt.hypers_all_off:
             return None
-        if setup_hyper.hypers_all_except_image_sky_off:
+        if setup_adapt.hypers_all_except_image_sky_off:
             if not include_hyper_image_sky:
                 return None
 
     model = result.instance.as_model()
 
-    model = clean_model_of_hyper_images(model=model)
+    model = clean_model_of_adapt_images(model=model)
 
-    model.hyper_image_sky = setup_hyper.hyper_image_sky
-    model.hyper_background_noise = setup_hyper.hyper_background_noise
+    model.hyper_image_sky = setup_adapt.hyper_image_sky
+    model.hyper_background_noise = setup_adapt.hyper_background_noise
 
-    if setup_hyper.hyper_galaxy_names is not None:
+    if setup_adapt.hyper_galaxy_names is not None:
 
         for path_galaxy, galaxy in result.path_galaxy_tuples:
-            if path_galaxy[-1] in setup_hyper.hyper_galaxy_names:
-                if not np.all(result.hyper_galaxy_image_path_dict[path_galaxy] == 0):
+            if path_galaxy[-1] in setup_adapt.hyper_galaxy_names:
+                if not np.all(result.adapt_galaxy_image_path_dict[path_galaxy] == 0):
 
                     galaxy = getattr(model.galaxies, path_galaxy[-1])
 
@@ -105,7 +104,7 @@ def hyper_noise_model_from(
 
 
 def hyper_pix_model_from(
-    setup_hyper,
+    setup_adapt,
     result: af.Result,
     include_hyper_image_sky: bool = False,
     pixelization_overwrite=None,
@@ -117,30 +116,29 @@ def hyper_pix_model_from(
 
     1) The `Pixelization` of any `Galaxy` in the model.
     2) The `Regularization` of any `Galaxy` in the model.
-    3) Hyper data components like a `HyperImageSky` or `HyperBackgroundNoise` if input into the function.
     4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
        data which are fit poorly.
 
-    The hyper model is typically used in pipelines to refine and improve an `LEq` after model-fits that fit the
+    The adapt model is typically used in pipelines to refine and improve an `LEq` after model-fits that fit the
     `Galaxy` light and mass components.
 
     Parameters
     ----------
-    setup_hyper
-        The setup of the hyper analysis if used.
+    setup_adapt
+        The setup of the adapt fit.
     result
-        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
+        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the adapt model.
     include_hyper_image_sky
-        This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_hyper`.
+        This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_adapt`.
 
     Returns
     -------
     af.Collection
-        The hyper model, which has an instance of the input results maximum log likelihood model with certain hyper
+        The adapt model, which has an instance of the input results maximum log likelihood model with certain hyper
         model components now free parameters.
     """
 
-    if setup_hyper is None:
+    if setup_adapt is None:
         return None
 
     model = result.instance.as_model(
@@ -157,31 +155,31 @@ def hyper_pix_model_from(
     if regularization_overwrite:
         model.galaxies.source.regularization = af.Model(regularization_overwrite)
 
-    if setup_hyper.mesh_pixels_fixed is not None:
+    if setup_adapt.mesh_pixels_fixed is not None:
         if hasattr(model.galaxies.source.pixelization.mesh, "pixels"):
             model.galaxies.source.pixelization.mesh.pixels = (
-                setup_hyper.mesh_pixels_fixed
+                setup_adapt.mesh_pixels_fixed
             )
 
-    model = clean_model_of_hyper_images(model=model)
+    model = clean_model_of_adapt_images(model=model)
 
     model.hyper_image_sky = None
     model.hyper_background_noise = None
 
-    if setup_hyper.hyper_image_sky is not None and include_hyper_image_sky:
-        model.hyper_image_sky = setup_hyper.hyper_image_sky
+    if setup_adapt.hyper_image_sky is not None and include_hyper_image_sky:
+        model.hyper_image_sky = setup_adapt.hyper_image_sky
 
-    if setup_hyper.hyper_background_noise is not None:
+    if setup_adapt.hyper_background_noise is not None:
         try:
             model.hyper_background_noise = result.instance.hyper_background_noise
         except AttributeError:
             pass
 
-    if setup_hyper.hyper_galaxy_names is not None:
+    if setup_adapt.hyper_galaxy_names is not None:
 
         for path_galaxy, galaxy in result.path_galaxy_tuples:
-            if path_galaxy[-1] in setup_hyper.hyper_galaxy_names:
-                if not np.all(result.hyper_galaxy_image_path_dict[path_galaxy] == 0):
+            if path_galaxy[-1] in setup_adapt.hyper_galaxy_names:
+                if not np.all(result.adapt_galaxy_image_path_dict[path_galaxy] == 0):
 
                     model_galaxy = getattr(model.galaxies, path_galaxy[-1])
 
@@ -190,12 +188,12 @@ def hyper_pix_model_from(
     return model
 
 
-def hyper_fit_no_noise(
-    setup_hyper,
+def adapt_fit_no_noise(
+    setup_adapt,
     result: af.Result,
     analysis,
     search_previous,
-    use_positive_only_solver: bool = True,
+    use_positive_only_solver: bool = False,
     include_hyper_image_sky: bool = False,
 ):
 
@@ -206,7 +204,7 @@ def hyper_fit_no_noise(
         analysis.settings_inversion.use_positive_only_solver = True
 
     hyper_model_pix = hyper_pix_model_from(
-        setup_hyper=setup_hyper,
+        setup_adapt=setup_adapt,
         result=result,
         include_hyper_image_sky=include_hyper_image_sky,
     )
@@ -215,53 +213,52 @@ def hyper_fit_no_noise(
 
         return result
 
-    search = setup_hyper.search_pix_cls(
+    search = setup_adapt.search_pix_cls(
         path_prefix=search_previous.path_prefix_no_unique_tag,
         name=f"{search_previous.paths.name}__hyper_pix",
         unique_tag=search_previous.paths.unique_tag,
         number_of_cores=search_previous.number_of_cores,
-        **setup_hyper.search_pix_dict,
+        **setup_adapt.search_pix_dict,
     )
 
     hyper_pix_result = search.fit(model=hyper_model_pix, analysis=analysis)
 
-    result.hyper = hyper_pix_result
+    result.adapt = hyper_pix_result
 
     return result
 
 
-def hyper_fit(
-    setup_hyper,
+def adapt_fit(
+    setup_adapt,
     result: af.Result,
     analysis,
     search_previous: af.NonLinearSearch,
-    use_positive_only_solver: bool = True,
+    use_positive_only_solver: bool = False,
     include_hyper_image_sky: bool = False,
     pixelization_overwrite=None,
     regularization_overwrite=None,
 ):
     """
-    Perform a hyper-fit, which extends a model-fit with an additional fit which fixes the non-hyper components of the
-    model (e.g., `LightProfile`'s, `MassProfile`) to the `Result`'s maximum likelihood fit. The hyper-fit then treats
-    only the hyper-model components as free parameters, which are any of the following model components:
+    Perform a adapt-fit, which extends a model-fit with an additional fit which fixes the non-pixelization components of the
+    model (e.g., `LightProfile`'s, `MassProfile`) to the `Result`'s maximum likelihood fit. The adapt-fit then treats
+    only the adaptive pixelization's components as free parameters, which are any of the following model components:
 
     1) The `Pixelization` of any `Galaxy` in the model.
     2) The `Regularization` of any `Galaxy` in the model.
-    3) Hyper data components like a `HyperImageSky` or `HyperBackgroundNoise` if input into the function.
     4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
        data which are fit poorly.
 
-    The hyper model is typically used in pipelines to refine and improve an `LEq` after model-fits that fit the
+    The adapt model is typically used in pipelines to refine and improve an `LEq` after model-fits that fit the
     `Galaxy` light and mass components.
 
     Parameters
     ----------
     hyper_model : Collection
-        The hyper model used by the hyper-fit, which models hyper-components like a `Pixelization` or `HyperGalaxy`'s.
-    setup_hyper : SetupHyper
-        The setup of the hyper analysis if used.
+        The adapt model used by the adapt-fit, which models hyper-components like a `Pixelization` or `HyperGalaxy`'s.
+    setup_adapt : SetupAdapt
+        The setup of the adapt fit.
     result : af.Result
-        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
+        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the adapt model.
     analysis : Analysis
         An analysis class used to fit imaging or interferometer data with a model.
     use_positive_only_solver
@@ -271,24 +268,24 @@ def hyper_fit(
     Returns
     -------
     af.Result
-        The result of the hyper model-fit, which has a new attribute `result.hyper` that contains updated parameter
-        values for the hyper-model components for passing to later model-fits.
+        The result of the adapt model-fit, which has a new attribute `result.adapt` that contains updated parameter
+        values for the adaptive pixelization's components for passing to later model-fits.
     """
 
-    if analysis.hyper_model_image is None:
+    if analysis.adapt_model_image is None:
 
         analysis.set_hyper_dataset(result=result)
 
     hyper_noise_model = hyper_noise_model_from(
-        setup_hyper=setup_hyper,
+        setup_adapt=setup_adapt,
         result=result,
         include_hyper_image_sky=include_hyper_image_sky,
     )
 
     if hyper_noise_model is None:
 
-        return hyper_fit_no_noise(
-            setup_hyper=setup_hyper,
+        return adapt_fit_no_noise(
+            setup_adapt=setup_adapt,
             result=result,
             analysis=analysis,
             search_previous=search_previous,
@@ -301,12 +298,12 @@ def hyper_fit(
 
     if hyper_noise_model is not None:
 
-        search = setup_hyper.search_noise_cls(
+        search = setup_adapt.search_noise_cls(
             path_prefix=search_previous.path_prefix_no_unique_tag,
             name=f"{search_previous.paths.name}__hyper_noise",
             unique_tag=search_previous.paths.unique_tag,
             number_of_cores=search_previous.number_of_cores,
-            **setup_hyper.search_noise_dict,
+            **setup_adapt.search_noise_dict,
         )
 
         hyper_noise_result = search.fit(model=hyper_noise_model, analysis=analysis)
@@ -314,7 +311,7 @@ def hyper_fit(
     analysis.set_hyper_dataset(result=result)
 
     hyper_pix_model = hyper_pix_model_from(
-        setup_hyper=setup_hyper,
+        setup_adapt=setup_adapt,
         result=hyper_noise_result,
         include_hyper_image_sky=include_hyper_image_sky,
         pixelization_overwrite=pixelization_overwrite,
@@ -323,7 +320,7 @@ def hyper_fit(
 
     if hyper_pix_model is None:
 
-        result.hyper = hyper_noise_result
+        result.adapt = hyper_noise_result
 
         return result
 
@@ -334,48 +331,47 @@ def hyper_fit(
     except AttributeError:
         pass
 
-    search = setup_hyper.search_pix_cls(
+    search = setup_adapt.search_pix_cls(
         path_prefix=search_previous.path_prefix_no_unique_tag,
         name=f"{search_previous.paths.name}__hyper_pix",
         unique_tag=search_previous.paths.unique_tag,
         number_of_cores=search_previous.number_of_cores,
-        **setup_hyper.search_pix_dict,
+        **setup_adapt.search_pix_dict,
     )
 
     hyper_pix_result = search.fit(model=hyper_pix_model, analysis=analysis)
 
-    result.hyper = hyper_pix_result
+    result.adapt = hyper_pix_result
 
     return result
 
 
 def hyper_model_from(
-    setup_hyper, result: af.Result, include_hyper_image_sky: bool = False
+    setup_adapt, result: af.Result, include_hyper_image_sky: bool = False
 ) -> af.Collection:
     """
     Make a hyper model from the `Result` of a model-fit, where the hyper-model is the maximum log likelihood instance
     of the inferred model but turns the following hyper components of the model to free parameters:
     1) The `Pixelization` of any `Galaxy` in the model.
     2) The `Regularization` of any `Galaxy` in the model.
-    3) Hyper data components like a `HyperImageSky` or `HyperBackgroundNoise` if input into the function.
     4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
        data which are fit poorly.
 
-    The hyper model is typically used in pipelines to refine and improve an `LEq` after model-fits that fit the
+    The adapt model is typically used in pipelines to refine and improve an `LEq` after model-fits that fit the
     `Galaxy` light and mass components.
 
     Parameters
     ----------
-    setup_hyper
-        The setup of the hyper analysis if used.
+    setup_adapt
+        The setup of the adapt fit.
     result
-        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
+        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the adapt model.
     include_hyper_image_sky
-        This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_hyper`.
+        This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_adapt`.
     Returns
     -------
     af.Collection
-        The hyper model, which has an instance of the input results maximum log likelihood model with certain hyper
+        The adapt model, which has an instance of the input results maximum log likelihood model with certain hyper
         model components now free parameters.
     """
 
@@ -386,27 +382,27 @@ def hyper_model_from(
         excluded_classes=(aa.reg.ConstantZeroth, aa.reg.Zeroth),
     )
 
-    model = clean_model_of_hyper_images(model=model)
+    model = clean_model_of_adapt_images(model=model)
 
-    if setup_hyper is None:
+    if setup_adapt is None:
         return None
 
-    if setup_hyper.hyper_galaxy_names is None:
+    if setup_adapt.hyper_galaxy_names is None:
         if not has_pixelization_from(model=model):
-            if setup_hyper.hypers_all_off:
+            if setup_adapt.hypers_all_off:
                 return None
-            if setup_hyper.hypers_all_except_image_sky_off:
+            if setup_adapt.hypers_all_except_image_sky_off:
                 if not include_hyper_image_sky:
                     return None
 
-    model.hyper_image_sky = setup_hyper.hyper_image_sky
-    model.hyper_background_noise = setup_hyper.hyper_background_noise
+    model.hyper_image_sky = setup_adapt.hyper_image_sky
+    model.hyper_background_noise = setup_adapt.hyper_background_noise
 
-    if setup_hyper.hyper_galaxy_names is not None:
+    if setup_adapt.hyper_galaxy_names is not None:
 
         for path_galaxy, galaxy in result.path_galaxy_tuples:
-            if path_galaxy[-1] in setup_hyper.hyper_galaxy_names:
-                if not np.all(result.hyper_galaxy_image_path_dict[path_galaxy] == 0):
+            if path_galaxy[-1] in setup_adapt.hyper_galaxy_names:
+                if not np.all(result.adapt_galaxy_image_path_dict[path_galaxy] == 0):
 
                     galaxy = getattr(model.galaxies, path_galaxy[-1])
 
@@ -443,7 +439,7 @@ def stochastic_model_from(
     Parameters
     ----------
     result : af.Result
-        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
+        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the adapt model.
     include_lens_light
         If `True` and the model includes any `LightProfile`'s, these are fitted for in the model.
     include_pixelization
@@ -481,7 +477,7 @@ def stochastic_model_from(
     model = result.instance.as_model(tuple(model_classes))
 
     if clean_model:
-        model = clean_model_of_hyper_images(model=model)
+        model = clean_model_of_adapt_images(model=model)
 
     model.galaxies.lens.take_attributes(source=result.model.galaxies.lens)
 
@@ -528,17 +524,17 @@ def stochastic_fit(
 
     Parameters
     ----------
-    setup_hyper : SetupHyper
-        The setup of the hyper analysis if used.
+    setup_adapt : SetupAdapt
+        The setup of the adapt fit.
     result : af.Result
-        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
+        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the adapt model.
     include_hyper_image_sky : hd.HyperImageSky
-        This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_hyper`.
+        This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_adapt`.
 
     Returns
     -------
     af.Collection
-        The hyper model, which has an instance of the input results maximum log likelihood model with certain hyper
+        The adapt model, which has an instance of the input results maximum log likelihood model with certain hyper
         model components now free parameters.
     """
 

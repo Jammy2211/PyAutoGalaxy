@@ -4,5 +4,3 @@ general:
   zoom_around_mask: true
 inversion:
   reconstruction_vmax_factor: 0.5
-units:
-  in_kpc: false

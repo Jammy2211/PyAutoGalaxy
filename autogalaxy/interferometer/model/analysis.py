@@ -29,7 +29,7 @@ class AnalysisInterferometer(AnalysisDataset):
     def __init__(
         self,
         dataset: aa.Interferometer,
-        hyper_dataset_result: ResultInterferometer = None,
+        adapt_result: ResultInterferometer = None,
         cosmology: LensingCosmology = Planck15(),
         settings_pixelization: aa.SettingsPixelization = None,
         settings_inversion: aa.SettingsInversion = None,
@@ -53,8 +53,8 @@ class AnalysisInterferometer(AnalysisDataset):
         ----------
         dataset
             The interferometer dataset that the model is fitted too.
-        hyper_dataset_result
-            The hyper-model image and hyper galaxies images of a previous result in a model-fitting pipeline, which are
+        adapt_result
+            The hyper-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
@@ -66,20 +66,20 @@ class AnalysisInterferometer(AnalysisDataset):
         """
         super().__init__(
             dataset=dataset,
-            hyper_dataset_result=hyper_dataset_result,
+            adapt_result=adapt_result,
             cosmology=cosmology,
             settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
         )
 
-        if self.hyper_dataset_result is not None:
+        if self.adapt_result is not None:
 
-            self.set_hyper_dataset(result=self.hyper_dataset_result)
+            self.set_hyper_dataset(result=self.adapt_result)
 
         else:
 
-            self.hyper_galaxy_visibilities_path_dict = None
-            self.hyper_model_visibilities = None
+            self.adapt_galaxy_visibilities_path_dict = None
+            self.adapt_model_visibilities = None
 
     @property
     def interferometer(self):
@@ -87,11 +87,11 @@ class AnalysisInterferometer(AnalysisDataset):
 
     def set_hyper_dataset(self, result):
         """
-        Using a the result of a previous model-fit, set the hyper-dataset for this analysis. This is used to adapt
+        Using a the result of a previous model-fit, set the adapt-dataset for this analysis. This is used to adapt
         aspects of the model (e.g. the pixelization, regularization scheme) to the properties of the dataset being
         fitted.
 
-        This passes the hyper model image and hyper galaxy images of the previous fit. These represent where different
+        This passes the adapt image and galaxy images of the previous fit. These represent where different
         galaxies in the dataset are located and thus allows the fit to adapt different aspects of the model to different
         galaxies in the data.
 
@@ -106,9 +106,9 @@ class AnalysisInterferometer(AnalysisDataset):
         """
         super().set_hyper_dataset(result=result)
 
-        self.hyper_model_visibilities = result.hyper_model_visibilities
-        self.hyper_galaxy_visibilities_path_dict = (
-            result.hyper_galaxy_visibilities_path_dict
+        self.adapt_model_visibilities = result.adapt_model_visibilities
+        self.adapt_galaxy_visibilities_path_dict = (
+            result.adapt_galaxy_visibilities_path_dict
         )
 
     def instance_with_associated_hyper_visibilities_from(
@@ -139,12 +139,12 @@ class AnalysisInterferometer(AnalysisDataset):
         instance
            The input instance with visibilities associated with galaxies where possible.
         """
-        if self.hyper_galaxy_visibilities_path_dict is not None:
+        if self.adapt_galaxy_visibilities_path_dict is not None:
             for galaxy_path, galaxy in instance.path_instance_tuples_for_class(Galaxy):
-                if galaxy_path in self.hyper_galaxy_visibilities_path_dict:
-                    galaxy.hyper_model_visibilities = self.hyper_model_visibilities
-                    galaxy.hyper_galaxy_visibilities = (
-                        self.hyper_galaxy_visibilities_path_dict[galaxy_path]
+                if galaxy_path in self.adapt_galaxy_visibilities_path_dict:
+                    galaxy.adapt_model_visibilities = self.adapt_model_visibilities
+                    galaxy.adapt_galaxy_visibilities = (
+                        self.adapt_galaxy_visibilities_path_dict[galaxy_path]
                     )
 
         return instance
@@ -154,7 +154,7 @@ class AnalysisInterferometer(AnalysisDataset):
         PyAutoFit calls this function immediately before the non-linear search begins, therefore it can be used to
         perform tasks using the final model parameterization.
 
-        This function checks that the hyper-dataset is consistent with previous hyper-datasets if the model-fit is
+        This function checks that the adapt-dataset is consistent with previous adapt-datasets if the model-fit is
         being resumed from a previous run, and it visualizes objects which do not change throughout the model fit
         like the dataset.
 
@@ -179,8 +179,8 @@ class AnalysisInterferometer(AnalysisDataset):
                 visualizer.visualize_interferometer(interferometer=self.interferometer)
 
                 visualizer.visualize_adapt_images(
-                    hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
-                    hyper_model_image=self.hyper_model_image,
+                    adapt_galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
+                    adapt_model_image=self.adapt_model_image,
                 )
 
             logger.info(
@@ -272,7 +272,7 @@ class AnalysisInterferometer(AnalysisDataset):
         FitInterferometer
             The fit of the plane to the interferometer dataset, which includes the log likelihood.
         """
-        instance = self.instance_with_associated_hyper_images_from(instance=instance)
+        instance = self.instance_with_associated_adapt_images_from(instance=instance)
 
         plane = self.plane_via_instance_from(instance=instance)
 
@@ -329,7 +329,7 @@ class AnalysisInterferometer(AnalysisDataset):
         - Images of the best-fit `FitInterferometer`, including the model-image, residuals and chi-squared of its fit
           to the imaging data.
 
-        - The hyper-images of the model-fit showing how the hyper galaxies are used to represent different galaxies in
+        - The hyper-images of the model-fit showing how the galaxies are used to represent different galaxies in
           the dataset.
 
         - If hyper features are used to scale the noise, a `FitInterferometer` with these features turned off may be
@@ -353,7 +353,7 @@ class AnalysisInterferometer(AnalysisDataset):
         if os.environ.get("PYAUTOFIT_TEST_MODE") == "1":
             return
 
-        instance = self.instance_with_associated_hyper_images_from(instance=instance)
+        instance = self.instance_with_associated_adapt_images_from(instance=instance)
         plane = self.plane_via_instance_from(instance=instance)
 
         fit = self.fit_interferometer_via_plane_from(
@@ -388,8 +388,8 @@ class AnalysisInterferometer(AnalysisDataset):
                 pass
 
         visualizer.visualize_adapt_images(
-            hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
-            hyper_model_image=self.hyper_model_image,
+            adapt_galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
+            adapt_model_image=self.adapt_model_image,
         )
 
     def make_result(
@@ -412,7 +412,7 @@ class AnalysisInterferometer(AnalysisDataset):
         - The non-linear search used to perform the model fit.
 
         The `ResultInterferometer` object contains a number of methods which use the above objects to create the max
-        log likelihood `Plane`, `FitInterferometer`, hyper-galaxy images,etc.
+        log likelihood `Plane`, `FitInterferometer`, adapt-galaxy images,etc.
 
         Parameters
         ----------

@@ -6,57 +6,57 @@ import autogalaxy as ag
 from autoarray.inversion.pixelization.mesh.abstract import AbstractMesh
 
 
-def test__hyper_galaxy_image_list():
+def test__adapt_galaxy_image_list():
 
     pixelization = ag.Pixelization(mesh=AbstractMesh())
 
     galaxy_pix = ag.legacy.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.legacy.Plane(galaxies=[galaxy_pix], redshift=None)
-    assert plane.hyper_galaxies_with_pixelization_image_list[0] is None
+    assert plane.adapt_galaxies_with_pixelization_image_list[0] is None
 
     galaxy_pix = ag.legacy.Galaxy(
-        redshift=0.5, pixelization=pixelization, hyper_galaxy_image=1
+        redshift=0.5, pixelization=pixelization, adapt_galaxy_image=1
     )
 
     plane = ag.legacy.Plane(
         galaxies=[galaxy_pix, ag.legacy.Galaxy(redshift=0.5)], redshift=None
     )
-    assert plane.hyper_galaxies_with_pixelization_image_list[0] == 1
+    assert plane.adapt_galaxies_with_pixelization_image_list[0] == 1
 
     plane = ag.legacy.Plane(galaxies=[ag.legacy.Galaxy(redshift=0.5)], redshift=None)
 
-    assert plane.hyper_galaxies_with_pixelization_image_list == []
+    assert plane.adapt_galaxies_with_pixelization_image_list == []
 
 
 def test__contribution_map_list():
 
-    hyper_model_image = ag.Array2D.no_mask([[2.0, 4.0, 10.0]], pixel_scales=1.0)
-    hyper_galaxy_image = ag.Array2D.no_mask([[1.0, 5.0, 8.0]], pixel_scales=1.0)
+    adapt_model_image = ag.Array2D.no_mask([[2.0, 4.0, 10.0]], pixel_scales=1.0)
+    adapt_galaxy_image = ag.Array2D.no_mask([[1.0, 5.0, 8.0]], pixel_scales=1.0)
 
     hyper_galaxy_0 = ag.legacy.HyperGalaxy(contribution_factor=5.0)
     hyper_galaxy_1 = ag.legacy.HyperGalaxy(contribution_factor=10.0)
 
     contribution_map_0 = hyper_galaxy_0.contribution_map_from(
-        hyper_model_image=hyper_model_image, hyper_galaxy_image=hyper_galaxy_image
+        adapt_model_image=adapt_model_image, adapt_galaxy_image=adapt_galaxy_image
     )
 
     contribution_map_1 = hyper_galaxy_1.contribution_map_from(
-        hyper_model_image=hyper_model_image, hyper_galaxy_image=hyper_galaxy_image
+        adapt_model_image=adapt_model_image, adapt_galaxy_image=adapt_galaxy_image
     )
 
     galaxy_0 = ag.legacy.Galaxy(
         redshift=0.5,
         hyper_galaxy=hyper_galaxy_0,
-        hyper_model_image=hyper_model_image,
-        hyper_galaxy_image=hyper_galaxy_image,
+        adapt_model_image=adapt_model_image,
+        adapt_galaxy_image=adapt_galaxy_image,
     )
 
     galaxy_1 = ag.legacy.Galaxy(
         redshift=0.5,
         hyper_galaxy=hyper_galaxy_1,
-        hyper_model_image=hyper_model_image,
-        hyper_galaxy_image=hyper_galaxy_image,
+        adapt_model_image=adapt_model_image,
+        adapt_galaxy_image=adapt_galaxy_image,
     )
 
     plane = ag.legacy.Plane(redshift=0.5, galaxies=[galaxy_0])
@@ -81,20 +81,20 @@ def test__contribution_map_list():
 
     assert (sum(plane.contribution_map_list) == plane.contribution_map).all()
 
-    hyper_model_image = ag.Array2D.no_mask([[2.0, 4.0, 10.0]], pixel_scales=1.0)
-    hyper_galaxy_image = ag.Array2D.no_mask([[1.0, 5.0, 8.0]], pixel_scales=1.0)
+    adapt_model_image = ag.Array2D.no_mask([[2.0, 4.0, 10.0]], pixel_scales=1.0)
+    adapt_galaxy_image = ag.Array2D.no_mask([[1.0, 5.0, 8.0]], pixel_scales=1.0)
 
     hyper_galaxy = ag.legacy.HyperGalaxy(contribution_factor=5.0)
 
     contribution_map = hyper_galaxy.contribution_map_from(
-        hyper_model_image=hyper_model_image, hyper_galaxy_image=hyper_galaxy_image
+        adapt_model_image=adapt_model_image, adapt_galaxy_image=adapt_galaxy_image
     )
 
     galaxy = ag.legacy.Galaxy(
         redshift=0.5,
         hyper_galaxy=hyper_galaxy,
-        hyper_model_image=hyper_model_image,
-        hyper_galaxy_image=hyper_galaxy_image,
+        adapt_model_image=adapt_model_image,
+        adapt_galaxy_image=adapt_galaxy_image,
     )
 
     plane = ag.legacy.Plane(
@@ -133,27 +133,27 @@ def test__hyper_noise_map_list_from():
         contribution_factor=3.0, noise_factor=1.0, noise_power=2.0
     )
 
-    hyper_model_image = ag.Array2D.no_mask(values=[[0.5, 1.0, 1.5]], pixel_scales=1.0)
+    adapt_model_image = ag.Array2D.no_mask(values=[[0.5, 1.0, 1.5]], pixel_scales=1.0)
 
-    hyper_galaxy_image_0 = ag.Array2D.no_mask(
+    adapt_galaxy_image_0 = ag.Array2D.no_mask(
         values=[[0.0, 1.0, 1.5]], pixel_scales=1.0
     )
-    hyper_galaxy_image_1 = ag.Array2D.no_mask(
+    adapt_galaxy_image_1 = ag.Array2D.no_mask(
         values=[[1.0, 1.0, 1.5]], pixel_scales=1.0
     )
 
     galaxy_0 = ag.legacy.Galaxy(
         redshift=0.5,
         hyper_galaxy=hyper_galaxy_0,
-        hyper_model_image=hyper_model_image,
-        hyper_galaxy_image=hyper_galaxy_image_0,
+        adapt_model_image=adapt_model_image,
+        adapt_galaxy_image=adapt_galaxy_image_0,
     )
 
     galaxy_1 = ag.legacy.Galaxy(
         redshift=0.5,
         hyper_galaxy=hyper_galaxy_1,
-        hyper_model_image=hyper_model_image,
-        hyper_galaxy_image=hyper_galaxy_image_1,
+        adapt_model_image=adapt_model_image,
+        adapt_galaxy_image=adapt_galaxy_image_1,
     )
 
     plane = ag.legacy.Plane(redshift=0.5, galaxies=[galaxy_0, galaxy_1])
@@ -167,18 +167,18 @@ def test__hyper_noise_map_list_from():
 
     noise_map = ag.Array2D.no_mask(values=[[5.0, 3.0, 1.0]], pixel_scales=1.0)
 
-    hyper_model_image = ag.Array2D.no_mask(values=[[2.0, 4.0, 10.0]], pixel_scales=1.0)
-    hyper_galaxy_image = ag.Array2D.no_mask(values=[[1.0, 5.0, 8.0]], pixel_scales=1.0)
+    adapt_model_image = ag.Array2D.no_mask(values=[[2.0, 4.0, 10.0]], pixel_scales=1.0)
+    adapt_galaxy_image = ag.Array2D.no_mask(values=[[1.0, 5.0, 8.0]], pixel_scales=1.0)
 
     hyper_galaxy_0 = ag.legacy.HyperGalaxy(contribution_factor=5.0)
     hyper_galaxy_1 = ag.legacy.HyperGalaxy(contribution_factor=10.0)
 
     contribution_map_0 = hyper_galaxy_0.contribution_map_from(
-        hyper_model_image=hyper_model_image, hyper_galaxy_image=hyper_galaxy_image
+        adapt_model_image=adapt_model_image, adapt_galaxy_image=adapt_galaxy_image
     )
 
     contribution_map_1 = hyper_galaxy_1.contribution_map_from(
-        hyper_model_image=hyper_model_image, hyper_galaxy_image=hyper_galaxy_image
+        adapt_model_image=adapt_model_image, adapt_galaxy_image=adapt_galaxy_image
     )
 
     hyper_noise_map_0 = hyper_galaxy_0.hyper_noise_map_from(
@@ -192,15 +192,15 @@ def test__hyper_noise_map_list_from():
     galaxy_0 = ag.legacy.Galaxy(
         redshift=0.5,
         hyper_galaxy=hyper_galaxy_0,
-        hyper_model_image=hyper_model_image,
-        hyper_galaxy_image=hyper_galaxy_image,
+        adapt_model_image=adapt_model_image,
+        adapt_galaxy_image=adapt_galaxy_image,
     )
 
     galaxy_1 = ag.legacy.Galaxy(
         redshift=0.5,
         hyper_galaxy=hyper_galaxy_1,
-        hyper_model_image=hyper_model_image,
-        hyper_galaxy_image=hyper_galaxy_image,
+        adapt_model_image=adapt_model_image,
+        adapt_galaxy_image=adapt_galaxy_image,
     )
 
     plane = ag.legacy.Plane(

@@ -50,8 +50,8 @@ class Plane(PlaneBase):
             if galaxy.has(cls=HyperGalaxy):
 
                 contribution_map = galaxy.hyper_galaxy.contribution_map_from(
-                    hyper_model_image=galaxy.hyper_model_image,
-                    hyper_galaxy_image=galaxy.hyper_galaxy_image,
+                    adapt_model_image=galaxy.adapt_model_image,
+                    adapt_galaxy_image=galaxy.adapt_galaxy_image,
                 )
 
                 hyper_noise_map = galaxy.hyper_galaxy.hyper_noise_map_from(

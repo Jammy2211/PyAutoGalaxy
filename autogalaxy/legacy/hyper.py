@@ -63,7 +63,7 @@ class HyperGalaxy:
         return "\n".join(["{}: {}".format(k, v) for k, v in self.__dict__.items()])
 
     def contribution_map_from(
-        self, hyper_model_image: aa.Array2D, hyper_galaxy_image: aa.Array2D
+        self, adapt_model_image: aa.Array2D, adapt_galaxy_image: aa.Array2D
     ) -> aa.Array2D:
         """
         Returns the contribution map of a galaxy, which represents the fraction of
@@ -82,11 +82,11 @@ class HyperGalaxy:
 
         Parameters
         ----------
-        hyper_model_image
+        adapt_model_image
             The best-fit model image to the observed image from a previous analysis
             search. This provides the total light attributed to each image pixel by the
             model.
-        hyper_galaxy_image
+        adapt_galaxy_image
             A model image of the galaxy (from light profiles or an inversion) from a
             previous analysis search.
 
@@ -98,7 +98,7 @@ class HyperGalaxy:
             import autogalaxy as ag
 
             # For realistic use, input accurate image from a model-fit to all of the data.
-            hyper_model_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
+            adapt_model_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
 
             # For realistic use, input accurate image from a model-fit to just one galaxy in the data.
             hyper_galaxu_image= ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
@@ -111,12 +111,12 @@ class HyperGalaxy:
             )
 
             contribution_map = galaxy.hyper_galaxy.contribution_map_from(
-                hyper_galaxy_image=hyper_galaxu_image,
-                hyper_model_image=hyper_model_image,
+                adapt_galaxy_image=hyper_galaxu_image,
+                adapt_model_image=adapt_model_image,
             )
         """
         contribution_map = np.divide(
-            hyper_galaxy_image, np.add(hyper_model_image, self.contribution_factor)
+            adapt_galaxy_image, np.add(adapt_model_image, self.contribution_factor)
         )
         return np.divide(contribution_map, np.max(contribution_map))
 
@@ -144,13 +144,13 @@ class HyperGalaxy:
             import autogalaxy as ag
 
             # For realistic use, input noise-map of observed data.
-            hyper_model_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
+            adapt_model_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
 
             # For realistic use, input accurate image of a model-fit to all galaxies in the data.
-            hyper_model_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
+            adapt_model_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
 
             # For realistic use, input accurate image from a model-fit of only this galaxy.
-            hyper_galaxy_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
+            adapt_galaxy_image = ag.Array2D.ones(shape_native=(100, 100), pixel_scales=1.0)
 
             hyper_galaxy = ag.HyperGalaxy(contribution_factor=1.0)
 
@@ -160,8 +160,8 @@ class HyperGalaxy:
             )
 
             contribution_map = galaxy.hyper_galaxy.contribution_map_from(
-                hyper_galaxy_image=hyper_galaxu_image,
-                hyper_model_image=hyper_model_image,
+                adapt_galaxy_image=hyper_galaxu_image,
+                adapt_model_image=adapt_model_image,
             )
 
             hyper_noise_map = galaxy.hyper_galaxy.hyper_noise_map_from(

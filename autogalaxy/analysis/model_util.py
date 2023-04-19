@@ -94,7 +94,7 @@ def set_upper_limit_of_pixelization_pixels_prior(
     Parameters
     ----------
     model
-        The hyper model used by the hyper-fit, which models hyper-components like a `Pixelization` or `HyperGalaxy`'s.
+        The adapt model used by the adapt-fit, which models hyper-components like a `Pixelization` or `HyperGalaxy`'s.
     pixels_in_mask
         The number of pixels in the mask, which are used to set the upper and lower limits of the priors on the
         number of pixels in the pixelization.
@@ -150,24 +150,24 @@ def set_upper_limit_of_pixelization_pixels_prior(
                 )
 
 
-def clean_model_of_hyper_images(model):
+def clean_model_of_adapt_images(model):
 
     for galaxy in model.galaxies:
 
-        del galaxy.hyper_model_image
-        del galaxy.hyper_galaxy_image
+        del galaxy.adapt_model_image
+        del galaxy.adapt_galaxy_image
 
     if hasattr(model, "clumps"):
         for clump in model.clumps:
 
-            del clump.hyper_model_image
-            del clump.hyper_galaxy_image
+            del clump.adapt_model_image
+            del clump.adapt_galaxy_image
 
     return model
 
 
 def hyper_model_from(
-    setup_hyper,
+    setup_adapt,
     result: af.Result,
     pixelization_overwrite=None,
     regularization_overwrite=None,
@@ -178,30 +178,29 @@ def hyper_model_from(
 
     1) The `Pixelization` of any `Galaxy` in the model.
     2) The `Regularization` of any `Galaxy` in the model.
-    3) Hyper data components like a `HyperImageSky` or `HyperBackgroundNoise` if input into the function.
     4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
        data which are fit poorly.
 
-    The hyper model is typically used in pipelines to refine and improve an `LEq` after model-fits that fit the
+    The adapt model is typically used in pipelines to refine and improve an `LEq` after model-fits that fit the
     `Galaxy` light and mass components.
 
     Parameters
     ----------
-    setup_hyper
-        The setup of the hyper analysis if used.
+    setup_adapt
+        The setup of the adapt fit.
     result
-        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the hyper model.
+        The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the adapt model.
     include_hyper_image_sky
-        This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_hyper`.
+        This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_adapt`.
 
     Returns
     -------
     af.Collection
-        The hyper model, which has an instance of the input results maximum log likelihood model with certain hyper
+        The adapt model, which has an instance of the input results maximum log likelihood model with certain hyper
         model components now free parameters.
     """
 
-    if setup_hyper is None:
+    if setup_adapt is None:
         return None
 
     model = result.instance.as_model(
@@ -218,41 +217,41 @@ def hyper_model_from(
     if regularization_overwrite:
         model.galaxies.source.regularization = af.Model(regularization_overwrite)
 
-    if setup_hyper.mesh_pixels_fixed is not None:
+    if setup_adapt.mesh_pixels_fixed is not None:
         if hasattr(model.galaxies.source.pixelization.mesh, "pixels"):
             model.galaxies.source.pixelization.mesh.pixels = (
-                setup_hyper.mesh_pixels_fixed
+                setup_adapt.mesh_pixels_fixed
             )
 
-    model = clean_model_of_hyper_images(model=model)
+    model = clean_model_of_adapt_images(model=model)
 
     return model
 
 
-def hyper_fit(
-    setup_hyper,
+def adapt_fit(
+    setup_adapt,
     result: af.Result,
     analysis,
     search_previous,
 ):
 
-    if analysis.hyper_model_image is None:
+    if analysis.adapt_model_image is None:
 
         raise exc.AnalysisException(
-            "The analysis class does not have a hyper_model_image attribute, which is required for hyper fitting."
+            "The analysis class does not have a adapt_model_image attribute, which is required for hyper fitting."
         )
 
     hyper_model_pix = hyper_model_from(
-        setup_hyper=setup_hyper,
+        setup_adapt=setup_adapt,
         result=result,
     )
 
-    search = setup_hyper.search_pix_cls(
+    search = setup_adapt.search_pix_cls(
         path_prefix=search_previous.path_prefix_no_unique_tag,
         name=f"{search_previous.paths.name}__hyper_pix",
         unique_tag=search_previous.paths.unique_tag,
         number_of_cores=search_previous.number_of_cores,
-        **setup_hyper.search_pix_dict,
+        **setup_adapt.search_pix_dict,
     )
 
     set_upper_limit_of_pixelization_pixels_prior(
@@ -261,6 +260,6 @@ def hyper_fit(
 
     hyper_pix_result = search.fit(model=hyper_model_pix, analysis=analysis)
 
-    result.hyper = hyper_pix_result
+    result.adapt = hyper_pix_result
 
     return result
