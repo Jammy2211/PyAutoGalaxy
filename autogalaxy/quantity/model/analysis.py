@@ -122,7 +122,7 @@ class AnalysisQuantity(Analysis):
         paths: af.DirectoryPaths,
         instance: af.ModelInstance,
         during_analysis: bool,
-    ) -> None:
+    ):
         """
         Output images of the maximum log likelihood model inferred by the model-fit. This function is called throughout
         the non-linear search at regular intervals, and therefore provides on-the-fly visualization of how well the
