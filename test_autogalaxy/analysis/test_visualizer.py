@@ -82,12 +82,7 @@ def test__visualizes_imaging__uses_configs(
     assert path.join(plot_path, "data.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map.png") not in plot_patch.paths
     assert path.join(plot_path, "psf.png") in plot_patch.paths
-    assert path.join(plot_path, "inverse_noise_map.png") in plot_patch.paths
     assert path.join(plot_path, "signal_to_noise_map.png") not in plot_patch.paths
-    assert (
-        path.join(plot_path, "absolute_signal_to_noise_map.png") not in plot_patch.paths
-    )
-    assert path.join(plot_path, "potential_chi_squared_map.png") in plot_patch.paths
 
 
 def test__visualizes_interferometer__uses_configs(

@@ -142,10 +142,7 @@ class Visualizer:
             data=should_plot("data"),
             noise_map=should_plot("noise_map"),
             psf=should_plot("psf"),
-            inverse_noise_map=should_plot("inverse_noise_map"),
             signal_to_noise_map=should_plot("signal_to_noise_map"),
-            absolute_signal_to_noise_map=should_plot("absolute_signal_to_noise_map"),
-            potential_chi_squared_map=should_plot("potential_chi_squared_map"),
         )
 
         if should_plot("subplot_dataset"):
@@ -194,7 +191,6 @@ class Visualizer:
             dirty_image=should_plot("dirty_image"),
             dirty_noise_map=should_plot("dirty_noise_map"),
             dirty_signal_to_noise_map=should_plot("dirty_signal_to_noise_map"),
-            dirty_inverse_noise_map=should_plot("dirty_inverse_noise_map"),
         )
 
     def visualize_plane(

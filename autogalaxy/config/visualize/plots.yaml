@@ -1,10 +1,7 @@
 dataset:
   subplot_dataset: true
-  absolute_signal_to_noise_map: false
   data: false
-  inverse_noise_map: false
   noise_map: false
-  potential_chi_squared_map: false
   signal_to_noise_map: false
 fit:
   subplot_fit: true
@@ -26,7 +23,6 @@ fit_interferometer:
   amplitudes_vs_uv_distances: false
   dirty_chi_squared_map: false
   dirty_image: false
-  dirty_inverse_noise_map: false
   dirty_noise_map: false
   dirty_normalized_residual_map: false
   dirty_residual_map: false
@@ -56,7 +52,6 @@ imaging:
 interferometer:
   amplitudes_vs_uv_distances: false
   dirty_image: false
-  dirty_inverse_noise_map: false
   dirty_noise_map: false
   dirty_signal_to_noise_map: false
   phases_vs_uv_distances: false
