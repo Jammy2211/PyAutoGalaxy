@@ -131,6 +131,7 @@ class PlanePlotter(Plotter):
         deflections_y: bool = False,
         deflections_x: bool = False,
         magnification: bool = False,
+        zoom_to_brightest: bool = True,
         title_suffix: str = "",
         filename_suffix: str = "",
     ):
@@ -159,6 +160,9 @@ class PlanePlotter(Plotter):
             Whether to make a 2D plot (via `imshow`) of the x component of the deflection angles.
         magnification
             Whether to make a 2D plot (via `imshow`) of the magnification.
+        zoom_to_brightest
+            For images not in the image-plane (e.g. the `plane_image`), whether to automatically zoom the plot to
+            the brightest regions of the galaxies being plotted as opposed to the full extent of the grid.
         title_suffix
             Add a suffix to the end of the matplotlib title label.
         filename_suffix
@@ -177,7 +181,9 @@ class PlanePlotter(Plotter):
         if plane_image:
 
             self.mat_plot_2d.plot_array(
-                array=self.plane.plane_image_2d_from(grid=self.grid),
+                array=self.plane.plane_image_2d_from(
+                    grid=self.grid, zoom_to_brightest=zoom_to_brightest
+                ),
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title=f"Plane Image{title_suffix}",

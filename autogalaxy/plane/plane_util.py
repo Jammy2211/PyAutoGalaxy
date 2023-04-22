@@ -1,6 +1,8 @@
 import numpy as np
 from typing import List
 
+from autoconf import conf
+
 import autoarray as aa
 
 from autogalaxy.galaxy.galaxy import Galaxy
@@ -13,7 +15,7 @@ def plane_image_from(
     galaxies: List[Galaxy],
     grid: aa.Grid2D,
     buffer: float = 1.0e-2,
-    adapt_grid: bool = True,
+    zoom_to_brightest: bool = True,
 ) -> aa.Array2D:
     """
     Returns the plane image of a list of galaxies, by summing their individual images.
@@ -39,7 +41,7 @@ def plane_image_from(
         grid is derived.
     buffer
         The buffer around the adaptive grid that is used to ensure the image of the galaxies is not cut off.
-    adapt_grid
+    zoom_to_brightest
         If True, an adaptive grid is used to compute the image of the galaxies which zooms in on the brightest
         regions of the image. If False, the input grid is used.
 
@@ -50,12 +52,14 @@ def plane_image_from(
 
     shape = grid.shape_native
 
-    if adapt_grid:
+    if zoom_to_brightest:
 
         image = sum(map(lambda g: g.image_2d_from(grid=grid), galaxies))
         image = image.native
 
-        fractional_value = np.max(image) * 0.01
+        zoom_percent = conf.instance["visualize"]["general"]["zoom"]["plane_percent"]
+
+        fractional_value = np.max(image) * zoom_percent
 
         fractional_bool = image > fractional_value
 
@@ -68,26 +72,20 @@ def plane_image_from(
 
         grid = grid.native
 
-        y_min = grid[y_min_pix, 0][0] - buffer
-        y_max = grid[y_max_pix, 0][0] + buffer
-        x_min = grid[0, x_min_pix][1] - buffer
-        x_max = grid[0, x_max_pix][1] + buffer
+        extent = (
+            grid[0, x_min_pix][1] - buffer,
+            grid[0, x_max_pix][1] + buffer,
+            grid[y_min_pix, 0][0] - buffer,
+            grid[y_max_pix, 0][0] + buffer,
+        )
 
-        y_sep = y_max - y_min
-        x_sep = x_max - x_min
-
-        if y_sep > x_sep:
-            x_min -= (y_sep - x_sep) / 2
-            x_max += (y_sep - x_sep) / 2
-        elif x_sep > y_sep:
-            y_min -= (x_sep - y_sep) / 2
-            y_max += (x_sep - y_sep) / 2
+        extent = aa.util.geometry.extent_symmetric_from(extent=extent)
 
         pixel_scales = (
-            float((y_max - y_min) / shape[0]),
-            float((x_max - x_min) / shape[1]),
+            float((extent[3] - extent[2]) / shape[0]),
+            float((extent[1] - extent[0]) / shape[1]),
         )
-        origin = ((y_max + y_min) / 2.0, (x_max + x_min) / 2.0)
+        origin = ((extent[3] + extent[2]) / 2.0, (extent[1] + extent[0]) / 2.0)
 
         grid = aa.Grid2D.uniform(
             shape_native=grid.shape_native,

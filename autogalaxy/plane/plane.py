@@ -15,7 +15,7 @@ from autogalaxy.operate.image import OperateImageGalaxies
 from autogalaxy.operate.deflections import OperateDeflections
 
 from autogalaxy import exc
-from autogalaxy.util import plane_util
+from autogalaxy.plane import plane_util
 
 
 class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
@@ -176,12 +176,12 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return galaxy_image_2d_dict
 
     def plane_image_2d_from(
-        self, grid: aa.type.Grid2DLike, adapt_grid: bool = True
+        self, grid: aa.type.Grid2DLike, zoom_to_brightest: bool = True
     ) -> aa.Array2D:
         return plane_util.plane_image_from(
             galaxies=self.galaxies,
             grid=grid.mask.derive_grid.all_false_sub_1,
-            adapt_grid=adapt_grid,
+            zoom_to_brightest=zoom_to_brightest,
         )
 
     @aa.grid_dec.grid_2d_to_vector_yx
