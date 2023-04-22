@@ -147,7 +147,7 @@ class Visualizer:
 
         if should_plot("subplot_dataset"):
 
-            imaging_plotter.subplot_imaging()
+            imaging_plotter.subplot_dataset()
 
     def visualize_interferometer(self, interferometer: aa.Interferometer):
         """
@@ -174,13 +174,13 @@ class Visualizer:
         mat_plot_2d = self.mat_plot_2d_from(subfolders="interferometer")
 
         interferometer_plotter = aplt.InterferometerPlotter(
-            interferometer=interferometer,
+            dataset=interferometer,
             include_2d=self.include_2d,
             mat_plot_2d=mat_plot_2d,
         )
 
         if should_plot("subplot_dataset"):
-            interferometer_plotter.subplot_interferometer()
+            interferometer_plotter.subplot_dataset()
 
         interferometer_plotter.figures_2d(
             data=should_plot("data"),

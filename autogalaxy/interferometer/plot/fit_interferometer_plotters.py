@@ -85,8 +85,8 @@ class FitInterferometerPlotter(Plotter):
 
         self.figures_2d = self._fit_interferometer_meta_plotter.figures_2d
         self.subplot = self._fit_interferometer_meta_plotter.subplot
-        self.subplot_fit_interferometer = (
-            self._fit_interferometer_meta_plotter.subplot_fit_interferometer
+        self.subplot_fit = (
+            self._fit_interferometer_meta_plotter.subplot_fit
         )
         self.subplot_fit_dirty_images = (
             self._fit_interferometer_meta_plotter.subplot_fit_dirty_images

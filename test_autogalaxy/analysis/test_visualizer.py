@@ -78,7 +78,7 @@ def test__visualizes_imaging__uses_configs(
 
     plot_path = path.join(plot_path, "imaging")
 
-    assert path.join(plot_path, "subplot_imaging.png") in plot_patch.paths
+    assert path.join(plot_path, "subplot_dataset.png") in plot_patch.paths
     assert path.join(plot_path, "data.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map.png") not in plot_patch.paths
     assert path.join(plot_path, "psf.png") in plot_patch.paths
@@ -95,7 +95,7 @@ def test__visualizes_interferometer__uses_configs(
 
     plot_path = path.join(plot_path, "interferometer")
 
-    assert path.join(plot_path, "subplot_interferometer.png") in plot_patch.paths
+    assert path.join(plot_path, "subplot_dataset.png") in plot_patch.paths
     assert path.join(plot_path, "visibilities.png") in plot_patch.paths
     assert path.join(plot_path, "u_wavelengths.png") not in plot_patch.paths
     assert path.join(plot_path, "v_wavelengths.png") not in plot_patch.paths
