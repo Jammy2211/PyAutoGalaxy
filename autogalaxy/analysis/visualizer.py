@@ -371,9 +371,6 @@ class Visualizer:
             reconstructed_image=should_plot("reconstructed_image"),
             reconstruction=should_plot("reconstruction"),
             errors=should_plot("errors"),
-            residual_map=should_plot("residual_map"),
-            normalized_residual_map=should_plot("normalized_residual_map"),
-            chi_squared_map=should_plot("chi_squared_map"),
             regularization_weights=should_plot("regularization_weights"),
         )
 

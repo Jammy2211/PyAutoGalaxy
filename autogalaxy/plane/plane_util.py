@@ -54,45 +54,48 @@ def plane_image_from(
 
     if zoom_to_brightest:
 
-        image = sum(map(lambda g: g.image_2d_from(grid=grid), galaxies))
-        image = image.native
+        try:
+            image = sum(map(lambda g: g.image_2d_from(grid=grid), galaxies))
+            image = image.native
 
-        zoom_percent = conf.instance["visualize"]["general"]["zoom"]["plane_percent"]
+            zoom_percent = conf.instance["visualize"]["general"]["zoom"]["plane_percent"]
 
-        fractional_value = np.max(image) * zoom_percent
+            fractional_value = np.max(image) * zoom_percent
 
-        fractional_bool = image > fractional_value
+            fractional_bool = image > fractional_value
 
-        true_indices = np.argwhere(fractional_bool)
+            true_indices = np.argwhere(fractional_bool)
 
-        y_max_pix = np.min(true_indices[:, 0])
-        y_min_pix = np.max(true_indices[:, 0])
-        x_min_pix = np.min(true_indices[:, 1])
-        x_max_pix = np.max(true_indices[:, 1])
+            y_max_pix = np.min(true_indices[:, 0])
+            y_min_pix = np.max(true_indices[:, 0])
+            x_min_pix = np.min(true_indices[:, 1])
+            x_max_pix = np.max(true_indices[:, 1])
 
-        grid = grid.native
+            grid = grid.native
 
-        extent = (
-            grid[0, x_min_pix][1] - buffer,
-            grid[0, x_max_pix][1] + buffer,
-            grid[y_min_pix, 0][0] - buffer,
-            grid[y_max_pix, 0][0] + buffer,
-        )
+            extent = (
+                grid[0, x_min_pix][1] - buffer,
+                grid[0, x_max_pix][1] + buffer,
+                grid[y_min_pix, 0][0] - buffer,
+                grid[y_max_pix, 0][0] + buffer,
+            )
 
-        extent = aa.util.geometry.extent_symmetric_from(extent=extent)
+            extent = aa.util.geometry.extent_symmetric_from(extent=extent)
 
-        pixel_scales = (
-            float((extent[3] - extent[2]) / shape[0]),
-            float((extent[1] - extent[0]) / shape[1]),
-        )
-        origin = ((extent[3] + extent[2]) / 2.0, (extent[1] + extent[0]) / 2.0)
+            pixel_scales = (
+                float((extent[3] - extent[2]) / shape[0]),
+                float((extent[1] - extent[0]) / shape[1]),
+            )
+            origin = ((extent[3] + extent[2]) / 2.0, (extent[1] + extent[0]) / 2.0)
 
-        grid = aa.Grid2D.uniform(
-            shape_native=grid.shape_native,
-            pixel_scales=pixel_scales,
-            sub_size=1,
-            origin=origin,
-        )
+            grid = aa.Grid2D.uniform(
+                shape_native=grid.shape_native,
+                pixel_scales=pixel_scales,
+                sub_size=1,
+                origin=origin,
+            )
+        except ValueError:
+            pass
 
     image = sum(map(lambda g: g.image_2d_from(grid=grid), galaxies))
 
