@@ -175,11 +175,13 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         return galaxy_image_2d_dict
 
-    def plane_image_2d_from(self, grid: aa.type.Grid2DLike) -> "PlaneImage":
-        return plane_util.plane_image_of_galaxies_from(
-            shape=grid.mask.shape,
-            grid=grid.mask.derive_grid.all_false_sub_1,
+    def plane_image_2d_from(
+        self, grid: aa.type.Grid2DLike, adapt_grid: bool = True
+    ) -> aa.Array2D:
+        return plane_util.plane_image_from(
             galaxies=self.galaxies,
+            grid=grid.mask.derive_grid.all_false_sub_1,
+            adapt_grid=adapt_grid,
         )
 
     @aa.grid_dec.grid_2d_to_vector_yx
@@ -400,9 +402,3 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
                         background_sky_level=background_sky_level,
                         psf=psf,
                     )
-
-
-class PlaneImage:
-    def __init__(self, array, grid):
-        self.array = array
-        self.grid = grid

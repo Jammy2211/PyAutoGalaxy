@@ -177,7 +177,7 @@ class PlanePlotter(Plotter):
         if plane_image:
 
             self.mat_plot_2d.plot_array(
-                array=self.plane.plane_image_2d_from(grid=self.grid).array,
+                array=self.plane.plane_image_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title=f"Plane Image{title_suffix}",

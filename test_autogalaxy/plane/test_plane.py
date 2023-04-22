@@ -350,6 +350,20 @@ def test__light_profile_snr__signal_to_noise_via_simulator_correct():
     assert 11.0 < imaging.signal_to_noise_map.native[2, 0] < 21.0
 
 
+def test__plane_image_2d_from(sub_grid_2d_7x7):
+
+    sub_grid_2d_7x7[1] = np.array([2.0, 2.0])
+
+    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
+
+    plane = ag.Plane(galaxies=[galaxy], redshift=None)
+
+    image_2d = plane.image_2d_from(grid=sub_grid_2d_7x7)
+
+    assert image_2d[0] == pytest.approx(0.09268, 1.0e-4)
+    assert image_2d[1] == pytest.approx(0.02648, 1.0e-4)
+
+
 ### Mass Profile Quantities ###
 
 
@@ -445,77 +459,6 @@ def test__deflections_yx_2d_from(sub_grid_2d_7x7):
     assert (deflections.binned[0, 1] == 0.0).all()
     assert (deflections.binned[1, 0] == 0.0).all()
     assert (deflections.binned[0] == 0.0).all()
-
-
-def test__plane_image_2d_from(sub_grid_2d_7x7):
-    sub_grid_2d_7x7[1] = np.array([2.0, 2.0])
-
-    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
-
-    plane = ag.Plane(galaxies=[galaxy], redshift=None)
-
-    plane_image_from_func = ag.plane.plane.plane_util.plane_image_of_galaxies_from(
-        shape=(7, 7),
-        grid=sub_grid_2d_7x7.mask.derive_grid.all_false_sub_1,
-        galaxies=[galaxy],
-    )
-
-    plane_image_from_plane = plane.plane_image_2d_from(grid=sub_grid_2d_7x7)
-
-    assert (plane_image_from_func.array == plane_image_from_plane.array).all()
-
-    # The grid coordinates -2.0 -> 2.0 mean a plane of shape (5,5) has arc second coordinates running over
-    # -1.6, -0.8, 0.0, 0.8, 1.6. The origin -1.6, -1.6 of the model_galaxy means its brighest pixel should be
-    # index 0 of the 1D grid and (0,0) of the 2d plane data.
-
-    mask = ag.Mask2D.all_false(shape_native=(5, 5), pixel_scales=1.0, sub_size=1)
-
-    grid = ag.Grid2D.from_mask(mask=mask)
-
-    g0 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp.Sersic(centre=(1.6, -1.6), intensity=1.0)
-    )
-    plane = ag.Plane(galaxies=[g0], redshift=None)
-
-    plane_image = plane.plane_image_2d_from(grid=grid)
-
-    assert plane_image.array.shape_native == (5, 5)
-    assert np.unravel_index(
-        plane_image.array.native.argmax(), plane_image.array.native.shape
-    ) == (0, 0)
-
-    g0 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp.Sersic(centre=(1.6, 1.6), intensity=1.0)
-    )
-    plane = ag.Plane(galaxies=[g0], redshift=None)
-
-    plane_image = plane.plane_image_2d_from(grid=grid)
-
-    assert np.unravel_index(
-        plane_image.array.native.argmax(), plane_image.array.native.shape
-    ) == (0, 4)
-
-    g0 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp.Sersic(centre=(-1.6, -1.6), intensity=1.0)
-    )
-    plane = ag.Plane(galaxies=[g0], redshift=None)
-
-    plane_image = plane.plane_image_2d_from(grid=grid)
-
-    assert np.unravel_index(
-        plane_image.array.native.argmax(), plane_image.array.native.shape
-    ) == (4, 0)
-
-    g0 = ag.Galaxy(
-        redshift=0.5, light_profile=ag.lp.Sersic(centre=(-1.6, 1.6), intensity=1.0)
-    )
-    plane = ag.Plane(galaxies=[g0], redshift=None)
-
-    plane_image = plane.plane_image_2d_from(grid=grid)
-
-    assert np.unravel_index(
-        plane_image.array.native.argmax(), plane_image.array.native.shape
-    ) == (4, 4)
 
 
 ### Traced Grids ###

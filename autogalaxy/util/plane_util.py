@@ -1,37 +1,111 @@
 import numpy as np
+from typing import List
 
 import autoarray as aa
 
+from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
-from autogalaxy.plane.plane import PlaneImage
 
 from autogalaxy import exc
 
 
-def plane_image_of_galaxies_from(shape, grid, galaxies, buffer=1.0e-2):
+def plane_image_from(
+    galaxies: List[Galaxy],
+    grid: aa.Grid2D,
+    buffer: float = 1.0e-2,
+    adapt_grid: bool = True,
+) -> aa.Array2D:
+    """
+    Returns the plane image of a list of galaxies, by summing their individual images.
 
-    y_min = np.min(grid[:, 0]) - buffer
-    y_max = np.max(grid[:, 0]) + buffer
-    x_min = np.min(grid[:, 1]) - buffer
-    x_max = np.max(grid[:, 1]) + buffer
+    For lensing calculations performed by **PyAutoLens**, this function is used to return the unleensed image
+    source-plane galaxies.
 
-    pixel_scales = (
-        float((y_max - y_min) / shape[0]),
-        float((x_max - x_min) / shape[1]),
+    By default, an adaptive grid is used to determine the grid that the images of the galaxies are computed on.
+    This grid adapts its dimensions to capture the brightest regions of the image, ensuring that visualization of
+    the plane-image is focused entirely on where the galaxies are brightest.
+
+    This adaptive grid is based on determining the size of the grid that contains all pixels with an
+    input % (typically 99%) of the total flux of the brightest pixel in the image.
+
+    The adaptive grid can be disabled such that the input grid is used to compute the image of the galaxies.
+
+    Parameters
+    ----------
+    galaxies
+        The list of galaxies whose images are summed to compute the plane image.
+    grid
+        The grid of (y,x) coordinates for which the image of the galaxies is computed on, or from which the adaptive
+        grid is derived.
+    buffer
+        The buffer around the adaptive grid that is used to ensure the image of the galaxies is not cut off.
+    adapt_grid
+        If True, an adaptive grid is used to compute the image of the galaxies which zooms in on the brightest
+        regions of the image. If False, the input grid is used.
+
+    Returns
+    -------
+    The plane image of the galaxies, which is the sum of their individual images.
+    """
+
+    shape = grid.shape_native
+
+    if adapt_grid:
+
+        image = sum(map(lambda g: g.image_2d_from(grid=grid), galaxies))
+        image = image.native
+
+        fractional_value = np.max(image) * 0.01
+
+        fractional_bool = image > fractional_value
+
+        true_indices = np.argwhere(fractional_bool)
+
+        y_max_pix = np.min(true_indices[:, 0])
+        y_min_pix = np.max(true_indices[:, 0])
+        x_min_pix = np.min(true_indices[:, 1])
+        x_max_pix = np.max(true_indices[:, 1])
+
+        grid = grid.native
+
+        y_min = grid[y_min_pix, 0][0] - buffer
+        y_max = grid[y_max_pix, 0][0] + buffer
+        x_min = grid[0, x_min_pix][1] - buffer
+        x_max = grid[0, x_max_pix][1] + buffer
+
+        y_sep = y_max - y_min
+        x_sep = x_max - x_min
+
+        if y_sep > x_sep:
+            x_min -= (y_sep - x_sep) / 2
+            x_max += (y_sep - x_sep) / 2
+        elif x_sep > y_sep:
+            y_min -= (x_sep - y_sep) / 2
+            y_max += (x_sep - y_sep) / 2
+
+        pixel_scales = (
+            float((y_max - y_min) / shape[0]),
+            float((x_max - x_min) / shape[1]),
+        )
+        origin = ((y_max + y_min) / 2.0, (x_max + x_min) / 2.0)
+
+        grid = aa.Grid2D.uniform(
+            shape_native=grid.shape_native,
+            pixel_scales=pixel_scales,
+            sub_size=1,
+            origin=origin,
+        )
+
+    image = sum(map(lambda g: g.image_2d_from(grid=grid), galaxies))
+
+    return aa.Array2D.no_mask(
+        values=image.native, pixel_scales=grid.pixel_scales, origin=grid.origin
     )
-    origin = ((y_max + y_min) / 2.0, (x_max + x_min) / 2.0)
-
-    uniform_grid = aa.Grid2D.uniform(
-        shape_native=shape, pixel_scales=pixel_scales, sub_size=1, origin=origin
-    )
-
-    image = sum(map(lambda g: g.image_2d_from(grid=uniform_grid), galaxies))
-
-    return PlaneImage(array=image, grid=grid)
 
 
 def ordered_plane_redshifts_from(galaxies):
-    """Given a list of galaxies (with redshifts), return a list of the redshifts in ascending order.
+    """
+    Given a list of galaxies (with redshifts), return a list of the redshifts in ascending order.
 
     If two or more galaxies have the same redshift that redshift is not double counted.
 
