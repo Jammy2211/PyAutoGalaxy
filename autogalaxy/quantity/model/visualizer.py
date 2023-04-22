@@ -48,7 +48,7 @@ class VisualizerQuantity(Visualizer):
         )
 
         if should_plot("subplot_fit"):
-            fit_quantity_plotter.subplot_fit_quantity()
+            fit_quantity_plotter.subplot_fit()
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="fit_quantity")
 

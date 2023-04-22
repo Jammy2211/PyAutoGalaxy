@@ -31,7 +31,7 @@ def test__visualizes_fit_quantity__uses_configs(
 
     plot_path = path.join(plot_path, "fit_quantity")
 
-    assert path.join(plot_path, "subplot_fit_quantity.png") in plot_patch.paths
+    assert path.join(plot_path, "subplot_fit.png") in plot_patch.paths
     assert path.join(plot_path, "data.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map.png") not in plot_patch.paths
 
@@ -45,10 +45,10 @@ def test__visualizes_fit_quantity__uses_configs(
 
     visualizer.visualize_fit_quantity(fit=fit_quantity_7x7_vector_yx_2d)
 
-    assert path.join(plot_path, "subplot_fit_quantity_y.png") in plot_patch.paths
+    assert path.join(plot_path, "subplot_fit_y.png") in plot_patch.paths
     assert path.join(plot_path, "data_y.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map_y.png") not in plot_patch.paths
 
-    assert path.join(plot_path, "subplot_fit_quantity_x.png") in plot_patch.paths
+    assert path.join(plot_path, "subplot_fit_x.png") in plot_patch.paths
     assert path.join(plot_path, "data_x.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map_x.png") not in plot_patch.paths
