@@ -12,8 +12,6 @@ from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.imaging.model.visualizer import VisualizerImaging
-from autogalaxy.hyper.hyper_data import HyperImageSky
-from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.imaging.model.result import ResultImaging
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.plane.plane import Plane
@@ -25,7 +23,7 @@ class AnalysisImaging(AnalysisDataset):
     def __init__(
         self,
         dataset: aa.Imaging,
-        hyper_dataset_result: ResultImaging = None,
+        adapt_result: ResultImaging = None,
         cosmology: LensingCosmology = Planck15(),
         settings_pixelization: aa.SettingsPixelization = None,
         settings_inversion: aa.SettingsInversion = None,
@@ -49,8 +47,8 @@ class AnalysisImaging(AnalysisDataset):
         ----------
         dataset
             The `Imaging` dataset that the model is fitted too.
-        hyper_dataset_result
-            The hyper-model image and hyper galaxies images of a previous result in a model-fitting pipeline, which are
+        adapt_result
+            The hyper-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
@@ -62,7 +60,7 @@ class AnalysisImaging(AnalysisDataset):
         """
         super().__init__(
             dataset=dataset,
-            hyper_dataset_result=hyper_dataset_result,
+            adapt_result=adapt_result,
             cosmology=cosmology,
             settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
@@ -77,7 +75,7 @@ class AnalysisImaging(AnalysisDataset):
         PyAutoFit calls this function immediately before the non-linear search begins, therefore it can be used to
         perform tasks using the final model parameterization.
 
-        This function checks that the hyper-dataset is consistent with previous hyper-datasets if the model-fit is
+        This function checks that the adapt-dataset is consistent with previous adapt-datasets if the model-fit is
         being resumed from a previous run, and it visualizes objects which do not change throughout the model fit
         like the dataset.
 
@@ -101,9 +99,9 @@ class AnalysisImaging(AnalysisDataset):
 
                 visualizer.visualize_imaging(imaging=self.imaging)
 
-                visualizer.visualize_hyper_images(
-                    hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
-                    hyper_model_image=self.hyper_model_image,
+                visualizer.visualize_adapt_images(
+                    adapt_galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
+                    adapt_model_image=self.adapt_model_image,
                 )
 
             self.set_preloads(paths=paths, model=model)
@@ -164,7 +162,6 @@ class AnalysisImaging(AnalysisDataset):
     def fit_imaging_via_instance_from(
         self,
         instance: af.ModelInstance,
-        use_hyper_scaling: bool = True,
         preload_overwrite: Optional[Preloads] = None,
         profiling_dict: Optional[Dict] = None,
     ) -> FitImaging:
@@ -192,21 +189,12 @@ class AnalysisImaging(AnalysisDataset):
         FitImaging
             The fit of the plane to the imaging dataset, which includes the log likelihood.
         """
-        instance = self.instance_with_associated_hyper_images_from(instance=instance)
-
-        hyper_image_sky = self.hyper_image_sky_via_instance_from(instance=instance)
-
-        hyper_background_noise = self.hyper_background_noise_via_instance_from(
-            instance=instance
-        )
+        instance = self.instance_with_associated_adapt_images_from(instance=instance)
 
         plane = self.plane_via_instance_from(instance=instance)
 
         return self.fit_imaging_via_plane_from(
             plane=plane,
-            hyper_image_sky=hyper_image_sky,
-            hyper_background_noise=hyper_background_noise,
-            use_hyper_scaling=use_hyper_scaling,
             preload_overwrite=preload_overwrite,
             profiling_dict=profiling_dict,
         )
@@ -214,9 +202,6 @@ class AnalysisImaging(AnalysisDataset):
     def fit_imaging_via_plane_from(
         self,
         plane: Plane,
-        hyper_image_sky: Optional[HyperImageSky],
-        hyper_background_noise: Optional[HyperBackgroundNoise],
-        use_hyper_scaling: bool = True,
         preload_overwrite: Optional[Preloads] = None,
         profiling_dict: Optional[Dict] = None,
     ) -> FitImaging:
@@ -230,10 +215,6 @@ class AnalysisImaging(AnalysisDataset):
         ----------
         plane
             The plane of galaxies whose model images are used to fit the imaging data.
-        hyper_image_sky
-            A model component which scales the background sky level of the data before computing the log likelihood.
-        hyper_background_noise
-            A model component which scales the background noise level of the data before computing the log likelihood.
         use_hyper_scaling
             If false, the scaling of the background sky and noise are not performed irrespective of the model components
             themselves.
@@ -253,9 +234,6 @@ class AnalysisImaging(AnalysisDataset):
         return FitImaging(
             dataset=self.dataset,
             plane=plane,
-            hyper_image_sky=hyper_image_sky,
-            hyper_background_noise=hyper_background_noise,
-            use_hyper_scaling=use_hyper_scaling,
             settings_pixelization=self.settings_pixelization,
             settings_inversion=self.settings_inversion,
             preloads=preloads,
@@ -284,11 +262,8 @@ class AnalysisImaging(AnalysisDataset):
         - Images of the best-fit `FitImaging`, including the model-image, residuals and chi-squared of its fit to
           the imaging data.
 
-        - The hyper-images of the model-fit showing how the hyper galaxies are used to represent different galaxies in
+        - The hyper-images of the model-fit showing how the galaxies are used to represent different galaxies in
           the dataset.
-
-        - If hyper features are used to scale the noise or background sky, a `FitImaging` with these features turned
-          off may be output, to indicate how much these features are altering the dataset.
 
         The images output by this function are customized using the file `config/visualize/plots.ini`.
 
@@ -308,18 +283,11 @@ class AnalysisImaging(AnalysisDataset):
         if os.environ.get("PYAUTOFIT_TEST_MODE") == "1":
             return
 
-        instance = self.instance_with_associated_hyper_images_from(instance=instance)
+        instance = self.instance_with_associated_adapt_images_from(instance=instance)
         plane = self.plane_via_instance_from(instance=instance)
-
-        hyper_image_sky = self.hyper_image_sky_via_instance_from(instance=instance)
-        hyper_background_noise = self.hyper_background_noise_via_instance_from(
-            instance=instance
-        )
 
         fit = self.fit_imaging_via_plane_from(
             plane=plane,
-            hyper_image_sky=hyper_image_sky,
-            hyper_background_noise=hyper_background_noise,
         )
 
         visualizer = VisualizerImaging(visualize_path=paths.image_path)
@@ -343,26 +311,10 @@ class AnalysisImaging(AnalysisDataset):
                 inversion=fit.inversion, during_analysis=during_analysis
             )
 
-        visualizer.visualize_hyper_images(
-            hyper_galaxy_image_path_dict=self.hyper_galaxy_image_path_dict,
-            hyper_model_image=self.hyper_model_image,
+        visualizer.visualize_adapt_images(
+            adapt_galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
+            adapt_model_image=self.adapt_model_image,
         )
-
-        if visualizer.plot_fit_no_hyper:
-
-            fit = self.fit_imaging_via_plane_from(
-                plane=plane,
-                hyper_image_sky=None,
-                hyper_background_noise=None,
-                use_hyper_scaling=False,
-            )
-
-            try:
-                visualizer.visualize_fit_imaging(
-                    fit=fit, during_analysis=during_analysis, subfolders="fit_no_hyper"
-                )
-            except (exc.InversionException, np.linalg.LinAlgError):
-                pass
 
     def make_result(
         self,
@@ -384,7 +336,7 @@ class AnalysisImaging(AnalysisDataset):
         - The non-linear search used to perform the model fit.
 
         The `ResultImaging` object contains a number of methods which use the above objects to create the max
-        log likelihood `Plane`, `FitImaging`, hyper-galaxy images,etc.
+        log likelihood `Plane`, `FitImaging`, adapt-galaxy images,etc.
 
         Parameters
         ----------

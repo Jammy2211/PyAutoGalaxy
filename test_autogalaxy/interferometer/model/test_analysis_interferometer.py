@@ -40,30 +40,3 @@ def test__fit_figure_of_merit__matches_correct_fit_given_galaxy_profiles(
     fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
     assert fit.log_likelihood == fit_figure_of_merit
-
-
-def test__fit_figure_of_merit__includes_hyper_image_and_noise__matches_fit(
-    interferometer_7,
-):
-    hyper_background_noise = ag.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
-
-    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=0.1))
-
-    model = af.Collection(
-        hyper_background_noise=hyper_background_noise,
-        galaxies=af.Collection(galaxy=galaxy),
-    )
-
-    analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
-
-    instance = model.instance_from_unit_vector([])
-    fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
-
-    plane = analysis.plane_via_instance_from(instance=instance)
-    fit = ag.FitInterferometer(
-        dataset=interferometer_7,
-        plane=plane,
-        hyper_background_noise=hyper_background_noise,
-    )
-
-    assert fit.log_likelihood == fit_figure_of_merit

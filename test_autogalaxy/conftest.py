@@ -311,29 +311,19 @@ def make_planck15():
     return fixtures.make_planck15()
 
 
-@pytest.fixture(name="hyper_model_image_7x7")
-def make_hyper_model_image_7x7():
-    return fixtures.make_hyper_model_image_7x7()
+@pytest.fixture(name="adapt_model_image_7x7")
+def make_adapt_model_image_7x7():
+    return fixtures.make_adapt_model_image_7x7()
 
 
-@pytest.fixture(name="hyper_galaxy_image_0_7x7")
-def make_hyper_galaxy_image_0_7x7():
-    return fixtures.make_hyper_galaxy_image_0_7x7()
+@pytest.fixture(name="adapt_galaxy_image_0_7x7")
+def make_adapt_galaxy_image_0_7x7():
+    return fixtures.make_adapt_galaxy_image_0_7x7()
 
 
-@pytest.fixture(name="hyper_galaxy_image_path_dict_7x7")
-def make_hyper_galaxy_image_path_dict_7x7():
-    return fixtures.make_hyper_galaxy_image_path_dict_7x7()
-
-
-@pytest.fixture(name="contribution_map_7x7")
-def make_contribution_map_7x7(
-    hyper_model_image_7x7, hyper_galaxy_image_0_7x7, hyper_galaxy
-):
-    return hyper_galaxy.contribution_map_from(
-        hyper_model_image=hyper_model_image_7x7,
-        hyper_galaxy_image=hyper_galaxy_image_0_7x7,
-    )
+@pytest.fixture(name="adapt_galaxy_image_path_dict_7x7")
+def make_adapt_galaxy_image_path_dict_7x7():
+    return fixtures.make_adapt_galaxy_image_path_dict_7x7()
 
 
 ### QUANTITY ###

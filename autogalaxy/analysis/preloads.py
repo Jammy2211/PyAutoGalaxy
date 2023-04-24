@@ -25,8 +25,6 @@ class Preloads(aa.Preloads):
         data_linear_func_matrix_dict=None,
         mapper_operated_mapping_matrix_dict=None,
         operated_mapping_matrix: Optional[np.ndarray] = None,
-        curvature_matrix_preload: Optional[np.ndarray] = None,
-        curvature_matrix_counts: Optional[np.ndarray] = None,
         curvature_matrix: Optional[np.ndarray] = None,
         regularization_matrix: Optional[np.ndarray] = None,
         log_det_regularization_matrix_term: Optional[float] = None,
@@ -52,7 +50,7 @@ class Preloads(aa.Preloads):
             every galaxy in the model). This can be preloaded when no light profiles in the model vary.
         w_tilde
             A class containing values that enable an inversion's linear algebra to use the w-tilde formalism. This can
-            be preloaded when no component of the model changes the noise map (e.g. hyper galaxies are fixed).
+            be preloaded when no component of the model changes the noise map (e.g. galaxies are fixed).
         use_w_tilde
             Whether to use the w tilde formalism, which superseeds the value in `SettingsInversions` such that w tilde
             will be disabled for model-fits it is not applicable (e.g. because the noise-map changes).
@@ -72,13 +70,6 @@ class Preloads(aa.Preloads):
         operated_mapping_matrix
             A matrix containing the mappings between PSF blurred image pixels and source pixels used in the linear
             algebra of an inversion. This can be preloaded when no mass profiles and pixelizations in the model vary.
-        curvature_matrix_preload
-            A matrix containing preloaded value used to construct the curvature matrix from the blurred mapping matrix.
-            This can be preloaded when no mass profiles and pixelizations in the model vary.
-        curvature_matrix_counts
-            A matrix containing the length of values in the curvature matrix preloaded, which are used to construct
-            the curvature matrix from the blurred mapping matrix. This can be preloaded when no mass profiles and
-            pixelizations in the model vary.
 
         Returns
         -------
@@ -94,8 +85,6 @@ class Preloads(aa.Preloads):
             data_linear_func_matrix_dict=data_linear_func_matrix_dict,
             mapper_operated_mapping_matrix_dict=mapper_operated_mapping_matrix_dict,
             operated_mapping_matrix=operated_mapping_matrix,
-            curvature_matrix_preload=curvature_matrix_preload,
-            curvature_matrix_counts=curvature_matrix_counts,
             curvature_matrix=curvature_matrix,
             regularization_matrix=regularization_matrix,
             log_det_regularization_matrix_term=log_det_regularization_matrix_term,
@@ -217,9 +206,6 @@ class Preloads(aa.Preloads):
         ]
         line += [
             f"Inversion Linear Func (Linear Light Profile) Dicts = {self.linear_func_operated_mapping_matrix_dict is not None}\n"
-        ]
-        line += [
-            f"Curvature Matrix Sparse = {self.curvature_matrix_preload is not None}\n"
         ]
         line += [f"Curvature Matrix = {self.curvature_matrix is not None}\n"]
         line += [

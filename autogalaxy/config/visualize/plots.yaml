@@ -47,8 +47,7 @@ galaxies:
   convergence: false
   image: false
   potential: false
-hyper:
-  fit_no_hyper: true
+adapt:
   images_of_galaxies: true
   contribution_map_list: true
   model_image: true

@@ -1,5 +1,6 @@
+from __future__ import annotations
 import math
-from typing import List, Optional
+from typing import TYPE_CHECKING, List, Optional
 
 import autoarray as aa
 import autoarray.plot as aplt
@@ -16,8 +17,10 @@ from autogalaxy.plot.mass_plotter import MassPlotter
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
-from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePDFPlotter
+
+if TYPE_CHECKING:
+    from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
+    from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePDFPlotter
 from autogalaxy.profiles.plot.mass_profile_plotters import MassProfilePlotter
 from autogalaxy.profiles.plot.mass_profile_plotters import MassProfilePDFPlotter
 
@@ -130,6 +133,8 @@ class GalaxyPlotter(Plotter):
         LightProfilePlotter
             An object that plots the light profiles, often used for plotting attributes of the galaxy.
         """
+
+        from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
 
         if not one_d_only:
 
@@ -420,7 +425,6 @@ class GalaxyPlotter(Plotter):
         deflections_y: bool = False,
         deflections_x: bool = False,
         magnification: bool = False,
-        contribution_map: bool = False,
         title_suffix: str = "",
         filename_suffix: str = "",
     ):
@@ -445,8 +449,6 @@ class GalaxyPlotter(Plotter):
             Whether to make a 2D plot (via `imshow`) of the x component of the deflection angles.
         magnification
             Whether to make a 2D plot (via `imshow`) of the magnification.
-        contribution_map
-            Whether to make a 2D plot (via `imshow`) of the contribution map.
         """
         if image:
 
@@ -467,17 +469,6 @@ class GalaxyPlotter(Plotter):
             title_suffix=title_suffix,
             filename_suffix=filename_suffix,
         )
-
-        if contribution_map:
-
-            self.mat_plot_2d.plot_array(
-                array=self.galaxy.contribution_map,
-                visuals_2d=self.get_visuals_2d(),
-                auto_labels=aplt.AutoLabels(
-                    title=f"Contribution Map{title_suffix}",
-                    filename=f"contribution_map_2d{filename_suffix}",
-                ),
-            )
 
     def subplot_of_light_profiles(self, image: bool = False):
         """
@@ -655,6 +646,11 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             An object that plots the average value and errors of a list of light profiles, often used for plotting
             attributes of the galaxy.
         """
+
+        from autogalaxy.profiles.plot.light_profile_plotters import (
+            LightProfilePDFPlotter,
+        )
+
         light_profile_pdf_list = [
             galaxy.cls_list_from(cls=LightProfile)[index]
             for galaxy in self.galaxy_pdf_list

@@ -80,7 +80,7 @@ def test__sparse_image_plane_grid_list(masked_imaging_7x7):
     # returned otherwise.
 
     galaxy_pix = ag.Galaxy(
-        redshift=0.5, pixelization=pixelization, hyper_galaxy_image=2
+        redshift=0.5, pixelization=pixelization, adapt_galaxy_image=2
     )
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)

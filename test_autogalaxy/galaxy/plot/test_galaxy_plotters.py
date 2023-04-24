@@ -144,17 +144,6 @@ def test__figures_2d__all_are_output(
     assert path.join(plot_path, "image_2d.png") in plot_patch.paths
     assert path.join(plot_path, "convergence_2d.png") in plot_patch.paths
 
-    gal_x1_lp_x1_mp.hyper_galaxy = ag.HyperGalaxy()
-    gal_x1_lp_x1_mp.hyper_model_image = ag.Array2D.ones(
-        shape_native=(7, 7), pixel_scales=0.1
-    )
-    gal_x1_lp_x1_mp.hyper_galaxy_image = ag.Array2D.ones(
-        shape_native=(7, 7), pixel_scales=0.1
-    )
-
-    galaxy_plotter.figures_2d(contribution_map=True)
-    assert path.join(plot_path, "contribution_map_2d.png") in plot_patch.paths
-
 
 def test__subplots_galaxy_quantities__all_are_output(
     gal_x1_lp_x1_mp,

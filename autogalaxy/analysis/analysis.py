@@ -14,8 +14,8 @@ from autogalaxy.analysis.maker import FitMaker
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
-from autogalaxy.hyper.hyper_data import HyperImageSky
-from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
+from autogalaxy.legacy.hyper_data import HyperImageSky
+from autogalaxy.legacy.hyper_data import HyperBackgroundNoise
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
 from autogalaxy.analysis.result import ResultDataset
@@ -67,7 +67,7 @@ class AnalysisDataset(Analysis):
     def __init__(
         self,
         dataset: Union[aa.Imaging, aa.Interferometer],
-        hyper_dataset_result: ResultDataset = None,
+        adapt_result: ResultDataset = None,
         cosmology: LensingCosmology = Planck15(),
         settings_pixelization: aa.SettingsPixelization = None,
         settings_inversion: aa.SettingsInversion = None,
@@ -84,8 +84,8 @@ class AnalysisDataset(Analysis):
         ----------
         dataset
             The dataset that is the model is fitted too.
-        hyper_dataset_result
-            The hyper-model image and hyper galaxies images of a previous result in a model-fitting pipeline, which are
+        adapt_result
+            The hyper-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
@@ -99,16 +99,16 @@ class AnalysisDataset(Analysis):
         super().__init__(cosmology=cosmology)
 
         self.dataset = dataset
-        self.hyper_dataset_result = hyper_dataset_result
+        self.adapt_result = adapt_result
 
-        if self.hyper_dataset_result is not None:
+        if self.adapt_result is not None:
 
-            self.set_hyper_dataset(result=self.hyper_dataset_result)
+            self.set_hyper_dataset(result=self.adapt_result)
 
         else:
 
-            self.hyper_galaxy_image_path_dict = None
-            self.hyper_model_image = None
+            self.adapt_galaxy_image_path_dict = None
+            self.adapt_model_image = None
 
         self.settings_pixelization = settings_pixelization or aa.SettingsPixelization()
         self.settings_inversion = settings_inversion or aa.SettingsInversion()
@@ -136,7 +136,7 @@ class AnalysisDataset(Analysis):
             the imaging data.
         """
 
-        self.check_and_replace_hyper_images(paths=paths)
+        self.check_and_replace_adapt_images(paths=paths)
 
         model_util.set_upper_limit_of_pixelization_pixels_prior(
             model=model, pixels_in_mask=self.dataset.mask.pixels_in_mask
@@ -144,11 +144,11 @@ class AnalysisDataset(Analysis):
 
     def set_hyper_dataset(self, result: ResultDataset) -> None:
         """
-        Using a the result of a previous model-fit, set the hyper-dataset for this analysis. This is used to adapt
+        Using a the result of a previous model-fit, set the adapt-dataset for this analysis. This is used to adapt
         aspects of the model (e.g. the pixelization, regularization scheme) to the properties of the dataset being
         fitted.
 
-        This passes the hyper model image and hyper galaxy images of the previous fit. These represent where different
+        This passes the adapt image and galaxy images of the previous fit. These represent where different
         galaxies in the dataset are located and thus allows the fit to adapt different aspects of the model to different
         galaxies in the data.
 
@@ -159,11 +159,11 @@ class AnalysisDataset(Analysis):
             the dataset, which set up the hyper dataset. These are used by certain classes for adapting the analysis
             to the properties of the dataset.
         """
-        hyper_galaxy_image_path_dict = result.hyper_galaxy_image_path_dict
-        hyper_model_image = result.hyper_model_image
+        adapt_galaxy_image_path_dict = result.adapt_galaxy_image_path_dict
+        adapt_model_image = result.adapt_model_image
 
-        self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict
-        self.hyper_model_image = hyper_model_image
+        self.adapt_galaxy_image_path_dict = adapt_galaxy_image_path_dict
+        self.adapt_model_image = adapt_model_image
 
     @property
     def preloads_cls(self):
@@ -284,7 +284,7 @@ class AnalysisDataset(Analysis):
         if hasattr(instance, "hyper_background_noise"):
             return instance.hyper_background_noise
 
-    def instance_with_associated_hyper_images_from(
+    def instance_with_associated_adapt_images_from(
         self, instance: af.ModelInstance
     ) -> af.ModelInstance:
         """
@@ -313,14 +313,14 @@ class AnalysisDataset(Analysis):
            The input instance with images associated with galaxies where possible.
         """
 
-        if self.hyper_galaxy_image_path_dict is not None:
+        if self.adapt_galaxy_image_path_dict is not None:
 
             for galaxy_path, galaxy in instance.path_instance_tuples_for_class(Galaxy):
-                if galaxy_path in self.hyper_galaxy_image_path_dict:
+                if galaxy_path in self.adapt_galaxy_image_path_dict:
 
-                    galaxy.hyper_model_image = self.hyper_model_image
+                    galaxy.adapt_model_image = self.adapt_model_image
 
-                    galaxy.hyper_galaxy_image = self.hyper_galaxy_image_path_dict[
+                    galaxy.adapt_galaxy_image = self.adapt_galaxy_image_path_dict[
                         galaxy_path
                     ]
 
@@ -361,21 +361,21 @@ class AnalysisDataset(Analysis):
 
         paths.save_object("cosmology", self.cosmology)
 
-        if self.hyper_model_image is not None:
-            paths.save_object("hyper_model_image", self.hyper_model_image)
+        if self.adapt_model_image is not None:
+            paths.save_object("adapt_model_image", self.adapt_model_image)
 
-        if self.hyper_galaxy_image_path_dict is not None:
+        if self.adapt_galaxy_image_path_dict is not None:
             paths.save_object(
-                "hyper_galaxy_image_path_dict", self.hyper_galaxy_image_path_dict
+                "adapt_galaxy_image_path_dict", self.adapt_galaxy_image_path_dict
             )
 
-    def check_and_replace_hyper_images(self, paths: af.DirectoryPaths):
+    def check_and_replace_adapt_images(self, paths: af.DirectoryPaths):
         """
-        Using a the result of a previous model-fit, a hyper-dataset can be set up which adapts aspects of the model
+        Using a the result of a previous model-fit, a adapt-dataset can be set up which adapts aspects of the model
         (e.g. the pixelization, regularization scheme) to the properties of the dataset being fitted.
 
         If the model-fit is being resumed from a previous run, this function checks that the model image and galaxy
-        images used to set up the hyper-dataset are identical to those used previously. If they are not, it replaces
+        images used to set up the adapt-dataset are identical to those used previously. If they are not, it replaces
         them with the previous hyper image. This ensures consistency in the log likelihood function.
 
         Parameters
@@ -385,21 +385,21 @@ class AnalysisDataset(Analysis):
             visualization and the pickled objects used by the aggregator output by this function.
         """
         try:
-            hyper_model_image = paths.load_object("hyper_model_image")
+            adapt_model_image = paths.load_object("adapt_model_image")
 
-            if np.max(abs(hyper_model_image - self.hyper_model_image)) > 1e-8:
+            if np.max(abs(adapt_model_image - self.adapt_model_image)) > 1e-8:
 
                 logger.info(
                     "ANALYSIS - Hyper image loaded from pickle different to that set in Analysis class."
                     "Overwriting hyper images with values loaded from pickles."
                 )
 
-                self.hyper_model_image = hyper_model_image
+                self.adapt_model_image = adapt_model_image
 
-                hyper_galaxy_image_path_dict = paths.load_object(
-                    "hyper_galaxy_image_path_dict"
+                adapt_galaxy_image_path_dict = paths.load_object(
+                    "adapt_galaxy_image_path_dict"
                 )
-                self.hyper_galaxy_image_path_dict = hyper_galaxy_image_path_dict
+                self.adapt_galaxy_image_path_dict = adapt_galaxy_image_path_dict
 
         except (
             FileNotFoundError,

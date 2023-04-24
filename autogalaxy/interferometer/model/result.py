@@ -20,7 +20,7 @@ class ResultInterferometer(ResultDataset):
     - The non-linear search used to perform the model fit.
 
     This class contains a number of methods which use the above objects to create the max log likelihood `Plane`,
-    `FitInterferometer`, hyper-galaxy images,etc.
+    `FitInterferometer`, adapt-galaxy images,etc.
 
     Parameters
     ----------
@@ -45,18 +45,14 @@ class ResultInterferometer(ResultDataset):
         An instance of a `FitInterferometer` corresponding to the maximum log likelihood model inferred by the
         non-linear search.
         """
-        hyper_background_noise = self.analysis.hyper_background_noise_via_instance_from(
-            instance=self.instance_copy
-        )
-
-        instance = self.analysis.instance_with_associated_hyper_images_from(
+        instance = self.analysis.instance_with_associated_adapt_images_from(
             instance=self.instance_copy
         )
 
         plane = self.analysis.plane_via_instance_from(instance=instance)
 
         return self.analysis.fit_interferometer_via_plane_from(
-            plane=plane, hyper_background_noise=hyper_background_noise
+            plane=plane,
         )
 
     @property
@@ -108,36 +104,36 @@ class ResultInterferometer(ResultDataset):
         }
 
     @property
-    def hyper_galaxy_visibilities_path_dict(self):
+    def adapt_galaxy_visibilities_path_dict(self):
         """
         A dictionary associating 1D hyper_galaxies galaxy visibilities with their names.
 
-        This is used for creating the hyper-dataset used by Analysis objects to adapt aspects of a model to the dataset
+        This is used for creating the adapt-dataset used by Analysis objects to adapt aspects of a model to the dataset
         being fitted.
         """
 
-        hyper_galaxy_visibilities_path_dict = {}
+        adapt_galaxy_visibilities_path_dict = {}
 
         for path, galaxy in self.path_galaxy_tuples:
-            hyper_galaxy_visibilities_path_dict[path] = self.visibilities_galaxy_dict[
+            adapt_galaxy_visibilities_path_dict[path] = self.visibilities_galaxy_dict[
                 path
             ]
 
-        return hyper_galaxy_visibilities_path_dict
+        return adapt_galaxy_visibilities_path_dict
 
     @property
-    def hyper_model_visibilities(self) -> aa.Visibilities:
+    def adapt_model_visibilities(self) -> aa.Visibilities:
         """
-        The hyper model visibilities used by AnalysisInterferometer objects to adapt aspects of a model to the dataset
+        The adapt model visibilities used by AnalysisInterferometer objects to adapt aspects of a model to the dataset
         being fitted.
 
-        The hyper model visibilities are the sum of the hyper galaxy visibilities of every individual galaxy.
+        The adapt model visibilities are the sum of the galaxy visibilities of every individual galaxy.
         """
-        hyper_model_visibilities = aa.Visibilities.zeros(
+        adapt_model_visibilities = aa.Visibilities.zeros(
             shape_slim=(self.max_log_likelihood_fit.visibilities.shape_slim,)
         )
 
         for path, galaxy in self.path_galaxy_tuples:
-            hyper_model_visibilities += self.hyper_galaxy_visibilities_path_dict[path]
+            adapt_model_visibilities += self.adapt_galaxy_visibilities_path_dict[path]
 
-        return hyper_model_visibilities
+        return adapt_model_visibilities

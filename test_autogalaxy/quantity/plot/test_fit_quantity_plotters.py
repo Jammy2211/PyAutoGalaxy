@@ -39,7 +39,7 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
         chi_squared_map=True,
     )
 
-    assert path.join(plot_path, "image_2d.png") in plot_patch.paths
+    assert path.join(plot_path, "data.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map.png") not in plot_patch.paths
     assert path.join(plot_path, "signal_to_noise_map.png") not in plot_patch.paths
     assert path.join(plot_path, "model_image.png") in plot_patch.paths
@@ -61,7 +61,7 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
         chi_squared_map=True,
     )
 
-    assert path.join(plot_path, "image_2d_y.png") in plot_patch.paths
+    assert path.join(plot_path, "data_y.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map_y.png") not in plot_patch.paths
     assert path.join(plot_path, "signal_to_noise_map_y.png") not in plot_patch.paths
     assert path.join(plot_path, "model_image_y.png") in plot_patch.paths
@@ -69,7 +69,7 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
     assert path.join(plot_path, "normalized_residual_map_y.png") not in plot_patch.paths
     assert path.join(plot_path, "chi_squared_map_y.png") in plot_patch.paths
 
-    assert path.join(plot_path, "image_2d_x.png") in plot_patch.paths
+    assert path.join(plot_path, "data_x.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map_x.png") not in plot_patch.paths
     assert path.join(plot_path, "signal_to_noise_map_x.png") not in plot_patch.paths
     assert path.join(plot_path, "model_image_x.png") in plot_patch.paths

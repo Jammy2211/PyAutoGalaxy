@@ -8,10 +8,8 @@ import autoarray as aa
 from autogalaxy.abstract_fit import AbstractFitInversion
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.hyper.hyper_data import HyperBackgroundNoise
 from autogalaxy.plane.plane import Plane
 from autogalaxy.plane.to_inversion import PlaneToInversion
-from autogalaxy.profiles.light.linear import LightProfileLinear
 
 
 class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
@@ -19,8 +17,6 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         self,
         dataset: aa.Interferometer,
         plane: Plane,
-        hyper_background_noise: HyperBackgroundNoise = None,
-        use_hyper_scaling: bool = True,
         settings_pixelization: aa.SettingsPixelization = aa.SettingsPixelization(),
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads: aa.Preloads = Preloads(),
@@ -57,11 +53,6 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             The interfometer dataset which is fitted by the galaxies in the plane.
         plane
             The plane of galaxies whose light profile images are used to fit the interferometer data.
-        hyper_background_noise
-            If included, adds a noise-scaling term to the background noise.
-        use_hyper_scaling
-            If set to False, the hyper scaling functions (e.g. the `hyper_background_noise`) are
-            omitted irrespective of their inputs.
         settings_pixelization
             Settings controlling how a pixelization is fitted for example if a border is used when creating the
             pixelization.
@@ -89,28 +80,10 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
 
         self.plane = plane
 
-        self.hyper_background_noise = hyper_background_noise
-
-        self.use_hyper_scaling = use_hyper_scaling
-
         self.settings_pixelization = settings_pixelization
         self.settings_inversion = settings_inversion
 
         self.preloads = preloads
-
-    @property
-    def noise_map(self) -> aa.VisibilitiesNoiseMap:
-        """
-        Returns the interferometer's noise-map, which may have a hyper scaling performed which increase the noise in
-        regions of the data that are poorly fitted in order to avoid overfitting.
-        """
-        if self.use_hyper_scaling and self.hyper_background_noise is not None:
-
-            return self.hyper_background_noise.hyper_noise_map_complex_from(
-                noise_map=self.dataset.noise_map
-            )
-
-        return self.dataset.noise_map
 
     @property
     def profile_visibilities(self) -> aa.Visibilities:
@@ -193,7 +166,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         - The images of all linear objects (e.g. linear light profiles / pixelizations), where the images are solved
           for first via the inversion.
 
-        For modeling, this dictionary is used to set up the `hyper_images` that adapt certain pixelizations to the
+        For modeling, this dictionary is used to set up the `adapt_images` that adapt certain pixelizations to the
         data being fitted.
         """
         galaxy_model_image_dict = self.plane.galaxy_image_2d_dict_from(grid=self.grid)
@@ -216,7 +189,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         - The visibilities of all linear objects (e.g. linear light profiles / pixelizations), where the visibilities
           are solved for first via the inversion.
 
-        For modeling, this dictionary is used to set up the `hyper_visibilities` that adapt certain pixelizations to the
+        For modeling, this dictionary is used to set up the `adapt_visibilities` that adapt certain pixelizations to the
         data being fitted.
         """
         galaxy_model_visibilities_dict = self.plane.galaxy_visibilities_dict_from(
@@ -281,8 +254,6 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         return FitInterferometer(
             dataset=self.interferometer,
             plane=self.plane,
-            hyper_background_noise=self.hyper_background_noise,
-            use_hyper_scaling=self.use_hyper_scaling,
             settings_pixelization=self.settings_pixelization,
             settings_inversion=settings_inversion,
             preloads=preloads,

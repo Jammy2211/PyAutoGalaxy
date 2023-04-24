@@ -15,7 +15,6 @@ def make_trivial_galaxy():
 @pytest.fixture(name="trivial_galaxy_dict")
 def make_trivial_galaxy_dict():
     return {
-        "hyper_galaxy": None,
         "redshift": 1.0,
         "type": "autogalaxy.galaxy.galaxy.Galaxy",
     }
@@ -31,13 +30,9 @@ def test_trivial__from_dict(trivial_galaxy, trivial_galaxy_dict):
 
 class PixelizationGalaxy(ag.Galaxy):
     def __init__(
-        self,
-        redshift: float,
-        hyper_galaxy: Optional[ag.HyperGalaxy] = None,
-        pixelization: Optional[ag.Pixelization] = None,
-        **kwargs
+        self, redshift: float, pixelization: Optional[ag.Pixelization] = None, **kwargs
     ):
-        super().__init__(redshift, hyper_galaxy=hyper_galaxy, **kwargs)
+        super().__init__(redshift, **kwargs)
         self.pixelization = pixelization
 
 
@@ -54,7 +49,6 @@ def make_pixelization_galaxy():
 @pytest.fixture(name="pixelization_galaxy_dict")
 def make_pixelization_galaxy_dict():
     return {
-        "hyper_galaxy": None,
         "pixelization": {
             "mesh": {"type": "autoarray.inversion.pixelization.mesh.voronoi.Voronoi"},
             "regularization": {
@@ -94,7 +88,6 @@ def make_profiles_galaxy():
 @pytest.fixture(name="profiles_galaxy_dict")
 def make_profiles_galaxy_dict():
     return {
-        "hyper_galaxy": None,
         "light": {
             "centre": (0.0, 0.0),
             "core_radius_0": 0.01,

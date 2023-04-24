@@ -37,7 +37,7 @@ Create figures and subplots showing quantities of standard **PyAutoGalaxy** obje
     FitImagingPlotter
     FitInterferometerPlotter
     PlanePlotter
-    HyperPlotter
+    AdaptPlotter
     FitImagingPlotter
     FitInterferometerPlotter
     MultiFigurePlotter
