@@ -74,7 +74,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
         if self.adapt_result is not None:
 
-            self.set_hyper_dataset(result=self.adapt_result)
+            self.set_adapt_dataset(result=self.adapt_result)
 
         else:
 
@@ -116,7 +116,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
         return self
 
-    def set_hyper_dataset(self, result):
+    def set_adapt_dataset(self, result):
         """
         Using a the result of a previous model-fit, set the adapt-dataset for this analysis. This is used to adapt
         aspects of the model (e.g. the pixelization, regularization scheme) to the properties of the dataset being
@@ -135,7 +135,7 @@ class AnalysisInterferometer(AnalysisDataset):
             the dataset, which set up the hyper dataset. These are used by certain classes for adapting the analysis
             to the properties of the dataset.
         """
-        super().set_hyper_dataset(result=result)
+        super().set_adapt_dataset(result=result)
 
         self.adapt_model_visibilities = result.adapt_model_visibilities
         self.adapt_galaxy_visibilities_path_dict = (

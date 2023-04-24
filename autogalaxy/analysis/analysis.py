@@ -103,7 +103,7 @@ class AnalysisDataset(Analysis):
 
         if self.adapt_result is not None:
 
-            self.set_hyper_dataset(result=self.adapt_result)
+            self.set_adapt_dataset(result=self.adapt_result)
 
         else:
 
@@ -142,7 +142,7 @@ class AnalysisDataset(Analysis):
             model=model, pixels_in_mask=self.dataset.mask.pixels_in_mask
         )
 
-    def set_hyper_dataset(self, result: ResultDataset) -> None:
+    def set_adapt_dataset(self, result: ResultDataset) -> None:
         """
         Using a the result of a previous model-fit, set the adapt-dataset for this analysis. This is used to adapt
         aspects of the model (e.g. the pixelization, regularization scheme) to the properties of the dataset being

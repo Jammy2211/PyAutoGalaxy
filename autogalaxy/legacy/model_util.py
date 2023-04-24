@@ -197,7 +197,7 @@ def adapt_fit_no_noise(
     include_hyper_image_sky: bool = False,
 ):
 
-    analysis.set_hyper_dataset(result=result)
+    analysis.set_adapt_dataset(result=result)
 
     if use_positive_only_solver:
 
@@ -274,7 +274,7 @@ def adapt_fit(
 
     if analysis.adapt_model_image is None:
 
-        analysis.set_hyper_dataset(result=result)
+        analysis.set_adapt_dataset(result=result)
 
     hyper_noise_model = hyper_noise_model_from(
         setup_adapt=setup_adapt,
@@ -308,7 +308,7 @@ def adapt_fit(
 
         hyper_noise_result = search.fit(model=hyper_noise_model, analysis=analysis)
 
-    analysis.set_hyper_dataset(result=result)
+    analysis.set_adapt_dataset(result=result)
 
     hyper_pix_model = hyper_pix_model_from(
         setup_adapt=setup_adapt,
