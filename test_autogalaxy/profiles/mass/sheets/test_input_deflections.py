@@ -8,7 +8,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__deflections_yx_2d_from__grid_coordinates_overlap_image_grid_of_deflections():
-
     deflections_y = ag.Array2D.no_mask(
         values=[[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]],
         pixel_scales=0.1,
@@ -66,7 +65,6 @@ def test__deflections_yx_2d_from__grid_coordinates_overlap_image_grid_of_deflect
 
 
 def test__deflections_yx_2d_from__grid_coordinates_dont_overlap_image_grid_of_deflections__uses_interpolation():
-
     deflections_y = ag.Array2D.no_mask(
         values=[[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]],
         pixel_scales=0.1,
@@ -114,7 +112,6 @@ def test__deflections_yx_2d_from__grid_coordinates_dont_overlap_image_grid_of_de
 
 
 def test__deflections_yx_2d_from__preload_grid_deflections_used_if_preload_grid_input():
-
     deflections_y = ag.Array2D.no_mask(
         values=[[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]],
         pixel_scales=0.1,
@@ -164,7 +161,6 @@ def test__deflections_yx_2d_from__preload_grid_deflections_used_if_preload_grid_
 
 
 def test__deflections_yx_2d_from__input_grid_extends_beyond_image_plane_grid__raises_exception():
-
     deflections_y = ag.Array2D.no_mask(
         values=[[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]],
         pixel_scales=0.1,
@@ -267,7 +263,6 @@ def test__deflections_yx_2d_from__input_grid_extends_beyond_image_plane_grid__ra
 
 
 def test__convergence_2d_from_potential_2d_from():
-
     deflections_y = ag.Array2D.no_mask(
         values=[[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]],
         pixel_scales=0.1,

@@ -6,7 +6,6 @@ from autogalaxy import exc
 
 
 def test_via_signal_to_noise_map(dataset_quantity_7x7_array_2d, sub_mask_2d_7x7):
-
     data = ag.Array2D.no_mask(values=[[1.0, 2.0], [3.0, 4.0]], pixel_scales=1.0)
     signal_to_noise_map = ag.Array2D.no_mask(
         values=[[1.0, 5.0], [15.0, 40.0]], pixel_scales=1.0
@@ -45,7 +44,6 @@ def test_via_signal_to_noise_map(dataset_quantity_7x7_array_2d, sub_mask_2d_7x7)
 def test__apply_mask__masks_dataset(
     dataset_quantity_7x7_array_2d, dataset_quantity_7x7_vector_yx_2d, sub_mask_2d_7x7
 ):
-
     dataset_quantity_7x7 = dataset_quantity_7x7_array_2d.apply_mask(
         mask=sub_mask_2d_7x7
     )
@@ -96,7 +94,6 @@ def test__grid(
 
 
 def test__vector_data__y_x():
-
     data = ag.VectorYX2D.no_mask(
         values=[[[1.0, 5.0], [2.0, 6.0]], [[3.0, 7.0], [4.0, 8.0]]],
         pixel_scales=1.0,

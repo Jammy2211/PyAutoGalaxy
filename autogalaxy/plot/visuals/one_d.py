@@ -19,7 +19,6 @@ class Visuals1D(aplt.Visuals1D):
         einstein_radius_errors: Optional[List[float]] = None,
         model_fluxes: Optional[aa.Grid1D] = None,
     ):
-
         super().__init__(
             origin=origin,
             mask=mask,
@@ -35,7 +34,6 @@ class Visuals1D(aplt.Visuals1D):
         self.model_fluxes = model_fluxes
 
     def plot_via_plotter(self, plotter, grid_indexes=None, mapper=None):
-
         super().plot_via_plotter(plotter=plotter)
 
         if self.half_light_radius is not None:
@@ -53,7 +51,6 @@ class Visuals1D(aplt.Visuals1D):
             )
 
         if self.model_fluxes is not None:
-
             plotter.model_fluxes_yx_scatter.scatter_yx(
                 y=self.model_fluxes, x=np.arange(len(self.model_fluxes))
             )

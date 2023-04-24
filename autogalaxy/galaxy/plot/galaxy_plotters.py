@@ -79,7 +79,6 @@ class GalaxyPlotter(Plotter):
 
         if galaxy is not None:
             if galaxy.has(cls=LightProfileLinear):
-
                 raise exc.raise_linear_light_profile_in_plot(
                     plotter_type=self.__class__.__name__, model_obj="Plane"
                 )
@@ -137,7 +136,6 @@ class GalaxyPlotter(Plotter):
         from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
 
         if not one_d_only:
-
             return LightProfilePlotter(
                 light_profile=light_profile,
                 grid=self.grid,
@@ -178,7 +176,6 @@ class GalaxyPlotter(Plotter):
         """
 
         if not one_d_only:
-
             return MassProfilePlotter(
                 mass_profile=mass_profile,
                 grid=self.grid,
@@ -206,11 +203,9 @@ class GalaxyPlotter(Plotter):
 
     @property
     def decomposed_light_profile_plotter_list(self):
-
         plotter_list = []
 
         for i, light_profile in enumerate(self.galaxy.cls_list_from(cls=LightProfile)):
-
             light_profile_plotter = self.light_profile_plotter_from(
                 light_profile=light_profile, one_d_only=True
             )
@@ -221,11 +216,9 @@ class GalaxyPlotter(Plotter):
 
     @property
     def decomposed_mass_profile_plotter_list(self):
-
         plotter_list = []
 
         for i, mass_profile in enumerate(self.galaxy.cls_list_from(cls=MassProfile)):
-
             mass_profile_plotter = self.mass_profile_plotter_from(
                 mass_profile=mass_profile, one_d_only=True
             )
@@ -266,7 +259,6 @@ class GalaxyPlotter(Plotter):
             plot_axis_type_override = None
 
         if image:
-
             image_1d = self.galaxy.image_1d_from(grid=self.grid)
 
             self.mat_plot_1d.plot_yx(
@@ -284,7 +276,6 @@ class GalaxyPlotter(Plotter):
             )
 
         if convergence:
-
             convergence_1d = self.galaxy.convergence_1d_from(grid=self.grid)
 
             self.mat_plot_1d.plot_yx(
@@ -302,7 +293,6 @@ class GalaxyPlotter(Plotter):
             )
 
         if potential:
-
             potential_1d = self.galaxy.potential_1d_from(grid=self.grid)
 
             self.mat_plot_1d.plot_yx(
@@ -356,7 +346,6 @@ class GalaxyPlotter(Plotter):
         """
 
         if self.galaxy.has(cls=LightProfile):
-
             multi_plotter = aplt.MultiYX1DPlotter(
                 plotter_list=self.decomposed_light_profile_plotter_list,
                 legend_labels=legend_labels,
@@ -364,7 +353,6 @@ class GalaxyPlotter(Plotter):
             multi_plotter.plotter_list[0].mat_plot_1d.output = self.mat_plot_1d.output
 
             if image:
-
                 change_filename = False
 
                 if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
@@ -379,14 +367,12 @@ class GalaxyPlotter(Plotter):
                     multi_plotter.plotter_list[0].set_filename(filename=None)
 
         if self.galaxy.has(cls=MassProfile):
-
             multi_plotter = aplt.MultiYX1DPlotter(
                 plotter_list=self.decomposed_mass_profile_plotter_list,
                 legend_labels=legend_labels,
             )
 
             if convergence:
-
                 change_filename = False
 
                 if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
@@ -403,7 +389,6 @@ class GalaxyPlotter(Plotter):
                     multi_plotter.plotter_list[0].set_filename(filename=None)
 
             if potential:
-
                 change_filename = False
 
                 if multi_plotter.plotter_list[0].mat_plot_1d.output.filename is None:
@@ -451,7 +436,6 @@ class GalaxyPlotter(Plotter):
             Whether to make a 2D plot (via `imshow`) of the magnification.
         """
         if image:
-
             self.mat_plot_2d.plot_array(
                 array=self.galaxy.image_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),
@@ -751,7 +735,6 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             plot_axis_type_override = None
 
         if image:
-
             image_1d_list = [
                 galaxy.image_1d_from(grid=self.grid) for galaxy in self.galaxy_pdf_list
             ]
@@ -794,7 +777,6 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             )
 
         if convergence:
-
             convergence_1d_list = [
                 galaxy.convergence_1d_from(grid=self.grid)
                 for galaxy in self.galaxy_pdf_list
@@ -844,7 +826,6 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             )
 
         if potential:
-
             potential_1d_list = [
                 galaxy.potential_1d_from(grid=self.grid)
                 for galaxy in self.galaxy_pdf_list
@@ -934,7 +915,6 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             Manually overrides the labels of the plot's legend.
         """
         if image:
-
             multi_plotter = aplt.MultiYX1DPlotter(
                 plotter_list=[self] + self.light_profile_pdf_plotter_list,
                 legend_labels=legend_labels,
@@ -955,7 +935,6 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 multi_plotter.plotter_list[0].set_filename(filename=None)
 
         if convergence:
-
             multi_plotter = aplt.MultiYX1DPlotter(
                 plotter_list=[self] + self.mass_profile_pdf_plotter_list,
                 legend_labels=legend_labels,
@@ -976,7 +955,6 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 multi_plotter.plotter_list[0].set_filename(filename=None)
 
         if potential:
-
             multi_plotter = aplt.MultiYX1DPlotter(
                 plotter_list=[self] + self.mass_profile_pdf_plotter_list,
                 legend_labels=legend_labels,

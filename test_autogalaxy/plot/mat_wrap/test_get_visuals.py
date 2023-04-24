@@ -18,7 +18,6 @@ def make_profile_plotter_setup():
 
 
 def test__1d__via_light_obj_from(lp_0):
-
     visuals_1d = aplt.Visuals1D()
     include_1d = aplt.Include1D(half_light_radius=True)
 
@@ -38,7 +37,6 @@ def test__1d__via_light_obj_from(lp_0):
 
 
 def test__1d__via_light_obj_list_from(lp_0):
-
     visuals_1d = aplt.Visuals1D()
     include_1d = aplt.Include1D(half_light_radius=True)
 
@@ -64,7 +62,6 @@ def test__1d__via_light_obj_list_from(lp_0):
 
 
 def test__1d__via_mass_obj_from(mp_0, grid_2d_7x7):
-
     visuals_1d = aplt.Visuals1D()
     include_1d = aplt.Include1D(einstein_radius=True)
 
@@ -84,7 +81,6 @@ def test__1d__via_mass_obj_from(mp_0, grid_2d_7x7):
 
 
 def test__1d__via_mass_obj_list_from(mp_0, grid_2d_7x7):
-
     visuals_1d = aplt.Visuals1D()
     include_1d = aplt.Include1D(einstein_radius=True)
 
@@ -112,7 +108,6 @@ def test__1d__via_mass_obj_list_from(mp_0, grid_2d_7x7):
 
 
 def test__2d__via_light_obj_from(lp_0, grid_2d_7x7):
-
     visuals_2d = aplt.Visuals2D(vectors=2)
     include_2d = aplt.Include2D(
         origin=True, mask=True, border=True, light_profile_centres=True
@@ -146,7 +141,6 @@ def test__2d__via_light_obj_from(lp_0, grid_2d_7x7):
 
 
 def test__2d__via_mass_obj(mp_0, grid_2d_7x7):
-
     visuals_2d = aplt.Visuals2D(vectors=2)
     include_2d = aplt.Include2D(
         origin=True,
@@ -196,7 +190,6 @@ def test__2d__via_mass_obj(mp_0, grid_2d_7x7):
 
 
 def test__2d__via_light_mass_obj(gal_x1_lp_x1_mp, grid_2d_7x7):
-
     visuals_2d = aplt.Visuals2D(vectors=2)
     include_2d = aplt.Include2D(
         origin=True,
@@ -262,7 +255,6 @@ def test__2d__via_light_mass_obj(gal_x1_lp_x1_mp, grid_2d_7x7):
 
 
 def test__via_fit_imaging_from(fit_imaging_x2_galaxy_7x7, grid_2d_7x7):
-
     visuals_2d = aplt.Visuals2D(origin=(1.0, 1.0), vectors=2)
     include_2d = aplt.Include2D(
         origin=True,

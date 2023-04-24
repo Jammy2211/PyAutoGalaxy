@@ -25,7 +25,6 @@ def test__deflections_2d_via_analytic_from():
 
 
 def test__deflections_yx_2d_from():
-
     sersic_core = ag.mp.Chameleon()
 
     deflections = sersic_core.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
@@ -46,7 +45,6 @@ def test__deflections_yx_2d_from():
 
 
 def test__spherical_and_elliptical_identical():
-
     elliptical = ag.mp.Chameleon(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.0),
@@ -65,7 +63,6 @@ def test__spherical_and_elliptical_identical():
 
 
 def test__convergence_2d_from():
-
     chameleon = ag.mp.Chameleon(
         ell_comps=(0.0, 0.0),
         intensity=1.0,

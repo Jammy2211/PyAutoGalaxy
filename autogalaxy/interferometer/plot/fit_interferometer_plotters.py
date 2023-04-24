@@ -85,9 +85,7 @@ class FitInterferometerPlotter(Plotter):
 
         self.figures_2d = self._fit_interferometer_meta_plotter.figures_2d
         self.subplot = self._fit_interferometer_meta_plotter.subplot
-        self.subplot_fit_interferometer = (
-            self._fit_interferometer_meta_plotter.subplot_fit_interferometer
-        )
+        self.subplot_fit = self._fit_interferometer_meta_plotter.subplot_fit
         self.subplot_fit_dirty_images = (
             self._fit_interferometer_meta_plotter.subplot_fit_dirty_images
         )
@@ -141,7 +139,6 @@ class FitInterferometerPlotter(Plotter):
         methods are called to create these real-space images.
         """
         if self.fit.inversion is None:
-
             plane_plotter = self.plane_plotter_from(plane=self.plane)
 
             plane_plotter.subplot(
@@ -149,7 +146,6 @@ class FitInterferometerPlotter(Plotter):
             )
 
         elif self.fit.inversion is not None:
-
             self.open_subplot_figure(number_subplots=6)
 
             mapper_index = 0

@@ -5,7 +5,6 @@ import autogalaxy as ag
 
 
 def test__image_2d_from__does_not_include_linear_light_profiles(sub_grid_2d_7x7):
-
     lp = ag.lp.Sersic(intensity=0.1)
 
     lp_linear = ag.lp_linear.Sersic(effective_radius=2.0, sersic_index=2.0)
@@ -20,7 +19,6 @@ def test__image_2d_from__does_not_include_linear_light_profiles(sub_grid_2d_7x7)
 
 
 def test__image_2d_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_0):
-
     image_2d_not_operated = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
     image_2d_operated = lp_operated_0.image_2d_from(grid=sub_grid_2d_7x7)
 
@@ -37,7 +35,6 @@ def test__image_2d_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_
 
 
 def test__image_2d_list_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_0):
-
     image_2d_not_operated = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
     image_2d_operated = lp_operated_0.image_2d_from(grid=sub_grid_2d_7x7)
 

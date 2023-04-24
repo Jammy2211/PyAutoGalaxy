@@ -24,7 +24,6 @@ def test__all_individual_plotter__output_file_with_default_name(
     plot_path,
     plot_patch,
 ):
-
     galaxy = ag.legacy.Galaxy(
         redshift=0.5,
         light_profile_0=ag.lp.SersicSph(

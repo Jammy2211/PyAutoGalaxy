@@ -9,7 +9,6 @@ from autofit.non_linear.samples import Sample
 
 
 def clean(database_file, result_path):
-
     if path.exists(database_file):
         os.remove(database_file)
 

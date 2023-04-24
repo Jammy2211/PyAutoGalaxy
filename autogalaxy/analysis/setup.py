@@ -2,9 +2,6 @@ from typing import Optional
 
 import autofit as af
 
-from autogalaxy.legacy.hyper_data import HyperImageSky
-from autogalaxy.legacy.hyper_data import HyperBackgroundNoise
-
 
 class SetupAdapt:
     def __init__(

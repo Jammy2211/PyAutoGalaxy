@@ -9,7 +9,6 @@ from test_autogalaxy.aggregator.conftest import clean
 
 
 def test__plane_randomly_drawn_via_pdf_gen_from(masked_imaging_7x7, samples, model):
-
     path_prefix = "aggregator_plane_gen"
 
     database_file = path.join(conf.instance.output_path, "plane.sqlite")
@@ -33,9 +32,7 @@ def test__plane_randomly_drawn_via_pdf_gen_from(masked_imaging_7x7, samples, mod
     i = 0
 
     for plane_gen in plane_pdf_gen:
-
         for plane in plane_gen:
-
             i += 1
 
             assert plane.galaxies[0].redshift == 0.5
@@ -48,7 +45,6 @@ def test__plane_randomly_drawn_via_pdf_gen_from(masked_imaging_7x7, samples, mod
 
 
 def test__plane_all_above_weight_gen(masked_imaging_7x7, samples, model):
-
     path_prefix = "aggregator_plane_gen"
 
     database_file = path.join(conf.instance.output_path, "plane.sqlite")
@@ -72,32 +68,25 @@ def test__plane_all_above_weight_gen(masked_imaging_7x7, samples, model):
 
     i = 0
 
-    for (plane_gen, weight_gen) in zip(plane_pdf_gen, weight_pdf_gen):
-
+    for plane_gen, weight_gen in zip(plane_pdf_gen, weight_pdf_gen):
         for plane in plane_gen:
-
             i += 1
 
             if i == 1:
-
                 assert plane.galaxies[0].redshift == 0.5
                 assert plane.galaxies[0].light.centre == (1.0, 1.0)
                 assert plane.galaxies[1].redshift == 1.0
 
             if i == 2:
-
                 assert plane.galaxies[0].redshift == 0.5
                 assert plane.galaxies[0].light.centre == (10.0, 10.0)
                 assert plane.galaxies[1].redshift == 1.0
 
         for weight in weight_gen:
-
             if i == 0:
-
                 assert weight == 0.0
 
             if i == 1:
-
                 assert weight == 1.0
 
     assert i == 2

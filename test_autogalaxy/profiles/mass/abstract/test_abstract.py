@@ -8,7 +8,6 @@ from autogalaxy import exc
 
 
 def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
-
     mass_total = 0.0
 
     xs = np.linspace(-radius * 1.5, radius * 1.5, 40)
@@ -19,7 +18,6 @@ def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
 
     for x in xs:
         for y in ys:
-
             eta = profile.elliptical_radii_grid_from(grid=np.array([[x, y]]))
 
             if eta < radius:
@@ -29,7 +27,6 @@ def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
 
 
 def test__deflections_2d_via_potential_2d_from():
-
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
@@ -78,7 +75,6 @@ def test__deflections_2d_via_potential_2d_from():
 
 
 def test__mass_angular_within_circle_from():
-
     sis = ag.mp.IsothermalSph(einstein_radius=2.0)
 
     mass = sis.mass_angular_within_circle_from(radius=2.0)
@@ -101,7 +97,6 @@ def test__mass_angular_within_circle_from():
 
 
 def test__average_convergence_of_1_radius():
-
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     assert sis.average_convergence_of_1_radius == pytest.approx(2.0, 1e-4)
@@ -126,7 +121,6 @@ def test__average_convergence_of_1_radius():
 
 
 def test__density_between_circular_annuli():
-
     einstein_radius = 1.0
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=einstein_radius)
@@ -167,7 +161,6 @@ def test__density_between_circular_annuli():
 
 
 def test__mass_angular_via_normalization_from():
-
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     mass_angular_from_normalization = sis.mass_angular_via_normalization_from(
@@ -220,7 +213,6 @@ def test__mass_angular_via_normalization_from():
 
 
 def test__normalization_via_mass_angular_from():
-
     sersic = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     normalization = sersic.normalization_via_mass_angular_from(
@@ -276,7 +268,6 @@ def test__normalization_via_mass_angular_from():
 
 
 def test__einstein_radius_via_normalization_from():
-
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     einstein_radius_via_normalization_from = sis.einstein_radius_via_normalization_from(
@@ -330,7 +321,6 @@ def test__einstein_radius_via_normalization_from():
 
 
 def test__normalization_via_einstein_radius_from():
-
     sersic = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     normalization = sersic.normalization_via_einstein_radius_from(
@@ -368,7 +358,6 @@ def test__normalization_via_einstein_radius_from():
 
 
 def test__extract_attribute():
-
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     einstein_radii = sis.extract_attribute(
@@ -388,7 +377,6 @@ def test__extract_attribute():
 
 
 def test__regression__centre_of_profile_in_right_place():
-
     grid = ag.Grid2D.uniform(shape_native=(7, 7), pixel_scales=1.0)
 
     mass_profile = ag.mp.Isothermal(centre=(2.0, 1.0), einstein_radius=1.0)
@@ -470,7 +458,6 @@ def test__regression__centre_of_profile_in_right_place():
 
 
 def test__decorators__convergence_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities():
-
     grid_2d = ag.Grid2D.uniform(shape_native=(5, 5), pixel_scales=1.0)
 
     sie = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=1.0)
@@ -497,7 +484,6 @@ def test__decorators__convergence_1d_from__grid_2d_in__returns_1d_image_via_proj
 
 
 def test__decorators__convergence_1d_from__grid_2d_irregular_in__returns_1d_quantities():
-
     grid_2d = ag.Grid2DIrregular(values=[[1.0, 1.0], [2.0, 2.0], [4.0, 4.0]])
 
     sie = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=1.0)
@@ -520,7 +506,6 @@ def test__decorators__convergence_1d_from__grid_2d_irregular_in__returns_1d_quan
 
 
 def test__decorators__convergence_1d_from__grid_1d_in__returns_1d_quantities_via_projection():
-
     grid_1d = ag.Grid1D.no_mask(values=[1.0, 2.0, 3.0], pixel_scales=1.0)
 
     sie = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=1.0)
@@ -546,7 +531,6 @@ def test__decorators__convergence_1d_from__grid_1d_in__returns_1d_quantities_via
 
 
 def test__decorators__potential_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities():
-
     grid_2d = ag.Grid2D.uniform(shape_native=(5, 5), pixel_scales=1.0)
 
     sie = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=1.0)
@@ -573,7 +557,6 @@ def test__decorators__potential_1d_from__grid_2d_in__returns_1d_image_via_projec
 
 
 def test__decorators__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
-
     mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True],

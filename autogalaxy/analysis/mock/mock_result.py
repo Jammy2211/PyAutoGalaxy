@@ -1,3 +1,9 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING, Dict, List
+
+if TYPE_CHECKING:
+    from autogalaxy import mock
+
 import autofit as af
 import autogalaxy as ag
 
@@ -5,19 +11,19 @@ import autogalaxy as ag
 class MockResult(af.m.MockResult):
     def __init__(
         self,
-        samples=None,
-        instance=None,
-        model=None,
-        analysis=None,
-        search=None,
-        mask=None,
-        model_image=None,
-        path_galaxy_tuples=None,
-        adapt_galaxy_image_path_dict=None,
-        adapt_model_image=None,
-        adapt_galaxy_visibilities_path_dict=None,
-        adapt_model_visibilities=None,
-        pixelization=None,
+        samples: mock.MockSamples = None,
+        instance: af.Instance = None,
+        model: af.Model = None,
+        analysis: mock.MockAnalysis = None,
+        search: af.mock.MockSearch = None,
+        mask: mock.MockMask = None,
+        model_image: ag.Array2D = None,
+        path_galaxy_tuples: List[(str, ag.Galaxy)] = None,
+        adapt_galaxy_image_path_dict: Dict[ag.Galaxy, ag.Array2D] = None,
+        adapt_model_image: ag.Array2D = None,
+        adapt_galaxy_visibilities_path_dict: Dict[ag.Galaxy, ag.Visibilities] = None,
+        adapt_model_visibilities: ag.Visibilities = None,
+        pixelization: ag.Pixelization = None,
     ):
         super().__init__(
             samples=samples,
@@ -47,18 +53,18 @@ class MockResult(af.m.MockResult):
 class MockResults(af.ResultsCollection):
     def __init__(
         self,
-        samples=None,
-        instance=None,
-        model=None,
-        analysis=None,
-        search=None,
-        mask=None,
-        model_image=None,
-        adapt_galaxy_image_path_dict=None,
-        adapt_model_image=None,
-        adapt_galaxy_visibilities_path_dict=None,
-        adapt_model_visibilities=None,
-        pixelization=None,
+        samples: mock.MockSamples = None,
+        instance: af.Instance = None,
+        model: af.Model = None,
+        analysis: mock.MockAnalysis = None,
+        search: af.mock.MockSearch = None,
+        mask: mock.MockMask = None,
+        model_image: ag.Array2D = None,
+        adapt_galaxy_image_path_dict: Dict[ag.Galaxy, ag.Array2D] = None,
+        adapt_model_image: ag.Array2D = None,
+        adapt_galaxy_visibilities_path_dict: Dict[ag.Galaxy, ag.Visibilities] = None,
+        adapt_model_visibilities: ag.Visibilities = None,
+        pixelization: ag.Pixelization = None,
     ):
         """
         A collection of results from previous searchs. Results can be obtained using an index or the name of the search

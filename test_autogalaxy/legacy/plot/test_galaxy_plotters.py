@@ -24,7 +24,6 @@ def test__figures_2d__all_are_output(
     plot_path,
     plot_patch,
 ):
-
     gal_x1_lp_x1_mp = ag.legacy.Galaxy(
         redshift=gal_x1_lp_x1_mp.redshift, light=ag.lp.SersicSph
     )

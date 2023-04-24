@@ -11,7 +11,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 def test__blurred_image_2d_from(
     sub_grid_2d_7x7, blurring_grid_2d_7x7, psf_3x3, convolver_7x7
 ):
-
     lp = ag.lp.Sersic(intensity=1.0)
 
     image_2d = lp.image_2d_from(grid=sub_grid_2d_7x7)
@@ -98,7 +97,6 @@ def test__x1_plane__padded_image__compare_to_galaxy_images_using_padded_grid_sta
 
 
 def test__unmasked_blurred_image_2d_from():
-
     psf = ag.Kernel2D.no_mask(
         values=(np.array([[0.0, 3.0, 0.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0]])),
         pixel_scales=1.0,
@@ -178,7 +176,6 @@ def test__visibilities_from_grid_and_transformer(
 def test__blurred_image_2d_list_from(
     sub_grid_2d_7x7, blurring_grid_2d_7x7, psf_3x3, convolver_7x7
 ):
-
     lp_0 = ag.lp.Gaussian(intensity=1.0)
     lp_1 = ag.lp.Gaussian(intensity=2.0)
 
@@ -288,7 +285,6 @@ def test__unmasked_blurred_image_2d_list_from():
 
 
 def test__visibilities_list_from(sub_grid_2d_7x7, transformer_7x7_7):
-
     lp_0 = ag.lp.Sersic(intensity=1.0)
     lp_1 = ag.lp.Sersic(intensity=2.0)
 
@@ -311,7 +307,6 @@ def test__visibilities_list_from(sub_grid_2d_7x7, transformer_7x7_7):
 def test__galaxy_blurred_image_2d_dict_from(
     sub_grid_2d_7x7, blurring_grid_2d_7x7, convolver_7x7
 ):
-
     lp_0 = ag.lp.Sersic(intensity=1.0)
 
     g0 = ag.Galaxy(redshift=0.5, light_profile=lp_0)

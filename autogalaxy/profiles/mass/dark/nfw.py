@@ -63,7 +63,6 @@ class NFW(gNFW, MassProfileCSE):
             deflection_grid = self.axis_ratio * grid[:, index]
 
             for i in range(grid.shape[0]):
-
                 deflection_grid[i] *= (
                     self.kappa_s
                     * quad(
@@ -162,7 +161,6 @@ class NFW(gNFW, MassProfileCSE):
         potential_grid = np.zeros(grid.shape[0])
 
         for i in range(grid.shape[0]):
-
             potential_grid[i] = quad(
                 self.potential_func,
                 a=0.0,

@@ -22,7 +22,6 @@ class Include2D(aplt.Include2D):
         mapper_source_plane_data_grid: Optional[bool] = None,
         mapper_image_plane_mesh_grid=None,
     ):
-
         super().__init__(
             origin=origin,
             mask=mask,

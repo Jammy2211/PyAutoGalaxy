@@ -88,9 +88,7 @@ class DatasetQuantity(AbstractDataset):
         """
 
         if data.shape != noise_map.shape:
-
             if data.shape[0:-1] == noise_map.shape[0:]:
-
                 noise_map = aa.VectorYX2D.no_mask(
                     values=np.stack((noise_map, noise_map), axis=-1),
                     pixel_scales=data.pixel_scales,

@@ -10,7 +10,6 @@ from autogalaxy.profiles.light.linear import (
 
 
 def test__mapping_matrix_from(sub_grid_2d_7x7, blurring_grid_2d_7x7, convolver_7x7):
-
     lp_0 = ag.lp_linear.Sersic(effective_radius=1.0)
     lp_1 = ag.lp_linear.Sersic(effective_radius=2.0)
 
@@ -54,7 +53,6 @@ def test__mapping_matrix_from(sub_grid_2d_7x7, blurring_grid_2d_7x7, convolver_7
 
 
 def test__lp_from():
-
     lp_linear = ag.lp_linear.Sersic(centre=(1.0, 2.0))
 
     lp_non_linear = lp_linear.lp_instance_from(intensity=3.0)

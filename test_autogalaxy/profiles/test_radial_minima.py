@@ -9,7 +9,6 @@ directory = path.dirname(path.realpath(__file__))
 
 
 def test__grid_2d__moves_radial_coordinates__does_not_double_transform():
-
     grid_2d = ag.Grid2D.no_mask(values=[[[0.0, 0.0]]], pixel_scales=1.0)
     grid_2d_offset = ag.Grid2D.no_mask(values=[[[0.0001, 0.0001]]], pixel_scales=1)
 
@@ -39,7 +38,6 @@ def test__grid_2d__moves_radial_coordinates__does_not_double_transform():
 
 
 def test__grid_2d_irrergular__moves_radial_coordinates__does_not_double_transform():
-
     grid_2d_irregular = ag.Grid2DIrregular(values=[[0.0, 0.0]])
     grid_2d_irregular_offset = ag.Grid2DIrregular(values=[[0.0001, 0.0001]])
 

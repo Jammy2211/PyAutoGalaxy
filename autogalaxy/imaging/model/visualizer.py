@@ -9,7 +9,7 @@ from autogalaxy.analysis.visualizer import plot_setting
 
 class VisualizerImaging(Visualizer):
     def visualize_fit_imaging(
-        self, fit: FitImaging, during_analysis: bool, subfolders: str = "fit_imaging"
+        self, fit: FitImaging, during_analysis: bool, subfolders: str = "fit_dataset"
     ):
         """
         Visualizes a `FitImaging` object, which fits an imaging dataset.
@@ -60,15 +60,13 @@ class VisualizerImaging(Visualizer):
         )
 
         if should_plot("subplot_fit"):
-            fit_imaging_plotter.subplot_fit_imaging()
+            fit_imaging_plotter.subplot_fit()
 
         if should_plot("subplot_of_galaxies"):
             fit_imaging_plotter.subplot_of_galaxies()
 
         if not during_analysis:
-
             if should_plot("all_at_end_png"):
-
                 fit_imaging_plotter.figures_2d(
                     data=True,
                     noise_map=True,
@@ -84,9 +82,8 @@ class VisualizerImaging(Visualizer):
                 )
 
             if should_plot("all_at_end_fits"):
-
                 mat_plot_2d = self.mat_plot_2d_from(
-                    subfolders=path.join("fit_imaging", "fits"), format="fits"
+                    subfolders=path.join("fit_dataset", "fits"), format="fits"
                 )
 
                 fit_imaging_plotter = FitImagingPlotter(

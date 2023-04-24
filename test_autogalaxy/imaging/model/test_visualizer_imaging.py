@@ -20,7 +20,6 @@ def test__visualizes_fit_imaging__uses_configs(
     plot_path,
     plot_patch,
 ):
-
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
@@ -30,9 +29,9 @@ def test__visualizes_fit_imaging__uses_configs(
         fit=fit_imaging_x2_galaxy_inversion_7x7, during_analysis=False
     )
 
-    plot_path = path.join(plot_path, "fit_imaging")
+    plot_path = path.join(plot_path, "fit_dataset")
 
-    assert path.join(plot_path, "subplot_fit_imaging.png") in plot_patch.paths
+    assert path.join(plot_path, "subplot_fit.png") in plot_patch.paths
     assert path.join(plot_path, "data.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map.png") not in plot_patch.paths
 

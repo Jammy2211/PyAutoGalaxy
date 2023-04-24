@@ -10,7 +10,6 @@ directory = path.dirname(path.realpath(__file__))
 
 
 def test__make_result__result_interferometer_is_returned(interferometer_7):
-
     model = af.Collection(galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5)))
 
     analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
@@ -25,7 +24,6 @@ def test__make_result__result_interferometer_is_returned(interferometer_7):
 def test__fit_figure_of_merit__matches_correct_fit_given_galaxy_profiles(
     interferometer_7,
 ):
-
     galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=0.1))
 
     model = af.Collection(galaxies=af.Collection(galaxy=galaxy))

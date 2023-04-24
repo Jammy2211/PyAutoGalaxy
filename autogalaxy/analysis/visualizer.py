@@ -1,6 +1,6 @@
 import os
 from os import path
-from typing import List, Optional, Union
+from typing import Dict, List, Union
 
 from autoconf import conf
 import autoarray as aa
@@ -22,7 +22,6 @@ def setting(section: Union[List[str], str], name: str):
         return conf.instance["visualize"]["plots"][section][name]
 
     for sect in reversed(section):
-
         try:
             return conf.instance["visualize"]["plots"][sect][name]
         except KeyError:
@@ -142,15 +141,11 @@ class Visualizer:
             data=should_plot("data"),
             noise_map=should_plot("noise_map"),
             psf=should_plot("psf"),
-            inverse_noise_map=should_plot("inverse_noise_map"),
             signal_to_noise_map=should_plot("signal_to_noise_map"),
-            absolute_signal_to_noise_map=should_plot("absolute_signal_to_noise_map"),
-            potential_chi_squared_map=should_plot("potential_chi_squared_map"),
         )
 
         if should_plot("subplot_dataset"):
-
-            imaging_plotter.subplot_imaging()
+            imaging_plotter.subplot_dataset()
 
     def visualize_interferometer(self, interferometer: aa.Interferometer):
         """
@@ -177,13 +172,13 @@ class Visualizer:
         mat_plot_2d = self.mat_plot_2d_from(subfolders="interferometer")
 
         interferometer_plotter = aplt.InterferometerPlotter(
-            interferometer=interferometer,
+            dataset=interferometer,
             include_2d=self.include_2d,
             mat_plot_2d=mat_plot_2d,
         )
 
         if should_plot("subplot_dataset"):
-            interferometer_plotter.subplot_interferometer()
+            interferometer_plotter.subplot_dataset()
 
         interferometer_plotter.figures_2d(
             data=should_plot("data"),
@@ -194,7 +189,6 @@ class Visualizer:
             dirty_image=should_plot("dirty_image"),
             dirty_noise_map=should_plot("dirty_noise_map"),
             dirty_signal_to_noise_map=should_plot("dirty_signal_to_noise_map"),
-            dirty_inverse_noise_map=should_plot("dirty_inverse_noise_map"),
         )
 
     def visualize_plane(
@@ -234,11 +228,9 @@ class Visualizer:
         )
 
         if should_plot("subplot_plane"):
-
             plane_plotter.subplot()
 
         if should_plot("subplot_galaxy_images"):
-
             plane_plotter.subplot_galaxy_images()
 
         plane_plotter.figures_2d(
@@ -251,9 +243,7 @@ class Visualizer:
         )
 
         if not during_analysis:
-
             if should_plot("all_at_end_png"):
-
                 plane_plotter.figures_2d(
                     image=True,
                     convergence=True,
@@ -264,7 +254,6 @@ class Visualizer:
                 )
 
             if should_plot("all_at_end_fits"):
-
                 fits_mat_plot_2d = self.mat_plot_2d_from(
                     subfolders=path.join("plane", "fits"), format="fits"
                 )
@@ -318,7 +307,6 @@ class Visualizer:
         mat_plot_1d = self.mat_plot_1d_from(subfolders="galaxies")
 
         for galaxy in galaxies:
-
             galaxy_plotter = GalaxyPlotter(
                 galaxy=galaxy,
                 grid=grid,
@@ -375,23 +363,17 @@ class Visualizer:
             reconstructed_image=should_plot("reconstructed_image"),
             reconstruction=should_plot("reconstruction"),
             errors=should_plot("errors"),
-            residual_map=should_plot("residual_map"),
-            normalized_residual_map=should_plot("normalized_residual_map"),
-            chi_squared_map=should_plot("chi_squared_map"),
             regularization_weights=should_plot("regularization_weights"),
         )
 
         if should_plot("subplot_inversion"):
-
             mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
 
             for mapper_index in range(len(mapper_list)):
                 inversion_plotter.subplot_of_mapper(mapper_index=mapper_index)
 
         if not during_analysis:
-
             if should_plot("all_at_end_png"):
-
                 inversion_plotter.figures_2d(reconstructed_image=True)
 
                 inversion_plotter.figures_2d_of_pixelization(
@@ -407,7 +389,7 @@ class Visualizer:
 
     def visualize_adapt_images(
         self,
-        adapt_galaxy_image_path_dict: {str, aa.Array2D},
+        adapt_galaxy_image_path_dict: Dict[str, aa.Array2D],
         adapt_model_image: aa.Array2D,
     ):
         """
@@ -443,7 +425,6 @@ class Visualizer:
             hyper_plotter.figure_adapt_model_image(adapt_model_image=adapt_model_image)
 
         if should_plot("images_of_galaxies"):
-
             hyper_plotter.subplot_adapt_images_of_galaxies(
                 adapt_galaxy_image_path_dict=adapt_galaxy_image_path_dict
             )

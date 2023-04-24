@@ -6,7 +6,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__deflections_yx_2d_from():
-
     multipole = ag.mp.MultipolePowerLawM4(
         centre=(0.1, 0.2),
         einstein_radius=2.0,
@@ -33,7 +32,6 @@ def test__deflections_yx_2d_from():
 
 
 def test__convergence_2d_from():
-
     multipole = ag.mp.MultipolePowerLawM4(
         centre=(0.1, 0.2),
         einstein_radius=2.0,
@@ -58,7 +56,6 @@ def test__convergence_2d_from():
 
 
 def test__potential_2d_from():
-
     multipole = ag.mp.MultipolePowerLawM4(
         centre=(0.1, 0.2),
         einstein_radius=2.0,

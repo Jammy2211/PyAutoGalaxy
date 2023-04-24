@@ -43,7 +43,6 @@ class GalaxyPlotter(GalaxyPlotterBase):
             Whether to make a 2D plot (via `imshow`) of the contribution map.
         """
         if image:
-
             self.mat_plot_2d.plot_array(
                 array=self.galaxy.image_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),
@@ -63,7 +62,6 @@ class GalaxyPlotter(GalaxyPlotterBase):
         )
 
         if contribution_map:
-
             self.mat_plot_2d.plot_array(
                 array=self.galaxy.contribution_map,
                 visuals_2d=self.get_visuals_2d(),

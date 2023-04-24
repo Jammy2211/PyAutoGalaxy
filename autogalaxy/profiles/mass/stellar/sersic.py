@@ -18,11 +18,8 @@ from autogalaxy.profiles.mass.stellar.abstract import StellarProfile
 def cse_settings_from(
     effective_radius, sersic_index, sersic_constant, mass_to_light_gradient
 ):
-
     if mass_to_light_gradient > 0.5:
-
         if effective_radius > 0.2:
-
             lower_dex = 6.0
             upper_dex = np.min(
                 [np.log10((18.0 / sersic_constant) ** sersic_index), 1.1]
@@ -57,7 +54,6 @@ def cse_settings_from(
                 total_cses = 30
                 sample_points = 50
     else:
-
         upper_dex = np.min(
             [
                 np.log10((23.0 / sersic_constant) ** sersic_index),
@@ -352,7 +348,6 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         return self.effective_radius / np.sqrt(self.axis_ratio)
 
     def with_new_normalization(self, normalization):
-
         mass_profile = copy.copy(self)
         mass_profile.mass_to_light_ratio = normalization
         return mass_profile
@@ -379,7 +374,6 @@ class Sersic(AbstractSersic, MassProfileMGE, MassProfileCSE):
             deflection_grid = self.axis_ratio * grid[:, index]
 
             for i in range(grid.shape[0]):
-
                 deflection_grid[i] *= (
                     self.intensity
                     * self.mass_to_light_ratio

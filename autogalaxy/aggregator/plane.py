@@ -40,13 +40,11 @@ def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> Plane:
     galaxies_with_adapt = []
 
     if adapt_galaxy_image_path_dict is not None:
-
         galaxy_path_list = [
             gal[0] for gal in fit.instance.path_instance_tuples_for_class(Galaxy)
         ]
 
-        for (galaxy_path, galaxy) in zip(galaxy_path_list, galaxies):
-
+        for galaxy_path, galaxy in zip(galaxy_path_list, galaxies):
             if galaxy_path in adapt_galaxy_image_path_dict:
                 galaxy.adapt_model_image = adapt_model_image
                 galaxy.adapt_galaxy_image = adapt_galaxy_image_path_dict[galaxy_path]

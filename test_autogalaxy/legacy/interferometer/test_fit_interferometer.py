@@ -5,7 +5,6 @@ import autogalaxy as ag
 
 
 def test__noise_map__with_and_without_hyper_background(interferometer_7):
-
     g0 = ag.legacy.Galaxy(
         redshift=0.5, bulge=ag.m.MockLightProfile(image_2d=np.ones(9))
     )
@@ -28,7 +27,6 @@ def test__noise_map__with_and_without_hyper_background(interferometer_7):
 
 
 def test__fit_figure_of_merit__include_hyper_methods(interferometer_7):
-
     hyper_background_noise = ag.legacy.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
     g0 = ag.legacy.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))

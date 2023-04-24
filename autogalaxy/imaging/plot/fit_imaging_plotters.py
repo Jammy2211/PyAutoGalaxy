@@ -66,7 +66,7 @@ class FitImagingPlotter(Plotter):
 
         self.figures_2d = self._fit_imaging_meta_plotter.figures_2d
         self.subplot = self._fit_imaging_meta_plotter.subplot
-        self.subplot_fit_imaging = self._fit_imaging_meta_plotter.subplot_fit_imaging
+        self.subplot_fit = self._fit_imaging_meta_plotter.subplot_fit
 
     def get_visuals_2d(self) -> Visuals2D:
         return self.get_2d.via_fit_imaging_from(fit=self.fit)
@@ -145,9 +145,7 @@ class FitImagingPlotter(Plotter):
             galaxy_indices = [galaxy_index]
 
         for galaxy_index in galaxy_indices:
-
             if subtracted_image:
-
                 self.mat_plot_2d.cmap.kwargs["vmin"] = np.max(
                     self.fit.model_images_of_galaxies_list[galaxy_index]
                 )
@@ -165,7 +163,6 @@ class FitImagingPlotter(Plotter):
                 )
 
             if model_image:
-
                 self.mat_plot_2d.plot_array(
                     array=self.fit.model_images_of_galaxies_list[galaxy_index],
                     visuals_2d=self.get_visuals_2d(),
@@ -198,7 +195,6 @@ class FitImagingPlotter(Plotter):
             galaxy_indices = [galaxy_index]
 
         for galaxy_index in galaxy_indices:
-
             self.open_subplot_figure(number_subplots=4)
 
             self.figures_2d(data=True)

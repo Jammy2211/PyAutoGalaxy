@@ -8,7 +8,6 @@ from autogalaxy.cosmology.wrap import Planck15
 
 
 def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_source):
-
     cosmology = Planck15()
 
     cosmic_average_density = (
@@ -54,7 +53,6 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
 def kappa_s_and_scale_radius_for_ludlow(
     mass_at_200, scatter_sigma, redshift_object, redshift_source
 ):
-
     warnings.filterwarnings("ignore")
 
     cosmology = Planck15()

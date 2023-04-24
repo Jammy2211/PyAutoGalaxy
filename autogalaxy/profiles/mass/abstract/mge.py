@@ -101,7 +101,6 @@ class MassProfileMGE:
     """
 
     def __init__(self):
-
         self.count = 0
         self.sigma_calc = 0
         self.z = 0
@@ -111,7 +110,6 @@ class MassProfileMGE:
     @staticmethod
     #  @aa.util.numba.jit()
     def zeta_from(grid, amps, sigmas, axis_ratio):
-
         """
         The key part to compute the deflection angle of each Gaussian.
         Because of my optimization, there are blocks looking weird and indirect. What I'm doing here
@@ -139,7 +137,6 @@ class MassProfileMGE:
         expv = -(xs**2.0) * (1.0 - q2) - ys**2.0 * (1.0 / q2 - 1.0)
 
         for i in range(len(sigmas)):
-
             if i > 0:
                 z /= sigmas[i] / sigmas[i - 1]
                 zq /= sigmas[i] / sigmas[i - 1]
@@ -264,7 +261,6 @@ class MassProfileMGE:
         )
 
     def _deflections_2d_via_mge_from(self, grid, sigmas_factor=1.0):
-
         axis_ratio = self.axis_ratio
 
         if axis_ratio > 0.9999:

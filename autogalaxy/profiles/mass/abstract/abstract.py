@@ -33,7 +33,6 @@ class MassProfile(EllProfile, OperateDeflections):
         raise NotImplementedError
 
     def deflections_2d_via_potential_2d_from(self, grid):
-
         potential = self.potential_2d_from(grid=grid)
 
         deflections_y_2d = np.gradient(potential.native, grid.native[:, 0, 0], axis=0)
@@ -124,7 +123,6 @@ class MassProfile(EllProfile, OperateDeflections):
         """
 
         def func(radius):
-
             return (
                 self.mass_angular_within_circle_from(radius=radius)
                 - np.pi * radius**2.0
@@ -133,7 +131,6 @@ class MassProfile(EllProfile, OperateDeflections):
         return self.ellipticity_rescale * root_scalar(func, bracket=[1e-4, 1e4]).root
 
     def mass_angular_via_normalization_from(self, normalization, radius):
-
         mass_profile = self.with_new_normalization(normalization=normalization)
 
         return mass_profile.mass_angular_within_circle_from(radius=radius)
@@ -146,7 +143,6 @@ class MassProfile(EllProfile, OperateDeflections):
         normalization_max=1e15,
         bins=200,
     ):
-
         normalization_list = np.logspace(
             np.log10(normalization_min), np.log10(normalization_max), bins
         )
@@ -179,7 +175,6 @@ class MassProfile(EllProfile, OperateDeflections):
             )
 
         def func(normalization, mass_angular_root, radius):
-
             mass_angular = self.mass_angular_via_normalization_from(
                 normalization=normalization, radius=radius
             )
@@ -196,7 +191,6 @@ class MassProfile(EllProfile, OperateDeflections):
         raise NotImplementedError()
 
     def einstein_radius_via_normalization_from(self, normalization):
-
         mass_profile = self.with_new_normalization(normalization=normalization)
 
         try:
@@ -207,7 +201,6 @@ class MassProfile(EllProfile, OperateDeflections):
     def normalization_via_einstein_radius_from(
         self, einstein_radius, normalization_min=1e-9, normalization_max=1e9, bins=100
     ):
-
         normalization_list = np.logspace(
             np.log10(normalization_min), np.log10(normalization_max), bins
         )
@@ -238,7 +231,6 @@ class MassProfile(EllProfile, OperateDeflections):
             )
 
         def func(normalization, einstein_radius_root):
-
             einstein_radius = self.einstein_radius_via_normalization_from(
                 normalization=normalization
             )
@@ -253,7 +245,7 @@ class MassProfile(EllProfile, OperateDeflections):
 
     def extract_attribute(self, cls, attr_name):
         """
-        Returns an attribute of a class and its children profiles in the the galaxy as a `ValueIrregular`
+        Returns an attribute of a class and its children profiles in the galaxy as a `ValueIrregular`
         or `Grid2DIrregular` object.
 
         For example, if a galaxy has two light profiles and we want the `LightProfile` axis-ratios, the following:
@@ -277,7 +269,6 @@ class MassProfile(EllProfile, OperateDeflections):
 
         if isinstance(self, cls):
             if hasattr(self, attr_name):
-
                 attribute = getattr(self, attr_name)
 
                 if isinstance(attribute, float):

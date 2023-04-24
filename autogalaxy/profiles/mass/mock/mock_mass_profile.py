@@ -10,7 +10,6 @@ class MockMassProfile(ag.mp.MassProfile):
         value=None,
         value1=None,
     ):
-
         super().__init__()
 
         self.convergence_2d = convergence_2d

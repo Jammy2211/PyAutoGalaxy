@@ -184,7 +184,6 @@ class Chameleon(MassProfile, StellarProfile):
         return axis_ratio if axis_ratio < 0.99999 else 0.99999
 
     def with_new_normalization(self, normalization):
-
         mass_profile = copy.copy(self)
         mass_profile.mass_to_light_ratio = normalization
         return mass_profile

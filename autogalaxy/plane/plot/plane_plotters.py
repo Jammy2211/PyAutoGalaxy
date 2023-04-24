@@ -67,7 +67,6 @@ class PlanePlotter(Plotter):
         )
 
         if plane.has(cls=LightProfileLinear):
-
             raise exc.raise_linear_light_profile_in_plot(
                 plotter_type=self.__class__.__name__, model_obj="Plane"
             )
@@ -131,6 +130,7 @@ class PlanePlotter(Plotter):
         deflections_y: bool = False,
         deflections_x: bool = False,
         magnification: bool = False,
+        zoom_to_brightest: bool = True,
         title_suffix: str = "",
         filename_suffix: str = "",
     ):
@@ -159,13 +159,15 @@ class PlanePlotter(Plotter):
             Whether to make a 2D plot (via `imshow`) of the x component of the deflection angles.
         magnification
             Whether to make a 2D plot (via `imshow`) of the magnification.
+        zoom_to_brightest
+            For images not in the image-plane (e.g. the `plane_image`), whether to automatically zoom the plot to
+            the brightest regions of the galaxies being plotted as opposed to the full extent of the grid.
         title_suffix
             Add a suffix to the end of the matplotlib title label.
         filename_suffix
             Add a suffix to the end of the filename the plot is saved to hard-disk using.
         """
         if image:
-
             self.mat_plot_2d.plot_array(
                 array=self.plane.image_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),
@@ -175,9 +177,10 @@ class PlanePlotter(Plotter):
             )
 
         if plane_image:
-
             self.mat_plot_2d.plot_array(
-                array=self.plane.plane_image_2d_from(grid=self.grid).array,
+                array=self.plane.plane_image_2d_from(
+                    grid=self.grid, zoom_to_brightest=zoom_to_brightest
+                ),
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title=f"Plane Image{title_suffix}",
@@ -186,7 +189,6 @@ class PlanePlotter(Plotter):
             )
 
         if plane_grid:
-
             self.mat_plot_2d.plot_grid(
                 grid=self.grid,
                 visuals_2d=self.get_visuals_2d(),
@@ -244,11 +246,9 @@ class PlanePlotter(Plotter):
         galaxy_indexes = self.galaxy_indexes_from(galaxy_index=galaxy_index)
 
         for galaxy_index in galaxy_indexes:
-
             galaxy_plotter = self.galaxy_plotter_from(galaxy_index=galaxy_index)
 
             if image:
-
                 galaxy_plotter.figures_2d(
                     image=True,
                     title_suffix=f" Of Galaxy {galaxy_index}",
@@ -330,7 +330,6 @@ class PlanePlotter(Plotter):
         self.open_subplot_figure(number_subplots=number_subplots)
 
         for galaxy_index in range(0, len(self.plane.galaxies)):
-
             galaxy_plotter = self.galaxy_plotter_from(galaxy_index=galaxy_index)
             galaxy_plotter.figures_2d(
                 image=True, title_suffix=f" Of Plane {galaxy_index}"

@@ -142,7 +142,7 @@ class MultipolePowerLawM4(MassProfile):
         """
         super().__init__(centre=centre, ell_comps=(0.0, 0.0))
 
-        self.m = 4
+        self.m = 4  # Multipole order is m=4
 
         self.einstein_radius = einstein_radius
         self.slope = slope

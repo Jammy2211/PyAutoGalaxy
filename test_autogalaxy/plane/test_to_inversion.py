@@ -5,7 +5,6 @@ import autogalaxy as ag
 
 
 def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
-
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
@@ -61,7 +60,6 @@ def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
 
 
 def test__sparse_image_plane_grid_list(masked_imaging_7x7):
-
     pixelization = ag.m.MockPixelization(
         mesh=ag.m.MockMesh(image_plane_mesh_grid=np.array([1.0, 1.0]))
     )
@@ -105,7 +103,6 @@ def test__sparse_image_plane_grid_list(masked_imaging_7x7):
 
 
 def test__mapper_galaxy_dict(masked_imaging_7x7):
-
     mesh = ag.mesh.Rectangular(shape=(3, 3))
 
     pixelization = ag.m.MockPixelization(mesh=mesh)
@@ -158,7 +155,6 @@ def test__mapper_galaxy_dict(masked_imaging_7x7):
 
 
 def test__regularization_list(masked_imaging_7x7):
-
     regularization_0 = ag.reg.Constant(coefficient=1.0)
     regularization_1 = ag.reg.ConstantSplit(coefficient=2.0)
 
@@ -206,7 +202,6 @@ def test__regularization_list(masked_imaging_7x7):
 
 
 def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
-
     g_linear = ag.Galaxy(redshift=0.5, light_linear=ag.lp_linear.Sersic())
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g_linear])
@@ -252,7 +247,6 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
 
 
 def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
-
     g_linear = ag.Galaxy(redshift=0.5, light_linear=ag.lp_linear.Sersic())
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g_linear])
@@ -304,7 +298,6 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
 
 
 def test__raises_exception_if_noise_covariance_input(masked_imaging_covariance_7x7):
-
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
 
     with pytest.raises(ag.exc.InversionException):

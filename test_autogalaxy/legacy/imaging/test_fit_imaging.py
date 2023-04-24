@@ -5,7 +5,6 @@ import autogalaxy as ag
 
 
 def test__noise_map__with_hyper_galaxy(masked_imaging_7x7_no_blur):
-
     hyper_image = ag.Array2D.ones(shape_native=(3, 3), pixel_scales=1.0)
 
     g0 = ag.Galaxy(
@@ -30,7 +29,6 @@ def test__noise_map__with_hyper_galaxy(masked_imaging_7x7_no_blur):
 
 
 def test__noise_map__with_hyper_galaxy_reaches_upper_limit(masked_imaging_7x7_no_blur):
-
     hyper_image = ag.Array2D.ones(shape_native=(3, 3), pixel_scales=1.0)
 
     g0 = ag.Galaxy(
@@ -55,7 +53,6 @@ def test__noise_map__with_hyper_galaxy_reaches_upper_limit(masked_imaging_7x7_no
 
 
 def test__image__with_and_without_hyper_background_sky(masked_imaging_7x7_no_blur):
-
     g0 = ag.Galaxy(redshift=0.5, bulge=ag.m.MockLightProfile(image_2d_value=1.0))
 
     plane = ag.legacy.Plane(galaxies=[g0])
@@ -75,7 +72,6 @@ def test__image__with_and_without_hyper_background_sky(masked_imaging_7x7_no_blu
 
 
 def test__noise_map__with_and_without_hyper_background(masked_imaging_7x7_no_blur):
-
     g0 = ag.Galaxy(redshift=0.5, bulge=ag.m.MockLightProfile(image_2d_value=1.0))
     plane = ag.legacy.Plane(galaxies=[g0])
 
@@ -100,7 +96,6 @@ def test__noise_map__with_and_without_hyper_background(masked_imaging_7x7_no_blu
 
 
 def test__fit_figure_of_merit__include_hyper_methods(masked_imaging_7x7):
-
     hyper_image_sky = ag.legacy.hyper_data.HyperImageSky(sky_scale=1.0)
     hyper_background_noise = ag.legacy.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 

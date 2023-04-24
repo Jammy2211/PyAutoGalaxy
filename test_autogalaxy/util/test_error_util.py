@@ -4,7 +4,6 @@ import numpy as np
 
 
 def test__quantile_1d_profile():
-
     profile_1d_0 = np.array([1.0, 2.0, 3.0])
     profile_1d_1 = np.array([1.0, 2.0, 3.0])
 

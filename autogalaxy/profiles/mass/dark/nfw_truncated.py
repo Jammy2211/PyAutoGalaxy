@@ -71,7 +71,6 @@ class NFWTruncatedSph(AbstractgNFW):
         )
 
     def coord_func_l(self, grid_radius):
-
         f_r = self.coord_func_f(grid_radius=grid_radius)
         g_r = self.coord_func_g(grid_radius=grid_radius)
         k_r = self.coord_func_k(grid_radius=grid_radius)

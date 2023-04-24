@@ -5,7 +5,6 @@ import autogalaxy as ag
 
 
 def test__mesh_list_from_model():
-
     galaxies = af.Collection(galaxy=af.Model(ag.Galaxy, redshift=0.5))
 
     mesh_list = ag.util.model.mesh_list_from(model=af.Collection(galaxies=galaxies))
@@ -47,7 +46,6 @@ def test__mesh_list_from_model():
 
 
 def test__set_upper_limit_of_pixelization_pixels_prior():
-
     mesh = af.Model(ag.mesh.DelaunayBrightnessImage)
     mesh.pixels = af.UniformPrior(lower_limit=5.0, upper_limit=10.0)
     pixelization = ag.Pixelization(mesh=mesh)
@@ -125,7 +123,6 @@ def test__set_upper_limit_of_pixelization_pixels_prior():
 
 
 def test__hyper_model_from():
-
     pixelization = af.Model(ag.Pixelization, mesh=ag.mesh.Rectangular)
 
     model = af.Collection(

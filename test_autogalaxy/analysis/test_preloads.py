@@ -7,7 +7,6 @@ import autogalaxy as ag
 
 
 def test__set_blurred_image():
-
     # Blurred image is all zeros so preloads as zeros
 
     fit_0 = ag.m.MockFitImaging(blurred_image=np.zeros(2))
@@ -40,7 +39,6 @@ def test__set_blurred_image():
 
 
 def test__info():
-
     file_path = path.join("{}".format(path.dirname(path.realpath(__file__))), "files")
 
     file_preloads = path.join(file_path, "preloads.summary")

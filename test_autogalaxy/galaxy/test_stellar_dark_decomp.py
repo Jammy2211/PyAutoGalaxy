@@ -8,7 +8,6 @@ import pytest
 def test__stellar_mass_angular_within_galaxy__is_sum_of_individual_profiles(
     smp_0, smp_1
 ):
-
     galaxy = ag.Galaxy(
         redshift=0.5,
         stellar_0=smp_0,
@@ -44,7 +43,6 @@ def test__stellar_mass_angular_within_galaxy__is_sum_of_individual_profiles(
 
 
 def test__stellar_fraction_at_radius(dmp_0, dmp_1, smp_0, smp_1):
-
     galaxy = ag.Galaxy(redshift=0.5, stellar_0=smp_0, dark_0=dmp_0)
     decomp = ag.StellarDarkDecomp(galaxy=galaxy)
 
@@ -85,7 +83,6 @@ def test__stellar_fraction_at_radius(dmp_0, dmp_1, smp_0, smp_1):
 
 
 def test__dark_mass_within_galaxy__is_sum_of_individual_profiles(dmp_0, dmp_1):
-
     galaxy = ag.Galaxy(
         redshift=0.5,
         dark_0=dmp_0,
@@ -121,7 +118,6 @@ def test__dark_mass_within_galaxy__is_sum_of_individual_profiles(dmp_0, dmp_1):
 
 
 def test__dark_fraction_at_radius(dmp_0, dmp_1, smp_0, smp_1):
-
     galaxy = ag.Galaxy(redshift=0.5, dark_0=dmp_0, stellar_0=smp_0)
     decomp = ag.StellarDarkDecomp(galaxy=galaxy)
 

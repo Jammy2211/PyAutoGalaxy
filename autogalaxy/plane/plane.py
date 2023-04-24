@@ -15,7 +15,7 @@ from autogalaxy.operate.image import OperateImageGalaxies
 from autogalaxy.operate.deflections import OperateDeflections
 
 from autogalaxy import exc
-from autogalaxy.util import plane_util
+from autogalaxy.plane import plane_util
 
 
 class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
@@ -37,7 +37,6 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         """
 
         if redshift is None:
-
             if not galaxies:
                 raise exc.PlaneException(
                     "No redshift and no galaxies were input to a Plane. A redshift for the Plane therefore cannot be"
@@ -61,7 +60,6 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         return plane_dict
 
     def output_to_json(self, file_path: str):
-
         with open(file_path, "w+") as f:
             json.dump(self.dict(), f, indent=4)
 
@@ -170,16 +168,18 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
 
         image_2d_list = self.image_2d_list_from(grid=grid, operated_only=operated_only)
 
-        for (galaxy_index, galaxy) in enumerate(self.galaxies):
+        for galaxy_index, galaxy in enumerate(self.galaxies):
             galaxy_image_2d_dict[galaxy] = image_2d_list[galaxy_index]
 
         return galaxy_image_2d_dict
 
-    def plane_image_2d_from(self, grid: aa.type.Grid2DLike) -> "PlaneImage":
-        return plane_util.plane_image_of_galaxies_from(
-            shape=grid.mask.shape,
-            grid=grid.mask.derive_grid.all_false_sub_1,
+    def plane_image_2d_from(
+        self, grid: aa.type.Grid2DLike, zoom_to_brightest: bool = True
+    ) -> aa.Array2D:
+        return plane_util.plane_image_from(
             galaxies=self.galaxies,
+            grid=grid.mask.derive_grid.all_false_sub_1,
+            zoom_to_brightest=zoom_to_brightest,
         )
 
     @aa.grid_dec.grid_2d_to_vector_yx
@@ -299,7 +299,6 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         """
 
         def extract(value, name):
-
             try:
                 return getattr(value, name)
             except (AttributeError, IndexError):
@@ -348,7 +347,6 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         This is used for visualization, for example plotting the centres of all mass profiles colored by their profile.
         """
         if filter_nones:
-
             return [
                 galaxy.extract_attribute(cls=cls, attr_name=attr_name)
                 for galaxy in self.galaxies
@@ -356,7 +354,6 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
             ]
 
         else:
-
             return [
                 galaxy.extract_attribute(cls=cls, attr_name=attr_name)
                 for galaxy in self.galaxies
@@ -400,9 +397,3 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
                         background_sky_level=background_sky_level,
                         psf=psf,
                     )
-
-
-class PlaneImage:
-    def __init__(self, array, grid):
-        self.array = array
-        self.grid = grid

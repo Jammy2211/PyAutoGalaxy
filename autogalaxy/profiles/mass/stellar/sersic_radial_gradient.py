@@ -70,7 +70,6 @@ class SersicRadialGradient(AbstractSersic):
             deflection_grid = self.axis_ratio * grid[:, index]
 
             for i in range(grid.shape[0]):
-
                 deflection_grid[i] *= (
                     self.intensity
                     * self.mass_to_light_ratio

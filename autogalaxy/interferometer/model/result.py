@@ -1,5 +1,7 @@
 import autoarray as aa
 
+from typing import Dict
+
 from autogalaxy.analysis.result import ResultDataset
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
@@ -76,7 +78,7 @@ class ResultInterferometer(ResultDataset):
 
     def visibilities_for_galaxy(self, galaxy: Galaxy) -> aa.Visibilities:
         """
-        Given an instance of a `Galaxy` object, return an image of the galaxy via the the maximum log likelihood fit.
+        Given an instance of a `Galaxy` object, return an image of the galaxy via the maximum log likelihood fit.
 
         This image is extracted via the fit's `galaxy_model_image_dict`, which is necessary to make it straight
         forward to use the image as hyper-images.
@@ -94,7 +96,7 @@ class ResultInterferometer(ResultDataset):
         return self.max_log_likelihood_fit.galaxy_model_visibilities_dict[galaxy]
 
     @property
-    def visibilities_galaxy_dict(self) -> {str: Galaxy}:
+    def visibilities_galaxy_dict(self) -> Dict[str, Galaxy]:
         """
         A dictionary associating galaxy names with model visibilities of those galaxies.
         """
@@ -111,15 +113,10 @@ class ResultInterferometer(ResultDataset):
         This is used for creating the adapt-dataset used by Analysis objects to adapt aspects of a model to the dataset
         being fitted.
         """
-
-        adapt_galaxy_visibilities_path_dict = {}
-
-        for path, galaxy in self.path_galaxy_tuples:
-            adapt_galaxy_visibilities_path_dict[path] = self.visibilities_galaxy_dict[
-                path
-            ]
-
-        return adapt_galaxy_visibilities_path_dict
+        return {
+            self.visibilities_galaxy_dict[path]
+            for path, galaxy in self.path_galaxy_tuples
+        }
 
     @property
     def adapt_model_visibilities(self) -> aa.Visibilities:

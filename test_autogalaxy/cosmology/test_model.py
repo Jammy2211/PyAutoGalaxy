@@ -4,7 +4,6 @@ import autogalaxy as ag
 
 
 def test__planck15_Om0(planck15):
-
     planck15_Om0 = ag.cosmo.model.Planck15Om0()
 
     critical_surface_density = planck15.critical_surface_density_between_redshifts_from(
@@ -35,7 +34,6 @@ def test__planck15_Om0(planck15):
 
 
 def test__planck15_flat_w(planck15):
-
     planck15_flat_w = ag.cosmo.model.Planck15FlatwCDM()
 
     critical_surface_density = planck15.critical_surface_density_between_redshifts_from(

@@ -3,7 +3,6 @@ import autogalaxy as ag
 
 
 def test__clumps():
-
     centres = ag.Grid2DIrregular(values=[(1.0, 1.0)])
 
     clump_model = ag.ClumpModel(
@@ -45,7 +44,6 @@ def test__clumps():
 
 
 def test__clumps_light_only():
-
     centres = ag.Grid2DIrregular(values=[(1.0, 1.0)])
 
     clump_model = ag.ClumpModel(
@@ -64,7 +62,6 @@ def test__clumps_light_only():
 
 
 def test__clumps_mass_only():
-
     centres = ag.Grid2DIrregular(values=[(1.0, 1.0)])
 
     clump_model = ag.ClumpModel(
@@ -83,7 +80,6 @@ def test__clumps_mass_only():
 
 
 def test__einstein_radius_max():
-
     centres = ag.Grid2DIrregular(values=[(1.0, 1.0)])
 
     clump_model = ag.ClumpModel(

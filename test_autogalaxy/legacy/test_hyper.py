@@ -4,7 +4,6 @@ import autogalaxy as ag
 
 
 def test__contribution_map_from():
-
     hyper_image = np.ones((3,))
 
     hyp = ag.legacy.HyperGalaxy(contribution_factor=0.0)
@@ -33,7 +32,6 @@ def test__contribution_map_from():
 
 
 def test__hyper_noise_map_from():
-
     noise_map = np.array([1.0, 2.0, 3.0])
     contribution_map = np.array([[0.0, 0.5, 1.0]])
 

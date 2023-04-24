@@ -7,7 +7,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__deflections_via_integral_from():
-
     sersic = ag.mp.Sersic(
         centre=(-0.4, -0.2),
         ell_comps=(-0.07142, -0.085116),
@@ -42,7 +41,6 @@ def test__deflections_via_integral_from():
 
 
 def test__deflections_2d_via_mge_from():
-
     sersic = ag.mp.Sersic(
         centre=(-0.4, -0.2),
         ell_comps=(-0.07142, -0.085116),
@@ -81,7 +79,6 @@ def test__deflections_2d_via_mge_from():
 
 
 def test__deflections_2d_via_cse_from():
-
     sersic = ag.mp.Sersic(
         centre=(-0.4, -0.2),
         ell_comps=(-0.07142, -0.085116),
@@ -138,7 +135,6 @@ def test__deflections_2d_via_cse_from():
 
 
 def test__deflections_yx_2d_from():
-
     gaussian = ag.mp.Sersic()
 
     deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
@@ -283,7 +279,6 @@ def test__convergence_2d_via_cse_from():
 
 
 def test__convergence_2d_from():
-
     sersic = ag.mp.Sersic(
         centre=(0.0, 0.0),
         intensity=3.0,

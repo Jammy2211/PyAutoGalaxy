@@ -95,7 +95,6 @@ class FitQuantityPlotter(Plotter):
         """
 
         if isinstance(self.fit.dataset.data, aa.Array2D):
-
             fit_plotter = FitImagingPlotterMeta(
                 fit=self.fit,
                 get_visuals_2d=self.get_visuals_2d,
@@ -115,7 +114,6 @@ class FitQuantityPlotter(Plotter):
             )
 
         else:
-
             fit_plotter_y = FitImagingPlotterMeta(
                 fit=self.fit.y,
                 get_visuals_2d=self.get_visuals_2d_y,
@@ -154,13 +152,12 @@ class FitQuantityPlotter(Plotter):
                 suffix="_x",
             )
 
-    def subplot_fit_quantity(self):
+    def subplot_fit(self):
         """
         Standard subplot of the attributes of the plotter's `FitQuantity` object.
         """
 
         if isinstance(self.fit.dataset.data, aa.Array2D):
-
             fit_plotter = FitImagingPlotterMeta(
                 fit=self.fit,
                 get_visuals_2d=self.get_visuals_2d,
@@ -176,11 +173,10 @@ class FitQuantityPlotter(Plotter):
                 residual_map=True,
                 normalized_residual_map=True,
                 chi_squared_map=True,
-                auto_filename="subplot_fit_quantity",
+                auto_filename="subplot_fit",
             )
 
         else:
-
             fit_plotter_y = FitImagingPlotterMeta(
                 fit=self.fit.y,
                 get_visuals_2d=self.get_visuals_2d_y,
@@ -196,7 +192,7 @@ class FitQuantityPlotter(Plotter):
                 residual_map=True,
                 normalized_residual_map=True,
                 chi_squared_map=True,
-                auto_filename="subplot_fit_quantity_y",
+                auto_filename="subplot_fit_y",
             )
 
             fit_plotter_x = FitImagingPlotterMeta(
@@ -214,5 +210,5 @@ class FitQuantityPlotter(Plotter):
                 residual_map=True,
                 normalized_residual_map=True,
                 chi_squared_map=True,
-                auto_filename="subplot_fit_quantity_x",
+                auto_filename="subplot_fit_x",
             )

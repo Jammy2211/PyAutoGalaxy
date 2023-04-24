@@ -7,7 +7,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__deflections_yx_2d_from():
-
     truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0, truncation_radius=2.0
     )
@@ -58,7 +57,6 @@ def test__deflections_yx_2d_from():
 
 
 def test__convergence_2d_from():
-
     truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0, truncation_radius=2.0
     )
@@ -89,7 +87,6 @@ def test__convergence_2d_from():
 
 
 def test__mass_at_truncation_radius():
-
     truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0, truncation_radius=1.0
     )
@@ -144,7 +141,6 @@ def test__mass_at_truncation_radius():
 
 
 def test__compare_nfw_and_truncated_nfw_with_large_truncation_radius():
-
     truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0, truncation_radius=50000.0
     )

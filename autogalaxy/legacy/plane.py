@@ -46,9 +46,7 @@ class Plane(PlaneBase):
         hyper_noise_map_list = []
 
         for galaxy in self.galaxies:
-
             if galaxy.has(cls=HyperGalaxy):
-
                 contribution_map = galaxy.hyper_galaxy.contribution_map_from(
                     adapt_model_image=galaxy.adapt_model_image,
                     adapt_galaxy_image=galaxy.adapt_galaxy_image,
@@ -62,7 +60,6 @@ class Plane(PlaneBase):
                 hyper_noise_map_list.append(hyper_noise_map)
 
             else:
-
                 hyper_noise_map = aa.Array2D(
                     values=np.zeros(noise_map.mask.derive_mask.sub_1.pixels_in_mask),
                     mask=noise_map.mask.derive_mask.sub_1,
@@ -74,7 +71,6 @@ class Plane(PlaneBase):
 
     @property
     def contribution_map(self) -> Optional[aa.Array2D]:
-
         contribution_map_list = self.contribution_map_list
 
         contribution_map_list = [i for i in contribution_map_list if i is not None]
@@ -86,17 +82,13 @@ class Plane(PlaneBase):
 
     @property
     def contribution_map_list(self) -> List[aa.Array2D]:
-
         contribution_map_list = []
 
         for galaxy in self.galaxies:
-
             if galaxy.hyper_galaxy is not None:
-
                 contribution_map_list.append(galaxy.contribution_map)
 
             else:
-
                 contribution_map_list.append(None)
 
         return contribution_map_list

@@ -79,9 +79,7 @@ class InputDeflections(MassProfile):
     @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
-
         if self.preload_grid is not None and self.preload_deflections is not None:
-
             try:
                 if grid.sub_shape_slim == self.preload_grid.sub_shape_slim:
                     if np.allclose(grid, self.preload_grid, 1e-8):
@@ -93,7 +91,6 @@ class InputDeflections(MassProfile):
             self.preload_blurring_grid is not None
             and self.preload_blurring_deflections is not None
         ):
-
             try:
                 if grid.sub_shape_slim == self.preload_blurring_grid.sub_shape_slim:
                     if np.allclose(grid, self.preload_blurring_grid, 1e-8):

@@ -103,9 +103,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         regularization=aa.reg.Regularization,
         profiling_dict: Optional[Dict] = None,
     ):
-
         for light_profile in light_profile_list:
-
             if not isinstance(light_profile, LightProfileLinear):
                 raise exc.ProfileException(
                     """
@@ -130,7 +128,6 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
 
     @property
     def mapping_matrix(self) -> np.ndarray:
-
         mapping_matrix = np.zeros(shape=(self.grid.mask.pixels_in_mask, self.params))
 
         for pixel, light_profile in enumerate(self.light_profile_list):

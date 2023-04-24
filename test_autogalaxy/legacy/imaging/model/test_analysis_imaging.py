@@ -9,7 +9,6 @@ directory = path.dirname(path.realpath(__file__))
 def test__figure_of_merit__includes_hyper_image_and_noise__matches_fit(
     masked_imaging_7x7,
 ):
-
     hyper_image_sky = ag.legacy.hyper_data.HyperImageSky(sky_scale=1.0)
     hyper_background_noise = ag.legacy.hyper_data.HyperBackgroundNoise(noise_scale=1.0)
 
@@ -38,7 +37,6 @@ def test__figure_of_merit__includes_hyper_image_and_noise__matches_fit(
 
 
 def test__uses_adapt_fit_correctly(masked_imaging_7x7):
-
     galaxies = af.ModelInstance()
     galaxies.galaxy = ag.legacy.Galaxy(
         redshift=0.5, light=ag.lp.Sersic(intensity=1.0), mass=ag.mp.IsothermalSph

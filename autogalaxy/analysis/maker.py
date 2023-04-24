@@ -115,9 +115,7 @@ class FitMaker:
         preload_attempts = conf.instance["general"]["analysis"]["preload_attempts"]
 
         for i in range(preload_attempts):
-
             try:
-
                 instance = self.model.random_instance(ignore_prior_limits=True)
 
                 # The use_w_tilde here is for speed, incase noise scalin is on.
@@ -132,5 +130,4 @@ class FitMaker:
                 return fit
 
             except Exception as e:
-
                 continue

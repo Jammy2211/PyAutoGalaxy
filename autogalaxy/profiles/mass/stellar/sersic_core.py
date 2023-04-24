@@ -102,7 +102,6 @@ class SersicCore(Sersic):
         )
 
     def decompose_convergence_via_mge(self):
-
         radii_min = self.effective_radius / 50.0
         radii_max = self.effective_radius * 20.0
 

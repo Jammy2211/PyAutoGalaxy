@@ -90,7 +90,6 @@ class PowerLawCore(MassProfile):
         potential_grid = np.zeros(grid.shape[0])
 
         for i in range(grid.shape[0]):
-
             potential_grid[i] = quad(
                 self.potential_func,
                 a=0.0,
@@ -127,7 +126,6 @@ class PowerLawCore(MassProfile):
             deflection_grid = self.axis_ratio * grid[:, index]
 
             for i in range(grid.shape[0]):
-
                 deflection_grid[i] *= (
                     einstein_radius_rescaled
                     * quad(
@@ -188,7 +186,6 @@ class PowerLawCore(MassProfile):
         return "angular"
 
     def with_new_normalization(self, normalization):
-
         mass_profile = copy.copy(self)
         mass_profile.einstein_radius = normalization
         return mass_profile

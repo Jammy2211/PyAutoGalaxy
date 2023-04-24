@@ -7,7 +7,6 @@ import autogalaxy as ag
 def test__model_image__with_and_without_psf_blurring(
     masked_imaging_7x7_no_blur, masked_imaging_7x7
 ):
-
     g0 = ag.Galaxy(
         redshift=0.5,
         bulge=ag.m.MockLightProfile(image_2d_value=1.0, image_2d_first_value=2.0),
@@ -30,7 +29,6 @@ def test__model_image__with_and_without_psf_blurring(
 
 
 def test__fit_figure_of_merit(masked_imaging_7x7, masked_imaging_covariance_7x7):
-
     g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
     g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
 
@@ -179,7 +177,6 @@ def test__fit_figure_of_merit(masked_imaging_7x7, masked_imaging_covariance_7x7)
 
 
 def test__galaxy_model_image_dict(masked_imaging_7x7):
-
     # Normal Light Profiles Only
 
     g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
@@ -318,7 +315,6 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
 
 
 def test__model_images_of_galaxies_list(masked_imaging_7x7):
-
     galaxy_light = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
     galaxy_linear = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.Sersic())
 
@@ -374,7 +370,6 @@ def test___unmasked_blurred_images(masked_imaging_7x7):
 
 
 def test__subtracted_images_of_galaxies(masked_imaging_7x7_no_blur):
-
     g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
 
     g1 = ag.Galaxy(redshift=0.5)
@@ -397,7 +392,6 @@ def test__subtracted_images_of_galaxies(masked_imaging_7x7_no_blur):
 
 
 def test__light_profile_linear__intensity_dict(masked_imaging_7x7):
-
     linear_light_0 = ag.lp_linear.Sersic(sersic_index=1.0)
     linear_light_1 = ag.lp_linear.Sersic(sersic_index=4.0)
 
@@ -454,7 +448,6 @@ def test__light_profile_linear__intensity_dict(masked_imaging_7x7):
 
 
 def test__plane_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
-
     g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
 
     g0_linear = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.Sersic(sersic_index=1.0))

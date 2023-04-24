@@ -20,7 +20,6 @@ def grid_scaled_2d_for_marching_squares_from(
     shape_native: Tuple[int, int],
     mask: aa.Mask2D,
 ) -> aa.Grid2DIrregular:
-
     pixel_scales = mask.pixel_scales
     sub_size = mask.sub_size
     origin = mask.origin
@@ -57,7 +56,6 @@ def evaluation_grid(func):
     def wrapper(
         lensing_obj, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ):
-
         if hasattr(grid, "is_evaluation_grid"):
             if grid.is_evaluation_grid:
                 return func(lensing_obj, grid, pixel_scale)
@@ -168,7 +166,7 @@ class OperateDeflections(Dictable):
 
     def hessian_from(self, grid, buffer: float = 0.01, deflections_func=None) -> Tuple:
         """
-        Returns the Hessian of the lensing object, where the Hessian is the second partial derivatives of the the
+        Returns the Hessian of the lensing object, where the Hessian is the second partial derivatives of the
         potential (see equation 55 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
 
         `hessian_{i,j} = d^2 / dtheta_i dtheta_j`
@@ -349,7 +347,6 @@ class OperateDeflections(Dictable):
         tangential_critical_curve_list = []
 
         for tangential_critical_curve_indices in tangential_critical_curve_indices_list:
-
             curve = grid_scaled_2d_for_marching_squares_from(
                 grid_pixels_2d=tangential_critical_curve_indices,
                 shape_native=tangential_eigen_values.sub_shape_native,
@@ -394,7 +391,6 @@ class OperateDeflections(Dictable):
         radial_critical_curve_list = []
 
         for radial_critical_curve_indices in radial_critical_curve_indices_list:
-
             curve = grid_scaled_2d_for_marching_squares_from(
                 grid_pixels_2d=radial_critical_curve_indices,
                 shape_native=radial_eigen_values.sub_shape_native,
@@ -437,7 +433,6 @@ class OperateDeflections(Dictable):
         tangential_caustic_list = []
 
         for tangential_critical_curve in tangential_critical_curve_list:
-
             deflections_critical_curve = self.deflections_yx_2d_from(
                 grid=tangential_critical_curve
             )
@@ -480,7 +475,6 @@ class OperateDeflections(Dictable):
         radial_caustic_list = []
 
         for radial_critical_curve in radial_critical_curve_list:
-
             deflections_critical_curve = self.deflections_yx_2d_from(
                 grid=radial_critical_curve
             )
@@ -520,7 +514,6 @@ class OperateDeflections(Dictable):
         area_within_each_curve_list = []
 
         for curve in tangential_critical_curve_list:
-
             x, y = curve[:, 0], curve[:, 1]
             area = np.abs(0.5 * np.sum(y[:-1] * np.diff(x) - x[:-1] * np.diff(y)))
             area_within_each_curve_list.append(area)

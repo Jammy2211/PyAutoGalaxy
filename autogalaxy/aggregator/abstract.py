@@ -71,15 +71,12 @@ class AbstractAgg(ABC):
         """
 
         def func_gen(fit: af.Fit, minimum_weight: float) -> List[object]:
-
             samples = fit.value(name="samples")
 
             weight_list = []
 
             for sample in samples.sample_list:
-
                 if sample.weight > minimum_weight:
-
                     weight_list.append(sample.weight)
 
             return weight_list
@@ -111,13 +108,11 @@ class AbstractAgg(ABC):
         """
 
         def func_gen(fit: af.Fit, minimum_weight: float) -> List[object]:
-
             samples = fit.value(name="samples")
 
             all_above_weight_list = []
 
             for sample in samples.sample_list:
-
                 if sample.weight > minimum_weight:
                     instance = sample.instance_for_model(model=samples.model)
 
@@ -152,7 +147,6 @@ class AbstractAgg(ABC):
         """
 
         def func_gen(fit: af.Fit, total_samples: int) -> List[object]:
-
             samples = fit.value(name="samples")
 
             return [

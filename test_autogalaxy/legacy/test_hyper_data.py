@@ -3,7 +3,6 @@ import numpy as np
 
 
 def test__scale_sky_in_image__increases_all_image_values():
-
     image = np.array([1.0, 2.0, 3.0])
 
     hyper_sky = ag.legacy.hyper_data.HyperImageSky(sky_scale=10.0)
@@ -14,7 +13,6 @@ def test__scale_sky_in_image__increases_all_image_values():
 
 
 def test__scaled_background_noise__adds_to_input_noise():
-
     noise_map = np.array([1.0, 2.0, 3.0])
 
     hyper_background_noise_map = ag.legacy.hyper_data.HyperBackgroundNoise(
@@ -37,7 +35,6 @@ def test__scaled_background_noise__adds_to_input_noise():
 
 
 def test__scaled_background_noise__adds_to_input_noise__uses_complex_if_input_is_complex():
-
     noise_map = np.array([1.0 + 1.0j, 2.0 + 2.0j, 3.0 + 3.0j])
 
     hyper_background_noise_map = ag.legacy.hyper_data.HyperBackgroundNoise(

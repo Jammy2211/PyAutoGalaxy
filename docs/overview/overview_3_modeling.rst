@@ -295,7 +295,7 @@ plotted.
     plane_plotter.subplot_plane()
 
     fit_imaging_plotter = aplt.FitImagingPlotter(fit=result.max_log_likelihood_fit)
-    fit_imaging_plotter.subplot_fit_imaging()
+    fit_imaging_plotter.subplot_fit()
 
 Here's what the model-fit of the model which maximizes the log likelihood looks like, providing good residuals and
 low chi-squared values:

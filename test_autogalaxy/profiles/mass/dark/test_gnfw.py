@@ -7,7 +7,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__deflections_2d_via_integral_from():
-
     gnfw = ag.mp.gNFWSph(
         centre=(0.0, 0.0), kappa_s=1.0, inner_slope=0.5, scale_radius=8.0
     )
@@ -58,7 +57,6 @@ def test__deflections_2d_via_integral_from():
 
 
 def test__deflections_2d_via_mge_from():
-
     gnfw = ag.mp.gNFWSph(
         centre=(0.0, 0.0), kappa_s=1.0, inner_slope=0.5, scale_radius=8.0
     )
@@ -121,7 +119,6 @@ def test__deflections_2d_via_mge_from():
 
 
 def test__deflections_yx_2d_from():
-
     gnfw = ag.mp.gNFW()
 
     deflections = gnfw.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
@@ -153,7 +150,6 @@ def test__deflections_yx_2d_from():
 
 
 def test__convergence_2d_via_mge_from():
-
     gnfw = ag.mp.gNFWSph(
         centre=(0.0, 0.0), kappa_s=1.0, inner_slope=1.5, scale_radius=1.0
     )
@@ -194,7 +190,6 @@ def test__convergence_2d_via_mge_from():
 
 
 def test__convergence_2d_from():
-
     gnfw = ag.mp.gNFWSph(
         centre=(0.0, 0.0), kappa_s=1.0, inner_slope=1.5, scale_radius=1.0
     )
@@ -220,7 +215,6 @@ def test__convergence_2d_from():
 
 
 def test__potential_2d_from():
-
     gnfw = ag.mp.gNFWSph(
         centre=(0.0, 0.0), kappa_s=1.0, inner_slope=0.5, scale_radius=8.0
     )
@@ -265,7 +259,6 @@ def test__potential_2d_from():
 
 
 def test__compare_to_nfw():
-
     nfw = ag.mp.NFW(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.111111),

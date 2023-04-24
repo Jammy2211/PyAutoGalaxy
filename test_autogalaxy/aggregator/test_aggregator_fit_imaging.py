@@ -10,7 +10,6 @@ from test_autogalaxy.aggregator.conftest import clean
 def test__fit_imaging_randomly_drawn_via_pdf_gen_from(
     masked_imaging_7x7, samples, model
 ):
-
     path_prefix = "aggregator_fit_imaging_gen"
 
     database_file = path.join(conf.instance.output_path, "fit_imaging.sqlite")
@@ -36,9 +35,7 @@ def test__fit_imaging_randomly_drawn_via_pdf_gen_from(
     i = 0
 
     for fit_imaging_gen in fit_imaging_pdf_gen:
-
         for fit_imaging in fit_imaging_gen:
-
             i += 1
 
             assert fit_imaging.plane.galaxies[0].redshift == 0.5
@@ -50,7 +47,6 @@ def test__fit_imaging_randomly_drawn_via_pdf_gen_from(
 
 
 def test__fit_imaging_all_above_weight_gen(masked_imaging_7x7, samples, model):
-
     path_prefix = "aggregator_fit_imaging_gen"
 
     database_file = path.join(conf.instance.output_path, "fit_imaging.sqlite")
@@ -74,18 +70,14 @@ def test__fit_imaging_all_above_weight_gen(masked_imaging_7x7, samples, model):
     i = 0
 
     for fit_imaging_gen in fit_imaging_pdf_gen:
-
         for fit_imaging in fit_imaging_gen:
-
             i += 1
 
             if i == 1:
-
                 assert fit_imaging.plane.galaxies[0].redshift == 0.5
                 assert fit_imaging.plane.galaxies[0].light.centre == (1.0, 1.0)
 
             if i == 2:
-
                 assert fit_imaging.plane.galaxies[0].redshift == 0.5
                 assert fit_imaging.plane.galaxies[0].light.centre == (10.0, 10.0)
 

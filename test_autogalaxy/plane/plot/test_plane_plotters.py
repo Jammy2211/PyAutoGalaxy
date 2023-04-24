@@ -23,7 +23,6 @@ def test__all_individual_plotter__output_file_with_default_name(
     plot_path,
     plot_patch,
 ):
-
     plane_plotter = aplt.PlanePlotter(
         plane=plane_7x7,
         grid=sub_grid_2d_7x7,
@@ -49,7 +48,6 @@ def test__figures_of_galaxies(
     plot_path,
     plot_patch,
 ):
-
     plane_plotter = aplt.PlanePlotter(
         plane=plane_x2_gal_7x7,
         grid=sub_grid_2d_7x7,
@@ -73,7 +71,6 @@ def test__figures_of_galaxies(
 def test__plane_sub_plot_output(
     plane_x2_gal_7x7, sub_grid_2d_7x7, include_2d_all, plot_path, plot_patch
 ):
-
     plane_plotter = aplt.PlanePlotter(
         plane=plane_x2_gal_7x7,
         grid=sub_grid_2d_7x7,

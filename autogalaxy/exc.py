@@ -72,7 +72,6 @@ class UnitsException(Exception):
 
 
 def raise_linear_light_profile_in_unmasked():
-
     raise FitException(
         """
         You cannot compute the unmasked image from a fit which contains linear 
@@ -85,7 +84,6 @@ def raise_linear_light_profile_in_unmasked():
 
 
 def raise_linear_light_profile_in_plot(plotter_type: str, model_obj: str):
-
     raise ProfileException(
         f"""
         A linear light profile (inherits from `LightProfileLinear` class) has 

@@ -144,7 +144,6 @@ class PowerLawSph(PowerLaw):
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
-
         eta = self.radial_grid_from(grid)
         deflection_r = (
             2.0

@@ -7,7 +7,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__deflections_yx_2d_from():
-
     cored_isothermal = ag.mp.IsothermalCoreSph(
         centre=(-0.7, 0.5), einstein_radius=1.3, core_radius=0.2
     )
@@ -74,7 +73,6 @@ def test__deflections_yx_2d_from():
 
 
 def test__convergence_2d_from():
-
     cored_isothermal = ag.mp.IsothermalCoreSph(
         centre=(1, 1), einstein_radius=1.0, core_radius=0.1
     )
@@ -170,7 +168,6 @@ def test__convergence_2d_from():
 
 
 def test__potential_2d_from():
-
     cored_isothermal = ag.mp.IsothermalCoreSph(
         centre=(-0.7, 0.5), einstein_radius=1.3, core_radius=0.2
     )
@@ -225,7 +222,6 @@ def test__potential_2d_from():
 
 
 def test__compare_to_cored_power_law():
-
     power_law = ag.mp.IsothermalCore(
         centre=(0.0, 0.0),
         ell_comps=(0.333333, 0.0),

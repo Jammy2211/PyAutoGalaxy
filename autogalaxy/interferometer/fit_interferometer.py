@@ -127,7 +127,6 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         plane subtracted.
         """
         if self.perform_inversion:
-
             return self.plane_to_inversion.inversion
 
     @property
@@ -142,7 +141,6 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         """
 
         if self.perform_inversion:
-
             return self.profile_visibilities + self.inversion.mapped_reconstructed_data
 
         return self.profile_visibilities

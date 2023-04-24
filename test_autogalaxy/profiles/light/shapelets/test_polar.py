@@ -6,7 +6,6 @@ import autogalaxy as ag
 
 
 def test__image_2d_from():
-
     shapelet = ag.lp_shapelets.ShapeletPolar(n=2, m=0, centre=(0.0, 0.0), beta=1.0)
 
     image = shapelet.image_2d_from(grid=np.array([[0.0, 1.0], [0.5, 0.25]]))
@@ -21,7 +20,6 @@ def test__image_2d_from():
 
 
 def test__elliptical__image_2d_from():
-
     shapelet = ag.lp_shapelets.ShapeletPolarEll(
         n=2, m=0, centre=(0.0, 0.0), ell_comps=(0.1, 0.2), beta=1.0
     )

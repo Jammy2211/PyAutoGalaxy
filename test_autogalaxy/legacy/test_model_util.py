@@ -5,7 +5,6 @@ import autogalaxy as ag
 
 
 def test__hyper_model_noise_from():
-
     pixelization = af.Model(
         ag.Pixelization, mesh=ag.mesh.Rectangular, regularization=ag.reg.Constant
     )
@@ -130,7 +129,6 @@ def test__hyper_model_noise_from__adds_hyper_galaxies():
 
 
 def test__hyper_model_inversion_from():
-
     pixelization = af.Model(ag.Pixelization, mesh=ag.mesh.Rectangular)
 
     model = af.Collection(
@@ -195,7 +193,6 @@ def test__hyper_model_inversion_from():
 
 
 def test__hyper_model_inversion_from__adds_hyper_galaxies():
-
     pixelization = af.Model(ag.Pixelization, mesh=ag.mesh.Rectangular)
 
     model = af.Collection(
@@ -270,7 +267,6 @@ def test__hyper_model_inversion_from__adds_hyper_galaxies():
 
 
 def test__stochastic_model_from():
-
     pixelization = af.Model(
         ag.Pixelization,
         mesh=ag.mesh.VoronoiBrightnessImage(),

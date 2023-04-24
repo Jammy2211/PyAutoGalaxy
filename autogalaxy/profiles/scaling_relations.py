@@ -5,13 +5,11 @@ from autogalaxy.profiles import mass as mp
 
 class MassLightRelation:
     def __init__(self, gradient=1.0, denominator=1.0, power=0.5):
-
         self.gradient = gradient
         self.denominator = denominator
         self.power = power
 
     def einstein_radius_from(self, luminosity):
-
         return self.gradient * ((luminosity / self.denominator) ** self.power)
 
 
@@ -22,7 +20,6 @@ class IsothermalSphMLR(mp.IsothermalSph):
         luminosity: float = 1.0,
         centre: Tuple[float, float] = (0.0, 0.0),
     ):
-
         self.luminosity = luminosity
         self.relation = relation
 
@@ -39,7 +36,6 @@ class IsothermalMLR(mp.Isothermal):
         centre: Tuple[float, float] = (0.0, 0.0),
         ell_comps: Tuple[float, float] = (0.0, 0.0),
     ):
-
         self.luminosity = luminosity
         self.relation = relation
 

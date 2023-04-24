@@ -7,7 +7,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__deflections_yx_2d_from():
-
     broken_power_law = ag.mp.PowerLawBrokenSph(
         centre=(0, 0),
         einstein_radius=1.0,
@@ -88,7 +87,6 @@ def test__deflections_yx_2d_from():
 
 
 def test__convergence_2d_from():
-
     broken_power_law = ag.mp.PowerLawBrokenSph(
         centre=(0, 0),
         einstein_radius=1.0,
@@ -161,7 +159,6 @@ def test__convergence_2d_from():
 
 
 def test__deflections_yx_2d_from__compare_to_power_law():
-
     broken_power_law = ag.mp.PowerLawBrokenSph(
         centre=(0, 0),
         einstein_radius=2.0,

@@ -22,7 +22,6 @@ class MassPlotter(Plotter):
         visuals_2d: Visuals2D = Visuals2D(),
         include_2d: Include2D = Include2D(),
     ):
-
         super().__init__(
             mat_plot_2d=mat_plot_2d, include_2d=include_2d, visuals_2d=visuals_2d
         )
@@ -65,7 +64,6 @@ class MassPlotter(Plotter):
             Whether to make a 2D plot (via `imshow`) of the magnification.
         """
         if convergence:
-
             self.mat_plot_2d.plot_array(
                 array=self.mass_obj.convergence_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),
@@ -76,7 +74,6 @@ class MassPlotter(Plotter):
             )
 
         if potential:
-
             self.mat_plot_2d.plot_array(
                 array=self.mass_obj.potential_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),
@@ -87,7 +84,6 @@ class MassPlotter(Plotter):
             )
 
         if deflections_y:
-
             deflections = self.mass_obj.deflections_yx_2d_from(grid=self.grid)
             deflections_y = aa.Array2D(
                 values=deflections.slim[:, 0], mask=self.grid.mask
@@ -103,7 +99,6 @@ class MassPlotter(Plotter):
             )
 
         if deflections_x:
-
             deflections = self.mass_obj.deflections_yx_2d_from(grid=self.grid)
             deflections_x = aa.Array2D(
                 values=deflections.slim[:, 1], mask=self.grid.mask
@@ -119,7 +114,6 @@ class MassPlotter(Plotter):
             )
 
         if magnification:
-
             self.mat_plot_2d.plot_array(
                 array=self.mass_obj.magnification_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),

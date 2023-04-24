@@ -55,7 +55,6 @@ def test__deflections_via_integral_from():
 
 
 def test__deflections_2d_via_cse_from():
-
     nfw = ag.mp.NFWSph(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
     deflections_via_integral = nfw.deflections_2d_via_integral_from(
@@ -123,7 +122,6 @@ def test__deflections_yx_2d_from():
 
 
 def test__convergence_2d_via_mge_from():
-
     # r = 2.0 (> 1.0)
     # F(r) = (1/(sqrt(3))*atan(sqrt(3)) = 0.60459978807
     # kappa(r) = 2 * kappa_s * (1 - 0.60459978807) / (4-1) = 0.263600141
@@ -165,7 +163,6 @@ def test__convergence_2d_via_mge_from():
 
 
 def test__convergence_2d_via_cse_from():
-
     # r = 2.0 (> 1.0)
     # F(r) = (1/(sqrt(3))*atan(sqrt(3)) = 0.60459978807
     # kappa(r) = 2 * kappa_s * (1 - 0.60459978807) / (4-1) = 0.263600141
@@ -207,7 +204,6 @@ def test__convergence_2d_via_cse_from():
 
 
 def test__convergence_2d_from():
-
     # r = 2.0 (> 1.0)
     # F(r) = (1/(sqrt(3))*atan(sqrt(3)) = 0.60459978807
     # kappa(r) = 2 * kappa_s * (1 - 0.60459978807) / (4-1) = 0.263600141
@@ -249,7 +245,6 @@ def test__convergence_2d_from():
 
 
 def test__potential_2d_from():
-
     nfw = ag.mp.NFWSph(centre=(0.3, 0.2), kappa_s=2.5, scale_radius=4.0)
 
     potential = nfw.potential_2d_from(grid=np.array([[0.1875, 0.1625]]))
