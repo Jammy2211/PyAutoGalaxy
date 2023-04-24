@@ -7,7 +7,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__duffy__mass_and_concentration_consistent_with_normal_truncated_nfw():
-
     cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
     truncated_nfw_mass = ag.mp.NFWTruncatedMCRDuffySph(
@@ -60,7 +59,6 @@ def test__duffy__mass_and_concentration_consistent_with_normal_truncated_nfw():
 
 
 def test__ludlow__mass_and_concentration_consistent_with_normal_truncated_nfw__scatter_0():
-
     cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
     truncated_nfw_mass = ag.mp.NFWTruncatedMCRLudlowSph(

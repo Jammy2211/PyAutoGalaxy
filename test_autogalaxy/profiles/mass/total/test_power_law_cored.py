@@ -7,7 +7,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__deflections_yx_2d_from():
-
     power_law = ag.mp.PowerLawCoreSph(
         centre=(-0.7, 0.5), einstein_radius=1.0, slope=1.8, core_radius=0.2
     )
@@ -72,7 +71,6 @@ def test__deflections_yx_2d_from():
 
 
 def test__convergence_2d_from():
-
     cored_power_law = ag.mp.PowerLawCoreSph(
         centre=(1, 1), einstein_radius=1.0, slope=2.2, core_radius=0.1
     )

@@ -7,7 +7,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__deflections_yx_2d_from():
-
     # The radial coordinate at (1.0, 1.0) is sqrt(2)
     # This is decomposed into (y,x) angles of sin(45) = cos(45) = sqrt(2) / 2.0
     # Thus, for an EinR of 1.0, the deflection angle is (1.0 / sqrt(2)) * (sqrt(2) / 2.0)

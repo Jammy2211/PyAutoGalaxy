@@ -9,7 +9,6 @@ import autogalaxy as ag
 
 
 def create_fits(fits_path, array):
-
     file_dir = os.path.split(fits_path)[0]
 
     if not os.path.exists(file_dir):
@@ -26,13 +25,11 @@ def create_fits(fits_path, array):
 
 
 def clean_fits(fits_path):
-
     if path.exists(fits_path):
         shutil.rmtree(fits_path)
 
 
 def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
-
     fits_path = path.join("{}".format(path.dirname(path.realpath(__file__))), "files")
     image_path = path.join(fits_path, "image.fits")
     noise_map_path = path.join(fits_path, "noise_map.fits")
@@ -76,7 +73,6 @@ def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
 
 
 def test__simulator__via_plane_from__same_as_plane_image():
-
     psf = ag.Kernel2D.from_gaussian(shape_native=(7, 7), sigma=0.5, pixel_scales=0.05)
 
     grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
@@ -106,7 +102,6 @@ def test__simulator__via_plane_from__same_as_plane_image():
 
 
 def test__simulator__simulate_imaging_from_galaxy__source_galaxy__compare_to_imaging():
-
     galaxy_0 = ag.Galaxy(
         redshift=0.5,
         mass=ag.mp.Isothermal(

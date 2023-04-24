@@ -5,7 +5,6 @@ from autogalaxy.profiles.mass.stellar.abstract import StellarProfile
 
 class StellarDarkDecomp:
     def __init__(self, galaxy):
-
         self.galaxy = galaxy
 
     def stellar_mass_angular_within_circle_from(self, radius: float):
@@ -39,7 +38,6 @@ class StellarDarkDecomp:
         return 1.0 - self.dark_fraction_at_radius_from(radius=radius)
 
     def dark_fraction_at_radius_from(self, radius):
-
         stellar_mass = self.stellar_mass_angular_within_circle_from(radius=radius)
         dark_mass = self.dark_mass_angular_within_circle_from(radius=radius)
 

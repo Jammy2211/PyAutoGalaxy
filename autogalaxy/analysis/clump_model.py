@@ -82,7 +82,6 @@ class ClumpModel:
         mass_list = []
 
         for centre in self.centres.in_list:
-
             mass = af.Model(self.mass_cls, centre=centre)
 
             if (
@@ -109,7 +108,6 @@ class ClumpModel:
         clumps_light_only = {}
 
         for i in range(self.total_clumps):
-
             light = self.light_list[i] if self.light_cls is not None else None
 
             clumps_light_only[f"clump_{i}"] = af.Model(
@@ -130,7 +128,6 @@ class ClumpModel:
         clumps_mass_only = {}
 
         for i in range(self.total_clumps):
-
             mass = self.mass_list[i] if self.mass_cls is not None else None
 
             clumps_mass_only[f"clump_{i}"] = af.Model(
@@ -154,7 +151,6 @@ class ClumpModel:
         clumps = {}
 
         for i in range(self.total_clumps):
-
             light = self.light_list[i] if self.light_cls is not None else None
             mass = self.mass_list[i] if self.mass_cls is not None else None
 
@@ -167,7 +163,6 @@ class ClumpModel:
 
 class ClumpModelDisabled:
     def __init__(self):
-
         pass
 
     @property

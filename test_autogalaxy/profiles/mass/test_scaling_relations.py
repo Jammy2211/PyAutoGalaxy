@@ -3,7 +3,6 @@ import autogalaxy as ag
 
 class TestMassLightRelation:
     def test__einstein_radius_from(self):
-
         mass_light_relation = ag.sr.MassLightRelation(
             gradient=1.0, denominator=1.0, power=1.0
         )
@@ -43,7 +42,6 @@ class TestMassLightRelation:
 
 class TestIsothermalMLR:
     def test__setup_correctly_from_luminosity(self):
-
         relation = ag.sr.MassLightRelation(gradient=2.0, denominator=0.5, power=2.0)
 
         sis = ag.sr.IsothermalSphMLR(

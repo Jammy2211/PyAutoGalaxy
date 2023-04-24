@@ -73,11 +73,9 @@ class AnalysisInterferometer(AnalysisDataset):
         )
 
         if self.adapt_result is not None:
-
             self.set_adapt_dataset(result=self.adapt_result)
 
         else:
-
             self.adapt_galaxy_visibilities_path_dict = None
             self.adapt_model_visibilities = None
 
@@ -107,7 +105,6 @@ class AnalysisInterferometer(AnalysisDataset):
         super().modify_before_fit(paths=paths, model=model)
 
         if not paths.is_complete:
-
             logger.info(
                 "PRELOADS - Setting up preloads, may take a few minutes for fits using an inversion."
             )

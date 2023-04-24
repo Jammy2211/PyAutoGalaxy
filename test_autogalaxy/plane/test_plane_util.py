@@ -6,7 +6,6 @@ from autogalaxy import exc
 
 
 def test__plane_image_from(sub_grid_2d_7x7):
-
     galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
 
     plane_image = ag.util.plane.plane_image_from(

@@ -102,11 +102,9 @@ class AnalysisDataset(Analysis):
         self.adapt_result = adapt_result
 
         if self.adapt_result is not None:
-
             self.set_adapt_dataset(result=self.adapt_result)
 
         else:
-
             self.adapt_galaxy_image_path_dict = None
             self.adapt_model_image = None
 
@@ -216,7 +214,6 @@ class AnalysisDataset(Analysis):
             )
 
             if conf.instance["general"]["test"]["check_preloads"]:
-
                 self.preloads.check_via_fit(fit=fit_0)
 
         self.preloads.output_info_to_summary(file_path=paths.profile_path)
@@ -314,10 +311,8 @@ class AnalysisDataset(Analysis):
         """
 
         if self.adapt_galaxy_image_path_dict is not None:
-
             for galaxy_path, galaxy in instance.path_instance_tuples_for_class(Galaxy):
                 if galaxy_path in self.adapt_galaxy_image_path_dict:
-
                     galaxy.adapt_model_image = self.adapt_model_image
 
                     galaxy.adapt_galaxy_image = self.adapt_galaxy_image_path_dict[
@@ -388,7 +383,6 @@ class AnalysisDataset(Analysis):
             adapt_model_image = paths.load_object("adapt_model_image")
 
             if np.max(abs(adapt_model_image - self.adapt_model_image)) > 1e-8:
-
                 logger.info(
                     "ANALYSIS - Hyper image loaded from pickle different to that set in Analysis class."
                     "Overwriting hyper images with values loaded from pickles."
@@ -450,19 +444,15 @@ class AnalysisDataset(Analysis):
         )
 
         if not path.exists(figure_of_merit_sanity_file):
-
             with open(figure_of_merit_sanity_file, "w+") as f:
                 json.dump(figure_of_merit, f)
 
         else:
-
             with open(figure_of_merit_sanity_file) as json_file:
                 figure_of_merit_sanity = json.load(json_file)
 
             if conf.instance["general"]["test"]["check_figure_of_merit_sanity"]:
-
                 if not np.isclose(figure_of_merit, figure_of_merit_sanity):
-
                     raise exc.AnalysisException(
                         "Figure of merit sanity check failed. "
                         ""

@@ -118,14 +118,12 @@ class Preloads(aa.Preloads):
         preloads = cls()
 
         if isinstance(fit_0, aa.FitImaging):
-
             preloads.set_w_tilde_imaging(fit_0=fit_0, fit_1=fit_1)
             preloads.set_blurred_image(fit_0=fit_0, fit_1=fit_1)
 
         preloads.set_mapper_list(fit_0=fit_0, fit_1=fit_1)
 
         if preloads.mapper_list is not None:
-
             preloads.mapper_galaxy_dict = fit_0.plane_to_inversion.mapper_galaxy_dict
 
         preloads.set_operated_mapping_matrix_with_preloads(fit_0=fit_0, fit_1=fit_1)
@@ -160,7 +158,6 @@ class Preloads(aa.Preloads):
         if (np.max(abs(fit_0.blurred_image - fit_1.blurred_image)) < precision) and (
             np.sum(fit_0.blurred_image) > precision
         ):
-
             self.blurred_image = fit_0.blurred_image
 
             logger.info(
@@ -168,11 +165,9 @@ class Preloads(aa.Preloads):
             )
 
     def output_info_to_summary(self, file_path):
-
         file_preloads = path.join(file_path, "preloads.summary")
 
         if self.failed:
-
             logger.info(
                 "PRELOADS - Preloading failed as models gave too many exceptions, preloading therefore "
                 "not used."
@@ -183,7 +178,6 @@ class Preloads(aa.Preloads):
             )
 
         else:
-
             af.formatter.output_list_of_strings_to_file(
                 file=file_preloads, list_of_strings=self.info
             )

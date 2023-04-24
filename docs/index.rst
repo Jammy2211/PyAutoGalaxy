@@ -27,7 +27,7 @@ galaxies, massively parallel model-fitting and an SQLite3 database that allows l
 loaded, queried and analysed.
 
 The software comes distributed with the **HowToGalaxy** Jupyter notebook lectures, which are written assuming no
-previous knowledge about galaxy structure and teach a new user the theory and statistics required to analyse
+previous knowledge about galaxy structure and teach a new user theory and statistics required to analyse
 galaxy data. Checkout `the howtogalaxy section of
 the readthedocs <https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/howtogalaxy.html>`_.
 

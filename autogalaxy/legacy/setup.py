@@ -84,7 +84,6 @@ class SetupAdapt(SetupAdaptBase):
         return False
 
     def hyper_image_sky_from(self, result: af.Result, as_model=True):
-
         if self.hyper_image_sky is not None:
             if as_model:
                 if hasattr(result, "adapt"):
@@ -95,7 +94,6 @@ class SetupAdapt(SetupAdaptBase):
             return result.instance.hyper_image_sky
 
     def hyper_background_noise_from(self, result: af.Result):
-
         if self.hyper_background_noise is not None:
             if hasattr(result, "adapt"):
                 return result.adapt.instance.hyper_background_noise

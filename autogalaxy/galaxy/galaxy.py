@@ -51,7 +51,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         self.adapt_galaxy_image = None
 
         for name, val in kwargs.items():
-
             if isinstance(val, list):
                 raise exc.GalaxyException(
                     "One or more of the input light / mass profiles has been passed to the Galaxy object"
@@ -160,7 +159,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         )
 
     def grid_radial_from(self, grid, centre, angle):
-
         if isinstance(grid, aa.Grid1D) or isinstance(grid, aa.Grid2DIrregular):
             return grid
 
@@ -259,13 +257,11 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             The 1D (x,) coordinates where values of the image are evaluated.
         """
         if self.has(cls=LightProfile):
-
             image_1d_list = []
 
             for light_profile in self.cls_list_from(
                 cls=LightProfile, cls_filtered=LightProfileLinear
             ):
-
                 grid_radial = self.grid_radial_from(
                     grid=grid, centre=light_profile.centre, angle=light_profile.angle
                 )
@@ -350,11 +346,9 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             The 1D (x,) coordinates where values of the convergence are evaluated.
         """
         if self.has(cls=MassProfile):
-
             convergence_1d_list = []
 
             for mass_profile in self.cls_list_from(cls=MassProfile):
-
                 grid_radial = self.grid_radial_from(
                     grid=grid, centre=mass_profile.centre, angle=mass_profile.angle
                 )
@@ -412,11 +406,9 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
             The 1D (x,) coordinates where values of the potential are evaluated.
         """
         if self.has(cls=MassProfile):
-
             potential_1d_list = []
 
             for mass_profile in self.cls_list_from(cls=MassProfile):
-
                 grid_radial = self.grid_radial_from(
                     grid=grid, centre=mass_profile.centre, angle=mass_profile.angle
                 )
@@ -435,7 +427,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
 
     def extract_attribute(self, cls, attr_name):
         """
-        Returns an attribute of a class and its children profiles in the the galaxy as a `ValueIrregular`
+        Returns an attribute of a class and its children profiles in the galaxy as a `ValueIrregular`
         or `Grid2DIrregular` object.
 
         For example, if a galaxy has two light profiles and we want the `LightProfile` axis-ratios, the following:
@@ -458,7 +450,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         """
 
         def extract(value, name):
-
             try:
                 return getattr(value, name)
             except (AttributeError, IndexError):

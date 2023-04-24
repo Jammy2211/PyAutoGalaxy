@@ -1,6 +1,6 @@
 import copy
 import numpy as np
-from typing import Dict, List, Type, Union
+from typing import Dict, List, Tuple, Type, Union
 
 from autoconf import conf
 import autofit as af
@@ -64,7 +64,6 @@ class Result(af.Result):
         """
 
         if self.__instance is None:
-
             self.__instance = copy.deepcopy(self.instance)
 
         return self.__instance
@@ -82,7 +81,7 @@ class Result(af.Result):
         return self.analysis.plane_via_instance_from(instance=instance)
 
     @property
-    def path_galaxy_tuples(self) -> [(str, Galaxy)]:
+    def path_galaxy_tuples(self) -> List[Tuple[str, Galaxy]]:
         """
         Tuples associating the names of galaxies with instances from the best fit
         """
@@ -119,7 +118,7 @@ class ResultDataset(Result):
 
     def image_for_galaxy(self, galaxy: Galaxy) -> np.ndarray:
         """
-        Given an instance of a `Galaxy` object, return an image of the galaxy via the the maximum log likelihood fit.
+        Given an instance of a `Galaxy` object, return an image of the galaxy via the maximum log likelihood fit.
 
         This image is extracted via the fit's `galaxy_model_image_dict`, which is necessary to make it straight
         forward to use the image as hyper-images.
@@ -137,7 +136,7 @@ class ResultDataset(Result):
         return self.max_log_likelihood_fit.galaxy_model_image_dict[galaxy]
 
     @property
-    def image_galaxy_dict(self) -> {str: Galaxy}:
+    def image_galaxy_dict(self) -> Dict[str, Galaxy]:
         """
         A dictionary associating galaxy names with model images of those galaxies.
 
@@ -162,7 +161,6 @@ class ResultDataset(Result):
         adapt_galaxy_image_path_dict = {}
 
         for path, galaxy in self.path_galaxy_tuples:
-
             galaxy_image = self.image_galaxy_dict[path]
 
             if not np.all(galaxy_image == 0):

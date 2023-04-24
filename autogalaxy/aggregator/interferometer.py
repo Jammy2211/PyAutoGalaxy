@@ -49,7 +49,6 @@ def _interferometer_from(
 
 class InterferometerAgg:
     def __init__(self, aggregator: af.Aggregator):
-
         self.aggregator = aggregator
 
     def interferometer_gen_from(
@@ -68,7 +67,8 @@ class InterferometerAgg:
         Parameters
         ----------
         aggregator : ImaginAggregator
-            A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits."""
+            A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits.
+        """
 
         func = partial(
             _interferometer_from,

@@ -17,7 +17,6 @@ def make_galaxy_plotter_setup():
 def test__figures_1d__all_are_output(
     gal_x1_lp_x1_mp, sub_grid_2d_7x7, mask_2d_7x7, include_1d_all, plot_path, plot_patch
 ):
-
     galaxy_plotter = aplt.GalaxyPlotter(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_2d_7x7,
@@ -48,7 +47,6 @@ def test__figures_1d__all_are_output(
 def test__figures_1d_decomposed__all_are_output(
     gal_x1_lp_x1_mp, sub_grid_2d_7x7, mask_2d_7x7, include_1d_all, plot_path, plot_patch
 ):
-
     galaxy_plotter = aplt.GalaxyPlotter(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_2d_7x7,
@@ -80,7 +78,6 @@ def test__figures_1d_decomposed__all_are_output(
 def test__figures_1d_decomposed__light_profiles_different_centres_making_offset_radial_grid(
     sub_grid_2d_7x7, mask_2d_7x7, include_1d_all, plot_path, plot_patch
 ):
-
     lp_0 = ag.lp.SersicSph(centre=(0.0, 0.0))
     lp_1 = ag.lp.SersicSph(centre=(1.0, 1.0))
 
@@ -132,7 +129,6 @@ def test__figures_2d__all_are_output(
     plot_path,
     plot_patch,
 ):
-
     galaxy_plotter = aplt.GalaxyPlotter(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_2d_7x7,
@@ -153,7 +149,6 @@ def test__subplots_galaxy_quantities__all_are_output(
     plot_path,
     plot_patch,
 ):
-
     galaxy_plotter = aplt.GalaxyPlotter(
         galaxy=gal_x1_lp_x1_mp,
         grid=sub_grid_2d_7x7,

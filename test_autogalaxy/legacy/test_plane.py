@@ -7,7 +7,6 @@ from autoarray.inversion.pixelization.mesh.abstract import AbstractMesh
 
 
 def test__adapt_galaxy_image_list():
-
     pixelization = ag.Pixelization(mesh=AbstractMesh())
 
     galaxy_pix = ag.legacy.Galaxy(redshift=0.5, pixelization=pixelization)
@@ -30,7 +29,6 @@ def test__adapt_galaxy_image_list():
 
 
 def test__contribution_map_list():
-
     adapt_model_image = ag.Array2D.no_mask([[2.0, 4.0, 10.0]], pixel_scales=1.0)
     adapt_galaxy_image = ag.Array2D.no_mask([[1.0, 5.0, 8.0]], pixel_scales=1.0)
 

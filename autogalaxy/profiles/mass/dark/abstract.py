@@ -16,7 +16,6 @@ from autogalaxy import exc
 
 
 class DarkProfile:
-
     pass
 
 
@@ -112,7 +111,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         return eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size
 
     def decompose_convergence_via_mge(self):
-
         rho_at_scale_radius = (
             self.kappa_s / self.scale_radius
         )  # density parameter of 3D gNFW
@@ -146,9 +144,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
     @staticmethod
     @aa.util.numba.jit()
     def coord_func_f_jit(grid_radius, f):
-
         for index in range(f.shape[0]):
-
             if np.real(grid_radius[index]) > 1.0:
                 f[index] = (
                     1.0 / np.sqrt(np.square(grid_radius[index]) - 1.0)
@@ -163,7 +159,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
     @staticmethod
     @aa.util.numba.jit()
     def coord_func_f_float_jit(grid_radius):
-
         if np.real(grid_radius) > 1.0:
             return (1.0 / np.sqrt(np.square(grid_radius) - 1.0)) * np.arccos(
                 np.divide(1.0, grid_radius)
@@ -190,7 +185,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
     @staticmethod
     @aa.util.numba.jit()
     def coord_func_g_jit(grid_radius, f_r, g):
-
         for index in range(f_r.shape[0]):
             if np.real(grid_radius[index]) > 1.0:
                 g[index] = (1.0 - f_r[index]) / (np.square(grid_radius[index]) - 1.0)
@@ -204,7 +198,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
     @staticmethod
     @aa.util.numba.jit()
     def coord_func_g_float_jit(grid_radius, f_r):
-
         if np.real(grid_radius) > 1.0:
             return (1.0 - f_r) / (np.square(grid_radius) - 1.0)
         elif np.real(grid_radius) < 1.0:
@@ -240,7 +233,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_of_cosmic_average_density="profile",
         cosmology: LensingCosmology = Planck15(),
     ):
-
         if redshift_of_cosmic_average_density == "profile":
             redshift_calc = redshift_object
         elif redshift_of_cosmic_average_density == "local":
@@ -272,7 +264,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_of_cosmic_average_density="profile",
         cosmology: LensingCosmology = Planck15(),
     ):
-
         delta_concentration = self.delta_concentration(
             redshift_object=redshift_profile,
             redshift_source=redshift_source,
@@ -305,7 +296,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_of_cosmic_average_density="profile",
         cosmology: LensingCosmology = Planck15(),
     ):
-
         concentration = self.concentration(
             redshift_profile=redshift_object,
             redshift_source=redshift_source,
@@ -322,7 +312,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_of_cosmic_average_density="profile",
         cosmology: LensingCosmology = Planck15(),
     ):
-
         if redshift_of_cosmic_average_density == "profile":
             redshift_calc = redshift_object
         elif redshift_of_cosmic_average_density == "local":
@@ -362,7 +351,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
 
     def with_new_normalization(self, normalization):
-
         mass_profile = copy.copy(self)
         mass_profile.kappa_s = normalization
         return mass_profile

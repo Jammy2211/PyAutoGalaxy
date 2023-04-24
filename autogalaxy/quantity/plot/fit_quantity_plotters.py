@@ -95,7 +95,6 @@ class FitQuantityPlotter(Plotter):
         """
 
         if isinstance(self.fit.dataset.data, aa.Array2D):
-
             fit_plotter = FitImagingPlotterMeta(
                 fit=self.fit,
                 get_visuals_2d=self.get_visuals_2d,
@@ -115,7 +114,6 @@ class FitQuantityPlotter(Plotter):
             )
 
         else:
-
             fit_plotter_y = FitImagingPlotterMeta(
                 fit=self.fit.y,
                 get_visuals_2d=self.get_visuals_2d_y,
@@ -160,7 +158,6 @@ class FitQuantityPlotter(Plotter):
         """
 
         if isinstance(self.fit.dataset.data, aa.Array2D):
-
             fit_plotter = FitImagingPlotterMeta(
                 fit=self.fit,
                 get_visuals_2d=self.get_visuals_2d,
@@ -180,7 +177,6 @@ class FitQuantityPlotter(Plotter):
             )
 
         else:
-
             fit_plotter_y = FitImagingPlotterMeta(
                 fit=self.fit.y,
                 get_visuals_2d=self.get_visuals_2d_y,

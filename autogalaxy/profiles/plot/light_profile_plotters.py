@@ -68,7 +68,6 @@ class LightProfilePlotter(Plotter):
         )
 
         if isinstance(light_profile, LightProfileLinear):
-
             raise exc.raise_linear_light_profile_in_plot(
                 plotter_type=self.__class__.__name__, model_obj="Plane"
             )
@@ -116,7 +115,6 @@ class LightProfilePlotter(Plotter):
             plot_axis_type_override = None
 
         if image:
-
             image_1d = self.light_profile.image_1d_from(grid=self.grid)
 
             self.mat_plot_1d.plot_yx(
@@ -147,7 +145,6 @@ class LightProfilePlotter(Plotter):
             Whether to make a 2D plot (via `imshow`) of the image.
         """
         if image:
-
             self.mat_plot_2d.plot_array(
                 array=self.light_profile.image_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),
@@ -254,7 +251,6 @@ class LightProfilePDFPlotter(LightProfilePlotter):
             plot_axis_type_override = None
 
         if image:
-
             image_1d_list = [
                 light_profile.image_1d_from(grid=self.grid)
                 for light_profile in self.light_profile_pdf_list

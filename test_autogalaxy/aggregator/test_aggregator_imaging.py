@@ -8,7 +8,6 @@ from test_autogalaxy.aggregator.conftest import clean
 
 
 def test__imaging_generator_from_aggregator(imaging_7x7, mask_2d_7x7, samples, model):
-
     path_prefix = "aggregator_imaging_gen"
 
     database_file = path.join(conf.instance.output_path, "imaging.sqlite")

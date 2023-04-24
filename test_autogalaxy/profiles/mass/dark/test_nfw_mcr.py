@@ -7,7 +7,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__mass_and_concentration_consistent_with_normal_nfw():
-
     cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
     nfw_mass = ag.mp.NFWMCRDuffySph(
@@ -59,7 +58,6 @@ def test__mass_and_concentration_consistent_with_normal_nfw():
 
 
 def test__mass_and_concentration_consistent_with_normal_nfw__scatter_0():
-
     cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
     nfw_mass = ag.mp.NFWMCRLudlowSph(
@@ -116,7 +114,6 @@ def test__mass_and_concentration_consistent_with_normal_nfw__scatter_0():
 
 
 def test__same_as_above_but_elliptical():
-
     cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
     nfw_mass = ag.mp.NFWMCRLudlow(
@@ -177,7 +174,6 @@ def test__same_as_above_but_elliptical():
 
 
 def test__same_as_above_but_generalized_elliptical():
-
     cosmology = ag.cosmo.FlatLambdaCDM(H0=70.0, Om0=0.3)
 
     nfw_mass = ag.mp.gNFWMCRLudlow(

@@ -43,7 +43,6 @@ def mesh_list_from(model: af.Collection) -> List[aa.AbstractMesh]:
     mesh_list = []
 
     for galaxy in instance.galaxies:
-
         pixelization_list = galaxy.cls_list_from(cls=aa.Pixelization)
 
         for pixelization in pixelization_list:
@@ -118,11 +117,8 @@ def set_upper_limit_of_pixelization_pixels_prior(
         return
 
     for mesh in mesh_list:
-
         if hasattr(mesh.pixels, "upper_limit"):
-
             if pixels_in_mask < mesh.pixels.upper_limit:
-
                 lower_limit = mesh.pixels.lower_limit
 
                 log_str = (
@@ -132,7 +128,6 @@ def set_upper_limit_of_pixelization_pixels_prior(
                 )
 
                 if lower_limit > pixels_in_mask:
-
                     lower_limit = pixels_in_mask - lower_limit_no_pixels_below_mask
 
                     logger.info(
@@ -151,15 +146,12 @@ def set_upper_limit_of_pixelization_pixels_prior(
 
 
 def clean_model_of_adapt_images(model):
-
     for galaxy in model.galaxies:
-
         del galaxy.adapt_model_image
         del galaxy.adapt_galaxy_image
 
     if hasattr(model, "clumps"):
         for clump in model.clumps:
-
             del clump.adapt_model_image
             del clump.adapt_galaxy_image
 
@@ -234,9 +226,7 @@ def adapt_fit(
     analysis,
     search_previous,
 ):
-
     if analysis.adapt_model_image is None:
-
         raise exc.AnalysisException(
             "The analysis class does not have a adapt_model_image attribute, which is required for hyper fitting."
         )

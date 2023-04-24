@@ -89,7 +89,6 @@ class LightProfileSNR:
         brightest_value = np.max(image_2d)
 
         def func(intensity_factor):
-
             signal = intensity_factor * brightest_value * exposure_time
             noise = np.sqrt(signal + background_sky_level_counts)
 

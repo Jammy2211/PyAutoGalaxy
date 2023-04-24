@@ -7,7 +7,6 @@ from autogalaxy import exc
 
 
 def test__cls_list_from(lp_0, lp_linear_0):
-
     gal = ag.Galaxy(redshift=0.5, light_0=lp_0)
 
     cls_list = gal.cls_list_from(cls=ag.LightProfile)
@@ -34,7 +33,6 @@ def test__cls_list_from(lp_0, lp_linear_0):
 
 
 def test__image_1d_from(sub_grid_1d_7, lp_0, lp_1, gal_x2_lp):
-
     grid = ag.Grid2D.no_mask(values=[[[1.05, -0.55]]], pixel_scales=1.0)
 
     lp_image = lp_0.image_1d_from(grid=grid)
@@ -46,7 +44,6 @@ def test__image_1d_from(sub_grid_1d_7, lp_0, lp_1, gal_x2_lp):
 
 
 def test__image_2d_from(sub_grid_2d_7x7, gal_x2_lp):
-
     lp_0_image = gal_x2_lp.light_profile_0.image_2d_from(grid=sub_grid_2d_7x7)
     lp_1_image = gal_x2_lp.light_profile_1.image_2d_from(grid=sub_grid_2d_7x7)
 
@@ -63,7 +60,6 @@ def test__image_2d_from(sub_grid_2d_7x7, gal_x2_lp):
 
 
 def test__image_2d_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_0):
-
     image_2d_not_operated = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
     image_2d_operated = lp_operated_0.image_2d_from(grid=sub_grid_2d_7x7)
 
@@ -80,7 +76,6 @@ def test__image_2d_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_
 
 
 def test__image_2d_list_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_0):
-
     image_2d_not_operated = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
     image_2d_operated = lp_operated_0.image_2d_from(grid=sub_grid_2d_7x7)
 
@@ -101,7 +96,6 @@ def test__image_2d_list_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_oper
 
 
 def test__luminosity_within_circle(lp_0, lp_1, gal_x2_lp):
-
     lp_0_luminosity = lp_0.luminosity_within_circle_from(radius=0.5)
 
     lp_1_luminosity = lp_1.luminosity_within_circle_from(radius=0.5)
@@ -115,7 +109,6 @@ def test__luminosity_within_circle(lp_0, lp_1, gal_x2_lp):
 
 
 def test__convergence_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
-
     grid = ag.Grid2D.no_mask(values=[[[1.05, -0.55], [2.05, -0.55]]], pixel_scales=1.0)
 
     mp_convergence = mp_0.convergence_1d_from(grid=grid)
@@ -142,7 +135,6 @@ def test__convergence_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
 
 
 def test__convergence_2d_from(sub_grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
-
     mp_0_convergence = gal_x2_mp.mass_profile_0.convergence_2d_from(
         grid=sub_grid_2d_7x7
     )
@@ -168,7 +160,6 @@ def test__convergence_2d_from(sub_grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp)
 
 
 def test__potential_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
-
     grid = ag.Grid2D.no_mask(values=[[[1.05, -0.55]]], pixel_scales=1.0)
 
     mp_potential = mp_0.potential_1d_from(grid=grid)
@@ -195,7 +186,6 @@ def test__potential_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
 
 
 def test__potential_2d_from(sub_grid_2d_7x7, gal_x2_mp):
-
     mp_0_potential = gal_x2_mp.mass_profile_0.potential_2d_from(grid=sub_grid_2d_7x7)
 
     mp_1_potential = gal_x2_mp.mass_profile_1.potential_2d_from(grid=sub_grid_2d_7x7)
@@ -269,7 +259,6 @@ def test__deflections_yx_2d_from(sub_grid_2d_7x7, gal_x2_mp):
 def test__no_mass_profile__quantities_returned_as_0s_of_shape_grid(
     sub_grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp
 ):
-
     galaxy = ag.Galaxy(redshift=0.5)
 
     potential = galaxy.potential_2d_from(grid=sub_grid_2d_7x7)
@@ -285,7 +274,6 @@ def test__no_mass_profile__quantities_returned_as_0s_of_shape_grid(
 
 
 def test__mass_angular_within_circle_from(mp_0, mp_1, gal_x2_mp):
-
     mp_0_mass = mp_0.mass_angular_within_circle_from(radius=0.5)
 
     mp_1_mass = mp_1.mass_angular_within_circle_from(radius=0.5)
@@ -317,7 +305,6 @@ def test__light_and_mass_profiles__contained_in_light_and_mass_profile_lists(
 
 
 def test__extract_attribute():
-
     galaxy = ag.Galaxy(redshift=0.5)
 
     values = galaxy.extract_attribute(cls=ag.LightProfile, attr_name="value")
@@ -354,7 +341,6 @@ def test__extract_attribute():
 
 
 def test__image_2d_from__does_not_include_linear_light_profiles(sub_grid_2d_7x7, lp_0):
-
     lp_linear = ag.lp_linear.Sersic(effective_radius=2.0, sersic_index=2.0)
 
     galaxy = ag.Galaxy(redshift=0.5, light_0=lp_0, light_linear=lp_linear)
@@ -438,7 +424,6 @@ def test__light_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric
 
 
 def test__mass_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric_results():
-
     mp_0 = ag.mp.Isothermal(ell_comps=(0.333333, 0.0), einstein_radius=1.0)
 
     mp_1 = ag.mp.Isothermal(
@@ -577,7 +562,6 @@ def test__mass_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric_
 
 
 def test__centre_of_profile_in_right_place():
-
     grid = ag.Grid2D.uniform(shape_native=(7, 7), pixel_scales=1.0)
 
     galaxy = ag.Galaxy(
@@ -672,26 +656,21 @@ def test__centre_of_profile_in_right_place():
 
 
 def test__cannot_pass_light_or_mass_list():
-
     light_list = [ag.lp.Sersic(), ag.lp.Sersic()]
 
     with pytest.raises(exc.GalaxyException):
-
         ag.Galaxy(redshift=0.5, light=light_list)
 
     mass_list = [ag.mp.Sersic(), ag.mp.Sersic()]
 
     with pytest.raises(exc.GalaxyException):
-
         ag.Galaxy(redshift=0.5, mass=mass_list)
 
     with pytest.raises(exc.GalaxyException):
-
         ag.Galaxy(redshift=0.5, light=light_list, mass=mass_list)
 
 
 def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp):
-
     mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True],
@@ -739,7 +718,6 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
 
 
 def test__decorator__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
-
     mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True],

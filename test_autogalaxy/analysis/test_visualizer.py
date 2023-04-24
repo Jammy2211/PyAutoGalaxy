@@ -17,7 +17,6 @@ def make_visualizer_plotter_setup():
 def test__visualizes_plane__uses_configs(
     masked_imaging_7x7, plane_7x7, include_2d_all, plot_path, plot_patch
 ):
-
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
@@ -48,7 +47,6 @@ def test__visualizes_plane__uses_configs(
 def test__visualizes_galaxies__uses_configs(
     masked_imaging_7x7, plane_7x7, include_2d_all, plot_path, plot_patch
 ):
-
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
@@ -68,7 +66,6 @@ def test__visualizes_galaxies__uses_configs(
 def test__visualizes_imaging__uses_configs(
     imaging_7x7, include_2d_all, plot_path, plot_patch
 ):
-
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
@@ -88,7 +85,6 @@ def test__visualizes_imaging__uses_configs(
 def test__visualizes_interferometer__uses_configs(
     interferometer_7, include_2d_all, plot_path, plot_patch
 ):
-
     visualizer = vis.Visualizer(visualize_path=plot_path)
 
     visualizer.visualize_interferometer(interferometer=interferometer_7)
@@ -104,7 +100,6 @@ def test__visualizes_interferometer__uses_configs(
 def test__visualize_inversion__uses_configs(
     masked_imaging_7x7, voronoi_inversion_9_3x3, include_2d_all, plot_path, plot_patch
 ):
-
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
@@ -132,7 +127,6 @@ def test__visualize_adapt_images__uses_config(
     plot_path,
     plot_patch,
 ):
-
     visualizer = vis.Visualizer(visualize_path=plot_path)
 
     visualizer.visualize_adapt_images(

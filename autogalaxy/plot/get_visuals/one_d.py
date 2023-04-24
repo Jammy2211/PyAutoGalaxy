@@ -103,18 +103,15 @@ class GetVisuals1D(aplt.GetVisuals1D):
         """
 
         if self.include.half_light_radius:
-
             half_light_radius_list = [
                 light_profile.half_light_radius for light_profile in light_obj_list
             ]
 
             if None in half_light_radius_list:
-
                 half_light_radius = None
                 half_light_radius_errors = None
 
             else:
-
                 (
                     half_light_radius,
                     half_light_radius_errors,
@@ -123,7 +120,6 @@ class GetVisuals1D(aplt.GetVisuals1D):
                 )
 
         else:
-
             half_light_radius = None
             half_light_radius_errors = None
 
@@ -214,11 +210,9 @@ class GetVisuals1D(aplt.GetVisuals1D):
         """
 
         if self.include.einstein_radius:
-
             einstein_radius_list = []
 
             for mass_obj in mass_obj_list:
-
                 try:
                     einstein_radius_list.append(
                         mass_obj.einstein_radius_from(grid=grid)
@@ -236,7 +230,6 @@ class GetVisuals1D(aplt.GetVisuals1D):
             )
 
         else:
-
             einstein_radius = None
             einstein_radius_errors = None
 

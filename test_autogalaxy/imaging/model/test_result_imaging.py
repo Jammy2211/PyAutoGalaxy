@@ -10,7 +10,6 @@ from autogalaxy.imaging.model.result import ResultImaging
 def test__results_include_masked_dataset_and_mask(
     analysis_imaging_7x7, masked_imaging_7x7, samples_with_result
 ):
-
     result = ResultImaging(
         samples=samples_with_result, analysis=analysis_imaging_7x7, model=None
     )
@@ -20,7 +19,6 @@ def test__results_include_masked_dataset_and_mask(
 
 
 def test___image_dict(analysis_imaging_7x7):
-
     galaxies = af.ModelInstance()
     galaxies.galaxy = ag.Galaxy(redshift=0.5)
     galaxies.source = ag.Galaxy(redshift=0.5)
@@ -44,7 +42,6 @@ def test___image_dict(analysis_imaging_7x7):
 
 
 def test___linear_light_profiles_in_result(analysis_imaging_7x7):
-
     galaxies = af.ModelInstance()
     galaxies.galaxy = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.Sersic())
 

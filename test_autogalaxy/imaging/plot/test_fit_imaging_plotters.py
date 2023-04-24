@@ -17,7 +17,6 @@ def make_fit_imaging_plotter_setup():
 def test__fit_individuals__source_and_galaxy__dependent_on_input(
     fit_imaging_x2_galaxy_7x7, include_2d_all, plot_path, plot_patch
 ):
-
     fit_imaging_plotter = aplt.FitImagingPlotter(
         fit=fit_imaging_x2_galaxy_7x7,
         include_2d=include_2d_all,
@@ -44,7 +43,6 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
 def test__figures_of_galaxies(
     fit_imaging_x2_galaxy_7x7, include_2d_all, plot_path, plot_patch
 ):
-
     fit_imaging_plotter = aplt.FitImagingPlotter(
         fit=fit_imaging_x2_galaxy_7x7,
         include_2d=include_2d_all,
@@ -79,7 +77,6 @@ def test__figures_of_galaxies(
 def test__subplot_of_galaxy(
     fit_imaging_x2_galaxy_7x7, include_2d_all, plot_path, plot_patch
 ):
-
     fit_imaging_plotter = aplt.FitImagingPlotter(
         fit=fit_imaging_x2_galaxy_7x7,
         include_2d=include_2d_all,

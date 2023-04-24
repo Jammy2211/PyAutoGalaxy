@@ -14,7 +14,6 @@ class NFWTruncatedMCRScatterLudlowSph(NFWTruncatedSph):
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
     ):
-
         self.mass_at_200 = mass_at_200
         self.scatter_sigma = scatter_sigma
         self.redshift_object = redshift_object

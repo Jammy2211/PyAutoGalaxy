@@ -7,7 +7,6 @@ from autogalaxy.analysis import result as res
 def test__result_contains_instance_with_galaxies(
     analysis_imaging_7x7, samples_with_result
 ):
-
     model = af.Collection(
         galaxies=af.Collection(
             galaxy=af.Model(ag.Galaxy, redshift=0.5, light=ag.lp.Sersic),
@@ -24,7 +23,6 @@ def test__result_contains_instance_with_galaxies(
 
 
 def test__max_log_likelihood_plane_available_as_result(analysis_imaging_7x7):
-
     galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
     galaxy_1 = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=2.0))
 
@@ -45,7 +43,6 @@ def test__max_log_likelihood_plane_available_as_result(analysis_imaging_7x7):
 
 
 def test__results_include_pixelization__available_as_property(analysis_imaging_7x7):
-
     pixelization = ag.m.MockPixelization(mapper=1)
 
     source = ag.Galaxy(redshift=1.0, pixelization=pixelization)

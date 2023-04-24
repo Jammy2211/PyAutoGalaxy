@@ -28,7 +28,6 @@ def luminosity_from_radius_and_profile(radius, profile):
 
 
 def test__luminosity_within_centre__compare_to_gridded_calculations():
-
     sersic = ag.lp.SersicSph(intensity=3.0, effective_radius=2.0, sersic_index=2.0)
 
     luminosity_analytic = luminosity_from_radius_and_profile(radius=0.5, profile=sersic)
@@ -45,7 +44,6 @@ def test__luminosity_within_centre__compare_to_gridded_calculations():
 
 
 def test__image_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities():
-
     grid_2d = ag.Grid2D.uniform(shape_native=(5, 5), pixel_scales=1.0)
 
     gaussian = ag.lp.Gaussian(

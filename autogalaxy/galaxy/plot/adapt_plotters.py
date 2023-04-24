@@ -79,7 +79,6 @@ class AdaptPlotter(Plotter):
         self.open_subplot_figure(number_subplots=len(adapt_galaxy_image_path_dict))
 
         for path, galaxy_image in adapt_galaxy_image_path_dict.items():
-
             self.figure_adapt_galaxy_image(galaxy_image=galaxy_image)
 
         self.mat_plot_2d.output.subplot_to_figure(
@@ -115,7 +114,6 @@ class AdaptPlotter(Plotter):
         self.open_subplot_figure(number_subplots=number_subplots)
 
         for contribution_map_array in contribution_maps:
-
             self.figure_contribution_map(contribution_map=contribution_map_array)
 
         self.mat_plot_2d.output.subplot_to_figure(

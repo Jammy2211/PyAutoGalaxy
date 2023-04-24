@@ -129,7 +129,6 @@ class LightProfile(EllProfile, OperateImage):
 
     @property
     def half_light_radius(self) -> float:
-
         if hasattr(self, "effective_radius"):
             return self.effective_radius
 

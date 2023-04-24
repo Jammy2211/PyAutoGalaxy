@@ -11,7 +11,6 @@ from autogalaxy.profiles.mass.dark.abstract import AbstractgNFW
 
 
 def jit_integrand(integrand_function):
-
     from numba import cfunc
     from numba.types import intc, CPointer, float64
 
@@ -85,14 +84,12 @@ def jit_integrand(integrand_function):
 
 class gNFW(AbstractgNFW):
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
-
         return self.deflections_2d_via_mge_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike):
-
         return self._deflections_2d_via_mge_from(
             grid=grid, sigmas_factor=self.axis_ratio
         )
@@ -124,11 +121,9 @@ class gNFW(AbstractgNFW):
             )
 
         def calculate_deflection_component(npow, yx_index):
-
             deflection_grid = np.zeros(grid.shape[0])
 
             for i in range(grid.shape[0]):
-
                 deflection_grid[i] = (
                     2.0
                     * self.kappa_s
@@ -198,7 +193,6 @@ class gNFW(AbstractgNFW):
         tabulate_bins,
         surface_density_integral,
     ):
-
         _eta_u = np.sqrt((u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u)))))
         bin_size = (maximum_log_eta - minimum_log_eta) / (tabulate_bins - 1)
         i = 1 + int((np.log10(_eta_u) - minimum_log_eta) / bin_size)
@@ -216,7 +210,6 @@ class gNFW(AbstractgNFW):
         grid_radius = (1.0 / self.scale_radius) * grid_radius
 
         for index in range(grid_radius.shape[0]):
-
             integral_y_value = quad(
                 integral_y,
                 a=0.0,
@@ -296,7 +289,6 @@ class gNFW(AbstractgNFW):
             )
 
         for i in range(grid.shape[0]):
-
             potential_grid[i] = (2.0 * self.kappa_s * self.axis_ratio) * quad(
                 self.potential_func,
                 a=0.0,

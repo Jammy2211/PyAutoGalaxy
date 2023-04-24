@@ -7,7 +7,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__deflections_yx_2d_from():
-
     gaussian = ag.mp.DevVaucouleurs()
 
     deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))

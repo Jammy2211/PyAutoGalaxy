@@ -31,11 +31,8 @@ class AbstractToInversion:
         preloads=Preloads(),
         profiling_dict: Optional[Dict] = None,
     ):
-
         if dataset is not None:
-
             if dataset.noise_covariance_matrix is not None:
-
                 raise aa.exc.InversionException(
                     """
                     You cannot perform an inversion (e.g. use a linear light profile or pixelization) 
@@ -66,7 +63,6 @@ class AbstractToInversion:
     def lp_linear_func_list_galaxy_dict(
         self,
     ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
-
         raise NotImplementedError
 
     @cached_property
@@ -77,7 +73,6 @@ class AbstractToInversion:
     def linear_obj_galaxy_dict(
         self,
     ) -> Dict[Union[LightProfileLinearObjFuncList, aa.AbstractMapper], Galaxy]:
-
         lp_linear_func_galaxy_dict = self.lp_linear_func_list_galaxy_dict
 
         mapper_galaxy_dict = self.mapper_galaxy_dict
@@ -109,7 +104,6 @@ class PlaneToInversion(AbstractToInversion):
         preloads=aa.Preloads(),
         profiling_dict: Optional[Dict] = None,
     ):
-
         self.plane = plane
 
         super().__init__(
@@ -147,7 +141,6 @@ class PlaneToInversion(AbstractToInversion):
     def cls_light_profile_func_list_galaxy_dict_from(
         self, cls: Type
     ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
-
         if not self.plane.has(cls=cls):
             return {}
 
@@ -156,7 +149,6 @@ class PlaneToInversion(AbstractToInversion):
         for galaxy in self.plane.galaxies:
             if galaxy.has(cls=cls):
                 for light_profile in galaxy.cls_list_from(cls=cls):
-
                     if isinstance(light_profile, LightProfileLinear):
                         light_profile_list = [light_profile]
                     else:
@@ -168,7 +160,6 @@ class PlaneToInversion(AbstractToInversion):
                         ]
 
                     if len(light_profile_list) > 0:
-
                         lp_linear_func = LightProfileLinearObjFuncList(
                             grid=self.grid,
                             blurring_grid=self.blurring_grid,
@@ -185,7 +176,6 @@ class PlaneToInversion(AbstractToInversion):
     def lp_linear_func_list_galaxy_dict(
         self,
     ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
-
         lp_linear_light_profile_func_list_galaxy_dict = (
             self.cls_light_profile_func_list_galaxy_dict_from(cls=LightProfileLinear)
         )
@@ -203,7 +193,6 @@ class PlaneToInversion(AbstractToInversion):
     def sparse_image_plane_grid_list(
         self,
     ) -> Optional[List[aa.Grid2DSparse]]:
-
         if not self.plane.has(cls=aa.Pixelization):
             return None
 
@@ -227,7 +216,6 @@ class PlaneToInversion(AbstractToInversion):
         adapt_galaxy_image: aa.Array2D,
         image_plane_mesh_grid: aa.Grid2DSparse = None,
     ) -> aa.AbstractMapper:
-
         mapper_grids = mesh.mapper_grids_from(
             source_plane_data_grid=self.grid_pixelization,
             source_plane_mesh_grid=source_plane_mesh_grid,
@@ -242,7 +230,6 @@ class PlaneToInversion(AbstractToInversion):
 
     @cached_property
     def mapper_galaxy_dict(self) -> Dict[aa.AbstractMapper, Galaxy]:
-
         if not self.plane.has(cls=aa.Pixelization):
             return {}
 
@@ -257,7 +244,6 @@ class PlaneToInversion(AbstractToInversion):
         adapt_galaxy_image_list = self.plane.adapt_galaxies_with_pixelization_image_list
 
         for mapper_index in range(len(sparse_grid_list)):
-
             mapper = self.mapper_from(
                 mesh=pixelization_list[mapper_index].mesh,
                 regularization=pixelization_list[mapper_index].regularization,
@@ -274,7 +260,6 @@ class PlaneToInversion(AbstractToInversion):
 
     @property
     def inversion(self) -> aa.AbstractInversion:
-
         inversion = inversion_unpacked_from(
             dataset=self.dataset,
             data=self.data,

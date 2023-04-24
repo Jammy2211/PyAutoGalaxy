@@ -27,7 +27,6 @@ class MockLightProfileOperated(ag.lp_operated.LightProfileOperated):
 
 
 def test__decorator_changes_behaviour_correctly():
-
     grid = ag.Grid2D.uniform(shape_native=(3, 3), pixel_scales=1.0)
 
     lp = ag.lp.Gaussian()

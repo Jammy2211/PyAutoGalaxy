@@ -19,7 +19,6 @@ class GeometryProfile(Dictable):
     """
 
     def __init__(self, centre: Tuple[float, float] = (0.0, 0.0)):
-
         self.centre = centre
 
     def __hash__(self):
@@ -80,7 +79,6 @@ class SphProfile(GeometryProfile):
     """
 
     def __init__(self, centre: Tuple[float, float] = (0.0, 0.0)):
-
         super().__init__(centre=centre)
 
     @aa.grid_dec.grid_2d_to_structure
@@ -270,7 +268,7 @@ class EllProfile(SphProfile):
         Rotate a grid of (y,x) coordinates which have been transformed to the elliptical reference frame of a profile
         back to the original unrotated coordinate grid reference frame.
 
-        Note that unlike the method `transformed_from_reference_frame_grid_from` the the coordinates are not
+        Note that unlike the method `transformed_from_reference_frame_grid_from` the coordinates are not
         translated back to the profile's original centre.
 
         This routine is used after computing deflection angles in the reference frame of the profile, so that the

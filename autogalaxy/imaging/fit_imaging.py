@@ -105,7 +105,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         if len(self.plane.cls_list_from(cls=LightProfile)) == len(
             self.plane.cls_list_from(cls=LightProfileOperated)
         ):
-
             return self.plane.image_2d_from(
                 grid=self.dataset.grid,
             )
@@ -174,7 +173,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         """
 
         if self.perform_inversion:
-
             return self.blurred_image + self.inversion.mapped_reconstructed_data
 
         return self.blurred_image
@@ -229,7 +227,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         model_images_of_galaxies_list = self.model_images_of_galaxies_list
 
         for galaxy_index in range(len(self.galaxies)):
-
             other_galaxies_model_images = [
                 model_image
                 for i, model_image in enumerate(model_images_of_galaxies_list)

@@ -18,7 +18,6 @@ def test__fit_sub_plot_real_space(
     plot_path,
     plot_patch,
 ):
-
     fit_interferometer_plotter = aplt.FitInterferometerPlotter(
         fit=fit_interferometer_7x7,
         include_2d=include_2d_all,

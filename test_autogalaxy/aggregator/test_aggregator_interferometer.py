@@ -15,7 +15,6 @@ def test__interferometer_generator_from_aggregator(
     samples,
     model,
 ):
-
     path_prefix = "aggregator_interferometer"
 
     database_file = path.join(conf.instance.output_path, "interferometer.sqlite")

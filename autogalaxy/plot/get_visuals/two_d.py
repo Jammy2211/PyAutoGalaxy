@@ -67,13 +67,11 @@ class GetVisuals2D(aplt.GetVisuals2D):
         visuals_via_mask = self.via_mask_from(mask=grid.mask)
 
         if isinstance(light_obj, LightProfile):
-
             light_profile_centres = self.get(
                 "light_profile_centres", aa.Grid2DIrregular(values=[light_obj.centre])
             )
 
         else:
-
             light_profile_centres = self.get(
                 "light_profile_centres",
                 light_obj.extract_attribute(cls=LightProfile, attr_name="centre"),
@@ -119,13 +117,11 @@ class GetVisuals2D(aplt.GetVisuals2D):
         visuals_via_mask = self.via_mask_from(mask=grid.mask)
 
         if isinstance(mass_obj, MassProfile):
-
             mass_profile_centres = self.get(
                 "mass_profile_centres", aa.Grid2DIrregular(values=[mass_obj.centre])
             )
 
         else:
-
             mass_profile_centres = self.get(
                 "mass_profile_centres",
                 mass_obj.extract_attribute(cls=MassProfile, attr_name="centre"),
@@ -246,7 +242,6 @@ class GetVisuals2D(aplt.GetVisuals2D):
         )
 
         if galaxy_index == 0:
-
             tangential_critical_curves = self.get(
                 "tangential_critical_curves",
                 plane.tangential_critical_curve_list_from(grid=grid),
@@ -256,7 +251,6 @@ class GetVisuals2D(aplt.GetVisuals2D):
             tangential_critical_curves = None
 
         if galaxy_index == 0:
-
             radial_critical_curves = self.get(
                 "radial_critical_curves",
                 plane.radial_critical_curve_list_from(grid=grid),

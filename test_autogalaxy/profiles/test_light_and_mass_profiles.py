@@ -7,7 +7,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 class TestGaussian:
     def test__grid_calculations__same_as_gaussian(self):
-
         gaussian_lp = ag.lmp.Gaussian(ell_comps=(0.1, 0.05), intensity=1.0, sigma=5.0)
         gaussian_mp = ag.lmp.Gaussian(
             ell_comps=(0.1, 0.05),
@@ -39,7 +38,6 @@ class TestGaussian:
 
 class TestSersic:
     def test__grid_calculations__same_as_sersic(self):
-
         sersic_lp = ag.lmp.Sersic(
             ell_comps=(0.1, 0.05),
             intensity=1.0,
@@ -77,7 +75,6 @@ class TestSersic:
 
 class TestExponential:
     def test__grid_calculations__same_as_exponential(self):
-
         sersic_lp = ag.lmp.Exponential(
             ell_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
         )
@@ -110,7 +107,6 @@ class TestExponential:
 
 class TestDevVaucouleurs:
     def test__grid_calculations__same_as_dev_vaucouleurs(self):
-
         sersic_lp = ag.lmp.DevVaucouleurs(
             ell_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
         )
@@ -143,7 +139,6 @@ class TestDevVaucouleurs:
 
 class TestSersicRadialGradient:
     def test__grid_calculations__same_as_sersic_radial_gradient(self):
-
         sersic_lp = ag.lmp.Sersic(
             ell_comps=(0.1, 0.05),
             intensity=1.0,
@@ -181,7 +176,6 @@ class TestSersicRadialGradient:
 
 class TestExponentialRadialGradient:
     def test__grid_calculations__same_as_sersic_radial_gradient(self):
-
         sersic_lp = ag.lmp.Exponential(
             ell_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
         )
@@ -214,7 +208,6 @@ class TestExponentialRadialGradient:
 
 class TestSersicCore:
     def test__grid_calculations__same_as_core_sersic(self):
-
         sersic_lp = ag.lmp.SersicCore(
             ell_comps=(0.1, 0.05), effective_radius=0.6, sersic_index=2.0
         )
@@ -247,7 +240,6 @@ class TestSersicCore:
 
 class TestChameleon:
     def test__grid_calculations__same_as_chameleon(self):
-
         chameleon_lp = ag.lmp.Chameleon(
             ell_comps=(0.1, 0.05),
             intensity=1.0,

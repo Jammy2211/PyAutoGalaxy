@@ -67,7 +67,6 @@ class PlanePlotter(Plotter):
         )
 
         if plane.has(cls=LightProfileLinear):
-
             raise exc.raise_linear_light_profile_in_plot(
                 plotter_type=self.__class__.__name__, model_obj="Plane"
             )
@@ -169,7 +168,6 @@ class PlanePlotter(Plotter):
             Add a suffix to the end of the filename the plot is saved to hard-disk using.
         """
         if image:
-
             self.mat_plot_2d.plot_array(
                 array=self.plane.image_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),
@@ -179,7 +177,6 @@ class PlanePlotter(Plotter):
             )
 
         if plane_image:
-
             self.mat_plot_2d.plot_array(
                 array=self.plane.plane_image_2d_from(
                     grid=self.grid, zoom_to_brightest=zoom_to_brightest
@@ -192,7 +189,6 @@ class PlanePlotter(Plotter):
             )
 
         if plane_grid:
-
             self.mat_plot_2d.plot_grid(
                 grid=self.grid,
                 visuals_2d=self.get_visuals_2d(),
@@ -250,11 +246,9 @@ class PlanePlotter(Plotter):
         galaxy_indexes = self.galaxy_indexes_from(galaxy_index=galaxy_index)
 
         for galaxy_index in galaxy_indexes:
-
             galaxy_plotter = self.galaxy_plotter_from(galaxy_index=galaxy_index)
 
             if image:
-
                 galaxy_plotter.figures_2d(
                     image=True,
                     title_suffix=f" Of Galaxy {galaxy_index}",
@@ -336,7 +330,6 @@ class PlanePlotter(Plotter):
         self.open_subplot_figure(number_subplots=number_subplots)
 
         for galaxy_index in range(0, len(self.plane.galaxies)):
-
             galaxy_plotter = self.galaxy_plotter_from(galaxy_index=galaxy_index)
             galaxy_plotter.figures_2d(
                 image=True, title_suffix=f" Of Plane {galaxy_index}"

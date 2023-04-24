@@ -104,7 +104,6 @@ class FitImaging(FitImagingBase):
         in order to account for uncertainty in the background sky subtraction.
         """
         if self.use_hyper_scaling:
-
             return hyper_image_from(
                 image=self.dataset.image, hyper_image_sky=self.hyper_image_sky
             )
@@ -118,7 +117,6 @@ class FitImaging(FitImagingBase):
         the data that are poorly fitted in order to avoid overfitting.
         """
         if self.use_hyper_scaling:
-
             return hyper_noise_map_from(
                 noise_map=self.dataset.noise_map,
                 model_obj=self.plane,

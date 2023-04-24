@@ -2,7 +2,6 @@ import autogalaxy.plot as aplt
 
 
 def test__mat_obj__all_load_from_config_correctly():
-
     light_profile_centres_scatter = aplt.LightProfileCentresScatter()
 
     assert light_profile_centres_scatter.config_dict["s"] == 1

@@ -38,7 +38,6 @@ class Visuals2D(aplt.Visuals2D):
         indexes: Union[List[int], List[List[int]]] = None,
         pix_indexes: Union[List[int], List[List[int]]] = None,
     ):
-
         super().__init__(
             mask=mask,
             positions=positions,
@@ -65,7 +64,6 @@ class Visuals2D(aplt.Visuals2D):
         self.radial_caustics = radial_caustics
 
     def plot_via_plotter(self, plotter, grid_indexes=None, mapper=None):
-
         super().plot_via_plotter(
             plotter=plotter, grid_indexes=grid_indexes, mapper=mapper
         )

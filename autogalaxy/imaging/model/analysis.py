@@ -92,7 +92,6 @@ class AnalysisImaging(AnalysisDataset):
         super().modify_before_fit(paths=paths, model=model)
 
         if not paths.is_complete:
-
             self.set_preloads(paths=paths, model=model)
 
         return self

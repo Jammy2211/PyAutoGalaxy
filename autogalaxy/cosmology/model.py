@@ -6,7 +6,6 @@ from autogalaxy.cosmology.wrap import FlatwCDM
 
 class Planck15Om0(FlatLambdaCDM):
     def __init__(self, Om0: float = 0.3075):
-
         planck15 = cosmo.Planck15
 
         super().__init__(
@@ -22,7 +21,6 @@ class Planck15Om0(FlatLambdaCDM):
 
 class Planck15FlatwCDM(FlatwCDM):
     def __init__(self, Om0: float = 0.3075, w0: float = -1.0):
-
         planck15 = cosmo.Planck15
 
         super().__init__(

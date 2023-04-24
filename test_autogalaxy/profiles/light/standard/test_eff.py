@@ -66,7 +66,6 @@ def test__image_2d_from():
 
 
 def test__half_light_radius():
-
     eff = ag.lp.ElsonFreeFall(effective_radius=2.0, eta=4.0)
 
     assert eff.half_light_radius == pytest.approx(1.01964, 1e-2)

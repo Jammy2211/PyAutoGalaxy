@@ -9,7 +9,6 @@ directory = path.dirname(path.realpath(__file__))
 
 
 def test__plane_via_instance(masked_imaging_7x7):
-
     galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=0.1))
     clump = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=0.2))
 
@@ -28,7 +27,6 @@ def test__plane_via_instance(masked_imaging_7x7):
 
 
 def test__instance_with_associated_adapt_images_from(masked_imaging_7x7):
-
     galaxies = af.ModelInstance()
     galaxies.galaxy = ag.Galaxy(redshift=0.5)
     galaxies.source = ag.Galaxy(redshift=1.0)
@@ -73,7 +71,6 @@ def test__instance_with_associated_adapt_images_from(masked_imaging_7x7):
 def test__modify_before_fit__kmeans_pixelization_upper_limit_ajusted_based_on_mask(
     masked_imaging_7x7,
 ):
-
     mesh = af.Model(ag.mesh.DelaunayBrightnessImage)
     mesh.pixels = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
 

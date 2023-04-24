@@ -20,7 +20,6 @@ def test__visualizes_fit_imaging__uses_configs(
     plot_path,
     plot_patch,
 ):
-
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 

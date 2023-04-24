@@ -36,22 +36,18 @@ class OperateImage:
         psf: Optional[aa.Kernel2D],
         convolver: aa.Convolver,
     ) -> aa.Array2D:
-
         if psf is not None:
-
             return psf.convolved_array_with_mask_from(
                 array=image_2d.binned.native + blurring_image_2d.binned.native,
                 mask=image_2d.mask,
             )
 
         elif convolver is not None:
-
             return convolver.convolve_image(
                 image=image_2d, blurring_image=blurring_image_2d
             )
 
         else:
-
             raise exc.OperateException(
                 "A PSF or Convolver was not passed to the `blurred_image_2d_list_from()` function."
             )
@@ -262,7 +258,6 @@ class OperateImageList(OperateImage):
         blurred_image_2d_list = []
 
         for i in range(len(image_2d_operated_list)):
-
             image_2d_not_operated = image_2d_not_operated_list[i]
             blurring_image_2d_not_operated = blurring_image_2d_not_operated_list[i]
 
@@ -310,7 +305,6 @@ class OperateImageList(OperateImage):
         unmasked_blurred_image_list = []
 
         for padded_image_1d in padded_image_1d_list:
-
             unmasked_blurred_array_2d = padded_grid.mask.unmasked_blurred_array_from(
                 padded_array=padded_image_1d, psf=psf, image_shape=grid.mask.shape
             )
@@ -350,7 +344,6 @@ class OperateImageList(OperateImage):
         visibilities_list = []
 
         for image_2d in image_2d_list:
-
             if not np.any(image_2d):
                 visibilities = aa.Visibilities.zeros(
                     shape_slim=(transformer.uv_wavelengths.shape[0],)
@@ -418,7 +411,6 @@ class OperateImageGalaxies(OperateImageList):
         galaxy_blurred_image_2d_dict = {}
 
         for galaxy_key in galaxy_image_2d_not_operated_dict.keys():
-
             image_2d_not_operated = galaxy_image_2d_not_operated_dict[galaxy_key]
             blurring_image_2d_not_operated = galaxy_blurring_image_2d_not_operated_dict[
                 galaxy_key
@@ -469,7 +461,6 @@ class OperateImageGalaxies(OperateImageList):
         galaxy_visibilities_dict = {}
 
         for galaxy_key in galaxy_image_2d_dict.keys():
-
             image_2d = galaxy_image_2d_dict[galaxy_key]
 
             if not np.any(image_2d):
@@ -478,7 +469,6 @@ class OperateImageGalaxies(OperateImageList):
                 )
 
             else:
-
                 visibilities = transformer.visibilities_from(image=image_2d.binned)
 
             galaxy_visibilities_dict[galaxy_key] = visibilities

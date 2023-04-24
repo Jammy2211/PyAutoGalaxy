@@ -7,7 +7,6 @@ from autogalaxy import exc
 
 class Clicker:
     def __init__(self, image, pixel_scales, search_box_size):
-
         self.image = image
 
         pixel_scales = aa.util.geometry.convert_pixel_scales_2d(
@@ -20,9 +19,7 @@ class Clicker:
         self.click_list = []
 
     def onclick(self, event):
-
         if event.dblclick:
-
             y_arcsec = (
                 np.rint(event.ydata / self.pixel_scales[0]) * self.pixel_scales[0]
             )
@@ -42,7 +39,6 @@ class Clicker:
                 for x in range(
                     x_pixels - self.search_box_size, x_pixels + self.search_box_size
                 ):
-
                     flux_new = self.image.native[y, x]
 
                     if flux_new > flux:

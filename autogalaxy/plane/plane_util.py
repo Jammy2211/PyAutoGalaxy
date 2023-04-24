@@ -53,12 +53,13 @@ def plane_image_from(
     shape = grid.shape_native
 
     if zoom_to_brightest:
-
         try:
             image = sum(map(lambda g: g.image_2d_from(grid=grid), galaxies))
             image = image.native
 
-            zoom_percent = conf.instance["visualize"]["general"]["zoom"]["plane_percent"]
+            zoom_percent = conf.instance["visualize"]["general"]["zoom"][
+                "plane_percent"
+            ]
 
             fractional_value = np.max(image) * zoom_percent
 
@@ -178,7 +179,6 @@ def ordered_plane_redshifts_with_slicing_from(
     lens_redshifts.append(source_plane_redshift)
 
     for lens_plane_index in range(1, len(lens_redshifts)):
-
         previous_plane_redshift = lens_redshifts[lens_plane_index - 1]
         plane_redshift = lens_redshifts[lens_plane_index]
         slice_total = planes_between_lenses[lens_plane_index - 1]
@@ -202,7 +202,6 @@ def galaxies_in_redshift_ordered_planes_from(galaxies, plane_redshifts):
     galaxies_in_redshift_ordered_planes = [[] for i in range(len(plane_redshifts))]
 
     for galaxy in galaxies:
-
         index = (np.abs(np.asarray(plane_redshifts) - galaxy.redshift)).argmin()
 
         galaxies_in_redshift_ordered_planes[index].append(galaxy)
@@ -211,7 +210,6 @@ def galaxies_in_redshift_ordered_planes_from(galaxies, plane_redshifts):
 
 
 def planes_via_galaxies_from(galaxies, profiling_dict=None, plane_cls=Plane):
-
     plane_redshifts = ordered_plane_redshifts_from(galaxies=galaxies)
 
     galaxies_in_planes = galaxies_in_redshift_ordered_planes_from(

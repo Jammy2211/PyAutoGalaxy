@@ -115,7 +115,6 @@ class MassProfilePlotter(Plotter):
             plot_axis_type_override = None
 
         if convergence:
-
             convergence_1d = self.mass_profile.convergence_1d_from(grid=self.grid)
 
             self.mat_plot_1d.plot_yx(
@@ -133,7 +132,6 @@ class MassProfilePlotter(Plotter):
             )
 
         if potential:
-
             potential_1d = self.mass_profile.potential_1d_from(grid=self.grid)
 
             self.mat_plot_1d.plot_yx(
@@ -248,7 +246,6 @@ class MassProfilePDFPlotter(MassProfilePlotter):
             plot_axis_type_override = None
 
         if convergence:
-
             convergence_1d_list = [
                 mass_profile.convergence_1d_from(grid=self.grid)
                 for mass_profile in self.mass_profile_pdf_list
@@ -294,7 +291,6 @@ class MassProfilePDFPlotter(MassProfilePlotter):
             )
 
         if potential:
-
             potential_1d_list = [
                 mass_profile.potential_1d_from(grid=self.grid)
                 for mass_profile in self.mass_profile_pdf_list

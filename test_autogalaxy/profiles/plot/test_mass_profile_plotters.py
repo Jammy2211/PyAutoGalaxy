@@ -23,7 +23,6 @@ def test__figures_1d__all_are_output(
     plot_path,
     plot_patch,
 ):
-
     mat_plot_1d = aplt.MatPlot1D(
         half_light_radius_axvline=aplt.HalfLightRadiusAXVLine(color="r"),
         einstein_radius_axvline=aplt.EinsteinRadiusAXVLine(color="r"),
@@ -67,7 +66,6 @@ def test__figures_2d__all_are_output(
     plot_path,
     plot_patch,
 ):
-
     mass_profile_plotter = aplt.MassProfilePlotter(
         mass_profile=mp_0,
         grid=sub_grid_2d_7x7,

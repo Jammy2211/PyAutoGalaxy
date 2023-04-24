@@ -2,7 +2,6 @@ import autogalaxy as ag
 
 
 def test__signal_to_noise_via_simulator_correct():
-
     background_sky_level = 10.0
     exposure_time = 300.0
 

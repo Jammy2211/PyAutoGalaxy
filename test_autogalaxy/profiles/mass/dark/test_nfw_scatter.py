@@ -7,7 +7,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__scatter_is_nonzero():
-
     nfw = ag.mp.NFWMCRScatterLudlowSph(
         mass_at_200=1.0e9,
         scatter_sigma=1.0,

@@ -15,7 +15,6 @@ class gNFWMCRLudlow(gNFW):
         redshift_source: float = 1.0,
         inner_slope: float = 1.0,
     ):
-
         self.mass_at_200 = mass_at_200
         self.redshift_object = redshift_object
         self.redshift_source = redshift_source

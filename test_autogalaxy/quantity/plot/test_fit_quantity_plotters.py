@@ -24,7 +24,6 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
     plot_path,
     plot_patch,
 ):
-
     fit_quantity_plotter = aplt.FitQuantityPlotter(
         fit=fit_quantity_7x7_array_2d,
         include_2d=include_2d_all,
@@ -85,7 +84,6 @@ def test__fit_sub_plot__all_types_of_fit(
     plot_patch,
     plot_path,
 ):
-
     fit_quantity_plotter = aplt.FitQuantityPlotter(
         fit=fit_quantity_7x7_array_2d,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(path=plot_path, format="png")),

@@ -14,7 +14,6 @@ class Basis(LightProfile):
         light_profile_list: List[LightProfile],
         regularization: Optional[aa.AbstractRegularization] = None,
     ):
-
         super().__init__(
             centre=light_profile_list[0].centre,
             ell_comps=light_profile_list[0].ell_comps,
@@ -26,7 +25,6 @@ class Basis(LightProfile):
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> aa.Array2D:
-
         return sum(self.image_2d_list_from(grid=grid, operated_only=operated_only))
 
     def image_2d_list_from(

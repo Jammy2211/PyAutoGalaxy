@@ -66,9 +66,7 @@ class VisualizerImaging(Visualizer):
             fit_imaging_plotter.subplot_of_galaxies()
 
         if not during_analysis:
-
             if should_plot("all_at_end_png"):
-
                 fit_imaging_plotter.figures_2d(
                     data=True,
                     noise_map=True,
@@ -84,7 +82,6 @@ class VisualizerImaging(Visualizer):
                 )
 
             if should_plot("all_at_end_fits"):
-
                 mat_plot_2d = self.mat_plot_2d_from(
                     subfolders=path.join("fit_dataset", "fits"), format="fits"
                 )

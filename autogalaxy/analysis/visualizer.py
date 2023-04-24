@@ -1,6 +1,6 @@
 import os
 from os import path
-from typing import List, Optional, Union
+from typing import Dict, List, Union
 
 from autoconf import conf
 import autoarray as aa
@@ -22,7 +22,6 @@ def setting(section: Union[List[str], str], name: str):
         return conf.instance["visualize"]["plots"][section][name]
 
     for sect in reversed(section):
-
         try:
             return conf.instance["visualize"]["plots"][sect][name]
         except KeyError:
@@ -146,7 +145,6 @@ class Visualizer:
         )
 
         if should_plot("subplot_dataset"):
-
             imaging_plotter.subplot_dataset()
 
     def visualize_interferometer(self, interferometer: aa.Interferometer):
@@ -230,11 +228,9 @@ class Visualizer:
         )
 
         if should_plot("subplot_plane"):
-
             plane_plotter.subplot()
 
         if should_plot("subplot_galaxy_images"):
-
             plane_plotter.subplot_galaxy_images()
 
         plane_plotter.figures_2d(
@@ -247,9 +243,7 @@ class Visualizer:
         )
 
         if not during_analysis:
-
             if should_plot("all_at_end_png"):
-
                 plane_plotter.figures_2d(
                     image=True,
                     convergence=True,
@@ -260,7 +254,6 @@ class Visualizer:
                 )
 
             if should_plot("all_at_end_fits"):
-
                 fits_mat_plot_2d = self.mat_plot_2d_from(
                     subfolders=path.join("plane", "fits"), format="fits"
                 )
@@ -314,7 +307,6 @@ class Visualizer:
         mat_plot_1d = self.mat_plot_1d_from(subfolders="galaxies")
 
         for galaxy in galaxies:
-
             galaxy_plotter = GalaxyPlotter(
                 galaxy=galaxy,
                 grid=grid,
@@ -375,16 +367,13 @@ class Visualizer:
         )
 
         if should_plot("subplot_inversion"):
-
             mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
 
             for mapper_index in range(len(mapper_list)):
                 inversion_plotter.subplot_of_mapper(mapper_index=mapper_index)
 
         if not during_analysis:
-
             if should_plot("all_at_end_png"):
-
                 inversion_plotter.figures_2d(reconstructed_image=True)
 
                 inversion_plotter.figures_2d_of_pixelization(
@@ -400,7 +389,7 @@ class Visualizer:
 
     def visualize_adapt_images(
         self,
-        adapt_galaxy_image_path_dict: {str, aa.Array2D},
+        adapt_galaxy_image_path_dict: Dict[str, aa.Array2D],
         adapt_model_image: aa.Array2D,
     ):
         """
@@ -436,7 +425,6 @@ class Visualizer:
             hyper_plotter.figure_adapt_model_image(adapt_model_image=adapt_model_image)
 
         if should_plot("images_of_galaxies"):
-
             hyper_plotter.subplot_adapt_images_of_galaxies(
                 adapt_galaxy_image_path_dict=adapt_galaxy_image_path_dict
             )

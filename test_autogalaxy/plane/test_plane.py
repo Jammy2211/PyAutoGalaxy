@@ -12,7 +12,6 @@ from autogalaxy.plane import plane
 
 
 def critical_curve_via_magnification_via_plane_from(plane, grid):
-
     magnification = plane.magnification_2d_from(grid=grid)
 
     inverse_magnification = 1 / magnification
@@ -62,7 +61,6 @@ def caustics_via_magnification_via_plane_from(plane, grid):
 
 
 def test__has():
-
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
     assert plane.has(cls=ag.LightProfile) is False
 
@@ -86,7 +84,6 @@ def test__has():
 
 
 def test__cls_list_from():
-
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
 
     assert plane.cls_list_from(cls=ag.mp.MassProfile) == []
@@ -227,7 +224,6 @@ def test__image_2d_list_from(sub_grid_2d_7x7):
 
 
 def test__image_2d_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_0):
-
     image_2d_not_operated = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
     image_2d_operated = lp_operated_0.image_2d_from(grid=sub_grid_2d_7x7)
 
@@ -252,7 +248,6 @@ def test__image_2d_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_
 
 
 def test__image_2d_list_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_0):
-
     image_2d_not_operated = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
     image_2d_operated = lp_operated_0.image_2d_from(grid=sub_grid_2d_7x7)
 
@@ -281,7 +276,6 @@ def test__image_2d_list_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_oper
 
 
 def test__galaxy_image_2d_dict_from(sub_grid_2d_7x7):
-
     g0 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.Sersic(intensity=1.0))
     g1 = ag.Galaxy(
         redshift=0.5,
@@ -321,7 +315,6 @@ def test__galaxy_image_2d_dict_from(sub_grid_2d_7x7):
 
 
 def test__light_profile_snr__signal_to_noise_via_simulator_correct():
-
     background_sky_level = 10.0
     exposure_time = 300.0
 
@@ -351,7 +344,6 @@ def test__light_profile_snr__signal_to_noise_via_simulator_correct():
 
 
 def test__plane_image_2d_from(sub_grid_2d_7x7):
-
     sub_grid_2d_7x7[1] = np.array([2.0, 2.0])
 
     galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
@@ -368,7 +360,6 @@ def test__plane_image_2d_from(sub_grid_2d_7x7):
 
 
 def test__convergence_2d_from(sub_grid_2d_7x7):
-
     g0 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.IsothermalSph(einstein_radius=1.0))
     g1 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.IsothermalSph(einstein_radius=2.0))
 
@@ -400,7 +391,6 @@ def test__convergence_2d_from(sub_grid_2d_7x7):
 
 
 def test__potential_2d_from(sub_grid_2d_7x7):
-
     g0 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.IsothermalSph(einstein_radius=1.0))
     g1 = ag.Galaxy(redshift=0.5, mass_profile=ag.mp.IsothermalSph(einstein_radius=2.0))
 
@@ -509,7 +499,6 @@ def test__traced_grid_from(sub_grid_2d_7x7, sub_grid_2d_7x7_simple, gal_x1_mp):
 
 
 def test__extract_attribute():
-
     g0 = ag.Galaxy(
         redshift=0.5, mp_0=ag.m.MockMassProfile(value=0.9, value1=(1.0, 1.0))
     )
@@ -547,7 +536,6 @@ def test__extract_attribute():
 
 
 def test__extract_attributes_of_galaxies():
-
     g0 = ag.Galaxy(
         redshift=0.5, mp_0=ag.m.MockMassProfile(value=0.9, value1=(1.0, 1.0))
     )
@@ -631,7 +619,6 @@ def test__galaxy_redshifts_gives_list_of_redshifts():
 
 
 def test__grid_iterate_in__iterates_grid_correctly(gal_x1_lp):
-
     mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True],
@@ -682,7 +669,6 @@ def test__grid_iterate_in__iterates_grid_correctly(gal_x1_lp):
 
 
 def test__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
-
     mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True],

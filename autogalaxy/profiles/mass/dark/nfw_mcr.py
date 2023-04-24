@@ -17,7 +17,6 @@ class NFWMCRDuffySph(NFWSph):
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
     ):
-
         self.mass_at_200 = mass_at_200
         self.redshift_object = redshift_object
         self.redshift_source = redshift_source
@@ -35,7 +34,6 @@ class NFWMCRDuffySph(NFWSph):
         super().__init__(centre=centre, kappa_s=kappa_s, scale_radius=scale_radius)
 
     def with_new_normalization(self, normalization):
-
         raise NotImplementedError()
 
 
@@ -48,7 +46,6 @@ class NFWMCRLudlow(NFW):
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
     ):
-
         self.mass_at_200 = mass_at_200
         self.redshift_object = redshift_object
         self.redshift_source = redshift_source
@@ -80,7 +77,6 @@ class NFWMCRLudlowSph(NFWMCRScatterLudlowSph):
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
     ):
-
         super().__init__(
             centre=centre,
             mass_at_200=mass_at_200,

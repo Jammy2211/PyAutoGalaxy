@@ -4,7 +4,6 @@ from autofit.non_linear.samples.pdf import quantile
 
 
 def value_median_and_error_region_via_quantile(value_list, low_limit):
-
     median_profile_1d = quantile(x=value_list, q=0.5)
     lower_profile_1d = quantile(x=value_list, q=low_limit)
     upper_profile_1d = quantile(x=value_list, q=1 - low_limit)
@@ -13,7 +12,6 @@ def value_median_and_error_region_via_quantile(value_list, low_limit):
 
 
 def profile_1d_median_and_error_region_via_quantile(profile_1d_list, low_limit):
-
     median_profile_1d = quantile_profile_1d(profile_1d_list=profile_1d_list, q=0.5)
     lower_profile_1d = quantile_profile_1d(profile_1d_list=profile_1d_list, q=low_limit)
     upper_profile_1d = quantile_profile_1d(
@@ -63,7 +61,6 @@ def quantile_profile_1d(profile_1d_list, q, weights=None):
     radial_quantile = np.zeros(shape=profile_1d_list[0].shape[0])
 
     for radial_index in range(profile_1d_list[0].shape[0]):
-
         radial_list = [profile_1d[radial_index] for profile_1d in profile_1d_list]
 
         radial_quantile[radial_index] = quantile(x=radial_list, q=q, weights=weights)[0]

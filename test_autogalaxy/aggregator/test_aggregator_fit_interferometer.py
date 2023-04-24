@@ -10,7 +10,6 @@ from test_autogalaxy.aggregator.conftest import clean
 def test__fit_interferometer_randomly_drawn_via_pdf_gen_from(
     interferometer_7, samples, model
 ):
-
     path_prefix = "aggregator_fit_interferometer_gen"
 
     database_file = path.join(conf.instance.output_path, "fit_interferometer.sqlite")
@@ -36,7 +35,6 @@ def test__fit_interferometer_randomly_drawn_via_pdf_gen_from(
     i = 0
 
     for fit_interferometer_gen in fit_interferometer_pdf_gen:
-
         for fit_interferometer in fit_interferometer_gen:
             i += 1
 
@@ -49,7 +47,6 @@ def test__fit_interferometer_randomly_drawn_via_pdf_gen_from(
 
 
 def test__fit_interferometer_all_above_weight_gen(interferometer_7, samples, model):
-
     path_prefix = "aggregator_fit_interferometer_gen"
 
     database_file = path.join(conf.instance.output_path, "fit_interferometer.sqlite")
@@ -75,9 +72,7 @@ def test__fit_interferometer_all_above_weight_gen(interferometer_7, samples, mod
     i = 0
 
     for fit_interferometer_gen in fit_interferometer_pdf_gen:
-
         for fit_interferometer in fit_interferometer_gen:
-
             i += 1
 
             if i == 1:

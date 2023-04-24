@@ -98,11 +98,9 @@ class Gaussian(MassProfile, StellarProfile):
         """
 
         def calculate_deflection_component(npow, index):
-
             deflection_grid = self.axis_ratio * grid[:, index]
 
             for i in range(grid.shape[0]):
-
                 deflection_grid[i] *= (
                     self.intensity
                     * self.mass_to_light_ratio
@@ -215,7 +213,6 @@ class Gaussian(MassProfile, StellarProfile):
         return output_grid
 
     def with_new_normalization(self, normalization):
-
         mass_profile = copy.copy(self)
         mass_profile.mass_to_light_ratio = normalization
         return mass_profile

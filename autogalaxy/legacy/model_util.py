@@ -25,15 +25,12 @@ logger.setLevel(level="INFO")
 
 
 def clean_model_of_adapt_images(model):
-
     for galaxy in model.galaxies:
-
         del galaxy.adapt_model_image
         del galaxy.adapt_galaxy_image
 
     if hasattr(model, "clumps"):
         for clump in model.clumps:
-
             del clump.adapt_model_image
             del clump.adapt_galaxy_image
 
@@ -91,11 +88,9 @@ def hyper_noise_model_from(
     model.hyper_background_noise = setup_adapt.hyper_background_noise
 
     if setup_adapt.hyper_galaxy_names is not None:
-
         for path_galaxy, galaxy in result.path_galaxy_tuples:
             if path_galaxy[-1] in setup_adapt.hyper_galaxy_names:
                 if not np.all(result.adapt_galaxy_image_path_dict[path_galaxy] == 0):
-
                     galaxy = getattr(model.galaxies, path_galaxy[-1])
 
                     setattr(galaxy, "hyper_galaxy", af.Model(HyperGalaxy))
@@ -176,11 +171,9 @@ def hyper_pix_model_from(
             pass
 
     if setup_adapt.hyper_galaxy_names is not None:
-
         for path_galaxy, galaxy in result.path_galaxy_tuples:
             if path_galaxy[-1] in setup_adapt.hyper_galaxy_names:
                 if not np.all(result.adapt_galaxy_image_path_dict[path_galaxy] == 0):
-
                     model_galaxy = getattr(model.galaxies, path_galaxy[-1])
 
                     setattr(model_galaxy, "hyper_galaxy", galaxy.hyper_galaxy)
@@ -196,11 +189,9 @@ def adapt_fit_no_noise(
     use_positive_only_solver: bool = False,
     include_hyper_image_sky: bool = False,
 ):
-
     analysis.set_adapt_dataset(result=result)
 
     if use_positive_only_solver:
-
         analysis.settings_inversion.use_positive_only_solver = True
 
     hyper_model_pix = hyper_pix_model_from(
@@ -210,7 +201,6 @@ def adapt_fit_no_noise(
     )
 
     if hyper_model_pix is None:
-
         return result
 
     search = setup_adapt.search_pix_cls(
@@ -273,7 +263,6 @@ def adapt_fit(
     """
 
     if analysis.adapt_model_image is None:
-
         analysis.set_adapt_dataset(result=result)
 
     hyper_noise_model = hyper_noise_model_from(
@@ -283,7 +272,6 @@ def adapt_fit(
     )
 
     if hyper_noise_model is None:
-
         return adapt_fit_no_noise(
             setup_adapt=setup_adapt,
             result=result,
@@ -297,7 +285,6 @@ def adapt_fit(
         analysis.settings_inversion.use_positive_only_solver = True
 
     if hyper_noise_model is not None:
-
         search = setup_adapt.search_noise_cls(
             path_prefix=search_previous.path_prefix_no_unique_tag,
             name=f"{search_previous.paths.name}__hyper_noise",
@@ -319,7 +306,6 @@ def adapt_fit(
     )
 
     if hyper_pix_model is None:
-
         result.adapt = hyper_noise_result
 
         return result
@@ -399,11 +385,9 @@ def hyper_model_from(
     model.hyper_background_noise = setup_adapt.hyper_background_noise
 
     if setup_adapt.hyper_galaxy_names is not None:
-
         for path_galaxy, galaxy in result.path_galaxy_tuples:
             if path_galaxy[-1] in setup_adapt.hyper_galaxy_names:
                 if not np.all(result.adapt_galaxy_image_path_dict[path_galaxy] == 0):
-
                     galaxy = getattr(model.galaxies, path_galaxy[-1])
 
                     setattr(galaxy, "hyper_galaxy", af.Model(HyperGalaxy))

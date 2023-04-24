@@ -5,7 +5,6 @@ import pytest
 
 class TestSimulatorInterferometer:
     def test__from_plane__same_as_plane_input(self):
-
         grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
 
         galaxy_0 = ag.Galaxy(
@@ -42,7 +41,6 @@ class TestSimulatorInterferometer:
     def test__simulate_interferometer_from_galaxy__source_galaxy__compare_to_interferometer(
         self,
     ):
-
         galaxy_0 = ag.Galaxy(
             redshift=0.5,
             mass=ag.mp.Isothermal(

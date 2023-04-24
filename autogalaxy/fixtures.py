@@ -5,7 +5,6 @@ import autogalaxy.plot as aplt
 
 
 def make_masked_imaging_7x7():
-
     imaging_7x7 = make_imaging_7x7()
 
     masked_imaging_7x7 = imaging_7x7.apply_mask(mask=make_sub_mask_2d_7x7())
@@ -14,7 +13,6 @@ def make_masked_imaging_7x7():
 
 
 def make_masked_imaging_covariance_7x7():
-
     imaging_7x7 = make_imaging_covariance_7x7()
 
     masked_imaging_7x7 = imaging_7x7.apply_mask(mask=make_sub_mask_2d_7x7())
@@ -150,7 +148,6 @@ def make_planck15():
 
 
 def make_dataset_quantity_7x7_array_2d():
-
     return ag.DatasetQuantity(
         data=aa.Array2D.ones(shape_native=(7, 7), pixel_scales=1.0),
         noise_map=aa.Array2D.full(
@@ -160,7 +157,6 @@ def make_dataset_quantity_7x7_array_2d():
 
 
 def make_dataset_quantity_7x7_vector_yx_2d():
-
     return ag.DatasetQuantity(
         data=aa.VectorYX2D.ones(shape_native=(7, 7), pixel_scales=1.0),
         noise_map=aa.VectorYX2D.full(
@@ -170,7 +166,6 @@ def make_dataset_quantity_7x7_vector_yx_2d():
 
 
 def make_fit_quantity_7x7_array_2d():
-
     return ag.FitQuantity(
         dataset=make_dataset_quantity_7x7_array_2d(),
         light_mass_obj=make_plane_7x7(),
@@ -179,7 +174,6 @@ def make_fit_quantity_7x7_array_2d():
 
 
 def make_fit_quantity_7x7_vector_yx_2d():
-
     return ag.FitQuantity(
         dataset=make_dataset_quantity_7x7_vector_yx_2d(),
         light_mass_obj=make_plane_7x7(),

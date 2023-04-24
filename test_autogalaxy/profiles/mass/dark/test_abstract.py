@@ -5,7 +5,6 @@ import autogalaxy as ag
 
 
 def test__coord_function_f__from():
-
     truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=3.0
     )
@@ -54,7 +53,6 @@ def test__coord_function_g__from():
 
 
 def test__coord_function_h__from():
-
     truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=3.0
     )
@@ -65,7 +63,6 @@ def test__coord_function_h__from():
 
 
 def test__coord_function_k__from():
-
     truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=2.0
     )
@@ -84,7 +81,6 @@ def test__coord_function_k__from():
 
 
 def test__coord_function_l__from():
-
     truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=2.0
     )
@@ -111,7 +107,6 @@ def test__coord_function_l__from():
 
 
 def test__coord_function_m__from():
-
     truncated_nfw = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=2.0, scale_radius=10.0, truncation_radius=2.0
     )
@@ -138,7 +133,6 @@ def test__coord_function_m__from():
 
 
 def test__rho_at_scale_radius__unit_conversions():
-
     cosmology = ag.m.MockCosmology(
         arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=2.0
     )
@@ -201,7 +195,6 @@ def test__delta_concentration_value_in_default_units():
 
 
 def test__solve_concentration():
-
     cosmology = ag.m.MockCosmology(
         arcsec_per_kpc=1.0,
         kpc_per_arcsec=1.0,
@@ -235,7 +228,6 @@ def test__radius_at_200__different_length_units_include_conversions():
 
 
 def test__mass_at_200__unit_conversions_work():
-
     nfw = ag.mp.NFWSph(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
     cosmology = ag.m.MockCosmology(
@@ -275,7 +267,6 @@ def test__mass_at_200__unit_conversions_work():
 
 
 def test__values_of_quantities_for_real_cosmology():
-
     cosmology = ag.cosmo.LambdaCDM(H0=70.0, Om0=0.3, Ode0=0.7)
 
     nfw = ag.mp.NFWTruncatedSph(kappa_s=0.5, scale_radius=5.0, truncation_radius=10.0)

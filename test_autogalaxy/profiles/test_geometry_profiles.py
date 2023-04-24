@@ -12,7 +12,6 @@ directory = path.dirname(path.realpath(__file__))
 
 
 def test__cos_and_sin_from_x():
-
     elliptical_profile = geometry_profiles.EllProfile(
         centre=(1.0, 1.0), ell_comps=(0.0, 0.0)
     )
@@ -46,7 +45,6 @@ def test__cos_and_sin_from_x():
 
 
 def test__eccentric_radii_grid_from():
-
     elliptical_profile = geometry_profiles.EllProfile(ell_comps=(0.0, 0.0))
 
     eccentric_radius = elliptical_profile.eccentric_radii_grid_from(
@@ -77,7 +75,6 @@ def test__eccentric_radii_grid_from():
 
 
 def test__spherical__transform_to_reference_frame__coordinate_shifts_using_centre():
-
     spherical_profile = geometry_profiles.SphProfile(centre=(0.0, 0.0))
 
     transformed_grid = spherical_profile.transformed_from_reference_frame_grid_from(
@@ -113,7 +110,6 @@ def test__spherical__transform_to_reference_frame__coordinate_shifts_using_centr
 
 
 def test__spherical__transform_to_and_from_reference_frame():
-
     spherical_profile = geometry_profiles.SphProfile(centre=(0.0, 0.0))
 
     grid = np.array([[1.0, 1.0]])
@@ -138,7 +134,6 @@ def test__spherical__transform_to_and_from_reference_frame():
 
 
 def test__elliptical__transform_grid_to_and_from_reference_frame():
-
     elliptical_profile = geometry_profiles.EllProfile(ell_comps=(0.0, 0.0))
 
     transformed_grid = elliptical_profile.transformed_to_reference_frame_grid_from(

@@ -6,7 +6,6 @@ import autogalaxy as ag
 
 
 def test__elliptical_properties_and_patches():
-
     vectors = ag.ShearYX2D.no_mask(
         values=[(0.0, 1.0), (1.0, 0.0), (1.0, 1.0), (0.0, 0.0)],
         shape_native=(2, 2),

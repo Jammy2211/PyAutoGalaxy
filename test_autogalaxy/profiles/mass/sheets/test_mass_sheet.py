@@ -114,7 +114,6 @@ def test__deflections_yx_2d_from():
 
 
 def test__convergence_2d_from():
-
     mass_sheet = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=1.0)
 
     convergence = mass_sheet.convergence_2d_from(grid=np.array([[1.0, 0.0]]))

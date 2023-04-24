@@ -22,7 +22,6 @@ class MockCosmology(Planck15):
         critical_surface_density=2.0,
         cosmic_average_density=2.0,
     ):
-
         super().__init__()
 
         self.arcsec_per_kpc = arcsec_per_kpc

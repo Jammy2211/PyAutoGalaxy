@@ -77,9 +77,7 @@ class VisualizerInterferometer(Visualizer):
         )
 
         if not during_analysis:
-
             if should_plot("all_at_end_png"):
-
                 fit_interferometer_plotter.figures_2d(
                     visibilities=True,
                     noise_map=True,
@@ -94,7 +92,6 @@ class VisualizerInterferometer(Visualizer):
                 )
 
             if should_plot("all_at_end_fits"):
-
                 mat_plot_2d = self.mat_plot_2d_from(
                     subfolders=path.join("fit_dataset", "fits"), format="fits"
                 )

@@ -50,7 +50,6 @@ def _imaging_from(fit: af.Fit, settings_imaging: Optional[aa.SettingsImaging] = 
 
 class ImagingAgg:
     def __init__(self, aggregator: af.Aggregator):
-
         self.aggregator = aggregator
 
     def imaging_gen_from(self, settings_imaging: Optional[aa.SettingsImaging] = None):
@@ -65,7 +64,8 @@ class ImagingAgg:
         Parameters
         ----------
         aggregator
-            A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits."""
+            A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits.
+        """
 
         func = partial(_imaging_from, settings_imaging=settings_imaging)
 

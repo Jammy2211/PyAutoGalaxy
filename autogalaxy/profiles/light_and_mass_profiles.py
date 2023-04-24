@@ -502,7 +502,6 @@ class SersicCore(lp.SersicCore, mp.SersicCore, LightMassProfile):
         alpha: float = 3.0,
         mass_to_light_ratio: float = 1.0,
     ):
-
         lp.SersicCore.__init__(
             self,
             centre=centre,
@@ -628,7 +627,6 @@ class Chameleon(lp.Chameleon, mp.Chameleon, LightMassProfile):
         core_radius_1: float = 0.005,
         mass_to_light_ratio: float = 1.0,
     ):
-
         lp.Chameleon.__init__(
             self,
             centre=centre,

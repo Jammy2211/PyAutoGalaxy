@@ -65,7 +65,6 @@ class PlanePlotter(PlanePlotterBase):
         )
 
         if contribution_map:
-
             self.mat_plot_2d.plot_array(
                 array=self.plane.contribution_map,
                 visuals_2d=self.get_visuals_2d(),

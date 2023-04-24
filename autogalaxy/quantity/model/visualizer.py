@@ -69,7 +69,6 @@ class VisualizerQuantity(Visualizer):
         )
 
         if should_plot("all_at_end_fits"):
-
             mat_plot_2d = self.mat_plot_2d_from(
                 subfolders="fit_quantity/fits", format="fits"
             )

@@ -7,7 +7,6 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__deflections_yx_2d_from():
-
     isothermal = ag.mp.IsothermalSph(centre=(-0.7, 0.5), einstein_radius=1.3)
 
     deflections = isothermal.deflections_yx_2d_from(grid=np.array([[0.1875, 0.1625]]))
@@ -51,7 +50,6 @@ def test__deflections_yx_2d_from():
 
 
 def test__convergence_2d_from():
-
     # eta = 1.0
     # kappa = 0.5 * 1.0 ** 1.0
 
@@ -96,7 +94,6 @@ def test__convergence_2d_from():
 
 
 def test__potential_2d_from():
-
     isothermal = ag.mp.IsothermalSph(centre=(-0.7, 0.5), einstein_radius=1.3)
 
     potential = isothermal.potential_2d_from(grid=np.array([[0.1875, 0.1625]]))
@@ -124,7 +121,6 @@ def test__potential_2d_from():
 
 
 def test__shear_2d_from():
-
     isothermal = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     convergence = isothermal.convergence_2d_from(grid=np.array([[0.0, 1.0]]))

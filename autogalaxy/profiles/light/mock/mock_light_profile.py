@@ -18,7 +18,6 @@ class MockLightProfile(ag.LightProfile):
         value=None,
         value1=None,
     ):
-
         super().__init__()
 
         self.image_2d = image_2d
@@ -31,14 +30,12 @@ class MockLightProfile(ag.LightProfile):
     @aa.grid_dec.grid_2d_to_structure
     @check_operated_only
     def image_2d_from(self, grid, operated_only: Optional[bool] = None):
-
         if self.image_2d is not None:
             return self.image_2d
 
         image_2d = np.ones(shape=(grid.shape[0]))
 
         if self.image_2d_first_value is not None:
-
             image_2d[0] = self.image_2d_first_value
 
         return image_2d
