@@ -1,3 +1,5 @@
+from itertools import count
+
 """
 This class is depreciated but here to retain backwards compatibility with older scripts.
 """
