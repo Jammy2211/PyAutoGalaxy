@@ -200,7 +200,7 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
         plane=plane_linear,
         settings_pixelization=ag.SettingsPixelization(use_border=False),
         settings_inversion=ag.SettingsInversion(
-            use_w_tilde=False, no_regularization_add_to_curvature_diag=False
+            use_w_tilde=False, no_regularization_add_to_curvature_diag_value=False
         ),
     )
 
