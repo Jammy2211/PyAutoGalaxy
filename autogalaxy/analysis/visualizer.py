@@ -131,7 +131,7 @@ class Visualizer:
         def should_plot(name):
             return plot_setting(section=["dataset", "imaging"], name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="imaging")
+        mat_plot_2d = self.mat_plot_2d_from(subfolders="dataset")
 
         imaging_plotter = aplt.ImagingPlotter(
             imaging=imaging, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
@@ -169,7 +169,7 @@ class Visualizer:
         def should_plot(name):
             return plot_setting(section=["dataset", "interferometer"], name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="interferometer")
+        mat_plot_2d = self.mat_plot_2d_from(subfolders="dataset")
 
         interferometer_plotter = aplt.InterferometerPlotter(
             dataset=interferometer,
@@ -221,7 +221,9 @@ class Visualizer:
         def should_plot(name):
             return plot_setting(section="plane", name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="plane")
+        subfolders = "plane"
+
+        mat_plot_2d = self.mat_plot_2d_from(subfolders=subfolders)
 
         plane_plotter = PlanePlotter(
             plane=plane, grid=grid, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
@@ -242,37 +244,47 @@ class Visualizer:
             magnification=should_plot("magnification"),
         )
 
-        if not during_analysis:
-            if should_plot("all_at_end_png"):
-                plane_plotter.figures_2d(
-                    image=True,
-                    convergence=True,
-                    potential=True,
-                    deflections_y=True,
-                    deflections_x=True,
-                    magnification=True,
-                )
+        if not during_analysis and should_plot("all_at_end_png"):
+            mat_plot_2d = self.mat_plot_2d_from(
+                subfolders=path.join(subfolders, "end"),
+            )
 
-            if should_plot("all_at_end_fits"):
-                fits_mat_plot_2d = self.mat_plot_2d_from(
-                    subfolders=path.join("plane", "fits"), format="fits"
-                )
+            plane_plotter = PlanePlotter(
+                plane=plane,
+                grid=grid,
+                mat_plot_2d=mat_plot_2d,
+                include_2d=self.include_2d,
+            )
 
-                plane_plotter = PlanePlotter(
-                    plane=plane,
-                    grid=grid,
-                    mat_plot_2d=fits_mat_plot_2d,
-                    include_2d=self.include_2d,
-                )
+            plane_plotter.figures_2d(
+                image=True,
+                convergence=True,
+                potential=True,
+                deflections_y=True,
+                deflections_x=True,
+                magnification=True,
+            )
 
-                plane_plotter.figures_2d(
-                    image=True,
-                    convergence=True,
-                    potential=True,
-                    deflections_y=True,
-                    deflections_x=True,
-                    magnification=True,
-                )
+        if not during_analysis and should_plot("all_at_end_fits"):
+            mat_plot_2d = self.mat_plot_2d_from(
+                subfolders=path.join(subfolders, "fits"), format="fits"
+            )
+
+            plane_plotter = PlanePlotter(
+                plane=plane,
+                grid=grid,
+                mat_plot_2d=mat_plot_2d,
+                include_2d=self.include_2d,
+            )
+
+            plane_plotter.figures_2d(
+                image=True,
+                convergence=True,
+                potential=True,
+                deflections_y=True,
+                deflections_x=True,
+                magnification=True,
+            )
 
     def visualize_galaxies(
         self, galaxies: [List[Galaxy]], grid: aa.type.Grid2DLike, during_analysis: bool
@@ -348,7 +360,9 @@ class Visualizer:
         def should_plot(name):
             return plot_setting(section="inversion", name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="inversion")
+        subfolders = "inversion"
+
+        mat_plot_2d = self.mat_plot_2d_from(subfolders=subfolders)
 
         inversion_plotter = aplt.InversionPlotter(
             inversion=inversion, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
@@ -372,20 +386,42 @@ class Visualizer:
             for mapper_index in range(len(mapper_list)):
                 inversion_plotter.subplot_of_mapper(mapper_index=mapper_index)
 
-        if not during_analysis:
-            if should_plot("all_at_end_png"):
-                inversion_plotter.figures_2d(reconstructed_image=True)
+        if not during_analysis and should_plot("all_at_end_png"):
+            mat_plot_2d = self.mat_plot_2d_from(subfolders=path.join(subfolders, "end"))
 
-                inversion_plotter.figures_2d_of_pixelization(
-                    pixelization_index=0,
-                    reconstructed_image=True,
-                    reconstruction=True,
-                    errors=True,
-                    residual_map=True,
-                    normalized_residual_map=True,
-                    chi_squared_map=True,
-                    regularization_weights=True,
-                )
+            inversion_plotter = aplt.InversionPlotter(
+                inversion=inversion, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+            )
+
+            inversion_plotter.figures_2d(reconstructed_image=True)
+
+            inversion_plotter.figures_2d_of_pixelization(
+                pixelization_index=0,
+                reconstructed_image=True,
+                reconstruction=True,
+                errors=True,
+                regularization_weights=True,
+            )
+
+        if not during_analysis and should_plot("all_at_end_fits"):
+            mat_plot_2d = self.mat_plot_2d_from(
+                subfolders=path.join(subfolders, "fits"), format="fits"
+            )
+
+            inversion_plotter = aplt.InversionPlotter(
+                inversion=inversion, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+            )
+
+            inversion_plotter.figures_2d(reconstructed_image=True)
+
+            inversion_plotter.figures_2d_of_pixelization(
+                pixelization_index=0,
+                reconstructed_image=True,
+                reconstruction=True,
+                errors=True,
+                regularization_weights=True,
+                interpolate_to_uniform=True,
+            )
 
     def visualize_adapt_images(
         self,

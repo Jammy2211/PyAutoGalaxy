@@ -1,80 +1,89 @@
-dataset:
-  subplot_dataset: true
+# The `plots` section customizes every image that is output to hard-disk during a model-fit.
+
+# For example, if `plots: fit: subplot_fit=True``, the ``fit_dataset.png`` subplot file will
+# be plotted every time visualization is performed.
+
+dataset:                                   # Settings for plots of all datasets (e.g. ImagingPlotter, InterferometerPlotter).
+  subplot_dataset: true                    # Plot subplot containing all dataset quantities (e.g. the data, noise-map, etc.)?
   data: false
   noise_map: false
   signal_to_noise_map: false
-fit:
-  subplot_fit: true
-  subplot_of_galaxies: true
-  subplot_galaxy_images: true
-  subtracted_images_of_galaxies: true
-  chi_squared_map: false
+imaging:                                   # Settings for plots of imaging datasets (e.g. ImagingPlotter).
+  psf: false
+fit:                                       # Settings for plots of all fits (e.g. FitImagingPlotter, FitInterferometerPlotter).
+  subplot_fit: true                        # Plot subplot of all fit quantities for any dataset (e.g. the model data, residual-map, etc.)?
+  all_at_end_png: true                     # Plot all individual plots listed below as .png (even if False)?
+  all_at_end_fits: true                    # Plot all individual plots listed below as .fits (even if False)?
+  all_at_end_pdf: false                    # Plot all individual plots listed below as publication-quality .pdf (even if False)?
+  subplot_of_galaxies: false               # Plot subplot of the model-image, subtracted image and other quantities of each galaxy?
+  subplot_galaxy_images: false             # Plot subplot of the image of each galaxy in the model?
+  subtracted_images_of_galaxies: false
   data: false
+  noise_map: false
+  signal_to_noise_map: false
   model_data: false
-  model_images_of_galaxies: true
-  noise_map: false
-  normalized_residual_map: false
   residual_map: false
-  signal_to_noise_map: false
-  all_at_end_fits: false
-  all_at_end_png: false
-fit_imaging: {}
-fit_interferometer:
+  normalized_residual_map: false
+  chi_squared_map: false
+  model_images_of_galaxies: false          # Plot individual plots of each galaxy's model image?
+fit_imaging: {}                            # Settings for plots of fits to imaging datasets (e.g. FitImagingPlotter).
+plane:                                     # Settings for plots of planes (e.g. PlanePlotter).
+  subplot_plane: true                      # Plot subplot of all quantities in each plane (e.g. images, convergence)?
+  all_at_end_png: true                     # Plot all individual plots listed below as .png (even if False)?
+  all_at_end_fits: true                    # Plot all individual plots listed below as .fits (even if False)?
+  all_at_end_pdf: false                    # Plot all individual plots listed below as publication-quality .pdf (even if False)?
+  subplot_galaxy_images: false             # Plot subplot of the image of each galaxy in the model?
+  image: false
+  source_plane_image: false
+  convergence: false
+  deflections: false
+  potential: false
+  magnification: false
+galaxies:                                  # Settings for plots of galaxies (e.g GalaxyPlotter).
+  image: false
+  convergence: false
+  potential: false
+inversion:                                 # Settings for plots of inversions (e.g. InversionPlotter).
+  subplot_inversion: true                  # Plot subplot of all quantities in each inversion (e.g. reconstrucuted image, reconstruction)?
+  all_at_end_png: true                     # Plot all individual plots listed below as .png (even if False)?
+  all_at_end_fits: true                    # Plot all individual plots listed below as .fits (even if False)?
+  all_at_end_pdf: false                    # Plot all individual plots listed below as publication-quality .pdf (even if False)?
+  errors: false
+  reconstructed_image: false
+  reconstruction: false
+  regularization_weights: false
+adapt:                                     # Settings for plots of adapt images used by adaptive pixelizations.
+  images_of_galaxies: true
+  contribution_map_list: true
+  model_image: true
+interferometer:                            # Settings for plots of interferometer datasets (e.g. InterferometerPlotter).
   amplitudes_vs_uv_distances: false
-  dirty_chi_squared_map: false
-  dirty_image: false
-  dirty_noise_map: false
-  dirty_normalized_residual_map: false
-  dirty_residual_map: false
-  dirty_signal_to_noise_map: false
   phases_vs_uv_distances: false
   uv_wavelengths: false
-fit_quantity:
-  subplot_fit: true
+  dirty_image: false
+  dirty_noise_map: false
+  dirty_signal_to_noise_map: false
+fit_interferometer:                        # Settings for plots of fits to interferometer datasets (e.g. FitInterferometerPlotter).
+  subplot_fit_dirty_images: false          # Plot subplot of the dirty-images of all interferometer datasets?
+  subplot_fit_real_space: false            # Plot subplot of the real-space images of all interferometer datasets?
+  amplitudes_vs_uv_distances: false
+  phases_vs_uv_distances: false
+  uv_wavelengths: false
+  dirty_image: false
+  dirty_noise_map: false
+  dirty_signal_to_noise_map: false
+  dirty_residual_map: false
+  dirty_normalized_residual_map: false
+  dirty_chi_squared_map: false
+other:                                     # Settings for other plotting quantities.
+  stochastic_histogram: false
+fit_quantity:                              # Settings for plots of fit quantities (e.g. FitQuantityPlotter).
+  all_at_end_png: true                     # Plot all individual plots listed below as .png (even if False)?
+  all_at_end_fits: true                    # Plot all individual plots listed below as .fits (even if False)?
+  all_at_end_pdf: false                    # Plot all individual plots listed below as publication-quality .pdf (even if False)?
   chi_squared_map: false
   image: true
   model_image: false
   noise_map: false
   residual_map: false
   normalized_residual_map: false
-  all_at_end_fits: true
-  all_at_end_png: true
-galaxies:
-  convergence: false
-  image: false
-  potential: false
-adapt:
-  images_of_galaxies: true
-  contribution_map_list: true
-  model_image: true
-imaging:
-  psf: false
-interferometer:
-  amplitudes_vs_uv_distances: false
-  dirty_image: false
-  dirty_noise_map: false
-  dirty_signal_to_noise_map: false
-  phases_vs_uv_distances: false
-  uv_wavelengths: false
-inversion:
-  subplot_inversion: true
-  errors: false
-  reconstructed_image: false
-  reconstruction: false
-  regularization_weights: false
-  all_at_end_png: false
-other:
-  stochastic_histogram: false
-plane:
-  subplot_plane: true
-  subplot_galaxy_images: true
-  convergence: false
-  deflections: false
-  image: false
-  magnification: false
-  potential: false
-  source_plane_image: false
-  all_at_end_fits: false
-  all_at_end_png: false
-positions:
-  image_with_positions: true

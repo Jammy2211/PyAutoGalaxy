@@ -27,5 +27,5 @@ def test__visualizes_fit_interferometer__uses_configs(
     plot_path = path.join(plot_path, "fit_dataset")
 
     assert path.join(plot_path, "subplot_fit.png") in plot_patch.paths
-    assert path.join(plot_path, "visibilities.png") in plot_patch.paths
+    assert path.join(plot_path, "data.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map.png") not in plot_patch.paths

@@ -318,7 +318,7 @@ class AnalysisInterferometer(AnalysisDataset):
             the imaging data.
         """
 
-        if paths.is_complete or not os.environ.get("PYAUTOFIT_TEST_MODE") == "1":
+        if paths.is_complete or os.environ.get("PYAUTOFIT_TEST_MODE") == "1":
             return
 
         visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
