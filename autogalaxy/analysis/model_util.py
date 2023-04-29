@@ -238,7 +238,7 @@ def adapt_fit(
 
     search = setup_adapt.search_pix_cls(
         path_prefix=search_previous.path_prefix_no_unique_tag,
-        name=f"{search_previous.paths.name}__hyper_pix",
+        name=f"{search_previous.paths.name}__adapt",
         unique_tag=search_previous.paths.unique_tag,
         number_of_cores=search_previous.number_of_cores,
         **setup_adapt.search_pix_dict,
@@ -248,8 +248,8 @@ def adapt_fit(
         model=hyper_model_pix, pixels_in_mask=result.mask.pixels_in_mask
     )
 
-    hyper_pix_result = search.fit(model=hyper_model_pix, analysis=analysis)
+    adapt_result = search.fit(model=hyper_model_pix, analysis=analysis)
 
-    result.adapt = hyper_pix_result
+    result.adapt = adapt_result
 
     return result

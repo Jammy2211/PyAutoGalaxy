@@ -142,7 +142,7 @@ def test__hyper_model_inversion_from():
 
     result = ag.m.MockResult(instance=instance)
 
-    model = ag.util.model_legacy.hyper_pix_model_from(
+    model = ag.util.model_legacy.adapt_model_from(
         setup_adapt=ag.legacy.SetupAdapt(), result=result
     )
 
@@ -154,11 +154,11 @@ def test__hyper_model_inversion_from():
     assert model.hyper_image_sky is None
     assert model.hyper_background_noise is None
 
-    model = ag.util.model_legacy.hyper_pix_model_from(result=result, setup_adapt=None)
+    model = ag.util.model_legacy.adapt_model_from(result=result, setup_adapt=None)
 
     assert model == None
 
-    model = ag.util.model_legacy.hyper_pix_model_from(
+    model = ag.util.model_legacy.adapt_model_from(
         setup_adapt=ag.legacy.SetupAdapt(
             hyper_image_sky=ag.legacy.hyper_data.HyperImageSky,
             hyper_background_noise=ag.legacy.hyper_data.HyperBackgroundNoise,
@@ -185,7 +185,7 @@ def test__hyper_model_inversion_from():
 
     result = ag.m.MockResult(instance=instance)
 
-    model = ag.util.model_legacy.hyper_pix_model_from(
+    model = ag.util.model_legacy.adapt_model_from(
         result=result, setup_adapt=ag.legacy.SetupAdapt()
     )
 
@@ -242,7 +242,7 @@ def test__hyper_model_inversion_from__adds_hyper_galaxies():
     setup_adapt = ag.legacy.SetupAdapt()
     setup_adapt.hyper_galaxy_names = ["galaxy_0"]
 
-    model = ag.util.model_legacy.hyper_pix_model_from(
+    model = ag.util.model_legacy.adapt_model_from(
         result=result, setup_adapt=setup_adapt
     )
 
@@ -254,7 +254,7 @@ def test__hyper_model_inversion_from__adds_hyper_galaxies():
     setup_adapt = ag.legacy.SetupAdapt()
     setup_adapt.hyper_galaxy_names = ["galaxy_0", "galaxy_1"]
 
-    model = ag.util.model_legacy.hyper_pix_model_from(
+    model = ag.util.model_legacy.adapt_model_from(
         result=result, setup_adapt=setup_adapt
     )
 
