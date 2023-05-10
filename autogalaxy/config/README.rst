@@ -3,7 +3,7 @@ The ``config`` folder contains configuration files which customize default **PyA
 Folders
 -------
 
-- ``priors``: Configs defining default priors assumed on every lens model component and set of parameters.
+- ``priors``: Configs defining default priors assumed on every model component and set of parameters.
 - ``visualize``: Configs defining what images are output by a lens model fit.
 
 Files

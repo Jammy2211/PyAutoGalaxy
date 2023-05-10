@@ -140,7 +140,7 @@ class LensingCosmology(cosmo.FLRW):
         D_l = angular_diameter_distance_of_lens_redshift_to_earth
 
         This function returns the critical surface density in units of solar masses, which are convenient units for
-        converting the inferred masses of a lens model from angular units (e.g. dimensionless units inferred from
+        converting the inferred masses of a model from angular units (e.g. dimensionless units inferred from
         data in arcseconds) to solar masses.
 
         Parameters
@@ -177,7 +177,7 @@ class LensingCosmology(cosmo.FLRW):
         D_l = Angular diameter distance of lens redshift to earth
 
         This function returns the critical surface density in units of solar masses / kpc^2, which are convenient
-        units for converting the inferred masses of a lens model from angular units (e.g. dimensionless units inferred
+        units for converting the inferred masses of a model from angular units (e.g. dimensionless units inferred
         from data in arcseconds) to solar masses.
 
         Parameters

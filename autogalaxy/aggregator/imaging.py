@@ -17,7 +17,7 @@ def _imaging_from(fit: af.Fit, settings_imaging: Optional[aa.SettingsImaging] = 
     Parameters
     ----------
     fit
-        A PyAutoFit aggregator's SearchOutput object containing the generators of the results of PyAutoGalaxy model-fits.
+        A PyAutoFit aggregator's SearchOutput object containing the generators of the results of model-fits.
     """
 
     data = fit.value(name="data")
@@ -64,7 +64,7 @@ class ImagingAgg:
         Parameters
         ----------
         aggregator
-            A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits.
+            A PyAutoFit aggregator object containing the results of model-fits.
         """
 
         func = partial(_imaging_from, settings_imaging=settings_imaging)

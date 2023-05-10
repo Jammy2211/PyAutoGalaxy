@@ -33,7 +33,7 @@ def _fit_interferometer_from(
     Parameters
     ----------
     fit
-        A PyAutoFit database Fit object containing the generators of the results of PyAutoGalaxy model-fits.
+        A PyAutoFit database Fit object containing the generators of the results of model-fits.
     galaxies
         A list of galaxies corresponding to a sample of a non-linear search and model-fit.
 
@@ -103,7 +103,7 @@ class FitInterferometerAgg(AbstractAgg):
         Parameters
         ----------
         fit
-            A PyAutoFit database Fit object containing the generators of the results of PyAutoGalaxy model-fits.
+            A PyAutoFit database Fit object containing the generators of the results of model-fits.
         galaxies
             A list of galaxies corresponding to a sample of a non-linear search and model-fit.
 

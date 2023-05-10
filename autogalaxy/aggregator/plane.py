@@ -21,7 +21,7 @@ def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> Plane:
     Parameters
     ----------
     fit
-        A PyAutoFit database Fit object containing the generators of the results of PyAutoGalaxy model-fits.
+        A PyAutoFit database Fit object containing the generators of the results of model-fits.
     galaxies
         A list of galaxies corresponding to a sample of a non-linear search and model-fit.
 
@@ -70,7 +70,7 @@ class PlaneAgg(AbstractAgg):
         Parameters
         ----------
         fit
-            A PyAutoFit database Fit object containing the generators of the results of PyAutoGalaxy model-fits.
+            A PyAutoFit database Fit object containing the generators of the results of model-fits.
         galaxies
             A list of galaxies corresponding to a sample of a non-linear search and model-fit.
 

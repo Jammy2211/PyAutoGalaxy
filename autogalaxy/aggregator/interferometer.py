@@ -67,7 +67,7 @@ class InterferometerAgg:
         Parameters
         ----------
         aggregator : ImaginAggregator
-            A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits.
+            A PyAutoFit aggregator object containing the results of model-fits.
         """
 
         func = partial(

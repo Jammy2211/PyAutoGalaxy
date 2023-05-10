@@ -4,7 +4,7 @@ from functools import partial
 from typing import TYPE_CHECKING, List, Generator
 
 if TYPE_CHECKING:
-    from autogalaxy.galaxy.galaxy import Galaxy
+    from autocti.model.model_util import AbstractCTI
 
 import autofit as af
 
@@ -15,8 +15,9 @@ class AbstractAgg(ABC):
         An abstract aggregator wrapper, which makes it straight forward to compute generators of objects from specific
         samples of a non-linear search.
 
-        For example, in **PyAutoLens**, this makes it straight forward to create generators of `Plane`'s drawn from
+        For example, in **PyAutoCTI**, this makes it straight forward to create generators of `CTI`'s drawn from
         the PDF estimated by a non-linear for efficient error calculation of derived quantities.
+        
         Parameters
         ----------
         aggregator
@@ -25,17 +26,17 @@ class AbstractAgg(ABC):
         self.aggregator = aggregator
 
     @abstractmethod
-    def make_object_for_gen(self, fit: af.Fit, galaxies: List[Galaxy]) -> object:
+    def make_object_for_gen(self, fit: af.Fit, cti: AbstractCTI) -> object:
         """
-        For example, in the `PlaneAgg` object, this function is overwritten such that it creates a `Plane` from a
-        `ModelInstance` that contains the galaxies of a sample from a non-linear search.
+        For example, in the `CTIAgg` object, this function is overwritten such that it creates a `CTI` from a
+        `ModelInstance` that contains the cti model of a sample from a non-linear search.
 
         Parameters
         ----------
         fit
-            A PyAutoFit database Fit object containing the generators of the results of PyAutoGalaxy model-fits.
-        galaxies
-            A list of galaxies corresponding to a sample of a non-linear search and model-fit.
+            A PyAutoFit database Fit object containing the generators of the results of model-fits.
+        cti
+            A cti model corresponding to a sample of a non-linear search and model-fit.
 
         Returns
         -------
@@ -49,13 +50,13 @@ class AbstractAgg(ABC):
 
         This generator creates a list containing the maximum log instance of every result loaded in the aggregator.
 
-        For example, in **PyAutoLens**, by overwriting the `make_gen_from` method this returns a generator
-        of `Plane` objects from a PyAutoFit aggregator. This generator then generates a list of the maximum log
-        likelihood `Plane` objects for all aggregator results.
+        For example, in **PyAutoCTI**, by overwriting the `make_gen_from` method this returns a generator
+        of `CTI` objects from a PyAutoFit aggregator. This generator then generates a list of the maximum log
+        likelihood `CTI` objects for all aggregator results.
         """
 
         def func_gen(fit: af.Fit) -> Generator:
-            return self.make_object_for_gen(fit=fit, galaxies=fit.instance.galaxies)
+            return self.make_object_for_gen(fit=fit, cti=fit.instance.cti)
 
         return self.aggregator.map(func=func_gen)
 
@@ -117,7 +118,7 @@ class AbstractAgg(ABC):
                     instance = sample.instance_for_model(model=samples.model)
 
                     all_above_weight_list.append(
-                        self.make_object_for_gen(fit=fit, galaxies=instance.galaxies)
+                        self.make_object_for_gen(fit=fit, cti=instance.cti)
                     )
 
             return all_above_weight_list
@@ -136,8 +137,8 @@ class AbstractAgg(ABC):
         entries will be returned, where each entry in this list contains 100 object's paired with non-linear samples
         randomly drawn from the PDF.
 
-        For example, in **PyAutoLens**, by overwriting the `make_gen_from` method this returns a generator
-        of `Plane` objects from a PyAutoFit aggregator. This generator then generates lists of `Plane` objects
+        For example, in **PyAutoCTI**, by overwriting the `make_gen_from` method this returns a generator
+        of `CTI` objects from a PyAutoFit aggregator. This generator then generates lists of `CTI` objects
         corresponding to non-linear search samples randomly drawn from the PDF.
 
         Parameters
@@ -152,7 +153,7 @@ class AbstractAgg(ABC):
             return [
                 self.make_object_for_gen(
                     fit=fit,
-                    galaxies=samples.draw_randomly_via_pdf().galaxies,
+                    cti=samples.draw_randomly_via_pdf().cti,
                 )
                 for i in range(total_samples)
             ]
