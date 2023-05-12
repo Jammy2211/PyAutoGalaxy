@@ -25,8 +25,8 @@ SMBH:
       upper: inf
   mass:
     type: LogUniform
-    lower_limit: 1e6
-    upper_limit: 1e13
+    lower_limit: 1000000.0
+    upper_limit: 10000000000000.0
     width_modifier:
       type: Relative
       value: 0.25
