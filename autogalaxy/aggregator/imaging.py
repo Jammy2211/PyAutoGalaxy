@@ -9,7 +9,7 @@ def _imaging_from(fit: af.Fit, settings_imaging: Optional[aa.SettingsImaging] = 
     """
     Returns a `Imaging` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to describe
     that it acts as the aggregator object for one result in the `Aggregator`. This uses the aggregator's generator
-    outputs such that the function can use the `Aggregator`'s map function to to create a `Imaging` generator.
+    outputs such that the function can use the `Aggregator`'s map function to create a `Imaging` generator.
 
      The `Imaging` is created following the same method as the PyAutoGalaxy `Search` classes, including using the
     `SettingsImaging` instance output by the Search to load inputs of the `Imaging` (e.g. psf_shape_2d).
@@ -52,7 +52,7 @@ class ImagingAgg:
     def __init__(self, aggregator: af.Aggregator):
         self.aggregator = aggregator
 
-    def imaging_gen_from(self, settings_imaging: Optional[aa.SettingsImaging] = None):
+    def dataset_gen_from(self, settings_imaging: Optional[aa.SettingsImaging] = None):
         """
         Returns a generator of `Imaging` objects from an input aggregator, which generates a list of the
         `Imaging` objects for every set of results loaded in the aggregator.

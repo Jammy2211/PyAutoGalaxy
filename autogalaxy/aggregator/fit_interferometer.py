@@ -95,7 +95,7 @@ class FitInterferometerAgg(AbstractAgg):
         self.use_preloaded_grid = use_preloaded_grid
         self.real_space_mask = real_space_mask
 
-    def make_object_for_gen(self, fit, galaxies) -> FitInterferometer:
+    def object_via_gen_from(self, fit, galaxies) -> FitInterferometer:
         """
         Creates a `FitInterferometer` object from a `ModelInstance` that contains the galaxies of a sample from a non-linear
         search.

@@ -18,8 +18,8 @@ How to Tackle HowToGalaxy
 -------------------------
 
 The **HowToGalaxy** lecture series current sits at 4 chapters, and each will take a day or so to go through
-properly. You probably want to be modeling galaxies with **PyAutoGalaxy** faster than that! Furthermore, the concepts
-in the later chapters are pretty challenging, and familiarity with **PyAutoGalaxy** and modeling is desirable before
+properly. You probably want to be modeling galaxies faster than that! Furthermore, the concepts
+in the later chapters are pretty challenging, and familiarity and modeling is desirable before
 you tackle them.
 
 Therefore, we recommend that you complete chapters 1 & 2 and then apply what you've learnt to the modeling of simulated

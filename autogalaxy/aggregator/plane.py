@@ -62,7 +62,7 @@ class PlaneAgg(AbstractAgg):
     search model-fit.
     """
 
-    def make_object_for_gen(self, fit, galaxies) -> Plane:
+    def object_via_gen_from(self, fit, galaxies) -> Plane:
         """
         Creates a `Plane` object from a `ModelInstance` that contains the galaxies of a sample from a non-linear
         search.
