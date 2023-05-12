@@ -126,4 +126,3 @@ def test__hyper_model_noise_from__adds_hyper_galaxies():
     assert isinstance(model.galaxies.galaxy_1, af.Model)
     assert model.galaxies.galaxy_1.redshift == 1.0
     assert model.galaxies.galaxy_1.hyper_galaxy.cls is ag.legacy.HyperGalaxy
-
