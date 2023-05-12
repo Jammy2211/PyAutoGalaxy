@@ -25,6 +25,7 @@ label:
     intensity: I_{\rm b}
     kappa: \kappa
     kappa_s: \kappa_{\rm s}
+    mass: M
     mass_at_200: M_{\rm 200}
     mass_to_light_gradient: \Gamma
     mass_to_light_ratio: \Psi

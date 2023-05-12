@@ -1,8 +1,6 @@
 import numpy as np
 from typing import Tuple
 
-import autoarray as aa
-
 from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.profiles.mass.point.point import PointMass
 
