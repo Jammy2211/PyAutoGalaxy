@@ -4,7 +4,7 @@ import pytest
 import autogalaxy as ag
 
 
-def test__creates_two_smbhs__centres_correct_based_on_angle__init():
+def test__x2_smbhs__centres_correct_based_on_angle__init():
     smbh_binary = ag.mp.SMBHBinary(
         centre=(0.0, 0.0),
         separation=1.0,
@@ -63,7 +63,35 @@ def test__creates_two_smbhs__centres_correct_based_on_angle__init():
     )
 
 
-def test__creates_two_smbhs__masses_corrected_based_on_mass_and_ratio__init():
+def test__x2_smbhs__centres_shifted_based_on_centre__init():
+    smbh_binary = ag.mp.SMBHBinary(
+        centre=(3.0, 1.0),
+        separation=1.0,
+        angle_binary=0.0001,
+    )
+
+    assert smbh_binary.smbh_0.centre == pytest.approx(
+        (3.0, 1.5), 1e-2
+    )
+    assert smbh_binary.smbh_1.centre == pytest.approx(
+        (3.0, 0.5), 1e-2
+    )
+
+    smbh_binary = ag.mp.SMBHBinary(
+        centre=(-3.0, -1.0),
+        separation=1.0,
+        angle_binary=0.0001,
+    )
+
+    assert smbh_binary.smbh_0.centre == pytest.approx(
+        (-3.0, -0.5), 1e-2
+    )
+    assert smbh_binary.smbh_1.centre == pytest.approx(
+        (-3.0, -1.5), 1e-2
+    )
+
+
+def test__x2_smbhs__masses_corrected_based_on_mass_and_ratio__init():
     smbh_binary = ag.mp.SMBHBinary(
         mass=3.0,
         mass_ratio=2.0,
