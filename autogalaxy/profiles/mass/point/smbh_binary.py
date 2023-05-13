@@ -1,9 +1,6 @@
 import numpy as np
 from typing import Tuple
 
-import autoarray as aa
-
-from autogalaxy import convert
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.profiles.mass.point.smbh import SMBH
 
