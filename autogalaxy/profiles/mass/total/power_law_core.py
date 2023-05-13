@@ -54,7 +54,7 @@ class PowerLawCore(MassProfile):
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike):
         """
-        Calculate the projected convergence on a grid of (y,x) arc-second coordinates.
+        Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
 
         The `grid_2d_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See
         *aa.grid_2d_to_structure* for a description of the output.

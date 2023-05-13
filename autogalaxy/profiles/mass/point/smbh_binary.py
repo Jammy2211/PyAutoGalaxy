@@ -26,9 +26,17 @@ class SMBHBinary(MassProfile):
         Parameters
         ----------
         centre
-            The (y,x) arc-second coordinates of the profile centre.
+            The (y,x) arc-second coordinates of centre of the SMBH binary, defined as the mid-point between the
+            two SMBHs.
+        separation
+            The arc-second separation between the two SMBHs.
+        angle_binary
+            The angle between the two SMBHs relative to the positive x-axis of the centre of the SMBH binary.
         mass
-            The mass of the SMBH in solar masses.
+            The sum of the masses of the two SMBHs in solar masses.
+        mass_ratio
+            The ratio of the mass of the second SMBH to the first SMBH. A mass ratio of 2.0 gives two SMBHs where
+            the first SMBH has twice the mass of the second SMBH.
         redshift_object
             The redshift of the SMBH, which is used to convert its mass to an Einstein radius.
         redshift_source
@@ -76,15 +84,48 @@ class SMBHBinary(MassProfile):
         super().__init__(centre=centre, ell_comps=(0.0, 0.0))
 
     @property
-    def angle_binary_radians(self):
+    def angle_binary_radians(self) -> float:
+        """
+        The angle between the two SMBHs in radians.
+        """
         return self.angle_binary * np.pi / 180.0
 
     def convergence_2d_from(self, grid: aa.type.Grid2DLike):
+        """
+        Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
+
+        The convergence is computed as the sum of the convergence of the two individual `SMBH` profiles in the binary.
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+        """
         return self.smbh_0.convergence_2d_from(grid=grid) + self.smbh_1.convergence_2d_from(grid=grid)
 
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
+        """
+        Returns the two dimensional projected potential on a grid of (y,x) arc-second coordinates.
+
+        The potential is computed as the sum of the potential of the two individual `SMBH` profiles in the binary.
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the potential is computed on.
+        """
         return self.smbh_0.potential_2d_from(grid=grid) + self.smbh_1.potential_2d_from(grid=grid)
 
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+        """
+        Returns the two dimensional deflection angles on a grid of (y,x) arc-second coordinates.
 
+        The deflection angles are computed as the sum of the convergence of the two individual `SMBH` profiles in the
+        binary.
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
+        """
         return self.smbh_0.deflections_yx_2d_from(grid=grid) + self.smbh_1.deflections_yx_2d_from(grid=grid)
