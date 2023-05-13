@@ -2,6 +2,7 @@ label:
   label:
     sigma: \sigma
     alpha: \alpha
+    angle_binary: \theta
     beta: \beta
     break_radius: \theta_{\rm B}
     centre_0: y
@@ -28,6 +29,7 @@ label:
     kappa_s: \kappa_{\rm s}
     mass: M
     mass_at_200: M_{\rm 200}
+    mass_ratio: M_{\rm ratio}
     mass_to_light_gradient: \Gamma
     mass_to_light_ratio: \Psi
     noise_factor: \omega_{\rm 1}
@@ -43,6 +45,7 @@ label:
     redshift_source: z_{\rm src}
     scale_radius: R_{\rm s}
     scatter: \sigma
+    separation: s
     sersic_index: n
     shape_0: y_{\rm pix}
     shape_1: x_{\rm pix}
@@ -69,6 +72,7 @@ label_format:
   format:
     sigma: '{:.4f}'
     alpha: '{:.4f}'
+    angle_binary: '{:.4f}'
     angular_diameter_distance_to_earth: '{:.4f}'
     beta: '{:.4f}'
     centre_0: '{:.4f}'
@@ -98,6 +102,7 @@ label_format:
     mass: '{:.4e}'
     mass_at_200: '{:.4e}'
     mass_at_truncation_radius: '{:.4e}'
+    mass_ratio: '{:.4f}'
     mass_to_light_gradient: '{:.4f}'
     mass_to_light_ratio: '{:.4f}'
     n_x: '{:.1d}'
@@ -116,6 +121,7 @@ label_format:
     redshift_source: '{:.4f}'
     rho: '{:.4f}'
     scale_radius: '{:.4f}'
+    separation: '{:.4f}'
     sersic_index: '{:.4f}'
     shape_0: '{:.4f}'
     shape_1: '{:.4f}'
