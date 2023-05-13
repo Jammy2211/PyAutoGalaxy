@@ -12,8 +12,8 @@ class SMBHBinary(MassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        separation : float = 1.0,
-        angle_binary : float = 0.0,
+        separation: float = 1.0,
+        angle_binary: float = 0.0,
         mass: float = 1e10,
         mass_ratio: float = 1.0,
         redshift_object: float = 0.5,
@@ -43,10 +43,13 @@ class SMBHBinary(MassProfile):
         self.redshift_object = redshift_object
         self.redshift_source = redshift_source
 
-        x_0 = centre[1] + (self.separation/2.0) * np.cos(self.angle_binary_radians)
-        y_0 = centre[0] + (self.separation/2.0) * np.sin(self.angle_binary_radians)
+        x_0 = centre[1] + (self.separation / 2.0) * np.cos(self.angle_binary_radians)
+        y_0 = centre[0] + (self.separation / 2.0) * np.sin(self.angle_binary_radians)
 
-        mass_0 = mass * (mass_ratio/mass)
+        if mass_ratio >= 1.0:
+            mass_0 = mass * (mass_ratio / mass)
+        else:
+            mass_0 = mass - mass * ((1.0 / mass_ratio) / mass)
 
         self.smbh_0 = SMBH(
             centre=(y_0, x_0),
@@ -55,8 +58,12 @@ class SMBHBinary(MassProfile):
             redshift_source=redshift_source,
         )
 
-        x_1 = centre[1] + (self.separation/2.0) * np.cos(self.angle_binary_radians - np.pi)
-        y_1 = centre[0] + (self.separation/2.0) * np.sin(self.angle_binary_radians - np.pi)
+        x_1 = centre[1] + (self.separation / 2.0) * np.cos(
+            self.angle_binary_radians - np.pi
+        )
+        y_1 = centre[0] + (self.separation / 2.0) * np.sin(
+            self.angle_binary_radians - np.pi
+        )
 
         mass_1 = mass - mass_0
 

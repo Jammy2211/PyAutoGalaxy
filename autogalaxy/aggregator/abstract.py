@@ -55,7 +55,6 @@ class AbstractAgg(ABC):
         """
 
         def func_gen(fit: af.Fit) -> Generator:
-
             if fit.instance.clumps is not None:
                 galaxies = fit.instance.galaxies + fit.instance.clumps
 
