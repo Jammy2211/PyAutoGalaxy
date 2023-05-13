@@ -110,3 +110,22 @@ def test__x2_smbhs__masses_corrected_based_on_mass_and_ratio__init():
 
     assert smbh_binary.smbh_0.mass == pytest.approx(1.0, 1e-2)
     assert smbh_binary.smbh_1.mass == pytest.approx(2.0, 1e-2)
+
+
+def test__deflections_yx_2d_from():
+
+    smbh_binary = ag.mp.SMBHBinary(
+        centre=(0.0, 0.0),
+        separation=2.0,
+        angle_binary=0.000,
+    )
+
+    smbh_0 = ag.mp.SMBH(centre=smbh_binary.smbh_0.centre, mass=smbh_binary.smbh_0.mass)
+    smbh_1 = ag.mp.SMBH(centre=smbh_binary.smbh_1.centre, mass=smbh_binary.smbh_1.mass)
+
+    deflections = smbh_binary.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
+
+    deflections_0 = smbh_0.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
+    deflections_1 = smbh_1.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
+
+    assert deflections[0, 0] == pytest.approx(deflections_0[0, 0] + deflections_1[0, 0], 1e-2)

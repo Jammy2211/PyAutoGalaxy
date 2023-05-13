@@ -1,6 +1,8 @@
 import numpy as np
 from typing import Tuple
 
+import autoarray as aa
+
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.profiles.mass.point.smbh import SMBH
 
@@ -76,3 +78,7 @@ class SMBHBinary(MassProfile):
     @property
     def angle_binary_radians(self):
         return self.angle_binary * np.pi / 180.0
+
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+
+        return self.smbh_0.deflections_yx_2d_from(grid=grid) + self.smbh_1.deflections_yx_2d_from(grid=grid)
