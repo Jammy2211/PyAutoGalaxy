@@ -79,6 +79,9 @@ class SMBHBinary(MassProfile):
     def angle_binary_radians(self):
         return self.angle_binary * np.pi / 180.0
 
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
+        return self.smbh_0.convergence_2d_from(grid=grid) + self.smbh_1.convergence_2d_from(grid=grid)
+
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
 
         return self.smbh_0.deflections_yx_2d_from(grid=grid) + self.smbh_1.deflections_yx_2d_from(grid=grid)
