@@ -82,6 +82,9 @@ class SMBHBinary(MassProfile):
     def convergence_2d_from(self, grid: aa.type.Grid2DLike):
         return self.smbh_0.convergence_2d_from(grid=grid) + self.smbh_1.convergence_2d_from(grid=grid)
 
+    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+        return self.smbh_0.potential_2d_from(grid=grid) + self.smbh_1.potential_2d_from(grid=grid)
+
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
 
         return self.smbh_0.deflections_yx_2d_from(grid=grid) + self.smbh_1.deflections_yx_2d_from(grid=grid)

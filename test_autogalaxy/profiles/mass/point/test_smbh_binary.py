@@ -130,6 +130,23 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(convergence_0 + convergence_1, 1e-2)
 
+def test__potential_2d_from():
+
+    smbh_binary = ag.mp.SMBHBinary(
+        centre=(0.0, 0.0),
+        separation=2.0,
+        angle_binary=0.000,
+    )
+
+    smbh_0 = ag.mp.SMBH(centre=smbh_binary.smbh_0.centre, mass=smbh_binary.smbh_0.mass)
+    smbh_1 = ag.mp.SMBH(centre=smbh_binary.smbh_1.centre, mass=smbh_binary.smbh_1.mass)
+
+    potential = smbh_binary.potential_2d_from(grid=np.array([[1.0, 1.0]]))
+
+    potential_0 = smbh_0.potential_2d_from(grid=np.array([[1.0, 1.0]]))
+    potential_1 = smbh_1.potential_2d_from(grid=np.array([[1.0, 1.0]]))
+
+    assert potential == pytest.approx(potential_0 + potential_1, 1e-2)
 
 def test__deflections_yx_2d_from():
 
