@@ -1,4 +1,4 @@
-SMBH:
+SMBHBinary:
   centre_0:
     type: Gaussian
     mean: 0.0
