@@ -81,7 +81,7 @@ The workspace contains examples of how to do this, as well as other uses for pix
 Wrap-Up
 -------
 
-This was a brief overview of ``Inverion``'s with **PyAutoGalaxy**.
+This was a brief overview of ``Inverion``'s.
 
 There is a lot more to using ``Inverion``'s then presented here, which is covered in chapters 4 of the **HowToGalaxy**,
 specifically:

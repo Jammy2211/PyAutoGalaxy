@@ -1,6 +1,6 @@
 from .abstract.abstract import MassProfile
+from .point import PointMass, SMBH
 from .total import (
-    PointMass,
     PowerLawCore,
     PowerLawCoreSph,
     PowerLawBroken,

@@ -13,7 +13,7 @@ def _interferometer_from(
     """
     Returns a `Interferometer` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to
     describe that it acts as the aggregator object for one result in the `Aggregator`. This uses the aggregator's
-    generator outputs such that the function can use the `Aggregator`'s map function to to create a
+    generator outputs such that the function can use the `Aggregator`'s map function to create a
     `Interferometer` generator.
 
     The `Interferometer` is created following the same method as the PyAutoGalaxy `Search` classes, including
@@ -51,7 +51,7 @@ class InterferometerAgg:
     def __init__(self, aggregator: af.Aggregator):
         self.aggregator = aggregator
 
-    def interferometer_gen_from(
+    def dataset_gen_from(
         self,
         real_space_mask: Optional[aa.Mask2D] = None,
         settings_interferometer: Optional[aa.SettingsInterferometer] = None,
@@ -67,7 +67,7 @@ class InterferometerAgg:
         Parameters
         ----------
         aggregator : ImaginAggregator
-            A PyAutoFit aggregator object containing the results of PyAutoGalaxy model-fits.
+            A PyAutoFit aggregator object containing the results of model-fits.
         """
 
         func = partial(

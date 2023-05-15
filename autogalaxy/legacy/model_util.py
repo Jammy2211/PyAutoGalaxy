@@ -194,13 +194,13 @@ def adapt_fit_no_noise(
     if use_positive_only_solver:
         analysis.settings_inversion.use_positive_only_solver = True
 
-    hyper_model_pix = hyper_pix_model_from(
+    adapt_model_pix = hyper_pix_model_from(
         setup_adapt=setup_adapt,
         result=result,
         include_hyper_image_sky=include_hyper_image_sky,
     )
 
-    if hyper_model_pix is None:
+    if adapt_model_pix is None:
         return result
 
     search = setup_adapt.search_pix_cls(
@@ -211,7 +211,7 @@ def adapt_fit_no_noise(
         **setup_adapt.search_pix_dict,
     )
 
-    hyper_pix_result = search.fit(model=hyper_model_pix, analysis=analysis)
+    hyper_pix_result = search.fit(model=adapt_model_pix, analysis=analysis)
 
     result.adapt = hyper_pix_result
 
@@ -332,7 +332,7 @@ def adapt_fit(
     return result
 
 
-def hyper_model_from(
+def adapt_model_from(
     setup_adapt, result: af.Result, include_hyper_image_sky: bool = False
 ) -> af.Collection:
     """

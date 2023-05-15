@@ -37,7 +37,7 @@ def test__imaging_generator_from_aggregator(imaging_7x7, mask_2d_7x7, samples, m
     agg.add_directory(directory=result_path)
 
     imaging_agg = ag.agg.ImagingAgg(aggregator=agg)
-    imaging_gen = imaging_agg.imaging_gen_from()
+    imaging_gen = imaging_agg.dataset_gen_from()
 
     for imaging in imaging_gen:
         assert (imaging.image == masked_imaging_7x7.image).all()
