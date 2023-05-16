@@ -34,8 +34,6 @@ def test__fit_figure_of_merit(masked_imaging_7x7, masked_imaging_covariance_7x7)
 
     plane = ag.Plane(redshift=0.5, galaxies=[g0, g1])
 
-    print(plane.cls_list_from(cls=ag.LightProfile))
-
     fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
 
     assert fit.perform_inversion is False
@@ -465,6 +463,49 @@ def test__plane_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
     assert plane.galaxies[0].bulge.intensity == pytest.approx(1.0, 1.0e-4)
     assert plane.galaxies[1].bulge.intensity == pytest.approx(7.0932274, 1.0e-4)
     assert plane.galaxies[2].bulge.intensity == pytest.approx(-1.04694839, 1.0e-4)
+
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
+
+    basis = ag.lp_basis.Basis(
+        light_profile_list=[
+            ag.lp_linear.Sersic(sersic_index=1.0),
+            ag.lp.Sersic(intensity=0.1, sersic_index=2.0),
+            ag.lp_linear.Sersic(sersic_index=3.0),
+        ]
+    )
+
+    g0_linear = ag.Galaxy(redshift=0.5, bulge=basis)
+    g1_linear = ag.Galaxy(redshift=1.0, bulge=ag.lp_linear.Sersic(sersic_index=4.0))
+
+    plane = ag.Plane(galaxies=[g0, g0_linear, g1_linear])
+
+    fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
+
+    assert fit.galaxies[0].bulge.intensity == pytest.approx(1.0, 1.0e-4)
+    assert fit.galaxies[1].bulge.light_profile_list[0].intensity == pytest.approx(
+        1.0, 1.0e-4
+    )
+    assert fit.galaxies[1].bulge.light_profile_list[1].intensity == pytest.approx(
+        0.1, 1.0e-4
+    )
+    assert fit.galaxies[1].bulge.light_profile_list[2].intensity == pytest.approx(
+        1.0, 1.0e-4
+    )
+    assert fit.galaxies[2].bulge.intensity == pytest.approx(1.0, 1.0e-4)
+
+    plane = fit.plane_linear_light_profiles_to_light_profiles
+
+    assert plane.galaxies[0].bulge.intensity == pytest.approx(1.0, 1.0e-4)
+    assert plane.galaxies[1].bulge.light_profile_list[0].intensity == pytest.approx(
+        -14.74483, 1.0e-4
+    )
+    assert plane.galaxies[1].bulge.light_profile_list[1].intensity == pytest.approx(
+        0.1, 1.0e-4
+    )
+    assert plane.galaxies[1].bulge.light_profile_list[2].intensity == pytest.approx(
+        23.0021210, 1.0e-4
+    )
+    assert plane.galaxies[2].bulge.intensity == pytest.approx(-6.58608, 1.0e-4)
 
 
 # def test__light_profile_no_convolve(masked_imaging_7x7):

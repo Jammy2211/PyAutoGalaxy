@@ -9,6 +9,7 @@ import autoarray as aa
 
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
+from autogalaxy.profiles.light.basis import Basis
 
 
 class AbstractFitInversion:
@@ -188,11 +189,9 @@ class AbstractFitInversion:
 
         for galaxy in model_obj.galaxies:
             for key, obj in galaxy.__dict__.items():
-                if isinstance(obj, LightProfile):
-                    try:
-                        intensity = self.linear_light_profile_intensity_dict[obj]
-                        galaxy.__dict__[key] = obj.lp_instance_from(intensity=intensity)
-                    except KeyError:
-                        pass
+                if isinstance(obj, LightProfileLinear) or isinstance(obj, Basis):
+                    galaxy.__dict__[key] = obj.lp_instance_from(
+                        linear_light_profile_intensity_dict=self.linear_light_profile_intensity_dict
+                    )
 
         return model_obj

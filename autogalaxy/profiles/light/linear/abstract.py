@@ -56,7 +56,7 @@ class LightProfileLinear(LightProfile):
 
         return parameters_dict
 
-    def lp_instance_from(self, intensity: float) -> LightProfile:
+    def lp_instance_from(self, linear_light_profile_intensity_dict: Dict) -> LightProfile:
         """
         Creates an instance of a linear light profile using its parent normal light profile (e.g. the non linear
         variant which has an `intensity` parameter).
@@ -70,11 +70,12 @@ class LightProfileLinear(LightProfile):
             and derived from the data the light profile's image is compared too, which is expected to be electrons
             per second).
         """
+        intensity = linear_light_profile_intensity_dict[self]
         parameters_dict = self.parameters_dict_from(intensity=intensity)
 
         return self.lp_cls(**parameters_dict)
 
-    def lmp_model_from(self, intensity: float) -> af.Model(lmp.LightMassProfile):
+    def lmp_model_from(self, linear_light_profile_intensity_dict: Dict) -> af.Model(lmp.LightMassProfile):
         """
         Creates an instance of a linear light profile using its parent light and mass profile (e.g. the non linear
         variant which has `mass_to_light_ratio` and `intensity` parameters).
@@ -88,6 +89,7 @@ class LightProfileLinear(LightProfile):
             and derived from the data the light profile's image is compared too, which is expected to be electrons
             per second).
         """
+        intensity = linear_light_profile_intensity_dict[self]
         parameters_dict = self.parameters_dict_from(intensity=intensity)
 
         return af.Model(self.lmp_cls, **parameters_dict)

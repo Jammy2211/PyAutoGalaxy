@@ -177,6 +177,19 @@ class PlanePlotter(Plotter):
             )
 
         if plane_image:
+            import numpy as np
+
+            # print(self.plane.galaxies[0].bulge)
+            # print(self.plane.galaxies[0].bulge.intensity)
+            #
+            # print(self.plane.plane_image_2d_from(
+            #         grid=self.grid, zoom_to_brightest=zoom_to_brightest
+            #     ))
+            # print(np.max(self.plane.plane_image_2d_from(
+            #         grid=self.grid, zoom_to_brightest=zoom_to_brightest
+            #     )))
+            # www
+
             self.mat_plot_2d.plot_array(
                 array=self.plane.plane_image_2d_from(
                     grid=self.grid, zoom_to_brightest=zoom_to_brightest
