@@ -223,7 +223,7 @@ class MultipolePowerLawM4(MassProfile):
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid1D2DLike) -> np.ndarray:
         """
-        Calculate the projected convergence on a grid of (y,x) arc-second coordinates.
+        Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
 
         Parameters
         ----------
