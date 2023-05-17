@@ -57,12 +57,22 @@ class ClumpModel:
 
         self.einstein_radius_upper_limit = einstein_radius_upper_limit
         self.unfix_centres = unfix_centres
-
+        
+        self.centre_prior_half_width = 0.1
 
     @property
     def total_clumps(self) -> int:
         return len(self.centres.in_list)
 
+    def unfix_centre(obj, centre):
+        obj.centre.centre_0 = af.UniformPrior(
+             lower_limit=new_centre[0] - centre_prior_half_width, upper_limit=new_centre[0] + centre_prior_half_width
+        )
+        obj.centre.centre_1 = af.UniformPrior(
+             lower_limit=new_centre[1] - centre_prior_half_width, upper_limit=new_centre[1] + centre_prior_half_width
+        )
+        return obj
+    
     @property
     def light_list(self) -> Optional[List[af.Model]]:
         """                                                                                                                                                                               
@@ -76,14 +86,7 @@ class ClumpModel:
 
         for centre in self.centres.in_list:
             if self.unfix_centres:
-                light = af.Model(self.light_cls)
-                light.centre.centre_0 = af.UniformPrior(
-                    lower_limit=centre[0] - 0.1, upper_limit=centre[0] + 0.1
-                )
-                light.centre.centre_1 = af.UniformPrior(
-                    lower_limit=centre[1] - 0.1, upper_limit=centre[1] + 0.1
-                )
-                light_list.append(light)
+                light_list.append(unfix_centre(af.Model(self.light_cls), centre))
             else:
                 light_list.append(af.Model(self.light_cls, centre=centre))
 
@@ -102,13 +105,7 @@ class ClumpModel:
 
         for centre in self.centres.in_list:
             if self.unfix_centres:
-                mass = af.Model(self.mass_cls)
-                mass.centre.centre_0 = af.UniformPrior(
-                    lower_limit=centre[0] - 0.1, upper_limit=centre[0] + 0.1
-                )
-                mass.centre.centre_1 = af.UniformPrior(
-                    lower_limit=centre[1] - 0.1, upper_limit=centre[1] + 0.1
-                )
+                mass = unfix_centres(af.Model(self.mass_cls), centre)
             else:
                 mass = af.Model(self.mass_cls, centre=centre)
 
