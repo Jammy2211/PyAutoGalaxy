@@ -55,7 +55,10 @@ class AbstractAgg(ABC):
         """
 
         def func_gen(fit: af.Fit) -> Generator:
-            return self.object_via_gen_from(fit=fit, galaxies=fit.instance.galaxies)
+            if fit.instance.clumps is not None:
+                galaxies = fit.instance.galaxies + fit.instance.clumps
+
+            return self.object_via_gen_from(fit=fit, galaxies=galaxies)
 
         return self.aggregator.map(func=func_gen)
 
