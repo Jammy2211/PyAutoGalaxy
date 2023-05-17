@@ -31,7 +31,7 @@ def clean_fits(fits_path):
 
 def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
     fits_path = path.join("{}".format(path.dirname(path.realpath(__file__))), "files")
-    image_path = path.join(fits_path, "image.fits")
+    image_path = path.join(fits_path, "data.fits")
     noise_map_path = path.join(fits_path, "noise_map.fits")
     psf_path = path.join(fits_path, "psf.fits")
 

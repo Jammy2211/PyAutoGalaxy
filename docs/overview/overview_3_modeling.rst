@@ -18,7 +18,7 @@ The task of finding these ``LightProfiles``'is called *modeling*.
 PyAutoFit
 ---------
 
-Modeling with **PyAutoGalaxy** uses the probabilistic programming language
+Modeling uses the probabilistic programming language
 `PyAutoFit <https://github.com/rhayes777/PyAutoFit>`_, an open-source Python framework that allows complex model
 fitting techniques to be straightforwardly integrated into scientific modeling software. Check it out if you
 are interested in developing your own software to perform advanced model-fitting!

@@ -122,7 +122,7 @@ def test__set_upper_limit_of_pixelization_pixels_prior():
     # )
 
 
-def test__hyper_model_from():
+def test__adapt_model_from():
     pixelization = af.Model(ag.Pixelization, mesh=ag.mesh.Rectangular)
 
     model = af.Collection(
@@ -136,7 +136,7 @@ def test__hyper_model_from():
 
     result = ag.m.MockResult(instance=instance)
 
-    model = ag.util.model.hyper_model_from(setup_adapt=ag.SetupAdapt(), result=result)
+    model = ag.util.model.adapt_model_from(setup_adapt=ag.SetupAdapt(), result=result)
 
     assert isinstance(model.galaxies.galaxy.pixelization.mesh, af.Model)
 
@@ -154,6 +154,6 @@ def test__hyper_model_from():
 
     result = ag.m.MockResult(instance=instance)
 
-    model = ag.util.model.hyper_model_from(result=result, setup_adapt=ag.SetupAdapt())
+    model = ag.util.model.adapt_model_from(result=result, setup_adapt=ag.SetupAdapt())
 
     assert model == None

@@ -65,41 +65,47 @@ class VisualizerImaging(Visualizer):
         if should_plot("subplot_of_galaxies"):
             fit_imaging_plotter.subplot_of_galaxies()
 
-        if not during_analysis:
-            if should_plot("all_at_end_png"):
-                fit_imaging_plotter.figures_2d(
-                    data=True,
-                    noise_map=True,
-                    signal_to_noise_map=True,
-                    model_image=True,
-                    residual_map=True,
-                    normalized_residual_map=True,
-                    chi_squared_map=True,
-                )
+        if not during_analysis and should_plot("all_at_end_png"):
+            mat_plot_2d = self.mat_plot_2d_from(subfolders=path.join(subfolders, "end"))
 
-                fit_imaging_plotter.figures_2d_of_galaxies(
-                    subtracted_image=True, model_image=True
-                )
+            fit_imaging_plotter = FitImagingPlotter(
+                fit=fit, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+            )
 
-            if should_plot("all_at_end_fits"):
-                mat_plot_2d = self.mat_plot_2d_from(
-                    subfolders=path.join("fit_dataset", "fits"), format="fits"
-                )
+            fit_imaging_plotter.figures_2d(
+                data=True,
+                noise_map=True,
+                signal_to_noise_map=True,
+                model_image=True,
+                residual_map=True,
+                normalized_residual_map=True,
+                chi_squared_map=True,
+            )
 
-                fit_imaging_plotter = FitImagingPlotter(
-                    fit=fit, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
-                )
+            fit_imaging_plotter.figures_2d_of_galaxies(
+                subtracted_image=True, model_image=True
+            )
 
-                fit_imaging_plotter.figures_2d(
-                    data=True,
-                    noise_map=True,
-                    signal_to_noise_map=True,
-                    model_image=True,
-                    residual_map=True,
-                    normalized_residual_map=True,
-                    chi_squared_map=True,
-                )
+        if not during_analysis and should_plot("all_at_end_fits"):
+            mat_plot_2d = self.mat_plot_2d_from(
+                subfolders=path.join(subfolders, "fits"), format="fits"
+            )
 
-                fit_imaging_plotter.figures_2d_of_galaxies(
-                    subtracted_image=True, model_image=True
-                )
+            fit_imaging_plotter = FitImagingPlotter(
+                fit=fit, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+            )
+
+            fit_imaging_plotter.figures_2d(
+                data=True,
+                noise_map=True,
+                signal_to_noise_map=True,
+                model_image=True,
+                residual_map=True,
+                normalized_residual_map=True,
+                chi_squared_map=True,
+            )
+
+            fit_imaging_plotter.figures_2d_of_galaxies(
+                subtracted_image=True,
+                model_image=True,
+            )

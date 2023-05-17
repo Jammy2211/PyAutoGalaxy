@@ -158,7 +158,7 @@ def clean_model_of_adapt_images(model):
     return model
 
 
-def hyper_model_from(
+def adapt_model_from(
     setup_adapt,
     result: af.Result,
     pixelization_overwrite=None,
@@ -231,25 +231,25 @@ def adapt_fit(
             "The analysis class does not have a adapt_model_image attribute, which is required for hyper fitting."
         )
 
-    hyper_model_pix = hyper_model_from(
+    adapt_model_pix = adapt_model_from(
         setup_adapt=setup_adapt,
         result=result,
     )
 
     search = setup_adapt.search_pix_cls(
         path_prefix=search_previous.path_prefix_no_unique_tag,
-        name=f"{search_previous.paths.name}__hyper_pix",
+        name=f"{search_previous.paths.name}__adapt",
         unique_tag=search_previous.paths.unique_tag,
         number_of_cores=search_previous.number_of_cores,
         **setup_adapt.search_pix_dict,
     )
 
     set_upper_limit_of_pixelization_pixels_prior(
-        model=hyper_model_pix, pixels_in_mask=result.mask.pixels_in_mask
+        model=adapt_model_pix, pixels_in_mask=result.mask.pixels_in_mask
     )
 
-    hyper_pix_result = search.fit(model=hyper_model_pix, analysis=analysis)
+    adapt_result = search.fit(model=adapt_model_pix, analysis=analysis)
 
-    result.adapt = hyper_pix_result
+    result.adapt = adapt_result
 
     return result

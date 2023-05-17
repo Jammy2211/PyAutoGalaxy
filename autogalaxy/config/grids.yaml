@@ -56,4 +56,6 @@ radial_minimum:
     ShapeletPolarEll: 1.0e-8
     ShapeletExponential: 1.0e-8
     ShapeletExponentialEll: 1.0e-8
+    SMBH: 1.0e-8
+    SMBHBinary: 1.0e-8
     EllProfile: 1.0e-08

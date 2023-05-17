@@ -13,7 +13,7 @@ A large amount of **PyAutoGalaxy** functionality is contained in its parent proj
 
 **PyAutoArray** https://github.com/Jammy2211/PyAutoArray
 
-If you wish to build from source all code used by **PyAutoGalaxy** you may need to build from source these 3 additional
+If you wish to build from source all code you may need to build from source these 3 additional
 projects. We include below instructions for building just **PyAutoGalaxy** from source or building all projects.
 
 Building Only PyAutoGalaxy

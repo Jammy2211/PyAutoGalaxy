@@ -25,7 +25,7 @@ class AbstractAgg(ABC):
         self.aggregator = aggregator
 
     @abstractmethod
-    def make_object_for_gen(self, fit: af.Fit, galaxies: List[Galaxy]) -> object:
+    def object_via_gen_from(self, fit: af.Fit, galaxies: List[Galaxy]) -> object:
         """
         For example, in the `PlaneAgg` object, this function is overwritten such that it creates a `Plane` from a
         `ModelInstance` that contains the galaxies of a sample from a non-linear search.
@@ -55,7 +55,10 @@ class AbstractAgg(ABC):
         """
 
         def func_gen(fit: af.Fit) -> Generator:
-            return self.make_object_for_gen(fit=fit, galaxies=fit.instance.galaxies)
+            if fit.instance.clumps is not None:
+                galaxies = fit.instance.galaxies + fit.instance.clumps
+
+            return self.object_via_gen_from(fit=fit, galaxies=galaxies)
 
         return self.aggregator.map(func=func_gen)
 
@@ -117,7 +120,7 @@ class AbstractAgg(ABC):
                     instance = sample.instance_for_model(model=samples.model)
 
                     all_above_weight_list.append(
-                        self.make_object_for_gen(fit=fit, galaxies=instance.galaxies)
+                        self.object_via_gen_from(fit=fit, galaxies=instance.galaxies)
                     )
 
             return all_above_weight_list
@@ -150,7 +153,7 @@ class AbstractAgg(ABC):
             samples = fit.value(name="samples")
 
             return [
-                self.make_object_for_gen(
+                self.object_via_gen_from(
                     fit=fit,
                     galaxies=samples.draw_randomly_via_pdf().galaxies,
                 )
