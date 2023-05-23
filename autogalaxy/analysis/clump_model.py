@@ -16,34 +16,38 @@ class ClumpModel:
         light_cls: Optional[Type[LightProfile]] = None,
         mass_cls: Optional[Type[MassProfile]] = None,
         einstein_radius_upper_limit: Optional[float] = None,
+        unfix_centres: bool = False
     ):
-        """
-        The clump API allows creates model components which model the light and mass of galaxies that are nearby the
-        main galaxy(s) of interest.
-
-        The `ClumpModel` object handles the creation of these model components to streamline model composition with
-        multiple clumps.
-
-        Every galaxy which is modeled as a clump has its centre input into this object which is fixed to this value
-        for model-fitting. All clumps are created as model `Galaxy` objects with a shard input redshift.
-
-        The light and mass profiles of the clumps are input via the `light_cls` and `mass_cls` inputs. If either is
-        omitted the clumps are not assigned a light or mass model.
-
-        Parameters
-        ----------
-        redshift
-            The redshift value of all clumps, which is likely the same as the main galaxy redshift.
-        centres
-            The centre of every clump in the model, whose light and mass profile centres are fixed to this value
-            throughout the model-fit.
-        light_cls
-            The light profile given to all clumps; if omitted all clumps have no light profile.
-        mass_cls
-            The mass profile given to all clumps; if omitted all clumps have no mass profile.
-        einstein_radius_upper_limit
-            The upper limit given to any mass model's `einstein_radius` parameter (e.g. if `IsothermalSph` profiles
-            are used to model clumps).
+        """                                                                                                                                                                               
+        The clump API allows creates model components which model the light and mass of galaxies that are nearby the                                                                      
+        main galaxy(s) of interest.                                                                                                                                                       
+                                                                                                                                                                                          
+        The `ClumpModel` object handles the creation of these model components to streamline model composition with                                                                       
+        multiple clumps.                                                                                                                                                                  
+                                                                                                                                                                                          
+        Every galaxy which is modeled as a clump has its centre input into this object which is fixed to this value                                                                       
+        for model-fitting. All clumps are created as model `Galaxy` objects with a shard input redshift.                                                                                  
+                                                                                                                                                                                          
+        The light and mass profiles of the clumps are input via the `light_cls` and `mass_cls` inputs. If either is                                                                       
+        omitted the clumps are not assigned a light or mass model.                                                                                                                        
+                                                                                                                                                                                          
+        Parameters                                                                                                                                                                        
+        ----------                                                                                                                                                                        
+        redshift                                                                                                                                                                          
+            The redshift value of all clumps, which is likely the same as the main galaxy redshift.                                                                                       
+        centres                                                                                                                                                                           
+            The centre of every clump in the model, whose light and mass profile centres are fixed to this value                                                                          
+            throughout the model-fit.                                                                                                                                                     
+        light_cls                                                                                                                                                                         
+            The light profile given to all clumps; if omitted all clumps have no light profile.                                                                                           
+        mass_cls                                                                                                                                                                          
+            The mass profile given to all clumps; if omitted all clumps have no mass profile.                                                                                             
+        einstein_radius_upper_limit                                                                                                                                                       
+            The upper limit given to any mass model's `einstein_radius` parameter (e.g. if `IsothermalSph` profiles                                                                       
+            are used to model clumps).                                                                                                                                                    
+        unfix_centres                                                                                                                                                                     
+            If required, change the mass and light centres from fixed values to Uniform Prior Models +/- 0.1 around                                                                       
+            the input centres.                                                                                                                                                            
         """
         self.redshift = redshift
         self.centres = centres
@@ -52,29 +56,47 @@ class ClumpModel:
         self.mass_cls = mass_cls
 
         self.einstein_radius_upper_limit = einstein_radius_upper_limit
+        self.unfix_centres = unfix_centres
+        
+        self.centre_prior_half_width = 0.1
 
     @property
     def total_clumps(self) -> int:
         return len(self.centres.in_list)
 
+    def unfix_centre(obj, centre):
+        obj.centre.centre_0 = af.UniformPrior(
+             lower_limit=new_centre[0] - centre_prior_half_width, upper_limit=new_centre[0] + centre_prior_half_width
+        )
+        obj.centre.centre_1 = af.UniformPrior(
+             lower_limit=new_centre[1] - centre_prior_half_width, upper_limit=new_centre[1] + centre_prior_half_width
+        )
+        return obj
+    
     @property
     def light_list(self) -> Optional[List[af.Model]]:
-        """
-        Returns a list of every clump's light model, where the centre of that light model is fixed to its corresponding
-        input clump's centre.
+        """                                                                                                                                                                               
+        Returns a list of every clump's light model, where the centre of that light model is fixed to its corresponding                                                                   
+        input clump's centre, unless specified to be free.                                                                                                                                
         """
         if self.light_cls is None:
             return None
 
-        return [
-            af.Model(self.light_cls, centre=centre) for centre in self.centres.in_list
-        ]
+        light_list = []
+
+        for centre in self.centres.in_list:
+            if self.unfix_centres:
+                light_list.append(unfix_centre(af.Model(self.light_cls), centre))
+            else:
+                light_list.append(af.Model(self.light_cls, centre=centre))
+
+        return light_list
 
     @property
     def mass_list(self) -> Optional[List[af.Model]]:
-        """
-        Returns a list of every clump's mass model, where the centre of that mass model is fixed to its corresponding
-        input clump's centre.
+        """                                                                                                                                                                               
+        Returns a list of every clump's mass model, where the centre of that mass model is fixed to its corresponding                                                                     
+        input clump's centre, unless specified to be free.                                                                                                                                
         """
         if self.mass_cls is None:
             return None
@@ -82,7 +104,10 @@ class ClumpModel:
         mass_list = []
 
         for centre in self.centres.in_list:
-            mass = af.Model(self.mass_cls, centre=centre)
+            if self.unfix_centres:
+                mass = unfix_centres(af.Model(self.mass_cls), centre)
+            else:
+                mass = af.Model(self.mass_cls, centre=centre)
 
             if (
                 hasattr(mass, "einstein_radius")
@@ -91,7 +116,6 @@ class ClumpModel:
                 mass.einstein_radius = af.UniformPrior(
                     lower_limit=0.0, upper_limit=self.einstein_radius_upper_limit
                 )
-
             mass_list.append(mass)
 
         return mass_list
