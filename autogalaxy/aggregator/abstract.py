@@ -55,8 +55,10 @@ class AbstractAgg(ABC):
         """
 
         def func_gen(fit: af.Fit) -> Generator:
-            if fit.instance.clumps is not None:
-                galaxies = fit.instance.galaxies + fit.instance.clumps
+
+            galaxies = fit.instance.galaxies
+            if hasattr(fit.instance, "clumps"):
+                galaxies = galaxies + fit.instance.clumps
 
             return self.object_via_gen_from(fit=fit, galaxies=galaxies)
 
