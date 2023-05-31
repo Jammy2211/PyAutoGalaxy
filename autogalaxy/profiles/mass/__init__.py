@@ -43,5 +43,5 @@ from .stellar import (
     Chameleon,
     ChameleonSph,
 )
-from .multipole import MultipolePowerLawM4
+from .multipole import MultipolePowerLaw
 from .sheets import ExternalShear, MassSheet, InputDeflections
