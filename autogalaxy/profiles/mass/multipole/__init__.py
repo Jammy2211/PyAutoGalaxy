@@ -1,1 +1,1 @@
-from .power_law import MultipolePowerLaw
+from .power_law import PowerLawMultipole

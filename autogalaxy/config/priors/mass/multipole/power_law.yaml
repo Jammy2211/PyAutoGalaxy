@@ -1,4 +1,4 @@
-MultipolePowerLaw:
+PowerLawMultipole:
   m:
     type: Constant
     value: 4

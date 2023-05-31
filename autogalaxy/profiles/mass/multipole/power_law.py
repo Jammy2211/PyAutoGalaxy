@@ -66,7 +66,7 @@ def multipole_parameters_from(
     return k_m, angle_m
 
 
-class MultipolePowerLaw(MassProfile):
+class PowerLawMultipole(MassProfile):
     def __init__(
         self,
         m : int,
@@ -122,7 +122,7 @@ class MultipolePowerLaw(MassProfile):
             slope=2.2
         )
 
-        multipole = al.mp.MultipolePowerLaw(
+        multipole = al.mp.PowerLawMultipole(
             centre=(0.0, 0.0),
             einstein_radius=1.0,
             slope=2.2,

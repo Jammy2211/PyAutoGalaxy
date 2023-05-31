@@ -78,7 +78,7 @@ Multipoles [ag.mp]
    :template: custom-class-template.rst
    :recursive:
 
-   MultipolePowerLaw
+   PowerLawMultipole
 
 Stellar [ag.mp]
 ---------------
