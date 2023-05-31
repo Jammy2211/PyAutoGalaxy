@@ -113,7 +113,6 @@ def test__x2_smbhs__masses_corrected_based_on_mass_and_ratio__init():
 
 
 def test__convergence_2d_from():
-
     smbh_binary = ag.mp.SMBHBinary(
         centre=(0.0, 0.0),
         separation=2.0,
@@ -130,8 +129,8 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(convergence_0 + convergence_1, 1e-2)
 
-def test__potential_2d_from():
 
+def test__potential_2d_from():
     smbh_binary = ag.mp.SMBHBinary(
         centre=(0.0, 0.0),
         separation=2.0,
@@ -148,8 +147,8 @@ def test__potential_2d_from():
 
     assert potential == pytest.approx(potential_0 + potential_1, 1e-2)
 
-def test__deflections_yx_2d_from():
 
+def test__deflections_yx_2d_from():
     smbh_binary = ag.mp.SMBHBinary(
         centre=(0.0, 0.0),
         separation=2.0,
@@ -164,4 +163,6 @@ def test__deflections_yx_2d_from():
     deflections_0 = smbh_0.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
     deflections_1 = smbh_1.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
 
-    assert deflections[0, 0] == pytest.approx(deflections_0[0, 0] + deflections_1[0, 0], 1e-2)
+    assert deflections[0, 0] == pytest.approx(
+        deflections_0[0, 0] + deflections_1[0, 0], 1e-2
+    )

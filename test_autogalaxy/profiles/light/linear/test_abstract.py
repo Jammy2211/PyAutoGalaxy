@@ -55,7 +55,9 @@ def test__mapping_matrix_from(sub_grid_2d_7x7, blurring_grid_2d_7x7, convolver_7
 def test__lp_from():
     lp_linear = ag.lp_linear.Sersic(centre=(1.0, 2.0))
 
-    lp_non_linear = lp_linear.lp_instance_from(linear_light_profile_intensity_dict={lp_linear: 3.0})
+    lp_non_linear = lp_linear.lp_instance_from(
+        linear_light_profile_intensity_dict={lp_linear: 3.0}
+    )
 
     assert not isinstance(lp_non_linear, LightProfileLinear)
     assert type(lp_non_linear) is ag.lp.Sersic

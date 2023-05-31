@@ -101,7 +101,9 @@ class SMBHBinary(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
-        return self.smbh_0.convergence_2d_from(grid=grid) + self.smbh_1.convergence_2d_from(grid=grid)
+        return self.smbh_0.convergence_2d_from(
+            grid=grid
+        ) + self.smbh_1.convergence_2d_from(grid=grid)
 
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
         """
@@ -114,7 +116,9 @@ class SMBHBinary(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the potential is computed on.
         """
-        return self.smbh_0.potential_2d_from(grid=grid) + self.smbh_1.potential_2d_from(grid=grid)
+        return self.smbh_0.potential_2d_from(grid=grid) + self.smbh_1.potential_2d_from(
+            grid=grid
+        )
 
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         """
@@ -128,4 +132,6 @@ class SMBHBinary(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        return self.smbh_0.deflections_yx_2d_from(grid=grid) + self.smbh_1.deflections_yx_2d_from(grid=grid)
+        return self.smbh_0.deflections_yx_2d_from(
+            grid=grid
+        ) + self.smbh_1.deflections_yx_2d_from(grid=grid)
