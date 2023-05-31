@@ -143,7 +143,7 @@ class MultipolePowerLaw(MassProfile):
         """
         super().__init__(centre=centre, ell_comps=(0.0, 0.0))
 
-        self.m = m
+        self.m = int(m)
 
         self.einstein_radius = einstein_radius
         self.slope = slope
