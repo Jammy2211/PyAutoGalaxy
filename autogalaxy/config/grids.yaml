@@ -25,7 +25,7 @@ radial_minimum:
     MassSheet: 1.0e-08
     Moffat: 1.0e-08
     MoffatSph: 1.0e-08
-    MultipolePowerLawM4: 1.0e-08
+    PowerLawMultipole: 1.0e-08
     NFW: 1.0e-06
     NFWMCRDuffySph: 1.0e-06
     NFWMCRLudlow: 1.0e-06

@@ -1,4 +1,7 @@
-MultipolePowerLawM4:
+PowerLawMultipole:
+  m:
+    type: Constant
+    value: 4
   centre_0:
     type: Gaussian
     mean: 0.0

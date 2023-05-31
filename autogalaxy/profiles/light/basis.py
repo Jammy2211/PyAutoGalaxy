@@ -37,13 +37,11 @@ class Basis(LightProfile):
             for light_profile in self.light_profile_list
         ]
 
-    def lp_instance_from(self, linear_light_profile_intensity_dict : Dict):
+    def lp_instance_from(self, linear_light_profile_intensity_dict: Dict):
         light_profile_list = []
 
         for light_profile in self.light_profile_list:
-
             if isinstance(light_profile, lp_linear.LightProfileLinear):
-
                 light_profile = light_profile.lp_instance_from(
                     linear_light_profile_intensity_dict=linear_light_profile_intensity_dict
                 )

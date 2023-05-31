@@ -66,16 +66,17 @@ def multipole_parameters_from(
     return k_m, angle_m
 
 
-class MultipolePowerLawM4(MassProfile):
+class PowerLawMultipole(MassProfile):
     def __init__(
         self,
+        m: int,
         centre: Tuple[float, float] = (0.0, 0.0),
         einstein_radius: float = 1.0,
         slope: float = 2.0,
         ell_comps_multipole: Tuple[float, float] = (0.0, 0.0),
     ):
         r"""
-        A multipole extension with multipole order M=4 to the power-law total mass distribution.
+        A multipole extension with multipole order M to the power-law total mass distribution.
 
         Quantities computed from this profile (e.g. deflections, convergence) are of only the multipole, and not the
         power-law mass distribution itself.
@@ -121,7 +122,7 @@ class MultipolePowerLawM4(MassProfile):
             slope=2.2
         )
 
-        multipole = al.mp.MultipolePowerLawM4(
+        multipole = al.mp.PowerLawMultipole(
             centre=(0.0, 0.0),
             einstein_radius=1.0,
             slope=2.2,
@@ -142,7 +143,7 @@ class MultipolePowerLawM4(MassProfile):
         """
         super().__init__(centre=centre, ell_comps=(0.0, 0.0))
 
-        self.m = 4  # Multipole order is m=4
+        self.m = int(m)
 
         self.einstein_radius = einstein_radius
         self.slope = slope

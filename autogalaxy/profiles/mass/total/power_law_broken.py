@@ -1,7 +1,5 @@
 import copy
 import numpy as np
-from scipy.integrate import quad
-from scipy import special
 from typing import Tuple
 
 import autoarray as aa
