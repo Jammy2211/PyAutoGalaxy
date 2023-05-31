@@ -5,6 +5,7 @@ from .total import (
     PowerLawCoreSph,
     PowerLawBroken,
     PowerLawBrokenSph,
+    PowerLawMultipole,
     IsothermalCore,
     IsothermalCoreSph,
     PowerLaw,
@@ -43,5 +44,4 @@ from .stellar import (
     Chameleon,
     ChameleonSph,
 )
-from .multipole import PowerLawMultipole
 from .sheets import ExternalShear, MassSheet, InputDeflections
