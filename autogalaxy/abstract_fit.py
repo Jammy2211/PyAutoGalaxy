@@ -186,11 +186,12 @@ class AbstractFitInversion:
 
         model_obj = copy.copy(self.model_obj)
 
-        for galaxy in model_obj.galaxies:
-            for key, obj in galaxy.__dict__.items():
-                if isinstance(obj, LightProfileLinear) or isinstance(obj, Basis):
-                    galaxy.__dict__[key] = obj.lp_instance_from(
-                        linear_light_profile_intensity_dict=self.linear_light_profile_intensity_dict
-                    )
+        for path, instance in model_obj.path_instance_tuples_for_class(
+            (LightProfileLinear, Basis)
+        ):
+            model_obj = model_obj.replacing_for_path(
+                path,
+                instance.lp_instance_from(self.linear_light_profile_intensity_dict),
+            )
 
         return model_obj
