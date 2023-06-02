@@ -7,7 +7,6 @@ if TYPE_CHECKING:
 
 import autoarray as aa
 
-from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.profiles.light.basis import Basis
 
