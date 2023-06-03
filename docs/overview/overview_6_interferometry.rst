@@ -18,7 +18,7 @@ images are computed. It is this image that is mapped to Fourier space to compare
 
 .. code-block:: python
 
-    real_space_mask_2d = ag.Mask2D.circular(
+    real_space_mask = ag.Mask2D.circular(
         shape_native=(400, 400), pixel_scales=0.025, radius=3.0
     )
 
@@ -32,15 +32,15 @@ for an ``Imaging`` object.
 
     dataset_path = "/path/to/dataset/folder"
 
-    interferometer = ag.Interferometer.from_fits(
+    dataset = ag.Interferometer.from_fits(
         data_path=path.join(dataset_path, "visibilities.fits"),
         noise_map_path=path.join(dataset_path, "noise_map.fits"),
         uv_wavelengths_path=path.join(dataset_path, "uv_wavelengths.fits"),
-        real_space_mask=real_space_mask_2d,
+        real_space_mask=real_space_mask,
     )
 
-    interferometer_plotter = aplt.InterferometerPlotter(interferometer=interferometer)
-    interferometer_plotter.figures_2d(visibilities=True, uv_wavelengths=True)
+    dataset_plotter = aplt.InterferometerPlotter(interferometer=interferometer)
+    dataset_plotter.figures_2d(visibilities=True, uv_wavelengths=True)
 
 Here is what the interferometer visibilities and uv wavelength (which represent the interferometer's baselines) looks
 like.
@@ -62,8 +62,8 @@ This can also plot the dataset in real-space, using the fast Fourier transforms 
 
 .. code-block:: python
 
-    interferometer_plotter = aplt.InterferometerPlotter(interferometer=interferometer)
-    interferometer_plotter.figures_2d(dirty_image=True, dirty_signal_to_noise_map=True)
+    dataset_plotter = aplt.InterferometerPlotter(interferometer=interferometer)
+    dataset_plotter.figures_2d(dirty_image=True, dirty_signal_to_noise_map=True)
 
 Here is what the image and signal-to-noise map look like in real space:
 
@@ -103,7 +103,7 @@ but we will apply the settings above:
 
 .. code-block:: python
 
-    interferometer = interferometer.apply_settings(
+    dataset = dataset.apply_settings(
         settings=ag.SettingsInterferometer(transformer_class=transformer_class)
     )
 
@@ -120,10 +120,10 @@ Note that the fit is not performed in real-space, but plotting it in real-space 
         interferometer=interferometer, tracer=tracer
     )
 
-    fit_interferometer_plotter = aplt.FitInterferometerPlotter(fit=fit)
-    fit_interferometer_plotter.subplot_fit()
-    fit_interferometer_plotter.subplot_fit_dirty_images()
-    fit_interferometer_plotter.subplot_fit_real_space()
+    fit_plotter = aplt.FitInterferometerPlotter(fit=fit)
+    fit_plotter.subplot_fit()
+    fit_plotter.subplot_fit_dirty_images()
+    fit_plotter.subplot_fit_real_space()
 
 Here is what the image of the galaxy looks like before it is Fourier transformed to the uv-plane:
 
@@ -133,7 +133,7 @@ Here is what the image of the galaxy looks like before it is Fourier transformed
 
 And here is what the Fourier transformed model visibilities look like:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/interferometry/model_visibilities.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/interferometry/model_data.png
   :width: 400
   :alt: Alternative text
 
@@ -190,7 +190,7 @@ to the uv-plane via the Fourier transform discussed above:
 
     search = af.DynestyStatic(name="overview_interferometer")
 
-    analysis = ag.AnalysisInterferometer(dataset=interferometer)
+    analysis = ag.AnalysisInterferometer(dataset=dataset)
 
     result = search.fit(model=model, analysis=analysis)
 
@@ -202,7 +202,7 @@ Gaussian noise to the visibilities:
 
 .. code-block:: python
 
-    real_space_grid_2d = ag.Grid2D.uniform(
+    real_space_grid = ag.Grid2D.uniform(
         shape_native=real_space_mask.shape_native,
         pixel_scales=real_space_mask.pixel_scales
     )
@@ -214,7 +214,7 @@ Gaussian noise to the visibilities:
         noise_sigma=0.01,
     )
 
-    interferometer = simulator.via_plane_from(plane=plane, grid=real_space_grid)
+    dataset = simulator.via_plane_from(plane=plane, grid=real_space_grid)
 
 Wrap-Up
 -------

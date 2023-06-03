@@ -16,10 +16,10 @@ and accounting for the background sky in the exposure which adds Poisson noise.
 
 .. code-block:: python
 
-    psf_2d = ag.Kernel2D.from_gaussian(shape_native=(11, 11), sigma=0.1, pixel_scales=0.05)
+    psf = ag.Kernel2D.from_gaussian(shape_native=(11, 11), sigma=0.1, pixel_scales=0.05)
 
     simulator = ag.SimulatorImaging(
-        exposure_time=300.0, background_sky_level=1.0, psf=psf_2d, add_poisson_noise=True
+        exposure_time=300.0, background_sky_level=1.0, psf=psf, add_poisson_noise=True
     )
 
 Once we have a simulator, we can use it to create an imaging dataset which consists of an image, noise-map and
@@ -27,7 +27,7 @@ Point Spread Function (PSF) by passing it a plane and grid.
 
 .. code-block:: python
 
-    imaging = simulator.via_plane_from(plane=plane, grid=grid_2d)
+    dataset = simulator.via_plane_from(plane=plane, grid=grid)
 
 Here is what our dataset looks like:
 

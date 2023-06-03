@@ -252,7 +252,7 @@ class AnalysisImaging(AnalysisDataset):
 
         visualizer = VisualizerImaging(visualize_path=paths.image_path)
 
-        visualizer.visualize_imaging(imaging=self.imaging)
+        visualizer.visualize_imaging(dataset=self.dataset)
 
         visualizer.visualize_adapt_images(
             adapt_galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
@@ -306,7 +306,7 @@ class AnalysisImaging(AnalysisDataset):
         )
 
         visualizer = VisualizerImaging(visualize_path=paths.image_path)
-        visualizer.visualize_imaging(imaging=self.imaging)
+        visualizer.visualize_imaging(dataset=self.dataset)
 
         try:
             visualizer.visualize_fit_imaging(fit=fit, during_analysis=during_analysis)

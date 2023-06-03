@@ -337,10 +337,10 @@ def test__light_profile_snr__signal_to_noise_via_simulator_correct():
         background_sky_level=background_sky_level,
     )
 
-    imaging = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset = simulator.via_plane_from(plane=plane, grid=grid)
 
-    assert 9.0 < imaging.signal_to_noise_map.native[0, 2] < 11.0
-    assert 11.0 < imaging.signal_to_noise_map.native[2, 0] < 21.0
+    assert 9.0 < dataset.signal_to_noise_map.native[0, 2] < 11.0
+    assert 11.0 < dataset.signal_to_noise_map.native[2, 0] < 21.0
 
 
 def test__plane_image_2d_from(sub_grid_2d_7x7):

@@ -27,9 +27,9 @@ def test__perfect_fit__chi_squared_0():
         exposure_time=300.0, psf=psf, add_poisson_noise=False
     )
 
-    imaging = simulator.via_plane_from(plane=plane, grid=grid)
-    imaging.noise_map = ag.Array2D.ones(
-        shape_native=imaging.image.shape_native, pixel_scales=0.2
+    dataset = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset.noise_map = ag.Array2D.ones(
+        shape_native=dataset.data.shape_native, pixel_scales=0.2
     )
 
     file_path = path.join(
@@ -46,13 +46,13 @@ def test__perfect_fit__chi_squared_0():
     if path.exists(file_path) is False:
         os.makedirs(file_path)
 
-    imaging.output_to_fits(
+    dataset.output_to_fits(
         data_path=path.join(file_path, "data.fits"),
         noise_map_path=path.join(file_path, "noise_map.fits"),
         psf_path=path.join(file_path, "psf.fits"),
     )
 
-    imaging = ag.Imaging.from_fits(
+    dataset = ag.Imaging.from_fits(
         data_path=path.join(file_path, "data.fits"),
         noise_map_path=path.join(file_path, "noise_map.fits"),
         psf_path=path.join(file_path, "psf.fits"),
@@ -60,20 +60,20 @@ def test__perfect_fit__chi_squared_0():
     )
 
     mask = ag.Mask2D.circular(
-        shape_native=imaging.image.shape_native,
+        shape_native=dataset.data.shape_native,
         pixel_scales=0.2,
         sub_size=1,
         radius=0.8,
     )
 
-    masked_imaging = imaging.apply_mask(mask=mask)
-    masked_imaging = masked_imaging.apply_settings(
+    masked_dataset = dataset.apply_mask(mask=mask)
+    masked_dataset = masked_dataset.apply_settings(
         settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
     )
 
     plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
-    fit = ag.FitImaging(dataset=masked_imaging, plane=plane)
+    fit = ag.FitImaging(dataset=masked_dataset, plane=plane)
 
     assert fit.chi_squared == pytest.approx(0.0, 1e-4)
 
@@ -109,15 +109,15 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
 
     simulator = ag.SimulatorImaging(exposure_time=300.0, psf=psf, noise_seed=1)
 
-    imaging = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset = simulator.via_plane_from(plane=plane, grid=grid)
 
     mask = ag.Mask2D.circular(
-        shape_native=imaging.image.shape_native, pixel_scales=0.2, radius=2.0
+        shape_native=dataset.data.shape_native, pixel_scales=0.2, radius=2.0
     )
 
-    masked_imaging = imaging.apply_mask(mask=mask)
+    masked_dataset = dataset.apply_mask(mask=mask)
 
-    fit = ag.FitImaging(dataset=masked_imaging, plane=plane)
+    fit = ag.FitImaging(dataset=masked_dataset, plane=plane)
 
     assert fit.figure_of_merit == pytest.approx(532.19918562, 1.0e-2)
 
@@ -134,11 +134,11 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
 
     plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
-    imaging = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset = simulator.via_plane_from(plane=plane, grid=grid)
 
-    masked_imaging = imaging.apply_mask(mask=mask)
+    masked_dataset = dataset.apply_mask(mask=mask)
 
-    fit = ag.FitImaging(dataset=masked_imaging, plane=plane)
+    fit = ag.FitImaging(dataset=masked_dataset, plane=plane)
 
     assert fit.figure_of_merit == pytest.approx(532.19918562, 1.0e-2)
 
@@ -162,26 +162,26 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
         exposure_time=300.0, psf=psf, add_poisson_noise=False
     )
 
-    imaging = simulator.via_plane_from(plane=plane, grid=grid)
-    imaging.noise_map = ag.Array2D.ones(
-        shape_native=imaging.image.shape_native, pixel_scales=0.2
+    dataset = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset.noise_map = ag.Array2D.ones(
+        shape_native=dataset.data.shape_native, pixel_scales=0.2
     )
 
     mask = ag.Mask2D.circular(
-        shape_native=imaging.image.shape_native,
+        shape_native=dataset.data.shape_native,
         pixel_scales=0.2,
         sub_size=1,
         radius=0.8,
     )
 
-    masked_imaging = imaging.apply_mask(mask=mask)
-    masked_imaging = masked_imaging.apply_settings(
+    masked_dataset = dataset.apply_mask(mask=mask)
+    masked_dataset = masked_dataset.apply_settings(
         settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
     )
 
     plane = ag.Plane(galaxies=[galaxy])
 
-    fit = ag.FitImaging(dataset=masked_imaging, plane=plane)
+    fit = ag.FitImaging(dataset=masked_dataset, plane=plane)
 
     galaxy_linear = ag.Galaxy(
         redshift=0.5,
@@ -192,7 +192,7 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
     plane_linear = ag.Plane(galaxies=[galaxy_linear])
 
     fit_linear = ag.FitImaging(
-        dataset=masked_imaging,
+        dataset=masked_dataset,
         plane=plane_linear,
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
@@ -212,9 +212,9 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
     assert fit_linear.figure_of_merit == pytest.approx(-45.02798, 1.0e-4)
 
     galaxy_image = galaxy.blurred_image_2d_from(
-        grid=masked_imaging.grid,
-        convolver=masked_imaging.convolver,
-        blurring_grid=masked_imaging.blurring_grid,
+        grid=masked_dataset.grid,
+        convolver=masked_dataset.convolver,
+        blurring_grid=masked_dataset.blurring_grid,
     )
 
     assert fit_linear.galaxy_model_image_dict[galaxy_linear] == pytest.approx(

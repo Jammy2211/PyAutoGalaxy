@@ -35,7 +35,7 @@ We simply use lists of the classes we are now familiar with, for example the `Im
 
 .. code-block:: python
 
-    imaging_list = [
+    dataset_list = [
         al.Imaging.from_fits(
             image_path=path.join(dataset_path, f"{color}_image.fits"),
             psf_path=path.join(dataset_path, f"{color}_psf.fits"),
@@ -68,11 +68,11 @@ necessary, but provides a more reliable analysis.
 
 .. code-block:: python
 
-    mask_2d_list = [
+    mask_list = [
         al.Mask2D.circular(
-            shape_native=imaging.shape_native, pixel_scales=imaging.pixel_scales, radius=3.0
+            shape_native=dataset.shape_native, pixel_scales=dataset.pixel_scales, radius=3.0
         )
-        for imaging in imaging_list
+        for dataset in dataset_list
     ]
 
 Analysis
@@ -82,7 +82,7 @@ We create a list of ``AnalysisImaging`` objects for every dataset.
 
 .. code-block:: python
 
-    analysis_list = [al.AnalysisImaging(dataset=imaging) for imaging in imaging_list]
+    analysis_list = [al.AnalysisImaging(dataset=dataset) for dataset in dataset_list]
 
 We now introduce the key new aspect to the **PyAutoGalaxy** multi-dataset API, which is critical to fitting multiple
 datasets simultaneously.
@@ -203,12 +203,12 @@ to a dataset observed in the g, r and I bands.
     bulge_m = af.UniformPrior(lower_limit=-0.1, upper_limit=0.1)
     bulge_c = af.UniformPrior(lower_limit=-10.0, upper_limit=10.0)
 
-    for wavelength, imaging in zip(wavelength_list, imaging_list):
+    for wavelength, imaging in zip(wavelength_list, dataset_list):
 
         bulge_intensity = (wavelength * bulge_m) + bulge_c
 
         analysis_list.append(
-            ag.AnalysisImaging(dataset=imaging).with_model(
+            ag.AnalysisImaging(dataset=dataset).with_model(
                 model.replacing(
                     {
                         model.galaxies.galaxy.bulge.intensity: bulge_intensity,

@@ -71,7 +71,7 @@ def test__visualizes_imaging__uses_configs(
 
     visualizer = vis.Visualizer(visualize_path=plot_path)
 
-    visualizer.visualize_imaging(imaging=imaging_7x7)
+    visualizer.visualize_imaging(dataset=imaging_7x7)
 
     plot_path = path.join(plot_path, "dataset")
 
@@ -87,7 +87,7 @@ def test__visualizes_interferometer__uses_configs(
 ):
     visualizer = vis.Visualizer(visualize_path=plot_path)
 
-    visualizer.visualize_interferometer(interferometer=interferometer_7)
+    visualizer.visualize_interferometer(dataset=interferometer_7)
 
     plot_path = path.join(plot_path, "dataset")
 

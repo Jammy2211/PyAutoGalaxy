@@ -29,30 +29,30 @@ units to arc-seconds):
 
 .. code:: python
 
-    grid_2d = ag.Grid2D.uniform(
+    grid = ag.Grid2D.uniform(
         shape_native=(100, 100),
         pixel_scales=0.1,
     )
 
-    grid_2d_plotter = aplt.Grid2DPlotter(grid=grid_2d)
-    grid_2d_plotter.figure_2d()
+    grid_plotter = aplt.Grid2DPlotter(grid=grid)
+    grid_plotter.figure_2d()
 
 .. sourcecode:: python
 
     import autogalaxy as ag
 
 
-    grid_2d = ag.Grid2D.uniform(
+    grid = ag.Grid2D.uniform(
         shape_native=(100, 100),
         pixel_scales=0.1,
     )
 
-    grid_2d_plotter = aplt.Grid2DPlotter(grid=grid_2d)
-    grid_2d_plotter.figure_2d()
+    grid_plotter = aplt.Grid2DPlotter(grid=grid)
+    grid_plotter.figure_2d()
 
 This is what our ``Grid2D`` looks like:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/galaxies/grid_2d.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/galaxies/grid.png
   :width: 400
   :alt: Alternative text
 
@@ -80,7 +80,7 @@ image of the `LightProfile`.
 
 .. code-block:: python
 
-    image_2d = sersic_light_profile.image_2d_from(grid=grid_2d)
+    image = sersic_light_profile.image_2d_from(grid=grid)
 
 The PyAutoGalaxy plot module provides methods for plotting objects and their properties, like
 the `LightProfile`'s image.
@@ -88,7 +88,7 @@ the `LightProfile`'s image.
 .. code-block:: python
 
     light_profile_plotter = aplt.LightProfilePlotter(
-        light_profile=sersic_light_profile, grid=grid_2d
+        light_profile=sersic_light_profile, grid=grid
     )
     light_profile_plotter.figures_2d(image=True)
 
@@ -128,7 +128,7 @@ We can create an image the galaxy by passing it the 2D grid above.
 
 .. code-block:: python
 
-    image_2d = galaxy.image_2d_from(grid=grid_2d)
+    image = galaxy.image_2d_from(grid=grid)
 
 The **PyAutoGalaxy** plot module provides methods for plotting galaxies.
 
@@ -136,7 +136,7 @@ Below, we plot its image, which is the sum of the bulge and disk components.
 
 .. code-block:: python
 
-    galaxy_plotter = aplt.GalaxyPlotter(galaxy=galaxy, grid=grid_2d)
+    galaxy_plotter = aplt.GalaxyPlotter(galaxy=galaxy, grid=grid)
     galaxy_plotter.figures_2d(image=True)
 
 The galaxy, with both a bulge and disk, appears as follows
@@ -184,9 +184,9 @@ The image of the plane consists of all galaxies.
 
 .. code-block:: python
 
-    image_2d = plane.image_2d_from(grid=grid_2d)
+    image = plane.image_2d_from(grid=grid)
 
-    plane_plotter = aplt.PlanePlotter(plane=plane, grid=grid_2d)
+    plane_plotter = aplt.PlanePlotter(plane=plane, grid=grid)
     plane_plotter.figures_2d(image=True)
     plane_plotter.subplot_galaxy_images()
 

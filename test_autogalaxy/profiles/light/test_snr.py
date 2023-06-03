@@ -15,11 +15,11 @@ def test__signal_to_noise_via_simulator_correct():
         noise_seed=5,
     )
 
-    imaging = simulator.via_galaxies_from(
+    dataset = simulator.via_galaxies_from(
         grid=grid, galaxies=[ag.Galaxy(redshift=0.5, light=sersic)]
     )
 
-    assert 9.0 < imaging.signal_to_noise_max < 11.5
+    assert 9.0 < dataset.signal_to_noise_max < 11.5
 
     psf = ag.Kernel2D.from_gaussian(
         shape_native=(3, 3), sigma=2.0, pixel_scales=0.2, normalize=True
@@ -32,8 +32,8 @@ def test__signal_to_noise_via_simulator_correct():
         noise_seed=5,
     )
 
-    imaging = simulator.via_galaxies_from(
+    dataset = simulator.via_galaxies_from(
         grid=grid, galaxies=[ag.Galaxy(redshift=0.5, light=sersic)]
     )
 
-    assert 9.0 < imaging.signal_to_noise_max < 11.5
+    assert 9.0 < dataset.signal_to_noise_max < 11.5

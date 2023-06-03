@@ -118,7 +118,7 @@ search calls to fit the lens model to the data.
 
 .. code-block:: python
 
-    analysis = ag.AnalysisImaging(dataset=imaging)
+    analysis = ag.AnalysisImaging(dataset=dataset)
 
 Model-Fit
 ---------
@@ -277,8 +277,8 @@ make a corner plot of the probability density function (PDF):
 
 .. code-block:: python
 
-    dynesty_plotter = aplt.DynestyPlotter(samples=result.samples)
-    dynesty_plotter.cornerplot()
+    search_plotter = aplt.DynestyPlotter(samples=result.samples)
+    search_plotter.cornerplot()
 
 Here is an example of how a PDF estimated for a model appears:
 
@@ -294,8 +294,8 @@ plotted.
     plane_plotter = aplt.PlanePlotter(plane=result.max_log_likelihood_plane, grid=mask.derive_grid.masked)
     plane_plotter.subplot_plane()
 
-    fit_imaging_plotter = aplt.FitImagingPlotter(fit=result.max_log_likelihood_fit)
-    fit_imaging_plotter.subplot_fit()
+    fit_plotter = aplt.FitImagingPlotter(fit=result.max_log_likelihood_fit)
+    fit_plotter.subplot_fit()
 
 Here's what the model-fit of the model which maximizes the log likelihood looks like, providing good residuals and
 low chi-squared values:

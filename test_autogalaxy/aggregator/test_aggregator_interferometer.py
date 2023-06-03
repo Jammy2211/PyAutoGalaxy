@@ -47,15 +47,15 @@ def test__interferometer_generator_from_aggregator(
     agg.add_directory(directory=result_path)
 
     interferometer_agg = ag.agg.InterferometerAgg(aggregator=agg)
-    interferometer_gen = interferometer_agg.dataset_gen_from()
+    dataset_gen = interferometer_agg.dataset_gen_from()
 
-    for interferometer in interferometer_gen:
-        assert (interferometer.visibilities == interferometer_7.visibilities).all()
-        assert (interferometer.real_space_mask == mask_2d_7x7).all()
-        assert isinstance(interferometer.grid, ag.Grid2DIterate)
-        assert isinstance(interferometer.grid_pixelization, ag.Grid2DIterate)
-        assert interferometer.grid.sub_steps == [2]
-        assert interferometer.grid.fractional_accuracy == 0.5
-        assert isinstance(interferometer.transformer, ag.TransformerDFT)
+    for dataset in dataset_gen:
+        assert (dataset.data == interferometer_7.visibilities).all()
+        assert (dataset.real_space_mask == mask_2d_7x7).all()
+        assert isinstance(dataset.grid, ag.Grid2DIterate)
+        assert isinstance(dataset.grid_pixelization, ag.Grid2DIterate)
+        assert dataset.grid.sub_steps == [2]
+        assert dataset.grid.fractional_accuracy == 0.5
+        assert isinstance(dataset.transformer, ag.TransformerDFT)
 
     clean(database_file=database_file, result_path=result_path)

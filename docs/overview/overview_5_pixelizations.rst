@@ -21,10 +21,10 @@ To fit this image with an ``Inversion``, we first mask the ``Imaging`` object:
 .. code-block:: python
 
    mask = al.Mask2D.circular(
-      shape_native=imaging.shape_native, pixel_scales=imaging.pixel_scales, radius=3.0
+      shape_native=dataset.shape_native, pixel_scales=dataset.pixel_scales, radius=3.0
     )
 
-   imaging = imaging.apply_mask(mask=mask_2d)
+   dataset = dataset.apply_mask(mask=mask)
 
 To reconstruct the galaxy on a pixel-grid, called a mesh, we simply pass it the ``Mesh`` class we want to reconstruct its
 light on.
@@ -50,7 +50,7 @@ object.
 
     plane = ag.Plane(galaxies=[galaxy])
 
-    fit = ag.FitImaging(dataset=imaging, plane=plane)
+    fit = ag.FitImaging(dataset=dataset, plane=plane)
 
 Here is what our reconstructed galaxy looks like:
 

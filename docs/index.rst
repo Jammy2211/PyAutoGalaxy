@@ -21,7 +21,7 @@ Telescope imaging of a spiral galaxy:
 .. |pic2| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/almacombined.png?raw=true
 
 Core features include fully automated Bayesian model-fitting of galaxy two-dimensional surface brightness profiles,
-support for imaging and interferometer datasets and comprehensive tools for simulating galaxy images. The software
+support for dataset and interferometer datasets and comprehensive tools for simulating galaxy images. The software
 places a focus on **big data** analysis, including support for hierarchical models that simultaneously fit thousands of
 galaxies, massively parallel model-fitting and an SQLite3 database that allows large suites of modeling results to be
 loaded, queried and analysed.
@@ -79,7 +79,7 @@ and `PyNUFFT` [@pynufft].
     To describe the galaxy emission two-dimensional grids of (y,x) Cartesian
     coordinates are used.
     """
-    grid_2d = ag.Grid2D.uniform(
+    grid = ag.Grid2D.uniform(
         shape_native=(50, 50),
         pixel_scales=0.05,  # <- Conversion from pixel units to arc-seconds.
     )
@@ -122,7 +122,7 @@ and `PyNUFFT` [@pynufft].
     We can use the Grid2D and Plane to perform many calculations, for example
     plotting the image of the lensed source.
     """
-    plane_plotter = aplt.PlanePlotter(plane=plane, grid=grid_2d)
+    plane_plotter = aplt.PlanePlotter(plane=plane, grid=grid)
     plane_plotter.figures_2d(image=True)
 
 
@@ -143,7 +143,7 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
     """
     Load Imaging data of the galaxy from the dataset folder of the workspace.
     """
-    imaging = ag.Imaging.from_fits(
+    dataset = ag.Imaging.from_fits(
         data_path="/path/to/dataset/image.fits",
         noise_map_path="/path/to/dataset/noise_map.fits",
         psf_path="/path/to/dataset/psf.fits",
@@ -154,7 +154,7 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
     Create a mask for the data, which we setup as a 3.0" circle.
     """
     mask = ag.Mask2D.circular(
-        shape_native=imaging.shape_native, pixel_scales=imaging.pixel_scales, radius=3.0
+        shape_native=dataset.shape_native, pixel_scales=dataset.pixel_scales, radius=3.0
     )
 
     """
@@ -178,7 +178,7 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
     We next set up the `Analysis`, which contains the `log likelihood function` that the
     non-linear search calls to fit the lens model to the data.
     """
-    analysis = ag.AnalysisImaging(dataset=masked_imaging)
+    analysis = ag.AnalysisImaging(dataset=masked_dataset)
 
     """
     To perform the model-fit we pass the model and analysis to the search's fit method. This will

@@ -10,9 +10,7 @@ def test__model_visibilities(interferometer_7):
 
     fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 
-    assert fit.model_visibilities.slim[0] == pytest.approx(
-        np.array([1.48496 + 0.0]), 1.0e-4
-    )
+    assert fit.model_data.slim[0] == pytest.approx(np.array([1.48496 + 0.0]), 1.0e-4)
     assert fit.log_likelihood == pytest.approx(-34.16859, 1.0e-4)
 
 

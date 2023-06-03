@@ -125,10 +125,10 @@ class AbstractFitInversion:
         This is used to create the overall `galaxy_model_image_dict`, which maps every galaxy to its
         overall `model_data` (e.g. including the `model_data` of orindary light profiles too).
 
-        If `use_image=False`, the `reconstructed_data` of the inversion (e.g. an image for imaging data,
+        If `use_image=False`, the `reconstructed_data` of the inversion (e.g. an image for dataset data,
         visibilities for  interferometer data) is input in the dictionary.
 
-        if `use_image=True`, the `reconstructed_image` of the inversion (e.g. the image for imaging data, the
+        if `use_image=True`, the `reconstructed_image` of the inversion (e.g. the image for dataset data, the
         real-space image for interferometer data) is input in the dictionary.
 
         Parameters

@@ -109,7 +109,7 @@ class Visualizer:
             )
         )
 
-    def visualize_imaging(self, imaging: aa.Imaging):
+    def visualize_imaging(self, dataset: aa.Imaging):
         """
         Visualizes an `Imaging` dataset object.
 
@@ -124,7 +124,7 @@ class Visualizer:
 
         Parameters
         ----------
-        imaging
+        dataset
             The imaging dataset whose attributes are visualized.
         """
 
@@ -133,11 +133,11 @@ class Visualizer:
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="dataset")
 
-        imaging_plotter = aplt.ImagingPlotter(
-            imaging=imaging, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+        dataset_plotter = aplt.ImagingPlotter(
+            dataset=dataset, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
-        imaging_plotter.figures_2d(
+        dataset_plotter.figures_2d(
             data=should_plot("data"),
             noise_map=should_plot("noise_map"),
             psf=should_plot("psf"),
@@ -145,9 +145,9 @@ class Visualizer:
         )
 
         if should_plot("subplot_dataset"):
-            imaging_plotter.subplot_dataset()
+            dataset_plotter.subplot_dataset()
 
-    def visualize_interferometer(self, interferometer: aa.Interferometer):
+    def visualize_interferometer(self, dataset: aa.Interferometer):
         """
         Visualizes an `Interferometer` dataset object.
 
@@ -162,7 +162,7 @@ class Visualizer:
 
         Parameters
         ----------
-        interferometer
+        dataset
             The interferometer dataset whose attributes are visualized.
         """
 
@@ -171,16 +171,16 @@ class Visualizer:
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="dataset")
 
-        interferometer_plotter = aplt.InterferometerPlotter(
-            dataset=interferometer,
+        dataset_plotter = aplt.InterferometerPlotter(
+            dataset=dataset,
             include_2d=self.include_2d,
             mat_plot_2d=mat_plot_2d,
         )
 
         if should_plot("subplot_dataset"):
-            interferometer_plotter.subplot_dataset()
+            dataset_plotter.subplot_dataset()
 
-        interferometer_plotter.figures_2d(
+        dataset_plotter.figures_2d(
             data=should_plot("data"),
             u_wavelengths=should_plot("uv_wavelengths"),
             v_wavelengths=should_plot("uv_wavelengths"),
@@ -453,15 +453,15 @@ class Visualizer:
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="adapt")
 
-        hyper_plotter = AdaptPlotter(
+        adapt_plotter = AdaptPlotter(
             mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
         if should_plot("model_image"):
-            hyper_plotter.figure_adapt_model_image(adapt_model_image=adapt_model_image)
+            adapt_plotter.figure_adapt_model_image(adapt_model_image=adapt_model_image)
 
         if should_plot("images_of_galaxies"):
-            hyper_plotter.subplot_adapt_images_of_galaxies(
+            adapt_plotter.subplot_adapt_images_of_galaxies(
                 adapt_galaxy_image_path_dict=adapt_galaxy_image_path_dict
             )
 
@@ -491,12 +491,12 @@ class Visualizer:
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="adapt")
 
-        hyper_plotter = AdaptPlotter(
+        adapt_plotter = AdaptPlotter(
             mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
         if hasattr(plane, "contribution_map_list"):
             if should_plot("contribution_map_list"):
-                hyper_plotter.subplot_contribution_map_list(
+                adapt_plotter.subplot_contribution_map_list(
                     contribution_map_list_list=plane.contribution_map_list
                 )
