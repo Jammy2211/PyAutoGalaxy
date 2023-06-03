@@ -138,7 +138,9 @@ simple analysis which fits a galaxy's light.
     Create a mask for the data, which we setup as a 3.0" circle.
     """
     mask = ag.Mask2D.circular(
-        shape_native=dataset.shape_native, pixel_scales=dataset.pixel_scales, radius=3.0
+        shape_native=dataset.shape_native,
+        pixel_scales=dataset.pixel_scales,
+        radius=3.0
     )
 
     """
