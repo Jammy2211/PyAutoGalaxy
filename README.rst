@@ -127,7 +127,7 @@ simple analysis which fits a galaxy's light.
     """
     Load Imaging data of the strong galaxy from the dataset folder of the workspace.
     """
-    imaging = ag.Imaging.from_fits(
+    dataset = ag.Imaging.from_fits(
         data_path="/path/to/dataset/image.fits",
         noise_map_path="/path/to/dataset/noise_map.fits",
         psf_path="/path/to/dataset/psf.fits",
@@ -138,7 +138,7 @@ simple analysis which fits a galaxy's light.
     Create a mask for the data, which we setup as a 3.0" circle.
     """
     mask = ag.Mask2D.circular(
-        shape_native=imaging.shape_native, pixel_scales=imaging.pixel_scales, radius=3.0
+        shape_native=dataset.shape_native, pixel_scales=dataset.pixel_scales, radius=3.0
     )
 
     """
@@ -162,7 +162,7 @@ simple analysis which fits a galaxy's light.
     We next set up the `Analysis`, which contains the `log likelihood function` that the
     non-linear search calls to fit the galaxy model to the data.
     """
-    analysis = ag.AnalysisImaging(dataset=masked_imaging)
+    analysis = ag.AnalysisImaging(dataset=masked_dataset)
 
     """
     To perform the model-fit we pass the model and analysis to the search's fit method. This will

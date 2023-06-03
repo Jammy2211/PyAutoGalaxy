@@ -24,19 +24,15 @@ class TestSimulatorInterferometer:
             noise_seed=1,
         )
 
-        interferometer = simulator.via_plane_from(plane=plane, grid=grid)
+        dataset = simulator.via_plane_from(plane=plane, grid=grid)
 
         interferometer_via_image = simulator.via_image_from(
             image=plane.image_2d_from(grid=grid)
         )
 
-        assert (
-            interferometer.visibilities == interferometer_via_image.visibilities
-        ).all()
-        assert (
-            interferometer.uv_wavelengths == interferometer_via_image.uv_wavelengths
-        ).all()
-        assert (interferometer.noise_map == interferometer_via_image.noise_map).all()
+        assert (dataset.data == interferometer_via_image.visibilities).all()
+        assert (dataset.uv_wavelengths == interferometer_via_image.uv_wavelengths).all()
+        assert (dataset.noise_map == interferometer_via_image.noise_map).all()
 
     def test__simulate_interferometer_from_galaxy__source_galaxy__compare_to_interferometer(
         self,
@@ -68,9 +64,7 @@ class TestSimulatorInterferometer:
             noise_seed=1,
         )
 
-        interferometer = simulator.via_galaxies_from(
-            galaxies=[galaxy_0, galaxy_1], grid=grid
-        )
+        dataset = simulator.via_galaxies_from(galaxies=[galaxy_0, galaxy_1], grid=grid)
 
         plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
@@ -78,10 +72,8 @@ class TestSimulatorInterferometer:
             image=plane.image_2d_from(grid=grid)
         )
 
-        assert interferometer.visibilities == pytest.approx(
+        assert dataset.data == pytest.approx(
             interferometer_via_image.visibilities, 1.0e-4
         )
-        assert (
-            interferometer.uv_wavelengths == interferometer_via_image.uv_wavelengths
-        ).all()
-        assert (interferometer_via_image.noise_map == interferometer.noise_map).all()
+        assert (dataset.uv_wavelengths == interferometer_via_image.uv_wavelengths).all()
+        assert (interferometer_via_image.noise_map == dataset.noise_map).all()

@@ -8,7 +8,7 @@ import autoarray as aa
 def _interferometer_from(
     fit: af.Fit,
     real_space_mask: Optional[aa.Mask2D] = None,
-    settings_interferometer: Optional[aa.SettingsInterferometer] = None,
+    settings_dataset: Optional[aa.SettingsInterferometer] = None,
 ):
     """
     Returns a `Interferometer` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to
@@ -31,20 +31,18 @@ def _interferometer_from(
     noise_map = fit.value(name="noise_map")
     uv_wavelengths = fit.value(name="uv_wavelengths")
     real_space_mask = real_space_mask or fit.value(name="real_space_mask")
-    settings_interferometer = settings_interferometer or fit.value(
-        name="settings_dataset"
-    )
+    settings_dataset = settings_dataset or fit.value(name="settings_dataset")
 
-    interferometer = aa.Interferometer(
+    dataset = aa.Interferometer(
         data=data,
         noise_map=noise_map,
         uv_wavelengths=uv_wavelengths,
         real_space_mask=real_space_mask,
     )
 
-    interferometer = interferometer.apply_settings(settings=settings_interferometer)
+    dataset = dataset.apply_settings(settings=settings_dataset)
 
-    return interferometer
+    return dataset
 
 
 class InterferometerAgg:
@@ -54,7 +52,7 @@ class InterferometerAgg:
     def dataset_gen_from(
         self,
         real_space_mask: Optional[aa.Mask2D] = None,
-        settings_interferometer: Optional[aa.SettingsInterferometer] = None,
+        settings_dataset: Optional[aa.SettingsInterferometer] = None,
     ):
         """
         Returns a generator of `Interferometer` objects from an input aggregator, which generates a list of the
@@ -73,7 +71,7 @@ class InterferometerAgg:
         func = partial(
             _interferometer_from,
             real_space_mask=real_space_mask,
-            settings_interferometer=settings_interferometer,
+            settings_dataset=settings_dataset,
         )
 
         return self.aggregator.map(func=func)

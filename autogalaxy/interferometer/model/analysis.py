@@ -323,7 +323,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
         visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
 
-        visualizer.visualize_interferometer(interferometer=self.interferometer)
+        visualizer.visualize_interferometer(dataset=self.interferometer)
 
         visualizer.visualize_adapt_images(
             adapt_galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
@@ -375,7 +375,7 @@ class AnalysisInterferometer(AnalysisDataset):
         )
 
         visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
-        visualizer.visualize_interferometer(interferometer=self.interferometer)
+        visualizer.visualize_interferometer(dataset=self.interferometer)
 
         plane = fit.plane_linear_light_profiles_to_light_profiles
 

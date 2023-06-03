@@ -5,7 +5,7 @@ import autofit as af
 import autoarray as aa
 
 
-def _imaging_from(fit: af.Fit, settings_imaging: Optional[aa.SettingsImaging] = None):
+def _imaging_from(fit: af.Fit, settings_dataset: Optional[aa.SettingsImaging] = None):
     """
     Returns a `Imaging` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to describe
     that it acts as the aggregator object for one result in the `Aggregator`. This uses the aggregator's generator
@@ -24,35 +24,35 @@ def _imaging_from(fit: af.Fit, settings_imaging: Optional[aa.SettingsImaging] = 
     noise_map = fit.value(name="noise_map")
     psf = fit.value(name="psf")
 
-    settings_imaging = settings_imaging or fit.value(name="settings_dataset")
+    settings_dataset = settings_dataset or fit.value(name="settings_dataset")
 
-    if not hasattr(settings_imaging, "relative_accuracy"):
-        settings_imaging.relative_accuracy = None
+    if not hasattr(settings_dataset, "relative_accuracy"):
+        settings_dataset.relative_accuracy = None
 
-    if hasattr(settings_imaging, "sub_size_inversion"):
-        settings_imaging.sub_size_pixelization = settings_imaging.sub_size_inversion
+    if hasattr(settings_dataset, "sub_size_inversion"):
+        settings_dataset.sub_size_pixelization = settings_dataset.sub_size_inversion
 
-    if hasattr(settings_imaging, "grid_inversion_class"):
-        settings_imaging.grid_pixelization_class = settings_imaging.grid_inversion_class
+    if hasattr(settings_dataset, "grid_inversion_class"):
+        settings_dataset.grid_pixelization_class = settings_dataset.grid_inversion_class
 
-    imaging = aa.Imaging(
+    dataset = aa.Imaging(
         data=data,
         noise_map=noise_map,
         psf=psf,
-        settings=settings_imaging,
+        settings=settings_dataset,
         pad_for_convolver=True,
     )
 
-    imaging.apply_settings(settings=settings_imaging)
+    dataset.apply_settings(settings=settings_dataset)
 
-    return imaging
+    return dataset
 
 
 class ImagingAgg:
     def __init__(self, aggregator: af.Aggregator):
         self.aggregator = aggregator
 
-    def dataset_gen_from(self, settings_imaging: Optional[aa.SettingsImaging] = None):
+    def dataset_gen_from(self, settings_dataset: Optional[aa.SettingsImaging] = None):
         """
         Returns a generator of `Imaging` objects from an input aggregator, which generates a list of the
         `Imaging` objects for every set of results loaded in the aggregator.
@@ -67,6 +67,6 @@ class ImagingAgg:
             A PyAutoFit aggregator object containing the results of model-fits.
         """
 
-        func = partial(_imaging_from, settings_imaging=settings_imaging)
+        func = partial(_imaging_from, settings_dataset=settings_dataset)
 
         return self.aggregator.map(func=func)

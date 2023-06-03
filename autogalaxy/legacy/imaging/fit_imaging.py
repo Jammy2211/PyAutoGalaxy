@@ -157,7 +157,7 @@ class FitImaging(FitImagingBase):
         )
 
         return FitImaging(
-            dataset=self.imaging,
+            dataset=self.dataset,
             plane=self.plane,
             hyper_image_sky=self.hyper_image_sky,
             hyper_background_noise=self.hyper_background_noise,

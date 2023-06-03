@@ -147,7 +147,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
 
     @property
     def grid(self) -> aa.Grid2D:
-        return self.interferometer.grid
+        return self.dataset.grid
 
     @property
     def galaxies(self) -> List[Galaxy]:
@@ -191,7 +191,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         data being fitted.
         """
         galaxy_model_visibilities_dict = self.plane.galaxy_visibilities_dict_from(
-            grid=self.interferometer.grid, transformer=self.interferometer.transformer
+            grid=self.dataset.grid, transformer=self.dataset.transformer
         )
 
         galaxy_linear_obj_data_dict = self.galaxy_linear_obj_data_dict_from(

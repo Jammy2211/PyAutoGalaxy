@@ -39,11 +39,11 @@ def test__imaging_generator_from_aggregator(imaging_7x7, mask_2d_7x7, samples, m
     imaging_agg = ag.agg.ImagingAgg(aggregator=agg)
     imaging_gen = imaging_agg.dataset_gen_from()
 
-    for imaging in imaging_gen:
-        assert (imaging.image == masked_imaging_7x7.image).all()
-        assert isinstance(imaging.grid, ag.Grid2DIterate)
-        assert isinstance(imaging.grid_pixelization, ag.Grid2DIterate)
-        assert imaging.grid.sub_steps == [2]
-        assert imaging.grid.fractional_accuracy == 0.5
+    for dataset in imaging_gen:
+        assert (dataset.data == masked_imaging_7x7.image).all()
+        assert isinstance(dataset.grid, ag.Grid2DIterate)
+        assert isinstance(dataset.grid_pixelization, ag.Grid2DIterate)
+        assert dataset.grid.sub_steps == [2]
+        assert dataset.grid.fractional_accuracy == 0.5
 
     clean(database_file=database_file, result_path=result_path)

@@ -73,11 +73,11 @@ class VisualizerQuantity(Visualizer):
                 subfolders="fit_quantity/fits", format="fits"
             )
 
-            fit_imaging_plotter = FitQuantityPlotter(
+            fit_plotter = FitQuantityPlotter(
                 fit=fit, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
             )
 
-            fit_imaging_plotter.figures_2d(
+            fit_plotter.figures_2d(
                 image=True,
                 noise_map=True,
                 signal_to_noise_map=True,

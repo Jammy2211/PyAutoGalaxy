@@ -68,7 +68,7 @@ irregulars [@Hubble1926]. Today, by analysing millions of galaxies with advanced
 expanded on this picture and revealed the rich diversity of galaxy morphology in both the nearby and distant 
 Universe [@Kormendy2015a; @Vulcani2014; @VanDerWel2012]. `PyAutoGalaxy` is an open-source Python 3.8+ package 
 for analysing the morphologies and structures of large multiwavelength galaxy samples, with core features including 
-fully automated Bayesian model-fitting of galaxy two-dimensional surface brightness profiles, support for imaging and 
+fully automated Bayesian model-fitting of galaxy two-dimensional surface brightness profiles, support for dataset and 
 interferometer datasets and comprehensive tools for simulating galaxy images. The software places a focus 
 on big data analysis, including support for hierarchical models that simultaneously fit thousands of galaxies, 
 massively parallel model-fitting and an SQLite3 database that allows large suites of modeling results to be loaded, 

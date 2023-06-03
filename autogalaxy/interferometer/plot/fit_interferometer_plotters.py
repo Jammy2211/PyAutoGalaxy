@@ -91,7 +91,7 @@ class FitInterferometerPlotter(Plotter):
         )
 
     def get_visuals_2d_real_space(self) -> Visuals2D:
-        return self.get_2d.via_mask_from(mask=self.fit.interferometer.real_space_mask)
+        return self.get_2d.via_mask_from(mask=self.fit.dataset.real_space_mask)
 
     @property
     def plane(self) -> Plane:
@@ -108,7 +108,7 @@ class FitInterferometerPlotter(Plotter):
         """
         return PlanePlotter(
             plane=plane,
-            grid=self.fit.interferometer.grid,
+            grid=self.fit.dataset.grid,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.get_visuals_2d_real_space(),
             include_2d=self.include_2d,

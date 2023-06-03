@@ -1,6 +1,5 @@
 from astropy import units
-from colossus.cosmology import cosmology as col_cosmology
-from colossus.halo.concentration import concentration as col_concentration
+
 import numpy as np
 import warnings
 
@@ -53,6 +52,9 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
 def kappa_s_and_scale_radius_for_ludlow(
     mass_at_200, scatter_sigma, redshift_object, redshift_source
 ):
+    from colossus.cosmology import cosmology as col_cosmology
+    from colossus.halo.concentration import concentration as col_concentration
+
     warnings.filterwarnings("ignore")
 
     cosmology = Planck15()

@@ -39,18 +39,18 @@ def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
     create_fits(fits_path=noise_map_path, array=[[2.0, 1.0], [1.0, 1.0]])
     create_fits(fits_path=psf_path, array=[[1.0, 1.0], [0.0, 0.0]])
 
-    imaging = ag.Imaging.from_fits(
+    dataset = ag.Imaging.from_fits(
         data_path=image_path,
         noise_map_path=noise_map_path,
         psf_path=psf_path,
         pixel_scales=0.1,
     )
 
-    assert (imaging.image.native == np.array([[0.0, 0.0], [1.0, 0.0]])).all()
-    assert (imaging.noise_map.native == np.array([[1.0, 1.0], [2.0, 1.0]])).all()
-    assert (imaging.psf.native == np.array([[0.0, 0.0], [0.5, 0.5]])).all()
+    assert (dataset.data.native == np.array([[0.0, 0.0], [1.0, 0.0]])).all()
+    assert (dataset.noise_map.native == np.array([[1.0, 1.0], [2.0, 1.0]])).all()
+    assert (dataset.psf.native == np.array([[0.0, 0.0], [0.5, 0.5]])).all()
 
-    imaging.output_to_fits(
+    dataset.output_to_fits(
         data_path=image_path,
         noise_map_path=noise_map_path,
         psf_path=psf_path,
@@ -90,15 +90,15 @@ def test__simulator__via_plane_from__same_as_plane_image():
         add_poisson_noise=False,
     )
 
-    imaging = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset = simulator.via_plane_from(plane=plane, grid=grid)
 
     imaging_via_image = simulator.via_image_from(image=plane.image_2d_from(grid=grid))
 
-    assert imaging.shape_native == (20, 20)
-    assert imaging.image.native[0, 0] != imaging_via_image.image.native[0, 0]
-    assert imaging.image.native[10, 10] == imaging_via_image.image.native[10, 10]
-    assert (imaging.psf == imaging_via_image.psf).all()
-    assert (imaging.noise_map == imaging_via_image.noise_map).all()
+    assert dataset.shape_native == (20, 20)
+    assert dataset.data.native[0, 0] != imaging_via_image.image.native[0, 0]
+    assert dataset.data.native[10, 10] == imaging_via_image.image.native[10, 10]
+    assert (dataset.psf == imaging_via_image.psf).all()
+    assert (dataset.noise_map == imaging_via_image.noise_map).all()
 
 
 def test__simulator__simulate_imaging_from_galaxy__source_galaxy__compare_to_imaging():
@@ -132,13 +132,13 @@ def test__simulator__simulate_imaging_from_galaxy__source_galaxy__compare_to_ima
         noise_seed=1,
     )
 
-    imaging = simulator.via_galaxies_from(galaxies=[galaxy_0, galaxy_1], grid=grid)
+    dataset = simulator.via_galaxies_from(galaxies=[galaxy_0, galaxy_1], grid=grid)
 
     plane = ag.Plane(redshift=0.75, galaxies=[galaxy_0, galaxy_1])
 
     imaging_via_image = simulator.via_image_from(image=plane.image_2d_from(grid=grid))
 
-    assert imaging.shape_native == (11, 11)
-    assert imaging.image == pytest.approx(imaging_via_image.image, 1.0e-4)
-    assert (imaging.psf == imaging_via_image.psf).all()
-    assert (imaging.noise_map == imaging_via_image.noise_map).all()
+    assert dataset.shape_native == (11, 11)
+    assert dataset.data == pytest.approx(imaging_via_image.image, 1.0e-4)
+    assert (dataset.psf == imaging_via_image.psf).all()
+    assert (dataset.noise_map == imaging_via_image.noise_map).all()
