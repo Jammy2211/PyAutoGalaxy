@@ -486,7 +486,36 @@ class OperateDeflections(Dictable):
         return radial_caustic_list
 
     @evaluation_grid
-    def area_within_tangential_critical_curve_list_from(
+    def radial_critical_curve_area_list_from(
+        self, grid, pixel_scale: Union[Tuple[float, float], float]
+    ) -> List[float]:
+        """
+        Returns the surface area within each radial critical curve as a list, the calculation of which is described in
+        the function `radial_critical_curve_list_from()`.
+
+        The area is computed via a line integral.
+
+        Due to the use of a marching squares algorithm to estimate the critical curve, this function can only use the
+        Jacobian and a uniform 2D grid.
+
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles used to calculate the radial critical
+            curve are computed on.
+        pixel_scale
+            If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
+            caustic to be computed more accurately using a higher resolution grid.
+        """
+        radial_critical_curve_list = self.radial_critical_curve_list_from(
+            grid=grid, pixel_scale=pixel_scale
+        )
+
+        return self.area_within_curve_list_from(curve_list=radial_critical_curve_list)
+
+    @evaluation_grid
+    def tangential_critical_curve_area_list_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
     ) -> List[float]:
         """
@@ -511,9 +540,16 @@ class OperateDeflections(Dictable):
             grid=grid, pixel_scale=pixel_scale
         )
 
+        return self.area_within_curve_list_from(
+            curve_list=tangential_critical_curve_list
+        )
+
+    def area_within_curve_list_from(
+        self, curve_list: List[aa.Grid2DIrregular]
+    ) -> List[float]:
         area_within_each_curve_list = []
 
-        for curve in tangential_critical_curve_list:
+        for curve in curve_list:
             x, y = curve[:, 0], curve[:, 1]
             area = np.abs(0.5 * np.sum(y[:-1] * np.diff(x) - x[:-1] * np.diff(y)))
             area_within_each_curve_list.append(area)
@@ -534,7 +570,7 @@ class OperateDeflections(Dictable):
         adopted in studies, for example the SLACS series of papers.
 
         The calculation of the tangential critical curves and their areas is described in the functions
-         `tangential_critical_curve_list_from()` and `area_within_tangential_critical_curve_list_from()`.
+         `tangential_critical_curve_list_from()` and `tangential_critical_curve_area_list_from()`.
 
         Due to the use of a marching squares algorithm to estimate the critical curve, this function can only use the
         Jacobian and a uniform 2D grid.
@@ -549,7 +585,7 @@ class OperateDeflections(Dictable):
             caustic to be computed more accurately using a higher resolution grid.
         """
         try:
-            area_list = self.area_within_tangential_critical_curve_list_from(
+            area_list = self.tangential_critical_curve_area_list_from(
                 grid=grid, pixel_scale=pixel_scale
             )
             return [np.sqrt(area / np.pi) for area in area_list]
@@ -573,7 +609,7 @@ class OperateDeflections(Dictable):
         raises an error, and the function `einstein_radius_list_from()` should be used instead.
 
         The calculation of the tangential critical curves and their areas is described in the functions
-         `tangential_critical_curve_list_from()` and `area_within_tangential_critical_curve_list_from()`.
+         `tangential_critical_curve_list_from()` and `tangential_critical_curve_area_list_from()`.
 
         Due to the use of a marching squares algorithm to estimate the critical curve, this function can only use the
         Jacobian and a uniform 2D grid.

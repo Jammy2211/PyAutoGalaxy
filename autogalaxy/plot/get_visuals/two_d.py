@@ -133,11 +133,18 @@ class GetVisuals2D(aplt.GetVisuals2D):
             "tangential_critical_curves",
         )
 
-        radial_critical_curves = self.get(
-            "radial_critical_curves",
-            mass_obj.radial_critical_curve_list_from(grid=grid),
-            "radial_critical_curves",
+        radial_critical_curves = None
+
+        radial_critical_curve_area_list = mass_obj.radial_critical_curve_area_list_from(
+            grid=grid
         )
+
+        if any([area > grid.pixel_scale for area in radial_critical_curve_area_list]):
+            radial_critical_curves = self.get(
+                "radial_critical_curves",
+                mass_obj.radial_critical_curve_list_from(grid=grid),
+                "radial_critical_curves",
+            )
 
         return (
             self.visuals

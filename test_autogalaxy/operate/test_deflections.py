@@ -414,7 +414,19 @@ def test__radial_caustic_list_from___compare_via_magnification():
     )
 
 
-def test__area_within_tangential_critical_curve_list_from():
+def test__radial_critical_curve_area_list_from():
+    grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
+
+    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
+
+    area_within_radial_critical_curve_list = sis.radial_critical_curve_area_list_from(
+        grid=grid
+    )
+
+    assert area_within_radial_critical_curve_list[0] == pytest.approx(0.0455, 1e-1)
+
+
+def test__tangential_critical_curve_area_list_from():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
@@ -422,7 +434,7 @@ def test__area_within_tangential_critical_curve_list_from():
     area_calc = np.pi * sis.einstein_radius**2
 
     area_within_tangential_critical_curve_list = (
-        sis.area_within_tangential_critical_curve_list_from(grid=grid)
+        sis.tangential_critical_curve_area_list_from(grid=grid)
     )
 
     assert area_within_tangential_critical_curve_list[0] == pytest.approx(
