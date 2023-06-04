@@ -34,7 +34,6 @@ def mass_from(mass, mass_result, unfix_mass_centre: bool = False) -> af.Model:
     mass.take_attributes(source=mass_result)
 
     if unfix_mass_centre and isinstance(mass.centre, tuple):
-
         centre_tuple = mass.centre
 
         mass.centre = af.Model(mass.cls).centre
@@ -45,7 +44,9 @@ def mass_from(mass, mass_result, unfix_mass_centre: bool = False) -> af.Model:
     return mass
 
 
-def source_custom_model_from(result: af.Result, source_is_model: bool = False) -> af.Model:
+def source_custom_model_from(
+    result: af.Result, source_is_model: bool = False
+) -> af.Model:
     """
     Setup the source model using the previous pipeline's source result.
 
@@ -74,9 +75,7 @@ def source_custom_model_from(result: af.Result, source_is_model: bool = False) -
     redshift = result.instance.galaxies.source.redshift
 
     if not hasattr(result.instance.galaxies.source, "pixelization"):
-
         if source_is_model:
-
             return af.Model(
                 ag.Galaxy,
                 redshift=redshift,
@@ -92,9 +91,7 @@ def source_custom_model_from(result: af.Result, source_is_model: bool = False) -
         )
 
     if hasattr(result, "adapt"):
-
         if source_is_model:
-
             pixelization = af.Model(
                 ag.Pixelization,
                 mesh=result.adapt.instance.galaxies.source.pixelization.mesh,
@@ -120,9 +117,7 @@ def source_custom_model_from(result: af.Result, source_is_model: bool = False) -
         )
 
     else:
-
         if source_is_model:
-
             pixelization = af.Model(
                 ag.Pixelization,
                 mesh=result.instance.galaxies.source.pixelization.mesh,
@@ -178,3 +173,108 @@ def source_from(
         if result.instance.galaxies.source.pixelization is not None:
             return source_custom_model_from(result=result, source_is_model=False)
     return source_custom_model_from(result=result, source_is_model=True)
+
+
+def clean_clumps_of_adapt_images(clumps):
+    for clump in clumps:
+        if hasattr(clump, "adapt_model_image"):
+            del clump.adapt_model_image
+
+        if hasattr(clump, "adapt_galaxy_image"):
+            del clump.adapt_galaxy_image
+
+
+def clumps_from(
+    result: af.Result, light_as_model: bool = False, mass_as_model: bool = False
+) -> af.Collection:
+    """
+    The clump API models the light and / or mass of additional galaxies surrouding the main galaxy or strong lens
+    system.
+
+    This function performs model composition of clumps for fits using the search chaining API. It makes it possible to
+    pass the clump parameters from a previous search to a new search, such that the new clumps are either treated
+    as an instance or model component.
+
+    This function currently requires that mass profiles are `IsothermalSph` objects and that light profiles are
+    `Sersic` objects. This will be generalised in the future.
+
+    Parameters
+    ----------
+    result
+        The result, which includes clumps, of the previous search, which via prior passing are used to create the new
+        clump model.
+    light_as_model
+        If `True`, the clump light is passed as a model component, else it is a fixed instance.
+    mass_as_model
+        If `True`, the clump mass is passed as a model component, else it is a fixed instance.
+
+    Returns
+    -------
+    af.Collection
+        A collection of clump `Galaxy` objects, where each clump is either an instance or model component.
+    """
+    # ideal API:
+
+    # clumps = result.instance.clumps.as_model((ag.LightProfile, ag.mp.MassProfile,), fixed="centre", prior_pass=True)
+
+    if mass_as_model:
+        clumps = result.instance.clumps.as_model((ag.mp.MassProfile,))
+
+        for clump_index in range(len(result.instance.clumps)):
+            if hasattr(result.instance.clumps[clump_index], "mass"):
+                clumps[clump_index].mass.centre = result.instance.clumps[
+                    clump_index
+                ].mass.centre
+                clumps[clump_index].mass.einstein_radius = result.model.clumps[
+                    clump_index
+                ].mass.einstein_radius
+
+    elif light_as_model:
+        clumps = result.instance.clumps.as_model((ag.LightProfile,))
+
+        for clump_index in range(len(result.instance.clumps)):
+            if clumps[clump_index].light is not None:
+                clumps[clump_index].light.centre = result.instance.clumps[
+                    clump_index
+                ].light.centre
+
+    else:
+        clumps = result.instance.clumps.as_model(())
+
+    clean_clumps_of_adapt_images(clumps=clumps)
+
+    return clumps
+
+
+def mass_light_dark_from(
+    lmp_model: af.Model(ag.lmp.LightMassProfile),
+    result_light_component: af.Model,
+) -> Optional[af.Model]:
+    """
+    Returns an updated version of a `LightMassProfile` model (e.g. a bulge or disk) whose priors are initialized from
+    previous results of a `Light` pipeline.
+
+    This function generically links any `LightProfile` to any `LightMassProfile`, pairing parameters which share the
+    same path.
+
+    Parameters
+    ----------
+    lmp_model
+        The light and mass profile whoses priors are passed from the LIGHT PIPELINE.
+    result_light_component
+        The `LightProfile` result of the LIGHT PIPELINE used to pass the priors.
+
+    Returns
+    -------
+    af.Model(mp.LightMassProfile)
+        The light and mass profile whose priors are initialized from a previous result.
+    """
+
+    if lmp_model is None:
+        return lmp_model
+
+    # TODO : Add support for linear light profiles + Basis
+
+    lmp_model.take_attributes(source=result_light_component)
+
+    return lmp_model
