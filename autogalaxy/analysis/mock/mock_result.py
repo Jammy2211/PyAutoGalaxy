@@ -21,8 +21,6 @@ class MockResult(af.m.MockResult):
         path_galaxy_tuples: List[(str, ag.Galaxy)] = None,
         adapt_galaxy_image_path_dict: Dict[ag.Galaxy, ag.Array2D] = None,
         adapt_model_image: ag.Array2D = None,
-        adapt_galaxy_visibilities_path_dict: Dict[ag.Galaxy, ag.Visibilities] = None,
-        adapt_model_visibilities: ag.Visibilities = None,
         pixelization: ag.Pixelization = None,
     ):
         super().__init__(
@@ -37,8 +35,6 @@ class MockResult(af.m.MockResult):
         self.adapt_galaxy_image_path_dict = adapt_galaxy_image_path_dict
         self.adapt_model_image = adapt_model_image
         self.path_galaxy_tuples = path_galaxy_tuples
-        self.adapt_galaxy_visibilities_path_dict = adapt_galaxy_visibilities_path_dict
-        self.adapt_model_visibilities = adapt_model_visibilities
         self.model_image = model_image
         self.unmasked_model_image = model_image
         self.pixelization = pixelization
@@ -62,8 +58,6 @@ class MockResults(af.ResultsCollection):
         model_image: ag.Array2D = None,
         adapt_galaxy_image_path_dict: Dict[ag.Galaxy, ag.Array2D] = None,
         adapt_model_image: ag.Array2D = None,
-        adapt_galaxy_visibilities_path_dict: Dict[ag.Galaxy, ag.Visibilities] = None,
-        adapt_model_visibilities: ag.Visibilities = None,
         pixelization: ag.Pixelization = None,
     ):
         """
@@ -83,8 +77,6 @@ class MockResults(af.ResultsCollection):
             model_image=model_image,
             adapt_galaxy_image_path_dict=adapt_galaxy_image_path_dict,
             adapt_model_image=adapt_model_image,
-            adapt_galaxy_visibilities_path_dict=adapt_galaxy_visibilities_path_dict,
-            adapt_model_visibilities=adapt_model_visibilities,
             pixelization=pixelization,
         )
 

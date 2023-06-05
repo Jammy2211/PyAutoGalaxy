@@ -72,13 +72,6 @@ class AnalysisInterferometer(AnalysisDataset):
             settings_inversion=settings_inversion,
         )
 
-        if self.adapt_result is not None:
-            self.set_adapt_dataset(result=self.adapt_result)
-
-        else:
-            self.adapt_galaxy_visibilities_path_dict = None
-            self.adapt_model_visibilities = None
-
     @property
     def interferometer(self):
         return self.dataset
