@@ -1,7 +1,12 @@
 from typing import Tuple, Optional, Union
 
+import autoarray as aa
 import autofit as af
-import autogalaxy as ag
+
+from autogalaxy.profiles.light.abstract import LightProfile
+from autogalaxy.profiles.mass.abstract.abstract import MassProfile
+from autogalaxy.profiles.light_and_mass_profiles import LightMassProfile
+from autogalaxy.galaxy.galaxy import Galaxy
 
 
 def mass_from(mass, mass_result, unfix_mass_centre: bool = False) -> af.Model:
@@ -67,7 +72,7 @@ def source_custom_model_from(
 
     Returns
     -------
-    af.Model(ag.Galaxy)
+    af.Model(Galaxy)
         The source galaxy with its light profile(s) and pixelization, set up as a model or instance according to
         the input `source_is_model`.
     """
@@ -77,14 +82,14 @@ def source_custom_model_from(
     if not hasattr(result.instance.galaxies.source, "pixelization"):
         if source_is_model:
             return af.Model(
-                ag.Galaxy,
+                Galaxy,
                 redshift=redshift,
                 bulge=result.model.galaxies.source.bulge,
                 disk=result.model.galaxies.source.disk,
             )
 
         return af.Model(
-            ag.Galaxy,
+            Galaxy,
             redshift=redshift,
             bulge=result.instance.galaxies.source.bulge,
             disk=result.instance.galaxies.source.disk,
@@ -93,25 +98,25 @@ def source_custom_model_from(
     if hasattr(result, "adapt"):
         if source_is_model:
             pixelization = af.Model(
-                ag.Pixelization,
+                aa.Pixelization,
                 mesh=result.adapt.instance.galaxies.source.pixelization.mesh,
                 regularization=result.adapt.model.galaxies.source.pixelization.regularization,
             )
 
             return af.Model(
-                ag.Galaxy,
+                Galaxy,
                 redshift=redshift,
                 pixelization=pixelization,
             )
 
         pixelization = af.Model(
-            ag.Pixelization,
+            aa.Pixelization,
             mesh=result.adapt.instance.galaxies.source.pixelization.mesh,
             regularization=result.adapt.instance.galaxies.source.pixelization.regularization,
         )
 
         return af.Model(
-            ag.Galaxy,
+            Galaxy,
             redshift=redshift,
             pixelization=pixelization,
         )
@@ -119,25 +124,25 @@ def source_custom_model_from(
     else:
         if source_is_model:
             pixelization = af.Model(
-                ag.Pixelization,
+                aa.Pixelization,
                 mesh=result.instance.galaxies.source.pixelization.mesh,
                 regularization=result.model.galaxies.source.pixelization.regularization,
             )
 
             return af.Model(
-                ag.Galaxy,
+                Galaxy,
                 redshift=redshift,
                 pixelization=pixelization,
             )
 
         pixelization = af.Model(
-            ag.Pixelization,
+            aa.Pixelization,
             mesh=result.instance.galaxies.source.pixelization.mesh,
             regularization=result.instance.galaxies.source.pixelization.regularization,
         )
 
         return af.Model(
-            ag.Galaxy,
+            Galaxy,
             redshift=redshift,
             pixelization=pixelization,
         )
@@ -164,7 +169,7 @@ def source_from(
 
     Returns
     -------
-    af.Model(ag.Galaxy)
+    af.Model(Galaxy)
         The source galaxy with its light profile(s) and pixelization, set up as a model or instance according to
         the input `result`.
     """
@@ -215,10 +220,10 @@ def clumps_from(
     """
     # ideal API:
 
-    # clumps = result.instance.clumps.as_model((ag.LightProfile, ag.mp.MassProfile,), fixed="centre", prior_pass=True)
+    # clumps = result.instance.clumps.as_model((LightProfile, mp.MassProfile,), fixed="centre", prior_pass=True)
 
     if mass_as_model:
-        clumps = result.instance.clumps.as_model((ag.mp.MassProfile,))
+        clumps = result.instance.clumps.as_model((MassProfile,))
 
         for clump_index in range(len(result.instance.clumps)):
             if hasattr(result.instance.clumps[clump_index], "mass"):
@@ -230,7 +235,7 @@ def clumps_from(
                 ].mass.einstein_radius
 
     elif light_as_model:
-        clumps = result.instance.clumps.as_model((ag.LightProfile,))
+        clumps = result.instance.clumps.as_model((LightProfile,))
 
         for clump_index in range(len(result.instance.clumps)):
             if clumps[clump_index].light is not None:
@@ -247,7 +252,7 @@ def clumps_from(
 
 
 def mass_light_dark_from(
-    lmp_model: af.Model(ag.lmp.LightMassProfile),
+    lmp_model: af.Model(LightMassProfile),
     result_light_component: af.Model,
 ) -> Optional[af.Model]:
     """
