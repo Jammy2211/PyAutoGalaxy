@@ -85,7 +85,7 @@ def set_upper_limit_of_pixelization_pixels_prior(
     lower_limit_no_pixels_below_mask: int = 10,
 ):
     """
-    If the mesh(es) of pixelizations being fitted in the hyper-model fit is a `VoronoiBrightnessImage` pixelization,
+    If the mesh(es) of pixelizations being fitted in the adapt-model fit is a `VoronoiBrightnessImage` pixelization,
     this function sets the upper limit of its `pixels` prior to the number of data points in the mask.
 
     This ensures the KMeans algorithm does not raise an exception due to having fewer data points than source pixels.
@@ -93,7 +93,7 @@ def set_upper_limit_of_pixelization_pixels_prior(
     Parameters
     ----------
     model
-        The adapt model used by the adapt-fit, which models hyper-components like a `Pixelization` or `HyperGalaxy`'s.
+        The adapt model used by the adapt-fit, which models adapt-components like a `Pixelization`..
     pixels_in_mask
         The number of pixels in the mask, which are used to set the upper and lower limits of the priors on the
         number of pixels in the pixelization.
@@ -165,13 +165,11 @@ def adapt_model_from(
     regularization_overwrite=None,
 ) -> af.Collection:
     """
-    Make a hyper model from the `Result` of a model-fit, where the hyper-model is the maximum log likelihood instance
-    of the inferred model but turns the following hyper components of the model to free parameters:
+    Make a adapt model from the `Result` of a model-fit, where the adapt-model is the maximum log likelihood instance
+    of the inferred model but turns the following adapt components of the model to free parameters:
 
     1) The `Pixelization` of any `Galaxy` in the model.
     2) The `Regularization` of any `Galaxy` in the model.
-    4) `HyperGalaxy` components of the `Galaxy`'s in the model, which are used to scale the noise in regions of the
-       data which are fit poorly.
 
     The adapt model is typically used in pipelines to refine and improve an `LEq` after model-fits that fit the
     `Galaxy` light and mass components.
@@ -182,13 +180,11 @@ def adapt_model_from(
         The setup of the adapt fit.
     result
         The result of a previous `Analysis` search whose maximum log likelihood model forms the basis of the adapt model.
-    include_hyper_image_sky
-        This must be true to include the hyper-image sky in the model, even if it is turned on in `setup_adapt`.
 
     Returns
     -------
     af.Collection
-        The adapt model, which has an instance of the input results maximum log likelihood model with certain hyper
+        The adapt model, which has an instance of the input results maximum log likelihood model with certain adapt
         model components now free parameters.
     """
 
@@ -228,7 +224,7 @@ def adapt_fit(
 ):
     if analysis.adapt_model_image is None:
         raise exc.AnalysisException(
-            "The analysis class does not have a adapt_model_image attribute, which is required for hyper fitting."
+            "The analysis class does not have a adapt_model_image attribute, which is required for adapt fitting."
         )
 
     adapt_model_pix = adapt_model_from(

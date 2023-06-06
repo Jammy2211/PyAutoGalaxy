@@ -96,7 +96,6 @@ from .profiles.light import (
 )
 from .profiles.light import snr as lp_snr
 from . import convert
-from . import legacy
 from . import mock as m  # noqa
 from .util.shear_field import ShearYX2D
 from .util.shear_field import ShearYX2DIrregular

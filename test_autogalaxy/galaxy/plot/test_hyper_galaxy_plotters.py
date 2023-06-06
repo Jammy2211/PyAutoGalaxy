@@ -10,7 +10,7 @@ def make_adapt_plotter_setup():
         "{}".format(path.dirname(path.realpath(__file__))),
         "files",
         "plots",
-        "hyper_galaxies",
+        "adapt",
     )
 
 

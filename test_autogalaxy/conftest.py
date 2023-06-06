@@ -291,11 +291,6 @@ def make_gal_x1_lp_x1_mp():
     return fixtures.make_gal_x1_lp_x1_mp()
 
 
-@pytest.fixture(name="hyper_galaxy")
-def make_hyper_galaxy():
-    return fixtures.make_hyper_galaxy()
-
-
 @pytest.fixture(name="plane_7x7")
 def make_plane_7x7():
     return fixtures.make_plane_7x7()

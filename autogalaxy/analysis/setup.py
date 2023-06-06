@@ -22,7 +22,7 @@ class SetupAdapt:
         search_pix_cls
             The non-linear search used by every adapt model-fit search.
         search_pix_dict
-            The dictionary of search options for the hyper inversion model-fit searches.
+            The dictionary of search options for the adapt inversion model-fit searches.
         """
 
         self.search_pix_cls = search_pix_cls or af.DynestyStatic
