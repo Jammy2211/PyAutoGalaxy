@@ -40,16 +40,15 @@ class PowerLaw(PowerLawCore):
 
     @aa.grid_dec.grid_2d_to_structure
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
-
         alpha = self.deflections_yx_2d_from(grid)
 
-        alpha_x = alpha[:,1]
-        alpha_y = alpha[:,0]
+        alpha_x = alpha[:, 1]
+        alpha_y = alpha[:, 0]
 
-        x = grid[:,1] - self.centre[1]
-        y = grid[:,0] - self.centre[0]
+        x = grid[:, 1] - self.centre[1]
+        y = grid[:, 0] - self.centre[0]
 
-        return (x*alpha_x + y*alpha_y)/(3-self.slope)
+        return (x * alpha_x + y * alpha_y) / (3 - self.slope)
 
     @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
