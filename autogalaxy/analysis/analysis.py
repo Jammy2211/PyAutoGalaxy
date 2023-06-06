@@ -33,7 +33,7 @@ class Analysis(af.Analysis):
         This abstract Analysis class for all model-fits which fit galaxies (or objects containing galaxies like a
         plane), but does not perform a model-fit by itself (and is therefore only inherited from).
 
-        This class stores the Cosmology used for the analysis and hyper datasets used for certain model classes.
+        This class stores the Cosmology used for the analysis and adapt datasets used for certain model classes.
 
         Parameters
         ----------
@@ -75,7 +75,7 @@ class AnalysisDataset(Analysis):
         to a dataset, like imaging or interferometer data.
 
         This class stores the settings used to perform the model-fit for certain components of the model (e.g. a
-        pixelization or inversion), the Cosmology used for the analysis and hyper datasets used for certain model
+        pixelization or inversion), the Cosmology used for the analysis and adapt datasets used for certain model
         classes.
 
         Parameters
@@ -83,7 +83,7 @@ class AnalysisDataset(Analysis):
         dataset
             The dataset that is the model is fitted too.
         adapt_result
-            The hyper-model image and galaxies images of a previous result in a model-fitting pipeline, which are
+            The adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
@@ -152,7 +152,7 @@ class AnalysisDataset(Analysis):
         ----------
         result
             The result of a previous model-fit which contains the model image and model galaxy images of a fit to
-            the dataset, which set up the hyper dataset. These are used by certain classes for adapting the analysis
+            the dataset, which set up the adapt dataset. These are used by certain classes for adapting the analysis
             to the properties of the dataset.
         """
         adapt_galaxy_image_path_dict = result.adapt_galaxy_image_path_dict
@@ -243,11 +243,11 @@ class AnalysisDataset(Analysis):
         self, instance: af.ModelInstance
     ) -> af.ModelInstance:
         """
-        Using the model image and galaxy images that were set up as the hyper dataset, associate the galaxy images
+        Using the model image and galaxy images that were set up as the adapt dataset, associate the galaxy images
         of that result with the galaxies in this model fit.
 
         Association is performed based on galaxy names, whereby if the name of a galaxy in this search matches the
-        full-path name of galaxies in the hyper dataset the galaxy image is passed.
+        full-path name of galaxies in the adapt dataset the galaxy image is passed.
 
         If the galaxy collection has a different name then an association is not made.
 
@@ -293,7 +293,7 @@ class AnalysisDataset(Analysis):
         - The settings associated with the inversion.
         - The settings associated with the pixelization.
         - The Cosmology.
-        - The hyper dataset's model image and galaxy images, if used.
+        - The adapt dataset's model image and galaxy images, if used.
 
         It is common for these attributes to be loaded by many of the template aggregator functions given in the
         `aggregator` modules. For example, when using the database tools to reperform a fit, this will by default
@@ -329,7 +329,7 @@ class AnalysisDataset(Analysis):
 
         If the model-fit is being resumed from a previous run, this function checks that the model image and galaxy
         images used to set up the adapt-dataset are identical to those used previously. If they are not, it replaces
-        them with the previous hyper image. This ensures consistency in the log likelihood function.
+        them with the previous adapt image. This ensures consistency in the log likelihood function.
 
         Parameters
         ----------
@@ -342,8 +342,8 @@ class AnalysisDataset(Analysis):
 
             if np.max(abs(adapt_model_image - self.adapt_model_image)) > 1e-8:
                 logger.info(
-                    "ANALYSIS - Hyper image loaded from pickle different to that set in Analysis class."
-                    "Overwriting hyper images with values loaded from pickles."
+                    "ANALYSIS - adapt image loaded from pickle different to that set in Analysis class."
+                    "Overwriting adapt images with values loaded from pickles."
                 )
 
                 self.adapt_model_image = adapt_model_image

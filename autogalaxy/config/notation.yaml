@@ -65,9 +65,6 @@ label:
     SMBH: smbh
     Redshift: z
     Regularization: reg
-    HyperBackgroundNoise: hyper
-    HyperGalaxy: hyper
-    HyperImageSky: hyper
     InputDeflections: defl
 label_format:
   format:

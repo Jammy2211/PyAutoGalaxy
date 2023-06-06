@@ -46,7 +46,7 @@ class AnalysisInterferometer(AnalysisDataset):
         `Plane`) to an interferometer dataset.
 
         This class stores the settings used to perform the model-fit for certain components of the model (e.g. a
-        pixelization or inversion), the Cosmology used for the analysis and hyper datasets used for certain model
+        pixelization or inversion), the Cosmology used for the analysis and adapt datasets used for certain model
         classes.
 
         Parameters
@@ -54,7 +54,7 @@ class AnalysisInterferometer(AnalysisDataset):
         dataset
             The interferometer dataset that the model is fitted too.
         adapt_result
-            The hyper-model image and galaxies images of a previous result in a model-fitting pipeline, which are
+            The adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
@@ -115,7 +115,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
         For this analysis class, this function performs the following steps:
 
-        1) If the analysis has a hyper dataset, associated the model galaxy images of this dataset to the galaxies in
+        1) If the analysis has a adapt dataset, associated the model galaxy images of this dataset to the galaxies in
            the model instance.
 
         2) Extract attributes which model aspects of the data reductions, like scaling the background background noise.
@@ -174,9 +174,6 @@ class AnalysisInterferometer(AnalysisDataset):
         instance
             An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
             via a non-linear search).
-        use_hyper_scaling
-            If false, the scaling of the background sky and noise are not performed irrespective of the model components
-            themselves.
         preload_overwrite
             If a `Preload` object is input this is used instead of the preloads stored as an attribute in the analysis.
         profiling_dict
@@ -272,10 +269,10 @@ class AnalysisInterferometer(AnalysisDataset):
         - Images of the best-fit `FitInterferometer`, including the model-image, residuals and chi-squared of its fit
           to the imaging data.
 
-        - The hyper-images of the model-fit showing how the galaxies are used to represent different galaxies in
+        - The adapt-images of the model-fit showing how the galaxies are used to represent different galaxies in
           the dataset.
 
-        - If hyper features are used to scale the noise, a `FitInterferometer` with these features turned off may be
+        - If adapt features are used to scale the noise, a `FitInterferometer` with these features turned off may be
           output, to indicate how much these features are altering the dataset.
 
         The images output by this function are customized using the file `config/visualize/plots.ini`.
@@ -388,7 +385,7 @@ class AnalysisInterferometer(AnalysisDataset):
          - The settings associated with the inversion.
          - The settings associated with the pixelization.
          - The Cosmology.
-         - The hyper dataset's model image and galaxy images, if used.
+         - The adapt dataset's model image and galaxy images, if used.
 
          This function also outputs attributes specific to an interferometer dataset:
 
