@@ -239,46 +239,6 @@ class AnalysisDataset(Analysis):
 
         return self
 
-    def hyper_image_sky_via_instance_from(
-        self, instance: af.ModelInstance
-    ) -> Optional[HyperImageSky]:
-        """
-        If the model instance contains a `HyperImageSky` attribute, which adds a free parameter to the model that
-        scales the background sky, return this attribute. Otherwise a None is returned.
-
-        Parameters
-        ----------
-        instance
-            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
-            via a non-linear search).
-
-        Returns
-        -------
-        An instance of the hyper image sky class that scales the sky background.
-        """
-        if hasattr(instance, "hyper_image_sky"):
-            return instance.hyper_image_sky
-
-    def hyper_background_noise_via_instance_from(
-        self, instance: af.ModelInstance
-    ) -> Optional[HyperBackgroundNoise]:
-        """
-        If the model instance contains a `HyperBackgroundNoise` attribute, which adds a free parameter to the model that
-        scales the background noise, return this attribute. Otherwise a None is returned.
-
-        Parameters
-        ----------
-        instance
-            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
-            via a non-linear search).
-
-        Returns
-        -------
-        An instance of the hyper background noise class that scales the background noise.
-        """
-        if hasattr(instance, "hyper_background_noise"):
-            return instance.hyper_background_noise
-
     def instance_with_associated_adapt_images_from(
         self, instance: af.ModelInstance
     ) -> af.ModelInstance:
