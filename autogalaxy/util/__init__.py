@@ -24,4 +24,3 @@ from autogalaxy.analysis import model_util as model
 from autogalaxy.util import error_util as error
 from autogalaxy.plane import plane_util as plane
 from autogalaxy.analysis import chaining_util as chaining
-from autogalaxy.legacy import model_util as model_legacy
