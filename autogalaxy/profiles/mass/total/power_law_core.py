@@ -87,6 +87,8 @@ class PowerLawCore(MassProfile):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
+        print(grid)
+
         potential_grid = np.zeros(grid.shape[0])
 
         for i in range(grid.shape[0]):
