@@ -199,7 +199,7 @@ class PlaneToInversion(AbstractToInversion):
         return [
             pixelization.mesh.image_plane_mesh_grid_from(
                 image_plane_data_grid=self.grid_pixelization,
-                hyper_data=adapt_galaxy_image,
+                adapt_data=adapt_galaxy_image,
                 settings=self.settings_pixelization,
             )
             for pixelization, adapt_galaxy_image in zip(
@@ -220,7 +220,7 @@ class PlaneToInversion(AbstractToInversion):
             source_plane_data_grid=self.grid_pixelization,
             source_plane_mesh_grid=source_plane_mesh_grid,
             image_plane_mesh_grid=image_plane_mesh_grid,
-            hyper_data=adapt_galaxy_image,
+            adapt_data=adapt_galaxy_image,
             settings=self.settings_pixelization,
             preloads=self.preloads,
             profiling_dict=self.plane.profiling_dict,
