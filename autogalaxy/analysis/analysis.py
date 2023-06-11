@@ -66,6 +66,129 @@ class Analysis(af.Analysis):
             )
         return Plane(galaxies=instance.galaxies, profiling_dict=profiling_dict)
 
+    @property
+    def fit_func(self) -> Callable:
+        raise NotImplementedError
+
+    def profile_log_likelihood_function(
+        self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None
+    ) -> Tuple[Dict, Dict]:
+        """
+        This function is optionally called throughout a model-fit to profile the log likelihood function.
+
+        All function calls inside the `log_likelihood_function` that are decorated with the `profile_func` are timed
+        with their times stored in a dictionary called the `profiling_dict`.
+
+        An `info_dict` is also created which stores information on aspects of the model and dataset that dictate
+        run times, so the profiled times can be interpreted with this context.
+
+        The results of this profiling are then output to hard-disk in the `preloads` folder of the model-fit results,
+        which they can be inspected to ensure run-times are as expected.
+
+        Parameters
+        ----------
+        instance
+            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
+            via a non-linear search).
+        paths
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            visualization and the pickled objects used by the aggregator output by this function.
+
+        Returns
+        -------
+        Two dictionaries, the profiling dictionary and info dictionary, which contain the profiling times of the
+        `log_likelihood_function` and information on the model and dataset used to perform the profiling.
+        """
+        profiling_dict = {}
+        info_dict = {}
+
+        repeats = conf.instance["general"]["profiling"]["repeats"]
+        info_dict["repeats"] = repeats
+
+        fit = self.fit_func(instance=instance)
+        fit.figure_of_merit
+
+        start = time.time()
+
+        for i in range(repeats):
+            try:
+                fit = self.fit_func(instance=instance)
+                fit.figure_of_merit
+            except Exception:
+                logger.info(
+                    "Profiling failed. Returning without outputting information."
+                )
+                return
+
+        fit_time = (time.time() - start) / repeats
+
+        profiling_dict["fit_time"] = fit_time
+
+        fit = self.fit_func(instance=instance, profiling_dict=profiling_dict)
+        fit.figure_of_merit
+
+        try:
+            info_dict["image_pixels"] = self.dataset.grid.sub_shape_slim
+            info_dict["sub_size_light_profiles"] = self.dataset.grid.sub_size
+        except AttributeError:
+            pass
+
+        if fit.model_obj.has(cls=aa.Pixelization):
+            info_dict["use_w_tilde"] = fit.inversion.settings.use_w_tilde
+            info_dict["sub_size_pixelization"] = self.dataset.grid_pixelization.sub_size
+            info_dict[
+                "use_positive_only_solver"
+            ] = fit.inversion.settings.use_positive_only_solver
+            info_dict[
+                "force_edge_pixels_to_zeros"
+            ] = fit.inversion.settings.force_edge_pixels_to_zeros
+            info_dict["use_w_tilde_numpy"] = fit.inversion.settings.use_w_tilde_numpy
+            info_dict["source_pixels"] = len(fit.inversion.reconstruction)
+
+            if hasattr(fit.inversion, "w_tilde"):
+                info_dict[
+                    "w_tilde_curvature_preload_size"
+                ] = fit.inversion.w_tilde.curvature_preload.shape[0]
+
+        self.output_profiling_info(
+            paths=paths, profiling_dict=profiling_dict, info_dict=info_dict
+        )
+
+        return profiling_dict, info_dict
+
+    def output_profiling_info(
+        self, paths: Optional[af.DirectoryPaths], profiling_dict: Dict, info_dict: Dict
+    ):
+        """
+        Output the log likelihood function profiling information to hard-disk as a json file.
+
+        This function is separate from the `profile_log_likelihood_function` function above such that it can be
+        called by children `Analysis` classes that profile additional aspects of the model-fit and therefore add
+        extra information to the `profiling_dict` and `info_dict`.
+
+        Parameters
+        ----------
+        paths
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            visualization and the pickled objects used by the aggregator output by this function.
+        profiling_dict
+            A dictionary containing the profiling times of the functions called by the `log_likelihood_function`.
+        info_dict
+            A dictionary containing information on the model and dataset used to perform the profiling, where these
+            settings typically control the overall run-time.
+        """
+
+        if paths is None:
+            return
+
+        os.makedirs(paths.profile_path, exist_ok=True)
+
+        with open(path.join(paths.profile_path, "profiling_dict.json"), "w+") as f:
+            json.dump(profiling_dict, f, indent=4)
+
+        with open(path.join(paths.profile_path, "info_dict.json"), "w+") as f:
+            json.dump(info_dict, f, indent=4)
+
 
 class AnalysisDataset(Analysis):
     def __init__(
@@ -425,123 +548,3 @@ class AnalysisDataset(Analysis):
                         f"Old Figure of Merit = {figure_of_merit_sanity}\n"
                         f"New Figure of Merit = {figure_of_merit}"
                     )
-
-    @property
-    def fit_func(self) -> Callable:
-        raise NotImplementedError
-
-    def profile_log_likelihood_function(
-        self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None
-    ) -> Tuple[Dict, Dict]:
-        """
-        This function is optionally called throughout a model-fit to profile the log likelihood function.
-
-        All function calls inside the `log_likelihood_function` that are decorated with the `profile_func` are timed
-        with their times stored in a dictionary called the `profiling_dict`.
-
-        An `info_dict` is also created which stores information on aspects of the model and dataset that dictate
-        run times, so the profiled times can be interpreted with this context.
-
-        The results of this profiling are then output to hard-disk in the `preloads` folder of the model-fit results,
-        which they can be inspected to ensure run-times are as expected.
-
-        Parameters
-        ----------
-        instance
-            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
-            via a non-linear search).
-        paths
-            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
-            visualization and the pickled objects used by the aggregator output by this function.
-
-        Returns
-        -------
-        Two dictionaries, the profiling dictionary and info dictionary, which contain the profiling times of the
-        `log_likelihood_function` and information on the model and dataset used to perform the profiling.
-        """
-        profiling_dict = {}
-        info_dict = {}
-
-        repeats = conf.instance["general"]["profiling"]["repeats"]
-        info_dict["repeats"] = repeats
-
-        fit = self.fit_func(instance=instance)
-        fit.figure_of_merit
-
-        start = time.time()
-
-        for i in range(repeats):
-            try:
-                fit = self.fit_func(instance=instance)
-                fit.figure_of_merit
-            except Exception:
-                logger.info(
-                    "Profiling failed. Returning without outputting information."
-                )
-                return
-
-        fit_time = (time.time() - start) / repeats
-
-        profiling_dict["fit_time"] = fit_time
-
-        fit = self.fit_func(instance=instance, profiling_dict=profiling_dict)
-        fit.figure_of_merit
-
-        info_dict["image_pixels"] = self.dataset.grid.sub_shape_slim
-        info_dict["sub_size_light_profiles"] = self.dataset.grid.sub_size
-
-        if fit.model_obj.has(cls=aa.Pixelization):
-            info_dict["use_w_tilde"] = fit.inversion.settings.use_w_tilde
-            info_dict["sub_size_pixelization"] = self.dataset.grid_pixelization.sub_size
-            info_dict[
-                "use_positive_only_solver"
-            ] = fit.inversion.settings.use_positive_only_solver
-            info_dict[
-                "force_edge_pixels_to_zeros"
-            ] = fit.inversion.settings.force_edge_pixels_to_zeros
-            info_dict["use_w_tilde_numpy"] = fit.inversion.settings.use_w_tilde_numpy
-            info_dict["source_pixels"] = len(fit.inversion.reconstruction)
-
-            if hasattr(fit.inversion, "w_tilde"):
-                info_dict[
-                    "w_tilde_curvature_preload_size"
-                ] = fit.inversion.w_tilde.curvature_preload.shape[0]
-
-        self.output_profiling_info(
-            paths=paths, profiling_dict=profiling_dict, info_dict=info_dict
-        )
-
-        return profiling_dict, info_dict
-
-    def output_profiling_info(
-        self, paths: Optional[af.DirectoryPaths], profiling_dict: Dict, info_dict: Dict
-    ):
-        """
-        Output the log likelihood function profiling information to hard-disk as a json file.
-
-        This function is separate from the `profile_log_likelihood_function` function above such that it can be
-        called by children `Analysis` classes that profile additional aspects of the model-fit and therefore add
-        extra information to the `profiling_dict` and `info_dict`.
-
-        Parameters
-        ----------
-        paths
-            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
-            visualization and the pickled objects used by the aggregator output by this function.
-        profiling_dict
-            A dictionary containing the profiling times of the functions called by the `log_likelihood_function`.
-        info_dict
-            A dictionary containing information on the model and dataset used to perform the profiling, where these
-            settings typically control the overall run-time.
-        """
-
-        if paths is None:
-            return
-
-        os.makedirs(paths.profile_path, exist_ok=True)
-
-        with open(path.join(paths.profile_path, "profiling_dict.json"), "w+") as f:
-            json.dump(profiling_dict, f, indent=4)
-
-        with open(path.join(paths.profile_path, "info_dict.json"), "w+") as f:
-            json.dump(info_dict, f, indent=4)

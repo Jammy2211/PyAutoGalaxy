@@ -114,11 +114,72 @@ Analysis
 --------
 
 We next create an ``AnalysisImaging`` object, which contains the ``log likelihood function`` that the non-linear
-search calls to fit the lens model to the data.
+search calls to fit the model to the data.
 
 .. code-block:: python
 
     analysis = ag.AnalysisImaging(dataset=dataset)
+
+
+Run Times
+---------
+
+modeling can be a computationally expensive process. When fitting complex models to high resolution datasets
+run times can be of order hours, days, weeks or even months.
+
+Run times are dictated by two factors:
+
+ - The log likelihood evaluation time: the time it takes for a single ``instance`` of the model to be fitted to
+   the dataset such that a log likelihood is returned.
+
+ - The number of iterations (e.g. log likelihood evaluations) performed by the non-linear search: more complex lens
+   models require more iterations to converge to a solution.
+
+The log likelihood evaluation time can be estimated before a fit using the ``profile_log_likelihood_function`` method,
+which returns two dictionaries containing the run-times and information about the fit.
+
+.. code-block:: python
+
+    profiling_dict, info_dict = analysis.profile_log_likelihood_function(
+        instance=model.random_instance()
+    )
+
+The overall log likelihood evaluation time is given by the ``fit_time`` key.
+
+For this example, it is ~0.01 seconds, which is extremely fast for modeling. More advanced lens
+modeling features (e.g. shapelets, multi Gaussian expansions, pixelizations) have slower log likelihood evaluation
+times (1-3 seconds), and you should be wary of this when using these features.
+
+The ``profiling_dict`` has a break-down of the run-time of every individual function call in the log likelihood
+function, whereas the ``info_dict`` stores information about the data which drives the run-time (e.g. number of
+image-pixels in the mask, the shape of the PSF, etc.).
+
+.. code-block:: python
+
+    print(f"Log Likelihood Evaluation Time (second) = {profiling_dict['fit_time']}")
+
+This gives an output of ~0.01 seconds.
+
+To estimate the expected overall run time of the model-fit we multiply the log likelihood evaluation time by an
+estimate of the number of iterations the non-linear search will perform.
+
+Estimating this quantity is more tricky, as it varies depending on the model complexity (e.g. number of parameters)
+and the properties of the dataset and model being fitted.
+
+For this example, we conservatively estimate that the non-linear search will perform ~10000 iterations per free
+parameter in the model. This is an upper limit, with models typically converging in far fewer iterations.
+
+If you perform the fit over multiple CPUs, you can divide the run time by the number of cores to get an estimate of
+the time it will take to fit the model. However, above ~6 cores the speed-up from parallelization is less efficient and
+does not scale linearly with the number of cores.
+
+.. code-block:: python
+
+    print(
+        "Estimated Run Time Upper Limit (seconds) = ",
+        (profiling_dict["fit_time"] * model.total_free_parameters * 10000)
+        / search.number_of_cores,
+    )
 
 Model-Fit
 ---------
@@ -133,7 +194,7 @@ dynesty samples, model parameters, visualization) to hard-disk.
 The non-linear search fits the model by guessing many models over and over iteratively, using the models which
 give a good fit to the data to guide it where to guess subsequent model. 
 
-An animation of a non-linear search is shown below, although this is for a strong gravitational lens using
+An animation of a non-linear search is shown below, although this is for a strong gravitational using
 **PyAutoGalaxy**'s child project **PyAutoLens**. Updating the animation for a galaxy is on the **PyAutoGalaxy**
 to-do list!
 
@@ -256,7 +317,7 @@ This gives the following output:
 
 
 This result contains the full posterior information of our non-linear search, including all
-parameter samples, log likelihood values and tools to compute the errors on the lens model.
+parameter samples, log likelihood values and tools to compute the errors on the model.
 
 This is contained in the ``Samples`` object. Below, we show how to print the median PDF parameter estimates, but
 many different results are available and illustrated in the `results package of the workspace <https://github.com/Jammy2211/autogalaxy_workspace/tree/release/notebooks/results>`_.
