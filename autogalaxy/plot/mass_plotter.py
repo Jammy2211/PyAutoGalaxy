@@ -108,7 +108,7 @@ class MassPlotter(Plotter):
                 array=deflections_x,
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
-                    title=f"deflections X{title_suffix}",
+                    title=f"Deflections X{title_suffix}",
                     filename=f"deflections_x_2d{filename_suffix}",
                 ),
             )

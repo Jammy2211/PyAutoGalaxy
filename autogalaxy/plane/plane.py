@@ -1,6 +1,6 @@
 import json
 import numpy as np
-from typing import Dict, List, Optional, Tuple, Type
+from typing import Dict, List, Optional, Tuple, Type, Union
 
 import autoarray as aa
 
@@ -67,7 +67,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     def galaxy_redshifts(self) -> List[float]:
         return [galaxy.redshift for galaxy in self.galaxies]
 
-    def has(self, cls: Tuple[Type]) -> bool:
+    def has(self, cls: Union[Type, Tuple[Type]]) -> bool:
         if self.galaxies is not None:
             return any(list(map(lambda galaxy: galaxy.has(cls=cls), self.galaxies)))
         return False

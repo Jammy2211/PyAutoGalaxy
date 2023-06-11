@@ -109,4 +109,4 @@ from autoconf import conf
 
 conf.instance.register(__file__)
 
-__version__ = "2023.7.7.1"
+__version__ = "2023.7.7.2"
