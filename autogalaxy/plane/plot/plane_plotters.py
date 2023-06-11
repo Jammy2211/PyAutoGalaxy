@@ -133,6 +133,7 @@ class PlanePlotter(Plotter):
         zoom_to_brightest: bool = True,
         title_suffix: str = "",
         filename_suffix: str = "",
+        source_plane_title: bool = False,
     ):
         """
         Plots the individual attributes of the plotter's `Plane` object in 2D, which are computed via the plotter's 2D
@@ -166,6 +167,8 @@ class PlanePlotter(Plotter):
             Add a suffix to the end of the matplotlib title label.
         filename_suffix
             Add a suffix to the end of the filename the plot is saved to hard-disk using.
+        source_plane_title
+            If `True`, the title of the plot is overwritten to read "source-plane image".
         """
         if image:
             self.mat_plot_2d.plot_array(
@@ -177,18 +180,10 @@ class PlanePlotter(Plotter):
             )
 
         if plane_image:
-            import numpy as np
-
-            # print(self.plane.galaxies[0].bulge)
-            # print(self.plane.galaxies[0].bulge.intensity)
-            #
-            # print(self.plane.plane_image_2d_from(
-            #         grid=self.grid, zoom_to_brightest=zoom_to_brightest
-            #     ))
-            # print(np.max(self.plane.plane_image_2d_from(
-            #         grid=self.grid, zoom_to_brightest=zoom_to_brightest
-            #     )))
-            # www
+            if source_plane_title:
+                title = "Source Plane Image"
+            else:
+                title = f"Plane Image{title_suffix}"
 
             self.mat_plot_2d.plot_array(
                 array=self.plane.plane_image_2d_from(
@@ -196,17 +191,22 @@ class PlanePlotter(Plotter):
                 ),
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
-                    title=f"Plane Image{title_suffix}",
+                    title=title,
                     filename=f"plane_image{filename_suffix}",
                 ),
             )
 
         if plane_grid:
+            if source_plane_title:
+                title = "Source Plane Grid"
+            else:
+                title = f"Plane Grid{title_suffix}"
+
             self.mat_plot_2d.plot_grid(
                 grid=self.grid,
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
-                    title=f"Plane Grid2D{title_suffix}",
+                    title=title,
                     filename=f"plane_grid{filename_suffix}",
                 ),
             )

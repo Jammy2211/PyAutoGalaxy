@@ -6,7 +6,7 @@ irregulars. Today, by analysing millions of galaxies with advanced image process
 expanded on this picture and revealed the rich diversity of galaxy morphology both in the nearby and distant
 Universe.
 
-``PyAutoGalaxy`` is an open-source Python 3.8+ package for analysing the morphologies and structures of large
+``PyAutoGalaxy`` is an open-source Python 3.8 - 3.10 package for analysing the morphologies and structures of large
 multi-wavelength galaxy samples. **PyAutoGalaxy** makes it simple to model galaxies, for example this Hubble Space
 Telescope imaging of a spiral galaxy:
 

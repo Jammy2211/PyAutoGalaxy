@@ -1,3 +1,4 @@
+import autoarray as aa
 import autoarray.plot as aplt
 
 from autoarray.fit.plot.fit_interferometer_plotters import FitInterferometerPlotterMeta
@@ -184,14 +185,14 @@ class FitInterferometerPlotter(Plotter):
         Depending on whether `LightProfile`'s or an `Inversion` are used to represent galaxies in the `Plane`, different
         methods are called to create these real-space images.
         """
-        if self.fit.inversion is None:
+        if not self.plane.has(cls=aa.Pixelization):
             plane_plotter = self.plane_plotter_from(plane=self.plane)
 
             plane_plotter.subplot(
                 image=True, plane_image=True, auto_filename="subplot_fit_real_space"
             )
 
-        elif self.fit.inversion is not None:
+        elif self.plane.has(cls=aa.Pixelization):
             self.open_subplot_figure(number_subplots=6)
 
             mapper_index = 0

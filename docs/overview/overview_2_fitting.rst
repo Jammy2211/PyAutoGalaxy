@@ -26,7 +26,7 @@ demonstrate fitting.
     )
 
     dataset_plotter = aplt.ImagingPlotter(dataset=dataset)
-    dataset_plotter.figures_2d(image=True, noise_map=True, psf=True)
+    dataset_plotter.figures_2d(data=True, noise_map=True, psf=True)
 
 Here's what our ``image``, ``noise_map`` and ``psf`` (point-spread function) look like:
 
@@ -58,7 +58,7 @@ To do this we can use a ``Mask2D`` object, which for this example we'll create a
     dataset = dataset.apply_mask(mask=mask)
 
     dataset_plotter = aplt.ImagingPlotter(dataset=dataset)
-    dataset_plotter.figures_2d(image=True)
+    dataset_plotter.figures_2d(data=True)
 
 Here is what our image looks like with the mask applied, where **PyAutoGalaxy** has automatically zoomed around the
 ``Mask2D`` to make the lensed source appear bigger:

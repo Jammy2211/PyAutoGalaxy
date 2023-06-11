@@ -1,6 +1,6 @@
 import json
 import numpy as np
-from typing import Dict, List, Optional, Tuple, Type
+from typing import Dict, List, Optional, Tuple, Type, Union
 
 import autoarray as aa
 
@@ -23,7 +23,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         self,
         galaxies,
         redshift: Optional[float] = None,
-        profiling_dict: Optional[Dict] = None,
+        run_time_dict: Optional[Dict] = None,
     ):
         """
         A plane of galaxies where all galaxies are at the same redshift.
@@ -52,7 +52,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         self.redshift = redshift
         self.galaxies = galaxies
 
-        self.profiling_dict = profiling_dict
+        self.run_time_dict = run_time_dict
 
     def dict(self) -> Dict:
         plane_dict = super().dict()
@@ -67,7 +67,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
     def galaxy_redshifts(self) -> List[float]:
         return [galaxy.redshift for galaxy in self.galaxies]
 
-    def has(self, cls: Tuple[Type]) -> bool:
+    def has(self, cls: Union[Type, Tuple[Type]]) -> bool:
         if self.galaxies is not None:
             return any(list(map(lambda galaxy: galaxy.has(cls=cls), self.galaxies)))
         return False
