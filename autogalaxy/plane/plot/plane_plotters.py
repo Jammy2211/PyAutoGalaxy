@@ -133,7 +133,7 @@ class PlanePlotter(Plotter):
         zoom_to_brightest: bool = True,
         title_suffix: str = "",
         filename_suffix: str = "",
-        source_plane_title : bool = False,
+        source_plane_title: bool = False,
     ):
         """
         Plots the individual attributes of the plotter's `Plane` object in 2D, which are computed via the plotter's 2D
@@ -180,7 +180,6 @@ class PlanePlotter(Plotter):
             )
 
         if plane_image:
-
             if source_plane_title:
                 title = "Source Plane Image"
             else:
@@ -198,7 +197,6 @@ class PlanePlotter(Plotter):
             )
 
         if plane_grid:
-
             if source_plane_title:
                 title = "Source Plane Grid"
             else:

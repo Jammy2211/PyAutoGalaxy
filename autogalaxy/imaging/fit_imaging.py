@@ -136,6 +136,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
 
     @property
     def plane_to_inversion(self) -> PlaneToInversion:
+
         return PlaneToInversion(
             plane=self.plane,
             dataset=self.dataset,
@@ -145,6 +146,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             settings_pixelization=self.settings_pixelization,
             settings_inversion=self.settings_inversion,
             preloads=self.preloads,
+            profiling_dict=self.profiling_dict
         )
 
     @cached_property

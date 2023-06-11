@@ -260,6 +260,7 @@ class PlaneToInversion(AbstractToInversion):
 
     @property
     def inversion(self) -> aa.AbstractInversion:
+
         inversion = inversion_unpacked_from(
             dataset=self.dataset,
             data=self.data,

@@ -1,6 +1,6 @@
 import numpy as np
-import os
-from typing import Dict, Optional
+
+from typing import Dict, Optional, Tuple
 
 import autofit as af
 import autoarray as aa
@@ -176,7 +176,7 @@ class AnalysisImaging(AnalysisDataset):
         """
         instance = self.instance_with_associated_adapt_images_from(instance=instance)
 
-        plane = self.plane_via_instance_from(instance=instance)
+        plane = self.plane_via_instance_from(instance=instance, profiling_dict=profiling_dict)
 
         return self.fit_imaging_via_plane_from(
             plane=plane,
@@ -400,3 +400,42 @@ class AnalysisImaging(AnalysisDataset):
 
         paths.save_object("psf", self.dataset.psf)
         paths.save_object("mask", self.dataset.mask)
+
+    def profile_log_likelihood_function(
+        self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None
+    ) -> Tuple[Dict, Dict]:
+        """
+        This function is optionally called throughout a model-fit to profile the log likelihood function.
+
+        All function calls inside the `log_likelihood_function` that are decorated with the `profile_func` are timed
+        with their times stored in a dictionary called the `profiling_dict`.
+
+        An `info_dict` is also created which stores information on aspects of the model and dataset that dictate
+        run times, so the profiled times can be interpreted with this context.
+
+        The results of this profiling are then output to hard-disk in the `preloads` folder of the model-fit results,
+        which they can be inspected to ensure run-times are as expected.
+
+        Parameters
+        ----------
+        instance
+            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
+            via a non-linear search).
+        paths
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            visualization and the pickled objects used by the aggregator output by this function.
+
+        Returns
+        -------
+        Two dictionaries, the profiling dictionary and info dictionary, which contain the profiling times of the
+        `log_likelihood_function` and information on the model and dataset used to perform the profiling.
+        """
+        profiling_dict, info_dict = super().profile_log_likelihood_function(
+            instance=instance,
+        )
+
+        info_dict["psf_shape_2d"] = self.dataset.psf.shape_native
+
+        self.output_profiling_info(paths=paths, profiling_dict=profiling_dict, info_dict=info_dict)
+
+        return profiling_dict, info_dict
