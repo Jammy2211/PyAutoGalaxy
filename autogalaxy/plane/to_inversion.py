@@ -29,7 +29,7 @@ class AbstractToInversion:
         settings_pixelization=aa.SettingsPixelization(),
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads=Preloads(),
-        profiling_dict: Optional[Dict] = None,
+        run_time_dict: Optional[Dict] = None,
     ):
         if dataset is not None:
             if dataset.noise_covariance_matrix is not None:
@@ -52,7 +52,7 @@ class AbstractToInversion:
         self.settings_inversion = settings_inversion
 
         self.preloads = preloads
-        self.profiling_dict = profiling_dict
+        self.run_time_dict = run_time_dict
 
     def cls_light_profile_func_list_galaxy_dict_from(
         self, cls: Type
@@ -102,7 +102,7 @@ class PlaneToInversion(AbstractToInversion):
         settings_pixelization=aa.SettingsPixelization(),
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads=aa.Preloads(),
-        profiling_dict: Optional[Dict] = None,
+        run_time_dict: Optional[Dict] = None,
     ):
         self.plane = plane
 
@@ -114,7 +114,7 @@ class PlaneToInversion(AbstractToInversion):
             settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
             preloads=preloads,
-            profiling_dict=profiling_dict,
+            run_time_dict=run_time_dict,
         )
 
         if grid is not None:
@@ -223,7 +223,7 @@ class PlaneToInversion(AbstractToInversion):
             adapt_data=adapt_galaxy_image,
             settings=self.settings_pixelization,
             preloads=self.preloads,
-            profiling_dict=self.plane.profiling_dict,
+            run_time_dict=self.plane.run_time_dict,
         )
 
         return mapper_from(mapper_grids=mapper_grids, regularization=regularization)
@@ -268,7 +268,7 @@ class PlaneToInversion(AbstractToInversion):
             linear_obj_list=self.linear_obj_list,
             settings=self.settings_inversion,
             preloads=self.preloads,
-            profiling_dict=self.plane.profiling_dict,
+            run_time_dict=self.plane.run_time_dict,
         )
 
         inversion.linear_obj_galaxy_dict = self.linear_obj_galaxy_dict

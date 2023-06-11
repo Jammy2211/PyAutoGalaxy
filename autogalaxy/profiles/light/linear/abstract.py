@@ -107,7 +107,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         convolver: Optional[aa.Convolver],
         light_profile_list: List[LightProfileLinear],
         regularization=aa.reg.Regularization,
-        profiling_dict: Optional[Dict] = None,
+        run_time_dict: Optional[Dict] = None,
     ):
         for light_profile in light_profile_list:
             if not isinstance(light_profile, LightProfileLinear):
@@ -121,7 +121,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
                 )
 
         super().__init__(
-            grid=grid, regularization=regularization, profiling_dict=profiling_dict
+            grid=grid, regularization=regularization, run_time_dict=run_time_dict
         )
 
         self.blurring_grid = blurring_grid

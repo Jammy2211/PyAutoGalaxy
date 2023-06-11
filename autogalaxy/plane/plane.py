@@ -23,7 +23,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         self,
         galaxies,
         redshift: Optional[float] = None,
-        profiling_dict: Optional[Dict] = None,
+        run_time_dict: Optional[Dict] = None,
     ):
         """
         A plane of galaxies where all galaxies are at the same redshift.
@@ -52,7 +52,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         self.redshift = redshift
         self.galaxies = galaxies
 
-        self.profiling_dict = profiling_dict
+        self.run_time_dict = run_time_dict
 
     def dict(self) -> Dict:
         plane_dict = super().dict()

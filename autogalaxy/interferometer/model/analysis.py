@@ -159,7 +159,7 @@ class AnalysisInterferometer(AnalysisDataset):
     def fit_interferometer_via_instance_from(
         self,
         instance: af.ModelInstance,
-        profiling_dict: Optional[Dict] = None,
+        run_time_dict: Optional[Dict] = None,
     ) -> FitInterferometer:
         """
         Given a model instance create a `FitInterferometer` object.
@@ -174,7 +174,7 @@ class AnalysisInterferometer(AnalysisDataset):
             via a non-linear search).
         preload_overwrite
             If a `Preload` object is input this is used instead of the preloads stored as an attribute in the analysis.
-        profiling_dict
+        run_time_dict
             A dictionary which times functions called to fit the model to data, for profiling.
 
         Returns
@@ -185,18 +185,18 @@ class AnalysisInterferometer(AnalysisDataset):
         instance = self.instance_with_associated_adapt_images_from(instance=instance)
 
         plane = self.plane_via_instance_from(
-            instance=instance, profiling_dict=profiling_dict
+            instance=instance, run_time_dict=run_time_dict
         )
 
         return self.fit_interferometer_via_plane_from(
-            plane=plane, profiling_dict=profiling_dict
+            plane=plane, run_time_dict=run_time_dict
         )
 
     def fit_interferometer_via_plane_from(
         self,
         plane: Plane,
         preload_overwrite: Optional[Preloads] = None,
-        profiling_dict: Optional[Dict] = None,
+        run_time_dict: Optional[Dict] = None,
     ) -> FitInterferometer:
         """
         Given a `Plane`, which the analysis constructs from a model instance, create a `FitInterferometer` object.
@@ -223,7 +223,7 @@ class AnalysisInterferometer(AnalysisDataset):
             settings_pixelization=self.settings_pixelization,
             settings_inversion=self.settings_inversion,
             preloads=preloads,
-            profiling_dict=profiling_dict,
+            run_time_dict=run_time_dict,
         )
 
     @property
@@ -417,7 +417,7 @@ class AnalysisInterferometer(AnalysisDataset):
         This function is optionally called throughout a model-fit to profile the log likelihood function.
 
         All function calls inside the `log_likelihood_function` that are decorated with the `profile_func` are timed
-        with their times stored in a dictionary called the `profiling_dict`.
+        with their times stored in a dictionary called the `run_time_dict`.
 
         An `info_dict` is also created which stores information on aspects of the model and dataset that dictate
         run times, so the profiled times can be interpreted with this context.
@@ -439,7 +439,7 @@ class AnalysisInterferometer(AnalysisDataset):
         Two dictionaries, the profiling dictionary and info dictionary, which contain the profiling times of the
         `log_likelihood_function` and information on the model and dataset used to perform the profiling.
         """
-        profiling_dict, info_dict = super().profile_log_likelihood_function(
+        run_time_dict, info_dict = super().profile_log_likelihood_function(
             instance=instance,
         )
 
@@ -447,7 +447,7 @@ class AnalysisInterferometer(AnalysisDataset):
         info_dict["transformer_cls"] = self.dataset.transformer.__class__.__name__
 
         self.output_profiling_info(
-            paths=paths, profiling_dict=profiling_dict, info_dict=info_dict
+            paths=paths, run_time_dict=run_time_dict, info_dict=info_dict
         )
 
-        return profiling_dict, info_dict
+        return run_time_dict, info_dict
