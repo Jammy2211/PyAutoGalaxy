@@ -482,7 +482,7 @@ class AnalysisDataset(Analysis):
 
         fit_time = (time.time() - start) / repeats
 
-        info_dict["fit_time"] = fit_time
+        profiling_dict["fit_time"] = fit_time
 
         fit = self.fit_func(instance=instance, profiling_dict=profiling_dict)
         fit.figure_of_merit
