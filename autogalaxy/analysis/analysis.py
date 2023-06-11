@@ -43,7 +43,9 @@ class Analysis(af.Analysis):
         """
         self.cosmology = cosmology
 
-    def plane_via_instance_from(self, instance: af.ModelInstance, profiling_dict: Optional[Dict] = None) -> Plane:
+    def plane_via_instance_from(
+        self, instance: af.ModelInstance, profiling_dict: Optional[Dict] = None
+    ) -> Plane:
         """
         Create a `Plane` from the galaxies contained in a model instance.
 
@@ -58,7 +60,10 @@ class Analysis(af.Analysis):
         An instance of the Plane class that is used to then fit the dataset.
         """
         if hasattr(instance, "clumps"):
-            return Plane(galaxies=instance.galaxies + instance.clumps, profiling_dict=profiling_dict)
+            return Plane(
+                galaxies=instance.galaxies + instance.clumps,
+                profiling_dict=profiling_dict,
+            )
         return Plane(galaxies=instance.galaxies, profiling_dict=profiling_dict)
 
 

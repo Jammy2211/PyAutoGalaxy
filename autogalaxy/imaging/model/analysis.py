@@ -176,7 +176,9 @@ class AnalysisImaging(AnalysisDataset):
         """
         instance = self.instance_with_associated_adapt_images_from(instance=instance)
 
-        plane = self.plane_via_instance_from(instance=instance, profiling_dict=profiling_dict)
+        plane = self.plane_via_instance_from(
+            instance=instance, profiling_dict=profiling_dict
+        )
 
         return self.fit_imaging_via_plane_from(
             plane=plane,
@@ -436,6 +438,8 @@ class AnalysisImaging(AnalysisDataset):
 
         info_dict["psf_shape_2d"] = self.dataset.psf.shape_native
 
-        self.output_profiling_info(paths=paths, profiling_dict=profiling_dict, info_dict=info_dict)
+        self.output_profiling_info(
+            paths=paths, profiling_dict=profiling_dict, info_dict=info_dict
+        )
 
         return profiling_dict, info_dict

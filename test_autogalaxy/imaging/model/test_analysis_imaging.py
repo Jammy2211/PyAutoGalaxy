@@ -38,14 +38,14 @@ def test__figure_of_merit__matches_correct_fit_given_galaxy_profiles(
 
     assert fit.log_likelihood == fit_figure_of_merit
 
-def test__profile_log_likelihood_function(masked_imaging_7x7):
 
+def test__profile_log_likelihood_function(masked_imaging_7x7):
     pixelization = ag.Pixelization(
         mesh=ag.mesh.Rectangular(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 
-    galaxy = ag.Galaxy(redshift=0.5,pixelization=pixelization)
+    galaxy = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
@@ -53,7 +53,9 @@ def test__profile_log_likelihood_function(masked_imaging_7x7):
 
     analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
 
-    profiling_dict, info_dict = analysis.profile_log_likelihood_function(instance=instance)
+    profiling_dict, info_dict = analysis.profile_log_likelihood_function(
+        instance=instance
+    )
 
     assert "regularization_term_0" in profiling_dict
     assert "log_det_regularization_matrix_term_0" in profiling_dict
