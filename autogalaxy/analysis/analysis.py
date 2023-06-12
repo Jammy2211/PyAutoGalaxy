@@ -105,12 +105,14 @@ class Analysis(af.Analysis):
         repeats = conf.instance["general"]["profiling"]["repeats"]
         info_dict["repeats"] = repeats
 
+        # Ensure numba functions are compiled before profiling begins.
+
         fit = self.fit_func(instance=instance)
         fit.figure_of_merit
 
         start = time.time()
 
-        for i in range(repeats):
+        for _ in range(repeats):
             try:
                 fit = self.fit_func(instance=instance)
                 fit.figure_of_merit

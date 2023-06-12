@@ -54,8 +54,8 @@ def test__figures_1d__all_are_output(
 
     mass_profile_plotter.figures_1d(convergence=True, potential=True)
 
-    assert path.join(plot_path, "convergence_1d.png") in plot_patch.paths
-    assert path.join(plot_path, "potential_1d.png") in plot_patch.paths
+    assert path.join(plot_path, "convergence_1d_pdf.png") in plot_patch.paths
+    assert path.join(plot_path, "potential_1d_pdf.png") in plot_patch.paths
 
 
 def test__figures_2d__all_are_output(

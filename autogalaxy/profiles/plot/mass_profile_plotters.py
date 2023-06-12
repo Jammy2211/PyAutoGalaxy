@@ -122,9 +122,8 @@ class MassProfilePlotter(Plotter):
                 x=convergence_1d.grid_radial,
                 visuals_1d=self.get_visuals_1d(),
                 auto_labels=aplt.AutoLabels(
-                    title="Convergence vs Radius",
-                    ylabel="Convergence ",
-                    xlabel="Radius",
+                    title="Convergence vs Radius (arcsec)",
+                    yunit="",
                     legend=self.mass_profile.__class__.__name__,
                     filename="convergence_1d",
                 ),
@@ -139,9 +138,8 @@ class MassProfilePlotter(Plotter):
                 x=potential_1d.grid_radial,
                 visuals_1d=self.get_visuals_1d(),
                 auto_labels=aplt.AutoLabels(
-                    title="Potential vs Radius",
-                    ylabel="Potential ",
-                    xlabel="Radius",
+                    title="Potential vs Radius (arcsec)",
+                    yunit="",
                     legend=self.mass_profile.__class__.__name__,
                     filename="potential_1d",
                 ),
@@ -281,11 +279,10 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                 x=convergence_1d_list[0].grid_radial,
                 visuals_1d=visuals_1d,
                 auto_labels=aplt.AutoLabels(
-                    title="Convergence vs Radius",
-                    ylabel="Convergence ",
-                    xlabel="Radius",
+                    title="Convergence vs Radius (arcsec)",
+                    yunit="",
                     legend=self.mass_profile_pdf_list[0].__class__.__name__,
-                    filename="convergence_1d",
+                    filename="convergence_1d_pdf",
                 ),
                 plot_axis_type_override=plot_axis_type_override,
             )
@@ -326,11 +323,10 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                 x=potential_1d_list[0].grid_radial,
                 visuals_1d=visuals_1d,
                 auto_labels=aplt.AutoLabels(
-                    title="Potential vs Radius",
-                    ylabel="Potential ",
-                    xlabel="Radius",
+                    title="Potential vs Radius (arcsec)",
+                    yunit="",
                     legend=self.mass_profile_pdf_list[0].__class__.__name__,
-                    filename="potential_1d",
+                    filename="potential_1d_pdf",
                 ),
                 plot_axis_type_override=plot_axis_type_override,
             )

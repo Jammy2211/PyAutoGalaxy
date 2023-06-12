@@ -55,7 +55,7 @@ def test__figures_1d__all_are_output(
 
     light_profile_plotter.figures_1d(image=True)
 
-    assert path.join(plot_path, "image_1d.png") in plot_patch.paths
+    assert path.join(plot_path, "image_1d_pdf.png") in plot_patch.paths
 
 
 def test__figures_2d__all_are_output(

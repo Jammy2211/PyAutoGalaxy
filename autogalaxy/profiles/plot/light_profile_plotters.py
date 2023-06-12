@@ -122,9 +122,8 @@ class LightProfilePlotter(Plotter):
                 x=image_1d.grid_radial,
                 visuals_1d=self.get_visuals_1d(),
                 auto_labels=aplt.AutoLabels(
-                    title="Image vs Radius",
-                    ylabel="Image",
-                    xlabel="Radius",
+                    title=r"Image ($\mathrm{e^{-}}\,\mathrm{s^{-1}}$) vs Radius (arcsec)",
+                    yunit="",
                     legend=self.light_profile.__class__.__name__,
                     filename="image_1d",
                 ),
@@ -280,11 +279,10 @@ class LightProfilePDFPlotter(LightProfilePlotter):
                 x=image_1d_list[0].grid_radial,
                 visuals_1d=visuals_1d,
                 auto_labels=aplt.AutoLabels(
-                    title="Image vs Radius",
-                    ylabel="Image",
-                    xlabel="Radius",
+                    title=r"Image ($\mathrm{e^{-}}\,\mathrm{s^{-1}}$) vs Radius (arcsec)",
+                    yunit="",
                     legend=self.light_profile_pdf_list[0].__class__.__name__,
-                    filename="image_1d",
+                    filename="image_1d_pdf",
                 ),
                 plot_axis_type_override=plot_axis_type_override,
             )

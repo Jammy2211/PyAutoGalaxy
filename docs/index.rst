@@ -20,6 +20,21 @@ Telescope imaging of a spiral galaxy:
 
 .. |pic2| image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/almacombined.png?raw=true
 
+
+Getting Started
+===============
+
+The following links are useful for new starters:
+
+- `The PyAutoGalaxy readthedocs <https://pyautogalaxy.readthedocs.io/en/latest>`_, which includes `an installation guide <https://pyautogalaxy.readthedocs.io/en/latest/installation/overview.html>`_ and `an overview of **PyAutoGalaxy**'s core features <https://pyautogalaxy.readthedocs.io/en/latest/overview/overview_1_galaxies.html>`_.
+
+- `The introduction Jupyter Notebook on Binder <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=introduction.ipynb>`_, where you can try **PyAutoGalaxy** in a web browser (without installation).
+
+- `The autogalaxy_workspace GitHub repository <https://github.com/Jammy2211/autogalaxy_workspace>`_, which includes example scripts and the `HowToGalaxy Jupyter notebook tutorials <https://github.com/Jammy2211/autogalaxy_workspace/tree/master/notebooks/howtogalaxy>`_ which give new users a step-by-step introduction to **PyAutoGalaxy**.
+
+Features
+========
+
 Core features include fully automated Bayesian model-fitting of galaxy two-dimensional surface brightness profiles,
 support for dataset and interferometer datasets and comprehensive tools for simulating galaxy images. The software
 places a focus on **big data** analysis, including support for hierarchical models that simultaneously fit thousands of
