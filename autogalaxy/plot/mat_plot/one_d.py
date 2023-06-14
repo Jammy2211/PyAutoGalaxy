@@ -110,7 +110,9 @@ class MatPlot1D(aplt.MatPlot1D):
             model_fluxes_yx_scatter or w.ModelFluxesYXScatter(is_default=True)
         )
 
-    def set_for_multi_plot(self, is_for_multi_plot: bool, color: str):
+    def set_for_multi_plot(
+        self, is_for_multi_plot: bool, color: str, xticks=None, yticks=None
+    ):
         """
         Sets the `is_for_subplot` attribute for every `MatWrap` object in this `MatPlot` object by updating
         the `is_for_subplot`. By changing this tag:
@@ -124,7 +126,12 @@ class MatPlot1D(aplt.MatPlot1D):
             The entry the `is_for_subplot` attribute of every `MatWrap` object is set too.
         """
 
-        super().set_for_multi_plot(is_for_multi_plot=is_for_multi_plot, color=color)
+        super().set_for_multi_plot(
+            is_for_multi_plot=is_for_multi_plot,
+            color=color,
+            xticks=xticks,
+            yticks=yticks,
+        )
 
         self.half_light_radius_axvline.kwargs["c"] = color
         self.einstein_radius_axvline.kwargs["c"] = color
