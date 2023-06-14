@@ -246,9 +246,6 @@ class AnalysisInterferometer(AnalysisDataset):
             the imaging data.
         """
 
-        if not self.should_visualize(paths=paths):
-            return
-
         visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
 
         visualizer.visualize_interferometer(dataset=self.interferometer)
@@ -291,9 +288,6 @@ class AnalysisInterferometer(AnalysisDataset):
             If True the visualization is being performed midway through the non-linear search before it is finished,
             which may change which images are output.
         """
-
-        if not self.should_visualize(paths=paths):
-            return
 
         instance = self.instance_with_associated_adapt_images_from(instance=instance)
         plane = self.plane_via_instance_from(instance=instance)
