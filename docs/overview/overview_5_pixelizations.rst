@@ -61,6 +61,21 @@ Here is what our reconstructed galaxy looks like:
 Note how the reconstruction is irregular and has multiple clumps of light, these features would be difficult
 to represent using analytic light profiles!
 
+Positive Only Solver
+--------------------
+
+All pixelized source reconstructions use a positive-only solver, meaning that every source-pixel is only allowed
+to reconstruct positive flux values. This ensures that the source reconstruction is physical and that we don't
+reconstruct negative flux values that don't exist in the real source galaxy (a common systematic solution in lens
+analysis).
+
+It may be surprising to hear that this is a feature worth pointing out, but it turns out setting up the linear algebra
+to enforce positive reconstructions is difficult to make efficient. A lot of development time went into making this
+possible, where a bespoke fast non-negative linear solver was developed to achieve this.
+
+Other methods in the literature often do not use a positive only solver, and therefore suffer from these
+unphysical solutions, which can degrade the results of lens model in general.
+
 Why Use Pixelizations?
 ----------------------
 
