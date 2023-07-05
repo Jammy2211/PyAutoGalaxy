@@ -275,7 +275,7 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
         redshift=0.5, galaxies=[g0, g1_linear, g3, galaxy_pix_0, galaxy_pix_1]
     )
 
-    masked_imaging_7x7.image[0] = 3.0
+    masked_imaging_7x7.data[0] = 3.0
 
     fit = ag.FitImaging(
         dataset=masked_imaging_7x7,

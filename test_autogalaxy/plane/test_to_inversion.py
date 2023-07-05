@@ -209,7 +209,7 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
     plane_to_inversion = ag.PlaneToInversion(
         plane=plane,
         dataset=masked_imaging_7x7,
-        data=masked_imaging_7x7.image,
+        data=masked_imaging_7x7.data,
         noise_map=masked_imaging_7x7.noise_map,
         w_tilde=masked_imaging_7x7.w_tilde,
         settings_pixelization=ag.SettingsPixelization(use_border=False),
@@ -232,7 +232,7 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
     plane_to_inversion = ag.PlaneToInversion(
         plane=plane,
         dataset=masked_imaging_7x7,
-        data=masked_imaging_7x7.image,
+        data=masked_imaging_7x7.data,
         noise_map=masked_imaging_7x7.noise_map,
         w_tilde=masked_imaging_7x7.w_tilde,
         settings_pixelization=ag.SettingsPixelization(use_border=False),
@@ -242,7 +242,7 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
     inversion = plane_to_inversion.inversion
 
     assert inversion.mapped_reconstructed_image == pytest.approx(
-        masked_imaging_7x7.image, 1.0e-2
+        masked_imaging_7x7.data, 1.0e-2
     )
 
 

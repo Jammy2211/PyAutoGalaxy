@@ -95,8 +95,8 @@ def test__simulator__via_plane_from__same_as_plane_image():
     imaging_via_image = simulator.via_image_from(image=plane.image_2d_from(grid=grid))
 
     assert dataset.shape_native == (20, 20)
-    assert dataset.data.native[0, 0] != imaging_via_image.image.native[0, 0]
-    assert dataset.data.native[10, 10] == imaging_via_image.image.native[10, 10]
+    assert dataset.data.native[0, 0] != imaging_via_image.data.native[0, 0]
+    assert dataset.data.native[10, 10] == imaging_via_image.data.native[10, 10]
     assert (dataset.psf == imaging_via_image.psf).all()
     assert (dataset.noise_map == imaging_via_image.noise_map).all()
 
@@ -139,6 +139,6 @@ def test__simulator__simulate_imaging_from_galaxy__source_galaxy__compare_to_ima
     imaging_via_image = simulator.via_image_from(image=plane.image_2d_from(grid=grid))
 
     assert dataset.shape_native == (11, 11)
-    assert dataset.data == pytest.approx(imaging_via_image.image, 1.0e-4)
+    assert dataset.data == pytest.approx(imaging_via_image.data, 1.0e-4)
     assert (dataset.psf == imaging_via_image.psf).all()
     assert (dataset.noise_map == imaging_via_image.noise_map).all()

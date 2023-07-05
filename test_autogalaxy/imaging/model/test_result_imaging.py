@@ -15,7 +15,7 @@ def test__results_include_masked_dataset_and_mask(
     )
 
     assert (result.mask == masked_imaging_7x7.mask).all()
-    assert (result.dataset.image == masked_imaging_7x7.image).all()
+    assert (result.dataset.image == masked_imaging_7x7.data).all()
 
 
 def test___image_dict(analysis_imaging_7x7):

@@ -40,7 +40,7 @@ def test__imaging_generator_from_aggregator(imaging_7x7, mask_2d_7x7, samples, m
     imaging_gen = imaging_agg.dataset_gen_from()
 
     for dataset in imaging_gen:
-        assert (dataset.data == masked_imaging_7x7.image).all()
+        assert (dataset.data == masked_imaging_7x7.data).all()
         assert isinstance(dataset.grid, ag.Grid2DIterate)
         assert isinstance(dataset.grid_pixelization, ag.Grid2DIterate)
         assert dataset.grid.sub_steps == [2]
