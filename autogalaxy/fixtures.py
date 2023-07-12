@@ -247,6 +247,7 @@ def make_fit_interferometer_x2_galaxy_inversion_7x7():
 
 
 def make_samples_with_result():
+
     galaxies = [
         ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0)),
         ag.Galaxy(redshift=1.0, light=ag.lp.Sersic(intensity=2.0)),
