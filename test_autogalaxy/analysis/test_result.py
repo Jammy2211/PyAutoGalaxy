@@ -7,15 +7,9 @@ from autogalaxy.analysis import result as res
 def test__result_contains_instance_with_galaxies(
     analysis_imaging_7x7, samples_with_result
 ):
-    model = af.Collection(
-        galaxies=af.Collection(
-            galaxy=af.Model(ag.Galaxy, redshift=0.5, light=ag.lp.Sersic),
-            source=af.Model(ag.Galaxy, redshift=1.0, light=ag.lp.Sersic),
-        )
-    )
-
     result = res.Result(
-        samples=samples_with_result, analysis=analysis_imaging_7x7, model=model
+        samples=samples_with_result,
+        analysis=analysis_imaging_7x7,
     )
 
     assert isinstance(result.instance.galaxies[0], ag.Galaxy)
@@ -52,7 +46,8 @@ def test__results_include_pixelization__available_as_property(analysis_imaging_7
     samples = ag.m.MockSamples(max_log_likelihood_instance=max_log_likelihood_plane)
 
     result = res.ResultDataset(
-        samples=samples, analysis=analysis_imaging_7x7, model=None
+        samples=samples,
+        analysis=analysis_imaging_7x7,
     )
 
     assert isinstance(
