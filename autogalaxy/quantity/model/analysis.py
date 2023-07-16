@@ -161,9 +161,6 @@ class AnalysisQuantity(Analysis):
     def make_result(
         self,
         samples: af.SamplesPDF,
-        sigma=1.0,
-        use_errors=True,
-        use_widths=False,
     ) -> ResultQuantity:
         """
         After the non-linear search is complete create its `ResultQuantity`, which includes:
@@ -194,7 +191,7 @@ class AnalysisQuantity(Analysis):
         """
         return ResultQuantity(samples=samples, analysis=self)
 
-    def save_attributes_for_aggregator(self, paths: af.DirectoryPaths):
+    def save_attributes(self, paths: af.DirectoryPaths):
         """
         Before the non-linear search begins, this routine saves attributes of the `Analysis` object to the `pickles`
         folder such that they can be loaded after the analysis using PyAutoFit's database and aggregator tools.
