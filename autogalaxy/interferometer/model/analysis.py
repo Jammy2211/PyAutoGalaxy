@@ -394,8 +394,17 @@ class AnalysisInterferometer(AnalysisDataset):
         """
         super().save_attributes(paths=paths)
 
-        paths.save_object("uv_wavelengths", self.dataset.uv_wavelengths)
-        paths.save_object("real_space_mask", self.dataset.real_space_mask)
+        dataset_path = paths._files_path / "dataset"
+
+        aa.util.array_2d.numpy_array_2d_to_fits(
+            array_2d=self.dataset.uv_wavelengths,
+            file_path=dataset_path / "uv_wavelengths.fits",
+            overwrite=True
+        )
+
+        self.dataset.real_space_mask.output_to_fits(
+            file_path=dataset_path / "real_space_mask.fits", overwrite=True
+        )
 
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None
