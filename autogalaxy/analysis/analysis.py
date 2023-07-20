@@ -4,6 +4,7 @@ import numpy as np
 from typing import Callable, Dict, Optional, Tuple, Union
 from os import path
 import os
+import pickle
 import time
 
 from autoconf import conf
@@ -449,18 +450,29 @@ class AnalysisDataset(Analysis):
         self.settings_inversion.output_to_json(
             file_path=paths._files_path / "settings_inversion.json"
         )
-
-        paths.save_object("settings_pixelization", self.settings_pixelization)
-
+        self.settings_pixelization.output_to_json(
+            file_path=paths._files_path / "settings_pixelization.json"
+        )
         paths.save_object("cosmology", self.cosmology)
 
+        with open(paths._files_path / "cosmology.pickle", "wb") as f:
+            pickle.dump(self.cosmology, f)
+
+        adapt_path = paths._files_path / "adapt"
+
         if self.adapt_model_image is not None:
-            paths.save_object("adapt_model_image", self.adapt_model_image)
+            self.adapt_model_image.output_to_fits(
+                file_path=adapt_path / "adapt_model_image.fits", overwrite=True
+            )
 
         if self.adapt_galaxy_image_path_dict is not None:
-            paths.save_object(
-                "adapt_galaxy_image_path_dict", self.adapt_galaxy_image_path_dict
-            )
+
+            for key, value in self.adapt_galaxy_image_path_dict.items():
+
+                value.output_to_fits(
+                    file_path=adapt_path / f"{key}.fits",
+                    overwrite=True,
+                )
 
     def check_and_replace_adapt_images(self, paths: af.DirectoryPaths):
         """
@@ -477,30 +489,34 @@ class AnalysisDataset(Analysis):
             The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
             visualization and the pickled objects used by the aggregator output by this function.
         """
+
+        def load_adapt_image(filename):
+
+            adapt_image = aa.Array2D.from_fits(
+                file_path=paths._files_path / "adapt" / filename,
+                pixel_scales=self.dataset.pixel_scales,
+            )
+            return adapt_image.apply_mask(mask=self.dataset.mask)
+
         try:
-            adapt_model_image = paths.load_object("adapt_model_image")
+            adapt_model_image = load_adapt_image(filename="adapt_model_image.fits")
+        except FileNotFoundError:
+            return
 
-            if np.max(abs(adapt_model_image - self.adapt_model_image)) > 1e-8:
-                logger.info(
-                    "ANALYSIS - adapt image loaded from pickle different to that set in Analysis class."
-                    "Overwriting adapt images with values loaded from pickles."
-                )
+        if np.max(abs(adapt_model_image - self.adapt_model_image)) > 1e-8:
 
-                self.adapt_model_image = adapt_model_image
+            logger.info(
+                "ANALYSIS - adapt image loaded from pickle different to that set in Analysis class."
+                "Overwriting adapt images with values loaded from pickles."
+            )
 
-                adapt_galaxy_image_path_dict = paths.load_object(
-                    "adapt_galaxy_image_path_dict"
-                )
-                self.adapt_galaxy_image_path_dict = adapt_galaxy_image_path_dict
+            self.adapt_model_image = adapt_model_image
 
-        except (
-            FileNotFoundError,
-            AttributeError,
-            KeyError,
-            ModuleNotFoundError,
-            TypeError,
-        ):
-            pass
+            self.adapt_galaxy_image_path_dict = {
+                key: load_adapt_image(filename=f"{key}.fits")
+                for key
+                in self.adapt_galaxy_image_path_dict.keys()
+            }
 
     def output_or_check_figure_of_merit_sanity(
         self, paths: af.DirectoryPaths, result: af.Result
