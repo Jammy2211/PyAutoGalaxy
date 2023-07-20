@@ -437,8 +437,14 @@ class AnalysisDataset(Analysis):
             The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
             and the pickled objects used by the aggregator output by this function.
         """
-        paths.save_object("data", self.dataset.data)
-        paths.save_object("noise_map", self.dataset.noise_map)
+        dataset_path = paths._files_path / "dataset"
+
+        self.dataset.output_to_fits(
+            data_path=dataset_path / "data.fits",
+            noise_map_path=dataset_path / "noise_map.fits",
+            overwrite=True,
+        )
+
         paths.save_object("settings_dataset", self.dataset.settings)
         paths.save_object("settings_inversion", self.settings_inversion)
         paths.save_object("settings_pixelization", self.settings_pixelization)

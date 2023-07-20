@@ -387,8 +387,12 @@ class AnalysisImaging(AnalysisDataset):
         """
         super().save_attributes(paths=paths)
 
-        paths.save_object("psf", self.dataset.psf)
-        paths.save_object("mask", self.dataset.mask)
+        dataset_path = paths._files_path / "dataset"
+
+        self.dataset.psf.output_to_fits(
+            file_path=dataset_path / "psf.fits", overwrite=True,
+        )
+        self.dataset.mask.output_to_fits(file_path=dataset_path / "mask.fits", overwrite=True)
 
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None

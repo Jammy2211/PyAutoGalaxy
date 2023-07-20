@@ -1,5 +1,6 @@
 import json
 import numpy as np
+from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Type, Union
 
 import autoarray as aa
@@ -59,7 +60,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         plane_dict["galaxies"] = [galaxy.dict() for galaxy in self.galaxies]
         return plane_dict
 
-    def output_to_json(self, file_path: str):
+    def output_to_json(self, file_path: Union[Path, str]):
         with open(file_path, "w+") as f:
             json.dump(self.dict(), f, indent=4)
 
