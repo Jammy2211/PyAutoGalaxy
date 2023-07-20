@@ -444,9 +444,12 @@ class AnalysisDataset(Analysis):
             noise_map_path=dataset_path / "noise_map.fits",
             overwrite=True,
         )
+        self.dataset.settings.output_to_json(file_path=dataset_path / "settings.json")
 
-        paths.save_object("settings_dataset", self.dataset.settings)
-        paths.save_object("settings_inversion", self.settings_inversion)
+        self.settings_inversion.output_to_json(
+            file_path=paths._files_path / "settings_inversion.json"
+        )
+
         paths.save_object("settings_pixelization", self.settings_pixelization)
 
         paths.save_object("cosmology", self.cosmology)
