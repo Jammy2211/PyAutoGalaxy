@@ -21,14 +21,15 @@ class AnalysisQuantity(Analysis):
         cosmology: LensingCosmology = Planck15(),
     ):
         """
-        Analysis classes are used by PyAutoFit to fit a model to a dataset via a non-linear search.
+        Fits a galaxy model to a quantity dataset via a non-linear search.
 
-        An Analysis class defines the `log_likelihood_function` which fits the model to the dataset and returns the
-        log likelihood value defining how well the model fitted the data. The Analysis class handles many other tasks,
-        such as visualization, outputting results to hard-disk and storing results in a format that can be loaded after
-        the model-fit is complete using PyAutoFit's database tools.
+        The `Analysis` class defines the `log_likelihood_function` which fits the model to the dataset and returns the
+        log likelihood value defining how well the model fitted the data.
 
-        This Analysis class is used for model-fits which fit derived quantity of galaxies, for example their
+        It handles many other tasks, such as visualization, outputting results to hard-disk and storing results in
+        a format that can be loaded after the model-fit is complete.
+
+        This class is used for model-fits which fit derived quantity of galaxies, for example their
         convergence, potential or deflection angles, to another model for that quantity. For example, one could find
         the `PowerLaw` mass profile model that best fits the deflection angles of an `NFW` mass profile.
 
@@ -223,6 +224,8 @@ class AnalysisQuantity(Analysis):
             overwrite=True,
         )
         self.dataset.settings.output_to_json(file_path=dataset_path / "settings.json")
-        self.dataset.mask.output_to_fits(file_path=dataset_path / "mask.fits", overwrite=True)
+        self.dataset.mask.output_to_fits(
+            file_path=dataset_path / "mask.fits", overwrite=True
+        )
 
         paths.save_object("cosmology", self.cosmology)

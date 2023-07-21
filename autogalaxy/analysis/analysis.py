@@ -30,7 +30,7 @@ logger.setLevel(level="INFO")
 class Analysis(af.Analysis):
     def __init__(self, cosmology: LensingCosmology = Planck15):
         """
-        Analysis classes are used by PyAutoFit to fit a model to a dataset via a non-linear search.
+        Fits a model to a dataset via a non-linear search.
 
         This abstract Analysis class for all model-fits which fit galaxies (or objects containing galaxies like a
         plane), but does not perform a model-fit by itself (and is therefore only inherited from).
@@ -40,7 +40,7 @@ class Analysis(af.Analysis):
         Parameters
         ----------
         cosmology
-            The AstroPy Cosmology assumed for this analysis.
+            The Cosmology assumed for this analysis.
         """
         self.cosmology = cosmology
 
@@ -245,8 +245,8 @@ class AnalysisDataset(Analysis):
 
     def modify_before_fit(self, paths: af.DirectoryPaths, model: af.Collection):
         """
-        PyAutoFit calls this function immediately before the non-linear search begins, therefore it can be used to
-        perform tasks using the final model parameterization.
+        This function is called immediately before the non-linear search begins and performs final tasks and checks
+        before it begins.
 
         This function:
 
@@ -466,9 +466,7 @@ class AnalysisDataset(Analysis):
             )
 
         if self.adapt_galaxy_image_path_dict is not None:
-
             for key, value in self.adapt_galaxy_image_path_dict.items():
-
                 value.output_to_fits(
                     file_path=adapt_path / f"{key}.fits",
                     overwrite=True,
@@ -491,7 +489,6 @@ class AnalysisDataset(Analysis):
         """
 
         def load_adapt_image(filename):
-
             adapt_image = aa.Array2D.from_fits(
                 file_path=paths._files_path / "adapt" / filename,
                 pixel_scales=self.dataset.pixel_scales,
@@ -504,7 +501,6 @@ class AnalysisDataset(Analysis):
             return
 
         if np.max(abs(adapt_model_image - self.adapt_model_image)) > 1e-8:
-
             logger.info(
                 "ANALYSIS - adapt image loaded from pickle different to that set in Analysis class."
                 "Overwriting adapt images with values loaded from pickles."
@@ -514,8 +510,7 @@ class AnalysisDataset(Analysis):
 
             self.adapt_galaxy_image_path_dict = {
                 key: load_adapt_image(filename=f"{key}.fits")
-                for key
-                in self.adapt_galaxy_image_path_dict.keys()
+                for key in self.adapt_galaxy_image_path_dict.keys()
             }
 
     def output_or_check_figure_of_merit_sanity(

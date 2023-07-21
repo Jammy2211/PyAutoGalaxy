@@ -33,12 +33,13 @@ class AnalysisInterferometer(AnalysisDataset):
         settings_inversion: aa.SettingsInversion = None,
     ):
         """
-        Analysis classes are used by PyAutoFit to fit a model to a dataset via a non-linear search.
+        Fits a galaxy model to an interferometer dataset via a non-linear search.
 
-        An Analysis class defines the `log_likelihood_function` which fits the model to the dataset and returns the
-        log likelihood value defining how well the model fitted the data. The Analysis class handles many other tasks,
-        such as visualization, outputting results to hard-disk and storing results in a format that can be loaded after
-        the model-fit is complete using PyAutoFit's database tools.
+        The `Analysis` class defines the `log_likelihood_function` which fits the model to the dataset and returns the
+        log likelihood value defining how well the model fitted the data.
+
+        It handles many other tasks, such as visualization, outputting results to hard-disk and storing results in
+        a format that can be loaded after the model-fit is complete.
 
         This Analysis class is used for all model-fits which fit galaxies (or objects containing galaxies like a
         `Plane`) to an interferometer dataset.
@@ -76,8 +77,8 @@ class AnalysisInterferometer(AnalysisDataset):
 
     def modify_before_fit(self, paths: af.DirectoryPaths, model: af.Collection):
         """
-        PyAutoFit calls this function immediately before the non-linear search begins, therefore it can be used to
-        perform tasks using the final model parameterization.
+        This function is called immediately before the non-linear search begins and performs final tasks and checks
+        before it begins.
 
         This function checks that the adapt-dataset is consistent with previous adapt-datasets if the model-fit is
         being resumed from a previous run, and it visualizes objects which do not change throughout the model fit
@@ -399,7 +400,7 @@ class AnalysisInterferometer(AnalysisDataset):
         aa.util.array_2d.numpy_array_2d_to_fits(
             array_2d=self.dataset.uv_wavelengths,
             file_path=dataset_path / "uv_wavelengths.fits",
-            overwrite=True
+            overwrite=True,
         )
 
         self.dataset.real_space_mask.output_to_fits(

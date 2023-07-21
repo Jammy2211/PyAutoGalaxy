@@ -136,12 +136,12 @@ def make_output_data_dir():
 
     return output_data_dir
 
-def test__output_to_fits(dataset_quantity_7x7_array_2d, output_data_dir):
 
+def test__output_to_fits(dataset_quantity_7x7_array_2d, output_data_dir):
     dataset_quantity_7x7_array_2d.output_to_fits(
         data_path=path.join(output_data_dir, "data.fits"),
         noise_map_path=path.join(output_data_dir, "noise_map.fits"),
-        overwrite=True
+        overwrite=True,
     )
 
     data = ag.Array2D.from_fits(
@@ -171,11 +171,11 @@ def test__output_to_fits(dataset_quantity_7x7_array_2d, output_data_dir):
     dataset_quantity.output_to_fits(
         data_path=path.join(output_data_dir, "data.fits"),
         noise_map_path=path.join(output_data_dir, "noise_map.fits"),
-        overwrite=True
+        overwrite=True,
     )
 
     data = ag.Array2D.from_fits(
         file_path=path.join(output_data_dir, "data.fits"), hdu=0, pixel_scales=1.0
     )
 
-    assert data[0,0] == pytest.approx([1.0, 5.0], 1.0e-4)
+    assert data[0, 0] == pytest.approx([1.0, 5.0], 1.0e-4)
