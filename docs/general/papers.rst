@@ -5,4 +5,6 @@ Papers
 
 The following papers use **PyAutoGalaxy**:
 
-¯\_(ツ)_/¯
+**Statistics / Machine Learning**
+
+`Streamlined Lensed Quasar Identification in Multiband Images via Ensemble Networks <https://arxiv.org/abs/2307.01090>`_

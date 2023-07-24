@@ -20,30 +20,24 @@ def _imaging_from(fit: af.Fit, settings_dataset: Optional[aa.SettingsImaging] = 
         A PyAutoFit aggregator's SearchOutput object containing the generators of the results of model-fits.
     """
 
-    data = fit.value(name="data")
-    noise_map = fit.value(name="noise_map")
-    psf = fit.value(name="psf")
+    data = aa.Array2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.data"))
+    noise_map = aa.Array2D.from_primary_hdu(
+        primary_hdu=fit.value(name="dataset.noise_map")
+    )
+    psf = aa.Kernel2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.psf"))
 
-    settings_dataset = settings_dataset or fit.value(name="settings_dataset")
-
-    if not hasattr(settings_dataset, "relative_accuracy"):
-        settings_dataset.relative_accuracy = None
-
-    if hasattr(settings_dataset, "sub_size_inversion"):
-        settings_dataset.sub_size_pixelization = settings_dataset.sub_size_inversion
-
-    if hasattr(settings_dataset, "grid_inversion_class"):
-        settings_dataset.grid_pixelization_class = settings_dataset.grid_inversion_class
+    settings_dataset = settings_dataset or fit.value(name="dataset.settings")
 
     dataset = aa.Imaging(
         data=data,
         noise_map=noise_map,
         psf=psf,
         settings=settings_dataset,
-        pad_for_convolver=True,
+        check_noise_map=False,
     )
 
-    dataset.apply_settings(settings=settings_dataset)
+    mask = aa.Mask2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.mask"))
+    dataset = dataset.apply_mask(mask=mask)
 
     return dataset
 
