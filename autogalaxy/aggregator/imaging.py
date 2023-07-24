@@ -7,9 +7,9 @@ import autoarray as aa
 
 def _imaging_from(fit: af.Fit, settings_dataset: Optional[aa.SettingsImaging] = None) -> aa.Imaging:
     """
-    Returns a `Imaging` object from a `PyAutoFit` sqlite database `Fit` object.
+    Returns an `Imaging` object from a `PyAutoFit` sqlite database `Fit` object.
 
-    The results of a model-fit can be stored in an sqlite database, including the following attributes of the fit:
+    The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
 
     - The imaging data as a .fits file (`dataset/data.fits`).
     - The noise-map as a .fits file (`dataset/noise_map.fits`).
@@ -56,21 +56,50 @@ def _imaging_from(fit: af.Fit, settings_dataset: Optional[aa.SettingsImaging] = 
 
 class ImagingAgg:
     def __init__(self, aggregator: af.Aggregator):
+        """
+        Interfaces with an `PyAutoFit` aggregator object to create instances of `Imaging` objects from the results
+        of a model-fit.
+
+        The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
+
+        - The imaging data as a .fits file (`dataset/data.fits`).
+        - The noise-map as a .fits file (`dataset/noise_map.fits`).
+        - The point spread function as a .fits file (`dataset/psf.fits`).
+        - The settings of the `Imaging` data structure used in the fit (`dataset/settings.json`).
+        - The mask used to mask the `Imaging` data structure in the fit (`dataset/mask.fits`).
+
+        The `aggregator` contains the path to each of these files, and they can be loaded individually. This class
+        can load them all at once and create an `Imaging` object via the `_imaging_from` method.
+
+        This class's methods returns generators which create the instances of the `Imaging` objects. This ensures
+        that large sets of results can be efficiently loaded from the hard-disk and do not require storing all of the
+        `Imaging` instances in the memory at once.
+
+        For example, if the `aggregator` contains 3 model-fits, this class can be used to create a generator which
+        creates instances of the corresponding 3 `Imaging` objects.
+
+        This can be done manually, but this object provides a more concise API.
+        
+        Parameters
+        ----------
+        aggregator
+            A `PyAutoFit` aggregator object which can load the results of model-fits.
+        """
         self.aggregator = aggregator
 
     def dataset_gen_from(self, settings_dataset: Optional[aa.SettingsImaging] = None):
         """
-        Returns a generator of `Imaging` objects from an input aggregator, which generates a list of the
-        `Imaging` objects for every set of results loaded in the aggregator.
+        Returns a generator of `Imaging` objects from an input aggregator.
 
-        This is performed by mapping the `imaging_from_agg_obj` with the aggregator, which sets up each
-        imaging using only generators ensuring that manipulating the imaging of large sets of results is done in a
-        memory efficient way.
+        See `__init__` for a description of how the `Imaging` objects are created by this method.
+
+        The settings can be overwritten by inputting a `settings_dataset` object, for example if you want to use a grid
+        with a different level of sub-griding.
 
         Parameters
         ----------
-        aggregator
-            A PyAutoFit aggregator object containing the results of model-fits.
+        settings_dataset
+            Optionally overwrite the `SettingsImaging` of the `Imaging` object that is created from the fit.
         """
 
         func = partial(_imaging_from, settings_dataset=settings_dataset)
