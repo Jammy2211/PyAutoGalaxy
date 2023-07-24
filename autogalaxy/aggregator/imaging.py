@@ -5,7 +5,9 @@ import autofit as af
 import autoarray as aa
 
 
-def _imaging_from(fit: af.Fit, settings_dataset: Optional[aa.SettingsImaging] = None) -> aa.Imaging:
+def _imaging_from(
+    fit: af.Fit, settings_dataset: Optional[aa.SettingsImaging] = None
+) -> aa.Imaging:
     """
     Returns an `Imaging` object from a `PyAutoFit` sqlite database `Fit` object.
 
@@ -72,14 +74,14 @@ class ImagingAgg:
         can load them all at once and create an `Imaging` object via the `_imaging_from` method.
 
         This class's methods returns generators which create the instances of the `Imaging` objects. This ensures
-        that large sets of results can be efficiently loaded from the hard-disk and do not require storing all of the
+        that large sets of results can be efficiently loaded from the hard-disk and do not require storing all
         `Imaging` instances in the memory at once.
 
         For example, if the `aggregator` contains 3 model-fits, this class can be used to create a generator which
         creates instances of the corresponding 3 `Imaging` objects.
 
         This can be done manually, but this object provides a more concise API.
-        
+
         Parameters
         ----------
         aggregator

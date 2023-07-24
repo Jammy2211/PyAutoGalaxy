@@ -11,27 +11,43 @@ def _interferometer_from(
     settings_dataset: Optional[aa.SettingsInterferometer] = None,
 ):
     """
-    Returns a `Interferometer` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to
-    describe that it acts as the aggregator object for one result in the `Aggregator`. This uses the aggregator's
-    generator outputs such that the function can use the `Aggregator`'s map function to create a
-    `Interferometer` generator.
+    Returns an `Interferometer` object from a `PyAutoFit` sqlite database `Fit` object.
 
-    The `Interferometer` is created following the same method as the PyAutoGalaxy `Search` classes, including
-    using the `SettingsInterferometer` instance output by the Search to load inputs of the `Interferometer`
-    (e.g. psf_shape_2d).
+    The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
+
+    - The interferometer visibilities data as a .fits file (`dataset/data.fits`).
+    - The visibilities noise-map as a .fits file (`dataset/noise_map.fits`).
+    - The uv wavelengths as a .fits file (`dataset/uv_wavelengths.fits`).
+    - The real space mask defining the grid of the interferometer for the FFT (`dataset/real_space_mask.fits`).
+    - The settings of the `Interferometer` data structure used in the fit (`dataset/settings.json`).
+
+    Each individual attribute can be loaded from the database via the `fit.value()` method.
+
+    This method combines all of these attributes and returns a `Interferometer` object, including having its
+    settings updated to the values used by the model-fit.
+
+    The settings can be overwritten by inputting a `settings_dataset` object, for example if you want to use a grid
+    with a different level of sub-griding.
 
     Parameters
     ----------
-    fit : ImaginSearchOutput
-        A PyAutoFit aggregator's SearchOutput object containing the generators of the results of PyAutoGalaxy
-        model-fits.
+    fit
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
+    settings_dataset
+        Optionally overwrite the `SettingsInterferometer` of the `Interferometer` object that is created from the fit.
     """
 
-    data = fit.value(name="data")
-    noise_map = fit.value(name="noise_map")
-    uv_wavelengths = fit.value(name="uv_wavelengths")
-    real_space_mask = real_space_mask or fit.value(name="real_space_mask")
-    settings_dataset = settings_dataset or fit.value(name="settings_dataset")
+    data = aa.Visibilities(
+        visibilities=fit.value(name="dataset.data").data.astype("float")
+    )
+    noise_map = aa.VisibilitiesNoiseMap(
+        fit.value(name="dataset.noise_map").data.astype("float")
+    )
+    uv_wavelengths = fit.value(name="dataset.uv_wavelengths").data
+    real_space_mask = real_space_mask or aa.Mask2D.from_primary_hdu(
+        primary_hdu=fit.value(name="dataset.real_space_mask")
+    )
+    settings_dataset = settings_dataset or fit.value(name="dataset.settings")
 
     dataset = aa.Interferometer(
         data=data,
@@ -40,13 +56,40 @@ def _interferometer_from(
         real_space_mask=real_space_mask,
     )
 
-    dataset = dataset.apply_settings(settings=settings_dataset)
-
-    return dataset
+    return dataset.apply_settings(settings=settings_dataset)
 
 
 class InterferometerAgg:
     def __init__(self, aggregator: af.Aggregator):
+        """
+        Interfaces with an `PyAutoFit` aggregator object to create instances of `Interferometer` objects from the results
+        of a model-fit.
+
+        The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
+
+        - The interferometer visibilities data as a .fits file (`dataset/data.fits`).
+        - The visibilities noise-map as a .fits file (`dataset/noise_map.fits`).
+        - The uv wavelengths as a .fits file (`dataset/uv_wavelengths.fits`).
+        - The real space mask defining the grid of the interferometer for the FFT (`dataset/real_space_mask.fits`).
+        - The settings of the `Interferometer` data structure used in the fit (`dataset/settings.json`).
+
+        The `aggregator` contains the path to each of these files, and they can be loaded individually. This class
+        can load them all at once and create an `Interferometer` object via the `_interferometer_from` method.
+
+        This class's methods returns generators which create the instances of the `Interferometer` objects. This ensures
+        that large sets of results can be efficiently loaded from the hard-disk and do not require storing all
+        `Interferometer` instances in the memory at once.
+
+        For example, if the `aggregator` contains 3 model-fits, this class can be used to create a generator which
+        creates instances of the corresponding 3 `Interferometer` objects.
+
+        This can be done manually, but this object provides a more concise API.
+
+        Parameters
+        ----------
+        aggregator
+            A `PyAutoFit` aggregator object which can load the results of model-fits.
+        """
         self.aggregator = aggregator
 
     def dataset_gen_from(
@@ -55,19 +98,18 @@ class InterferometerAgg:
         settings_dataset: Optional[aa.SettingsInterferometer] = None,
     ):
         """
-        Returns a generator of `Interferometer` objects from an input aggregator, which generates a list of the
-        `Interferometer` objects for every set of results loaded in the aggregator.
+        Returns a generator of `Interferometer` objects from an input aggregator.
 
-        This is performed by mapping the `interferometer_from_agg_obj` with the aggregator, which sets up each
-        interferometer object using only generators ensuring that manipulating the interferometer objects of large
-        sets of results is done in a memory efficient  way.
+        See `__init__` for a description of how the `Interferometer` objects are created by this method.
+
+        The settings can be overwritten by inputting a `settings_dataset` object, for example if you want to use a grid
+        with a different level of sub-griding.
 
         Parameters
         ----------
-        aggregator : ImaginAggregator
-            A PyAutoFit aggregator object containing the results of model-fits.
+        settings_dataset
+            Optionally overwrite the `SettingsInterferometer` of the `Interferometer` object that is created from the fit.
         """
-
         func = partial(
             _interferometer_from,
             real_space_mask=real_space_mask,

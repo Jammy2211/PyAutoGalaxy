@@ -45,5 +45,6 @@ def test__dataset_generator_from_aggregator(imaging_7x7, mask_2d_7x7, samples, m
         assert isinstance(dataset.grid_pixelization, ag.Grid2DIterate)
         assert dataset.grid.sub_steps == [2]
         assert dataset.grid.fractional_accuracy == 0.5
+        assert isinstance(dataset.settings, ag.SettingsImaging)
 
     clean(database_file=database_file, result_path=result_path)
