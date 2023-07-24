@@ -5,19 +5,32 @@ import autofit as af
 import autoarray as aa
 
 
-def _imaging_from(fit: af.Fit, settings_dataset: Optional[aa.SettingsImaging] = None):
+def _imaging_from(fit: af.Fit, settings_dataset: Optional[aa.SettingsImaging] = None) -> aa.Imaging:
     """
-    Returns a `Imaging` object from an aggregator's `SearchOutput` class, which we call an 'agg_obj' to describe
-    that it acts as the aggregator object for one result in the `Aggregator`. This uses the aggregator's generator
-    outputs such that the function can use the `Aggregator`'s map function to create a `Imaging` generator.
+    Returns a `Imaging` object from a `PyAutoFit` sqlite database `Fit` object.
 
-     The `Imaging` is created following the same method as the PyAutoGalaxy `Search` classes, including using the
-    `SettingsImaging` instance output by the Search to load inputs of the `Imaging` (e.g. psf_shape_2d).
+    The results of a model-fit can be stored in an sqlite database, including the following attributes of the fit:
+
+    - The imaging data as a .fits file (`dataset/data.fits`).
+    - The noise-map as a .fits file (`dataset/noise_map.fits`).
+    - The point spread function as a .fits file (`dataset/psf.fits`).
+    - The settings of the `Imaging` data structure used in the fit (`dataset/settings.json`).
+    - The mask used to mask the `Imaging` data structure in the fit (`dataset/mask.fits`).
+
+    Each individual attribute can be loaded from the database via the `fit.value()` method.
+
+    This method combines all of these attributes and returns a `Imaging` object, has the mask applied to the
+    `Imaging` data structure and its settings updated to the values used by the model-fit.
+
+    The settings can be overwritten by inputting a `settings_dataset` object, for example if you want to use a grid
+    with a different level of sub-griding.
 
     Parameters
     ----------
     fit
-        A PyAutoFit aggregator's SearchOutput object containing the generators of the results of model-fits.
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
+    settings_dataset
+        Optionally overwrite the `SettingsImaging` of the `Imaging` object that is created from the fit.
     """
 
     data = aa.Array2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.data"))
@@ -37,9 +50,8 @@ def _imaging_from(fit: af.Fit, settings_dataset: Optional[aa.SettingsImaging] = 
     )
 
     mask = aa.Mask2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.mask"))
-    dataset = dataset.apply_mask(mask=mask)
 
-    return dataset
+    return dataset.apply_mask(mask=mask)
 
 
 class ImagingAgg:
