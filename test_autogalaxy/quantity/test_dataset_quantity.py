@@ -120,35 +120,35 @@ def test__vector_data__y_x():
     assert (dataset_quantity.x.noise_map.slim == np.array([5.1, 6.1, 7.1, 8.1])).all()
 
 
-@pytest.fixture(name="output_data_path")
-def make_output_data_path():
-    output_data_path = path.join(
+@pytest.fixture(name="test_data_path")
+def make_test_data_path():
+    test_data_path = path.join(
         "{}".format(os.path.dirname(os.path.realpath(__file__))),
         "files",
         "array",
         "output_test",
     )
 
-    if os.path.exists(output_data_path):
-        shutil.rmtree(output_data_path)
+    if os.path.exists(test_data_path):
+        shutil.rmtree(test_data_path)
 
-    os.makedirs(output_data_path)
+    os.makedirs(test_data_path)
 
-    return output_data_path
+    return test_data_path
 
 
-def test__output_to_fits(dataset_quantity_7x7_array_2d, output_data_path):
+def test__output_to_fits(dataset_quantity_7x7_array_2d, test_data_path):
     dataset_quantity_7x7_array_2d.output_to_fits(
-        data_path=path.join(output_data_path, "data.fits"),
-        noise_map_path=path.join(output_data_path, "noise_map.fits"),
+        data_path=path.join(test_data_path, "data.fits"),
+        noise_map_path=path.join(test_data_path, "noise_map.fits"),
         overwrite=True,
     )
 
     data = ag.Array2D.from_fits(
-        file_path=path.join(output_data_path, "data.fits"), hdu=0, pixel_scales=1.0
+        file_path=path.join(test_data_path, "data.fits"), hdu=0, pixel_scales=1.0
     )
     noise_map = ag.Array2D.from_fits(
-        file_path=path.join(output_data_path, "noise_map.fits"), hdu=0, pixel_scales=1.0
+        file_path=path.join(test_data_path, "noise_map.fits"), hdu=0, pixel_scales=1.0
     )
 
     assert (data.native == np.ones((7, 7))).all()
@@ -169,13 +169,13 @@ def test__output_to_fits(dataset_quantity_7x7_array_2d, output_data_path):
     dataset_quantity = ag.DatasetQuantity(data=data, noise_map=noise_map)
 
     dataset_quantity.output_to_fits(
-        data_path=path.join(output_data_path, "data.fits"),
-        noise_map_path=path.join(output_data_path, "noise_map.fits"),
+        data_path=path.join(test_data_path, "data.fits"),
+        noise_map_path=path.join(test_data_path, "noise_map.fits"),
         overwrite=True,
     )
 
     data = ag.Array2D.from_fits(
-        file_path=path.join(output_data_path, "data.fits"), hdu=0, pixel_scales=1.0
+        file_path=path.join(test_data_path, "data.fits"), hdu=0, pixel_scales=1.0
     )
 
     assert data[0, 0] == pytest.approx([1.0, 5.0], 1.0e-4)

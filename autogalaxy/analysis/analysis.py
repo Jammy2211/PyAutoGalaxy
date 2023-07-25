@@ -460,6 +460,7 @@ class AnalysisDataset(Analysis):
 
         adapt_path = paths._files_path / "adapt"
 
+
         if self.adapt_model_image is not None:
             self.adapt_model_image.output_to_fits(
                 file_path=adapt_path / "adapt_model_image.fits", overwrite=True
@@ -471,6 +472,9 @@ class AnalysisDataset(Analysis):
                     file_path=adapt_path / f"{key}.fits",
                     overwrite=True,
                 )
+
+            with af.util.open_(adapt_path / "adapt_galaxy_keys.json", "w") as f:
+                json.dump([str(key) for key, value in self.adapt_galaxy_image_path_dict.items()], f)
 
     def check_and_replace_adapt_images(self, paths: af.DirectoryPaths):
         """

@@ -20,8 +20,8 @@ def clean(database_file, result_path):
 def make_model():
     return af.Collection(
         galaxies=af.Collection(
-            lens=af.Model(ag.Galaxy, redshift=0.5, light=ag.lp.Sersic),
-            source=af.Model(ag.Galaxy, redshift=1.0, light=ag.lp.Sersic),
+            g0=af.Model(ag.Galaxy, redshift=0.5, light=ag.lp.Sersic),
+            g1=af.Model(ag.Galaxy, redshift=1.0, light=ag.lp.Sersic),
         )
     )
 
