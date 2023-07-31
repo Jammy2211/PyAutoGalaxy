@@ -419,9 +419,7 @@ class AnalysisDataset(Analysis):
 
         For this analysis the following are output:
 
-        - The dataset's data.
-        - The dataset's noise-map.
-        - The settings associated with the dataset.
+        - The dataset (data / noise-map / settings / etc.).
         - The settings associated with the inversion.
         - The settings associated with the pixelization.
         - The Cosmology.

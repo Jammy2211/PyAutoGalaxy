@@ -43,11 +43,10 @@ def test__plane_randomly_drawn_via_pdf_gen_from(masked_imaging_7x7, adapt_model_
             assert plane.galaxies[0].light.centre == (10.0, 10.0)
             assert plane.galaxies[1].redshift == 1.0
 
-            print(plane.galaxies[0].adapt_model_image)
-            print(adapt_model_image_7x7)
 
             assert (plane.galaxies[0].adapt_model_image == adapt_model_image_7x7).all()
-            assert (plane.galaxies[0].adapt_galaxy_image_path_dict["(g0),"] == adapt_galaxy_image_path_dict_7x7["(g0),"]).all()
+            assert (plane.galaxies[0].adapt_galaxy_image == adapt_galaxy_image_path_dict_7x7["('galaxies', 'g0')"]).all()
+            assert (plane.galaxies[1].adapt_galaxy_image == adapt_galaxy_image_path_dict_7x7["('galaxies', 'g1')"]).all()
 
     assert i == 2
 

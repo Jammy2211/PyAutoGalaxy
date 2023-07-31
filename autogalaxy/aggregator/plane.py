@@ -46,21 +46,12 @@ def galaxies_with_adapt_images_from(fit: af.Fit, galaxies: List[Galaxy]):
 
     for galaxy_path, galaxy in zip(galaxy_path_list, galaxies):
 
-        print(galaxy_path, galaxy)
-        dfdsfs
-
-        if galaxy_path in adapt_galaxy_image_path_dict:
-
-            print(galaxy_path)
-            dsdfsd
+        if str(galaxy_path) in adapt_galaxy_image_path_dict:
 
             galaxy.adapt_model_image = adapt_model_image
-            galaxy.adapt_galaxy_image = adapt_galaxy_image_path_dict[galaxy_path]
+            galaxy.adapt_galaxy_image = adapt_galaxy_image_path_dict[str(galaxy_path)]
 
         galaxies_with_adapt.append(galaxy)
-
-    print(galaxies_with_adapt[0].adapt_model_image)
-    print(adapt_model_image)
 
     return galaxies_with_adapt
 

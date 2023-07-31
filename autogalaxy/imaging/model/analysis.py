@@ -362,9 +362,8 @@ class AnalysisImaging(AnalysisDataset):
 
          For this analysis, it uses the `AnalysisDataset` object's method to output the following:
 
-         - The dataset's data.
-         - The dataset's noise-map.
-         - The settings associated with the dataset.
+         - The imaging dataset (data / noise-map / settings / psf / etc.).
+         - The mask applied to the dataset.
          - The settings associated with the inversion.
          - The settings associated with the pixelization.
          - The Cosmology.
@@ -383,8 +382,8 @@ class AnalysisImaging(AnalysisDataset):
          Parameters
          ----------
          paths
-             The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
-             and the pickled objects used by the aggregator output by this function.
+             The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+             visualization, and the pickled objects used by the aggregator output by this function.
         """
         super().save_attributes(paths=paths)
 

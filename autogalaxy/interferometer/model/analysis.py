@@ -369,9 +369,8 @@ class AnalysisInterferometer(AnalysisDataset):
 
          For this analysis, it uses the `AnalysisDataset` object's method to output the following:
 
-         - The dataset's data.
-         - The dataset's noise-map.
-         - The settings associated with the dataset.
+         - The interferometer dataset (data / noise-map / uv-wavelengths / settings / etc.).
+         - The real space mask defining how the images appear in real-space and used for the FFT.
          - The settings associated with the inversion.
          - The settings associated with the pixelization.
          - The Cosmology.
