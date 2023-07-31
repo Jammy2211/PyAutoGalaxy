@@ -199,7 +199,6 @@ def make_adapt_galaxy_image_0_7x7():
 
 
 def make_adapt_galaxy_image_path_dict_7x7():
-
     adapt_galaxy_image_path_dict = {
         "('galaxies', 'g0')": make_adapt_galaxy_image_0_7x7(),
         "('galaxies', 'g1')": make_adapt_galaxy_image_1_7x7(),

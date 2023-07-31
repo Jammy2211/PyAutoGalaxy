@@ -12,13 +12,16 @@ from autogalaxy.aggregator.abstract import AbstractAgg
 
 
 def galaxies_with_adapt_images_from(fit: af.Fit, galaxies: List[Galaxy]):
-
     from autogalaxy.galaxy.galaxy import Galaxy
 
-    adapt_model_image = aa.Array2D.from_primary_hdu(primary_hdu=fit.value(name="adapt.adapt_model_image"))
+    adapt_model_image = fit.value(name="adapt.adapt_model_image")
 
     if adapt_model_image is None:
         return galaxies
+
+    adapt_model_image = aa.Array2D.from_primary_hdu(
+        primary_hdu=adapt_model_image
+    )
 
     mask = aa.Mask2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.mask"))
 
@@ -29,9 +32,12 @@ def galaxies_with_adapt_images_from(fit: af.Fit, galaxies: List[Galaxy]):
     adapt_galaxy_image_path_dict = {}
 
     for key in adapt_galaxy_keys:
-
-        adapt_galaxy_image_path_dict[key] = aa.Array2D.from_primary_hdu(primary_hdu=fit.value(name=f"adapt.{key}"))
-        adapt_galaxy_image_path_dict[key] = adapt_galaxy_image_path_dict[key].apply_mask(mask=mask)
+        adapt_galaxy_image_path_dict[key] = aa.Array2D.from_primary_hdu(
+            primary_hdu=fit.value(name=f"adapt.{key}")
+        )
+        adapt_galaxy_image_path_dict[key] = adapt_galaxy_image_path_dict[
+            key
+        ].apply_mask(mask=mask)
 
     # TODO : Understand why fit.instance.path_instance_tuples_for_class(Galaxy) does not work because
     # TODO : it is a Plane opbject.
@@ -45,9 +51,7 @@ def galaxies_with_adapt_images_from(fit: af.Fit, galaxies: List[Galaxy]):
     galaxies_with_adapt = []
 
     for galaxy_path, galaxy in zip(galaxy_path_list, galaxies):
-
         if str(galaxy_path) in adapt_galaxy_image_path_dict:
-
             galaxy.adapt_model_image = adapt_model_image
             galaxy.adapt_galaxy_image = adapt_galaxy_image_path_dict[str(galaxy_path)]
 
