@@ -64,10 +64,13 @@ def test__plane_randomly_drawn_via_pdf_gen_from(
     clean(database_file=database_file, result_path=result_path)
 
 
-
-
-def test__plane_all_above_weight_gen(masked_imaging_7x7,     adapt_model_image_7x7,
-    adapt_galaxy_image_path_dict_7x7,samples, model):
+def test__plane_all_above_weight_gen(
+    masked_imaging_7x7,
+    adapt_model_image_7x7,
+    adapt_galaxy_image_path_dict_7x7,
+    samples,
+    model,
+):
     path_prefix = "aggregator_plane_gen"
 
     database_file = path.join(conf.instance.output_path, "plane.sqlite")
@@ -104,7 +107,9 @@ def test__plane_all_above_weight_gen(masked_imaging_7x7,     adapt_model_image_7
                 assert plane.galaxies[0].light.centre == (1.0, 1.0)
                 assert plane.galaxies[1].redshift == 1.0
 
-                assert (plane.galaxies[0].adapt_model_image == adapt_model_image_7x7).all()
+                assert (
+                    plane.galaxies[0].adapt_model_image == adapt_model_image_7x7
+                ).all()
                 assert (
                     plane.galaxies[0].adapt_galaxy_image
                     == adapt_galaxy_image_path_dict_7x7["('galaxies', 'g0')"]
@@ -129,4 +134,3 @@ def test__plane_all_above_weight_gen(masked_imaging_7x7,     adapt_model_image_7
     assert i == 2
 
     clean(database_file=database_file, result_path=result_path)
-
