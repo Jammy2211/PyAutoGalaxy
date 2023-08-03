@@ -95,8 +95,8 @@ def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> Plane:
 
     Each individual attribute can be loaded from the database via the `fit.value()` method.
 
-    This method combines all of these attributes and returns a `Plane` object, including associate adapt images
-    with their respective galaxies.
+    This method combines all of these attributes and returns a `Plane` object for a given non-linear search sample
+    (e.g. the maximum likelihood model). This includes associating adapt images with their respective galaxies.
 
     Parameters
     ----------
