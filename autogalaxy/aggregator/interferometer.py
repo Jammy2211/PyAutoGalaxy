@@ -1,5 +1,5 @@
 from functools import partial
-from typing import Optional
+from typing import List, Optional
 
 import autofit as af
 import autoarray as aa
@@ -9,7 +9,7 @@ def _interferometer_from(
     fit: af.Fit,
     real_space_mask: Optional[aa.Mask2D] = None,
     settings_dataset: Optional[aa.SettingsInterferometer] = None,
-):
+) -> List[aa.Interferometer]:
     """
     Returns an `Interferometer` object from a `PyAutoFit` sqlite database `Fit` object.
 
@@ -26,6 +26,10 @@ def _interferometer_from(
     This method combines all of these attributes and returns a `Interferometer` object, including having its
     settings updated to the values used by the model-fit.
 
+    If multiple `Interferometer` objects were fitted simultaneously via analysis summing, the `fit.child_values()`
+    method is instead used to load lists of the data, noise-map, PSF and mask and combine them into a list of
+    `Interferometer` objects.
+
     The settings can be overwritten by inputting a `settings_dataset` object, for example if you want to use a grid
     with a different level of sub-griding.
 
@@ -37,26 +41,38 @@ def _interferometer_from(
         Optionally overwrite the `SettingsInterferometer` of the `Interferometer` object that is created from the fit.
     """
 
-    data = aa.Visibilities(
-        visibilities=fit.value(name="dataset.data").data.astype("float")
-    )
-    noise_map = aa.VisibilitiesNoiseMap(
-        fit.value(name="dataset.noise_map").data.astype("float")
-    )
-    uv_wavelengths = fit.value(name="dataset.uv_wavelengths").data
-    real_space_mask = real_space_mask or aa.Mask2D.from_primary_hdu(
-        primary_hdu=fit.value(name="dataset.real_space_mask")
-    )
-    settings_dataset = settings_dataset or fit.value(name="dataset.settings")
+    fit_list = [fit] if not fit.children else fit.children
 
-    dataset = aa.Interferometer(
-        data=data,
-        noise_map=noise_map,
-        uv_wavelengths=uv_wavelengths,
-        real_space_mask=real_space_mask,
-    )
+    dataset_list = []
 
-    return dataset.apply_settings(settings=settings_dataset)
+    for fit in fit_list:
+
+        data = aa.Visibilities(
+            visibilities=fit.value(name="dataset.data").data.astype("float")
+        )
+        noise_map = aa.VisibilitiesNoiseMap(
+            fit.value(name="dataset.noise_map").data.astype("float")
+        )
+        uv_wavelengths = fit.value(name="dataset.uv_wavelengths").data
+
+
+        real_space_mask = real_space_mask if real_space_mask is not None else aa.Mask2D.from_primary_hdu(
+            primary_hdu=fit.value(name="dataset.real_space_mask")
+        )
+        settings_dataset = settings_dataset or fit.value(name="dataset.settings")
+    
+        dataset = aa.Interferometer(
+            data=data,
+            noise_map=noise_map,
+            uv_wavelengths=uv_wavelengths,
+            real_space_mask=real_space_mask,
+        )
+
+        dataset = dataset.apply_settings(settings=settings_dataset)
+
+        dataset_list.append(dataset)
+    
+    return dataset_list
 
 
 class InterferometerAgg:
@@ -83,6 +99,10 @@ class InterferometerAgg:
         For example, if the `aggregator` contains 3 model-fits, this class can be used to create a generator which
         creates instances of the corresponding 3 `Interferometer` objects.
 
+        If multiple `Interferometer` objects were fitted simultaneously via analysis summing, the `fit.child_values()`
+        method is instead used to load lists of the data, noise-map, PSF and mask and combine them into a list of
+        `Interferometer` objects.
+
         This can be done manually, but this object provides a more concise API.
 
         Parameters
@@ -96,7 +116,7 @@ class InterferometerAgg:
         self,
         real_space_mask: Optional[aa.Mask2D] = None,
         settings_dataset: Optional[aa.SettingsInterferometer] = None,
-    ):
+    ) -> List[aa.Interferometer]:
         """
         Returns a generator of `Interferometer` objects from an input aggregator.
 
