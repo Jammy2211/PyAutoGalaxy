@@ -63,11 +63,8 @@ def galaxies_with_adapt_images_from(
             key
         ].apply_mask(mask=mask)
 
-    # TODO : Understand why fit.instance.path_instance_tuples_for_class(Galaxy) does not work because
-    # TODO : it is a Plane opbject.
-    # TODO : The code below used to be fit.instance.path_instance_tuples_for_class(Galaxy)
-
-    instance = fit.model.instance_from_prior_medians(ignore_prior_limits=True)
+    model = fit.value(name="model")
+    instance = model.instance_from_prior_medians(ignore_prior_limits=True)
     galaxy_path_list = [
         gal[0] for gal in instance.path_instance_tuples_for_class(Galaxy)
     ]
