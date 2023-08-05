@@ -1,5 +1,5 @@
 from functools import partial
-from typing import Optional
+from typing import List, Optional
 
 import autofit as af
 import autoarray as aa
@@ -7,9 +7,9 @@ import autoarray as aa
 
 def _imaging_from(
     fit: af.Fit, settings_dataset: Optional[aa.SettingsImaging] = None
-) -> aa.Imaging:
+) -> List[aa.Imaging]:
     """
-    Returns an `Imaging` object from a `PyAutoFit` sqlite database `Fit` object.
+    Returns a list of `Imaging` objects from a `PyAutoFit` sqlite database `Fit` object.
 
     The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
 
@@ -24,6 +24,10 @@ def _imaging_from(
     This method combines all of these attributes and returns a `Imaging` object, has the mask applied to the
     `Imaging` data structure and its settings updated to the values used by the model-fit.
 
+    If multiple `Imaging` objects were fitted simultaneously via analysis summing, the `fit.child_values()` method
+    is instead used to load lists of the data, noise-map, PSF and mask and combine them into a list of
+    `Imaging` objects.
+
     The settings can be overwritten by inputting a `settings_dataset` object, for example if you want to use a grid
     with a different level of sub-griding.
 
@@ -35,25 +39,35 @@ def _imaging_from(
         Optionally overwrite the `SettingsImaging` of the `Imaging` object that is created from the fit.
     """
 
-    data = aa.Array2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.data"))
-    noise_map = aa.Array2D.from_primary_hdu(
-        primary_hdu=fit.value(name="dataset.noise_map")
-    )
-    psf = aa.Kernel2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.psf"))
+    fit_list = [fit] if not fit.children else fit.children
 
-    settings_dataset = settings_dataset or fit.value(name="dataset.settings")
+    dataset_list = []
 
-    dataset = aa.Imaging(
-        data=data,
-        noise_map=noise_map,
-        psf=psf,
-        settings=settings_dataset,
-        check_noise_map=False,
-    )
+    for fit in fit_list:
 
-    mask = aa.Mask2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.mask"))
+        data = aa.Array2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.data"))
+        noise_map = aa.Array2D.from_primary_hdu(
+            primary_hdu=fit.value(name="dataset.noise_map")
+        )
+        psf = aa.Kernel2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.psf"))
 
-    return dataset.apply_mask(mask=mask)
+        settings_dataset = settings_dataset or fit.value(name="dataset.settings")
+
+        dataset = aa.Imaging(
+            data=data,
+            noise_map=noise_map,
+            psf=psf,
+            settings=settings_dataset,
+            check_noise_map=False,
+        )
+
+        mask = aa.Mask2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.mask"))
+
+        dataset = dataset.apply_mask(mask=mask)
+
+        dataset_list.append(dataset)
+
+    return dataset_list
 
 
 class ImagingAgg:
@@ -80,6 +94,10 @@ class ImagingAgg:
         For example, if the `aggregator` contains 3 model-fits, this class can be used to create a generator which
         creates instances of the corresponding 3 `Imaging` objects.
 
+        If multiple `Imaging` objects were fitted simultaneously via analysis summing, the `fit.child_values()` method
+        is instead used to load lists of the data, noise-map, PSF and mask and combine them into a list of
+        `Imaging` objects.
+
         This can be done manually, but this object provides a more concise API.
 
         Parameters
@@ -89,7 +107,7 @@ class ImagingAgg:
         """
         self.aggregator = aggregator
 
-    def dataset_gen_from(self, settings_dataset: Optional[aa.SettingsImaging] = None):
+    def dataset_gen_from(self, settings_dataset: Optional[aa.SettingsImaging] = None) -> List[aa.Imaging]:
         """
         Returns a generator of `Imaging` objects from an input aggregator.
 
