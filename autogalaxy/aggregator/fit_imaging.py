@@ -21,7 +21,7 @@ def _fit_imaging_from(
     settings_pixelization: aa.SettingsPixelization = None,
     settings_inversion: aa.SettingsInversion = None,
     use_preloaded_grid: bool = True,
-) -> FitImaging:
+) -> List[FitImaging]:
     """
     Returns an `FitImaging` object from a `PyAutoFit` sqlite database `Fit` object.
 
@@ -36,6 +36,10 @@ def _fit_imaging_from(
 
     This method combines all of these attributes and returns a `FitImaging` object for a given non-linear search sample
     (e.g. the maximum likelihood model). This includes associating adapt images with their respective galaxies.
+
+    If multiple `Imaging` objects were fitted simultaneously via analysis summing, the `fit.child_values()` method
+    is instead used to load lists of the data, noise-map, PSF and mask and combine them into a list of
+    `FitImaging` objects.
 
     The settings of a pixelization of inversion can be overwritten by inputting a `settings_dataset` object, for example
     if you want to use a grid with a different inversion solver.
@@ -60,7 +64,7 @@ def _fit_imaging_from(
 
     from autogalaxy.imaging.fit_imaging import FitImaging
 
-    dataset = _imaging_from(fit=fit, settings_dataset=settings_dataset)
+    dataset_list = _imaging_from(fit=fit, settings_dataset=settings_dataset)
 
     plane = _plane_from(fit=fit, galaxies=galaxies)
 
@@ -72,28 +76,44 @@ def _fit_imaging_from(
     preloads = Preloads(use_w_tilde=False)
 
     if use_preloaded_grid:
-        sparse_grids_of_planes = fit.value(name="preload_sparse_grids_of_planes")
+        if not fit.children:
+            sparse_grids_of_planes_list = [fit.value(name="preload_sparse_grids_of_planes")]
+        else:
+            try:
+                sparse_grids_of_planes_list = fit.child_values(name="preload_sparse_grids_of_planes")
+            except AttributeError:
+                sparse_grids_of_planes_list = [None] * len(dataset_list)
+    else:
+        sparse_grids_of_planes_list = [None] * len(dataset_list)
 
-        if sparse_grids_of_planes is not None:
-            preloads = Preloads(
-                sparse_image_plane_grid_pg_list=sparse_grids_of_planes,
-                use_w_tilde=False,
-            )
+    fit_dataset_list = []
 
-            if len(preloads.sparse_image_plane_grid_pg_list) == 2:
-                if type(preloads.sparse_image_plane_grid_pg_list[1]) != list:
-                    preloads.sparse_image_plane_grid_pg_list[1] = [
-                        preloads.sparse_image_plane_grid_pg_list[1]
-                    ]
+    for dataset, sparse_grids_of_planes in zip(dataset_list, sparse_grids_of_planes_list):
 
-    return FitImaging(
-        dataset=dataset,
-        plane=plane,
-        settings_pixelization=settings_pixelization,
-        settings_inversion=settings_inversion,
-        preloads=preloads,
+        if use_preloaded_grid:
+
+            if sparse_grids_of_planes is not None:
+                preloads = Preloads(
+                    sparse_image_plane_grid_pg_list=sparse_grids_of_planes,
+                    use_w_tilde=False,
+                )
+
+                if len(preloads.sparse_image_plane_grid_pg_list) == 2:
+                    if type(preloads.sparse_image_plane_grid_pg_list[1]) != list:
+                        preloads.sparse_image_plane_grid_pg_list[1] = [
+                            preloads.sparse_image_plane_grid_pg_list[1]
+                        ]
+
+        fit_dataset_list.append(FitImaging(
+            dataset=dataset,
+            plane=plane,
+            settings_pixelization=settings_pixelization,
+            settings_inversion=settings_inversion,
+            preloads=preloads,
+        )
     )
 
+    return fit_dataset_list
 
 class FitImagingAgg(AbstractAgg):
     def __init__(
@@ -125,6 +145,10 @@ class FitImagingAgg(AbstractAgg):
         For example, if the `aggregator` contains 3 model-fits, this class can be used to create a generator which
         creates instances of the corresponding 3 `FitImaging` objects.
 
+        If multiple `Imaging` objects were fitted simultaneously via analysis summing, the `fit.child_values()` method
+        is instead used to load lists of the data, noise-map, PSF and mask and combine them into a list of
+        `FitImaging` objects.
+
         This can be done manually, but this object provides a more concise API.
 
         Parameters
@@ -149,7 +173,7 @@ class FitImagingAgg(AbstractAgg):
         self.settings_inversion = settings_inversion
         self.use_preloaded_grid = use_preloaded_grid
 
-    def object_via_gen_from(self, fit, galaxies) -> FitImaging:
+    def object_via_gen_from(self, fit, galaxies) -> List[FitImaging]:
         """
         Returns a generator of `FitImaging` objects from an input aggregator.
 
