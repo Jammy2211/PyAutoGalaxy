@@ -25,10 +25,9 @@ class SetupAdapt:
             The dictionary of search options for the adapt inversion model-fit searches.
         """
 
-        self.search_pix_cls = search_pix_cls or af.DynestyStatic
+        self.search_pix_cls = search_pix_cls or af.Nautilus
         self.search_pix_dict = search_pix_dict or {
-            "nlive": 50,
-            "sample": "rwalk",
+            "n_live": 75,
         }
 
         self.mesh_pixels_fixed = mesh_pixels_fixed

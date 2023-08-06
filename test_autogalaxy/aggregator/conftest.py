@@ -3,17 +3,43 @@ from os import path
 import os
 import shutil
 
+from autoconf import conf
 import autofit as af
 import autogalaxy as ag
 from autofit.non_linear.samples import Sample
 
 
-def clean(database_file, result_path):
-    if path.exists(database_file):
-        os.remove(database_file)
+def clean(database_file):
+
+    database_sqlite = path.join(conf.instance.output_path, f"{database_file}.sqlite")
+
+    if path.exists(database_sqlite):
+        os.remove(database_sqlite)
+
+    result_path = path.join(conf.instance.output_path, database_file)
 
     if path.exists(result_path):
         shutil.rmtree(result_path)
+
+
+def aggregator_from(database_file, analysis, model, samples):
+
+    result_path = path.join(conf.instance.output_path, database_file)
+
+    clean(database_file=database_file)
+
+    search = ag.m.MockSearch(
+        samples=samples, result=ag.m.MockResult(model=model, samples=samples)
+    )
+    search.paths = af.DirectoryPaths(path_prefix=database_file)
+    search.fit(model=model, analysis=analysis)
+
+    database_file = path.join(conf.instance.output_path, f"{database_file}.sqlite")
+
+    agg = af.Aggregator.from_database(filename=database_file)
+    agg.add_directory(directory=result_path)
+
+    return agg
 
 
 @pytest.fixture(name="model")

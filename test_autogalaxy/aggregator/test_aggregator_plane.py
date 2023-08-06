@@ -1,12 +1,9 @@
-from os import path
-
-from autoconf import conf
-import autofit as af
 import autogalaxy as ag
 
 
-from test_autogalaxy.aggregator.conftest import clean
+from test_autogalaxy.aggregator.conftest import clean, aggregator_from
 
+database_file = "db_plane"
 
 def test__plane_randomly_drawn_via_pdf_gen_from(
     masked_imaging_7x7,
@@ -15,26 +12,19 @@ def test__plane_randomly_drawn_via_pdf_gen_from(
     samples,
     model,
 ):
-    path_prefix = "aggregator_plane_gen"
+    clean(database_file=database_file)
 
-    database_file = path.join(conf.instance.output_path, "plane.sqlite")
-    result_path = path.join(conf.instance.output_path, path_prefix)
-
-    clean(database_file=database_file, result_path=result_path)
-
-    search = ag.m.MockSearch(
-        samples=samples, result=ag.m.MockResult(model=model, samples=samples)
-    )
-    search.paths = af.DirectoryPaths(path_prefix=path_prefix)
     analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
 
     analysis.adapt_model_image = adapt_model_image_7x7
     analysis.adapt_galaxy_image_path_dict = adapt_galaxy_image_path_dict_7x7
 
-    search.fit(model=model, analysis=analysis)
-
-    agg = af.Aggregator.from_database(filename=database_file)
-    agg.add_directory(directory=result_path)
+    agg = aggregator_from(
+        database_file=database_file,
+        analysis=analysis,
+        model=model,
+        samples=samples,
+    )
 
     plane_agg = ag.agg.PlaneAgg(aggregator=agg)
     plane_pdf_gen = plane_agg.randomly_drawn_via_pdf_gen_from(total_samples=2)
@@ -61,7 +51,7 @@ def test__plane_randomly_drawn_via_pdf_gen_from(
 
     assert i == 2
 
-    clean(database_file=database_file, result_path=result_path)
+    clean(database_file=database_file)
 
 
 def test__plane_all_above_weight_gen(
@@ -71,26 +61,20 @@ def test__plane_all_above_weight_gen(
     samples,
     model,
 ):
-    path_prefix = "aggregator_plane_gen"
 
-    database_file = path.join(conf.instance.output_path, "plane.sqlite")
-    result_path = path.join(conf.instance.output_path, path_prefix)
+    clean(database_file=database_file)
 
-    clean(database_file=database_file, result_path=result_path)
-
-    search = ag.m.MockSearch(
-        samples=samples, result=ag.m.MockResult(model=model, samples=samples)
-    )
-    search.paths = af.DirectoryPaths(path_prefix=path_prefix)
     analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
 
     analysis.adapt_model_image = adapt_model_image_7x7
     analysis.adapt_galaxy_image_path_dict = adapt_galaxy_image_path_dict_7x7
 
-    search.fit(model=model, analysis=analysis)
-
-    agg = af.Aggregator.from_database(filename=database_file)
-    agg.add_directory(directory=result_path)
+    agg = aggregator_from(
+        database_file=database_file,
+        analysis=analysis,
+        model=model,
+        samples=samples,
+    )
 
     plane_agg = ag.agg.PlaneAgg(aggregator=agg)
     plane_pdf_gen = plane_agg.all_above_weight_gen_from(minimum_weight=-1.0)
@@ -133,4 +117,4 @@ def test__plane_all_above_weight_gen(
 
     assert i == 2
 
-    clean(database_file=database_file, result_path=result_path)
+    clean(database_file=database_file)

@@ -1,11 +1,8 @@
-from os import path
-
-from autoconf import conf
-import autofit as af
 import autogalaxy as ag
 
-from test_autogalaxy.aggregator.conftest import clean
+from test_autogalaxy.aggregator.conftest import clean, aggregator_from
 
+database_file = "db_interferometer"
 
 def test__interferometer_generator_from_aggregator__analysis_has_single_dataset(
     visibilities_7,
@@ -15,12 +12,6 @@ def test__interferometer_generator_from_aggregator__analysis_has_single_dataset(
     samples,
     model,
 ):
-    path_prefix = "aggregator_interferometer"
-
-    database_file = path.join(conf.instance.output_path, "interferometer.sqlite")
-    result_path = path.join(conf.instance.output_path, path_prefix)
-
-    clean(database_file=database_file, result_path=result_path)
 
     interferometer_7 = ag.Interferometer(
         data=visibilities_7,
@@ -36,15 +27,14 @@ def test__interferometer_generator_from_aggregator__analysis_has_single_dataset(
         ),
     )
 
-    search = ag.m.MockSearch(samples=samples)
-    search.paths = af.DirectoryPaths(path_prefix=path_prefix)
-
     analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
 
-    search.fit(model=model, analysis=analysis)
-
-    agg = af.Aggregator.from_database(filename=database_file)
-    agg.add_directory(directory=result_path)
+    agg = aggregator_from(
+        database_file=database_file,
+        analysis=analysis,
+        model=model,
+        samples=samples,
+    )
 
     dataset_agg = ag.agg.InterferometerAgg(aggregator=agg)
     dataset_gen = dataset_agg.dataset_gen_from()
@@ -59,7 +49,7 @@ def test__interferometer_generator_from_aggregator__analysis_has_single_dataset(
         assert isinstance(dataset_list[0].transformer, ag.TransformerDFT)
         assert isinstance(dataset_list[0].settings, ag.SettingsInterferometer)
 
-    clean(database_file=database_file, result_path=result_path)
+    clean(database_file=database_file)
 
 
 def test__interferometer_generator_from_aggregator__analysis_multi(
@@ -67,22 +57,12 @@ def test__interferometer_generator_from_aggregator__analysis_multi(
     samples,
     model,
 ):
-    path_prefix = "aggregator_interferometer"
-
-    database_file = path.join(conf.instance.output_path, "interferometer.sqlite")
-    result_path = path.join(conf.instance.output_path, path_prefix)
-
-    clean(database_file=database_file, result_path=result_path)
-
-    search = ag.m.MockSearch(samples=samples)
-    search.paths = af.DirectoryPaths(path_prefix=path_prefix)
-
-    analysis = analysis_interferometer_7 + analysis_interferometer_7
-
-    search.fit(model=model, analysis=analysis)
-
-    agg = af.Aggregator.from_database(filename=database_file)
-    agg.add_directory(directory=result_path)
+    agg = aggregator_from(
+        database_file=database_file,
+        analysis=analysis_interferometer_7 + analysis_interferometer_7,
+        model=model,
+        samples=samples,
+    )
 
     dataset_agg = ag.agg.InterferometerAgg(aggregator=agg)
     dataset_gen = dataset_agg.dataset_gen_from()
@@ -92,4 +72,4 @@ def test__interferometer_generator_from_aggregator__analysis_multi(
         assert (dataset_list[0].data == analysis_interferometer_7.dataset.data).all()
         assert (dataset_list[1].data == analysis_interferometer_7.dataset.data).all()
 
-    clean(database_file=database_file, result_path=result_path)
+    clean(database_file=database_file)
