@@ -5,7 +5,6 @@ import pytest
 import shutil
 
 import autogalaxy as ag
-from autogalaxy import exc
 
 
 def test_via_signal_to_noise_map(dataset_quantity_7x7_array_2d, sub_mask_2d_7x7):
