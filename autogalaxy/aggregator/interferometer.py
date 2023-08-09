@@ -11,7 +11,7 @@ def _interferometer_from(
     settings_dataset: Optional[aa.SettingsInterferometer] = None,
 ) -> List[aa.Interferometer]:
     """
-    Returns an `Interferometer` object from a `PyAutoFit` sqlite database `Fit` object.
+    Returns a list of `Interferometer` objects from a `PyAutoFit` sqlite database `Fit` object.
 
     The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
 

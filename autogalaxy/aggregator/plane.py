@@ -10,76 +10,7 @@ import autoarray as aa
 
 from autogalaxy.aggregator.abstract import AbstractAgg
 
-
-def galaxies_with_adapt_images_from(
-    fit: af.Fit, galaxies: List[Galaxy]
-) -> List[Galaxy]:
-    """
-    Associates adaptive images with galaxies when loading the galaxies from a `PyAutoFit` sqlite database `Fit` object.
-
-    The adapt galaxies are stored in the fit's `files/adapt` folder, which includes:
-
-    - The `adapt_model_image` associated with every galaxy (`adapt/adapt_model_image.fits`).
-    - The `adapt_galaxy_image` associated with every galaxy (e.g. `adapt/("galaxies", "g0").fits`).
-    - The `adapt_galaxy_keys` that are used to associate the `adapt_galaxy_image` with each galaxy.
-
-    This function ensures that if adaptive features (e.g. a `VoronoiBrightnessImage` mesh) are used in a model-fit,
-    they work when using the database to load and inspect the results of the model-fit.
-
-    Parameters
-    ----------
-    fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
-    galaxies
-        A list of galaxies corresponding to a sample of a non-linear search and model-fit.
-
-    Returns
-    -------
-    A list of galaxies associated with a sample of the non-linear search with adaptive images associated with them.
-    """
-
-    from autogalaxy.galaxy.galaxy import Galaxy
-
-    adapt_model_image = fit.value(name="adapt.adapt_model_image")
-
-    if adapt_model_image is None:
-        return galaxies
-
-    adapt_model_image = aa.Array2D.from_primary_hdu(primary_hdu=adapt_model_image)
-
-    mask = aa.Mask2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.mask"))
-
-    adapt_model_image = adapt_model_image.apply_mask(mask=mask)
-
-    adapt_galaxy_keys = fit.value(name="adapt.adapt_galaxy_keys")
-
-    adapt_galaxy_image_path_dict = {}
-
-    for key in adapt_galaxy_keys:
-        adapt_galaxy_image_path_dict[key] = aa.Array2D.from_primary_hdu(
-            primary_hdu=fit.value(name=f"adapt.{key}")
-        )
-        adapt_galaxy_image_path_dict[key] = adapt_galaxy_image_path_dict[
-            key
-        ].apply_mask(mask=mask)
-
-    model = fit.value(name="model")
-    instance = model.instance_from_prior_medians(ignore_prior_limits=True)
-    galaxy_path_list = [
-        gal[0] for gal in instance.path_instance_tuples_for_class(Galaxy)
-    ]
-
-    galaxies_with_adapt = []
-
-    for galaxy_path, galaxy in zip(galaxy_path_list, galaxies):
-        if str(galaxy_path) in adapt_galaxy_image_path_dict:
-            galaxy.adapt_model_image = adapt_model_image
-            galaxy.adapt_galaxy_image = adapt_galaxy_image_path_dict[str(galaxy_path)]
-
-        galaxies_with_adapt.append(galaxy)
-
-    return galaxies_with_adapt
-
+from autogalaxy.aggregator import agg_util
 
 def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> Plane:
     """
@@ -105,7 +36,7 @@ def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> Plane:
 
     from autogalaxy.plane.plane import Plane
 
-    galaxies = galaxies_with_adapt_images_from(fit=fit, galaxies=galaxies)
+    galaxies = agg_util.galaxies_with_adapt_images_from(fit=fit, galaxies=galaxies)
 
     return Plane(galaxies=galaxies)
 

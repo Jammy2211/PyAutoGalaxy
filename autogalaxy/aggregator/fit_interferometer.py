@@ -8,9 +8,11 @@ if TYPE_CHECKING:
 import autofit as af
 import autoarray as aa
 
-from autogalaxy.aggregator.interferometer import _interferometer_from
 from autogalaxy.aggregator.abstract import AbstractAgg
 from autogalaxy.analysis.preloads import Preloads
+
+from autogalaxy.aggregator import agg_util
+from autogalaxy.aggregator.interferometer import _interferometer_from
 from autogalaxy.aggregator.plane import _plane_from
 
 
@@ -22,9 +24,9 @@ def _fit_interferometer_from(
     settings_pixelization: aa.SettingsPixelization = None,
     settings_inversion: aa.SettingsInversion = None,
     use_preloaded_grid: bool = True,
-) -> FitInterferometer:
+) -> List[FitInterferometer]:
     """
-    Returns an `FitInterferometer` object from a `PyAutoFit` sqlite database `Fit` object.
+    Returns a list of `FitInterferometer` objects from a `PyAutoFit` sqlite database `Fit` object.
 
     The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
 
@@ -38,6 +40,10 @@ def _fit_interferometer_from(
     This method combines all of these attributes and returns a `FitInterferometer` object for a given non-linear
     search sample (e.g. the maximum likelihood model). This includes associating adapt images with their respective
     galaxies.
+
+    If multiple `FitInterferometer` objects were fitted simultaneously via analysis summing, the `fit.child_values()`
+    method is instead used to load lists of the data, noise-map, PSF and mask and combine them into a list of
+    `FitInterferometer` objects.
 
     The settings of a pixelization of inversion can be overwritten by inputting a `settings_dataset` object, for
     example if you want to use a grid with a different inversion solver.
@@ -61,7 +67,7 @@ def _fit_interferometer_from(
     """
     from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 
-    dataset = _interferometer_from(
+    dataset_list = _interferometer_from(
         fit=fit,
         real_space_mask=real_space_mask,
         settings_dataset=settings_dataset,
@@ -73,21 +79,39 @@ def _fit_interferometer_from(
     )
     settings_inversion = settings_inversion or fit.value(name="settings_inversion")
 
+    sparse_grids_of_planes_list = agg_util.sparse_grids_of_planes_list_from(
+        fit=fit, total_fits=len(dataset_list), use_preloaded_grid=use_preloaded_grid
+    )
+
     preloads = None
 
-    if use_preloaded_grid:
-        sparse_grids_of_planes = fit.value(name="preload_sparse_grids_of_planes")
+    fit_dataset_list = []
 
-        if sparse_grids_of_planes is not None:
-            preloads = Preloads(sparse_image_plane_grid_pg_list=sparse_grids_of_planes)
+    for dataset, sparse_grids_of_planes in zip(dataset_list, sparse_grids_of_planes_list):
 
-    return FitInterferometer(
-        dataset=dataset,
-        plane=plane,
-        settings_pixelization=settings_pixelization,
-        settings_inversion=settings_inversion,
-        preloads=preloads,
+        if use_preloaded_grid:
+
+            if sparse_grids_of_planes is not None:
+                preloads = Preloads(
+                    sparse_image_plane_grid_pg_list=sparse_grids_of_planes,
+                )
+
+                if len(preloads.sparse_image_plane_grid_pg_list) == 2:
+                    if type(preloads.sparse_image_plane_grid_pg_list[1]) != list:
+                        preloads.sparse_image_plane_grid_pg_list[1] = [
+                            preloads.sparse_image_plane_grid_pg_list[1]
+                        ]
+
+        fit_dataset_list.append(FitInterferometer(
+            dataset=dataset,
+            plane=plane,
+            settings_pixelization=settings_pixelization,
+            settings_inversion=settings_inversion,
+            preloads=preloads,
+        )
     )
+
+    return fit_dataset_list
 
 
 class FitInterferometerAgg(AbstractAgg):
@@ -121,6 +145,10 @@ class FitInterferometerAgg(AbstractAgg):
         For example, if the `aggregator` contains 3 model-fits, this class can be used to create a generator which
         creates instances of the corresponding 3 `FitInterferometer` objects.
 
+        If multiple `Imaging` objects were fitted simultaneously via analysis summing, the `fit.child_values()` method
+        is instead used to load lists of the data, noise-map, PSF and mask and combine them into a list of
+        `FitImaging` objects.
+
         This can be done manually, but this object provides a more concise API.
 
         Parameters
@@ -146,7 +174,7 @@ class FitInterferometerAgg(AbstractAgg):
         self.use_preloaded_grid = use_preloaded_grid
         self.real_space_mask = real_space_mask
 
-    def object_via_gen_from(self, fit, galaxies) -> FitInterferometer:
+    def object_via_gen_from(self, fit, galaxies) -> List[FitInterferometer]:
         """
         Returns a generator of `FitInterferometer` objects from an input aggregator.
 

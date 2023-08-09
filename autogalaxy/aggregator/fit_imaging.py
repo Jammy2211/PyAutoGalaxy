@@ -9,9 +9,11 @@ import autofit as af
 import autoarray as aa
 
 from autogalaxy.aggregator.abstract import AbstractAgg
-from autogalaxy.aggregator.imaging import _imaging_from
 from autogalaxy.analysis.preloads import Preloads
+
+from autogalaxy.aggregator.imaging import _imaging_from
 from autogalaxy.aggregator.plane import _plane_from
+from autogalaxy.aggregator import agg_util
 
 
 def _fit_imaging_from(
@@ -23,7 +25,7 @@ def _fit_imaging_from(
     use_preloaded_grid: bool = True,
 ) -> List[FitImaging]:
     """
-    Returns an `FitImaging` object from a `PyAutoFit` sqlite database `Fit` object.
+    Returns a list of `FitImaging` objects from a `PyAutoFit` sqlite database `Fit` object.
 
     The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
 
@@ -37,7 +39,7 @@ def _fit_imaging_from(
     This method combines all of these attributes and returns a `FitImaging` object for a given non-linear search sample
     (e.g. the maximum likelihood model). This includes associating adapt images with their respective galaxies.
 
-    If multiple `Imaging` objects were fitted simultaneously via analysis summing, the `fit.child_values()` method
+    If multiple `FitImaging` objects were fitted simultaneously via analysis summing, the `fit.child_values()` method
     is instead used to load lists of the data, noise-map, PSF and mask and combine them into a list of
     `FitImaging` objects.
 
@@ -75,16 +77,9 @@ def _fit_imaging_from(
 
     preloads = Preloads(use_w_tilde=False)
 
-    if use_preloaded_grid:
-        if not fit.children:
-            sparse_grids_of_planes_list = [fit.value(name="preload_sparse_grids_of_planes")]
-        else:
-            try:
-                sparse_grids_of_planes_list = fit.child_values(name="preload_sparse_grids_of_planes")
-            except AttributeError:
-                sparse_grids_of_planes_list = [None] * len(dataset_list)
-    else:
-        sparse_grids_of_planes_list = [None] * len(dataset_list)
+    sparse_grids_of_planes_list = agg_util.sparse_grids_of_planes_list_from(
+        fit=fit, total_fits=len(dataset_list), use_preloaded_grid=use_preloaded_grid
+    )
 
     fit_dataset_list = []
 
