@@ -301,9 +301,9 @@ def make_plane_x2_gal_7x7():
     return fixtures.make_plane_x2_gal_7x7()
 
 
-@pytest.fixture(name="Planck18")
-def make_Planck18():
-    return fixtures.make_Planck18()
+@pytest.fixture(name="Planck15")
+def make_Planck15():
+    return fixtures.make_Planck15()
 
 
 @pytest.fixture(name="adapt_model_image_7x7")

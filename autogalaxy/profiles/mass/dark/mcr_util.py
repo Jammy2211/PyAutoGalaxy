@@ -3,11 +3,11 @@ from astropy import units
 import numpy as np
 import warnings
 
-from autogalaxy.cosmology.wrap import Planck18
+from autogalaxy.cosmology.wrap import Planck15
 
 
 def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_source):
-    cosmology = Planck18()
+    cosmology = Planck15()
 
     cosmic_average_density = (
         cosmology.critical_density(redshift_object).to(units.solMass / units.kpc**3)
@@ -57,9 +57,9 @@ def kappa_s_and_scale_radius_for_ludlow(
 
     warnings.filterwarnings("ignore")
 
-    cosmology = Planck18()
+    cosmology = Planck15()
 
-    col_cosmo = col_cosmology.setCosmology("Planck18")
+    col_cosmo = col_cosmology.setCosmology("planck15")
     m_input = mass_at_200 * col_cosmo.h
     concentration = col_concentration(
         m_input, "200c", redshift_object, model="ludlow16"

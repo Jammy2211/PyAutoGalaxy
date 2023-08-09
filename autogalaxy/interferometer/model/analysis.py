@@ -10,7 +10,7 @@ from autoarray.exc import PixelizationException
 from autogalaxy.analysis.analysis import AnalysisDataset
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
-from autogalaxy.cosmology.wrap import Planck18
+from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.interferometer.model.result import ResultInterferometer
 from autogalaxy.interferometer.model.visualizer import VisualizerInterferometer
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
@@ -28,7 +28,7 @@ class AnalysisInterferometer(AnalysisDataset):
         self,
         dataset: aa.Interferometer,
         adapt_result: ResultInterferometer = None,
-        cosmology: LensingCosmology = Planck18(),
+        cosmology: LensingCosmology = Planck15(),
         settings_pixelization: aa.SettingsPixelization = None,
         settings_inversion: aa.SettingsInversion = None,
     ):

@@ -140,8 +140,8 @@ def make_plane_x2_galaxy_inversion_7x7():
 # COSMOLOGY #
 
 
-def make_Planck18():
-    return ag.cosmo.Planck18()
+def make_Planck15():
+    return ag.cosmo.Planck15()
 
 
 # QUANTITY DATASET AND FIT #

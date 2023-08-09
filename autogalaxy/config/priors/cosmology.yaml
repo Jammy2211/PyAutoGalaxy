@@ -1,4 +1,4 @@
-model.Planck18FlatwCDM:
+model.Planck15FlatwCDM:
   Om0:
     type: Uniform
     lower_limit: '0.0486'
@@ -19,7 +19,7 @@ model.Planck18FlatwCDM:
     gaussian_limits:
       lower: '-2.0'
       upper: '0.0'
-model.Planck18Om0:
+model.Planck15Om0:
   Om0:
     type: Uniform
     lower_limit: '0.0486'
