@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Tuple
 
-from autogalaxy.cosmology.wrap import Planck15
+from autogalaxy.cosmology.wrap import Planck18
 from autogalaxy.profiles.mass.point.point import PointMass
 
 
@@ -33,7 +33,7 @@ class SMBH(PointMass):
 
         self.mass = mass
 
-        cosmology = Planck15()
+        cosmology = Planck18()
 
         critical_surface_density = (
             cosmology.critical_surface_density_between_redshifts_from(

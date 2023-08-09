@@ -16,7 +16,7 @@ from autogalaxy import exc
 from autogalaxy.analysis.maker import FitMaker
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
-from autogalaxy.cosmology.wrap import Planck15
+from autogalaxy.cosmology.wrap import Planck18
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
 from autogalaxy.analysis.result import ResultDataset
@@ -29,7 +29,7 @@ logger.setLevel(level="INFO")
 
 
 class Analysis(af.Analysis):
-    def __init__(self, cosmology: LensingCosmology = Planck15):
+    def __init__(self, cosmology: LensingCosmology = Planck18):
         """
         Fits a model to a dataset via a non-linear search.
 
@@ -199,7 +199,7 @@ class AnalysisDataset(Analysis):
         self,
         dataset: Union[aa.Imaging, aa.Interferometer],
         adapt_result: ResultDataset = None,
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = Planck18(),
         settings_pixelization: aa.SettingsPixelization = None,
         settings_inversion: aa.SettingsInversion = None,
     ):

@@ -1,7 +1,7 @@
 from astropy import constants
 import math
 
-from autogalaxy.cosmology.wrap import Planck15
+from autogalaxy.cosmology.wrap import Planck18
 
 # Mock Cosmology #
 
@@ -14,7 +14,7 @@ class Value:
         return Value(value=self.value)
 
 
-class MockCosmology(Planck15):
+class MockCosmology(Planck18):
     def __init__(
         self,
         arcsec_per_kpc=0.5,

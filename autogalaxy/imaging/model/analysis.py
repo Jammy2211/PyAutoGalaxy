@@ -10,7 +10,7 @@ from autoarray.exc import PixelizationException
 from autogalaxy.analysis.analysis import AnalysisDataset
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
-from autogalaxy.cosmology.wrap import Planck15
+from autogalaxy.cosmology.wrap import Planck18
 from autogalaxy.imaging.model.visualizer import VisualizerImaging
 from autogalaxy.imaging.model.result import ResultImaging
 from autogalaxy.imaging.fit_imaging import FitImaging
@@ -24,7 +24,7 @@ class AnalysisImaging(AnalysisDataset):
         self,
         dataset: aa.Imaging,
         adapt_result: ResultImaging = None,
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = Planck18(),
         settings_pixelization: aa.SettingsPixelization = None,
         settings_inversion: aa.SettingsInversion = None,
     ):

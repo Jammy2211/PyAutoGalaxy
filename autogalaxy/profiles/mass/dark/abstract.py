@@ -7,7 +7,7 @@ import autoarray as aa
 
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.cosmology.lensing import LensingCosmology
-from autogalaxy.cosmology.wrap import Planck15
+from autogalaxy.cosmology.wrap import Planck18
 from autogalaxy.profiles.mass.abstract.mge import (
     MassProfileMGE,
 )
@@ -209,7 +209,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         return np.log(grid_radius / 2.0) + self.coord_func_f(grid_radius=grid_radius)
 
     def rho_at_scale_radius_solar_mass_per_kpc3(
-        self, redshift_object, redshift_source, cosmology: LensingCosmology = Planck15()
+        self, redshift_object, redshift_source, cosmology: LensingCosmology = Planck18()
     ):
         """
         The Cosmic average density is defined at the redshift of the profile."""
@@ -231,7 +231,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_object,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = Planck18(),
     ):
         if redshift_of_cosmic_average_density == "profile":
             redshift_calc = redshift_object
@@ -262,7 +262,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_profile,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = Planck18(),
     ):
         delta_concentration = self.delta_concentration(
             redshift_object=redshift_profile,
@@ -294,7 +294,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_object,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = Planck18(),
     ):
         concentration = self.concentration(
             redshift_profile=redshift_object,
@@ -310,7 +310,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_object,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = Planck18(),
     ):
         if redshift_of_cosmic_average_density == "profile":
             redshift_calc = redshift_object
