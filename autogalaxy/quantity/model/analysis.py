@@ -1,5 +1,7 @@
 import os
 
+from autoconf.dictable import as_dict
+
 import autofit as af
 
 from autogalaxy.analysis.analysis import Analysis
@@ -228,4 +230,4 @@ class AnalysisQuantity(Analysis):
             file_path=dataset_path / "mask.fits", overwrite=True
         )
 
-        paths.save_object("cosmology", self.cosmology)
+        paths.save_json("cosmology", as_dict(self.cosmology))
