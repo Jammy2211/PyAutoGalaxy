@@ -68,14 +68,12 @@ def _fit_imaging_from(
 
     dataset_list = _imaging_from(fit=fit, settings_dataset=settings_dataset)
 
-    plane = _plane_from(fit=fit, galaxies=galaxies)
+    plane_list = _plane_from(fit=fit, galaxies=galaxies)
 
     settings_pixelization = settings_pixelization or fit.value(
         name="settings_pixelization"
     )
     settings_inversion = settings_inversion or fit.value(name="settings_inversion")
-
-    preloads = Preloads(use_w_tilde=False)
 
     sparse_grids_of_planes_list = agg_util.sparse_grids_of_planes_list_from(
         fit=fit, total_fits=len(dataset_list), use_preloaded_grid=use_preloaded_grid
@@ -83,21 +81,14 @@ def _fit_imaging_from(
 
     fit_dataset_list = []
 
-    for dataset, sparse_grids_of_planes in zip(dataset_list, sparse_grids_of_planes_list):
+    for dataset, plane, sparse_grids_of_planes in zip(dataset_list, plane_list, sparse_grids_of_planes_list):
 
-        if use_preloaded_grid:
-
-            if sparse_grids_of_planes is not None:
-                preloads = Preloads(
-                    sparse_image_plane_grid_pg_list=sparse_grids_of_planes,
-                    use_w_tilde=False,
-                )
-
-                if len(preloads.sparse_image_plane_grid_pg_list) == 2:
-                    if type(preloads.sparse_image_plane_grid_pg_list[1]) != list:
-                        preloads.sparse_image_plane_grid_pg_list[1] = [
-                            preloads.sparse_image_plane_grid_pg_list[1]
-                        ]
+        preloads = agg_util.preloads_from(
+            preloads_cls=Preloads,
+            use_preloaded_grid=use_preloaded_grid,
+            sparse_grids_of_planes=sparse_grids_of_planes,
+            use_w_tilde=False
+        )
 
         fit_dataset_list.append(FitImaging(
             dataset=dataset,

@@ -32,20 +32,20 @@ def test__plane_randomly_drawn_via_pdf_gen_from(
     i = 0
 
     for plane_gen in plane_pdf_gen:
-        for plane in plane_gen:
+        for plane_list in plane_gen:
             i += 1
 
-            assert plane.galaxies[0].redshift == 0.5
-            assert plane.galaxies[0].light.centre == (10.0, 10.0)
-            assert plane.galaxies[1].redshift == 1.0
+            assert plane_list[0].galaxies[0].redshift == 0.5
+            assert plane_list[0].galaxies[0].light.centre == (10.0, 10.0)
+            assert plane_list[0].galaxies[1].redshift == 1.0
 
-            assert (plane.galaxies[0].adapt_model_image == adapt_model_image_7x7).all()
+            assert (plane_list[0].galaxies[0].adapt_model_image == adapt_model_image_7x7).all()
             assert (
-                plane.galaxies[0].adapt_galaxy_image
+                plane_list[0].galaxies[0].adapt_galaxy_image
                 == adapt_galaxy_image_path_dict_7x7["('galaxies', 'g0')"]
             ).all()
             assert (
-                plane.galaxies[1].adapt_galaxy_image
+                plane_list[0].galaxies[1].adapt_galaxy_image
                 == adapt_galaxy_image_path_dict_7x7["('galaxies', 'g1')"]
             ).all()
 
@@ -83,30 +83,30 @@ def test__plane_all_above_weight_gen(
     i = 0
 
     for plane_gen, weight_gen in zip(plane_pdf_gen, weight_pdf_gen):
-        for plane in plane_gen:
+        for plane_list in plane_gen:
             i += 1
 
             if i == 1:
-                assert plane.galaxies[0].redshift == 0.5
-                assert plane.galaxies[0].light.centre == (1.0, 1.0)
-                assert plane.galaxies[1].redshift == 1.0
+                assert plane_list[0].galaxies[0].redshift == 0.5
+                assert plane_list[0].galaxies[0].light.centre == (1.0, 1.0)
+                assert plane_list[0].galaxies[1].redshift == 1.0
 
                 assert (
-                    plane.galaxies[0].adapt_model_image == adapt_model_image_7x7
+                    plane_list[0].galaxies[0].adapt_model_image == adapt_model_image_7x7
                 ).all()
                 assert (
-                    plane.galaxies[0].adapt_galaxy_image
+                    plane_list[0].galaxies[0].adapt_galaxy_image
                     == adapt_galaxy_image_path_dict_7x7["('galaxies', 'g0')"]
                 ).all()
                 assert (
-                    plane.galaxies[1].adapt_galaxy_image
+                    plane_list[0].galaxies[1].adapt_galaxy_image
                     == adapt_galaxy_image_path_dict_7x7["('galaxies', 'g1')"]
                 ).all()
 
             if i == 2:
-                assert plane.galaxies[0].redshift == 0.5
-                assert plane.galaxies[0].light.centre == (10.0, 10.0)
-                assert plane.galaxies[1].redshift == 1.0
+                assert plane_list[0].galaxies[0].redshift == 0.5
+                assert plane_list[0].galaxies[0].light.centre == (10.0, 10.0)
+                assert plane_list[0].galaxies[1].redshift == 1.0
 
         for weight in weight_gen:
             if i == 0:

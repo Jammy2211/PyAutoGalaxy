@@ -1,4 +1,5 @@
 from __future__ import annotations
+import logging
 from typing import TYPE_CHECKING, List
 
 if TYPE_CHECKING:
@@ -6,13 +7,14 @@ if TYPE_CHECKING:
     from autogalaxy.plane.plane import Plane
 
 import autofit as af
-import autoarray as aa
 
 from autogalaxy.aggregator.abstract import AbstractAgg
 
 from autogalaxy.aggregator import agg_util
 
-def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> Plane:
+logger = logging.getLogger(__name__)
+
+def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> List[Plane]:
     """
     Returns an `Plane` object from a `PyAutoFit` sqlite database `Fit` object.
 
@@ -26,6 +28,10 @@ def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> Plane:
     This method combines all of these attributes and returns a `Plane` object for a given non-linear search sample
     (e.g. the maximum likelihood model). This includes associating adapt images with their respective galaxies.
 
+    If multiple `Plane` objects were fitted simultaneously via analysis summing, the `fit.child_values()` method
+    is instead used to load lists of planes. This is necessary if each plane has different galaxies (e.g. certain
+    parameters vary across each dataset and `Analysis` object).
+
     Parameters
     ----------
     fit
@@ -38,7 +44,19 @@ def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> Plane:
 
     galaxies = agg_util.galaxies_with_adapt_images_from(fit=fit, galaxies=galaxies)
 
-    return Plane(galaxies=galaxies)
+    if len(fit.children) > 0:
+        logger.info(
+            """
+            Using database for a fit with multiple summed Analysis objects.
+
+            Plane objects do not fully support this yet (e.g. adapt images may not be set up correctly)
+            so proceed with caution!
+            """
+        )
+
+        return [Plane(galaxies=galaxies)] * len(fit.children)
+
+    return [Plane(galaxies=galaxies)]
 
 
 class PlaneAgg(AbstractAgg):
@@ -61,6 +79,10 @@ class PlaneAgg(AbstractAgg):
     For example, if the `aggregator` contains 3 model-fits, this class can be used to create a generator which
     creates instances of the corresponding 3 `Plane` objects.
 
+    If multiple `Plane` objects were fitted simultaneously via analysis summing, the `fit.child_values()` method
+    is instead used to load lists of planes. This is necessary if each plane has different galaxies (e.g. certain
+    parameters vary across each dataset and `Analysis` object).
+
     This can be done manually, but this object provides a more concise API.
 
     Parameters
@@ -69,7 +91,7 @@ class PlaneAgg(AbstractAgg):
         A `PyAutoFit` aggregator object which can load the results of model-fits.
     """
 
-    def object_via_gen_from(self, fit, galaxies) -> Plane:
+    def object_via_gen_from(self, fit, galaxies) -> List[Plane]:
         """
         Returns a generator of `Plane` objects from an input aggregator.
 

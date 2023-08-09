@@ -7,7 +7,6 @@ if TYPE_CHECKING:
 import autofit as af
 import autoarray as aa
 
-
 def galaxies_with_adapt_images_from(
     fit: af.Fit, galaxies: List[Galaxy]
 ) -> List[Galaxy]:
@@ -121,3 +120,55 @@ def sparse_grids_of_planes_list_from(fit: af.Fit, total_fits : int, use_preloade
     else:
         return [None] * total_fits
 
+def preloads_from(
+        preloads_cls,
+        use_preloaded_grid: bool,
+        sparse_grids_of_planes : List,
+        use_w_tilde : Optional[bool] = False
+) -> aa.Preloads:
+    """
+    Returns a `Preloads` object associated with a fit loaded via the database.
+
+    When loading results via the database, the preloads class may have certain attributes associated with it
+    in order to perform the fit. The main purpose is to use the same image-plane mesh centres for pixelization where
+    the mesh is computed in the image-plane (see `agg_util.sparse_grids_of_planes_list_from`).
+
+    The preloads may also switch off `w_tilde` so fits are computed faster locally as they do not need to recompute
+    w_tilde.
+
+    Parameters
+    ----------
+    preloads_cls
+        The `Preloads` object used to create the preloads (this varies across
+        projects like `autogalaxy` and `autolens`).
+    use_preloaded_grid
+        Certain pixelization's construct their mesh in the source-plane from a stochastic KMeans algorithm. This grid
+        may be output to hard-disk after the model-fit and loaded via the database to ensure the same grid is used
+        as the fit.
+    sparse_grids_of_planes
+        The list of image-plane mesh centres used when creating the overall fit which are associated with the
+        preloads.
+    use_w_tilde
+        Whether to use the w-tilde formalism when recomputing fits.
+
+    Returns
+    -------
+    The preloads object associated with the fit loaded via the database.
+    """
+    preloads = preloads_cls()
+
+    if use_preloaded_grid:
+
+        if sparse_grids_of_planes is not None:
+            preloads = preloads_cls(
+                sparse_image_plane_grid_pg_list=sparse_grids_of_planes,
+                use_w_tilde=use_w_tilde,
+            )
+
+            if len(preloads.sparse_image_plane_grid_pg_list) == 2:
+                if type(preloads.sparse_image_plane_grid_pg_list[1]) != list:
+                    preloads.sparse_image_plane_grid_pg_list[1] = [
+                        preloads.sparse_image_plane_grid_pg_list[1]
+                    ]
+
+    return preloads

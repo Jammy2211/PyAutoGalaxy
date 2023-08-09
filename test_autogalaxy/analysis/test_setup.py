@@ -8,8 +8,7 @@ def test__adapt_search():
 
     assert setup.search_pix_cls == af.Nautilus
     assert setup.search_pix_dict == {
-        "nlive": 50,
-        "sample": "rwalk",
+        "n_live": 75,
     }
 
     setup = ag.SetupAdapt(
