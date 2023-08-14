@@ -140,7 +140,7 @@ def make_plane_x2_galaxy_inversion_7x7():
 # COSMOLOGY #
 
 
-def make_planck15():
+def make_Planck15():
     return ag.cosmo.Planck15()
 
 
@@ -200,8 +200,8 @@ def make_adapt_galaxy_image_0_7x7():
 
 def make_adapt_galaxy_image_path_dict_7x7():
     adapt_galaxy_image_path_dict = {
-        ("g0",): make_adapt_galaxy_image_0_7x7(),
-        ("g1",): make_adapt_galaxy_image_1_7x7(),
+        "('galaxies', 'g0')": make_adapt_galaxy_image_0_7x7(),
+        "('galaxies', 'g1')": make_adapt_galaxy_image_1_7x7(),
     }
 
     return adapt_galaxy_image_path_dict
@@ -247,7 +247,6 @@ def make_fit_interferometer_x2_galaxy_inversion_7x7():
 
 
 def make_samples_with_result():
-
     galaxies = [
         ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0)),
         ag.Galaxy(redshift=1.0, light=ag.lp.Sersic(intensity=2.0)),

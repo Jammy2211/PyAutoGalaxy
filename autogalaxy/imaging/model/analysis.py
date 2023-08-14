@@ -29,14 +29,15 @@ class AnalysisImaging(AnalysisDataset):
         settings_inversion: aa.SettingsInversion = None,
     ):
         """
-        Analysis classes are used by PyAutoFit to fit a model to a dataset via a non-linear search.
+        Fits a galaxy model to an imaging dataset via a non-linear search.
 
-        An Analysis class defines the `log_likelihood_function` which fits the model to the dataset and returns the
-        log likelihood value defining how well the model fitted the data. The Analysis class handles many other tasks,
-        such as visualization, outputting results to hard-disk and storing results in a format that can be loaded after
-        the model-fit is complete using PyAutoFit's database tools.
+        The `Analysis` class defines the `log_likelihood_function` which fits the model to the dataset and returns the
+        log likelihood value defining how well the model fitted the data.
 
-        This Analysis class is used for model-fits which fit galaxies (or objects containing galaxies like a `Plane`)
+        It handles many other tasks, such as visualization, outputting results to hard-disk and storing results in
+        a format that can be loaded after the model-fit is complete.
+
+        This class is used for model-fits which fit galaxies (or objects containing galaxies like a `Plane`)
         to an imaging dataset.
 
         This class stores the settings used to perform the model-fit for certain components of the model (e.g. a
@@ -46,7 +47,7 @@ class AnalysisImaging(AnalysisDataset):
         Parameters
         ----------
         dataset
-            The `Imaging` dataset that the model is fitted too.
+            The `Imaging` dataset that the model is fitted to.
         adapt_result
             The adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
@@ -72,8 +73,8 @@ class AnalysisImaging(AnalysisDataset):
 
     def modify_before_fit(self, paths: af.DirectoryPaths, model: af.Collection):
         """
-        PyAutoFit calls this function immediately before the non-linear search begins, therefore it can be used to
-        perform tasks using the final model parameterization.
+        This function is called immediately before the non-linear search begins and performs final tasks and checks
+        before it begins.
 
         This function checks that the adapt-dataset is consistent with previous adapt-datasets if the model-fit is
         being resumed from a previous run, and it visualizes objects which do not change throughout the model fit
@@ -324,9 +325,6 @@ class AnalysisImaging(AnalysisDataset):
     def make_result(
         self,
         samples: af.SamplesPDF,
-        sigma=1.0,
-        use_errors=True,
-        use_widths=False,
     ) -> ResultImaging:
         """
         After the non-linear search is complete create its `Result`, which includes:
@@ -357,16 +355,15 @@ class AnalysisImaging(AnalysisDataset):
         """
         return ResultImaging(samples=samples, analysis=self)
 
-    def save_attributes_for_aggregator(self, paths: af.DirectoryPaths):
+    def save_attributes(self, paths: af.DirectoryPaths):
         """
          Before the non-linear search begins, this routine saves attributes of the `Analysis` object to the `pickles`
          folder such that they can be loaded after the analysis using PyAutoFit's database and aggregator tools.
 
          For this analysis, it uses the `AnalysisDataset` object's method to output the following:
 
-         - The dataset's data.
-         - The dataset's noise-map.
-         - The settings associated with the dataset.
+         - The imaging dataset (data / noise-map / settings / psf / etc.).
+         - The mask applied to the dataset.
          - The settings associated with the inversion.
          - The settings associated with the pixelization.
          - The Cosmology.
@@ -385,13 +382,20 @@ class AnalysisImaging(AnalysisDataset):
          Parameters
          ----------
          paths
-             The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
-             and the pickled objects used by the aggregator output by this function.
+             The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+             visualization, and the pickled objects used by the aggregator output by this function.
         """
-        super().save_attributes_for_aggregator(paths=paths)
+        super().save_attributes(paths=paths)
 
-        paths.save_object("psf", self.dataset.psf)
-        paths.save_object("mask", self.dataset.mask)
+        dataset_path = paths._files_path / "dataset"
+
+        self.dataset.psf.output_to_fits(
+            file_path=dataset_path / "psf.fits",
+            overwrite=True,
+        )
+        self.dataset.mask.output_to_fits(
+            file_path=dataset_path / "mask.fits", overwrite=True
+        )
 
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None

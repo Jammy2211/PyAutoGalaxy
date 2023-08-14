@@ -4,9 +4,11 @@ import numpy as np
 from typing import Callable, Dict, Optional, Tuple, Union
 from os import path
 import os
+import pickle
 import time
 
 from autoconf import conf
+from autoconf.dictable import as_dict
 import autofit as af
 import autoarray as aa
 
@@ -29,7 +31,7 @@ logger.setLevel(level="INFO")
 class Analysis(af.Analysis):
     def __init__(self, cosmology: LensingCosmology = Planck15):
         """
-        Analysis classes are used by PyAutoFit to fit a model to a dataset via a non-linear search.
+        Fits a model to a dataset via a non-linear search.
 
         This abstract Analysis class for all model-fits which fit galaxies (or objects containing galaxies like a
         plane), but does not perform a model-fit by itself (and is therefore only inherited from).
@@ -39,7 +41,7 @@ class Analysis(af.Analysis):
         Parameters
         ----------
         cosmology
-            The AstroPy Cosmology assumed for this analysis.
+            The Cosmology assumed for this analysis.
         """
         self.cosmology = cosmology
 
@@ -244,8 +246,8 @@ class AnalysisDataset(Analysis):
 
     def modify_before_fit(self, paths: af.DirectoryPaths, model: af.Collection):
         """
-        PyAutoFit calls this function immediately before the non-linear search begins, therefore it can be used to
-        perform tasks using the final model parameterization.
+        This function is called immediately before the non-linear search begins and performs final tasks and checks
+        before it begins.
 
         This function:
 
@@ -410,7 +412,7 @@ class AnalysisDataset(Analysis):
 
         return instance
 
-    def save_attributes_for_aggregator(self, paths: af.DirectoryPaths):
+    def save_attributes(self, paths: af.DirectoryPaths):
         """
         Before the model-fit via the non-linear search begins, this routine saves attributes of the `Analysis` object
         to the `pickles` folder such that they can be loaded after the analysis using PyAutoFit's database and aggregator
@@ -418,9 +420,7 @@ class AnalysisDataset(Analysis):
 
         For this analysis the following are output:
 
-        - The dataset's data.
-        - The dataset's noise-map.
-        - The settings associated with the dataset.
+        - The dataset (data / noise-map / settings / etc.).
         - The settings associated with the inversion.
         - The settings associated with the pixelization.
         - The Cosmology.
@@ -437,21 +437,46 @@ class AnalysisDataset(Analysis):
             The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
             and the pickled objects used by the aggregator output by this function.
         """
-        paths.save_object("data", self.dataset.data)
-        paths.save_object("noise_map", self.dataset.noise_map)
-        paths.save_object("settings_dataset", self.dataset.settings)
-        paths.save_object("settings_inversion", self.settings_inversion)
-        paths.save_object("settings_pixelization", self.settings_pixelization)
+        dataset_path = paths._files_path / "dataset"
 
-        paths.save_object("cosmology", self.cosmology)
+        self.dataset.output_to_fits(
+            data_path=dataset_path / "data.fits",
+            noise_map_path=dataset_path / "noise_map.fits",
+            overwrite=True,
+        )
+        self.dataset.settings.output_to_json(file_path=dataset_path / "settings.json")
+
+        self.settings_inversion.output_to_json(
+            file_path=paths._files_path / "settings_inversion.json"
+        )
+        self.settings_pixelization.output_to_json(
+            file_path=paths._files_path / "settings_pixelization.json"
+        )
+
+        paths.save_json("cosmology", as_dict(self.cosmology))
+
+        adapt_path = paths._files_path / "adapt"
 
         if self.adapt_model_image is not None:
-            paths.save_object("adapt_model_image", self.adapt_model_image)
+            self.adapt_model_image.output_to_fits(
+                file_path=adapt_path / "adapt_model_image.fits", overwrite=True
+            )
 
         if self.adapt_galaxy_image_path_dict is not None:
-            paths.save_object(
-                "adapt_galaxy_image_path_dict", self.adapt_galaxy_image_path_dict
-            )
+            for key, value in self.adapt_galaxy_image_path_dict.items():
+                value.output_to_fits(
+                    file_path=adapt_path / f"{key}.fits",
+                    overwrite=True,
+                )
+
+            with af.util.open_(adapt_path / "adapt_galaxy_keys.json", "w") as f:
+                json.dump(
+                    [
+                        str(key)
+                        for key, value in self.adapt_galaxy_image_path_dict.items()
+                    ],
+                    f,
+                )
 
     def check_and_replace_adapt_images(self, paths: af.DirectoryPaths):
         """
@@ -468,30 +493,31 @@ class AnalysisDataset(Analysis):
             The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
             visualization and the pickled objects used by the aggregator output by this function.
         """
+
+        def load_adapt_image(filename):
+            adapt_image = aa.Array2D.from_fits(
+                file_path=paths._files_path / "adapt" / filename,
+                pixel_scales=self.dataset.pixel_scales,
+            )
+            return adapt_image.apply_mask(mask=self.dataset.mask)
+
         try:
-            adapt_model_image = paths.load_object("adapt_model_image")
+            adapt_model_image = load_adapt_image(filename="adapt_model_image.fits")
+        except FileNotFoundError:
+            return
 
-            if np.max(abs(adapt_model_image - self.adapt_model_image)) > 1e-8:
-                logger.info(
-                    "ANALYSIS - adapt image loaded from pickle different to that set in Analysis class."
-                    "Overwriting adapt images with values loaded from pickles."
-                )
+        if np.max(abs(adapt_model_image - self.adapt_model_image)) > 1e-8:
+            logger.info(
+                "ANALYSIS - adapt image loaded from pickle different to that set in Analysis class."
+                "Overwriting adapt images with values loaded from pickles."
+            )
 
-                self.adapt_model_image = adapt_model_image
+            self.adapt_model_image = adapt_model_image
 
-                adapt_galaxy_image_path_dict = paths.load_object(
-                    "adapt_galaxy_image_path_dict"
-                )
-                self.adapt_galaxy_image_path_dict = adapt_galaxy_image_path_dict
-
-        except (
-            FileNotFoundError,
-            AttributeError,
-            KeyError,
-            ModuleNotFoundError,
-            TypeError,
-        ):
-            pass
+            self.adapt_galaxy_image_path_dict = {
+                key: load_adapt_image(filename=f"{key}.fits")
+                for key in self.adapt_galaxy_image_path_dict.keys()
+            }
 
     def output_or_check_figure_of_merit_sanity(
         self, paths: af.DirectoryPaths, result: af.Result

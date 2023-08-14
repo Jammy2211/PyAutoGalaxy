@@ -33,12 +33,13 @@ class AnalysisInterferometer(AnalysisDataset):
         settings_inversion: aa.SettingsInversion = None,
     ):
         """
-        Analysis classes are used by PyAutoFit to fit a model to a dataset via a non-linear search.
+        Fits a galaxy model to an interferometer dataset via a non-linear search.
 
-        An Analysis class defines the `log_likelihood_function` which fits the model to the dataset and returns the
-        log likelihood value defining how well the model fitted the data. The Analysis class handles many other tasks,
-        such as visualization, outputting results to hard-disk and storing results in a format that can be loaded after
-        the model-fit is complete using PyAutoFit's database tools.
+        The `Analysis` class defines the `log_likelihood_function` which fits the model to the dataset and returns the
+        log likelihood value defining how well the model fitted the data.
+
+        It handles many other tasks, such as visualization, outputting results to hard-disk and storing results in
+        a format that can be loaded after the model-fit is complete.
 
         This Analysis class is used for all model-fits which fit galaxies (or objects containing galaxies like a
         `Plane`) to an interferometer dataset.
@@ -76,8 +77,8 @@ class AnalysisInterferometer(AnalysisDataset):
 
     def modify_before_fit(self, paths: af.DirectoryPaths, model: af.Collection):
         """
-        PyAutoFit calls this function immediately before the non-linear search begins, therefore it can be used to
-        perform tasks using the final model parameterization.
+        This function is called immediately before the non-linear search begins and performs final tasks and checks
+        before it begins.
 
         This function checks that the adapt-dataset is consistent with previous adapt-datasets if the model-fit is
         being resumed from a previous run, and it visualizes objects which do not change throughout the model fit
@@ -331,9 +332,6 @@ class AnalysisInterferometer(AnalysisDataset):
     def make_result(
         self,
         samples: af.SamplesPDF,
-        sigma=1.0,
-        use_errors=True,
-        use_widths=False,
     ) -> ResultInterferometer:
         """
         After the non-linear search is complete create its `Result`, which includes:
@@ -364,16 +362,15 @@ class AnalysisInterferometer(AnalysisDataset):
         """
         return ResultInterferometer(samples=samples, analysis=self)
 
-    def save_attributes_for_aggregator(self, paths: af.DirectoryPaths):
+    def save_attributes(self, paths: af.DirectoryPaths):
         """
          Before the model-fit begins, this routine saves attributes of the `Analysis` object to the `pickles` folder
          such that they can be loaded after the analysis using PyAutoFit's database and aggregator tools.
 
          For this analysis, it uses the `AnalysisDataset` object's method to output the following:
 
-         - The dataset's data.
-         - The dataset's noise-map.
-         - The settings associated with the dataset.
+         - The interferometer dataset (data / noise-map / uv-wavelengths / settings / etc.).
+         - The real space mask defining how the images appear in real-space and used for the FFT.
          - The settings associated with the inversion.
          - The settings associated with the pixelization.
          - The Cosmology.
@@ -395,10 +392,19 @@ class AnalysisInterferometer(AnalysisDataset):
              The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
              and the pickled objects used by the aggregator output by this function.
         """
-        super().save_attributes_for_aggregator(paths=paths)
+        super().save_attributes(paths=paths)
 
-        paths.save_object("uv_wavelengths", self.dataset.uv_wavelengths)
-        paths.save_object("real_space_mask", self.dataset.real_space_mask)
+        dataset_path = paths._files_path / "dataset"
+
+        aa.util.array_2d.numpy_array_2d_to_fits(
+            array_2d=self.dataset.uv_wavelengths,
+            file_path=dataset_path / "uv_wavelengths.fits",
+            overwrite=True,
+        )
+
+        self.dataset.real_space_mask.output_to_fits(
+            file_path=dataset_path / "real_space_mask.fits", overwrite=True
+        )
 
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None

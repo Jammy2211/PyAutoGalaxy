@@ -1,5 +1,7 @@
 import os
 
+from autoconf.dictable import as_dict
+
 import autofit as af
 
 from autogalaxy.analysis.analysis import Analysis
@@ -21,14 +23,15 @@ class AnalysisQuantity(Analysis):
         cosmology: LensingCosmology = Planck15(),
     ):
         """
-        Analysis classes are used by PyAutoFit to fit a model to a dataset via a non-linear search.
+        Fits a galaxy model to a quantity dataset via a non-linear search.
 
-        An Analysis class defines the `log_likelihood_function` which fits the model to the dataset and returns the
-        log likelihood value defining how well the model fitted the data. The Analysis class handles many other tasks,
-        such as visualization, outputting results to hard-disk and storing results in a format that can be loaded after
-        the model-fit is complete using PyAutoFit's database tools.
+        The `Analysis` class defines the `log_likelihood_function` which fits the model to the dataset and returns the
+        log likelihood value defining how well the model fitted the data.
 
-        This Analysis class is used for model-fits which fit derived quantity of galaxies, for example their
+        It handles many other tasks, such as visualization, outputting results to hard-disk and storing results in
+        a format that can be loaded after the model-fit is complete.
+
+        This class is used for model-fits which fit derived quantity of galaxies, for example their
         convergence, potential or deflection angles, to another model for that quantity. For example, one could find
         the `PowerLaw` mass profile model that best fits the deflection angles of an `NFW` mass profile.
 
@@ -161,9 +164,6 @@ class AnalysisQuantity(Analysis):
     def make_result(
         self,
         samples: af.SamplesPDF,
-        sigma=1.0,
-        use_errors=True,
-        use_widths=False,
     ) -> ResultQuantity:
         """
         After the non-linear search is complete create its `ResultQuantity`, which includes:
@@ -194,7 +194,7 @@ class AnalysisQuantity(Analysis):
         """
         return ResultQuantity(samples=samples, analysis=self)
 
-    def save_attributes_for_aggregator(self, paths: af.DirectoryPaths):
+    def save_attributes(self, paths: af.DirectoryPaths):
         """
         Before the non-linear search begins, this routine saves attributes of the `Analysis` object to the `pickles`
         folder such that they can be loaded after the analysis using PyAutoFit's database and aggregator tools.
@@ -218,8 +218,16 @@ class AnalysisQuantity(Analysis):
             The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
             visualization, and the pickled objects used by the aggregator output by this function.
         """
-        paths.save_object("data", self.dataset.data)
-        paths.save_object("noise_map", self.dataset.noise_map)
-        paths.save_object("settings_dataset", self.dataset.settings)
-        paths.save_object("mask", self.dataset.mask)
-        paths.save_object("cosmology", self.cosmology)
+        dataset_path = paths._files_path / "dataset"
+
+        self.dataset.output_to_fits(
+            data_path=dataset_path / "data.fits",
+            noise_map_path=dataset_path / "noise_map.fits",
+            overwrite=True,
+        )
+        self.dataset.settings.output_to_json(file_path=dataset_path / "settings.json")
+        self.dataset.mask.output_to_fits(
+            file_path=dataset_path / "mask.fits", overwrite=True
+        )
+
+        paths.save_json("cosmology", as_dict(self.cosmology))
