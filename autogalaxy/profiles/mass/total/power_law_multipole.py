@@ -90,12 +90,12 @@ def multipole_comps_from(k_m : float, phi_m : float, m : int) -> Tuple[float, fl
     -------
     The multipole component parameters.
     """
-    elliptical_comp_0 = k_m * np.sin(phi_m * float(m) * units.deg.to(units.rad))
-    elliptical_comp_1 = k_m * np.cos(phi_m * float(m) * units.deg.to(units.rad))
+    multipole_comp_0 = k_m * np.sin(phi_m * float(m) * units.deg.to(units.rad))
+    multipole_comp_1 = k_m * np.cos(phi_m * float(m) * units.deg.to(units.rad))
 
     return (
-        elliptical_comp_0,
-        elliptical_comp_1
+        multipole_comp_0,
+        multipole_comp_1
     )
 
 class PowerLawMultipole(MassProfile):
