@@ -80,15 +80,8 @@ def test__fit_imaging_randomly_drawn_via_pdf_gen_from__analysis_multi(
     clean(database_file=database_file)
 
 
-def test__fit_imaging_all_above_weight_gen(analysis_imaging_7x7, samples, model):
-    agg = aggregator_from(
-        database_file=database_file,
-        analysis=analysis_imaging_7x7,
-        model=model,
-        samples=samples,
-    )
-
-    fit_agg = ag.agg.FitImagingAgg(aggregator=agg)
+def test__fit_imaging_all_above_weight_gen(agg_7x7):
+    fit_agg = ag.agg.FitImagingAgg(aggregator=agg_7x7)
     fit_pdf_gen = fit_agg.all_above_weight_gen_from(minimum_weight=-1.0)
 
     i = 0
