@@ -36,35 +36,67 @@ def radial_and_angle_grid_from(
     return radial_grid, angle_grid
 
 
-def multipole_parameters_from(
-    ell_comps_multipole: Tuple[float, float]
-) -> Tuple[float, float]:
+def multipole_parameters_from(multipole_comps : Tuple[float, float], m : int) -> Tuple[float, float]:
     """
-    Converts the multipole elliptical components to their normalizartion value `k_m` and angle `phi`,
+    Converts the multipole component parameters to their normalizartion value `k_m` and angle `phi`,
     which are given by:
 
     .. math::
         \phi^{\rm mass}_m = \arctan{\frac{\epsilon_{\rm 2}^{\rm mp}}{\epsilon_{\rm 2}^{\rm mp}}}, \, \,
         k^{\rm mass}_m = \sqrt{{\epsilon_{\rm 1}^{\rm mp}}^2 + {\epsilon_{\rm 2}^{\rm mp}}^2} \, .
 
+    The conversion depends on the multipole order `m`, to ensure that all possible rotationally symmetric
+    multiple mass profiles are available in the conversion for multiple components spanning -inf to inf.
+
     Parameters
     ----------
-    ell_comps_multipole
-        The first and second ellipticity components of the multipole.
-
+    multipole_comps
+        The first and second components of the multipole.
 
     Returns
     -------
-    The normalization parameters of the multipole.
+    The normalization and angle parameters of the multipole.
     """
-    angle_m = np.arctan(ell_comps_multipole[0] / ell_comps_multipole[1]) * units.rad.to(
-        units.deg
+    phi_m = np.arctan2(
+        multipole_comps[0],
+        multipole_comps[1]
+    ) * 180.0 / np.pi / float(m)
+    k_m = np.sqrt(
+        multipole_comps[1] ** 2 + multipole_comps[0] ** 2
     )
-    k_m = np.sqrt(ell_comps_multipole[1] ** 2 + ell_comps_multipole[0] ** 2)
-    if angle_m < 0.0:
-        return k_m, angle_m + 90.0
-    return k_m, angle_m
 
+    return k_m, phi_m
+
+def multipole_comps_from(k_m : float, phi_m : float, m : int) -> Tuple[float, float]:
+    """
+    Converts the multipole normalizartion value `k_m` and angle `phi` to their multipole component parameters,
+    which are given by:
+
+    .. math::
+        \phi^{\rm mass}_m = \arctan{\frac{\epsilon_{\rm 2}^{\rm mp}}{\epsilon_{\rm 2}^{\rm mp}}}, \, \,
+        k^{\rm mass}_m = \sqrt{{\epsilon_{\rm 1}^{\rm mp}}^2 + {\epsilon_{\rm 2}^{\rm mp}}^2} \, .
+
+    The conversion depends on the multipole order `m`, to ensure that all possible rotationally symmetric
+    multiple mass profiles are available in the conversion for multiple components spanning -inf to inf.
+
+    Parameters
+    ----------
+    k_m
+        The magnitude of the multipole.
+    phi_m
+        The angle of the multipole.
+
+    Returns
+    -------
+    The multipole component parameters.
+    """
+    multipole_comp_0 = k_m * np.sin(phi_m * float(m) * units.deg.to(units.rad))
+    multipole_comp_1 = k_m * np.cos(phi_m * float(m) * units.deg.to(units.rad))
+
+    return (
+        multipole_comp_0,
+        multipole_comp_1
+    )
 
 class PowerLawMultipole(MassProfile):
     def __init__(
@@ -73,7 +105,7 @@ class PowerLawMultipole(MassProfile):
         centre: Tuple[float, float] = (0.0, 0.0),
         einstein_radius: float = 1.0,
         slope: float = 2.0,
-        ell_comps_multipole: Tuple[float, float] = (0.0, 0.0),
+        multipole_comps: Tuple[float, float] = (0.0, 0.0),
     ):
         r"""
         A multipole extension with multipole order M to the power-law total mass distribution.
@@ -109,7 +141,7 @@ class PowerLawMultipole(MassProfile):
             The arc-second Einstein radius.
         slope
             The density slope of the power-law (lower value -> shallower profile, higher value -> steeper profile).
-        ell_comps_multipole
+        multipole_comps
             The first and second ellipticity components of the multipole.
 
         Examples
@@ -126,7 +158,7 @@ class PowerLawMultipole(MassProfile):
             centre=(0.0, 0.0),
             einstein_radius=1.0,
             slope=2.2,
-            ell_comps_multipole=(0.3, 0.2)
+            multipole_comps=(0.3, 0.2)
         )
 
         galaxy = al.Galaxy(
@@ -148,9 +180,9 @@ class PowerLawMultipole(MassProfile):
         self.einstein_radius = einstein_radius
         self.slope = slope
 
-        self.ell_comps_multipole = ell_comps_multipole
+        self.multipole_comps = multipole_comps
         self.k_m, self.angle_m = multipole_parameters_from(
-            ell_comps_multipole=ell_comps_multipole
+            multipole_comps=multipole_comps, m=m
         )
         self.angle_m *= units.deg.to(units.rad)
 
