@@ -9,8 +9,14 @@ import autogalaxy as ag
 from autofit.non_linear.samples import Sample
 
 
-def clean(database_file):
+@pytest.fixture(autouse=True)
+def set_test_mode():
+    os.environ["PYAUTOFIT_TEST_MODE"] = "1"
+    yield
+    del os.environ["PYAUTOFIT_TEST_MODE"]
 
+
+def clean(database_file):
     database_sqlite = path.join(conf.instance.output_path, f"{database_file}.sqlite")
 
     if path.exists(database_sqlite):
@@ -23,7 +29,6 @@ def clean(database_file):
 
 
 def aggregator_from(database_file, analysis, model, samples):
-
     result_path = path.join(conf.instance.output_path, database_file)
 
     clean(database_file=database_file)
