@@ -288,6 +288,7 @@ class AnalysisDataset(Analysis):
             the dataset, which set up the adapt dataset. These are used by certain classes for adapting the analysis
             to the properties of the dataset.
         """
+
         adapt_galaxy_image_path_dict = result.adapt_galaxy_image_path_dict
         adapt_model_image = result.adapt_model_image
 
