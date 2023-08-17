@@ -50,6 +50,10 @@ class Result(af.Result):
         self.analysis = analysis
 
     @property
+    def max_log_likelihood_fit(self):
+        raise NotImplementedError
+
+    @property
     def max_log_likelihood_plane(self) -> Plane:
         """
         An instance of a `Plane` corresponding to the maximum log likelihood model inferred by the non-linear search.
@@ -81,7 +85,7 @@ class ResultDataset(Result):
         """
         The 2D mask applied to the dataset for the model-fit.
         """
-        return self.max_log_likelihood_fit.mask
+        return self.analysis.dataset.mask
 
     @property
     def grid(self) -> aa.Grid2D:
@@ -97,25 +101,6 @@ class ResultDataset(Result):
         """
         return self.max_log_likelihood_fit.dataset
 
-    def image_for_galaxy(self, galaxy: Galaxy) -> np.ndarray:
-        """
-        Given an instance of a `Galaxy` object, return an image of the galaxy via the maximum log likelihood fit.
-
-        This image is extracted via the fit's `galaxy_model_image_dict`, which is necessary to make it straight
-        forward to use the image as adapt-images.
-
-        Parameters
-        ----------
-        galaxy
-            A galaxy used by the model-fit.
-
-        Returns
-        -------
-        ndarray or None
-            A numpy arrays giving the model image of that galaxy.
-        """
-        return self.max_log_likelihood_fit.galaxy_model_image_dict[galaxy]
-
     @cached_property
     def image_galaxy_dict(self) -> Dict[str, Galaxy]:
         """
@@ -124,8 +109,11 @@ class ResultDataset(Result):
         This is used for creating the adapt-dataset used by Analysis objects to adapt aspects of a model to the dataset
         being fitted.
         """
+
+        galaxy_model_image_dict = self.max_log_likelihood_fit.galaxy_model_image_dict
+
         return {
-            galaxy_path: self.image_for_galaxy(galaxy)
+            galaxy_path: galaxy_model_image_dict[galaxy]
             for galaxy_path, galaxy in self.path_galaxy_tuples
         }
 
