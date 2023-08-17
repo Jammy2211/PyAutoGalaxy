@@ -2,6 +2,7 @@ import copy
 import numpy as np
 from typing import Dict, List, Tuple, Type, Union
 
+from autoconf import cached_property
 from autoconf import conf
 import autofit as af
 import autoarray as aa
@@ -48,25 +49,9 @@ class Result(af.Result):
 
         self.analysis = analysis
 
-        self.__instance = None
-
     @property
-    def instance_copy(self) -> af.Instance:
-        """
-        This is neccessary because the attributes of the `instance` are altered in the fit function, when linear
-        light profiles are converted to standard light profile.
-
-        This impacts autofit prior passing.
-
-        Returns
-        -------
-        A deep copy of the instance of the max log likelihood result.
-        """
-
-        if self.__instance is None:
-            self.__instance = copy.deepcopy(self.instance)
-
-        return self.__instance
+    def max_log_likelihood_fit(self):
+        raise NotImplementedError
 
     @property
     def max_log_likelihood_plane(self) -> Plane:
@@ -75,7 +60,7 @@ class Result(af.Result):
         """
 
         instance = self.analysis.instance_with_associated_adapt_images_from(
-            instance=self.instance_copy
+            instance=self.instance
         )
 
         return self.analysis.plane_via_instance_from(instance=instance)
@@ -85,7 +70,7 @@ class Result(af.Result):
         """
         Tuples associating the names of galaxies with instances from the best fit
         """
-        return self.instance_copy.path_instance_tuples_for_class(cls=Galaxy)
+        return self.instance.path_instance_tuples_for_class(cls=Galaxy)
 
 
 class ResultDataset(Result):
@@ -100,7 +85,7 @@ class ResultDataset(Result):
         """
         The 2D mask applied to the dataset for the model-fit.
         """
-        return self.max_log_likelihood_fit.mask
+        return self.analysis.dataset.mask
 
     @property
     def grid(self) -> aa.Grid2D:
@@ -116,26 +101,7 @@ class ResultDataset(Result):
         """
         return self.max_log_likelihood_fit.dataset
 
-    def image_for_galaxy(self, galaxy: Galaxy) -> np.ndarray:
-        """
-        Given an instance of a `Galaxy` object, return an image of the galaxy via the maximum log likelihood fit.
-
-        This image is extracted via the fit's `galaxy_model_image_dict`, which is necessary to make it straight
-        forward to use the image as adapt-images.
-
-        Parameters
-        ----------
-        galaxy
-            A galaxy used by the model-fit.
-
-        Returns
-        -------
-        ndarray or None
-            A numpy arrays giving the model image of that galaxy.
-        """
-        return self.max_log_likelihood_fit.galaxy_model_image_dict[galaxy]
-
-    @property
+    @cached_property
     def image_galaxy_dict(self) -> Dict[str, Galaxy]:
         """
         A dictionary associating galaxy names with model images of those galaxies.
@@ -143,8 +109,11 @@ class ResultDataset(Result):
         This is used for creating the adapt-dataset used by Analysis objects to adapt aspects of a model to the dataset
         being fitted.
         """
+
+        galaxy_model_image_dict = self.max_log_likelihood_fit.galaxy_model_image_dict
+
         return {
-            galaxy_path: self.image_for_galaxy(galaxy)
+            galaxy_path: galaxy_model_image_dict[galaxy]
             for galaxy_path, galaxy in self.path_galaxy_tuples
         }
 

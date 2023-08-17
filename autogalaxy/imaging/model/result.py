@@ -47,7 +47,7 @@ class ResultImaging(ResultDataset):
         search.
         """
         instance = self.analysis.instance_with_associated_adapt_images_from(
-            instance=self.instance_copy
+            instance=self.instance
         )
 
         plane = self.analysis.plane_via_instance_from(instance=instance)
