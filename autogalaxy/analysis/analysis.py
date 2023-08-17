@@ -289,6 +289,8 @@ class AnalysisDataset(Analysis):
             to the properties of the dataset.
         """
 
+        logger.info("Setting Adapt Dataset (adapt_model_image / adapt_galaxy_image_path_dict)")
+
         adapt_galaxy_image_path_dict = result.adapt_galaxy_image_path_dict
         adapt_model_image = result.adapt_model_image
 
