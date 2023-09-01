@@ -100,10 +100,12 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         }
 
     def dict(self) -> Dict:
-        return {
+        d = Dictable.dict(self)
+        d["arguments"] = {
+            **d.get("arguments", {}),
             **{name: profile.dict() for name, profile in self.profile_dict.items()},
-            **Dictable.dict(self),
         }
+        return d
 
     def cls_list_from(self, cls: Type, cls_filtered: Optional[Type] = None) -> List:
         """

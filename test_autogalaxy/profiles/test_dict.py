@@ -12,13 +12,16 @@ def make_ell_sersic():
 @pytest.fixture(name="ell_sersic_dict")
 def make_ell_sersic_dict():
     return {
-        "type": "autogalaxy.profiles.mass.stellar.sersic.Sersic",
-        "centre": (0.0, 0.0),
-        "ell_comps": (0.0, 0.0),
-        "intensity": 0.1,
-        "effective_radius": 0.6,
-        "sersic_index": 0.6,
-        "mass_to_light_ratio": 1.0,
+        "type": "instance",
+        "class_path": "autogalaxy.profiles.mass.stellar.sersic.Sersic",
+        "arguments": {
+            "centre": (0.0, 0.0),
+            "ell_comps": (0.0, 0.0),
+            "intensity": 0.1,
+            "effective_radius": 0.6,
+            "sersic_index": 0.6,
+            "mass_to_light_ratio": 1.0,
+        },
     }
 
 
