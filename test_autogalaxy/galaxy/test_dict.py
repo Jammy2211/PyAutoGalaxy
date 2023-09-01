@@ -4,7 +4,7 @@ from typing import Optional
 import autogalaxy as ag
 from autoarray.inversion.pixelization.mesh.voronoi import Voronoi
 from autoarray.inversion.regularization import AdaptiveBrightness
-from autoconf.dictable import Dictable
+from autoconf.dictable import from_dict
 
 
 @pytest.fixture(name="trivial_galaxy")
@@ -23,10 +23,6 @@ def make_trivial_galaxy_dict():
 
 def test__trivial_dict(trivial_galaxy, trivial_galaxy_dict):
     assert trivial_galaxy.dict() == trivial_galaxy_dict
-
-
-def test_trivial__from_dict(trivial_galaxy, trivial_galaxy_dict):
-    assert Dictable.from_dict(trivial_galaxy_dict) == trivial_galaxy
 
 
 class PixelizationGalaxy(ag.Galaxy):
@@ -85,11 +81,6 @@ def test__with_pixelization__dict(pixelization_galaxy, pixelization_galaxy_dict)
     assert pixelization_galaxy.dict() == pixelization_galaxy_dict
 
 
-def test__with_pixelization__from_dict(pixelization_galaxy, pixelization_galaxy_dict):
-    galaxy = Dictable.from_dict(pixelization_galaxy_dict)
-    assert galaxy == pixelization_galaxy
-
-
 def test_pixelization_equality():
     assert Voronoi() == Voronoi()
 
@@ -137,4 +128,4 @@ def test__profiles_galaxy__dict(profiles_galaxy, profiles_galaxy_dict):
 
 
 def test__profiles_galaxy__from_dict(profiles_galaxy, profiles_galaxy_dict):
-    assert Dictable.from_dict(profiles_galaxy_dict) == profiles_galaxy
+    assert from_dict(profiles_galaxy_dict) == profiles_galaxy

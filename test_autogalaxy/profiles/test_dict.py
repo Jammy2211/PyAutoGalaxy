@@ -1,4 +1,5 @@
 import pytest
+from autoconf.dictable import as_dict, from_dict
 
 import autogalaxy as ag
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
@@ -26,8 +27,8 @@ def make_ell_sersic_dict():
 
 
 def test_to_dict(ell_sersic, ell_sersic_dict):
-    assert ell_sersic.dict() == ell_sersic_dict
+    assert as_dict(ell_sersic) == ell_sersic_dict
 
 
 def test_from_dict(ell_sersic, ell_sersic_dict):
-    assert ell_sersic == GeometryProfile.from_dict(ell_sersic_dict)
+    assert ell_sersic == from_dict(ell_sersic_dict)
