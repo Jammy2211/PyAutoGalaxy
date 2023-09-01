@@ -54,11 +54,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         self.galaxies = galaxies
 
         self.run_time_dict = run_time_dict
-
-    def dict(self) -> Dict:
-        plane_dict = super().dict()
-        plane_dict["galaxies"] = [galaxy.dict() for galaxy in self.galaxies]
-        return plane_dict
+        self.run_time_dict = run_time_dict
 
     def output_to_json(self, file_path: Union[Path, str]):
         with open(file_path, "w+") as f:
