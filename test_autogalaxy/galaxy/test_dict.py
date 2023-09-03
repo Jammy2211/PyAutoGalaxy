@@ -4,7 +4,7 @@ from typing import Optional
 import autogalaxy as ag
 from autoarray.inversion.pixelization.mesh.voronoi import Voronoi
 from autoarray.inversion.regularization import AdaptiveBrightness
-from autoconf.dictable import Dictable
+from autoconf.dictable import from_dict
 
 
 @pytest.fixture(name="trivial_galaxy")
@@ -15,17 +15,14 @@ def make_trivial_galaxy():
 @pytest.fixture(name="trivial_galaxy_dict")
 def make_trivial_galaxy_dict():
     return {
-        "redshift": 1.0,
-        "type": "autogalaxy.galaxy.galaxy.Galaxy",
+        "type": "instance",
+        "class_path": "autogalaxy.galaxy.galaxy.Galaxy",
+        "arguments": {"redshift": 1.0},
     }
 
 
 def test__trivial_dict(trivial_galaxy, trivial_galaxy_dict):
     assert trivial_galaxy.dict() == trivial_galaxy_dict
-
-
-def test_trivial__from_dict(trivial_galaxy, trivial_galaxy_dict):
-    assert Dictable.from_dict(trivial_galaxy_dict) == trivial_galaxy
 
 
 class PixelizationGalaxy(ag.Galaxy):
@@ -49,18 +46,31 @@ def make_pixelization_galaxy():
 @pytest.fixture(name="pixelization_galaxy_dict")
 def make_pixelization_galaxy_dict():
     return {
-        "pixelization": {
-            "mesh": {"type": "autoarray.inversion.pixelization.mesh.voronoi.Voronoi"},
-            "regularization": {
-                "inner_coefficient": 1.0,
-                "outer_coefficient": 1.0,
-                "signal_scale": 1.0,
-                "type": "autoarray.inversion.regularization.adaptive_brightness.AdaptiveBrightness",
+        "type": "instance",
+        "class_path": "test_autogalaxy.galaxy.test_dict.PixelizationGalaxy",
+        "arguments": {
+            "redshift": 1.0,
+            "pixelization": {
+                "type": "instance",
+                "class_path": "autoarray.inversion.pixelization.pixelization.Pixelization",
+                "arguments": {
+                    "mesh": {
+                        "type": "instance",
+                        "class_path": "autoarray.inversion.pixelization.mesh.voronoi.Voronoi",
+                        "arguments": {},
+                    },
+                    "regularization": {
+                        "type": "instance",
+                        "class_path": "autoarray.inversion.regularization.adaptive_brightness.AdaptiveBrightness",
+                        "arguments": {
+                            "inner_coefficient": 1.0,
+                            "outer_coefficient": 1.0,
+                            "signal_scale": 1.0,
+                        },
+                    },
+                },
             },
-            "type": "autoarray.inversion.pixelization.pixelization.Pixelization",
         },
-        "redshift": 1.0,
-        "type": "test_autogalaxy.galaxy.test_dict.PixelizationGalaxy",
     }
 
 
@@ -69,11 +79,6 @@ def make_pixelization_galaxy_dict():
 
 def test__with_pixelization__dict(pixelization_galaxy, pixelization_galaxy_dict):
     assert pixelization_galaxy.dict() == pixelization_galaxy_dict
-
-
-def test__with_pixelization__from_dict(pixelization_galaxy, pixelization_galaxy_dict):
-    galaxy = Dictable.from_dict(pixelization_galaxy_dict)
-    assert galaxy == pixelization_galaxy
 
 
 def test_pixelization_equality():
@@ -88,24 +93,33 @@ def make_profiles_galaxy():
 @pytest.fixture(name="profiles_galaxy_dict")
 def make_profiles_galaxy_dict():
     return {
-        "light": {
-            "centre": (0.0, 0.0),
-            "core_radius_0": 0.01,
-            "core_radius_1": 0.05,
-            "ell_comps": (0.0, 0.0),
-            "intensity": 0.1,
-            "type": "autogalaxy.profiles.light.standard.chameleon.Chameleon",
+        "type": "instance",
+        "class_path": "autogalaxy.galaxy.galaxy.Galaxy",
+        "arguments": {
+            "redshift": 2.0,
+            "light": {
+                "type": "instance",
+                "class_path": "autogalaxy.profiles.light.standard.chameleon.Chameleon",
+                "arguments": {
+                    "centre": (0.0, 0.0),
+                    "ell_comps": (0.0, 0.0),
+                    "intensity": 0.1,
+                    "core_radius_0": 0.01,
+                    "core_radius_1": 0.05,
+                },
+            },
+            "mass": {
+                "type": "instance",
+                "class_path": "autogalaxy.profiles.mass.stellar.dev_vaucouleurs.DevVaucouleurs",
+                "arguments": {
+                    "centre": (0.0, 0.0),
+                    "ell_comps": (0.0, 0.0),
+                    "intensity": 0.1,
+                    "effective_radius": 0.6,
+                    "mass_to_light_ratio": 1.0,
+                },
+            },
         },
-        "mass": {
-            "centre": (0.0, 0.0),
-            "effective_radius": 0.6,
-            "ell_comps": (0.0, 0.0),
-            "intensity": 0.1,
-            "mass_to_light_ratio": 1.0,
-            "type": "autogalaxy.profiles.mass.stellar.dev_vaucouleurs.DevVaucouleurs",
-        },
-        "redshift": 2.0,
-        "type": "autogalaxy.galaxy.galaxy.Galaxy",
     }
 
 
@@ -114,4 +128,4 @@ def test__profiles_galaxy__dict(profiles_galaxy, profiles_galaxy_dict):
 
 
 def test__profiles_galaxy__from_dict(profiles_galaxy, profiles_galaxy_dict):
-    assert Dictable.from_dict(profiles_galaxy_dict) == profiles_galaxy
+    assert from_dict(profiles_galaxy_dict) == profiles_galaxy

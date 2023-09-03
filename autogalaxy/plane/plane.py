@@ -5,8 +5,6 @@ from typing import Dict, List, Optional, Tuple, Type, Union
 
 import autoarray as aa
 
-from autoconf.dictable import Dictable
-
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.profiles.light.basis import Basis
 from autogalaxy.profiles.light.abstract import LightProfile
@@ -19,7 +17,7 @@ from autogalaxy import exc
 from autogalaxy.plane import plane_util
 
 
-class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
+class Plane(OperateImageGalaxies, OperateDeflections):
     def __init__(
         self,
         galaxies,
@@ -54,11 +52,7 @@ class Plane(OperateImageGalaxies, OperateDeflections, Dictable):
         self.galaxies = galaxies
 
         self.run_time_dict = run_time_dict
-
-    def dict(self) -> Dict:
-        plane_dict = super().dict()
-        plane_dict["galaxies"] = [galaxy.dict() for galaxy in self.galaxies]
-        return plane_dict
+        self.run_time_dict = run_time_dict
 
     def output_to_json(self, file_path: Union[Path, str]):
         with open(file_path, "w+") as f:

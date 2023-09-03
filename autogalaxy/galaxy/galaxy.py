@@ -4,8 +4,8 @@ import numpy as np
 
 import autoarray as aa
 import autofit as af
+from autoconf.dictable import instance_as_dict, as_dict
 
-from autoconf.dictable import Dictable
 from autogalaxy import exc
 from autogalaxy.operate.deflections import OperateDeflections
 from autogalaxy.operate.image import OperateImageList
@@ -15,7 +15,7 @@ from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
-class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
+class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
     """
     @DynamicAttrs
     """
@@ -100,10 +100,12 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections, Dictable):
         }
 
     def dict(self) -> Dict:
-        return {
-            **{name: profile.dict() for name, profile in self.profile_dict.items()},
-            **Dictable.dict(self),
+        d = instance_as_dict(self)
+        d["arguments"] = {
+            **d.get("arguments", {}),
+            **{name: as_dict(profile) for name, profile in self.profile_dict.items()},
         }
+        return d
 
     def cls_list_from(self, cls: Type, cls_filtered: Optional[Type] = None) -> List:
         """

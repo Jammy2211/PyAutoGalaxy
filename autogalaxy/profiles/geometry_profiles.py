@@ -5,10 +5,9 @@ import numpy as np
 import autoarray as aa
 from autoarray.structures.grids.transformed_2d import Grid2DTransformedNumpy
 from autogalaxy import convert
-from autoconf.dictable import Dictable
 
 
-class GeometryProfile(Dictable):
+class GeometryProfile:
     """
     An abstract geometry profile, which describes profiles with y and x centre Cartesian coordinates
 

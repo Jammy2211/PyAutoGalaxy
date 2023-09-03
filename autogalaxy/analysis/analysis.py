@@ -8,7 +8,7 @@ import pickle
 import time
 
 from autoconf import conf
-from autoconf.dictable import as_dict
+from autoconf.dictable import as_dict, output_to_json
 import autofit as af
 import autoarray as aa
 
@@ -289,7 +289,9 @@ class AnalysisDataset(Analysis):
             to the properties of the dataset.
         """
 
-        logger.info("Setting Adapt Dataset (adapt_model_image / adapt_galaxy_image_path_dict)")
+        logger.info(
+            "Setting Adapt Dataset (adapt_model_image / adapt_galaxy_image_path_dict)"
+        )
 
         adapt_galaxy_image_path_dict = result.adapt_galaxy_image_path_dict
         adapt_model_image = result.adapt_model_image
@@ -447,13 +449,15 @@ class AnalysisDataset(Analysis):
             noise_map_path=dataset_path / "noise_map.fits",
             overwrite=True,
         )
-        self.dataset.settings.output_to_json(file_path=dataset_path / "settings.json")
+        output_to_json(self.dataset.settings, file_path=dataset_path / "settings.json")
 
-        self.settings_inversion.output_to_json(
-            file_path=paths._files_path / "settings_inversion.json"
+        output_to_json(
+            self.settings_inversion,
+            file_path=paths._files_path / "settings_inversion.json",
         )
-        self.settings_pixelization.output_to_json(
-            file_path=paths._files_path / "settings_pixelization.json"
+        output_to_json(
+            self.settings_pixelization,
+            file_path=paths._files_path / "settings_pixelization.json",
         )
 
         paths.save_json("cosmology", as_dict(self.cosmology))

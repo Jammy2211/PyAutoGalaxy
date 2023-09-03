@@ -2,15 +2,12 @@ from functools import wraps
 import logging
 import numpy as np
 from skimage import measure
-from typing import Callable, List, Tuple, Union
+from typing import List, Tuple, Union
 
 import autoarray as aa
-from autoconf.dictable import Dictable
 
 from autogalaxy.util.shear_field import ShearYX2D
 from autogalaxy.util.shear_field import ShearYX2DIrregular
-
-from autogalaxy import exc
 
 logger = logging.getLogger(__name__)
 
@@ -81,7 +78,7 @@ def evaluation_grid(func):
     return wrapper
 
 
-class OperateDeflections(Dictable):
+class OperateDeflections:
     """
     Packages methods which manipulate the 2D deflection angle map returned from the `deflections_yx_2d_from` function
     of a mass object (e.g. a `MassProfile`, `Galaxy`, `Plane`).
