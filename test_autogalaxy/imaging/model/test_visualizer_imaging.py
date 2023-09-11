@@ -42,4 +42,4 @@ def test__visualizes_fit_imaging__uses_configs(
         file_path=path.join(plot_path, "fits", "data.fits"), hdu=0
     )
 
-    assert image.shape == (5, 5)
+    assert image.shape == (7, 7)
