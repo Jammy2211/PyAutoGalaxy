@@ -8,7 +8,7 @@ import pickle
 import time
 
 from autoconf import conf
-from autoconf.dictable import as_dict, output_to_json
+from autoconf.dictable import to_dict, output_to_json
 import autofit as af
 import autoarray as aa
 
@@ -460,7 +460,7 @@ class AnalysisDataset(Analysis):
             file_path=paths._files_path / "settings_pixelization.json",
         )
 
-        paths.save_json("cosmology", as_dict(self.cosmology))
+        paths.save_json("cosmology", to_dict(self.cosmology))
 
         adapt_path = paths._files_path / "adapt"
 

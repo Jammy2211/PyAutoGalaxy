@@ -4,7 +4,7 @@ import numpy as np
 
 import autoarray as aa
 import autofit as af
-from autoconf.dictable import instance_as_dict, as_dict
+from autoconf.dictable import instance_as_dict, to_dict
 
 from autogalaxy import exc
 from autogalaxy.operate.deflections import OperateDeflections
@@ -103,7 +103,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
         d = instance_as_dict(self)
         d["arguments"] = {
             **d.get("arguments", {}),
-            **{name: as_dict(profile) for name, profile in self.profile_dict.items()},
+            **{name: to_dict(profile) for name, profile in self.profile_dict.items()},
         }
         return d
 
