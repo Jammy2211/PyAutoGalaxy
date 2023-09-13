@@ -355,6 +355,9 @@ class AnalysisDataset(Analysis):
             if conf.instance["general"]["test"]["check_preloads"]:
                 self.preloads.check_via_fit(fit=fit_0)
 
+        if isinstance(paths, af.DatabasePaths):
+            return
+
         self.preloads.output_info_to_summary(file_path=paths.profile_path)
 
     def modify_after_fit(
