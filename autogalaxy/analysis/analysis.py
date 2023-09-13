@@ -4,7 +4,6 @@ import numpy as np
 from typing import Callable, Dict, Optional, Tuple, Union
 from os import path
 import os
-import pickle
 import time
 
 from autoconf import conf
@@ -442,47 +441,59 @@ class AnalysisDataset(Analysis):
             The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
             and the pickled objects used by the aggregator output by this function.
         """
-        dataset_path = paths._files_path / "dataset"
-
-        self.dataset.output_to_fits(
-            data_path=dataset_path / "data.fits",
-            noise_map_path=dataset_path / "noise_map.fits",
-            overwrite=True,
+        paths.save_fits(
+            name="data",
+            hdu=self.dataset.data.hdu_for_output,
+            prefix="dataset",
         )
-        output_to_json(self.dataset.settings, file_path=dataset_path / "settings.json")
-
-        output_to_json(
-            self.settings_inversion,
-            file_path=paths._files_path / "settings_inversion.json",
+        paths.save_fits(
+            name="noise_map",
+            hdu=self.dataset.noise_map.hdu_for_output,
+            prefix="dataset",
         )
-        output_to_json(
-            self.settings_pixelization,
-            file_path=paths._files_path / "settings_pixelization.json",
+        paths.save_json(
+            name="settings",
+            object_dict=to_dict(self.dataset.settings),
+            prefix="dataset"
         )
-
-        paths.save_json("cosmology", to_dict(self.cosmology))
-
-        adapt_path = paths._files_path / "adapt"
+        paths.save_json(
+            name="settings_inversion",
+            object_dict=to_dict(self.settings_inversion),
+        )
+        paths.save_json(
+            name="settings_pixelization",
+            object_dict=to_dict(self.settings_pixelization),
+        )
+        paths.save_json(
+            name="cosmology",
+            object_dict=to_dict(self.cosmology),
+        )
 
         if self.adapt_model_image is not None:
-            self.adapt_model_image.output_to_fits(
-                file_path=adapt_path / "adapt_model_image.fits", overwrite=True
+            paths.save_fits(
+                name="adapt_model_image",
+                hdu=self.adapt_model_image.hdu_for_output,
+                prefix="adapt",
             )
 
         if self.adapt_galaxy_image_path_dict is not None:
+
+            adapt_galaxy_key_list = []
+
             for key, value in self.adapt_galaxy_image_path_dict.items():
-                value.output_to_fits(
-                    file_path=adapt_path / f"{key}.fits",
-                    overwrite=True,
+
+                paths.save_fits(
+                    name=key,
+                    hdu=value.hdu_for_output,
+                    prefix="adapt",
                 )
 
-            with af.util.open_(adapt_path / "adapt_galaxy_keys.json", "w") as f:
-                json.dump(
-                    [
-                        str(key)
-                        for key, value in self.adapt_galaxy_image_path_dict.items()
-                    ],
-                    f,
+                adapt_galaxy_key_list.append(key)
+
+                paths.save_json(
+                    name="adapt_galaxy_keys",
+                    object_dict=adapt_galaxy_key_list,
+                    prefix="adapt"
                 )
 
     def check_and_replace_adapt_images(self, paths: af.DirectoryPaths):
