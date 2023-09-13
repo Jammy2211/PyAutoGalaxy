@@ -218,16 +218,22 @@ class AnalysisQuantity(Analysis):
             The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
             visualization, and the pickled objects used by the aggregator output by this function.
         """
-        dataset_path = paths._files_path / "dataset"
-
-        self.dataset.output_to_fits(
-            data_path=dataset_path / "data.fits",
-            noise_map_path=dataset_path / "noise_map.fits",
-            overwrite=True,
+        paths.save_fits(
+            name="data",
+            hdu=self.dataset.data.hdu_for_output,
+            prefix="dataset",
         )
-        self.dataset.settings.output_to_json(file_path=dataset_path / "settings.json")
-        self.dataset.mask.output_to_fits(
-            file_path=dataset_path / "mask.fits", overwrite=True
+        paths.save_fits(
+            name="noise_map",
+            hdu=self.dataset.noise_map.hdu_for_output,
+            prefix="dataset",
         )
-
-        paths.save_json("cosmology", to_dict(self.cosmology))
+        paths.save_fits(
+            name="mask",
+            hdu=self.dataset.mask.hdu_for_output,
+            prefix="dataset",
+        )
+        paths.save_json(
+            name="cosmology",
+            object_dict=to_dict(self.cosmology),
+        )
