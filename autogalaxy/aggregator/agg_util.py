@@ -7,6 +7,7 @@ if TYPE_CHECKING:
 import autofit as af
 import autoarray as aa
 
+
 def galaxies_with_adapt_images_from(
     fit: af.Fit, galaxies: List[Galaxy]
 ) -> List[Galaxy]:
@@ -77,7 +78,9 @@ def galaxies_with_adapt_images_from(
     return galaxies_with_adapt
 
 
-def sparse_grids_of_planes_list_from(fit: af.Fit, total_fits : int, use_preloaded_grid: bool) -> List[Optional[aa.Grid2D]]:
+def sparse_grids_of_planes_list_from(
+    fit: af.Fit, total_fits: int, use_preloaded_grid: bool
+) -> List[Optional[aa.Grid2D]]:
     """
     Returns the image-plane pixelization grid(s) used by the fit.
 
@@ -120,11 +123,12 @@ def sparse_grids_of_planes_list_from(fit: af.Fit, total_fits : int, use_preloade
     else:
         return [None] * total_fits
 
+
 def preloads_from(
-        preloads_cls,
-        use_preloaded_grid: bool,
-        sparse_grids_of_planes : List,
-        use_w_tilde : Optional[bool] = False
+    preloads_cls,
+    use_preloaded_grid: bool,
+    sparse_grids_of_planes: List,
+    use_w_tilde: Optional[bool] = False,
 ) -> aa.Preloads:
     """
     Returns a `Preloads` object associated with a fit loaded via the database.
@@ -158,7 +162,6 @@ def preloads_from(
     preloads = preloads_cls()
 
     if use_preloaded_grid:
-
         if sparse_grids_of_planes is not None:
             preloads = preloads_cls(
                 sparse_image_plane_grid_pg_list=sparse_grids_of_planes,

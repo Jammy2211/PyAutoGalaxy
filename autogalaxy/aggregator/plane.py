@@ -14,6 +14,7 @@ from autogalaxy.aggregator import agg_util
 
 logger = logging.getLogger(__name__)
 
+
 def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> List[Plane]:
     """
     Returns an `Plane` object from a `PyAutoFit` sqlite database `Fit` object.

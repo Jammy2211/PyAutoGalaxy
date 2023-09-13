@@ -454,7 +454,7 @@ class AnalysisDataset(Analysis):
         paths.save_json(
             name="settings",
             object_dict=to_dict(self.dataset.settings),
-            prefix="dataset"
+            prefix="dataset",
         )
         paths.save_json(
             name="settings_inversion",
@@ -477,11 +477,9 @@ class AnalysisDataset(Analysis):
             )
 
         if self.adapt_galaxy_image_path_dict is not None:
-
             adapt_galaxy_key_list = []
 
             for key, value in self.adapt_galaxy_image_path_dict.items():
-
                 paths.save_fits(
                     name=key,
                     hdu=value.hdu_for_output,
@@ -493,7 +491,7 @@ class AnalysisDataset(Analysis):
                 paths.save_json(
                     name="adapt_galaxy_keys",
                     object_dict=adapt_galaxy_key_list,
-                    prefix="adapt"
+                    prefix="adapt",
                 )
 
     def check_and_replace_adapt_images(self, paths: af.DirectoryPaths):

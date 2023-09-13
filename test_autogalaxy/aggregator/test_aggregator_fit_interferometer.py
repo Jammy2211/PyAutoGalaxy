@@ -8,7 +8,6 @@ database_file = "db_fit_interferometer"
 def test__fit_interferometer_randomly_drawn_via_pdf_gen_from(
     interferometer_7, samples, model
 ):
-
     analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
 
     agg = aggregator_from(
@@ -19,9 +18,7 @@ def test__fit_interferometer_randomly_drawn_via_pdf_gen_from(
     )
 
     fit_agg = ag.agg.FitInterferometerAgg(aggregator=agg)
-    fit_pdf_gen = fit_agg.randomly_drawn_via_pdf_gen_from(
-        total_samples=2
-    )
+    fit_pdf_gen = fit_agg.randomly_drawn_via_pdf_gen_from(total_samples=2)
 
     i = 0
 
@@ -71,22 +68,19 @@ def test__fit_interferometer_randomly_drawn_via_pdf_gen_from(
 
 
 def test__fit_interferometer_all_above_weight_gen(interferometer_7, samples, model):
-
     clean(database_file=database_file)
 
     analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
-    
+
     agg = aggregator_from(
         database_file=database_file,
         analysis=analysis,
         model=model,
         samples=samples,
     )
-    
+
     fit_agg = ag.agg.FitInterferometerAgg(aggregator=agg)
-    fit_pdf_gen = fit_agg.all_above_weight_gen_from(
-        minimum_weight=-1.0
-    )
+    fit_pdf_gen = fit_agg.all_above_weight_gen_from(minimum_weight=-1.0)
 
     i = 0
 

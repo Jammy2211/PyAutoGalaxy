@@ -398,7 +398,6 @@ class AnalysisImaging(AnalysisDataset):
             prefix="dataset",
         )
 
-
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None
     ) -> Tuple[Dict, Dict]:
