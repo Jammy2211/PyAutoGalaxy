@@ -338,8 +338,6 @@ class AnalysisDataset(Analysis):
             "PRELOADS - Setting up preloads, may take a few minutes for fits using an inversion."
         )
 
-        os.makedirs(paths.profile_path, exist_ok=True)
-
         fit_maker = self.fit_maker_cls(model=model, fit_func=self.fit_func)
 
         fit_0 = fit_maker.fit_via_model_from(unit_value=0.45)
@@ -358,6 +356,7 @@ class AnalysisDataset(Analysis):
         if isinstance(paths, af.DatabasePaths):
             return
 
+        os.makedirs(paths.profile_path, exist_ok=True)
         self.preloads.output_info_to_summary(file_path=paths.profile_path)
 
     def modify_after_fit(
@@ -518,7 +517,6 @@ class AnalysisDataset(Analysis):
         """
 
         def load_adapt_image(filename):
-
             adapt_image = aa.Array2D.no_mask(
                 values=paths.load_fits(name=filename),
                 pixel_scales=self.dataset.pixel_scales,
@@ -580,9 +578,7 @@ class AnalysisDataset(Analysis):
         figure_of_merit = result.max_log_likelihood_fit.figure_of_merit
 
         try:
-            figure_of_merit_sanity = paths.load_json(
-                name="figure_of_merit_sanity"
-            )
+            figure_of_merit_sanity = paths.load_json(name="figure_of_merit_sanity")
 
             if conf.instance["general"]["test"]["check_figure_of_merit_sanity"]:
                 if not np.isclose(figure_of_merit, figure_of_merit_sanity):
@@ -596,10 +592,7 @@ class AnalysisDataset(Analysis):
                     )
 
         except (FileNotFoundError, KeyError):
-
             paths.save_json(
                 name="figure_of_merit_sanity",
                 object_dict=figure_of_merit,
             )
-
-
