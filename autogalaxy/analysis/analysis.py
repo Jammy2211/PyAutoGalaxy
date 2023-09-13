@@ -100,6 +100,10 @@ class Analysis(af.Analysis):
         Two dictionaries, the profiling dictionary and info dictionary, which contain the profiling times of the
         `log_likelihood_function` and information on the model and dataset used to perform the profiling.
         """
+
+        if isinstance(paths, af.DatabasePaths):
+            return
+
         run_time_dict = {}
         info_dict = {}
 
@@ -511,15 +515,17 @@ class AnalysisDataset(Analysis):
         """
 
         def load_adapt_image(filename):
-            adapt_image = aa.Array2D.from_fits(
-                file_path=paths._files_path / "adapt" / filename,
+
+            adapt_image = aa.Array2D.no_mask(
+                values=paths.load_fits(name=filename),
                 pixel_scales=self.dataset.pixel_scales,
             )
+
             return adapt_image.apply_mask(mask=self.dataset.mask)
 
         try:
-            adapt_model_image = load_adapt_image(filename="adapt_model_image.fits")
-        except FileNotFoundError:
+            adapt_model_image = load_adapt_image(filename="adapt_model_image")
+        except (FileNotFoundError, KeyError):
             return
 
         if np.max(abs(adapt_model_image - self.adapt_model_image)) > 1e-8:
@@ -531,7 +537,7 @@ class AnalysisDataset(Analysis):
             self.adapt_model_image = adapt_model_image
 
             self.adapt_galaxy_image_path_dict = {
-                key: load_adapt_image(filename=f"{key}.fits")
+                key: load_adapt_image(filename=f"{key}")
                 for key in self.adapt_galaxy_image_path_dict.keys()
             }
 

@@ -394,8 +394,6 @@ class AnalysisInterferometer(AnalysisDataset):
         """
         super().save_attributes(paths=paths)
 
-        dataset_path = paths._files_path / "dataset"
-
         hdu = aa.util.array_2d.hdu_for_output_from(
             array_2d=self.dataset.uv_wavelengths,
         )
