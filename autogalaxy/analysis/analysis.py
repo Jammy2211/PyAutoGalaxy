@@ -576,17 +576,10 @@ class AnalysisDataset(Analysis):
 
         figure_of_merit = result.max_log_likelihood_fit.figure_of_merit
 
-        figure_of_merit_sanity_file = path.join(
-            paths.output_path, "figure_of_merit_sanity.json"
-        )
-
-        if not path.exists(figure_of_merit_sanity_file):
-            with open(figure_of_merit_sanity_file, "w+") as f:
-                json.dump(figure_of_merit, f)
-
-        else:
-            with open(figure_of_merit_sanity_file) as json_file:
-                figure_of_merit_sanity = json.load(json_file)
+        try:
+            figure_of_merit_sanity = paths.load_json(
+                name="figure_of_merit_sanity"
+            )
 
             if conf.instance["general"]["test"]["check_figure_of_merit_sanity"]:
                 if not np.isclose(figure_of_merit, figure_of_merit_sanity):
@@ -598,3 +591,12 @@ class AnalysisDataset(Analysis):
                         f"Old Figure of Merit = {figure_of_merit_sanity}\n"
                         f"New Figure of Merit = {figure_of_merit}"
                     )
+
+        except (FileNotFoundError, KeyError):
+
+            paths.save_json(
+                name="figure_of_merit_sanity",
+                object_dict=figure_of_merit,
+            )
+
+
