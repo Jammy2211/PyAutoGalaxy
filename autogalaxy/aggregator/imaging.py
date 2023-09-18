@@ -44,7 +44,6 @@ def _imaging_from(
     dataset_list = []
 
     for fit in fit_list:
-
         data = aa.Array2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.data"))
         noise_map = aa.Array2D.from_primary_hdu(
             primary_hdu=fit.value(name="dataset.noise_map")
@@ -107,7 +106,9 @@ class ImagingAgg:
         """
         self.aggregator = aggregator
 
-    def dataset_gen_from(self, settings_dataset: Optional[aa.SettingsImaging] = None) -> List[aa.Imaging]:
+    def dataset_gen_from(
+        self, settings_dataset: Optional[aa.SettingsImaging] = None
+    ) -> List[aa.Imaging]:
         """
         Returns a generator of `Imaging` objects from an input aggregator.
 

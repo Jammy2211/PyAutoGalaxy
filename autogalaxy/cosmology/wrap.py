@@ -51,6 +51,3 @@ class Planck15(FlatLambdaCDM, LensingCosmology):
             Ob0=Planck15.Ob0,
             name=Planck15.name,
         )
-
-
-

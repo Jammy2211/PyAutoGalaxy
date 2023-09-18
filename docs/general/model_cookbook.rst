@@ -22,12 +22,12 @@ A simple model we can compose has a galaxy with a Sersic light profile:
     
     model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
-The model ``prior_count`` tells us the total number of free parameters (which are fitted for via a non-linear search),
-which in this case is 7.
+The model ``total_free_parameters`` tells us the total number of free parameters (which are fitted for via a
+non-linear search), which in this case is 7.
 
 .. code-block:: python
 
-    print(f"Model Prior Count = {model.prior_count}")
+    print(f"Model Total Free Parameters = {model.total_free_parameters}")
 
 If we print the ``info`` attribute of the model we get information on all of the parameters and their priors.
 
@@ -53,19 +53,19 @@ This gives the following output:
                 effective_radius                       UniformPrior, lower_limit = 0.0, upper_limit = 30.0
                 sersic_index                           UniformPrior, lower_limit = 0.8, upper_limit = 5.0
 
-More Complex Lens Models
-------------------------
+More Complex Models
+-------------------
 
 The API above can be easily extended to compose models where each galaxy has multiple light or mass profiles:
 
 .. code-block:: python
 
-    bulge = af.Model(al.lp.Sersic)
-    disk = af.Model(al.lp.Exponential)
-    bar = af.Model(al.lp.Sersic)
+    bulge = af.Model(ag.lp.Sersic)
+    disk = af.Model(ag.lp.Exponential)
+    bar = af.Model(ag.lp.Sersic)
 
     galaxy = af.Model(
-        al.Galaxy,
+        ag.Galaxy,
         redshift=0.5,
         bulge=bulge,
         disk=disk,
@@ -81,18 +81,18 @@ The API can also be extended to compose models where there are multiple galaxies
 
 .. code-block:: python
 
-    bulge = af.Model(al.lp.Sersic)
+    bulge = af.Model(ag.lp.Sersic)
 
     galaxy_0 = af.Model(
-        al.Galaxy,
+        ag.Galaxy,
         redshift=0.5,
         bulge=bulge,
     )
 
-    bulge = af.Model(al.lp.Sersic)
+    bulge = af.Model(ag.lp.Sersic)
 
     galaxy_1 = af.Model(
-        al.Galaxy,
+        ag.Galaxy,
         redshift=0.5,
         bulge=bulge,
     )
@@ -116,11 +116,11 @@ This means we can write the model above comprising multiple light profiles more 
 .. code-block:: python
 
     galaxy = af.Model(
-        al.Galaxy,
+        ag.Galaxy,
         redshift=0.5,
-        bulge=al.lp.Sersic,
-        disk=al.lp.Exponential,
-        bar=al.lp.Sersic
+        bulge=ag.lp.Sersic,
+        disk=ag.lp.Exponential,
+        bar=ag.lp.Sersic
     )
 
     model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
@@ -132,14 +132,14 @@ We can customize the priors of the model component individual parameters as foll
 
 .. code-block:: python
 
-    bulge = af.Model(al.lp.Sersic)
+    bulge = af.Model(ag.lp.Sersic)
     bulge.centre.centre_0 = af.UniformPrior(lower_limit=-0.1, upper_limit=0.1)
     bulge.centre.centre_1 = af.UniformPrior(lower_limit=-0.1, upper_limit=0.1)
     bulge.intensity = af.LogUniformPrior(lower_limit=1e-4, upper_limit=1e4)
     bulge.sersic_index = af.GaussianPrior(mean=4.0, sigma=1.0, lower_limit=1.0, upper_limit=8.0)
 
     galaxy = af.Model(
-        al.Galaxy,
+        ag.Galaxy,
         redshift=0.5,
         bulge=bulge,
     )
@@ -153,8 +153,8 @@ We can customize the model parameters in a number of different ways, as shown be
 
 .. code-block:: python
 
-    bulge = af.Model(al.lp.Sersic)
-    disk = af.Model(al.lp.Exponential)
+    bulge = af.Model(ag.lp.Sersic)
+    disk = af.Model(ag.lp.Exponential)
 
     # Parameter Pairing: Pair the centre of the bulge and disk together, reducing
     # the complexity of non-linear parameter space by N = 2
@@ -172,7 +172,7 @@ We can customize the model parameters in a number of different ways, as shown be
     bulge.intensity = disk.intensity + 0.1
 
     galaxy = af.Model(
-        al.Galaxy,
+        ag.Galaxy,
         redshift=0.5,
         bulge=bulge,
         disk=disk,
@@ -204,6 +204,9 @@ JSon Outputs
 After a model is composed, it can easily be output to a .json file on hard-disk in a readable structure:
 
 .. code-block:: python
+
+    import os
+    import json
 
     model_path = path.join("path", "to", "model", "json")
 
@@ -256,13 +259,8 @@ https://github.com/Jammy2211/autogalaxy_workspace/blob/release/notebooks/multi/m
 Relations (Advanced)
 --------------------
 
-In the model above, an extra free parameter ``intensity`` was added for every dataset.
-
-With 2 datasets this did not produce a complex model, but if there are 5+ datasets one will quickly find that the
-model complexity increases dramatically.
-
-We can therefore compose models where the free parameter(s) vary according to a user-specified function across the
-datasets.
+We can compose models where the free parameter(s) vary according to a user-specified function
+(e.g. y = mx +c -> intensity = (m * wavelength) + c across the datasets.
 
 The following example notebooks show how to compose and fit these models:
 
@@ -276,11 +274,8 @@ detailed in this cookbook.
 
 The **PyAutoFit** model composition cookbooks detail this API in more detail:
 
-https://pyautofit.readthedocs.io/en/latest/cookbooks/cookbook_1_basics.html
-https://pyautofit.readthedocs.io/en/latest/cookbooks/cookbook_2_collections.html
-https://pyautofit.readthedocs.io/en/latest/cookbooks/cookbook_3_multiple_datasets.html
-https://pyautofit.readthedocs.io/en/latest/cookbooks/cookbook_4_multi_level.html
-https://pyautofit.readthedocs.io/en/latest/cookbooks/cookbook_5_model_linking.html
+https://pyautofit.readthedocs.io/en/latest/cookbooks/model.html
+https://pyautofit.readthedocs.io/en/latest/cookbooks/multi_level_model.html
 
 Wrap Up
 -------

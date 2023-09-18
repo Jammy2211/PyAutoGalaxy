@@ -5,6 +5,7 @@ from test_autogalaxy.aggregator.conftest import clean, aggregator_from
 
 database_file = "db_plane"
 
+
 def test__plane_randomly_drawn_via_pdf_gen_from(
     masked_imaging_7x7,
     adapt_model_image_7x7,
@@ -39,7 +40,9 @@ def test__plane_randomly_drawn_via_pdf_gen_from(
             assert plane_list[0].galaxies[0].light.centre == (10.0, 10.0)
             assert plane_list[0].galaxies[1].redshift == 1.0
 
-            assert (plane_list[0].galaxies[0].adapt_model_image == adapt_model_image_7x7).all()
+            assert (
+                plane_list[0].galaxies[0].adapt_model_image == adapt_model_image_7x7
+            ).all()
             assert (
                 plane_list[0].galaxies[0].adapt_galaxy_image
                 == adapt_galaxy_image_path_dict_7x7["('galaxies', 'g0')"]
@@ -61,7 +64,6 @@ def test__plane_all_above_weight_gen(
     samples,
     model,
 ):
-
     clean(database_file=database_file)
 
     analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)

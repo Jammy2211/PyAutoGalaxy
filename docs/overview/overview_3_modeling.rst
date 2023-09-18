@@ -105,7 +105,7 @@ very effective at modeling.
 
 .. code-block:: python
 
-    search = af.DynestyStatic(name="search_example")
+    search = af.Nautilus(name="search_example")
 
 **PyAutoGalaxy** supports many model-fitting algorithms, including maximum likelihood estimators and MCMC, which are
 documented throughout the workspace.
@@ -167,11 +167,12 @@ Estimating this quantity is more tricky, as it varies depending on the model com
 and the properties of the dataset and model being fitted.
 
 For this example, we conservatively estimate that the non-linear search will perform ~10000 iterations per free
-parameter in the model. This is an upper limit, with models typically converging in far fewer iterations.
+parameter in the model. This is an upper limit, with models typically converge in far fewer iterations.
 
 If you perform the fit over multiple CPUs, you can divide the run time by the number of cores to get an estimate of
-the time it will take to fit the model. However, above ~6 cores the speed-up from parallelization is less efficient and
-does not scale linearly with the number of cores.
+the time it will take to fit the model. Parallelization with Nautilus scales well, it speeds up the model-fit by the
+``number_of_cores`` for N < 8 CPUs and roughly ``0.5*number_of_cores`` for N > 8 CPUs. This scaling continues
+for N> 50 CPUs, meaning that with super computing facilities you can always achieve fast run times!
 
 .. code-block:: python
 

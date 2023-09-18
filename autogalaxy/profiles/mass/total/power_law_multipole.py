@@ -36,7 +36,9 @@ def radial_and_angle_grid_from(
     return radial_grid, angle_grid
 
 
-def multipole_parameters_from(multipole_comps : Tuple[float, float], m : int) -> Tuple[float, float]:
+def multipole_parameters_from(
+    multipole_comps: Tuple[float, float], m: int
+) -> Tuple[float, float]:
     """
     Converts the multipole component parameters to their normalizartion value `k_m` and angle `phi`,
     which are given by:
@@ -57,17 +59,15 @@ def multipole_parameters_from(multipole_comps : Tuple[float, float], m : int) ->
     -------
     The normalization and angle parameters of the multipole.
     """
-    phi_m = np.arctan2(
-        multipole_comps[0],
-        multipole_comps[1]
-    ) * 180.0 / np.pi / float(m)
-    k_m = np.sqrt(
-        multipole_comps[1] ** 2 + multipole_comps[0] ** 2
+    phi_m = (
+        np.arctan2(multipole_comps[0], multipole_comps[1]) * 180.0 / np.pi / float(m)
     )
+    k_m = np.sqrt(multipole_comps[1] ** 2 + multipole_comps[0] ** 2)
 
     return k_m, phi_m
 
-def multipole_comps_from(k_m : float, phi_m : float, m : int) -> Tuple[float, float]:
+
+def multipole_comps_from(k_m: float, phi_m: float, m: int) -> Tuple[float, float]:
     """
     Converts the multipole normalizartion value `k_m` and angle `phi` to their multipole component parameters,
     which are given by:
@@ -93,10 +93,8 @@ def multipole_comps_from(k_m : float, phi_m : float, m : int) -> Tuple[float, fl
     multipole_comp_0 = k_m * np.sin(phi_m * float(m) * units.deg.to(units.rad))
     multipole_comp_1 = k_m * np.cos(phi_m * float(m) * units.deg.to(units.rad))
 
-    return (
-        multipole_comp_0,
-        multipole_comp_1
-    )
+    return (multipole_comp_0, multipole_comp_1)
+
 
 class PowerLawMultipole(MassProfile):
     def __init__(

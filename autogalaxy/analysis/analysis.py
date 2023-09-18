@@ -4,7 +4,6 @@ import numpy as np
 from typing import Callable, Dict, Optional, Tuple, Union
 from os import path
 import os
-import pickle
 import time
 
 from autoconf import conf
@@ -101,6 +100,10 @@ class Analysis(af.Analysis):
         Two dictionaries, the profiling dictionary and info dictionary, which contain the profiling times of the
         `log_likelihood_function` and information on the model and dataset used to perform the profiling.
         """
+
+        if isinstance(paths, af.DatabasePaths):
+            return
+
         run_time_dict = {}
         info_dict = {}
 
@@ -335,8 +338,6 @@ class AnalysisDataset(Analysis):
             "PRELOADS - Setting up preloads, may take a few minutes for fits using an inversion."
         )
 
-        os.makedirs(paths.profile_path, exist_ok=True)
-
         fit_maker = self.fit_maker_cls(model=model, fit_func=self.fit_func)
 
         fit_0 = fit_maker.fit_via_model_from(unit_value=0.45)
@@ -352,6 +353,10 @@ class AnalysisDataset(Analysis):
             if conf.instance["general"]["test"]["check_preloads"]:
                 self.preloads.check_via_fit(fit=fit_0)
 
+        if isinstance(paths, af.DatabasePaths):
+            return
+
+        os.makedirs(paths.profile_path, exist_ok=True)
         self.preloads.output_info_to_summary(file_path=paths.profile_path)
 
     def modify_after_fit(
@@ -442,47 +447,57 @@ class AnalysisDataset(Analysis):
             The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
             and the pickled objects used by the aggregator output by this function.
         """
-        dataset_path = paths._files_path / "dataset"
-
-        self.dataset.output_to_fits(
-            data_path=dataset_path / "data.fits",
-            noise_map_path=dataset_path / "noise_map.fits",
-            overwrite=True,
+        paths.save_fits(
+            name="data",
+            hdu=self.dataset.data.hdu_for_output,
+            prefix="dataset",
         )
-        output_to_json(self.dataset.settings, file_path=dataset_path / "settings.json")
-
-        output_to_json(
-            self.settings_inversion,
-            file_path=paths._files_path / "settings_inversion.json",
+        paths.save_fits(
+            name="noise_map",
+            hdu=self.dataset.noise_map.hdu_for_output,
+            prefix="dataset",
         )
-        output_to_json(
-            self.settings_pixelization,
-            file_path=paths._files_path / "settings_pixelization.json",
+        paths.save_json(
+            name="settings",
+            object_dict=to_dict(self.dataset.settings),
+            prefix="dataset",
         )
-
-        paths.save_json("cosmology", to_dict(self.cosmology))
-
-        adapt_path = paths._files_path / "adapt"
+        paths.save_json(
+            name="settings_inversion",
+            object_dict=to_dict(self.settings_inversion),
+        )
+        paths.save_json(
+            name="settings_pixelization",
+            object_dict=to_dict(self.settings_pixelization),
+        )
+        paths.save_json(
+            name="cosmology",
+            object_dict=to_dict(self.cosmology),
+        )
 
         if self.adapt_model_image is not None:
-            self.adapt_model_image.output_to_fits(
-                file_path=adapt_path / "adapt_model_image.fits", overwrite=True
+            paths.save_fits(
+                name="adapt_model_image",
+                hdu=self.adapt_model_image.hdu_for_output,
+                prefix="adapt",
             )
 
         if self.adapt_galaxy_image_path_dict is not None:
+            adapt_galaxy_key_list = []
+
             for key, value in self.adapt_galaxy_image_path_dict.items():
-                value.output_to_fits(
-                    file_path=adapt_path / f"{key}.fits",
-                    overwrite=True,
+                paths.save_fits(
+                    name=key,
+                    hdu=value.hdu_for_output,
+                    prefix="adapt",
                 )
 
-            with af.util.open_(adapt_path / "adapt_galaxy_keys.json", "w") as f:
-                json.dump(
-                    [
-                        str(key)
-                        for key, value in self.adapt_galaxy_image_path_dict.items()
-                    ],
-                    f,
+                adapt_galaxy_key_list.append(key)
+
+                paths.save_json(
+                    name="adapt_galaxy_keys",
+                    object_dict=adapt_galaxy_key_list,
+                    prefix="adapt",
                 )
 
     def check_and_replace_adapt_images(self, paths: af.DirectoryPaths):
@@ -502,15 +517,16 @@ class AnalysisDataset(Analysis):
         """
 
         def load_adapt_image(filename):
-            adapt_image = aa.Array2D.from_fits(
-                file_path=paths._files_path / "adapt" / filename,
+            adapt_image = aa.Array2D.no_mask(
+                values=paths.load_fits(name=filename),
                 pixel_scales=self.dataset.pixel_scales,
             )
+
             return adapt_image.apply_mask(mask=self.dataset.mask)
 
         try:
-            adapt_model_image = load_adapt_image(filename="adapt_model_image.fits")
-        except FileNotFoundError:
+            adapt_model_image = load_adapt_image(filename="adapt_model_image")
+        except (FileNotFoundError, KeyError):
             return
 
         if np.max(abs(adapt_model_image - self.adapt_model_image)) > 1e-8:
@@ -522,7 +538,7 @@ class AnalysisDataset(Analysis):
             self.adapt_model_image = adapt_model_image
 
             self.adapt_galaxy_image_path_dict = {
-                key: load_adapt_image(filename=f"{key}.fits")
+                key: load_adapt_image(filename=f"{key}")
                 for key in self.adapt_galaxy_image_path_dict.keys()
             }
 
@@ -561,17 +577,8 @@ class AnalysisDataset(Analysis):
 
         figure_of_merit = result.max_log_likelihood_fit.figure_of_merit
 
-        figure_of_merit_sanity_file = path.join(
-            paths.output_path, "figure_of_merit_sanity.json"
-        )
-
-        if not path.exists(figure_of_merit_sanity_file):
-            with open(figure_of_merit_sanity_file, "w+") as f:
-                json.dump(figure_of_merit, f)
-
-        else:
-            with open(figure_of_merit_sanity_file) as json_file:
-                figure_of_merit_sanity = json.load(json_file)
+        try:
+            figure_of_merit_sanity = paths.load_json(name="figure_of_merit_sanity")
 
             if conf.instance["general"]["test"]["check_figure_of_merit_sanity"]:
                 if not np.isclose(figure_of_merit, figure_of_merit_sanity):
@@ -583,3 +590,9 @@ class AnalysisDataset(Analysis):
                         f"Old Figure of Merit = {figure_of_merit_sanity}\n"
                         f"New Figure of Merit = {figure_of_merit}"
                     )
+
+        except (FileNotFoundError, KeyError):
+            paths.save_json(
+                name="figure_of_merit_sanity",
+                object_dict=figure_of_merit,
+            )

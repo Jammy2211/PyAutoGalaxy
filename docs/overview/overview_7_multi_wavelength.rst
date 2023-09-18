@@ -155,7 +155,7 @@ Each result corresponds to each analysis created above and is there the fit to e
 
 .. code-block:: python
 
-    search = af.DynestyStatic(name="overview_example_multiwavelength")
+    search = af.Nautilus(name="overview_example_multiwavelength")
     result_list = search.fit(model=model, analysis=analysis)
 
 Plotting each result's galaxies shows that the bulge and disk appear different in each result, owning to their

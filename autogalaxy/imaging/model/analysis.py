@@ -387,14 +387,15 @@ class AnalysisImaging(AnalysisDataset):
         """
         super().save_attributes(paths=paths)
 
-        dataset_path = paths._files_path / "dataset"
-
-        self.dataset.psf.output_to_fits(
-            file_path=dataset_path / "psf.fits",
-            overwrite=True,
+        paths.save_fits(
+            name="psf",
+            hdu=self.dataset.psf.hdu_for_output,
+            prefix="dataset",
         )
-        self.dataset.mask.output_to_fits(
-            file_path=dataset_path / "mask.fits", overwrite=True
+        paths.save_fits(
+            name="mask",
+            hdu=self.dataset.mask.hdu_for_output,
+            prefix="dataset",
         )
 
     def profile_log_likelihood_function(

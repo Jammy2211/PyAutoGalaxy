@@ -190,7 +190,10 @@ def clean_clumps_of_adapt_images(clumps):
 
 
 def clumps_from(
-    result: af.Result, light_as_model: bool = False, mass_as_model: bool = False, free_centre: bool = False,
+    result: af.Result,
+    light_as_model: bool = False,
+    mass_as_model: bool = False,
+    free_centre: bool = False,
 ) -> af.Collection:
     """
     The clump API models the light and / or mass of additional galaxies surrouding the main galaxy or strong lens
@@ -236,7 +239,9 @@ def clumps_from(
                     clump_index
                 ].mass.einstein_radius
                 if free_centre:
-                    clumps[clump_index].mass.centre = result.model.clumps[clump_index].mass.centre
+                    clumps[clump_index].mass.centre = result.model.clumps[
+                        clump_index
+                    ].mass.centre
 
     elif light_as_model:
         clumps = result.instance.clumps.as_model((LightProfile,))
@@ -247,7 +252,9 @@ def clumps_from(
                     clump_index
                 ].light.centre
                 if free_centre:
-                    clumps[clump_index].light.centre = result.model.clumps[clump_index].light.centre
+                    clumps[clump_index].light.centre = result.model.clumps[
+                        clump_index
+                    ].light.centre
 
     else:
         clumps = result.instance.clumps.as_model(())
