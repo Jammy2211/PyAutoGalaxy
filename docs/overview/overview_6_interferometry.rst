@@ -188,7 +188,7 @@ to the uv-plane via the Fourier transform discussed above:
     galaxies = af.Collection(galaxy=galaxy)
     model = af.Collection(galaxies=galaxies)
 
-    search = af.DynestyStatic(name="overview_interferometer")
+    search = af.Nautilus(name="overview_interferometer")
 
     analysis = ag.AnalysisInterferometer(dataset=dataset)
 
