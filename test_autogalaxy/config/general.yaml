@@ -36,7 +36,7 @@ output:
 pixelization:
   voronoi_nn_max_interpolation_neighbors: 100
 structures:
-  use_dataset_grids: true
+  native_binned_only: false           # If True, data structures are only stored in their native and binned format. This is used to reduce memory usage in autocti.
 test:
   check_figure_of_merit_sanity: false
   bypass_figure_of_merit_sanity: true

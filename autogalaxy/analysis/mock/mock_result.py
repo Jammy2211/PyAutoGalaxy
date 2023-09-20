@@ -18,6 +18,8 @@ class MockResult(af.m.MockResult):
         search: af.mock.MockSearch = None,
         adapt_galaxy_image_path_dict: Dict[ag.Galaxy, ag.Array2D] = None,
         adapt_model_image: ag.Array2D = None,
+        max_log_likelihood_plane: ag.Plane = None,
+        max_log_likelihood_tracer = None,
     ):
         super().__init__(
             samples=samples,
@@ -29,6 +31,8 @@ class MockResult(af.m.MockResult):
 
         self.adapt_galaxy_image_path_dict = adapt_galaxy_image_path_dict
         self.adapt_model_image = adapt_model_image
+        self.max_log_likelihood_plane = max_log_likelihood_plane
+        self.max_log_likelihood_tracer = max_log_likelihood_tracer
 
     @property
     def last(self):

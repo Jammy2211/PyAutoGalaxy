@@ -1,6 +1,9 @@
 import pytest
 import numpy as np
+import os
 from os import path
+
+from autoconf.dictable import from_json
 
 import autofit as af
 import autogalaxy as ag
@@ -87,3 +90,24 @@ def test__modify_before_fit__kmeans_pixelization_upper_limit_ajusted_based_on_ma
     assert model.galaxies.source.pixelization.mesh.pixels.upper_limit == pytest.approx(
         9, 1.0e-4
     )
+
+def test__save_results__plane_output_to_json(analysis_imaging_7x7):
+
+    galaxy = ag.Galaxy(redshift=0.5)
+
+    model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
+
+    plane = ag.Plane(galaxies=[galaxy])
+
+    paths = af.DirectoryPaths()
+
+    analysis_imaging_7x7.save_results(
+        paths=paths,
+        result=ag.m.MockResult(max_log_likelihood_plane=plane, model=model)
+    )
+
+    plane = from_json(file_path=paths._files_path / "plane.json")
+
+    assert plane.galaxies[0].redshift == 0.5
+
+    os.remove(paths._files_path / "plane.json")

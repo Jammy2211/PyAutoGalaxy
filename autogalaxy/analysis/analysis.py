@@ -500,6 +500,31 @@ class AnalysisDataset(Analysis):
                     prefix="adapt",
                 )
 
+    def save_results(self, paths: af.DirectoryPaths, result: ResultDataset):
+        """
+        At the end of a model-fit, this routine saves attributes of the `Analysis` object to the `files`
+        folder such that they can be loaded after the analysis using PyAutoFit's database and aggregator tools.
+
+        For this analysis it outputs the following:
+
+        - The maximum log likelihood plane of the fit.
+
+        Parameters
+        ----------
+        paths
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            visualization and the pickled objects used by the aggregator output by this function.
+        result
+            The result of a model fit, including the non-linear search, samples and maximum likelihood tracer.
+        """
+        try:
+            output_to_json(
+                obj=result.max_log_likelihood_plane,
+                file_path=paths._files_path / "plane.json"
+            )
+        except AttributeError:
+            pass
+
     def check_and_replace_adapt_images(self, paths: af.DirectoryPaths):
         """
         Using a the result of a previous model-fit, a adapt-dataset can be set up which adapts aspects of the model
