@@ -10,6 +10,8 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
     '''
     Computes the AutoGalaxy NFW parameters (kappa_s, scale_radius) for an NFW halo of the given
     mass, enforcing the Duffy '08 mass-concentration relation.
+
+    Interprets mass as *`M_{200c}`*, not `M_{200m}`.
     '''
     cosmology = Planck15()
 
@@ -59,6 +61,8 @@ def kappa_s_and_scale_radius_for_ludlow(
     '''
     Computes the AutoGalaxy NFW parameters (kappa_s, scale_radius) for an NFW halo of the given
     mass, enforcing the Ludlow '16 mass-concentration relation.
+
+    Interprets mass as *`M_{200c}`*, not `M_{200m}`.
     '''
     from colossus.cosmology import cosmology as col_cosmology
     from colossus.halo.concentration import concentration as col_concentration
