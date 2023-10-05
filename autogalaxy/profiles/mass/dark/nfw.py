@@ -29,8 +29,7 @@ class NFW(gNFW, MassProfileCSE):
             The overall normalization of the dark matter halo \
             (kappa_s = (rho_s * scale_radius)/lensing_critical_density)
         scale_radius
-            The arc-second radius where the average density within this radius is 200 times the critical density of \
-            the Universe..
+            The NFW scale radius `r_s`, as an angle on the sky in arcseconds.
         """
 
         super().__init__(
