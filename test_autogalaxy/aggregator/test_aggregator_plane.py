@@ -1,6 +1,5 @@
 import autogalaxy as ag
 
-
 from test_autogalaxy.aggregator.conftest import clean, aggregator_from
 
 database_file = "db_plane"

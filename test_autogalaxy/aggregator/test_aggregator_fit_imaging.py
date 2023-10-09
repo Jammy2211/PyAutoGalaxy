@@ -6,6 +6,7 @@ import autogalaxy as ag
 import autofit as af
 from uuid import uuid4
 from autoconf import conf
+from autoconf.conf import with_config
 
 from test_autogalaxy.aggregator.conftest import clean, aggregator_from
 
@@ -13,6 +14,12 @@ database_file = "db_fit_imaging"
 
 
 @pytest.fixture(name="agg_7x7")
+@with_config(
+    "general",
+    "output",
+    "samples_to_csv",
+    value=True,
+)
 def make_agg_7x7(samples, model, analysis_imaging_7x7):
     output_path = Path(conf.instance.output_path)
 
