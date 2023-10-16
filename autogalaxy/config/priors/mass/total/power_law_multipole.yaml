@@ -54,7 +54,7 @@ PowerLawMultipole:
       type: Absolute
       value: 0.05
     gaussian_limits:
-      lower: 0.0
+      lower: -inf
       upper: inf
   multipole_comps_1:
     type: Uniform
@@ -64,5 +64,5 @@ PowerLawMultipole:
       type: Absolute
       value: 0.05
     gaussian_limits:
-      lower: 0.0
+      lower: -inf
       upper: inf

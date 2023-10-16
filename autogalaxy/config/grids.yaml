@@ -32,6 +32,7 @@ radial_minimum:
     NFWMCRLudlowSph: 1.0e-06
     NFWMCRScatterLudlow: 1.0e-06
     NFWMCRScatterLudlowSph: 1.0e-06
+    NFWVirialMassConcSph : 1.0e-06
     NFWSph: 1.0e-06
     NFWTruncatedMCRDuffySph: 1.0e-06
     NFWTruncatedMCRLudlowSph: 1.0e-06
