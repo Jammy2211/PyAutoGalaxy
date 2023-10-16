@@ -264,9 +264,9 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_of_cosmic_average_density="profile",
         cosmology: LensingCosmology = Planck15(),
     ):
-        '''
+        """
         Computes the NFW halo concentration, `c_{200m}`
-        '''
+        """
         delta_concentration = self.delta_concentration(
             redshift_object=redshift_profile,
             redshift_source=redshift_source,
@@ -299,9 +299,9 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_of_cosmic_average_density="profile",
         cosmology: LensingCosmology = Planck15(),
     ):
-        '''
+        """
         Returns `r_{200m}` for this halo in **arcseconds**
-        '''
+        """
         concentration = self.concentration(
             redshift_profile=redshift_object,
             redshift_source=redshift_source,
@@ -318,9 +318,9 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_of_cosmic_average_density="profile",
         cosmology: LensingCosmology = Planck15(),
     ):
-        '''
+        """
         Returns `M_{200m}` of this NFW halo, in solar masses, at the given cosmology.
-        '''
+        """
         if redshift_of_cosmic_average_density == "profile":
             redshift_calc = redshift_object
         elif redshift_of_cosmic_average_density == "local":

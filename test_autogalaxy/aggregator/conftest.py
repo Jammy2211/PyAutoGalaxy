@@ -36,7 +36,6 @@ def clean(database_file):
     value=True,
 )
 def aggregator_from(database_file, analysis, model, samples):
-
     result_path = path.join(conf.instance.output_path, database_file)
 
     clean(database_file=database_file)

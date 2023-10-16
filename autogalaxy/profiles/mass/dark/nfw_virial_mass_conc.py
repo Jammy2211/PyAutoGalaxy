@@ -10,7 +10,9 @@ import warnings
 from autogalaxy.cosmology.wrap import Planck15
 
 
-def kappa_s_and_scale_radius(virial_mass, concentration, virial_overdens, redshift_object, redshift_source):
+def kappa_s_and_scale_radius(
+    virial_mass, concentration, virial_overdens, redshift_object, redshift_source
+):
     cosmology = Planck15()
 
     cosmic_average_density = (
@@ -45,7 +47,7 @@ def kappa_s_and_scale_radius(virial_mass, concentration, virial_overdens, redshi
     scale_radius = scale_radius_kpc / kpc_per_arcsec  # scale radius in arcsec
 
     return kappa_s, scale_radius, virial_radius
-        
+
 
 class NFWVirialMassConcSph(NFWSph):
     def __init__(
@@ -57,7 +59,6 @@ class NFWVirialMassConcSph(NFWSph):
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
     ):
-        
         """
         Spherical NFW profile initialized with the mass and concentration of the halo.
 
@@ -75,7 +76,7 @@ class NFWVirialMassConcSph(NFWSph):
         self.virial_mass = virial_mass
         self.concentration = concentration
         self.virial_overdens = virial_overdens
-        
+
         (
             kappa_s,
             scale_radius,
@@ -87,6 +88,5 @@ class NFWVirialMassConcSph(NFWSph):
             redshift_object=redshift_object,
             redshift_source=redshift_source,
         )
-        
+
         super().__init__(centre=centre, kappa_s=kappa_s, scale_radius=scale_radius)
-        
