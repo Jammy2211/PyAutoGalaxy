@@ -45,8 +45,8 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         inner_slope
             The inner slope of the dark matter halo
         scale_radius
-            The arc-second radius where the average density within this radius is 200 times the critical density of \
-            the Universe..
+            The NFW scale radius as an angle on the sky in arc-seconds. For a regular NFW halo, \
+            the scale radius is roughly where the log-slope of the profile changes from -1 to -3.
         """
 
         super().__init__(centre=centre, ell_comps=ell_comps)
@@ -264,6 +264,9 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_of_cosmic_average_density="profile",
         cosmology: LensingCosmology = Planck15(),
     ):
+        '''
+        Computes the NFW halo concentration, `c_{200m}`
+        '''
         delta_concentration = self.delta_concentration(
             redshift_object=redshift_profile,
             redshift_source=redshift_source,
@@ -296,6 +299,9 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_of_cosmic_average_density="profile",
         cosmology: LensingCosmology = Planck15(),
     ):
+        '''
+        Returns `r_{200m}` for this halo in **arcseconds**
+        '''
         concentration = self.concentration(
             redshift_profile=redshift_object,
             redshift_source=redshift_source,
@@ -312,6 +318,9 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_of_cosmic_average_density="profile",
         cosmology: LensingCosmology = Planck15(),
     ):
+        '''
+        Returns `M_{200m}` of this NFW halo, in solar masses, at the given cosmology.
+        '''
         if redshift_of_cosmic_average_density == "profile":
             redshift_calc = redshift_object
         elif redshift_of_cosmic_average_density == "local":
