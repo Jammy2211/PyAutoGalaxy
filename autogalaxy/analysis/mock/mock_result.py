@@ -19,7 +19,7 @@ class MockResult(af.m.MockResult):
         adapt_galaxy_image_path_dict: Dict[ag.Galaxy, ag.Array2D] = None,
         adapt_model_image: ag.Array2D = None,
         max_log_likelihood_plane: ag.Plane = None,
-        max_log_likelihood_tracer = None,
+        max_log_likelihood_tracer=None,
     ):
         super().__init__(
             samples=samples,
