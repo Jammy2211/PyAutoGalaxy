@@ -1,3 +1,4 @@
+from autoconf.dictable import from_dict, from_json, output_to_json, to_dict
 from autoarray.dataset import preprocess  # noqa
 from autoarray.dataset.imaging.settings import SettingsImaging  # noqa
 from autoarray.dataset.imaging.imaging import Imaging  # noqa
