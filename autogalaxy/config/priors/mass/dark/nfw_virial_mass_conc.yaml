@@ -1,0 +1,75 @@
+NFWVirialMassConcSph:
+  centre_0:
+    type: Gaussian
+    mean: 0.0
+    sigma: 0.1
+    lower_limit: -inf
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+  centre_1:
+    type: Gaussian
+    mean: 0.0
+    sigma: 0.1
+    lower_limit: -inf
+    upper_limit: inf
+    width_modifier:
+      type: Absolute
+      value: 0.05
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+  virial_mass:
+    type: LogUniform
+    lower_limit: 100000000.0
+    upper_limit: 1000000000000000.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+  concentration:
+    type: Uniform
+    lower_limit: 0.0
+    upper_limit: 12.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+  virial_overdens:
+    type: Uniform
+    lower_limit: 100.0
+    upper_limit: 250.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+  redshift_object:
+    type: Uniform
+    lower_limit: 0.0
+    upper_limit: 1.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
+  redshift_source:
+    type: Uniform
+    lower_limit: 0.0
+    upper_limit: 1.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
