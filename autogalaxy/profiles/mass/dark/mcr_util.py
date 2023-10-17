@@ -66,7 +66,7 @@ def physical_nfw_to_autogalaxy(
     col_cosmo_obj = set_colossus_cosmo(cosmology, sigma8, ns)
 
     halo = profile_nfw.NFWProfile(
-        M=mass*col_cosmo_obj.h(), c=concentration, z=redshift_object, mdef=mdef
+        M=mass*col_cosmo_obj.h, c=concentration, z=redshift_object, mdef=mdef
     )
 
     critical_surface_density = (
@@ -77,8 +77,8 @@ def physical_nfw_to_autogalaxy(
     kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_object)
 
     # rho_s in Msun kpc-3, and rs in kpc
-    rho_s = halo.par['rhos']*col_cosmo_obj.h()**2
-    rs = halo.par['rs']/col_cosmo_obj.h()
+    rho_s = halo.par['rhos']*col_cosmo_obj.h**2
+    rs = halo.par['rs']/col_cosmo_obj.h
     r200 = rs * concentration
 
     kappa_s = rho_s * rs / critical_surface_density
