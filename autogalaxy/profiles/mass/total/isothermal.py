@@ -49,7 +49,7 @@ class Isothermal(PowerLaw):
     ):
         """
         Represents an elliptical isothermal density distribution, which is equivalent to the elliptical power-law
-        density distribution for the value slope: float = 2.0
+        density distribution for the value slope = 2.0.
 
         Parameters
         ----------
