@@ -53,6 +53,9 @@ def galaxies_with_adapt_images_from(
     adapt_galaxy_image_path_dict = {}
 
     for key in adapt_galaxy_keys:
+
+        key = str(key).replace("[", "(").replace("]", ")")
+
         adapt_galaxy_image_path_dict[key] = aa.Array2D.from_primary_hdu(
             primary_hdu=fit.value(name=f"adapt.{key}")
         )

@@ -494,11 +494,11 @@ class AnalysisDataset(Analysis):
 
                 adapt_galaxy_key_list.append(key)
 
-                paths.save_json(
-                    name="adapt_galaxy_keys",
-                    object_dict=adapt_galaxy_key_list,
-                    prefix="adapt",
-                )
+            paths.save_json(
+                name="adapt_galaxy_keys",
+                object_dict=adapt_galaxy_key_list,
+                prefix="adapt",
+            )
 
     def save_results(self, paths: af.DirectoryPaths, result: ResultDataset):
         """
