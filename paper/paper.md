@@ -66,7 +66,7 @@ bibliography: paper.bib
 Nearly a century ago, Edwin Hubble famously classified galaxies into three distinct groups: ellipticals, spirals and 
 irregulars [@Hubble1926]. Today, by analysing millions of galaxies with advanced image processing techniques Astronomers have 
 expanded on this picture and revealed the rich diversity of galaxy morphology in both the nearby and distant 
-Universe [@Kormendy2015a; @Vulcani2014; @VanDerWel2012]. `PyAutoGalaxy` is an open-source Python 3.8 - 3.10 package 
+Universe [@Kormendy2015a; @Vulcani2014; @VanDerWel2012]. `PyAutoGalaxy` is an open-source Python 3.8 - 3.11 package 
 for analysing the morphologies and structures of large multiwavelength galaxy samples, with core features including 
 fully automated Bayesian model-fitting of galaxy two-dimensional surface brightness profiles, support for dataset and 
 interferometer datasets and comprehensive tools for simulating galaxy images. The software places a focus 
@@ -161,7 +161,7 @@ taken without a local `PyAutoGalaxy` installation.
 
 # Software Citations
 
-`PyAutoGalaxy` is written in Python 3.8 - 3.10 and uses the following software packages:
+`PyAutoGalaxy` is written in Python 3.8 - 3.11 and uses the following software packages:
 
 - `Astropy` [@astropy1; @astropy2]
 - `COLOSSUS` [@colossus]
