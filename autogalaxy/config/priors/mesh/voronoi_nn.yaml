@@ -50,3 +50,34 @@ VoronoiNNMagnification:
     gaussian_limits:
       lower: 3.0
       upper: inf
+VoronoiNNSNRImage:
+  pixels:
+    type: Uniform
+    lower_limit: 50.0
+    upper_limit: 2500.0
+    width_modifier:
+      type: Absolute
+      value: 100.0
+    gaussian_limits:
+      lower: 50.0
+      upper: inf
+  fraction_high_snr:
+    type: Uniform
+    lower_limit: 0.0
+    upper_limit: 1.0
+    width_modifier:
+      type: Absolute
+      value: 0.1
+    gaussian_limits:
+      lower: 0.0
+      upper: 1.0
+  snr_cut:
+    type: Uniform
+    lower_limit: 0.0
+    upper_limit: 30.0
+    width_modifier:
+      type: Absolute
+      value: 5.0
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
