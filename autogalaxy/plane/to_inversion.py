@@ -201,6 +201,7 @@ class PlaneToInversion(AbstractToInversion):
                 image_plane_data_grid=self.grid_pixelization,
                 adapt_data=adapt_galaxy_image,
                 settings=self.settings_pixelization,
+                noise_map=self.noise_map,
             )
             for pixelization, adapt_galaxy_image in zip(
                 self.plane.cls_list_from(cls=aa.Pixelization),
