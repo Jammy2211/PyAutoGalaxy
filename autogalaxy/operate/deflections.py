@@ -4,6 +4,8 @@ import numpy as np
 from skimage import measure
 from typing import List, Tuple, Union
 
+from autoconf import conf
+
 import autoarray as aa
 
 from autogalaxy.util.shear_field import ShearYX2D
@@ -64,6 +66,16 @@ def evaluation_grid(func):
             int(pixel_scale_ratio * zoom_shape_native[0]),
             int(pixel_scale_ratio * zoom_shape_native[1]),
         )
+
+        max_evaluation_grid_size = conf.instance["general"]["grid"]["max_evaluation_grid_size"]
+
+        # This is a hack to prevent the evaluation gird going beyond 1000 x 1000 pixels, which slows the code
+        # down a lot. Need a better moe robust way to set this up for any general lens.
+
+        if shape_native[0] > max_evaluation_grid_size:
+
+            pixel_scale = pixel_scale_ratio / (shape_native[0] / float(max_evaluation_grid_size))
+            shape_native = (max_evaluation_grid_size, max_evaluation_grid_size)
 
         grid = aa.Grid2D.uniform(
             shape_native=shape_native,

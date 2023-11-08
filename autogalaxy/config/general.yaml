@@ -2,6 +2,8 @@ analysis:
   preload_attempts: 250
 fits:
   flip_for_ds9: true
+grid:
+  max_evaluation_grid_size: 1000   # An evaluation grid whose shape is adaptive chosen is used to compute quantities like critical curves, this integer is the max size of the grid ensuring faster run times.
 adapt:
   adapt_minimum_percent: 0.01
   adapt_noise_limit: 100000000.0
