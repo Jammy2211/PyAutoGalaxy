@@ -65,6 +65,14 @@ def evaluation_grid(func):
             int(pixel_scale_ratio * zoom_shape_native[1]),
         )
 
+        # This is a hack to prevent the evaluation gird going beyond 1000 x 1000 pixels, which slows the code
+        # down a lot. Need a better moe robust way to set this up for any general lens.
+
+        if shape_native[0] > 1000:
+
+            pixel_scale = pixel_scale_ratio / (shape_native[0] / 1000.0)
+            shape_native = (1000, 1000)
+
         grid = aa.Grid2D.uniform(
             shape_native=shape_native,
             pixel_scales=(pixel_scale, pixel_scale),
