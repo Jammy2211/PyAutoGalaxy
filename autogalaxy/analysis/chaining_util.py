@@ -1,7 +1,12 @@
-from typing import Tuple, Optional, Union
+from __future__ import annotations
+from typing import TYPE_CHECKING, Tuple, Optional, Union
 
 import autoarray as aa
 import autofit as af
+
+if TYPE_CHECKING:
+
+    from autogalaxy.analysis.result import Result
 
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
@@ -50,7 +55,7 @@ def mass_from(mass, mass_result, unfix_mass_centre: bool = False) -> af.Model:
 
 
 def source_custom_model_from(
-    result: af.Result, source_is_model: bool = False
+    result: Result, source_is_model: bool = False
 ) -> af.Model:
     """
     Setup the source model using the previous pipeline's source result.
@@ -149,7 +154,7 @@ def source_custom_model_from(
 
 
 def source_from(
-    result: af.Result,
+    result: Result,
 ) -> af.Model:
     """
     Setup the source model for a MASS PIPELINE using the previous SOURCE PIPELINE results.
@@ -190,7 +195,7 @@ def clean_clumps_of_adapt_images(clumps):
 
 
 def clumps_from(
-    result: af.Result,
+    result: Result,
     light_as_model: bool = False,
     mass_as_model: bool = False,
     free_centre: bool = False,
