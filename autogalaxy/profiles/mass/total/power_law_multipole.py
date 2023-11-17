@@ -99,7 +99,7 @@ def multipole_comps_from(k_m: float, phi_m: float, m: int) -> Tuple[float, float
 class PowerLawMultipole(MassProfile):
     def __init__(
         self,
-        m: int,
+        m=4,
         centre: Tuple[float, float] = (0.0, 0.0),
         einstein_radius: float = 1.0,
         slope: float = 2.0,
