@@ -1,11 +1,10 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Tuple, Optional, Union
+from typing import TYPE_CHECKING, Optional
 
 import autoarray as aa
 import autofit as af
 
 if TYPE_CHECKING:
-
     from autogalaxy.analysis.result import Result
 
 from autogalaxy.profiles.light.abstract import LightProfile
@@ -54,9 +53,7 @@ def mass_from(mass, mass_result, unfix_mass_centre: bool = False) -> af.Model:
     return mass
 
 
-def source_custom_model_from(
-    result: Result, source_is_model: bool = False
-) -> af.Model:
+def source_custom_model_from(result: Result, source_is_model: bool = False) -> af.Model:
     """
     Setup the source model using the previous pipeline's source result.
 
