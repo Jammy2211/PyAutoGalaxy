@@ -84,7 +84,7 @@ def raise_linear_light_profile_in_unmasked():
 
 
 def raise_linear_light_profile_in_plot(
-        plotter_type: str,
+    plotter_type: str,
 ):
     raise ProfileException(
         f"""
