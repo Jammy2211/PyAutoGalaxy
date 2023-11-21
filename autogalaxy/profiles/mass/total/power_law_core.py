@@ -65,6 +65,8 @@ class PowerLawCore(MassProfile):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
 
+        print(grid)
+
         covnergence_grid = np.zeros(grid.shape[0])
 
         grid_eta = self.elliptical_radii_grid_from(grid)

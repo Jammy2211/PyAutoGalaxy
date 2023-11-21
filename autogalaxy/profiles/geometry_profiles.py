@@ -1,4 +1,4 @@
-from typing import Tuple, Type
+from typing import Optional, Tuple, Type
 
 import numpy as np
 
@@ -262,7 +262,7 @@ class EllProfile(SphProfile):
         return np.cos(theta_coordinate_to_profile), np.sin(theta_coordinate_to_profile)
 
     @aa.grid_dec.grid_2d_to_structure
-    def rotated_grid_from_reference_frame_from(self, grid):
+    def rotated_grid_from_reference_frame_from(self, grid, angle : float = Optional[None]):
         """
         Rotate a grid of (y,x) coordinates which have been transformed to the elliptical reference frame of a profile
         back to the original unrotated coordinate grid reference frame.
@@ -277,9 +277,17 @@ class EllProfile(SphProfile):
         ----------
         grid
             The (y, x) coordinates in the reference frame of an elliptical profile.
+        angle
+            Manually input an angle which is used instead of the profile's `angle` attribute. This is used in
+            certain circumstances where the angle applied is different to the profile's `angle` attribute, for
+            example weak lensing rotations which are typically twice that profile's `angle` attribute.
         """
+
+        if angle is None:
+            angle = self.angle
+
         return aa.util.geometry.transform_grid_2d_from_reference_frame(
-            grid_2d=grid, centre=(0.0, 0.0), angle=self.angle
+            grid_2d=grid, centre=(0.0, 0.0), angle=angle
         )
 
     @aa.grid_dec.grid_2d_to_structure

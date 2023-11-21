@@ -134,7 +134,8 @@ class Isothermal(PowerLaw):
         )
 
         shear_field = self.rotated_grid_from_reference_frame_from(
-            grid=np.vstack((shear_y, shear_x)).T
+            grid=np.vstack((shear_y, shear_x)).T,
+            angle=self.angle*2
         )
 
         return aa.VectorYX2DIrregular(values=shear_field, grid=grid)
