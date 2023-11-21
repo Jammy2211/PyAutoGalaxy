@@ -159,8 +159,8 @@ def test__shear_2d_from():
 
     shear = isothermal.shear_2d_from(grid=np.array([[0.0, 1.0]]))
 
-    assert shear[0, 0] == pytest.approx(0.35355, 1e-4)
-    assert shear[0, 1] == pytest.approx(-1.06066, 1e-4)
+    assert shear[0, 0] == pytest.approx(0.0, 1e-4)
+    assert shear[0, 1] == pytest.approx(-1.11803398874, 1e-4)
 
 
 def test__compare_to_cored_power_law():

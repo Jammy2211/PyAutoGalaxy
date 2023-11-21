@@ -262,7 +262,7 @@ class EllProfile(SphProfile):
         return np.cos(theta_coordinate_to_profile), np.sin(theta_coordinate_to_profile)
 
     @aa.grid_dec.grid_2d_to_structure
-    def rotated_grid_from_reference_frame_from(self, grid, angle : float = Optional[None]):
+    def rotated_grid_from_reference_frame_from(self, grid, angle : Optional[float] = None):
         """
         Rotate a grid of (y,x) coordinates which have been transformed to the elliptical reference frame of a profile
         back to the original unrotated coordinate grid reference frame.
