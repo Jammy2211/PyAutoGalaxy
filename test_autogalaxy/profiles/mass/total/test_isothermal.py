@@ -120,24 +120,24 @@ def test__potential_2d_from():
     )
 
 
-def test__shear_2d_from():
+def test__shear_yx_2d_from():
     isothermal = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     convergence = isothermal.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
 
-    shear = isothermal.shear_2d_from(grid=np.array([[0.0, 1.0]]))
+    shear = isothermal.shear_yx_2d_from(grid=np.array([[0.0, 1.0]]))
 
     assert shear[0, 0] == pytest.approx(0.0, 1e-4)
     assert shear[0, 1] == pytest.approx(-convergence, 1e-4)
 
     convergence = isothermal.convergence_2d_from(grid=np.array([[2.0, 1.0]]))
-    shear = isothermal.shear_2d_from(grid=np.array([[2.0, 1.0]]))
+    shear = isothermal.shear_yx_2d_from(grid=np.array([[2.0, 1.0]]))
 
     assert shear[0, 0] == pytest.approx(-(4.0 / 5.0) * convergence, 1e-4)
     assert shear[0, 1] == pytest.approx((3.0 / 5.0) * convergence, 1e-4)
 
     convergence = isothermal.convergence_2d_from(grid=np.array([[3.0, 5.0]]))
-    shear = isothermal.shear_2d_from(grid=np.array([[3.0, 5.0]]))
+    shear = isothermal.shear_yx_2d_from(grid=np.array([[3.0, 5.0]]))
 
     assert shear[0, 0] == pytest.approx(-(30.0 / 34.0) * convergence, 1e-4)
     assert shear[0, 1] == pytest.approx(-(16.0 / 34.0) * convergence, 1e-4)
@@ -148,7 +148,7 @@ def test__shear_2d_from():
 
     convergence = isothermal.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
 
-    shear = isothermal.shear_2d_from(grid=np.array([[0.0, 1.0]]))
+    shear = isothermal.shear_yx_2d_from(grid=np.array([[0.0, 1.0]]))
 
     assert shear[0, 0] == pytest.approx(0.0, 1e-4)
     assert shear[0, 1] == pytest.approx(-convergence, 1e-4)
@@ -157,7 +157,7 @@ def test__shear_2d_from():
         centre=(0.0, 0.0), ell_comps=(0.3, 0.4), einstein_radius=2.0
     )
 
-    shear = isothermal.shear_2d_from(grid=np.array([[0.0, 1.0]]))
+    shear = isothermal.shear_yx_2d_from(grid=np.array([[0.0, 1.0]]))
 
     assert shear[0, 0] == pytest.approx(0.0, 1e-4)
     assert shear[0, 1] == pytest.approx(-1.11803398874, 1e-4)
