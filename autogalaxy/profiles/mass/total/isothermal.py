@@ -112,29 +112,36 @@ class Isothermal(PowerLaw):
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def shear_2d_from(self, grid: aa.type.Grid2DLike):
+    def shear_yx_2d_from(self, grid: aa.type.Grid2DLike):
         """
         Calculate the (gamma_y, gamma_x) shear vector field on a grid of (y,x) arc-second coordinates.
+
+        The result is returned as a `ShearYX2D` dats structure, which has shape [total_shear_vectors, 2], where
+        entries for [:,0] are the gamma_2 values and entries for [:,1] are the gamma_1 values.
+
+        Note therefore that this convention means the FIRST entries in the array are the gamma_2 values and the SECOND
+        entries are the gamma_1 values.
 
         Parameters
         ----------
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
+
         """
 
         convergence = self.convergence_2d_from(grid=grid)
 
-        shear_y = (
+        gamma_2 = (
             -2
             * convergence
             * np.divide(grid[:, 1] * grid[:, 0], grid[:, 1] ** 2 + grid[:, 0] ** 2)
         )
-        shear_x = -convergence * np.divide(
+        gamma_1 = -convergence * np.divide(
             grid[:, 1] ** 2 - grid[:, 0] ** 2, grid[:, 1] ** 2 + grid[:, 0] ** 2
         )
 
         shear_field = self.rotated_grid_from_reference_frame_from(
-            grid=np.vstack((shear_y, shear_x)).T
+            grid=np.vstack((gamma_2, gamma_1)).T, angle=self.angle * 2
         )
 
         return aa.VectorYX2DIrregular(values=shear_field, grid=grid)
