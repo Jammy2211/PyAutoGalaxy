@@ -230,7 +230,7 @@ class NFW(gNFW, MassProfileCSE):
             into.
         """
         radii_min = 0.005
-        radii_max = 7.5
+        radii_max = max(7.5, np.max(grid_radii))
 
         def nfw_2d(r):
             grid_radius = (1.0 / self.scale_radius) * r + 0j
