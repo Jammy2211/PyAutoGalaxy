@@ -1,8 +1,8 @@
 from autoconf.dictable import from_dict, from_json, output_to_json, to_dict
 from autoarray.dataset import preprocess  # noqa
 from autoarray.dataset.imaging.settings import SettingsImaging  # noqa
-from autoarray.dataset.imaging.imaging import Imaging  # noqa
-from autoarray.dataset.interferometer.interferometer import Interferometer  # noqa
+from autoarray.dataset.imaging.dataset import Imaging  # noqa
+from autoarray.dataset.interferometer.dataset import Interferometer  # noqa
 from autoarray.dataset.interferometer.settings import SettingsInterferometer  # noqa
 from autoarray.inversion.pixelization import mesh  # noqa
 from autoarray.inversion import regularization as reg  # noqa
@@ -63,8 +63,8 @@ from .operate.deflections import OperateDeflections
 from .gui.scribbler import Scribbler
 from .imaging.fit_imaging import FitImaging
 from .imaging.model.analysis import AnalysisImaging
-from .imaging.imaging import SimulatorImaging
-from .interferometer.interferometer import SimulatorInterferometer
+from .imaging.simulator import SimulatorImaging
+from .interferometer.simulator import SimulatorInterferometer
 from .interferometer.fit_interferometer import FitInterferometer
 from .interferometer.model.analysis import AnalysisInterferometer
 
