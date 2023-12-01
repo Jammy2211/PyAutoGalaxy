@@ -78,6 +78,12 @@ class ShearYX2D(aa.VectorYX2D, AbstractShearField):
     This class extends `VectorYX2D` to include methods that are specific to a shear field, typically
     used for weak lensing calculations.
 
+    This data structure is of shape [total_vectors, 2], where entries for [:,0] are the gamma_2 values and
+    entries for [:,1] are the gamma_1 values.
+
+    Note therefore that this convention means the FIRST entries in the array are the gamma_2 values and the SECOND
+    entries are the gamma_1 values.
+
     Parameters
     ----------
     vectors
@@ -98,6 +104,13 @@ class ShearYX2DIrregular(aa.VectorYX2DIrregular, AbstractShearField):
 
     This class extends `VectorYX2DIrregular` to include methods that are specific to a shear field, typically
     used for weak lensing calculations.
+
+
+    This data structure is of shape [total_vectors, 2], where entries for [:,0] are the gamma_2 values and
+    entries for [:,1] are the gamma_1 values.
+
+    Note therefore that this convention means the FIRST entries in the array are the gamma_2 values and the SECOND
+    entries are the gamma_1 values.
 
     Parameters
     ----------

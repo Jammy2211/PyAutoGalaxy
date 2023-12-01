@@ -41,9 +41,7 @@ class MassProfileCSE(ABC):
         Parameters
         ----------
         """
-        # phi = np.sqrt(q**2.0 * (s**2.0 + gridx2) + gridy2)
         phi = np.sqrt(axis_ratio_squared * core_radius**2.0 + term1)
-        # Psi = (phi + s)**2.0 + (1 - q * q) * gridx2
         Psi = (phi + core_radius) ** 2.0 + term2
         bottom = core_radius * phi * Psi
         defl_x = (term3 * (phi + axis_ratio_squared * core_radius)) / bottom
@@ -51,7 +49,7 @@ class MassProfileCSE(ABC):
         return np.vstack((defl_y, defl_x))
 
     @abstractmethod
-    def decompose_convergence_via_cse(self):
+    def decompose_convergence_via_cse(self, grid_radii: np.ndarray):
         pass
 
     def _decompose_convergence_via_cse_from(
@@ -133,7 +131,9 @@ class MassProfileCSE(ABC):
             The grid of 1D radial arc-second coordinates the convergence is computed on.
         """
 
-        amplitude_list, core_radius_list = self.decompose_convergence_via_cse()
+        amplitude_list, core_radius_list = self.decompose_convergence_via_cse(
+            grid_radii=grid_radii
+        )
 
         return sum(
             amplitude
@@ -157,7 +157,9 @@ class MassProfileCSE(ABC):
             The grid of 1D radial arc-second coordinates the convergence is computed on.
         """
 
-        amplitude_list, core_radius_list = self.decompose_convergence_via_cse()
+        amplitude_list, core_radius_list = self.decompose_convergence_via_cse(
+            grid_radii=self.radial_grid_from(grid=grid)
+        )
         q = self.axis_ratio
         q2 = q**2.0
         grid_y = grid[:, 0]

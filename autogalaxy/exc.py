@@ -83,21 +83,39 @@ def raise_linear_light_profile_in_unmasked():
     )
 
 
-def raise_linear_light_profile_in_plot(plotter_type: str, model_obj: str):
+def raise_linear_light_profile_in_plot(
+    plotter_type: str,
+):
     raise ProfileException(
         f"""
-        A linear light profile (inherits from `LightProfileLinear` class) has 
-        been passed to the `{plotter_type}`.
+        A linear light profile has been passed to the `{plotter_type}`.
 
         Linear light profiles cannot be plotted, because they do not have an
         intensity value.
 
-        Therefore convert all linear light profiles to normal light profiles. 
+        Therefore convert all linear light profiles to normal light profiles
+        with intensity values. 
 
-        If you are performing modeling and have access to `FitImaging` 
-        or `FitInterferometer` object, a `{model_obj}` where all 
-        linear light are converted to regular light profiles using the
-        solved for intensities is available via the attribute
-        `{model_obj.lower()}_linear_light_profiles_to_light_profiles`.
+        The easiest way to do this is to create a`FitImaging` 
+        or `FitInterferometer` object. This will contain a property 
+        where all linear light have been converted to regular light profiles 
+        using the solved for intensities. 
+        
+        If you are using PyAutoLens, you should use the attribute
+        `fit.tracer_linear_light_profiles_to_light_profiles` to access a 
+        `Tracer` with these converted light profiles.
+
+        If you are using PyAutoGalaxy, you should instead use
+        `fit.plane_linear_light_profiles_to_light_profiles` to access a
+        `Plane` with these converted light profiles.
+             
+        If you are using database functionality and creating tracers
+        via the `TracerAgg` object or `PlaneAgg` object, you should 
+        instead use the `FitImagingAgg` object to create `FitImaging` 
+        objects.
+        
+        You should then access what you need via 
+        `fit.tracer_linear_light_profiles_to_light_profiles` or
+        `fit.plane_linear_light_profiles_to_light_profiles`.
         """
     )

@@ -4,6 +4,8 @@ import numpy as np
 from skimage import measure
 from typing import List, Tuple, Union
 
+from autoconf import conf
+
 import autoarray as aa
 
 from autogalaxy.util.shear_field import ShearYX2D
@@ -64,6 +66,19 @@ def evaluation_grid(func):
             int(pixel_scale_ratio * zoom_shape_native[0]),
             int(pixel_scale_ratio * zoom_shape_native[1]),
         )
+
+        max_evaluation_grid_size = conf.instance["general"]["grid"][
+            "max_evaluation_grid_size"
+        ]
+
+        # This is a hack to prevent the evaluation gird going beyond 1000 x 1000 pixels, which slows the code
+        # down a lot. Need a better moe robust way to set this up for any general lens.
+
+        if shape_native[0] > max_evaluation_grid_size:
+            pixel_scale = pixel_scale_ratio / (
+                shape_native[0] / float(max_evaluation_grid_size)
+            )
+            shape_native = (max_evaluation_grid_size, max_evaluation_grid_size)
 
         grid = aa.Grid2D.uniform(
             shape_native=shape_native,
@@ -164,7 +179,7 @@ class OperateDeflections:
     def hessian_from(self, grid, buffer: float = 0.01, deflections_func=None) -> Tuple:
         """
         Returns the Hessian of the lensing object, where the Hessian is the second partial derivatives of the
-        potential (see equation 55 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
+        potential (see equation 55 https://inspirehep.net/literature/419263):
 
         `hessian_{i,j} = d^2 / dtheta_i dtheta_j`
 
@@ -222,7 +237,7 @@ class OperateDeflections:
     ) -> aa.ArrayIrregular:
         """
         Returns the convergence of the lensing object, which is computed from the 2D deflection angle map via the
-        Hessian using the expression (see equation 56 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
+        Hessian using the expression (see equation 56 https://inspirehep.net/literature/419263):
 
         `convergence = 0.5 * (hessian_{0,0} + hessian_{1,1}) = 0.5 * (hessian_xx + hessian_yy)`
 
@@ -251,7 +266,7 @@ class OperateDeflections:
     ) -> ShearYX2DIrregular:
         """
         Returns the 2D (y,x) shear vectors of the lensing object, which are computed from the 2D deflection angle map
-        via the Hessian using the expressions (see equation 57 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
+        via the Hessian using the expressions (see equation 57 https://inspirehep.net/literature/419263):
 
         `shear_y = hessian_{1,0} =  hessian_{0,1} = hessian_yx = hessian_xy`
         `shear_x = 0.5 * (hessian_{0,0} - hessian_{1,1}) = 0.5 * (hessian_xx - hessian_yy)`
@@ -262,6 +277,12 @@ class OperateDeflections:
         This calculation of the shear vectors is independent of analytic calculations defined within `MassProfile`
         objects and can therefore be used as a cross-check.
 
+        The result is returned as a `ShearYX2D` dats structure, which has shape [total_shear_vectors, 2], where
+        entries for [:,0] are the gamma_2 values and entries for [:,1] are the gamma_1 values.
+
+        Note therefore that this convention means the FIRST entries in the array are the gamma_2 values and the SECOND
+        entries are the gamma_1 values.
+
         Parameters
         ----------
         grid
@@ -270,13 +291,18 @@ class OperateDeflections:
             The spacing in the y and x directions around each grid coordinate where deflection angles are computed and
             used to estimate the derivative.
         """
+
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
             grid=grid, buffer=buffer
         )
 
+        gamma_1 = 0.5 * (hessian_xx - hessian_yy)
+        gamma_2 = hessian_xy
+
         shear_yx_2d = np.zeros(shape=(grid.sub_shape_slim, 2))
-        shear_yx_2d[:, 0] = hessian_xy
-        shear_yx_2d[:, 1] = 0.5 * (hessian_xx - hessian_yy)
+
+        shear_yx_2d[:, 0] = gamma_2
+        shear_yx_2d[:, 1] = gamma_1
 
         return ShearYX2DIrregular(values=shear_yx_2d, grid=grid)
 
@@ -285,7 +311,7 @@ class OperateDeflections:
     ) -> aa.ArrayIrregular:
         """
         Returns the 2D magnification map of lensing object, which is computed from the 2D deflection angle map
-        via the Hessian using the expressions (see equation 60 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
+        via the Hessian using the expressions (see equation 60 https://inspirehep.net/literature/419263):
 
         `magnification = 1.0 / det(Jacobian) = 1.0 / abs((1.0 - convergence)**2.0 - shear**2.0)`
         `magnification = (1.0 - hessian_{0,0}) * (1.0 - hessian_{1, 1)) - hessian_{0,1}*hessian_{1,0}`
@@ -767,7 +793,7 @@ class OperateDeflections:
     def convergence_2d_via_jacobian_from(self, grid, jacobian=None) -> aa.Array2D:
         """
         Returns the convergence of the lensing object, which is computed from the 2D deflection angle map via the
-        Jacobian using the expression (see equation 58 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
+        Jacobian using the expression (see equation 58 https://inspirehep.net/literature/419263):
 
         `convergence = 1.0 - 0.5 * (jacobian_{0,0} + jacobian_{1,1}) = 0.5 * (jacobian_xx + jacobian_yy)`
 
@@ -793,7 +819,7 @@ class OperateDeflections:
     ) -> Union[ShearYX2D, ShearYX2DIrregular]:
         """
         Returns the 2D (y,x) shear vectors of the lensing object, which are computed from the 2D deflection angle map
-        via the Jacobian using the expression (see equation 58 https://www.tau.ac.il/~lab3/MICROLENSING/JeruLect.pdf):
+        via the Jacobian using the expression (see equation 58 https://inspirehep.net/literature/419263):
 
         `shear_y = -0.5 * (jacobian_{0,1} + jacobian_{1,0} = -0.5 * (jacobian_yx + jacobian_xy)`
         `shear_x = 0.5 * (jacobian_{1,1} + jacobian_{0,0} = 0.5 * (jacobian_yy + jacobian_xx)`
