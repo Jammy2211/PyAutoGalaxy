@@ -49,7 +49,7 @@ class MassProfileCSE(ABC):
         return np.vstack((defl_y, defl_x))
 
     @abstractmethod
-    def decompose_convergence_via_cse(self, grid_radii : np.ndarray):
+    def decompose_convergence_via_cse(self, grid_radii: np.ndarray):
         pass
 
     def _decompose_convergence_via_cse_from(
