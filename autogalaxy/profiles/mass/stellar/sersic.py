@@ -259,6 +259,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
 
     def decompose_convergence_via_cse(
         self,
+        grid_radii: np.ndarray
     ) -> Tuple[List, List]:
         """
         Decompose the convergence of the Sersic profile into cored steep elliptical (cse) profiles.

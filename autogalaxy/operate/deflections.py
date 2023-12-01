@@ -291,6 +291,7 @@ class OperateDeflections:
             The spacing in the y and x directions around each grid coordinate where deflection angles are computed and
             used to estimate the derivative.
         """
+
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
             grid=grid, buffer=buffer
         )

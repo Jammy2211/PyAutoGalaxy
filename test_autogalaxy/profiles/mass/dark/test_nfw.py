@@ -110,6 +110,52 @@ def test__deflections_2d_via_cse_from():
     assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-4)
 
 
+def test__deflections_2d__numerical_precision_of_csv_compared_to_integral():
+
+    nfw = ag.mp.NFW(
+        centre=(0.3, 0.2),
+        ell_comps=(0.03669, 0.172614),
+        kappa_s=2.5,
+        scale_radius=4.0,
+    )
+
+    deflections_via_integral = nfw.deflections_2d_via_integral_from(
+        grid=np.array([[1.0, 2.0]])
+    )
+    deflections_via_cse = nfw.deflections_2d_via_cse_from(
+        grid=np.array([[1.0, 2.0]])
+    )
+
+    assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-4)
+
+    nfw = ag.mp.NFW(
+        centre=(0.3, 0.2),
+        ell_comps=(0.2, 0.3),
+        kappa_s=3.5,
+        scale_radius=40.0,
+    )
+
+    deflections_via_integral = nfw.deflections_2d_via_integral_from(
+        grid=np.array([[100.0, 200.0]])
+    )
+    deflections_via_cse = nfw.deflections_2d_via_cse_from(
+        grid=np.array([[100.0, 200.0]])
+    )
+
+    assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-4)
+
+
+    deflections_via_integral = nfw.deflections_2d_via_integral_from(
+        grid=np.array([[-1000.0, -2000.0]])
+    )
+    deflections_via_cse = nfw.deflections_2d_via_cse_from(
+        grid=np.array([[-1000.0, -2000.0]])
+    )
+
+    assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-4)
+
+
+
 def test__deflections_yx_2d_from():
     nfw = ag.mp.NFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
