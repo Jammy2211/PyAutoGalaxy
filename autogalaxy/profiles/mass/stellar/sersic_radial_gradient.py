@@ -169,7 +169,9 @@ class SersicRadialGradient(AbstractSersic):
             func=sersic_radial_gradient_2D, radii_min=radii_min, radii_max=radii_max
         )
 
-    def decompose_convergence_via_cse(self, grid_radii : np.ndarray) -> Tuple[List, List]:
+    def decompose_convergence_via_cse(
+        self, grid_radii: np.ndarray
+    ) -> Tuple[List, List]:
         """
         Decompose the convergence of the Sersic profile into singular isothermal elliptical (sie) profiles.
 
