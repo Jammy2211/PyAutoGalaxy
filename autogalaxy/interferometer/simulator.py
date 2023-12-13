@@ -5,7 +5,6 @@ from autogalaxy.plane.plane import Plane
 
 
 class SimulatorInterferometer(aa.SimulatorInterferometer):
-
     def via_plane_from(self, plane, grid):
         """
         Returns a realistic simulated image by applying effects to a plain simulated image.
