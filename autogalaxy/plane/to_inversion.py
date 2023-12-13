@@ -190,19 +190,19 @@ class PlaneToInversion(AbstractToInversion):
         }
 
     @cached_property
-    def sparse_image_plane_grid_list(
+    def image_plane_mesh_grid_list(
         self,
     ) -> Optional[List[aa.Grid2DIrregular]]:
         if not self.plane.has(cls=aa.Pixelization):
             return None
 
         return [
-            pixelization.mesh.image_plane_mesh_grid_from(
-                image_plane_data_grid=self.grid_pixelization,
+            pixelization.image_mesh.image_plane_mesh_grid_from(
+                grid=self.grid_pixelization,
                 adapt_data=adapt_galaxy_image,
-                settings=self.settings_pixelization,
-                noise_map=self.noise_map,
             )
+            if pixelization.image_mesh is not None
+            else None
             for pixelization, adapt_galaxy_image in zip(
                 self.plane.cls_list_from(cls=aa.Pixelization),
                 self.plane.adapt_galaxies_with_pixelization_image_list,
@@ -234,7 +234,7 @@ class PlaneToInversion(AbstractToInversion):
         if not self.plane.has(cls=aa.Pixelization):
             return {}
 
-        sparse_grid_list = self.sparse_image_plane_grid_list
+        sparse_grid_list = self.image_plane_mesh_grid_list
 
         mapper_galaxy_dict = {}
 

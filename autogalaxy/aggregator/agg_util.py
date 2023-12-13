@@ -166,14 +166,14 @@ def preloads_from(
     if use_preloaded_grid:
         if sparse_grids_of_planes is not None:
             preloads = preloads_cls(
-                sparse_image_plane_grid_pg_list=sparse_grids_of_planes,
+                image_plane_mesh_grid_pg_list=sparse_grids_of_planes,
                 use_w_tilde=use_w_tilde,
             )
 
-            if len(preloads.sparse_image_plane_grid_pg_list) == 2:
-                if type(preloads.sparse_image_plane_grid_pg_list[1]) != list:
-                    preloads.sparse_image_plane_grid_pg_list[1] = [
-                        preloads.sparse_image_plane_grid_pg_list[1]
+            if len(preloads.image_plane_mesh_grid_pg_list) == 2:
+                if type(preloads.image_plane_mesh_grid_pg_list[1]) != list:
+                    preloads.image_plane_mesh_grid_pg_list[1] = [
+                        preloads.image_plane_mesh_grid_pg_list[1]
                     ]
 
     return preloads
