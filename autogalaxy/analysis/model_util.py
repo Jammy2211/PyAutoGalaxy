@@ -1,6 +1,5 @@
 from __future__ import annotations
 import logging
-from typing import TYPE_CHECKING, List
 
 import autofit as af
 import autoarray as aa
@@ -10,70 +9,6 @@ from autogalaxy import exc
 logger = logging.getLogger(__name__)
 
 logger.setLevel(level="INFO")
-
-
-def mesh_list_from(model: af.Collection) -> List[aa.AbstractMesh]:
-    """
-    For a model containing one or more galaxies, inspect its attributes and return the list of `mesh`'s of each
-    `pixelization` of all galaxies. If no galaxy has pixelization an empty list is returned.
-
-    This function expects that the input model is a `Collection` where the first model-component has the
-    name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
-    standard API for creating a model in PyAutoGalaxy.
-
-    The result of `mesh_from` is used by the preloading to determine whether certain parts of a
-    calculation can be cached before the non-linear search begins for efficiency.
-
-    Parameters
-    ----------
-    model
-        Contains the `galaxies` in the model that will be fitted via the non-linear search.
-
-    Returns
-    -------
-    The `mesh` of a galaxy, provided one galaxy has a `mesh`.
-    """
-
-    instance = model.instance_from_prior_medians(ignore_prior_limits=True)
-
-    mesh_list = []
-
-    for galaxy in instance.galaxies:
-        pixelization_list = galaxy.cls_list_from(cls=aa.Pixelization)
-
-        for pixelization in pixelization_list:
-            if pixelization is not None:
-                mesh_list.append(pixelization.mesh)
-
-    return mesh_list
-
-
-def has_pixelization_from(model: af.Collection) -> bool:
-    """
-    For a model containing one or more galaxies, inspect its attributes and return `True` if a galaxy has a
-    `Pixelization` otherwise return `False`.
-
-    This function expects that the input model is a `Collection` where the first model-component has the
-    name `galaxies`, and is itself a `Collection` of `Galaxy` instances. This is the
-    standard API for creating a model in PyAutoGalaxy.
-
-    The result of `has_pixelization_from` is used by the preloading to determine whether certain parts of a
-    calculation can be cached before the non-linear search begins for efficiency.
-
-    Parameters
-    ----------
-    model : af.Collection
-        Contains the `galaxies` in the model that will be fitted via the non-linear search.
-
-    Returns
-    -------
-    aa.mesh.Mesh or None:
-        The `Pixelization` of a galaxy, provided one galaxy has a `Pixelization`.
-    """
-    mesh_list = mesh_list_from(model=model)
-
-    return len(mesh_list) > 0
-
 
 def set_upper_limit_of_pixelization_pixels_prior(
     model: af.Collection,
@@ -101,12 +36,12 @@ def set_upper_limit_of_pixelization_pixels_prior(
     if not hasattr(model, "galaxies"):
         return
 
-    overlay_list = model.galaxies.models_with_type(cls=(aa.image_mesh.KMeans,))
+    image_mesh_list = model.galaxies.models_with_type(cls=(aa.image_mesh.KMeans,))
 
-    if not overlay_list:
+    if not image_mesh_list:
         return
 
-    for mesh in overlay_list:
+    for mesh in image_mesh_list:
         if hasattr(mesh.pixels, "upper_limit"):
             if pixels_in_mask < mesh.pixels.upper_limit:
                 lower_limit = mesh.pixels.lower_limit

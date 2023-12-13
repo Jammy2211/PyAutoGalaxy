@@ -37,7 +37,4 @@ KMeans:
     value: 5
   seed:
     type: Constant
-    value: None
-  stochastic:
-    type: Constant
-    value: 0
+    value: 1

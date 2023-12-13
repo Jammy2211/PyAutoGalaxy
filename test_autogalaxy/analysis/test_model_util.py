@@ -4,45 +4,6 @@ import autofit as af
 import autogalaxy as ag
 
 
-def test__mesh_list_from_model():
-    galaxies = af.Collection(galaxy=af.Model(ag.Galaxy, redshift=0.5))
-
-    mesh_list = ag.util.model.mesh_list_from(model=af.Collection(galaxies=galaxies))
-
-    assert mesh_list == []
-
-    pixelization_0 = ag.Pixelization(mesh=ag.mesh.Rectangular())
-    pixelization_1 = ag.Pixelization(mesh=ag.mesh.Voronoi())
-
-    galaxies = af.Collection(
-        galaxy=ag.Galaxy(
-            redshift=0.5, pixelization_0=pixelization_0, pixelization_1=pixelization_1
-        )
-    )
-
-    mesh_list = ag.util.model.mesh_list_from(model=af.Collection(galaxies=galaxies))
-
-    assert isinstance(mesh_list[0], ag.mesh.Rectangular)
-    assert isinstance(mesh_list[1], ag.mesh.Voronoi)
-
-    pixelization_0 = af.Model(ag.Pixelization, mesh=ag.mesh.Rectangular)
-    pixelization_1 = af.Model(ag.Pixelization, mesh=ag.mesh.Voronoi)
-
-    galaxies = af.Collection(
-        galaxy=af.Model(
-            ag.Galaxy,
-            redshift=0.5,
-            pixelization_0=pixelization_0,
-            pixelization_1=pixelization_1,
-        )
-    )
-
-    mesh_list = ag.util.model.mesh_list_from(model=af.Collection(galaxies=galaxies))
-
-    assert isinstance(mesh_list[0], ag.mesh.Rectangular)
-    assert isinstance(mesh_list[1], ag.mesh.Voronoi)
-
-
 def test__set_upper_limit_of_pixelization_pixels_prior():
     image_mesh = af.Model(ag.image_mesh.KMeans)
     image_mesh.pixels = af.UniformPrior(lower_limit=5.0, upper_limit=10.0)
