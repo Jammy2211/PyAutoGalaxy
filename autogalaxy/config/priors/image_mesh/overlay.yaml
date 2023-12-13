@@ -1,5 +1,5 @@
 Overlay:
-  shape_0:
+  shape_overlay_0:
     type: Uniform
     lower_limit: 20.0
     upper_limit: 45.0
@@ -9,7 +9,7 @@ Overlay:
     gaussian_limits:
       lower: 3.0
       upper: inf
-  shape_1:
+  shape_overlay_1:
     type: Uniform
     lower_limit: 20.0
     upper_limit: 45.0

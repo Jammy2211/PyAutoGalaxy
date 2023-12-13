@@ -74,10 +74,10 @@ def test__instance_with_associated_adapt_images_from(masked_imaging_7x7):
 def test__modify_before_fit__kmeans_pixelization_upper_limit_ajusted_based_on_mask(
     masked_imaging_7x7,
 ):
-    mesh = af.Model(ag.mesh.DelaunayBrightnessImage)
-    mesh.pixels = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
+    image_mesh = af.Model(ag.image_mesh.KMeans)
+    image_mesh.pixels = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
 
-    pixelization = af.Model(ag.Pixelization, mesh=mesh)
+    pixelization = af.Model(ag.Pixelization, mesh=None, image_mesh=image_mesh)
 
     galaxies = af.Collection(source=ag.Galaxy(redshift=0.5, pixelization=pixelization))
 
@@ -87,8 +87,9 @@ def test__modify_before_fit__kmeans_pixelization_upper_limit_ajusted_based_on_ma
 
     analysis.modify_before_fit(paths=af.DirectoryPaths(), model=model)
 
-    assert model.galaxies.source.pixelization.mesh.pixels.upper_limit == pytest.approx(
-        9, 1.0e-4
+    assert (
+        model.galaxies.source.pixelization.image_mesh.pixels.upper_limit
+        == pytest.approx(9, 1.0e-4)
     )
 
 
