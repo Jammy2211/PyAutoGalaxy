@@ -35,7 +35,6 @@ from autoarray.structures.arrays.irregular import ArrayIrregular  # noqa
 from autoarray.structures.header import Header  # noqa
 from autoarray.structures.grids.uniform_1d import Grid1D  # noqa
 from autoarray.structures.grids.uniform_2d import Grid2D  # noqa
-from autoarray.structures.grids.sparse_2d import Grid2DSparse  # noqa
 from autoarray.structures.grids.iterate_2d import Grid2DIterate  # noqa
 from autoarray.structures.grids.irregular_2d import Grid2DIrregular  # noqa
 from autoarray.structures.grids.irregular_2d import Grid2DIrregularUniform  # noqa

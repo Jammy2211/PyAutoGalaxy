@@ -12,7 +12,7 @@ class Visuals2D(aplt.Visuals2D):
         border: aa.Grid2D = None,
         mask: aa.Mask2D = None,
         positions: Optional[Union[aa.Grid2DIrregular, List[aa.Grid2DIrregular]]] = None,
-        grid: Union[aa.Grid2D, aa.Grid2DSparse] = None,
+        grid: Union[aa.Grid2D] = None,
         mesh_grid: aa.Grid2D = None,
         vectors: aa.VectorYX2DIrregular = None,
         patches: Union[ptch.Patch] = None,
