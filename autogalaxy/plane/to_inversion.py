@@ -234,7 +234,7 @@ class PlaneToInversion(AbstractToInversion):
         if not self.plane.has(cls=aa.Pixelization):
             return {}
 
-        sparse_grid_list = self.image_plane_mesh_grid_list
+        mesh_grid_list = self.image_plane_mesh_grid_list
 
         mapper_galaxy_dict = {}
 
@@ -244,13 +244,13 @@ class PlaneToInversion(AbstractToInversion):
         )
         adapt_galaxy_image_list = self.plane.adapt_galaxies_with_pixelization_image_list
 
-        for mapper_index in range(len(sparse_grid_list)):
+        for mapper_index in range(len(mesh_grid_list)):
             mapper = self.mapper_from(
                 mesh=pixelization_list[mapper_index].mesh,
                 regularization=pixelization_list[mapper_index].regularization,
-                source_plane_mesh_grid=sparse_grid_list[mapper_index],
+                source_plane_mesh_grid=mesh_grid_list[mapper_index],
                 adapt_galaxy_image=adapt_galaxy_image_list[mapper_index],
-                image_plane_mesh_grid=sparse_grid_list[mapper_index],
+                image_plane_mesh_grid=mesh_grid_list[mapper_index],
             )
 
             galaxy = galaxies_with_pixelization_list[mapper_index]
