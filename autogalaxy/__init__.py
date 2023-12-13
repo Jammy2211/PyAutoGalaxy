@@ -6,6 +6,7 @@ from autoarray.dataset.interferometer.dataset import Interferometer  # noqa
 from autoarray.dataset.interferometer.settings import SettingsInterferometer  # noqa
 from autoarray.inversion.pixelization import mesh  # noqa
 from autoarray.inversion import regularization as reg  # noqa
+from autoarray.inversion.pixelization import image_mesh
 from autoarray.inversion.pixelization.mappers.abstract import AbstractMapper  # noqa
 from autoarray.inversion.inversion.settings import SettingsInversion  # noqa
 from autoarray.inversion.inversion.factory import inversion_from as Inversion  # noqa

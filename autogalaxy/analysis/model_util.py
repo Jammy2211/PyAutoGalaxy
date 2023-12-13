@@ -2,10 +2,6 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, List
 
-if TYPE_CHECKING:
-    from autogalaxy.analysis.analysis import AnalysisDataset
-    from autogalaxy.analysis.result import ResultDataset
-
 import autofit as af
 import autoarray as aa
 
@@ -105,18 +101,12 @@ def set_upper_limit_of_pixelization_pixels_prior(
     if not hasattr(model, "galaxies"):
         return
 
-    mesh_list = model.galaxies.models_with_type(
-        cls=(
-            aa.mesh.DelaunayBrightnessImage,
-            aa.mesh.VoronoiBrightnessImage,
-            aa.mesh.VoronoiNNBrightnessImage,
-        )
-    )
+    overlay_list = model.galaxies.models_with_type(cls=(aa.image_mesh.KMeans,))
 
-    if not mesh_list:
+    if not overlay_list:
         return
 
-    for mesh in mesh_list:
+    for mesh in overlay_list:
         if hasattr(mesh.pixels, "upper_limit"):
             if pixels_in_mask < mesh.pixels.upper_limit:
                 lower_limit = mesh.pixels.lower_limit
@@ -192,7 +182,11 @@ def adapt_model_from(
         return None
 
     model = result.instance.as_model(
-        model_classes=(aa.AbstractMesh, aa.AbstractRegularization),
+        model_classes=(
+            aa.AbstractImageMesh,
+            aa.AbstractMesh,
+            aa.AbstractRegularization,
+        ),
         excluded_classes=(aa.reg.ConstantZeroth, aa.reg.Zeroth),
     )
 
