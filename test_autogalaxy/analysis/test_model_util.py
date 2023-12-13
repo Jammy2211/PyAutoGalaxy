@@ -90,6 +90,11 @@ def test__set_upper_limit_of_pixelization_pixels_prior():
 
 
 def test__adapt_model_from():
+    class MockResult:
+        def __init__(self, instance, model):
+            self.instance = instance
+            self.model = model
+
     pixelization = af.Model(ag.Pixelization, mesh=ag.mesh.Rectangular)
 
     model = af.Collection(
@@ -101,7 +106,7 @@ def test__adapt_model_from():
 
     instance = model.instance_from_prior_medians()
 
-    result = ag.m.MockResult(instance=instance)
+    result = MockResult(instance=instance, model=model)
 
     model = ag.util.model.adapt_model_from(setup_adapt=ag.SetupAdapt(), result=result)
 
@@ -119,8 +124,7 @@ def test__adapt_model_from():
 
     instance = model.instance_from_prior_medians()
 
-    result = ag.m.MockResult(instance=instance)
-
+    result = MockResult(instance=instance, model=model)
     model = ag.util.model.adapt_model_from(result=result, setup_adapt=ag.SetupAdapt())
 
     assert model == None

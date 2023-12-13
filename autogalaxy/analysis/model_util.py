@@ -10,6 +10,7 @@ logger = logging.getLogger(__name__)
 
 logger.setLevel(level="INFO")
 
+
 def set_upper_limit_of_pixelization_pixels_prior(
     model: af.Collection,
     pixels_in_mask: int,
@@ -125,7 +126,11 @@ def adapt_model_from(
         excluded_classes=(aa.reg.ConstantZeroth, aa.reg.Zeroth),
     )
 
-    if not has_pixelization_from(model=model):
+    has_pix = result.model.has_model(
+        cls=(aa.Pixelization,)
+    ) or result.model.has_instance(cls=(aa.Pixelization,))
+
+    if not has_pix:
         return None
 
     if pixelization_overwrite:
