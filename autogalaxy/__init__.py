@@ -10,6 +10,9 @@ from autoarray.inversion.pixelization import image_mesh
 from autoarray.inversion.pixelization.mappers.abstract import AbstractMapper  # noqa
 from autoarray.inversion.inversion.settings import SettingsInversion  # noqa
 from autoarray.inversion.inversion.factory import inversion_from as Inversion  # noqa
+from autoarray.inversion.pixelization.image_mesh.abstract import AbstractImageMesh
+from autoarray.inversion.pixelization.mesh.abstract import AbstractMesh
+from autoarray.inversion.regularization.abstract import AbstractRegularization
 from autoarray.inversion.inversion.factory import (
     inversion_imaging_unpacked_from as InversionImaging,
 )  # noqa

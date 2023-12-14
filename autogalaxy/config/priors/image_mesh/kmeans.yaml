@@ -29,12 +29,3 @@ KMeans:
     gaussian_limits:
       lower: 0.0
       upper: inf
-  n_iter:
-    type: Constant
-    value: 1
-  max_iter:
-    type: Constant
-    value: 5
-  seed:
-    type: Constant
-    value: 1

@@ -140,8 +140,8 @@ def adapt_model_from(
         model.galaxies.source.regularization = af.Model(regularization_overwrite)
 
     if setup_adapt.mesh_pixels_fixed is not None:
-        if hasattr(model.galaxies.source.pixelization.mesh, "pixels"):
-            model.galaxies.source.pixelization.mesh.pixels = (
+        if hasattr(model.galaxies.source.pixelization.image_mesh, "pixels"):
+            model.galaxies.source.pixelization.image_mesh.pixels = (
                 setup_adapt.mesh_pixels_fixed
             )
 
