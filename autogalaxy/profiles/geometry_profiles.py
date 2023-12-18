@@ -156,7 +156,7 @@ class SphProfile(GeometryProfile):
             The (y, x) coordinates in the reference frame of the profile.
         """
         transformed = np.add(grid, self.centre)
-        return transformed.view(Grid2DTransformedNumpy)
+        return Grid2DTransformedNumpy(values=np.array(transformed))
 
 
 class EllProfile(SphProfile):
