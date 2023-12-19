@@ -80,7 +80,7 @@ def galaxies_with_adapt_images_from(
     return galaxies_with_adapt
 
 
-def sparse_grids_of_planes_list_from(
+def mesh_grids_of_planes_list_from(
     fit: af.Fit, total_fits: int, use_preloaded_grid: bool
 ) -> List[Optional[aa.Grid2D]]:
     """
@@ -116,10 +116,10 @@ def sparse_grids_of_planes_list_from(
 
     if use_preloaded_grid:
         if not fit.children:
-            return [fit.value(name="preload_sparse_grids_of_planes")]
+            return [fit.value(name="preload_mesh_grids_of_planes")]
         else:
             try:
-                return fit.child_values(name="preload_sparse_grids_of_planes")
+                return fit.child_values(name="preload_mesh_grids_of_planes")
             except AttributeError:
                 return [None] * total_fits
     else:
@@ -129,7 +129,7 @@ def sparse_grids_of_planes_list_from(
 def preloads_from(
     preloads_cls,
     use_preloaded_grid: bool,
-    sparse_grids_of_planes: List,
+    mesh_grids_of_planes: List,
     use_w_tilde: Optional[bool] = False,
 ) -> aa.Preloads:
     """
@@ -137,7 +137,7 @@ def preloads_from(
 
     When loading results via the database, the preloads class may have certain attributes associated with it
     in order to perform the fit. The main purpose is to use the same image-plane mesh centres for pixelization where
-    the mesh is computed in the image-plane (see `agg_util.sparse_grids_of_planes_list_from`).
+    the mesh is computed in the image-plane (see `agg_util.mesh_grids_of_planes_list_from`).
 
     The preloads may also switch off `w_tilde` so fits are computed faster locally as they do not need to recompute
     w_tilde.
@@ -151,7 +151,7 @@ def preloads_from(
         Certain pixelization's construct their mesh in the source-plane from a stochastic KMeans algorithm. This grid
         may be output to hard-disk after the model-fit and loaded via the database to ensure the same grid is used
         as the fit.
-    sparse_grids_of_planes
+    mesh_grids_of_planes
         The list of image-plane mesh centres used when creating the overall fit which are associated with the
         preloads.
     use_w_tilde
@@ -164,16 +164,16 @@ def preloads_from(
     preloads = preloads_cls()
 
     if use_preloaded_grid:
-        if sparse_grids_of_planes is not None:
+        if mesh_grids_of_planes is not None:
             preloads = preloads_cls(
-                sparse_image_plane_grid_pg_list=sparse_grids_of_planes,
+                image_plane_mesh_grid_pg_list=mesh_grids_of_planes,
                 use_w_tilde=use_w_tilde,
             )
 
-            if len(preloads.sparse_image_plane_grid_pg_list) == 2:
-                if type(preloads.sparse_image_plane_grid_pg_list[1]) != list:
-                    preloads.sparse_image_plane_grid_pg_list[1] = [
-                        preloads.sparse_image_plane_grid_pg_list[1]
+            if len(preloads.image_plane_mesh_grid_pg_list) == 2:
+                if type(preloads.image_plane_mesh_grid_pg_list[1]) != list:
+                    preloads.image_plane_mesh_grid_pg_list[1] = [
+                        preloads.image_plane_mesh_grid_pg_list[1]
                     ]
 
     return preloads

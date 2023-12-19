@@ -190,19 +190,19 @@ class PlaneToInversion(AbstractToInversion):
         }
 
     @cached_property
-    def sparse_image_plane_grid_list(
+    def image_plane_mesh_grid_list(
         self,
-    ) -> Optional[List[aa.Grid2DSparse]]:
+    ) -> Optional[List[aa.Grid2DIrregular]]:
         if not self.plane.has(cls=aa.Pixelization):
             return None
 
         return [
-            pixelization.mesh.image_plane_mesh_grid_from(
-                image_plane_data_grid=self.grid_pixelization,
+            pixelization.image_mesh.image_plane_mesh_grid_from(
+                grid=self.grid_pixelization,
                 adapt_data=adapt_galaxy_image,
-                settings=self.settings_pixelization,
-                noise_map=self.noise_map,
             )
+            if pixelization.image_mesh is not None
+            else None
             for pixelization, adapt_galaxy_image in zip(
                 self.plane.cls_list_from(cls=aa.Pixelization),
                 self.plane.adapt_galaxies_with_pixelization_image_list,
@@ -213,9 +213,9 @@ class PlaneToInversion(AbstractToInversion):
         self,
         mesh: aa.AbstractMesh,
         regularization: aa.AbstractRegularization,
-        source_plane_mesh_grid: aa.Grid2DSparse,
+        source_plane_mesh_grid: aa.Grid2DIrregular,
         adapt_galaxy_image: aa.Array2D,
-        image_plane_mesh_grid: aa.Grid2DSparse = None,
+        image_plane_mesh_grid: Optional[aa.Grid2DIrregular] = None,
     ) -> aa.AbstractMapper:
         mapper_grids = mesh.mapper_grids_from(
             source_plane_data_grid=self.grid_pixelization,
@@ -234,7 +234,7 @@ class PlaneToInversion(AbstractToInversion):
         if not self.plane.has(cls=aa.Pixelization):
             return {}
 
-        sparse_grid_list = self.sparse_image_plane_grid_list
+        mesh_grid_list = self.image_plane_mesh_grid_list
 
         mapper_galaxy_dict = {}
 
@@ -244,13 +244,13 @@ class PlaneToInversion(AbstractToInversion):
         )
         adapt_galaxy_image_list = self.plane.adapt_galaxies_with_pixelization_image_list
 
-        for mapper_index in range(len(sparse_grid_list)):
+        for mapper_index in range(len(mesh_grid_list)):
             mapper = self.mapper_from(
                 mesh=pixelization_list[mapper_index].mesh,
                 regularization=pixelization_list[mapper_index].regularization,
-                source_plane_mesh_grid=sparse_grid_list[mapper_index],
+                source_plane_mesh_grid=mesh_grid_list[mapper_index],
                 adapt_galaxy_image=adapt_galaxy_image_list[mapper_index],
-                image_plane_mesh_grid=sparse_grid_list[mapper_index],
+                image_plane_mesh_grid=mesh_grid_list[mapper_index],
             )
 
             galaxy = galaxies_with_pixelization_list[mapper_index]
