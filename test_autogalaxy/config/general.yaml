@@ -16,7 +16,6 @@ hpc:
 adapt:
   adapt_minimum_percent: 0.01
   adapt_noise_limit: 100000000.0
-  stochastic_outputs: false
 model:
   ignore_prior_limits: true
 numba:

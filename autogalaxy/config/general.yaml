@@ -7,7 +7,6 @@ grid:
 adapt:
   adapt_minimum_percent: 0.01
   adapt_noise_limit: 100000000.0
-  stochastic_outputs: false
 test:
   check_figure_of_merit_sanity: false
   bypass_figure_of_merit_sanity: false
