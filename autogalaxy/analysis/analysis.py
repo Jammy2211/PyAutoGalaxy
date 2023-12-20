@@ -203,7 +203,6 @@ class AnalysisDataset(Analysis):
         dataset: Union[aa.Imaging, aa.Interferometer],
         adapt_result: ResultDataset = None,
         cosmology: LensingCosmology = Planck15(),
-        settings_pixelization: aa.SettingsPixelization = None,
         settings_inversion: aa.SettingsInversion = None,
     ):
         """
@@ -223,9 +222,6 @@ class AnalysisDataset(Analysis):
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
-        settings_pixelization
-            settings controlling how a pixelization is fitted during the model-fit, for example if a border is used
-            when creating the pixelization.
         settings_inversion
             Settings controlling how an inversion is fitted during the model-fit, for example which linear algebra
             formalism is used.
@@ -242,7 +238,6 @@ class AnalysisDataset(Analysis):
             self.adapt_galaxy_image_path_dict = None
             self.adapt_model_image = None
 
-        self.settings_pixelization = settings_pixelization or aa.SettingsPixelization()
         self.settings_inversion = settings_inversion or aa.SettingsInversion()
 
         self.preloads = self.preloads_cls()
@@ -465,10 +460,6 @@ class AnalysisDataset(Analysis):
         paths.save_json(
             name="settings_inversion",
             object_dict=to_dict(self.settings_inversion),
-        )
-        paths.save_json(
-            name="settings_pixelization",
-            object_dict=to_dict(self.settings_pixelization),
         )
         paths.save_json(
             name="cosmology",

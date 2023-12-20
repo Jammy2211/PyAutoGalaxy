@@ -22,7 +22,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         self,
         dataset: aa.Imaging,
         plane: Plane,
-        settings_pixelization: aa.SettingsPixelization = aa.SettingsPixelization(),
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads: aa.Preloads = Preloads(),
         run_time_dict: Optional[Dict] = None,
@@ -57,9 +56,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             The imaging dataset which is fitted by the galaxies in the plane.
         plane
             The plane of galaxies whose light profile images are used to fit the imaging data.
-        settings_pixelization
-            Settings controlling how a pixelization is fitted for example if a border is used when creating the
-            pixelization.
         settings_inversion
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
         preloads
@@ -81,7 +77,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             self=self, model_obj=plane, settings_inversion=settings_inversion
         )
 
-        self.settings_pixelization = settings_pixelization
         self.settings_inversion = settings_inversion
 
     @property
@@ -142,7 +137,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             data=self.profile_subtracted_image,
             noise_map=self.noise_map,
             w_tilde=self.w_tilde,
-            settings_pixelization=self.settings_pixelization,
             settings_inversion=self.settings_inversion,
             preloads=self.preloads,
             run_time_dict=self.run_time_dict,
@@ -316,7 +310,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         return FitImaging(
             dataset=self.dataset,
             plane=self.plane,
-            settings_pixelization=self.settings_pixelization,
             settings_inversion=settings_inversion,
             preloads=preloads,
             run_time_dict=run_time_dict,

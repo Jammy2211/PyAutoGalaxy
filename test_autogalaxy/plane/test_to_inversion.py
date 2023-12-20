@@ -212,7 +212,6 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
         data=masked_imaging_7x7.data,
         noise_map=masked_imaging_7x7.noise_map,
         w_tilde=masked_imaging_7x7.w_tilde,
-        settings_pixelization=ag.SettingsPixelization(use_border=False),
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
@@ -235,7 +234,6 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
         data=masked_imaging_7x7.data,
         noise_map=masked_imaging_7x7.noise_map,
         w_tilde=masked_imaging_7x7.w_tilde,
-        settings_pixelization=ag.SettingsPixelization(use_border=False),
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
@@ -257,7 +255,6 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
         data=interferometer_7.visibilities,
         noise_map=interferometer_7.noise_map,
         w_tilde=None,
-        settings_pixelization=ag.SettingsPixelization(use_border=False),
         settings_inversion=ag.SettingsInversion(
             use_w_tilde=False, use_linear_operators=False
         ),
@@ -284,7 +281,6 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
         data=interferometer_7.visibilities,
         noise_map=interferometer_7.noise_map,
         w_tilde=None,
-        settings_pixelization=ag.SettingsPixelization(use_border=False),
         settings_inversion=ag.SettingsInversion(
             use_w_tilde=False, use_linear_operators=False
         ),

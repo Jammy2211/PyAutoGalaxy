@@ -26,7 +26,6 @@ class AbstractToInversion:
         data: Optional[Union[aa.Array2D, aa.Visibilities]] = None,
         noise_map: Optional[Union[aa.Array2D, aa.VisibilitiesNoiseMap]] = None,
         w_tilde: Optional[Union[aa.WTildeImaging, aa.WTildeInterferometer]] = None,
-        settings_pixelization=aa.SettingsPixelization(),
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads=Preloads(),
         run_time_dict: Optional[Dict] = None,
@@ -48,7 +47,6 @@ class AbstractToInversion:
         self.noise_map = noise_map
         self.w_tilde = w_tilde
 
-        self.settings_pixelization = settings_pixelization
         self.settings_inversion = settings_inversion
 
         self.preloads = preloads
@@ -99,7 +97,6 @@ class PlaneToInversion(AbstractToInversion):
         grid: Optional[aa.type.Grid2DLike] = None,
         blurring_grid: Optional[aa.type.Grid2DLike] = None,
         grid_pixelization: Optional[aa.type.Grid2DLike] = None,
-        settings_pixelization=aa.SettingsPixelization(),
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads=aa.Preloads(),
         run_time_dict: Optional[Dict] = None,
@@ -111,7 +108,6 @@ class PlaneToInversion(AbstractToInversion):
             data=data,
             noise_map=noise_map,
             w_tilde=w_tilde,
-            settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
             preloads=preloads,
             run_time_dict=run_time_dict,
@@ -222,7 +218,6 @@ class PlaneToInversion(AbstractToInversion):
             source_plane_mesh_grid=source_plane_mesh_grid,
             image_plane_mesh_grid=image_plane_mesh_grid,
             adapt_data=adapt_galaxy_image,
-            settings=self.settings_pixelization,
             preloads=self.preloads,
             run_time_dict=self.plane.run_time_dict,
         )

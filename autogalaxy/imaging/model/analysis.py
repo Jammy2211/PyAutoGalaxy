@@ -25,7 +25,6 @@ class AnalysisImaging(AnalysisDataset):
         dataset: aa.Imaging,
         adapt_result: ResultImaging = None,
         cosmology: LensingCosmology = Planck15(),
-        settings_pixelization: aa.SettingsPixelization = None,
         settings_inversion: aa.SettingsInversion = None,
     ):
         """
@@ -53,9 +52,6 @@ class AnalysisImaging(AnalysisDataset):
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
-        settings_pixelization
-            Settings controlling how a pixelization is fitted for example if a border is used when creating the
-            pixelization.
         settings_inversion
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
         """
@@ -63,7 +59,6 @@ class AnalysisImaging(AnalysisDataset):
             dataset=dataset,
             adapt_result=adapt_result,
             cosmology=cosmology,
-            settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
         )
 
@@ -219,7 +214,6 @@ class AnalysisImaging(AnalysisDataset):
         return FitImaging(
             dataset=self.dataset,
             plane=plane,
-            settings_pixelization=self.settings_pixelization,
             settings_inversion=self.settings_inversion,
             preloads=preloads,
             run_time_dict=run_time_dict,
