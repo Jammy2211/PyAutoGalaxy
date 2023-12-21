@@ -6,6 +6,7 @@ from autoconf import cached_property
 import autoarray as aa
 
 from autogalaxy.abstract_fit import AbstractFitInversion
+from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
@@ -17,6 +18,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         self,
         dataset: aa.Interferometer,
         plane: Plane,
+        adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads: aa.Preloads = Preloads(),
         run_time_dict: Optional[Dict] = None,
@@ -52,6 +54,9 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             The interfometer dataset which is fitted by the galaxies in the plane.
         plane
             The plane of galaxies whose light profile images are used to fit the interferometer data.
+        adapt_images
+            Contains the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
+            reconstructed galaxy's morphology.
         settings_inversion
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
         preloads
@@ -76,6 +81,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
 
         self.plane = plane
 
+        self.adapt_images = adapt_images
         self.settings_inversion = settings_inversion
 
         self.preloads = preloads
@@ -106,6 +112,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             data=self.profile_subtracted_visibilities,
             noise_map=self.noise_map,
             w_tilde=self.w_tilde,
+            adapt_images=self.adapt_images,
             settings_inversion=self.settings_inversion,
             preloads=self.preloads,
         )

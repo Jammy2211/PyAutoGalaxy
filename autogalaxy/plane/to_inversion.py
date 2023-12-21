@@ -10,6 +10,7 @@ import autoarray as aa
 
 from autoarray.inversion.pixelization.mappers.factory import mapper_from
 from autoarray.inversion.inversion.factory import inversion_unpacked_from
+from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.profiles.light.linear import (
     LightProfileLinearObjFuncList,
 )
@@ -26,6 +27,7 @@ class AbstractToInversion:
         data: Optional[Union[aa.Array2D, aa.Visibilities]] = None,
         noise_map: Optional[Union[aa.Array2D, aa.VisibilitiesNoiseMap]] = None,
         w_tilde: Optional[Union[aa.WTildeImaging, aa.WTildeInterferometer]] = None,
+        adapt_images : Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads=Preloads(),
         run_time_dict: Optional[Dict] = None,
@@ -46,6 +48,7 @@ class AbstractToInversion:
         self.data = data
         self.noise_map = noise_map
         self.w_tilde = w_tilde
+        self.adapt_images = adapt_images
 
         self.settings_inversion = settings_inversion
 
@@ -94,6 +97,7 @@ class PlaneToInversion(AbstractToInversion):
         data: Optional[Union[aa.Array2D, aa.Visibilities]] = None,
         noise_map: Optional[Union[aa.Array2D, aa.VisibilitiesNoiseMap]] = None,
         w_tilde: Optional[Union[aa.WTildeImaging, aa.WTildeInterferometer]] = None,
+        adapt_images: Optional[AdaptImages] = None,
         grid: Optional[aa.type.Grid2DLike] = None,
         blurring_grid: Optional[aa.type.Grid2DLike] = None,
         grid_pixelization: Optional[aa.type.Grid2DLike] = None,
@@ -108,6 +112,7 @@ class PlaneToInversion(AbstractToInversion):
             data=data,
             noise_map=noise_map,
             w_tilde=w_tilde,
+            adapt_images=adapt_images,
             settings_inversion=settings_inversion,
             preloads=preloads,
             run_time_dict=run_time_dict,
@@ -189,19 +194,20 @@ class PlaneToInversion(AbstractToInversion):
     def image_plane_mesh_grid_list(
         self,
     ) -> Optional[List[aa.Grid2DIrregular]]:
+
         if not self.plane.has(cls=aa.Pixelization):
             return None
 
         return [
             pixelization.image_mesh.image_plane_mesh_grid_from(
                 grid=self.grid_pixelization,
-                adapt_data=adapt_galaxy_image,
+                adapt_data=self.adapt_images.galaxy_image_path_dict[galaxy],
             )
             if pixelization.image_mesh is not None
             else None
-            for pixelization, adapt_galaxy_image in zip(
+            for pixelization, galaxy in zip(
                 self.plane.cls_list_from(cls=aa.Pixelization),
-                self.plane.adapt_galaxies_with_pixelization_image_list,
+                self.plane.galaxies_with_cls_list_from(cls=aa.Pixelization),
             )
         ]
 
@@ -238,18 +244,18 @@ class PlaneToInversion(AbstractToInversion):
         galaxies_with_pixelization_list = self.plane.galaxies_with_cls_list_from(
             cls=aa.Pixelization
         )
-        adapt_galaxy_image_list = self.plane.adapt_galaxies_with_pixelization_image_list
 
         for mapper_index in range(len(mesh_grid_list)):
+
+            galaxy = galaxies_with_pixelization_list[mapper_index]
+
             mapper = self.mapper_from(
                 mesh=pixelization_list[mapper_index].mesh,
                 regularization=pixelization_list[mapper_index].regularization,
                 source_plane_mesh_grid=mesh_grid_list[mapper_index],
-                adapt_galaxy_image=adapt_galaxy_image_list[mapper_index],
+                adapt_galaxy_image=self.adapt_images.galaxy_image_path_dict[galaxy],
                 image_plane_mesh_grid=mesh_grid_list[mapper_index],
             )
-
-            galaxy = galaxies_with_pixelization_list[mapper_index]
 
             mapper_galaxy_dict[mapper] = galaxy
 
