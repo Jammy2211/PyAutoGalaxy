@@ -132,7 +132,7 @@ class AnalysisImaging(AnalysisDataset):
         """
 
         try:
-            return self.fit_imaging_from(instance=instance).figure_of_merit
+            return self.fit_from(instance=instance).figure_of_merit
         except (
             PixelizationException,
             exc.PixelizationException,
@@ -144,7 +144,7 @@ class AnalysisImaging(AnalysisDataset):
         ) as e:
             raise exc.FitException from e
 
-    def fit_imaging_from(
+    def fit_from(
         self,
         instance: af.ModelInstance,
         preload_overwrite: Optional[Preloads] = None,
@@ -187,10 +187,6 @@ class AnalysisImaging(AnalysisDataset):
             preloads=preloads,
             run_time_dict=run_time_dict,
         )
-
-    @property
-    def fit_func(self):
-        return self.fit_imaging_from
 
     def visualize_before_fit(self, paths: af.DirectoryPaths, model: af.Collection):
         """
@@ -250,7 +246,7 @@ class AnalysisImaging(AnalysisDataset):
             If True the visualization is being performed midway through the non-linear search before it is finished,
             which may change which images are output.
         """
-        fit = self.fit_imaging_from(instance=instance)
+        fit = self.fit_from(instance=instance)
 
         visualizer = VisualizerImaging(visualize_path=paths.image_path)
         visualizer.visualize_imaging(dataset=self.dataset)

@@ -68,10 +68,6 @@ class Analysis(af.Analysis):
             )
         return Plane(galaxies=instance.galaxies, run_time_dict=run_time_dict)
 
-    @property
-    def fit_func(self) -> Callable:
-        raise NotImplementedError
-
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None
     ) -> Tuple[Dict, Dict]:
@@ -113,14 +109,14 @@ class Analysis(af.Analysis):
 
         # Ensure numba functions are compiled before profiling begins.
 
-        fit = self.fit_func(instance=instance)
+        fit = self.fit_from(instance=instance)
         fit.figure_of_merit
 
         start = time.time()
 
         for _ in range(repeats):
             try:
-                fit = self.fit_func(instance=instance)
+                fit = self.fit_from(instance=instance)
                 fit.figure_of_merit
             except Exception:
                 logger.info(
@@ -132,7 +128,7 @@ class Analysis(af.Analysis):
 
         run_time_dict["fit_time"] = fit_time
 
-        fit = self.fit_func(instance=instance, run_time_dict=run_time_dict)
+        fit = self.fit_from(instance=instance, run_time_dict=run_time_dict)
         fit.figure_of_merit
 
         try:
@@ -296,7 +292,7 @@ class AnalysisDataset(Analysis):
             "PRELOADS - Setting up preloads, may take a few minutes for fits using an inversion."
         )
 
-        fit_maker = self.fit_maker_cls(model=model, fit_func=self.fit_func)
+        fit_maker = self.fit_maker_cls(model=model, fit_from=self.fit_from)
 
         fit_0 = fit_maker.fit_via_model_from(unit_value=0.45)
         fit_1 = fit_maker.fit_via_model_from(unit_value=0.55)

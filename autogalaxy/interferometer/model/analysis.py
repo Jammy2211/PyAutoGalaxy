@@ -139,7 +139,7 @@ class AnalysisInterferometer(AnalysisDataset):
         """
 
         try:
-            return self.fit_interferometer_from(instance=instance).figure_of_merit
+            return self.fit_from(instance=instance).figure_of_merit
         except (
             PixelizationException,
             exc.PixelizationException,
@@ -151,7 +151,7 @@ class AnalysisInterferometer(AnalysisDataset):
         ) as e:
             raise exc.FitException from e
 
-    def fit_interferometer_from(
+    def fit_from(
         self,
         instance: af.ModelInstance,
         preload_overwrite: Optional[Preloads] = None,
@@ -194,10 +194,6 @@ class AnalysisInterferometer(AnalysisDataset):
             preloads=preloads,
             run_time_dict=run_time_dict,
         )
-
-    @property
-    def fit_func(self):
-        return self.fit_interferometer_from
 
     def visualize_before_fit(self, paths: af.DirectoryPaths, model: af.Collection):
         """
@@ -255,7 +251,7 @@ class AnalysisInterferometer(AnalysisDataset):
             If True the visualization is being performed midway through the non-linear search before it is finished,
             which may change which images are output.
         """
-        fit = self.fit_interferometer_from(instance=instance)
+        fit = self.fit_from(instance=instance)
 
         visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
         visualizer.visualize_interferometer(dataset=self.interferometer)
