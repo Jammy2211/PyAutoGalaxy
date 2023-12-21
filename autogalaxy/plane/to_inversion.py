@@ -198,18 +198,43 @@ class PlaneToInversion(AbstractToInversion):
         if not self.plane.has(cls=aa.Pixelization):
             return None
 
-        return [
-            pixelization.image_mesh.image_plane_mesh_grid_from(
-                grid=self.grid_pixelization,
-                adapt_data=self.adapt_images.galaxy_image_path_dict[galaxy],
-            )
-            if pixelization.image_mesh is not None
-            else None
-            for pixelization, galaxy in zip(
-                self.plane.cls_list_from(cls=aa.Pixelization),
-                self.plane.galaxies_with_cls_list_from(cls=aa.Pixelization),
-            )
-        ]
+        image_plane_mesh_grid_list = []
+
+        for galaxy in self.plane.galaxies_with_cls_list_from(cls=aa.Pixelization):
+
+            pixelization = galaxy.cls_list_from(cls=aa.Pixelization)[0]
+
+            if pixelization.image_mesh is not None:
+
+                try:
+                    adapt_data = self.adapt_images.galaxy_image_path_dict[galaxy]
+                except AttributeError:
+                    adapt_data = None
+
+                    if pixelization.image_mesh.uses_adapt_images:
+
+                        raise aa.exc.PixelizationException(
+                            """
+                            Attempted to perform fit using a pixelization which requires an 
+                            image-mesh (E.g. KMeans, Hilbert).
+                            
+                            However, the adapt-images passed to the fit (E.g. FitImaging, FitInterferometer) 
+                            is None. Without an adapt image, an image-mesh cannot be used.
+                            """
+                        )
+
+                image_plane_mesh_grid = pixelization.image_mesh.image_plane_mesh_grid_from(
+                    grid=self.grid_pixelization,
+                    adapt_data=adapt_data
+                )
+
+            else:
+
+                image_plane_mesh_grid = None
+
+            image_plane_mesh_grid_list.append(image_plane_mesh_grid)
+
+        return image_plane_mesh_grid_list
 
     def mapper_from(
         self,
