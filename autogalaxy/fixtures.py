@@ -207,6 +207,13 @@ def make_adapt_galaxy_name_image_dict_7x7():
     return adapt_galaxy_name_image_dict
 
 
+def make_adapt_images_7x7():
+    return ag.AdaptImages(
+        model_image=make_adapt_model_image_7x7(),
+        galaxy_name_image_dict=make_adapt_galaxy_name_image_dict_7x7(),
+    )
+
+
 def make_adapt_galaxy_image_1_7x7():
     return ag.Array2D(
         np.full(fill_value=3.0, shape=make_mask_2d_7x7().pixels_in_mask),
@@ -260,12 +267,16 @@ def make_samples_with_result():
 def make_analysis_imaging_7x7():
     return ag.AnalysisImaging(
         dataset=make_masked_imaging_7x7(),
+        adapt_images=make_adapt_images_7x7(),
         settings_inversion=aa.SettingsInversion(use_w_tilde=False),
     )
 
 
 def make_analysis_interferometer_7():
-    return ag.AnalysisInterferometer(dataset=make_interferometer_7())
+    return ag.AnalysisInterferometer(
+        dataset=make_interferometer_7(),
+        adapt_images=make_adapt_images_7x7(),
+    )
 
 
 def make_include_1d_all():

@@ -7,17 +7,12 @@ database_file = "db_plane"
 
 def test__plane_randomly_drawn_via_pdf_gen_from(
     masked_imaging_7x7,
-    adapt_model_image_7x7,
-    adapt_galaxy_name_image_dict_7x7,
     samples,
     model,
 ):
     clean(database_file=database_file)
 
     analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
-
-    analysis.adapt_model_image = adapt_model_image_7x7
-    analysis.adapt_galaxy_name_image_dict = adapt_galaxy_name_image_dict_7x7
 
     agg = aggregator_from(
         database_file=database_file,
@@ -39,18 +34,6 @@ def test__plane_randomly_drawn_via_pdf_gen_from(
             assert plane_list[0].galaxies[0].light.centre == (10.0, 10.0)
             assert plane_list[0].galaxies[1].redshift == 1.0
 
-            assert (
-                plane_list[0].galaxies[0].adapt_model_image == adapt_model_image_7x7
-            ).all()
-            assert (
-                plane_list[0].galaxies[0].adapt_galaxy_image
-                == adapt_galaxy_name_image_dict_7x7["('galaxies', 'g0')"]
-            ).all()
-            assert (
-                plane_list[0].galaxies[1].adapt_galaxy_image
-                == adapt_galaxy_name_image_dict_7x7["('galaxies', 'g1')"]
-            ).all()
-
     assert i == 2
 
     clean(database_file=database_file)
@@ -58,17 +41,12 @@ def test__plane_randomly_drawn_via_pdf_gen_from(
 
 def test__plane_all_above_weight_gen(
     masked_imaging_7x7,
-    adapt_model_image_7x7,
-    adapt_galaxy_name_image_dict_7x7,
     samples,
     model,
 ):
     clean(database_file=database_file)
 
     analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
-
-    analysis.adapt_model_image = adapt_model_image_7x7
-    analysis.adapt_galaxy_name_image_dict = adapt_galaxy_name_image_dict_7x7
 
     agg = aggregator_from(
         database_file=database_file,
@@ -91,18 +69,6 @@ def test__plane_all_above_weight_gen(
                 assert plane_list[0].galaxies[0].redshift == 0.5
                 assert plane_list[0].galaxies[0].light.centre == (1.0, 1.0)
                 assert plane_list[0].galaxies[1].redshift == 1.0
-
-                assert (
-                    plane_list[0].galaxies[0].adapt_model_image == adapt_model_image_7x7
-                ).all()
-                assert (
-                    plane_list[0].galaxies[0].adapt_galaxy_image
-                    == adapt_galaxy_name_image_dict_7x7["('galaxies', 'g0')"]
-                ).all()
-                assert (
-                    plane_list[0].galaxies[1].adapt_galaxy_image
-                    == adapt_galaxy_name_image_dict_7x7["('galaxies', 'g1')"]
-                ).all()
 
             if i == 2:
                 assert plane_list[0].galaxies[0].redshift == 0.5

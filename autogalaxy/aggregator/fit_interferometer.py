@@ -68,7 +68,10 @@ def _fit_interferometer_from(
         real_space_mask=real_space_mask,
         settings_dataset=settings_dataset,
     )
+
     plane_list = _plane_from(fit=fit, galaxies=galaxies)
+
+    adapt_images_list = agg_util.adapt_images_from(fit=fit)
 
     settings_inversion = settings_inversion or fit.value(name="settings_inversion")
 
@@ -78,8 +81,8 @@ def _fit_interferometer_from(
 
     fit_dataset_list = []
 
-    for dataset, plane, mesh_grids_of_planes in zip(
-        dataset_list, plane_list, mesh_grids_of_planes_list
+    for dataset, plane, adapt_images, mesh_grids_of_planes in zip(
+        dataset_list, plane_list, adapt_images_list, mesh_grids_of_planes_list
     ):
         preloads = agg_util.preloads_from(
             preloads_cls=Preloads,
@@ -92,6 +95,7 @@ def _fit_interferometer_from(
             FitInterferometer(
                 dataset=dataset,
                 plane=plane,
+                adapt_images=adapt_images,
                 settings_inversion=settings_inversion,
                 preloads=preloads,
             )
