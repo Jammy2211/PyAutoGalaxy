@@ -44,7 +44,7 @@ class AnalysisInterferometer(AnalysisDataset):
         `Plane`) to an interferometer dataset.
 
         This class stores the settings used to perform the model-fit for certain components of the model (e.g. a
-        pixelization or inversion), the Cosmology used for the analysis and adapt datasets used for certain model
+        pixelization or inversion), the Cosmology used for the analysis and adapt images used for certain model
         classes.
 
         Parameters
@@ -109,7 +109,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
         For this analysis class, this function performs the following steps:
 
-        1) If the analysis has a adapt dataset, associated the model galaxy images of this dataset to the galaxies in
+        1) If the analysis has a adapt image, associated the model galaxy images of this dataset to the galaxies in
            the model instance.
 
         2) Extract attributes which model aspects of the data reductions, like scaling the background background noise.
@@ -368,7 +368,7 @@ class AnalysisInterferometer(AnalysisDataset):
          - The settings associated with the inversion.
          - The settings associated with the pixelization.
          - The Cosmology.
-         - The adapt dataset's model image and galaxy images, if used.
+         - The adapt image's model image and galaxy images, if used.
 
          This function also outputs attributes specific to an interferometer dataset:
 
