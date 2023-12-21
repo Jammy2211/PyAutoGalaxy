@@ -249,11 +249,16 @@ class PlaneToInversion(AbstractToInversion):
 
             galaxy = galaxies_with_pixelization_list[mapper_index]
 
+            try:
+                adapt_galaxy_image = self.adapt_images.galaxy_image_path_dict[galaxy]
+            except AttributeError:
+                adapt_galaxy_image = None
+
             mapper = self.mapper_from(
                 mesh=pixelization_list[mapper_index].mesh,
                 regularization=pixelization_list[mapper_index].regularization,
                 source_plane_mesh_grid=mesh_grid_list[mapper_index],
-                adapt_galaxy_image=self.adapt_images.galaxy_image_path_dict[galaxy],
+                adapt_galaxy_image=adapt_galaxy_image,
                 image_plane_mesh_grid=mesh_grid_list[mapper_index],
             )
 
