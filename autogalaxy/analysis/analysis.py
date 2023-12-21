@@ -343,46 +343,6 @@ class AnalysisDataset(Analysis):
 
         return self
 
-    def instance_with_associated_adapt_images_from(
-        self, instance: af.ModelInstance
-    ) -> af.ModelInstance:
-        """
-        Using the model image and galaxy images that were set up as the adapt image, associate the galaxy images
-        of that result with the galaxies in this model fit.
-
-        Association is performed based on galaxy names, whereby if the name of a galaxy in this search matches the
-        full-path name of galaxies in the adapt image the galaxy image is passed.
-
-        If the galaxy collection has a different name then an association is not made.
-
-        For example, `galaxies.lens` will match with:
-            `galaxies.lens`
-        but not with:
-            `galaxies.source`
-
-        Parameters
-        ----------
-        instance
-        An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
-            via a non-linear search), which has 0 or more galaxies in its tree.
-
-        Returns
-        -------
-        instance
-           The input instance with images associated with galaxies where possible.
-        """
-
-        if self.adapt_galaxy_image_path_dict is not None:
-            for galaxy_path, galaxy in instance.path_instance_tuples_for_class(Galaxy):
-                if galaxy_path in self.adapt_galaxy_image_path_dict:
-                    galaxy.adapt_model_image = self.adapt_model_image
-
-                    galaxy.adapt_galaxy_image = self.adapt_galaxy_image_path_dict[
-                        galaxy_path
-                    ]
-
-        return instance
-
     def save_attributes(self, paths: af.DirectoryPaths):
         """
         Before the model-fit via the non-linear search begins, this routine saves attributes of the `Analysis` object
@@ -432,28 +392,10 @@ class AnalysisDataset(Analysis):
             object_dict=to_dict(self.cosmology),
         )
 
-        if self.adapt_model_image is not None:
-            paths.save_fits(
-                name="adapt_model_image",
-                hdu=self.adapt_model_image.hdu_for_output,
-                prefix="adapt",
-            )
-
-        if self.adapt_galaxy_image_path_dict is not None:
-            adapt_galaxy_key_list = []
-
-            for key, value in self.adapt_galaxy_image_path_dict.items():
-                paths.save_fits(
-                    name=key,
-                    hdu=value.hdu_for_output,
-                    prefix="adapt",
-                )
-
-                adapt_galaxy_key_list.append(key)
-
+        if self.adapt_images is not None:
             paths.save_json(
-                name="adapt_galaxy_keys",
-                object_dict=adapt_galaxy_key_list,
+                name="adapt_images",
+                object_dict=to_dict(self.adapt_images),
                 prefix="adapt",
             )
 

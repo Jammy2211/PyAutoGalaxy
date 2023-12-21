@@ -171,11 +171,11 @@ class AnalysisImaging(AnalysisDataset):
         FitImaging
             The fit of the plane to the imaging dataset, which includes the log likelihood.
         """
-        instance = self.instance_with_associated_adapt_images_from(instance=instance)
-
         plane = self.plane_via_instance_from(
             instance=instance, run_time_dict=run_time_dict
         )
+
+        # adapt images
 
         return self.fit_imaging_via_plane_from(
             plane=plane,
@@ -244,10 +244,11 @@ class AnalysisImaging(AnalysisDataset):
 
         visualizer.visualize_imaging(dataset=self.dataset)
 
-        visualizer.visualize_adapt_images(
-            adapt_galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
-            adapt_model_image=self.adapt_model_image,
-        )
+        if self.adapt_images is not None:
+
+            visualizer.visualize_adapt_images(
+                adapt_images=self.adapt_images
+            )
 
     def visualize(
         self,
@@ -284,7 +285,6 @@ class AnalysisImaging(AnalysisDataset):
             If True the visualization is being performed midway through the non-linear search before it is finished,
             which may change which images are output.
         """
-        instance = self.instance_with_associated_adapt_images_from(instance=instance)
         plane = self.plane_via_instance_from(instance=instance)
 
         fit = self.fit_imaging_via_plane_from(

@@ -179,11 +179,11 @@ class AnalysisInterferometer(AnalysisDataset):
         FitInterferometer
             The fit of the plane to the interferometer dataset, which includes the log likelihood.
         """
-        instance = self.instance_with_associated_adapt_images_from(instance=instance)
-
         plane = self.plane_via_instance_from(
             instance=instance, run_time_dict=run_time_dict
         )
+
+        # adapt images
 
         return self.fit_interferometer_via_plane_from(
             plane=plane, run_time_dict=run_time_dict
@@ -246,10 +246,11 @@ class AnalysisInterferometer(AnalysisDataset):
 
         visualizer.visualize_interferometer(dataset=self.interferometer)
 
-        visualizer.visualize_adapt_images(
-            adapt_galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
-            adapt_model_image=self.adapt_model_image,
-        )
+        if self.adapt_images is not None:
+
+            visualizer.visualize_adapt_images(
+                adapt_images=self.adapt_images
+            )
 
     def visualize(self, paths: af.DirectoryPaths, instance, during_analysis):
         """
@@ -284,8 +285,6 @@ class AnalysisInterferometer(AnalysisDataset):
             If True the visualization is being performed midway through the non-linear search before it is finished,
             which may change which images are output.
         """
-
-        instance = self.instance_with_associated_adapt_images_from(instance=instance)
         plane = self.plane_via_instance_from(instance=instance)
 
         fit = self.fit_interferometer_via_plane_from(
