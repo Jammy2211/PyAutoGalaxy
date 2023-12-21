@@ -46,11 +46,7 @@ class ResultImaging(ResultDataset):
         An instance of a `FitImaging` corresponding to the maximum log likelihood model inferred by the non-linear
         search.
         """
-        plane = self.analysis.plane_via_instance_from(instance=self.instance)
-
-        return self.analysis.fit_imaging_via_plane_from(
-            plane=plane,
-        )
+        return self.analysis.fit_imaging_from(instance=self.instance)
 
     @property
     def max_log_likelihood_plane(self) -> Plane:

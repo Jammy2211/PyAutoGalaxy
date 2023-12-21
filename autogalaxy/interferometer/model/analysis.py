@@ -139,9 +139,7 @@ class AnalysisInterferometer(AnalysisDataset):
         """
 
         try:
-            return self.fit_interferometer_via_instance_from(
-                instance=instance
-            ).figure_of_merit
+            return self.fit_interferometer_from(instance=instance).figure_of_merit
         except (
             PixelizationException,
             exc.PixelizationException,
@@ -153,9 +151,10 @@ class AnalysisInterferometer(AnalysisDataset):
         ) as e:
             raise exc.FitException from e
 
-    def fit_interferometer_via_instance_from(
+    def fit_interferometer_from(
         self,
         instance: af.ModelInstance,
+        preload_overwrite: Optional[Preloads] = None,
         run_time_dict: Optional[Dict] = None,
     ) -> FitInterferometer:
         """
@@ -183,40 +182,14 @@ class AnalysisInterferometer(AnalysisDataset):
             instance=instance, run_time_dict=run_time_dict
         )
 
-        # adapt images
-
-        return self.fit_interferometer_via_plane_from(
-            plane=plane, run_time_dict=run_time_dict
-        )
-
-    def fit_interferometer_via_plane_from(
-        self,
-        plane: Plane,
-        preload_overwrite: Optional[Preloads] = None,
-        run_time_dict: Optional[Dict] = None,
-    ) -> FitInterferometer:
-        """
-        Given a `Plane`, which the analysis constructs from a model instance, create a `FitInterferometer` object.
-
-        This function is used in the `log_likelihood_function` to fit the model to the interferometer data and compute
-        the log likelihood.
-
-        Parameters
-        ----------
-        plane
-            The plane of galaxies whose model images are used to fit the interferometer data.
-
-        Returns
-        -------
-        FitInterferometer
-            The fit of the plane to the interferometer dataset, which includes the log likelihood.
-        """
+        adapt_images = self.adapt_images_via_instance_from(instance=instance)
 
         preloads = self.preloads if preload_overwrite is None else preload_overwrite
 
         return FitInterferometer(
             dataset=self.dataset,
             plane=plane,
+            adapt_images=adapt_images,
             settings_inversion=self.settings_inversion,
             preloads=preloads,
             run_time_dict=run_time_dict,
@@ -224,7 +197,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
     @property
     def fit_func(self):
-        return self.fit_interferometer_via_instance_from
+        return self.fit_interferometer_from
 
     def visualize_before_fit(self, paths: af.DirectoryPaths, model: af.Collection):
         """
@@ -247,10 +220,7 @@ class AnalysisInterferometer(AnalysisDataset):
         visualizer.visualize_interferometer(dataset=self.interferometer)
 
         if self.adapt_images is not None:
-
-            visualizer.visualize_adapt_images(
-                adapt_images=self.adapt_images
-            )
+            visualizer.visualize_adapt_images(adapt_images=self.adapt_images)
 
     def visualize(self, paths: af.DirectoryPaths, instance, during_analysis):
         """
@@ -285,11 +255,7 @@ class AnalysisInterferometer(AnalysisDataset):
             If True the visualization is being performed midway through the non-linear search before it is finished,
             which may change which images are output.
         """
-        plane = self.plane_via_instance_from(instance=instance)
-
-        fit = self.fit_interferometer_via_plane_from(
-            plane=plane,
-        )
+        fit = self.fit_interferometer_from(instance=instance)
 
         visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
         visualizer.visualize_interferometer(dataset=self.interferometer)
@@ -317,11 +283,6 @@ class AnalysisInterferometer(AnalysisDataset):
                 )
             except IndexError:
                 pass
-
-        visualizer.visualize_adapt_images(
-            adapt_galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
-            adapt_model_image=self.adapt_model_image,
-        )
 
     def make_result(
         self,

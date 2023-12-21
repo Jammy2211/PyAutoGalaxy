@@ -50,15 +50,15 @@ def galaxies_with_adapt_images_from(
 
     adapt_galaxy_keys = fit.value(name="adapt.adapt_galaxy_keys")
 
-    adapt_galaxy_image_path_dict = {}
+    adapt_galaxy_name_image_dict = {}
 
     for key in adapt_galaxy_keys:
         key = str(key).replace("[", "(").replace("]", ")")
 
-        adapt_galaxy_image_path_dict[key] = aa.Array2D.from_primary_hdu(
+        adapt_galaxy_name_image_dict[key] = aa.Array2D.from_primary_hdu(
             primary_hdu=fit.value(name=f"adapt.{key}")
         )
-        adapt_galaxy_image_path_dict[key] = adapt_galaxy_image_path_dict[
+        adapt_galaxy_name_image_dict[key] = adapt_galaxy_name_image_dict[
             key
         ].apply_mask(mask=mask)
 
@@ -71,9 +71,9 @@ def galaxies_with_adapt_images_from(
     galaxies_with_adapt = []
 
     for galaxy_path, galaxy in zip(galaxy_path_list, galaxies):
-        if str(galaxy_path) in adapt_galaxy_image_path_dict:
+        if str(galaxy_path) in adapt_galaxy_name_image_dict:
             galaxy.adapt_model_image = adapt_model_image
-            galaxy.adapt_galaxy_image = adapt_galaxy_image_path_dict[str(galaxy_path)]
+            galaxy.adapt_galaxy_image = adapt_galaxy_name_image_dict[str(galaxy_path)]
 
         galaxies_with_adapt.append(galaxy)
 

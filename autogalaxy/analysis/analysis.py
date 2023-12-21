@@ -256,9 +256,6 @@ class AnalysisDataset(Analysis):
             The PyAutoFit model object, which includes model components representing the galaxies that are fitted to
             the imaging data.
         """
-
-        self.check_and_replace_adapt_images(paths=paths)
-
         model_util.set_upper_limit_of_pixelization_pixels_prior(
             model=model, pixels_in_mask=self.dataset.mask.pixels_in_mask
         )
@@ -424,47 +421,11 @@ class AnalysisDataset(Analysis):
         except AttributeError:
             pass
 
-    def check_and_replace_adapt_images(self, paths: af.DirectoryPaths):
-        """
-        Using a the result of a previous model-fit, a adapt-dataset can be set up which adapts aspects of the model
-        (e.g. the pixelization, regularization scheme) to the properties of the dataset being fitted.
-
-        If the model-fit is being resumed from a previous run, this function checks that the model image and galaxy
-        images used to set up the adapt-dataset are identical to those used previously. If they are not, it replaces
-        them with the previous adapt image. This ensures consistency in the log likelihood function.
-
-        Parameters
-        ----------
-        paths
-            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
-            visualization and the pickled objects used by the aggregator output by this function.
-        """
-
-        def load_adapt_image(filename):
-            adapt_image = aa.Array2D.no_mask(
-                values=paths.load_fits(name=filename),
-                pixel_scales=self.dataset.pixel_scales,
-            )
-
-            return adapt_image.apply_mask(mask=self.dataset.mask)
-
+    def adapt_images_via_instance_from(self, instance: af.ModelInstance) -> AdaptImages:
         try:
-            adapt_model_image = load_adapt_image(filename="adapt_model_image")
-        except (FileNotFoundError, KeyError):
-            return
-
-        if np.max(abs(adapt_model_image - self.adapt_model_image)) > 1e-8:
-            logger.info(
-                "ANALYSIS - adapt image loaded from pickle different to that set in Analysis class."
-                "Overwriting adapt images with values loaded from pickles."
-            )
-
-            self.adapt_model_image = adapt_model_image
-
-            self.adapt_galaxy_image_path_dict = {
-                key: load_adapt_image(filename=f"{key}")
-                for key in self.adapt_galaxy_image_path_dict.keys()
-            }
+            return self.adapt_images.updated_via_instance_from(instance=instance)
+        except AttributeError:
+            pass
 
     def output_or_check_figure_of_merit_sanity(
         self, paths: af.DirectoryPaths, result: af.Result

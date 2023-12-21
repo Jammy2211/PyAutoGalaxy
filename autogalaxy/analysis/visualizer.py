@@ -460,7 +460,7 @@ class Visualizer:
 
         if should_plot("images_of_galaxies"):
             adapt_plotter.subplot_images_of_galaxies(
-                adapt_galaxy_image_path_dict=adapt_images.galaxy_image_path_dict
+                adapt_galaxy_name_image_dict=adapt_images.galaxy_image_dict
             )
 
     def visualize_contribution_maps(self, plane: Plane):

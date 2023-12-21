@@ -37,7 +37,7 @@ def test__instance_with_associated_adapt_images_from(masked_imaging_7x7):
     instance = af.ModelInstance()
     instance.galaxies = galaxies
 
-    adapt_galaxy_image_path_dict = {
+    adapt_galaxy_name_image_dict = {
         ("galaxies", "galaxy"): ag.Array2D.ones(shape_native=(3, 3), pixel_scales=1.0),
         ("galaxies", "source"): ag.Array2D.full(
             fill_value=2.0, shape_native=(3, 3), pixel_scales=1.0
@@ -46,7 +46,7 @@ def test__instance_with_associated_adapt_images_from(masked_imaging_7x7):
 
     result = ag.m.MockResult(
         instance=instance,
-        adapt_galaxy_image_path_dict=adapt_galaxy_image_path_dict,
+        adapt_galaxy_name_image_dict=adapt_galaxy_name_image_dict,
         adapt_model_image=ag.Array2D.full(
             fill_value=3.0, shape_native=(3, 3), pixel_scales=1.0
         ),

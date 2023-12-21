@@ -113,7 +113,7 @@ class ResultDataset(Result):
         }
 
     @property
-    def adapt_galaxy_image_path_dict(self) -> Dict[str, aa.Array2D]:
+    def adapt_galaxy_name_image_dict(self) -> Dict[str, aa.Array2D]:
         """
         A dictionary associating 1D galaxy images with their names.
         """
@@ -122,7 +122,7 @@ class ResultDataset(Result):
             "adapt_minimum_percent"
         ]
 
-        adapt_galaxy_image_path_dict = {}
+        adapt_galaxy_name_image_dict = {}
 
         for path, galaxy in self.path_galaxy_tuples:
             galaxy_image = self.image_galaxy_dict[path]
@@ -131,9 +131,9 @@ class ResultDataset(Result):
                 minimum_galaxy_value = adapt_minimum_percent * max(galaxy_image)
                 galaxy_image[galaxy_image < minimum_galaxy_value] = minimum_galaxy_value
 
-            adapt_galaxy_image_path_dict[path] = galaxy_image
+            adapt_galaxy_name_image_dict[path] = galaxy_image
 
-        return adapt_galaxy_image_path_dict
+        return adapt_galaxy_name_image_dict
 
     @property
     def adapt_model_image(self) -> aa.Array2D:
@@ -148,7 +148,7 @@ class ResultDataset(Result):
         )
 
         for path, galaxy in self.path_galaxy_tuples:
-            adapt_model_image += self.adapt_galaxy_image_path_dict[path]
+            adapt_model_image += self.adapt_galaxy_name_image_dict[path]
 
         return adapt_model_image
 
@@ -161,5 +161,5 @@ class ResultDataset(Result):
 
         return AdaptImages(
             model_image=self.adapt_model_image,
-            galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
+            galaxy_name_image_dict=self.adapt_galaxy_name_image_dict,
         )

@@ -60,25 +60,25 @@ class AdaptPlotter(Plotter):
         )
 
     def subplot_images_of_galaxies(
-        self, adapt_galaxy_image_path_dict: Dict[Galaxy, aa.Array2D]
+        self, adapt_galaxy_name_image_dict: Dict[Galaxy, aa.Array2D]
     ):
         """
         Plots a subplot of the galaxy image of all galaxies.
 
-        This uses the `adapt_galaxy_image_path_dict` which is a dictionary mapping each galaxy to its corresponding
+        This uses the `adapt_galaxy_name_image_dict` which is a dictionary mapping each galaxy to its corresponding
         to galaxy image.
 
         Parameters
         ----------
-        adapt_galaxy_image_path_dict
+        adapt_galaxy_name_image_dict
             A dictionary mapping each galaxy to its corresponding to galaxy image.
         """
-        if adapt_galaxy_image_path_dict is None:
+        if adapt_galaxy_name_image_dict is None:
             return
 
-        self.open_subplot_figure(number_subplots=len(adapt_galaxy_image_path_dict))
+        self.open_subplot_figure(number_subplots=len(adapt_galaxy_name_image_dict))
 
-        for path, galaxy_image in adapt_galaxy_image_path_dict.items():
+        for path, galaxy_image in adapt_galaxy_name_image_dict.items():
             self.figure_galaxy_image(galaxy_image=galaxy_image)
 
         self.mat_plot_2d.output.subplot_to_figure(

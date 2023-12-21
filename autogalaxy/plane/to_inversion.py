@@ -204,7 +204,7 @@ class PlaneToInversion(AbstractToInversion):
 
             if pixelization.image_mesh is not None:
                 try:
-                    adapt_data = self.adapt_images.galaxy_image_path_dict[galaxy]
+                    adapt_data = self.adapt_images.galaxy_image_dict[galaxy]
                 except AttributeError:
                     adapt_data = None
 
@@ -270,7 +270,7 @@ class PlaneToInversion(AbstractToInversion):
             galaxy = galaxies_with_pixelization_list[mapper_index]
 
             try:
-                adapt_galaxy_image = self.adapt_images.galaxy_image_path_dict[galaxy]
+                adapt_galaxy_image = self.adapt_images.galaxy_image_dict[galaxy]
             except AttributeError:
                 adapt_galaxy_image = None
 

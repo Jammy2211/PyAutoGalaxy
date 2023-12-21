@@ -122,7 +122,7 @@ def test__visualize_adapt_images__uses_config(
     masked_imaging_7x7,
     adapt_model_image_7x7,
     include_2d_all,
-    adapt_galaxy_image_path_dict_7x7,
+    adapt_galaxy_name_image_dict_7x7,
     fit_imaging_x2_galaxy_inversion_7x7,
     plot_path,
     plot_patch,
@@ -130,7 +130,7 @@ def test__visualize_adapt_images__uses_config(
     visualizer = vis.Visualizer(visualize_path=plot_path)
 
     visualizer.visualize_adapt_images(
-        adapt_galaxy_image_path_dict=adapt_galaxy_image_path_dict_7x7,
+        adapt_galaxy_name_image_dict=adapt_galaxy_name_image_dict_7x7,
         adapt_model_image=adapt_model_image_7x7,
     )
 

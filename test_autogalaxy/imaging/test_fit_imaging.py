@@ -187,7 +187,7 @@ def test__fit_figure_of_merit(
 
     adapt_images = ag.AdaptImages(
         model_image=adapt_model_image_7x7,
-        galaxy_image_path_dict={galaxy_pix: adapt_model_image_7x7},
+        galaxy_image_dict={galaxy_pix: adapt_model_image_7x7},
     )
 
     fit = ag.FitImaging(
