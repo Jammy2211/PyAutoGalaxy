@@ -27,7 +27,7 @@ class AbstractToInversion:
         data: Optional[Union[aa.Array2D, aa.Visibilities]] = None,
         noise_map: Optional[Union[aa.Array2D, aa.VisibilitiesNoiseMap]] = None,
         w_tilde: Optional[Union[aa.WTildeImaging, aa.WTildeInterferometer]] = None,
-        adapt_images : Optional[AdaptImages] = None,
+        adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads=Preloads(),
         run_time_dict: Optional[Dict] = None,
@@ -194,25 +194,21 @@ class PlaneToInversion(AbstractToInversion):
     def image_plane_mesh_grid_list(
         self,
     ) -> Optional[List[aa.Grid2DIrregular]]:
-
         if not self.plane.has(cls=aa.Pixelization):
             return None
 
         image_plane_mesh_grid_list = []
 
         for galaxy in self.plane.galaxies_with_cls_list_from(cls=aa.Pixelization):
-
             pixelization = galaxy.cls_list_from(cls=aa.Pixelization)[0]
 
             if pixelization.image_mesh is not None:
-
                 try:
                     adapt_data = self.adapt_images.galaxy_image_path_dict[galaxy]
                 except AttributeError:
                     adapt_data = None
 
                     if pixelization.image_mesh.uses_adapt_images:
-
                         raise aa.exc.PixelizationException(
                             """
                             Attempted to perform fit using a pixelization which requires an 
@@ -223,13 +219,13 @@ class PlaneToInversion(AbstractToInversion):
                             """
                         )
 
-                image_plane_mesh_grid = pixelization.image_mesh.image_plane_mesh_grid_from(
-                    grid=self.grid_pixelization,
-                    adapt_data=adapt_data
+                image_plane_mesh_grid = (
+                    pixelization.image_mesh.image_plane_mesh_grid_from(
+                        grid=self.grid_pixelization, adapt_data=adapt_data
+                    )
                 )
 
             else:
-
                 image_plane_mesh_grid = None
 
             image_plane_mesh_grid_list.append(image_plane_mesh_grid)
@@ -271,7 +267,6 @@ class PlaneToInversion(AbstractToInversion):
         )
 
         for mapper_index in range(len(mesh_grid_list)):
-
             galaxy = galaxies_with_pixelization_list[mapper_index]
 
             try:

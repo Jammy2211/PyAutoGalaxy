@@ -52,6 +52,7 @@ from autoarray.structures.arrays.kernel_2d import Kernel2D  # noqa
 from autoarray.structures.visibilities import Visibilities  # noqa
 from autoarray.structures.visibilities import VisibilitiesNoiseMap  # noqa
 
+from .analysis.adapt_images import AdaptImages
 from .analysis.maker import FitMaker
 from .analysis.preloads import Preloads
 from . import aggregator as agg

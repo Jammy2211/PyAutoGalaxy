@@ -28,7 +28,9 @@ def test__model_image__with_and_without_psf_blurring(
     assert fit.log_likelihood == pytest.approx(-14.52960, 1.0e-4)
 
 
-def test__fit_figure_of_merit(masked_imaging_7x7, masked_imaging_covariance_7x7):
+def test__fit_figure_of_merit(
+    masked_imaging_7x7, masked_imaging_covariance_7x7, adapt_model_image_7x7
+):
     g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
     g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
 
@@ -173,9 +175,6 @@ def test__fit_figure_of_merit(masked_imaging_7x7, masked_imaging_covariance_7x7)
     assert fit.perform_inversion is False
     assert fit.figure_of_merit == pytest.approx(-130242.56, 1.0e-4)
 
-
-def test__fit_figure_of_merit__uses_adapt_images(masked_imaging_7x7):
-
     pixelization = ag.Pixelization(
         image_mesh=ag.image_mesh.KMeans(pixels=5),
         mesh=ag.mesh.Delaunay(),
@@ -186,10 +185,17 @@ def test__fit_figure_of_merit__uses_adapt_images(masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), galaxy_pix])
 
-    fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
+    adapt_images = ag.AdaptImages(
+        model_image=adapt_model_image_7x7,
+        galaxy_image_path_dict={galaxy_pix: adapt_model_image_7x7},
+    )
+
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7, plane=plane, adapt_images=adapt_images
+    )
 
     assert fit.perform_inversion is True
-    assert fit.figure_of_merit == pytest.approx(-22.9005, 1.0e-4)
+    assert fit.figure_of_merit == pytest.approx(-23.146720, 1.0e-4)
 
 
 def test__galaxy_model_image_dict(masked_imaging_7x7):
@@ -524,4 +530,3 @@ def test__plane_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
         23.0021210, 1.0e-4
     )
     assert plane.galaxies[2].bulge.intensity == pytest.approx(-6.58608, 1.0e-4)
-

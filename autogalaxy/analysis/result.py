@@ -165,6 +165,6 @@ class ResultDataset(Result):
         """
 
         return AdaptImages(
-             model_image=self.adapt_model_image,
-             galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
+            model_image=self.adapt_model_image,
+            galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
         )

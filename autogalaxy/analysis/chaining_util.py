@@ -185,6 +185,7 @@ def source_from(
             return source_custom_model_from(result=result, source_is_model=False)
     return source_custom_model_from(result=result, source_is_model=True)
 
+
 def clumps_from(
     result: Result,
     light_as_model: bool = False,
