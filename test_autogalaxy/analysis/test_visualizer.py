@@ -129,9 +129,13 @@ def test__visualize_adapt_images__uses_config(
 ):
     visualizer = vis.Visualizer(visualize_path=plot_path)
 
+    adapt_images = ag.AdaptImages(
+        model_image=adapt_model_image_7x7,
+        galaxy_image_dict=adapt_galaxy_name_image_dict_7x7,
+    )
+
     visualizer.visualize_adapt_images(
-        adapt_galaxy_name_image_dict=adapt_galaxy_name_image_dict_7x7,
-        adapt_model_image=adapt_model_image_7x7,
+        adapt_images=adapt_images,
     )
 
     plot_path = path.join(plot_path, "adapt")

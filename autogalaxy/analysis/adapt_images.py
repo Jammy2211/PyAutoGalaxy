@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Dict, Optional
+from typing import TYPE_CHECKING, Dict, Optional, Tuple
 
 import autoarray as aa
 
@@ -12,7 +12,7 @@ class AdaptImages:
         self,
         model_image: aa.Array2D,
         galaxy_image_dict: Optional[Dict[Galaxy, aa.Array2D]] = None,
-        galaxy_name_image_dict: Optional[Dict[str, aa.Array2D]] = None,
+        galaxy_name_image_dict: Optional[Dict[Tuple[str, ...], aa.Array2D]] = None,
     ):
         """
         Contains the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
