@@ -1,4 +1,3 @@
-import copy
 import numpy as np
 from typing import Dict, List, Tuple, Type, Union
 
@@ -7,6 +6,7 @@ from autoconf import conf
 import autofit as af
 import autoarray as aa
 
+from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
 
@@ -156,3 +156,15 @@ class ResultDataset(Result):
             adapt_model_image += self.adapt_galaxy_image_path_dict[path]
 
         return adapt_model_image
+
+    @property
+    def adapt_images(self) -> AdaptImages:
+        """
+        Returns the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
+        reconstructed galaxy's morphology.
+        """
+
+        return AdaptImages(
+             model_image=self.adapt_model_image,
+             galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
+        )
