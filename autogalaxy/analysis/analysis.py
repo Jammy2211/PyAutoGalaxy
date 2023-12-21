@@ -12,6 +12,7 @@ import autofit as af
 import autoarray as aa
 
 from autogalaxy import exc
+from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.analysis.maker import FitMaker
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
@@ -201,7 +202,7 @@ class AnalysisDataset(Analysis):
     def __init__(
         self,
         dataset: Union[aa.Imaging, aa.Interferometer],
-        adapt_result: ResultDataset = None,
+        adapt_images: Optional[AdaptImages] = None,
         cosmology: LensingCosmology = Planck15(),
         settings_inversion: aa.SettingsInversion = None,
     ):
@@ -217,7 +218,7 @@ class AnalysisDataset(Analysis):
         ----------
         dataset
             The dataset that is the model is fitted too.
-        adapt_result
+        adapt_images
             The adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
@@ -229,14 +230,7 @@ class AnalysisDataset(Analysis):
         super().__init__(cosmology=cosmology)
 
         self.dataset = dataset
-        self.adapt_result = adapt_result
-
-        if self.adapt_result is not None:
-            self.set_adapt_dataset(result=self.adapt_result)
-
-        else:
-            self.adapt_galaxy_image_path_dict = None
-            self.adapt_model_image = None
+        self.adapt_images = adapt_images
 
         self.settings_inversion = settings_inversion or aa.SettingsInversion()
 
@@ -268,34 +262,6 @@ class AnalysisDataset(Analysis):
         model_util.set_upper_limit_of_pixelization_pixels_prior(
             model=model, pixels_in_mask=self.dataset.mask.pixels_in_mask
         )
-
-    def set_adapt_dataset(self, result: ResultDataset) -> None:
-        """
-        Using a the result of a previous model-fit, set the adapt-dataset for this analysis. This is used to adapt
-        aspects of the model (e.g. the pixelization, regularization scheme) to the properties of the dataset being
-        fitted.
-
-        This passes the adapt image and galaxy images of the previous fit. These represent where different
-        galaxies in the dataset are located and thus allows the fit to adapt different aspects of the model to different
-        galaxies in the data.
-
-        Parameters
-        ----------
-        result
-            The result of a previous model-fit which contains the model image and model galaxy images of a fit to
-            the dataset, which set up the adapt image. These are used by certain classes for adapting the analysis
-            to the properties of the dataset.
-        """
-
-        logger.info(
-            "Setting adapt image (adapt_model_image / adapt_galaxy_image_path_dict)"
-        )
-
-        adapt_galaxy_image_path_dict = result.adapt_galaxy_image_path_dict
-        adapt_model_image = result.adapt_model_image
-
-        self.adapt_galaxy_image_path_dict = adapt_galaxy_image_path_dict
-        self.adapt_model_image = adapt_model_image
 
     @property
     def preloads_cls(self):

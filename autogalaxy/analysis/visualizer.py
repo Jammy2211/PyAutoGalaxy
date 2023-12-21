@@ -6,6 +6,7 @@ from autoconf import conf
 import autoarray as aa
 import autoarray.plot as aplt
 
+from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.plot.galaxy_plotters import GalaxyPlotter
 from autogalaxy.galaxy.plot.adapt_plotters import AdaptPlotter
@@ -425,27 +426,24 @@ class Visualizer:
 
     def visualize_adapt_images(
         self,
-        adapt_galaxy_image_path_dict: Dict[str, aa.Array2D],
-        adapt_model_image: aa.Array2D,
+        adapt_images: AdaptImages,
     ):
         """
-        Visualizes the adapt-images and adapt image inferred by a model-fit.
+        Visualizes the adapt images used by a model-fit for adaptive pixelization mesh's and regularization.
 
         Images are output to the `image` folder of the `visualize_path` in a subfolder called `adapt`. When
         used with a non-linear search the `visualize_path` points to the search's results folder.
 
-        Visualization includes individual images of attributes of the adapt image (e.g. the adapt image) and
-        a subplot of all galaxy images on the same figure.
+        Visualization includes an image of the overall adapt model image and a subplot of all galaxy images on the same
+        figure.
 
         The images output by the `Visualizer` are customized using the file `config/visualize/plots.ini` under the
         [adapt] header.
 
         Parameters
         ----------
-        adapt_galaxy_image_path_dict
-            A dictionary mapping the path to each galaxy (e.g. its name) to its corresponding galaxy image.
-        adapt_model_image
-            The adapt image which corresponds to the sum of galaxy images.
+        adapt_images
+            The adapt images (e.g. overall model image, individual galaxy images).
         """
 
         def should_plot(name):
@@ -458,11 +456,11 @@ class Visualizer:
         )
 
         if should_plot("model_image"):
-            adapt_plotter.figure_adapt_model_image(adapt_model_image=adapt_model_image)
+            adapt_plotter.figure_model_image(model_image=adapt_images.model_image)
 
         if should_plot("images_of_galaxies"):
-            adapt_plotter.subplot_adapt_images_of_galaxies(
-                adapt_galaxy_image_path_dict=adapt_galaxy_image_path_dict
+            adapt_plotter.subplot_images_of_galaxies(
+                adapt_galaxy_image_path_dict=adapt_images.galaxy_image_path_dict
             )
 
     def visualize_contribution_maps(self, plane: Plane):

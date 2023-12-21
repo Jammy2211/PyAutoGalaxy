@@ -23,7 +23,7 @@ class AnalysisImaging(AnalysisDataset):
     def __init__(
         self,
         dataset: aa.Imaging,
-        adapt_result: ResultImaging = None,
+        adapt_images: ResultImaging = None,
         cosmology: LensingCosmology = Planck15(),
         settings_inversion: aa.SettingsInversion = None,
     ):
@@ -47,7 +47,7 @@ class AnalysisImaging(AnalysisDataset):
         ----------
         dataset
             The `Imaging` dataset that the model is fitted to.
-        adapt_result
+        adapt_images
             The adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
@@ -57,7 +57,7 @@ class AnalysisImaging(AnalysisDataset):
         """
         super().__init__(
             dataset=dataset,
-            adapt_result=adapt_result,
+            adapt_images=adapt_images,
             cosmology=cosmology,
             settings_inversion=settings_inversion,
         )

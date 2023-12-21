@@ -2,9 +2,11 @@ from typing import Dict
 
 import autoarray as aa
 
+from autogalaxy.galaxy.galaxy import Galaxy
+
 class AdaptImages:
 
-    def __init__(self, model_image : aa.Array2D, galaxy_image_path_dict : Dict[str, aa.Array2D]):
+    def __init__(self, model_image : aa.Array2D, galaxy_image_path_dict : Dict[Galaxy, aa.Array2D]):
         """
         Contains the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
         reconstructed galaxy's morphology.

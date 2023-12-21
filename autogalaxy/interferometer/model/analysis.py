@@ -27,7 +27,7 @@ class AnalysisInterferometer(AnalysisDataset):
     def __init__(
         self,
         dataset: aa.Interferometer,
-        adapt_result: ResultInterferometer = None,
+        adapt_images: ResultInterferometer = None,
         cosmology: LensingCosmology = Planck15(),
         settings_inversion: aa.SettingsInversion = None,
     ):
@@ -51,7 +51,7 @@ class AnalysisInterferometer(AnalysisDataset):
         ----------
         dataset
             The interferometer dataset that the model is fitted too.
-        adapt_result
+        adapt_images
             The adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
@@ -61,7 +61,7 @@ class AnalysisInterferometer(AnalysisDataset):
         """
         super().__init__(
             dataset=dataset,
-            adapt_result=adapt_result,
+            adapt_images=adapt_images,
             cosmology=cosmology,
             settings_inversion=settings_inversion,
         )
