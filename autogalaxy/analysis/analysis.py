@@ -389,7 +389,6 @@ class AnalysisDataset(Analysis):
             paths.save_json(
                 name="adapt_images",
                 object_dict=to_dict(self.adapt_images),
-                prefix="adapt",
             )
 
     def save_results(self, paths: af.DirectoryPaths, result: ResultDataset):

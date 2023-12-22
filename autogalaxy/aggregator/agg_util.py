@@ -33,13 +33,13 @@ def adapt_images_from(
 
     fit_list = [fit] if not fit.children else fit.children
 
-    if fit.value(name="adapt.adapt_images") is None:
+    if fit.value(name="adapt_images") is None:
         return [None] * len(fit_list)
 
     adapt_images_list = []
 
     for fit in fit_list:
-        adapt_images = fit.value(name="adapt.adapt_images")
+        adapt_images = fit.value(name="adapt_images")
 
         instance = fit.model.instance_from_prior_medians(ignore_prior_limits=True)
 
