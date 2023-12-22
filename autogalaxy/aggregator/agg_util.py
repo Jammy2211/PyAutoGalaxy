@@ -44,7 +44,7 @@ def adapt_images_from(
         instance = fit.model.instance_from_prior_medians(ignore_prior_limits=True)
 
         adapt_images = adapt_images.updated_via_instance_from(
-            instance=instance, name_to_str=True
+            instance=instance,
         )
 
         adapt_images_list.append(adapt_images)

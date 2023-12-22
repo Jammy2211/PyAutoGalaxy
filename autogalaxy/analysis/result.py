@@ -65,7 +65,12 @@ class Result(af.Result):
         """
         Tuples associating the names of galaxies with instances from the best fit
         """
-        return self.instance.path_instance_tuples_for_class(cls=Galaxy)
+        path_galaxy_tuples = []
+
+        for path, galaxy in self.instance.path_instance_tuples_for_class(cls=Galaxy):
+            path_galaxy_tuples.append((str(path), galaxy))
+
+        return path_galaxy_tuples
 
 
 class ResultDataset(Result):

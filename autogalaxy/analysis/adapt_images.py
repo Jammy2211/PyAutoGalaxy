@@ -42,14 +42,15 @@ class AdaptImages:
         self.galaxy_name_image_dict = galaxy_name_image_dict
 
     def updated_via_instance_from(
-        self, instance, name_to_str: bool = False
+        self,
+        instance,
     ) -> "AdaptImages":
         from autogalaxy.galaxy.galaxy import Galaxy
 
         galaxy_image_dict = {}
 
         for galaxy_name, galaxy in instance.path_instance_tuples_for_class(Galaxy):
-            galaxy_name = str(galaxy_name) if name_to_str else galaxy_name
+            galaxy_name = str(galaxy_name)
 
             if galaxy_name in self.galaxy_name_image_dict:
                 galaxy_image_dict[galaxy] = self.galaxy_name_image_dict[galaxy_name]
