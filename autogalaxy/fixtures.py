@@ -183,8 +183,8 @@ def make_fit_quantity_7x7_vector_yx_2d():
 
 # galaxies #
 
-def make_adapt_galaxy_name_image_dict_7x7():
 
+def make_adapt_galaxy_name_image_dict_7x7():
     image_0 = ag.Array2D(
         np.full(fill_value=2.0, shape=make_mask_2d_7x7().pixels_in_mask),
         mask=make_mask_2d_7x7(),

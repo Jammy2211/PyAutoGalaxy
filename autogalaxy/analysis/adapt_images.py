@@ -65,7 +65,6 @@ class AdaptImages:
 
     @classmethod
     def from_result(cls, result) -> "AdaptImages":
-
         adapt_minimum_percent = conf.instance["general"]["adapt"][
             "adapt_minimum_percent"
         ]
@@ -73,7 +72,6 @@ class AdaptImages:
         galaxy_name_image_dict = {}
 
         for path, galaxy in result.path_galaxy_tuples:
-
             galaxy_image = result.image_galaxy_dict[path]
 
             if not np.all(galaxy_image == 0):
