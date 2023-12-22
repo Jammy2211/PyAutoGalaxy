@@ -121,9 +121,6 @@ def test__fit_imaging__adapt_images(agg_7x7, adapt_images_7x7):
             i += 1
 
             assert (
-                fit_list[0].adapt_images.model_image == adapt_images_7x7.model_image
-            ).all()
-            assert (
                 list(fit_list[0].adapt_images.galaxy_image_dict.values())[0]
                 == list(adapt_images_7x7.galaxy_name_image_dict.values())[0]
             ).all()

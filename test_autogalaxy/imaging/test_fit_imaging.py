@@ -29,7 +29,8 @@ def test__model_image__with_and_without_psf_blurring(
 
 
 def test__fit_figure_of_merit(
-    masked_imaging_7x7, masked_imaging_covariance_7x7, adapt_model_image_7x7
+    masked_imaging_7x7,
+    masked_imaging_covariance_7x7,
 ):
     g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
     g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
@@ -185,9 +186,13 @@ def test__fit_figure_of_merit(
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), galaxy_pix])
 
+    model_image = ag.Array2D(
+        np.full(fill_value=5.0, shape=masked_imaging_7x7.mask.pixels_in_mask),
+        mask=masked_imaging_7x7.mask,
+    )
+
     adapt_images = ag.AdaptImages(
-        model_image=adapt_model_image_7x7,
-        galaxy_image_dict={galaxy_pix: adapt_model_image_7x7},
+        galaxy_image_dict={galaxy_pix: model_image},
     )
 
     fit = ag.FitImaging(

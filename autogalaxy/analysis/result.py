@@ -141,23 +141,6 @@ class ResultDataset(Result):
         return adapt_galaxy_name_image_dict
 
     @property
-    def adapt_model_image(self) -> aa.Array2D:
-        """
-        The adapt image used by Analysis objects to adapt aspects of a model to the dataset being fitted.
-
-        The adapt image is the sum of the galaxy image of every individual galaxy.
-        """
-        adapt_model_image = aa.Array2D(
-            values=np.zeros(self.mask.derive_mask.sub_1.pixels_in_mask),
-            mask=self.mask.derive_mask.sub_1,
-        )
-
-        for path, galaxy in self.path_galaxy_tuples:
-            adapt_model_image += self.adapt_galaxy_name_image_dict[path]
-
-        return adapt_model_image
-
-    @property
     def adapt_images(self) -> AdaptImages:
         """
         Returns the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
@@ -165,6 +148,5 @@ class ResultDataset(Result):
         """
 
         return AdaptImages(
-            model_image=self.adapt_model_image,
             galaxy_name_image_dict=self.adapt_galaxy_name_image_dict,
         )

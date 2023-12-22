@@ -43,8 +43,18 @@ def adapt_images_from(
 
         instance = fit.model.instance_from_prior_medians(ignore_prior_limits=True)
 
+        try:
+            mask = aa.Mask2D.from_primary_hdu(
+                primary_hdu=fit.value(name="dataset.mask")
+            )
+        except AttributeError:
+            mask = aa.Mask2D.from_primary_hdu(
+                primary_hdu=fit.value(name="dataset.real_space_mask")
+            )
+
         adapt_images = adapt_images.updated_via_instance_from(
             instance=instance,
+            mask=mask,
         )
 
         adapt_images_list.append(adapt_images)

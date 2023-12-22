@@ -120,7 +120,6 @@ def test__visualize_inversion__uses_configs(
 
 def test__visualize_adapt_images__uses_config(
     masked_imaging_7x7,
-    adapt_model_image_7x7,
     include_2d_all,
     adapt_galaxy_name_image_dict_7x7,
     fit_imaging_x2_galaxy_inversion_7x7,
@@ -130,7 +129,6 @@ def test__visualize_adapt_images__uses_config(
     visualizer = vis.Visualizer(visualize_path=plot_path)
 
     adapt_images = ag.AdaptImages(
-        model_image=adapt_model_image_7x7,
         galaxy_image_dict=adapt_galaxy_name_image_dict_7x7,
     )
 

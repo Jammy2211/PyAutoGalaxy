@@ -84,7 +84,7 @@ def test__image_plane_mesh_grid_list(masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
 
-    adapt_images = ag.AdaptImages(model_image=None, galaxy_image_dict={galaxy_pix: 2})
+    adapt_images = ag.AdaptImages(galaxy_image_dict={galaxy_pix: 2})
 
     plane_to_inversion = ag.PlaneToInversion(
         plane=plane, dataset=masked_imaging_7x7, adapt_images=adapt_images

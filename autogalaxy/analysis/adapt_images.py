@@ -1,5 +1,8 @@
 from __future__ import annotations
+import numpy as np
 from typing import TYPE_CHECKING, Dict, Optional, Tuple
+
+from autoconf import cached_property
 
 import autoarray as aa
 
@@ -10,7 +13,6 @@ if TYPE_CHECKING:
 class AdaptImages:
     def __init__(
         self,
-        model_image: aa.Array2D,
         galaxy_image_dict: Optional[Dict[Galaxy, aa.Array2D]] = None,
         galaxy_name_image_dict: Optional[Dict[Tuple[str, ...], aa.Array2D]] = None,
     ):
@@ -30,21 +32,37 @@ class AdaptImages:
 
         Parameters
         ----------
-        model_image
-            The overall image of the galaxies or strong lens (e.g. lens and source) used by these adaptive schemes.
         galaxy_image_dict
             A dictionary associating the name of each galaxy to an image of only that galaxy (e.g. for a strong lens
             the `source` entry is an image of the lensed source, without the lens light).
         """
 
-        self.model_image = model_image
         self.galaxy_image_dict = galaxy_image_dict
         self.galaxy_name_image_dict = galaxy_name_image_dict
 
-    def updated_via_instance_from(
-        self,
-        instance,
-    ) -> "AdaptImages":
+    @property
+    def mask(self):
+        try:
+            return list(self.galaxy_image_dict.values())[0].mask
+        except AttributeError:
+            return list(self.galaxy_name_image_dict.values())[0].mask
+
+    @cached_property
+    def model_image(self) -> aa.Array2D:
+        """
+        The model-image is the sum of all individual galaxy images in the image dictionary.
+        """
+        adapt_model_image = aa.Array2D(
+            values=np.zeros(self.mask.derive_mask.sub_1.pixels_in_mask),
+            mask=self.mask.derive_mask.sub_1,
+        )
+
+        for path in self.galaxy_image_dict.keys():
+            adapt_model_image += self.galaxy_image_dict[path]
+
+        return adapt_model_image
+
+    def updated_via_instance_from(self, instance, mask=None) -> "AdaptImages":
         from autogalaxy.galaxy.galaxy import Galaxy
 
         galaxy_image_dict = {}
@@ -55,6 +73,8 @@ class AdaptImages:
             if galaxy_name in self.galaxy_name_image_dict:
                 galaxy_image_dict[galaxy] = self.galaxy_name_image_dict[galaxy_name]
 
-        return AdaptImages(
-            model_image=self.model_image, galaxy_image_dict=galaxy_image_dict
-        )
+        if mask is not None:
+            for key, image in galaxy_image_dict.items():
+                galaxy_image_dict[key] = aa.Array2D(values=image, mask=mask)
+
+        return AdaptImages(galaxy_image_dict=galaxy_image_dict)
