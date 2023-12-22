@@ -385,13 +385,12 @@ class AnalysisDataset(Analysis):
             object_dict=to_dict(self.cosmology),
         )
 
-        # if self.adapt_images is not None:
-        #
-        #     paths.save_json(
-        #         name="adapt_images",
-        #         object_dict=to_dict(self.adapt_images),
-        #         prefix="adapt",
-        #     )
+        if self.adapt_images is not None:
+            paths.save_json(
+                name="adapt_images",
+                object_dict=to_dict(self.adapt_images),
+                prefix="adapt",
+            )
 
     def save_results(self, paths: af.DirectoryPaths, result: ResultDataset):
         """

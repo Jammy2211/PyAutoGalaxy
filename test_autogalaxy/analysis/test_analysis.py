@@ -38,8 +38,10 @@ def test__instance_with_associated_adapt_images_from(masked_imaging_7x7):
     instance.galaxies = galaxies
 
     adapt_galaxy_name_image_dict = {
-        ("galaxies", "galaxy"): ag.Array2D.ones(shape_native=(3, 3), pixel_scales=1.0),
-        ("galaxies", "source"): ag.Array2D.full(
+        str(("galaxies", "galaxy")): ag.Array2D.ones(
+            shape_native=(3, 3), pixel_scales=1.0
+        ),
+        str(("galaxies", "source")): ag.Array2D.full(
             fill_value=2.0, shape_native=(3, 3), pixel_scales=1.0
         ),
     }
