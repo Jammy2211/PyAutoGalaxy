@@ -2,6 +2,7 @@ from __future__ import annotations
 import numpy as np
 from typing import TYPE_CHECKING, Dict, Optional, Tuple
 
+from autoconf import conf
 from autoconf import cached_property
 
 import autoarray as aa
@@ -61,6 +62,27 @@ class AdaptImages:
             adapt_model_image += self.galaxy_image_dict[path]
 
         return adapt_model_image
+
+    @classmethod
+    def from_result(cls, result) -> "AdaptImages":
+
+        adapt_minimum_percent = conf.instance["general"]["adapt"][
+            "adapt_minimum_percent"
+        ]
+
+        galaxy_name_image_dict = {}
+
+        for path, galaxy in result.path_galaxy_tuples:
+
+            galaxy_image = result.image_galaxy_dict[path]
+
+            if not np.all(galaxy_image == 0):
+                minimum_galaxy_value = adapt_minimum_percent * max(galaxy_image)
+                galaxy_image[galaxy_image < minimum_galaxy_value] = minimum_galaxy_value
+
+            galaxy_name_image_dict[path] = galaxy_image
+
+        return AdaptImages(galaxy_name_image_dict=galaxy_name_image_dict)
 
     def updated_via_instance_from(self, instance, mask=None) -> "AdaptImages":
         from autogalaxy.galaxy.galaxy import Galaxy

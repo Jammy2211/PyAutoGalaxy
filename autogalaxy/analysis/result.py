@@ -1,8 +1,7 @@
-import numpy as np
 from typing import Dict, List, Tuple, Type, Union
 
 from autoconf import cached_property
-from autoconf import conf
+
 import autofit as af
 import autoarray as aa
 
@@ -118,35 +117,12 @@ class ResultDataset(Result):
         }
 
     @property
-    def adapt_galaxy_name_image_dict(self) -> Dict[str, aa.Array2D]:
-        """
-        A dictionary associating 1D galaxy images with their names.
-        """
-
-        adapt_minimum_percent = conf.instance["general"]["adapt"][
-            "adapt_minimum_percent"
-        ]
-
-        adapt_galaxy_name_image_dict = {}
-
-        for path, galaxy in self.path_galaxy_tuples:
-            galaxy_image = self.image_galaxy_dict[path]
-
-            if not np.all(galaxy_image == 0):
-                minimum_galaxy_value = adapt_minimum_percent * max(galaxy_image)
-                galaxy_image[galaxy_image < minimum_galaxy_value] = minimum_galaxy_value
-
-            adapt_galaxy_name_image_dict[path] = galaxy_image
-
-        return adapt_galaxy_name_image_dict
-
-    @property
     def adapt_images(self) -> AdaptImages:
         """
         Returns the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
         reconstructed galaxy's morphology.
         """
 
-        return AdaptImages(
-            galaxy_name_image_dict=self.adapt_galaxy_name_image_dict,
+        return AdaptImages.from_result(
+            result=self,
         )
