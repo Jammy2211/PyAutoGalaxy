@@ -68,22 +68,27 @@ def test__image_plane_mesh_grid_list(masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
+    plane_to_inversion = ag.PlaneToInversion(
+        plane=plane,
+        dataset=masked_imaging_7x7,
+    )
 
     image_plane_mesh_grid_list = plane_to_inversion.image_plane_mesh_grid_list
 
     assert (image_plane_mesh_grid_list == np.array([[1.0, 1.0]])).all()
 
-    # In the ag.m.MockPixelization class the grid is returned if hyper image=None, and grid*hyper image is
-    # returned otherwise.
-
     galaxy_pix = ag.Galaxy(
-        redshift=0.5, pixelization=pixelization, adapt_galaxy_image=2
+        redshift=0.5,
+        pixelization=pixelization,
     )
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
+    adapt_images = ag.AdaptImages(galaxy_image_dict={galaxy_pix: 2})
+
+    plane_to_inversion = ag.PlaneToInversion(
+        plane=plane, dataset=masked_imaging_7x7, adapt_images=adapt_images
+    )
 
     image_plane_mesh_grid_list = plane_to_inversion.image_plane_mesh_grid_list
 
@@ -212,7 +217,6 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
         data=masked_imaging_7x7.data,
         noise_map=masked_imaging_7x7.noise_map,
         w_tilde=masked_imaging_7x7.w_tilde,
-        settings_pixelization=ag.SettingsPixelization(use_border=False),
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
@@ -235,7 +239,6 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
         data=masked_imaging_7x7.data,
         noise_map=masked_imaging_7x7.noise_map,
         w_tilde=masked_imaging_7x7.w_tilde,
-        settings_pixelization=ag.SettingsPixelization(use_border=False),
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
@@ -257,7 +260,6 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
         data=interferometer_7.visibilities,
         noise_map=interferometer_7.noise_map,
         w_tilde=None,
-        settings_pixelization=ag.SettingsPixelization(use_border=False),
         settings_inversion=ag.SettingsInversion(
             use_w_tilde=False, use_linear_operators=False
         ),
@@ -284,7 +286,6 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
         data=interferometer_7.visibilities,
         noise_map=interferometer_7.noise_map,
         w_tilde=None,
-        settings_pixelization=ag.SettingsPixelization(use_border=False),
         settings_inversion=ag.SettingsInversion(
             use_w_tilde=False, use_linear_operators=False
         ),

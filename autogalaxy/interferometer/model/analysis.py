@@ -7,6 +7,7 @@ import autoarray as aa
 
 from autoarray.exc import PixelizationException
 
+from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.analysis.analysis import AnalysisDataset
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
@@ -27,9 +28,8 @@ class AnalysisInterferometer(AnalysisDataset):
     def __init__(
         self,
         dataset: aa.Interferometer,
-        adapt_result: ResultInterferometer = None,
+        adapt_images: Optional[AdaptImages] = None,
         cosmology: LensingCosmology = Planck15(),
-        settings_pixelization: aa.SettingsPixelization = None,
         settings_inversion: aa.SettingsInversion = None,
     ):
         """
@@ -45,29 +45,25 @@ class AnalysisInterferometer(AnalysisDataset):
         `Plane`) to an interferometer dataset.
 
         This class stores the settings used to perform the model-fit for certain components of the model (e.g. a
-        pixelization or inversion), the Cosmology used for the analysis and adapt datasets used for certain model
+        pixelization or inversion), the Cosmology used for the analysis and adapt images used for certain model
         classes.
 
         Parameters
         ----------
         dataset
             The interferometer dataset that the model is fitted too.
-        adapt_result
+        adapt_images
             The adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
-        settings_pixelization
-            settings controlling how a pixelization is fitted for example if a border is used when creating the
-            pixelization.
         settings_inversion
             Settings controlling how an inversion is fitted, for example which linear algebra formalism is used.
         """
         super().__init__(
             dataset=dataset,
-            adapt_result=adapt_result,
+            adapt_images=adapt_images,
             cosmology=cosmology,
-            settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
         )
 
@@ -114,7 +110,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
         For this analysis class, this function performs the following steps:
 
-        1) If the analysis has a adapt dataset, associated the model galaxy images of this dataset to the galaxies in
+        1) If the analysis has a adapt image, associated the model galaxy images of this dataset to the galaxies in
            the model instance.
 
         2) Extract attributes which model aspects of the data reductions, like scaling the background background noise.
@@ -143,9 +139,7 @@ class AnalysisInterferometer(AnalysisDataset):
         """
 
         try:
-            return self.fit_interferometer_via_instance_from(
-                instance=instance
-            ).figure_of_merit
+            return self.fit_from(instance=instance).figure_of_merit
         except (
             PixelizationException,
             exc.PixelizationException,
@@ -157,9 +151,10 @@ class AnalysisInterferometer(AnalysisDataset):
         ) as e:
             raise exc.FitException from e
 
-    def fit_interferometer_via_instance_from(
+    def fit_from(
         self,
         instance: af.ModelInstance,
+        preload_overwrite: Optional[Preloads] = None,
         run_time_dict: Optional[Dict] = None,
     ) -> FitInterferometer:
         """
@@ -183,53 +178,22 @@ class AnalysisInterferometer(AnalysisDataset):
         FitInterferometer
             The fit of the plane to the interferometer dataset, which includes the log likelihood.
         """
-        instance = self.instance_with_associated_adapt_images_from(instance=instance)
-
         plane = self.plane_via_instance_from(
             instance=instance, run_time_dict=run_time_dict
         )
 
-        return self.fit_interferometer_via_plane_from(
-            plane=plane, run_time_dict=run_time_dict
-        )
-
-    def fit_interferometer_via_plane_from(
-        self,
-        plane: Plane,
-        preload_overwrite: Optional[Preloads] = None,
-        run_time_dict: Optional[Dict] = None,
-    ) -> FitInterferometer:
-        """
-        Given a `Plane`, which the analysis constructs from a model instance, create a `FitInterferometer` object.
-
-        This function is used in the `log_likelihood_function` to fit the model to the interferometer data and compute
-        the log likelihood.
-
-        Parameters
-        ----------
-        plane
-            The plane of galaxies whose model images are used to fit the interferometer data.
-
-        Returns
-        -------
-        FitInterferometer
-            The fit of the plane to the interferometer dataset, which includes the log likelihood.
-        """
+        adapt_images = self.adapt_images_via_instance_from(instance=instance)
 
         preloads = self.preloads if preload_overwrite is None else preload_overwrite
 
         return FitInterferometer(
             dataset=self.dataset,
             plane=plane,
-            settings_pixelization=self.settings_pixelization,
+            adapt_images=adapt_images,
             settings_inversion=self.settings_inversion,
             preloads=preloads,
             run_time_dict=run_time_dict,
         )
-
-    @property
-    def fit_func(self):
-        return self.fit_interferometer_via_instance_from
 
     def visualize_before_fit(self, paths: af.DirectoryPaths, model: af.Collection):
         """
@@ -251,10 +215,8 @@ class AnalysisInterferometer(AnalysisDataset):
 
         visualizer.visualize_interferometer(dataset=self.interferometer)
 
-        visualizer.visualize_adapt_images(
-            adapt_galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
-            adapt_model_image=self.adapt_model_image,
-        )
+        if self.adapt_images is not None:
+            visualizer.visualize_adapt_images(adapt_images=self.adapt_images)
 
     def visualize(self, paths: af.DirectoryPaths, instance, during_analysis):
         """
@@ -289,13 +251,7 @@ class AnalysisInterferometer(AnalysisDataset):
             If True the visualization is being performed midway through the non-linear search before it is finished,
             which may change which images are output.
         """
-
-        instance = self.instance_with_associated_adapt_images_from(instance=instance)
-        plane = self.plane_via_instance_from(instance=instance)
-
-        fit = self.fit_interferometer_via_plane_from(
-            plane=plane,
-        )
+        fit = self.fit_from(instance=instance)
 
         visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
         visualizer.visualize_interferometer(dataset=self.interferometer)
@@ -323,11 +279,6 @@ class AnalysisInterferometer(AnalysisDataset):
                 )
             except IndexError:
                 pass
-
-        visualizer.visualize_adapt_images(
-            adapt_galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
-            adapt_model_image=self.adapt_model_image,
-        )
 
     def make_result(
         self,
@@ -374,7 +325,7 @@ class AnalysisInterferometer(AnalysisDataset):
          - The settings associated with the inversion.
          - The settings associated with the pixelization.
          - The Cosmology.
-         - The adapt dataset's model image and galaxy images, if used.
+         - The adapt image's model image and galaxy images, if used.
 
          This function also outputs attributes specific to an interferometer dataset:
 

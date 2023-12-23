@@ -25,7 +25,6 @@ from autoarray.inversion.pixelization.mappers.mapper_grids import MapperGrids  #
 from autoarray.inversion.pixelization.mappers.factory import (
     mapper_from as Mapper,
 )  # noqa
-from autoarray.inversion.pixelization.settings import SettingsPixelization  # noqa
 from autoarray.mask.mask_1d import Mask1D  # noqa
 from autoarray.mask.mask_2d import Mask2D  # noqa
 from autoarray.operators.convolver import Convolver  # noqa
@@ -53,6 +52,7 @@ from autoarray.structures.arrays.kernel_2d import Kernel2D  # noqa
 from autoarray.structures.visibilities import Visibilities  # noqa
 from autoarray.structures.visibilities import VisibilitiesNoiseMap  # noqa
 
+from .analysis.adapt_images import AdaptImages
 from .analysis.maker import FitMaker
 from .analysis.preloads import Preloads
 from . import aggregator as agg

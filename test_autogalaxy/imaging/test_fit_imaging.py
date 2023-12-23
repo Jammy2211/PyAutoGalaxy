@@ -28,7 +28,10 @@ def test__model_image__with_and_without_psf_blurring(
     assert fit.log_likelihood == pytest.approx(-14.52960, 1.0e-4)
 
 
-def test__fit_figure_of_merit(masked_imaging_7x7, masked_imaging_covariance_7x7):
+def test__fit_figure_of_merit(
+    masked_imaging_7x7,
+    masked_imaging_covariance_7x7,
+):
     g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
     g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
 
@@ -172,6 +175,32 @@ def test__fit_figure_of_merit(masked_imaging_7x7, masked_imaging_covariance_7x7)
 
     assert fit.perform_inversion is False
     assert fit.figure_of_merit == pytest.approx(-130242.56, 1.0e-4)
+
+    pixelization = ag.Pixelization(
+        image_mesh=ag.image_mesh.KMeans(pixels=5),
+        mesh=ag.mesh.Delaunay(),
+        regularization=ag.reg.Constant(coefficient=1.0),
+    )
+
+    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
+
+    plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), galaxy_pix])
+
+    model_image = ag.Array2D(
+        np.full(fill_value=5.0, shape=masked_imaging_7x7.mask.pixels_in_mask),
+        mask=masked_imaging_7x7.mask,
+    )
+
+    adapt_images = ag.AdaptImages(
+        galaxy_image_dict={galaxy_pix: model_image},
+    )
+
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7, plane=plane, adapt_images=adapt_images
+    )
+
+    assert fit.perform_inversion is True
+    assert fit.figure_of_merit == pytest.approx(-23.146720, 1.0e-4)
 
 
 def test__galaxy_model_image_dict(masked_imaging_7x7):
@@ -506,18 +535,3 @@ def test__plane_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
         23.0021210, 1.0e-4
     )
     assert plane.galaxies[2].bulge.intensity == pytest.approx(-6.58608, 1.0e-4)
-
-
-# def test__light_profile_no_convolve(masked_imaging_7x7):
-#
-#     g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Gaussian(intensity=1.0))
-#     plane = ag.Plane(redshift=0.5, galaxies=[g0])
-#     fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
-#
-#     g0_no_convolve = ag.Galaxy(
-#         redshift=0.5, bulge=ag.lp.Gaussian(intensity=1.0)
-#     )
-#     plane_no_convolve = ag.Plane(redshift=0.5, galaxies=[g0_no_convolve])
-#     fit_no_convolve = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane_no_convolve)
-#
-#     assert fit_no_convolve.log_likelihood != fit.log_likelihood

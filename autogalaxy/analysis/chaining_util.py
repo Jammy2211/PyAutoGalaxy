@@ -186,15 +186,6 @@ def source_from(
     return source_custom_model_from(result=result, source_is_model=True)
 
 
-def clean_clumps_of_adapt_images(clumps):
-    for clump in clumps:
-        if hasattr(clump, "adapt_model_image"):
-            del clump.adapt_model_image
-
-        if hasattr(clump, "adapt_galaxy_image"):
-            del clump.adapt_galaxy_image
-
-
 def clumps_from(
     result: Result,
     light_as_model: bool = False,
@@ -264,8 +255,6 @@ def clumps_from(
 
     else:
         clumps = result.instance.clumps.as_model(())
-
-    clean_clumps_of_adapt_images(clumps=clumps)
 
     return clumps
 

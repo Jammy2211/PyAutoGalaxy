@@ -87,13 +87,6 @@ class Plane(OperateImageGalaxies, OperateDeflections):
     def galaxies_with_cls_list_from(self, cls: Type) -> List[Galaxy]:
         return list(filter(lambda galaxy: galaxy.has(cls=cls), self.galaxies))
 
-    @property
-    def adapt_galaxies_with_pixelization_image_list(self) -> List[aa.Array2D]:
-        return [
-            galaxy.adapt_galaxy_image
-            for galaxy in self.galaxies_with_cls_list_from(cls=aa.Pixelization)
-        ]
-
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None

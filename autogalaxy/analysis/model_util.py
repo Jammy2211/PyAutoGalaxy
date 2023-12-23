@@ -17,15 +17,15 @@ def set_upper_limit_of_pixelization_pixels_prior(
     lower_limit_no_pixels_below_mask: int = 10,
 ):
     """
-    If the mesh(es) of pixelizations being fitted in the adapt-model fit is a `VoronoiBrightnessImage` pixelization,
-    this function sets the upper limit of its `pixels` prior to the number of data points in the mask.
+    Updates the prior on the `pixels` attribute of an image-mesh object (e.g. `Hilbert`, `KMeans`) to ensure it does
+    not exceed the number of data points in the mask.
 
     This ensures the KMeans algorithm does not raise an exception due to having fewer data points than source pixels.
 
     Parameters
     ----------
     model
-        The adapt model used by the adapt-fit, which models adapt-components like a `Pixelization`..
+        The adapt model used by the adapt-fit, which models adapt-components like a `Pixelization`.
     pixels_in_mask
         The number of pixels in the mask, which are used to set the upper and lower limits of the priors on the
         number of pixels in the pixelization.
@@ -69,19 +69,6 @@ def set_upper_limit_of_pixelization_pixels_prior(
                     lower_limit=lower_limit,
                     upper_limit=pixels_in_mask,
                 )
-
-
-def clean_model_of_adapt_images(model):
-    for galaxy in model.galaxies:
-        del galaxy.adapt_model_image
-        del galaxy.adapt_galaxy_image
-
-    if hasattr(model, "clumps"):
-        for clump in model.clumps:
-            del clump.adapt_model_image
-            del clump.adapt_galaxy_image
-
-    return model
 
 
 def adapt_model_from(
@@ -145,8 +132,6 @@ def adapt_model_from(
                 setup_adapt.mesh_pixels_fixed
             )
 
-    model = clean_model_of_adapt_images(model=model)
-
     return model
 
 
@@ -183,9 +168,9 @@ def adapt_fit(
         values for the adaptive pixelization's components for passing to later model-fits.
     """
 
-    if analysis.adapt_model_image is None:
+    if analysis.adapt_images is None:
         raise exc.AnalysisException(
-            "The analysis class does not have a adapt_model_image attribute, which is required for adapt fitting."
+            "The analysis class adapt_images attribute is None, an instance of AdaptImages is required for adaptive fitting."
         )
 
     adapt_model_pix = adapt_model_from(
@@ -205,8 +190,8 @@ def adapt_fit(
         model=adapt_model_pix, pixels_in_mask=result.mask.pixels_in_mask
     )
 
-    adapt_result = search.fit(model=adapt_model_pix, analysis=analysis)
+    adapt_images = search.fit(model=adapt_model_pix, analysis=analysis)
 
-    result.adapt = adapt_result
+    result.adapt = adapt_images
 
     return result

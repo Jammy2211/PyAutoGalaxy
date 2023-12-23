@@ -13,10 +13,10 @@ logger.setLevel(level="INFO")
 
 
 class FitMaker:
-    def __init__(self, model: af.Collection, fit_func: Callable):
+    def __init__(self, model: af.Collection, fit_from: Callable):
         """
         Makes fits using an input PyAutoFit `model`, where the parameters of the model are drawn from its prior. This
-        uses an input `fit_func`, which given an `instance` of the model creates the fit object.
+        uses an input `fit_from`, which given an `instance` of the model creates the fit object.
 
         This is used for implicit preloading in the `Analysis` classes, whereby the created fits are compared against
         one another to determine whether certain components of the analysis can be preloaded.
@@ -28,12 +28,12 @@ class FitMaker:
         ----------
         model
             A **PyAutoFit** model object which via its parameters and their priors can created instances of the model.
-        fit_func
+        fit_from
             A function which given the instance of the model creates a `Fit` object.
         """
 
         self.model = model
-        self.fit_func = fit_func
+        self.fit_from = fit_from
 
     @property
     def preloads_cls(self):
@@ -95,7 +95,7 @@ class FitMaker:
 
         # The use_w_tilde here is for speed, incase noise scalin is on.
 
-        fit = self.fit_func(
+        fit = self.fit_from(
             instance=instance, preload_overwrite=self.preloads_cls(use_w_tilde=False)
         )
         fit.figure_of_merit
@@ -120,7 +120,7 @@ class FitMaker:
 
                 # The use_w_tilde here is for speed, incase noise scalin is on.
 
-                fit = self.fit_func(
+                fit = self.fit_from(
                     instance=instance,
                     preload_overwrite=self.preloads_cls(use_w_tilde=False),
                 )

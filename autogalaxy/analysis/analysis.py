@@ -12,6 +12,7 @@ import autofit as af
 import autoarray as aa
 
 from autogalaxy import exc
+from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.analysis.maker import FitMaker
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
@@ -35,7 +36,7 @@ class Analysis(af.Analysis):
         This abstract Analysis class for all model-fits which fit galaxies (or objects containing galaxies like a
         plane), but does not perform a model-fit by itself (and is therefore only inherited from).
 
-        This class stores the Cosmology used for the analysis and adapt datasets used for certain model classes.
+        This class stores the Cosmology used for the analysis and adapt images used for certain model classes.
 
         Parameters
         ----------
@@ -66,10 +67,6 @@ class Analysis(af.Analysis):
                 run_time_dict=run_time_dict,
             )
         return Plane(galaxies=instance.galaxies, run_time_dict=run_time_dict)
-
-    @property
-    def fit_func(self) -> Callable:
-        raise NotImplementedError
 
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None
@@ -112,14 +109,14 @@ class Analysis(af.Analysis):
 
         # Ensure numba functions are compiled before profiling begins.
 
-        fit = self.fit_func(instance=instance)
+        fit = self.fit_from(instance=instance)
         fit.figure_of_merit
 
         start = time.time()
 
         for _ in range(repeats):
             try:
-                fit = self.fit_func(instance=instance)
+                fit = self.fit_from(instance=instance)
                 fit.figure_of_merit
             except Exception:
                 logger.info(
@@ -131,7 +128,7 @@ class Analysis(af.Analysis):
 
         run_time_dict["fit_time"] = fit_time
 
-        fit = self.fit_func(instance=instance, run_time_dict=run_time_dict)
+        fit = self.fit_from(instance=instance, run_time_dict=run_time_dict)
         fit.figure_of_merit
 
         try:
@@ -201,9 +198,8 @@ class AnalysisDataset(Analysis):
     def __init__(
         self,
         dataset: Union[aa.Imaging, aa.Interferometer],
-        adapt_result: ResultDataset = None,
+        adapt_images: Optional[AdaptImages] = None,
         cosmology: LensingCosmology = Planck15(),
-        settings_pixelization: aa.SettingsPixelization = None,
         settings_inversion: aa.SettingsInversion = None,
     ):
         """
@@ -211,21 +207,18 @@ class AnalysisDataset(Analysis):
         to a dataset, like imaging or interferometer data.
 
         This class stores the settings used to perform the model-fit for certain components of the model (e.g. a
-        pixelization or inversion), the Cosmology used for the analysis and adapt datasets used for certain model
+        pixelization or inversion), the Cosmology used for the analysis and adapt images used for certain model
         classes.
 
         Parameters
         ----------
         dataset
             The dataset that is the model is fitted too.
-        adapt_result
+        adapt_images
             The adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
-        settings_pixelization
-            settings controlling how a pixelization is fitted during the model-fit, for example if a border is used
-            when creating the pixelization.
         settings_inversion
             Settings controlling how an inversion is fitted during the model-fit, for example which linear algebra
             formalism is used.
@@ -233,16 +226,8 @@ class AnalysisDataset(Analysis):
         super().__init__(cosmology=cosmology)
 
         self.dataset = dataset
-        self.adapt_result = adapt_result
+        self.adapt_images = adapt_images
 
-        if self.adapt_result is not None:
-            self.set_adapt_dataset(result=self.adapt_result)
-
-        else:
-            self.adapt_galaxy_image_path_dict = None
-            self.adapt_model_image = None
-
-        self.settings_pixelization = settings_pixelization or aa.SettingsPixelization()
         self.settings_inversion = settings_inversion or aa.SettingsInversion()
 
         self.preloads = self.preloads_cls()
@@ -254,9 +239,9 @@ class AnalysisDataset(Analysis):
 
         This function:
 
-        - Checks if the model has a pixelization which uses a KMeans clustering algorithm (e.g. DelaunayBrightnessImage,
-          VoronoiBrightnessImage) and makes sure that the upper limit on the prior on its `pixels` is below the number
-          pixels in the mask. If it is not, the `pixels` prior upper limit is reduced.
+        - Checks if the model has a pixelization which uses an `image_mesh` which computes pixels from the image
+          (e.g. `Hilbert`, `KMeans`) and makes sure that the upper limit on the prior on its `pixels` is below the
+          number pixels in the mask. If it is not, the `pixels` prior upper limit is reduced.
 
         Parameters
         ----------
@@ -267,40 +252,9 @@ class AnalysisDataset(Analysis):
             The PyAutoFit model object, which includes model components representing the galaxies that are fitted to
             the imaging data.
         """
-
-        self.check_and_replace_adapt_images(paths=paths)
-
         model_util.set_upper_limit_of_pixelization_pixels_prior(
             model=model, pixels_in_mask=self.dataset.mask.pixels_in_mask
         )
-
-    def set_adapt_dataset(self, result: ResultDataset) -> None:
-        """
-        Using a the result of a previous model-fit, set the adapt-dataset for this analysis. This is used to adapt
-        aspects of the model (e.g. the pixelization, regularization scheme) to the properties of the dataset being
-        fitted.
-
-        This passes the adapt image and galaxy images of the previous fit. These represent where different
-        galaxies in the dataset are located and thus allows the fit to adapt different aspects of the model to different
-        galaxies in the data.
-
-        Parameters
-        ----------
-        result
-            The result of a previous model-fit which contains the model image and model galaxy images of a fit to
-            the dataset, which set up the adapt dataset. These are used by certain classes for adapting the analysis
-            to the properties of the dataset.
-        """
-
-        logger.info(
-            "Setting Adapt Dataset (adapt_model_image / adapt_galaxy_image_path_dict)"
-        )
-
-        adapt_galaxy_image_path_dict = result.adapt_galaxy_image_path_dict
-        adapt_model_image = result.adapt_model_image
-
-        self.adapt_galaxy_image_path_dict = adapt_galaxy_image_path_dict
-        self.adapt_model_image = adapt_model_image
 
     @property
     def preloads_cls(self):
@@ -338,7 +292,7 @@ class AnalysisDataset(Analysis):
             "PRELOADS - Setting up preloads, may take a few minutes for fits using an inversion."
         )
 
-        fit_maker = self.fit_maker_cls(model=model, fit_func=self.fit_func)
+        fit_maker = self.fit_maker_cls(model=model, fit_from=self.fit_from)
 
         fit_0 = fit_maker.fit_via_model_from(unit_value=0.45)
         fit_1 = fit_maker.fit_via_model_from(unit_value=0.55)
@@ -382,46 +336,6 @@ class AnalysisDataset(Analysis):
 
         return self
 
-    def instance_with_associated_adapt_images_from(
-        self, instance: af.ModelInstance
-    ) -> af.ModelInstance:
-        """
-        Using the model image and galaxy images that were set up as the adapt dataset, associate the galaxy images
-        of that result with the galaxies in this model fit.
-
-        Association is performed based on galaxy names, whereby if the name of a galaxy in this search matches the
-        full-path name of galaxies in the adapt dataset the galaxy image is passed.
-
-        If the galaxy collection has a different name then an association is not made.
-
-        For example, `galaxies.lens` will match with:
-            `galaxies.lens`
-        but not with:
-            `galaxies.source`
-
-        Parameters
-        ----------
-        instance
-        An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
-            via a non-linear search), which has 0 or more galaxies in its tree.
-
-        Returns
-        -------
-        instance
-           The input instance with images associated with galaxies where possible.
-        """
-
-        if self.adapt_galaxy_image_path_dict is not None:
-            for galaxy_path, galaxy in instance.path_instance_tuples_for_class(Galaxy):
-                if galaxy_path in self.adapt_galaxy_image_path_dict:
-                    galaxy.adapt_model_image = self.adapt_model_image
-
-                    galaxy.adapt_galaxy_image = self.adapt_galaxy_image_path_dict[
-                        galaxy_path
-                    ]
-
-        return instance
-
     def save_attributes(self, paths: af.DirectoryPaths):
         """
         Before the model-fit via the non-linear search begins, this routine saves attributes of the `Analysis` object
@@ -434,7 +348,7 @@ class AnalysisDataset(Analysis):
         - The settings associated with the inversion.
         - The settings associated with the pixelization.
         - The Cosmology.
-        - The adapt dataset's model image and galaxy images, if used.
+        - The adapt image's model image and galaxy images, if used.
 
         It is common for these attributes to be loaded by many of the template aggregator functions given in the
         `aggregator` modules. For example, when using the database tools to reperform a fit, this will by default
@@ -467,37 +381,14 @@ class AnalysisDataset(Analysis):
             object_dict=to_dict(self.settings_inversion),
         )
         paths.save_json(
-            name="settings_pixelization",
-            object_dict=to_dict(self.settings_pixelization),
-        )
-        paths.save_json(
             name="cosmology",
             object_dict=to_dict(self.cosmology),
         )
 
-        if self.adapt_model_image is not None:
-            paths.save_fits(
-                name="adapt_model_image",
-                hdu=self.adapt_model_image.hdu_for_output,
-                prefix="adapt",
-            )
-
-        if self.adapt_galaxy_image_path_dict is not None:
-            adapt_galaxy_key_list = []
-
-            for key, value in self.adapt_galaxy_image_path_dict.items():
-                paths.save_fits(
-                    name=key,
-                    hdu=value.hdu_for_output,
-                    prefix="adapt",
-                )
-
-                adapt_galaxy_key_list.append(key)
-
+        if self.adapt_images is not None:
             paths.save_json(
-                name="adapt_galaxy_keys",
-                object_dict=adapt_galaxy_key_list,
-                prefix="adapt",
+                name="adapt_images",
+                object_dict=to_dict(self.adapt_images),
             )
 
     def save_results(self, paths: af.DirectoryPaths, result: ResultDataset):
@@ -525,47 +416,11 @@ class AnalysisDataset(Analysis):
         except AttributeError:
             pass
 
-    def check_and_replace_adapt_images(self, paths: af.DirectoryPaths):
-        """
-        Using a the result of a previous model-fit, a adapt-dataset can be set up which adapts aspects of the model
-        (e.g. the pixelization, regularization scheme) to the properties of the dataset being fitted.
-
-        If the model-fit is being resumed from a previous run, this function checks that the model image and galaxy
-        images used to set up the adapt-dataset are identical to those used previously. If they are not, it replaces
-        them with the previous adapt image. This ensures consistency in the log likelihood function.
-
-        Parameters
-        ----------
-        paths
-            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
-            visualization and the pickled objects used by the aggregator output by this function.
-        """
-
-        def load_adapt_image(filename):
-            adapt_image = aa.Array2D.no_mask(
-                values=paths.load_fits(name=filename),
-                pixel_scales=self.dataset.pixel_scales,
-            )
-
-            return adapt_image.apply_mask(mask=self.dataset.mask)
-
+    def adapt_images_via_instance_from(self, instance: af.ModelInstance) -> AdaptImages:
         try:
-            adapt_model_image = load_adapt_image(filename="adapt_model_image")
-        except (FileNotFoundError, KeyError):
-            return
-
-        if np.max(abs(adapt_model_image - self.adapt_model_image)) > 1e-8:
-            logger.info(
-                "ANALYSIS - adapt image loaded from pickle different to that set in Analysis class."
-                "Overwriting adapt images with values loaded from pickles."
-            )
-
-            self.adapt_model_image = adapt_model_image
-
-            self.adapt_galaxy_image_path_dict = {
-                key: load_adapt_image(filename=f"{key}")
-                for key in self.adapt_galaxy_image_path_dict.keys()
-            }
+            return self.adapt_images.updated_via_instance_from(instance=instance)
+        except AttributeError:
+            pass
 
     def output_or_check_figure_of_merit_sanity(
         self, paths: af.DirectoryPaths, result: af.Result
