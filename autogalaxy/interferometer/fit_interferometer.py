@@ -253,6 +253,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         return FitInterferometer(
             dataset=self.interferometer,
             plane=self.plane,
+            adapt_images=self.adapt_images,
             settings_inversion=settings_inversion,
             preloads=preloads,
             run_time_dict=run_time_dict,

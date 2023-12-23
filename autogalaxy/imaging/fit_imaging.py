@@ -317,6 +317,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         return FitImaging(
             dataset=self.dataset,
             plane=self.plane,
+            adapt_images=self.adapt_images,
             settings_inversion=settings_inversion,
             preloads=preloads,
             run_time_dict=run_time_dict,
