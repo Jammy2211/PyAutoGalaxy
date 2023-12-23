@@ -58,8 +58,12 @@ class AdaptImages:
             mask=self.mask.derive_mask.sub_1,
         )
 
-        for path in self.galaxy_image_dict.keys():
-            adapt_model_image += self.galaxy_image_dict[path]
+        try:
+            for path in self.galaxy_image_dict.keys():
+                adapt_model_image += self.galaxy_image_dict[path]
+        except AttributeError:
+            for path in self.galaxy_name_image_dict.keys():
+                adapt_model_image += self.galaxy_name_image_dict[path]
 
         return adapt_model_image
 
