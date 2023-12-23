@@ -347,11 +347,6 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         """
         return self.effective_radius / np.sqrt(self.axis_ratio)
 
-    def with_new_normalization(self, normalization):
-        mass_profile = copy.copy(self)
-        mass_profile.mass_to_light_ratio = normalization
-        return mass_profile
-
 
 class Sersic(AbstractSersic, MassProfileMGE, MassProfileCSE):
     @aa.grid_dec.grid_2d_to_structure

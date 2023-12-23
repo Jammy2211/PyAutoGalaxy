@@ -185,12 +185,6 @@ class PowerLawCore(MassProfile):
     def unit_mass(self):
         return "angular"
 
-    def with_new_normalization(self, normalization):
-        mass_profile = copy.copy(self)
-        mass_profile.einstein_radius = normalization
-        return mass_profile
-
-
 class PowerLawCoreSph(PowerLawCore):
     def __init__(
         self,
