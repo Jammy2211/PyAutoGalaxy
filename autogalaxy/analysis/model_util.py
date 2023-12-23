@@ -17,15 +17,15 @@ def set_upper_limit_of_pixelization_pixels_prior(
     lower_limit_no_pixels_below_mask: int = 10,
 ):
     """
-    If the mesh(es) of pixelizations being fitted in the adapt-model fit is a `VoronoiBrightnessImage` pixelization,
-    this function sets the upper limit of its `pixels` prior to the number of data points in the mask.
+    Updates the prior on the `pixels` attribute of an image-mesh object (e.g. `Hilbert`, `KMeans`) to ensure it does
+    not exceed the number of data points in the mask.
 
     This ensures the KMeans algorithm does not raise an exception due to having fewer data points than source pixels.
 
     Parameters
     ----------
     model
-        The adapt model used by the adapt-fit, which models adapt-components like a `Pixelization`..
+        The adapt model used by the adapt-fit, which models adapt-components like a `Pixelization`.
     pixels_in_mask
         The number of pixels in the mask, which are used to set the upper and lower limits of the priors on the
         number of pixels in the pixelization.

@@ -16,7 +16,7 @@ def adapt_images_from(
     """
     Updates adaptive images when loading the galaxies from a `PyAutoFit` sqlite database `Fit` object.
 
-    This function ensures that if adaptive features (e.g. a `VoronoiBrightnessImage` mesh) are used in a model-fit,
+    This function ensures that if adaptive features (e.g. an `Hilbert` image-mesh) are used in a model-fit,
     they work when using the database to load and inspect the results of the model-fit.
 
     Parameters
@@ -68,7 +68,7 @@ def mesh_grids_of_planes_list_from(
     """
     Returns the image-plane pixelization grid(s) used by the fit.
 
-    A subset of mesh objects (e.g. `VoronoiBrightnessImage`) create the grid of points that act as the mesh
+    A subset of image-mesh objects (e.g. `Hilbert`, `KMeans`) create the grid of points that act as the mesh
     centres (e.g. the centers of Voronoi cells) in the image-plane. For lensing calculations this may then be
     traced to the source-plane to form the pixelization.
 
