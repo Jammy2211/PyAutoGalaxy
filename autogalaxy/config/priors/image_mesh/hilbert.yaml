@@ -12,7 +12,7 @@ Hilbert:
   weight_floor:
     type: Uniform
     lower_limit: 0.0
-    upper_limit: 1.0
+    upper_limit: 10.0
     width_modifier:
       type: Absolute
       value: 0.1
@@ -22,7 +22,7 @@ Hilbert:
   weight_power:
     type: Uniform
     lower_limit: 0.0
-    upper_limit: 20.0
+    upper_limit: 5.0
     width_modifier:
       type: Absolute
       value: 5.0
