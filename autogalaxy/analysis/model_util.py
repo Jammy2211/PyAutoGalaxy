@@ -113,9 +113,9 @@ def adapt_model_from(
         excluded_classes=(aa.reg.ConstantZeroth, aa.reg.Zeroth),
     )
 
-    has_pix = result.model.has_model(
+    has_pix = model.has_model(
         cls=(aa.Pixelization,)
-    ) or result.model.has_instance(cls=(aa.Pixelization,))
+    ) or model.has_instance(cls=(aa.Pixelization,))
 
     if not has_pix:
         return None
