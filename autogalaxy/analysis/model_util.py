@@ -12,9 +12,9 @@ logger.setLevel(level="INFO")
 
 
 def set_upper_limit_of_pixelization_pixels_prior(
-    model: af.Collection,
-    pixels_in_mask: int,
-    lower_limit_no_pixels_below_mask: int = 10,
+        model: af.Collection,
+        pixels_in_mask: int,
+        lower_limit_no_pixels_below_mask: int = 10,
 ):
     """
     Updates the prior on the `pixels` attribute of an image-mesh object (e.g. `Hilbert`, `KMeans`) to ensure it does
@@ -59,8 +59,8 @@ def set_upper_limit_of_pixelization_pixels_prior(
                     logger.info(
                         log_str
                         + "MODIFY BEFORE FIT - The pixelization's mesh's pixel UniformPrior lower_limit was "
-                        "also above the number of pixels in the mask, and has been reduced"
-                        "to the number of pixels in the mask minus 10."
+                          "also above the number of pixels in the mask, and has been reduced"
+                          "to the number of pixels in the mask minus 10."
                     )
                 else:
                     logger.info(log_str)
@@ -72,10 +72,10 @@ def set_upper_limit_of_pixelization_pixels_prior(
 
 
 def adapt_model_from(
-    setup_adapt,
-    result: af.Result,
-    pixelization_overwrite=None,
-    regularization_overwrite=None,
+        setup_adapt,
+        result: af.Result,
+        pixelization_overwrite=None,
+        regularization_overwrite=None,
 ) -> af.Collection:
     """
     Make a adapt model from the `Result` of a model-fit, where the adapt-model is the maximum log likelihood instance
@@ -136,10 +136,10 @@ def adapt_model_from(
 
 
 def adapt_fit(
-    setup_adapt,
-    result: af.Result,
-    analysis,
-    search_previous,
+        setup_adapt,
+        result: af.Result,
+        analysis,
+        search_previous,
 ):
     """
     Perform a adapt-fit, which extends a model-fit with an additional fit which fixes the non-pixelization components of the
@@ -186,12 +186,14 @@ def adapt_fit(
         **setup_adapt.search_pix_dict,
     )
 
+    analysis.adapt_images = result.adapt_images
+
     set_upper_limit_of_pixelization_pixels_prior(
         model=adapt_model_pix, pixels_in_mask=result.mask.pixels_in_mask
     )
 
-    adapt_images = search.fit(model=adapt_model_pix, analysis=analysis)
+    adapt_result = search.fit(model=adapt_model_pix, analysis=analysis)
 
-    result.adapt = adapt_images
+    result.adapt = adapt_result
 
     return result
