@@ -12,7 +12,7 @@ HilbertBalanced:
   weight_floor:
     type: Uniform
     lower_limit: 0.0
-    upper_limit: 1.0
+    upper_limit: 0.05
     width_modifier:
       type: Absolute
       value: 0.1
@@ -21,8 +21,8 @@ HilbertBalanced:
       upper: inf
   weight_power:
     type: Uniform
-    lower_limit: 0.0
-    upper_limit: 5.0
+    lower_limit: 2.5
+    upper_limit: 3.5
     width_modifier:
       type: Absolute
       value: 5.0
