@@ -10,67 +10,6 @@ logger = logging.getLogger(__name__)
 
 logger.setLevel(level="INFO")
 
-
-def set_upper_limit_of_pixelization_pixels_prior(
-        model: af.Collection,
-        pixels_in_mask: int,
-        lower_limit_no_pixels_below_mask: int = 10,
-):
-    """
-    Updates the prior on the `pixels` attribute of an image-mesh object (e.g. `Hilbert`, `KMeans`) to ensure it does
-    not exceed the number of data points in the mask.
-
-    This ensures the KMeans algorithm does not raise an exception due to having fewer data points than source pixels.
-
-    Parameters
-    ----------
-    model
-        The adapt model used by the adapt-fit, which models adapt-components like a `Pixelization`.
-    pixels_in_mask
-        The number of pixels in the mask, which are used to set the upper and lower limits of the priors on the
-        number of pixels in the pixelization.
-    lower_limit_no_pixels_below_mask
-        If the prior lower limit on the pixelization's number of pixels is above the number of pixels in the mask,
-        the number of pixels in the mask below which the lower limit is set.
-    """
-
-    if not hasattr(model, "galaxies"):
-        return
-
-    image_mesh_list = model.galaxies.models_with_type(cls=(aa.image_mesh.KMeans,))
-
-    if not image_mesh_list:
-        return
-
-    for mesh in image_mesh_list:
-        if hasattr(mesh.pixels, "upper_limit"):
-            if pixels_in_mask < mesh.pixels.upper_limit:
-                lower_limit = mesh.pixels.lower_limit
-
-                log_str = (
-                    "MODIFY BEFORE FIT -  A pixelization mesh's pixel UniformPrior upper limit"
-                    "was greater than the number of pixels in the mask. It has been "
-                    "reduced to the number of pixels in the mask.\,"
-                )
-
-                if lower_limit > pixels_in_mask:
-                    lower_limit = pixels_in_mask - lower_limit_no_pixels_below_mask
-
-                    logger.info(
-                        log_str
-                        + "MODIFY BEFORE FIT - The pixelization's mesh's pixel UniformPrior lower_limit was "
-                          "also above the number of pixels in the mask, and has been reduced"
-                          "to the number of pixels in the mask minus 10."
-                    )
-                else:
-                    logger.info(log_str)
-
-                mesh.pixels = af.UniformPrior(
-                    lower_limit=lower_limit,
-                    upper_limit=pixels_in_mask,
-                )
-
-
 def adapt_model_from(
         setup_adapt,
         result: af.Result,
@@ -187,10 +126,6 @@ def adapt_fit(
     )
 
     analysis.adapt_images = result.adapt_images
-
-    set_upper_limit_of_pixelization_pixels_prior(
-        model=adapt_model_pix, pixels_in_mask=result.mask.pixels_in_mask
-    )
 
     adapt_result = search.fit(model=adapt_model_pix, analysis=analysis)
 
