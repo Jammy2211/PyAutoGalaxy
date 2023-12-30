@@ -5,9 +5,9 @@ import autogalaxy as ag
 def test__adapt_search():
     setup = ag.SetupAdapt(search_pix_cls=None, search_pix_dict=None)
 
-    assert setup.search_pix_cls == af.Nautilus
+    assert setup.search_pix_cls == af.DynestyStatic
     assert setup.search_pix_dict == {
-        "n_live": 75,
+        "nlive": 100,
     }
 
     setup = ag.SetupAdapt(
