@@ -29,3 +29,6 @@ HilbertBalanced:
     gaussian_limits:
       lower: 0.0
       upper: inf
+  ratio:
+    type: Constant
+    value: 0.3
