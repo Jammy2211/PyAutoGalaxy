@@ -46,6 +46,7 @@ class MatPlot2D(aplt.MatPlot2D):
         radial_critical_curves_plot: Optional[w.RadialCriticalCurvesPlot] = None,
         tangential_caustics_plot: Optional[w.TangentialCausticsPlot] = None,
         radial_caustics_plot: Optional[w.RadialCausticsPlot] = None,
+        use_log10 : bool = False
     ):
         """
         Visualizes data structures (e.g an `Array2D`, `Grid2D`, `VectorField`, etc.) using Matplotlib.
@@ -201,4 +202,5 @@ class MatPlot2D(aplt.MatPlot2D):
             grid_plot=grid_plot,
             interpolated_reconstruction=interpolated_reconstruction,
             voronoi_drawer=voronoi_drawer,
+            use_log10=use_log10,
         )
