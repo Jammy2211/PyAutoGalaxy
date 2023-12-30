@@ -37,6 +37,7 @@ Image Mesh [ag.image_mesh]
 
    Overlay
    Hilbert
+   HilbertBalanced
    KMeans
 
 Mesh [ag.mesh]
@@ -79,7 +80,6 @@ Settings
    :template: custom-class-template.rst
    :recursive:
 
-   SettingsPixelization
    SettingsInversion
 
 Mapper
