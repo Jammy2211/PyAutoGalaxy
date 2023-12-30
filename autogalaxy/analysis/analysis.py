@@ -232,30 +232,6 @@ class AnalysisDataset(Analysis):
 
         self.preloads = self.preloads_cls()
 
-    def modify_before_fit(self, paths: af.DirectoryPaths, model: af.Collection):
-        """
-        This function is called immediately before the non-linear search begins and performs final tasks and checks
-        before it begins.
-
-        This function:
-
-        - Checks if the model has a pixelization which uses an `image_mesh` which computes pixels from the image
-          (e.g. `Hilbert`, `KMeans`) and makes sure that the upper limit on the prior on its `pixels` is below the
-          number pixels in the mask. If it is not, the `pixels` prior upper limit is reduced.
-
-        Parameters
-        ----------
-        paths
-            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
-            visualization and the pickled objects used by the aggregator output by this function.
-        model
-            The PyAutoFit model object, which includes model components representing the galaxies that are fitted to
-            the imaging data.
-        """
-        model_util.set_upper_limit_of_pixelization_pixels_prior(
-            model=model, pixels_in_mask=self.dataset.mask.pixels_in_mask
-        )
-
     @property
     def preloads_cls(self):
         return Preloads
