@@ -101,7 +101,7 @@ class FitMaker:
 
     def fit_random_instance_from(self) -> Union[aa.FitImaging, aa.FitInterferometer]:
         """
-        Create a fit via the model by guessing a  a sequence of random fits until an exception is not returned. If
+        Create a fit via the model by guessing a sequence of random fits until an exception is not returned. If
         the number of `preload_attempts` defined in the configuration files is exceeded a None is returned.
 
         Returns
@@ -125,7 +125,4 @@ class FitMaker:
                 return fit
 
             except Exception as e:
-
-                print(f"Preload attempt {i} failed.")
-
                 continue

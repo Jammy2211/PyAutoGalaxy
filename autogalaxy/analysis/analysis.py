@@ -268,6 +268,8 @@ class AnalysisDataset(Analysis):
             "PRELOADS - Setting up preloads, may take a few minutes for fits using an inversion."
         )
 
+        self.preloads = self.preloads_cls()
+
         fit_maker = self.fit_maker_cls(model=model, fit_from=self.fit_from)
 
         fit_0 = fit_maker.fit_via_model_from(unit_value=0.45)
