@@ -1,7 +1,7 @@
 import json
 import logging
 import numpy as np
-from typing import Callable, Dict, Optional, Tuple, Union
+from typing import Dict, Optional, Tuple, Union
 from os import path
 import os
 import time
@@ -17,11 +17,8 @@ from autogalaxy.analysis.maker import FitMaker
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
-from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
 from autogalaxy.analysis.result import ResultDataset
-
-from autogalaxy.analysis import model_util
 
 logger = logging.getLogger(__name__)
 
