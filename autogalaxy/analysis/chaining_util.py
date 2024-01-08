@@ -101,6 +101,7 @@ def source_custom_model_from(result: Result, source_is_model: bool = False) -> a
         if source_is_model:
             pixelization = af.Model(
                 aa.Pixelization,
+                image_mesh=result.adapt.instance.galaxies.source.pixelization.image_mesh,
                 mesh=result.adapt.instance.galaxies.source.pixelization.mesh,
                 regularization=result.adapt.model.galaxies.source.pixelization.regularization,
             )
@@ -113,6 +114,7 @@ def source_custom_model_from(result: Result, source_is_model: bool = False) -> a
 
         pixelization = af.Model(
             aa.Pixelization,
+            image_mesh=result.adapt.instance.galaxies.source.pixelization.image_mesh,
             mesh=result.adapt.instance.galaxies.source.pixelization.mesh,
             regularization=result.adapt.instance.galaxies.source.pixelization.regularization,
         )
@@ -127,6 +129,7 @@ def source_custom_model_from(result: Result, source_is_model: bool = False) -> a
         if source_is_model:
             pixelization = af.Model(
                 aa.Pixelization,
+                image_mesh=result.instance.galaxies.source.pixelization.image_mesh,
                 mesh=result.instance.galaxies.source.pixelization.mesh,
                 regularization=result.model.galaxies.source.pixelization.regularization,
             )
@@ -139,6 +142,7 @@ def source_custom_model_from(result: Result, source_is_model: bool = False) -> a
 
         pixelization = af.Model(
             aa.Pixelization,
+            image_mesh=result.instance.galaxies.source.pixelization.image_mesh,
             mesh=result.instance.galaxies.source.pixelization.mesh,
             regularization=result.instance.galaxies.source.pixelization.regularization,
         )
@@ -180,15 +184,6 @@ def source_from(
         if result.instance.galaxies.source.pixelization is not None:
             return source_custom_model_from(result=result, source_is_model=False)
     return source_custom_model_from(result=result, source_is_model=True)
-
-
-def clean_clumps_of_adapt_images(clumps):
-    for clump in clumps:
-        if hasattr(clump, "adapt_model_image"):
-            del clump.adapt_model_image
-
-        if hasattr(clump, "adapt_galaxy_image"):
-            del clump.adapt_galaxy_image
 
 
 def clumps_from(
@@ -260,8 +255,6 @@ def clumps_from(
 
     else:
         clumps = result.instance.clumps.as_model(())
-
-    clean_clumps_of_adapt_images(clumps=clumps)
 
     return clumps
 

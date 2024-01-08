@@ -24,25 +24,25 @@ class AdaptPlotter(Plotter):
     def get_visuals_2d(self) -> Visuals2D:
         return self.visuals_2d
 
-    def figure_adapt_model_image(self, adapt_model_image: aa.Array2D):
+    def figure_model_image(self, model_image: aa.Array2D):
         """
-        Plot the adapt image of a galaxy.
+        Plots the adapt model image (e.g. sum of all individual galaxy model images).
 
         Parameters
         ----------
-        adapt_model_image
-            The adapt image that is plotted.
+        model_image
+            The adapt model image that is plotted.
         """
 
         self.mat_plot_2d.plot_array(
-            array=adapt_model_image,
+            array=model_image,
             visuals_2d=self.get_visuals_2d(),
             auto_labels=aplt.AutoLabels(
                 title="adapt image", filename="adapt_model_image"
             ),
         )
 
-    def figure_adapt_galaxy_image(self, galaxy_image: aa.Array2D):
+    def figure_galaxy_image(self, galaxy_image: aa.Array2D):
         """
         Plot the galaxy image of a galaxy.
 
@@ -59,27 +59,27 @@ class AdaptPlotter(Plotter):
             ),
         )
 
-    def subplot_adapt_images_of_galaxies(
-        self, adapt_galaxy_image_path_dict: Dict[Galaxy, aa.Array2D]
+    def subplot_images_of_galaxies(
+        self, adapt_galaxy_name_image_dict: Dict[Galaxy, aa.Array2D]
     ):
         """
         Plots a subplot of the galaxy image of all galaxies.
 
-        This uses the `adapt_galaxy_image_path_dict` which is a dictionary mapping each galaxy to its corresponding
+        This uses the `adapt_galaxy_name_image_dict` which is a dictionary mapping each galaxy to its corresponding
         to galaxy image.
 
         Parameters
         ----------
-        adapt_galaxy_image_path_dict
+        adapt_galaxy_name_image_dict
             A dictionary mapping each galaxy to its corresponding to galaxy image.
         """
-        if adapt_galaxy_image_path_dict is None:
+        if adapt_galaxy_name_image_dict is None:
             return
 
-        self.open_subplot_figure(number_subplots=len(adapt_galaxy_image_path_dict))
+        self.open_subplot_figure(number_subplots=len(adapt_galaxy_name_image_dict))
 
-        for path, galaxy_image in adapt_galaxy_image_path_dict.items():
-            self.figure_adapt_galaxy_image(galaxy_image=galaxy_image)
+        for path, galaxy_image in adapt_galaxy_name_image_dict.items():
+            self.figure_galaxy_image(galaxy_image=galaxy_image)
 
         self.mat_plot_2d.output.subplot_to_figure(
             auto_filename="subplot_adapt_images_of_galaxies"

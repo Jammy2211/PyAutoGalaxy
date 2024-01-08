@@ -1,12 +1,11 @@
-import copy
-import numpy as np
 from typing import Dict, List, Tuple, Type, Union
 
 from autoconf import cached_property
-from autoconf import conf
+
 import autofit as af
 import autoarray as aa
 
+from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
 
@@ -58,19 +57,19 @@ class Result(af.Result):
         """
         An instance of a `Plane` corresponding to the maximum log likelihood model inferred by the non-linear search.
         """
-
-        instance = self.analysis.instance_with_associated_adapt_images_from(
-            instance=self.instance
-        )
-
-        return self.analysis.plane_via_instance_from(instance=instance)
+        return self.analysis.plane_via_instance_from(instance=self.instance)
 
     @property
     def path_galaxy_tuples(self) -> List[Tuple[str, Galaxy]]:
         """
         Tuples associating the names of galaxies with instances from the best fit
         """
-        return self.instance.path_instance_tuples_for_class(cls=Galaxy)
+        path_galaxy_tuples = []
+
+        for path, galaxy in self.instance.path_instance_tuples_for_class(cls=Galaxy):
+            path_galaxy_tuples.append((str(path), galaxy))
+
+        return path_galaxy_tuples
 
 
 class ResultDataset(Result):
@@ -118,41 +117,12 @@ class ResultDataset(Result):
         }
 
     @property
-    def adapt_galaxy_image_path_dict(self) -> Dict[str, aa.Array2D]:
+    def adapt_images(self) -> AdaptImages:
         """
-        A dictionary associating 1D galaxy images with their names.
+        Returns the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
+        reconstructed galaxy's morphology.
         """
 
-        adapt_minimum_percent = conf.instance["general"]["adapt"][
-            "adapt_minimum_percent"
-        ]
-
-        adapt_galaxy_image_path_dict = {}
-
-        for path, galaxy in self.path_galaxy_tuples:
-            galaxy_image = self.image_galaxy_dict[path]
-
-            if not np.all(galaxy_image == 0):
-                minimum_galaxy_value = adapt_minimum_percent * max(galaxy_image)
-                galaxy_image[galaxy_image < minimum_galaxy_value] = minimum_galaxy_value
-
-            adapt_galaxy_image_path_dict[path] = galaxy_image
-
-        return adapt_galaxy_image_path_dict
-
-    @property
-    def adapt_model_image(self) -> aa.Array2D:
-        """
-        The adapt image used by Analysis objects to adapt aspects of a model to the dataset being fitted.
-
-        The adapt image is the sum of the galaxy image of every individual galaxy.
-        """
-        adapt_model_image = aa.Array2D(
-            values=np.zeros(self.mask.derive_mask.sub_1.pixels_in_mask),
-            mask=self.mask.derive_mask.sub_1,
+        return AdaptImages.from_result(
+            result=self,
         )
-
-        for path, galaxy in self.path_galaxy_tuples:
-            adapt_model_image += self.adapt_galaxy_image_path_dict[path]
-
-        return adapt_model_image

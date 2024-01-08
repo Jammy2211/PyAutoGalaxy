@@ -38,7 +38,9 @@ def make_pixelization_galaxy():
     return PixelizationGalaxy(
         redshift=1.0,
         pixelization=ag.Pixelization(
-            mesh=Voronoi(), regularization=AdaptiveBrightness()
+            image_mesh=ag.image_mesh.Overlay(shape=(3, 3)),
+            mesh=Voronoi(),
+            regularization=AdaptiveBrightness(),
         ),
     )
 
@@ -54,6 +56,11 @@ def make_pixelization_galaxy_dict():
                 "type": "instance",
                 "class_path": "autoarray.inversion.pixelization.pixelization.Pixelization",
                 "arguments": {
+                    "image_mesh": {
+                        "type": "instance",
+                        "class_path": "autoarray.inversion.pixelization.image_mesh.overlay.Overlay",
+                        "arguments": {"shape": (3, 3)},
+                    },
                     "mesh": {
                         "type": "instance",
                         "class_path": "autoarray.inversion.pixelization.mesh.voronoi.Voronoi",

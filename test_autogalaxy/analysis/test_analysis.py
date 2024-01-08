@@ -37,58 +37,28 @@ def test__instance_with_associated_adapt_images_from(masked_imaging_7x7):
     instance = af.ModelInstance()
     instance.galaxies = galaxies
 
-    adapt_galaxy_image_path_dict = {
-        ("galaxies", "galaxy"): ag.Array2D.ones(shape_native=(3, 3), pixel_scales=1.0),
-        ("galaxies", "source"): ag.Array2D.full(
+    adapt_galaxy_name_image_dict = {
+        str(("galaxies", "galaxy")): ag.Array2D.ones(
+            shape_native=(3, 3), pixel_scales=1.0
+        ),
+        str(("galaxies", "source")): ag.Array2D.full(
             fill_value=2.0, shape_native=(3, 3), pixel_scales=1.0
         ),
     }
 
-    result = ag.m.MockResult(
-        instance=instance,
-        adapt_galaxy_image_path_dict=adapt_galaxy_image_path_dict,
-        adapt_model_image=ag.Array2D.full(
-            fill_value=3.0, shape_native=(3, 3), pixel_scales=1.0
-        ),
+    adapt_images = ag.AdaptImages(
+        galaxy_name_image_dict=adapt_galaxy_name_image_dict,
     )
 
-    analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7, adapt_result=result)
+    analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7, adapt_images=adapt_images)
 
-    instance = analysis.instance_with_associated_adapt_images_from(instance=instance)
+    adapt_images = analysis.adapt_images_via_instance_from(instance=instance)
 
-    assert instance.galaxies.galaxy.adapt_galaxy_image.native == pytest.approx(
+    assert adapt_images.galaxy_image_dict[galaxies.galaxy].native == pytest.approx(
         np.ones((3, 3)), 1.0e-4
     )
-    assert instance.galaxies.source.adapt_galaxy_image.native == pytest.approx(
+    assert adapt_images.galaxy_image_dict[galaxies.source].native == pytest.approx(
         2.0 * np.ones((3, 3)), 1.0e-4
-    )
-
-    assert instance.galaxies.galaxy.adapt_model_image.native == pytest.approx(
-        3.0 * np.ones((3, 3)), 1.0e-4
-    )
-    assert instance.galaxies.source.adapt_model_image.native == pytest.approx(
-        3.0 * np.ones((3, 3)), 1.0e-4
-    )
-
-
-def test__modify_before_fit__kmeans_pixelization_upper_limit_ajusted_based_on_mask(
-    masked_imaging_7x7,
-):
-    mesh = af.Model(ag.mesh.DelaunayBrightnessImage)
-    mesh.pixels = af.UniformPrior(lower_limit=0.0, upper_limit=100.0)
-
-    pixelization = af.Model(ag.Pixelization, mesh=mesh)
-
-    galaxies = af.Collection(source=ag.Galaxy(redshift=0.5, pixelization=pixelization))
-
-    model = af.Collection(galaxies=galaxies)
-
-    analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
-
-    analysis.modify_before_fit(paths=af.DirectoryPaths(), model=model)
-
-    assert model.galaxies.source.pixelization.mesh.pixels.upper_limit == pytest.approx(
-        9, 1.0e-4
     )
 
 

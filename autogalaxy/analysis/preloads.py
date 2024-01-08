@@ -17,7 +17,7 @@ class Preloads(aa.Preloads):
         w_tilde: Optional[aa.WTildeImaging] = None,
         use_w_tilde: Optional[bool] = None,
         blurred_image: Optional[aa.Array2D] = None,
-        sparse_image_plane_grid_pg_list: Optional[List[List[aa.Grid2D]]] = None,
+        image_plane_mesh_grid_pg_list: Optional[List[List[aa.Grid2D]]] = None,
         relocated_grid: Optional[aa.Grid2D] = None,
         mapper_list: Optional[aa.AbstractMapper] = None,
         mapper_galaxy_dict: Optional[Dict[aa.AbstractMapper, "Galaxy"]] = None,
@@ -28,8 +28,8 @@ class Preloads(aa.Preloads):
         curvature_matrix: Optional[np.ndarray] = None,
         regularization_matrix: Optional[np.ndarray] = None,
         log_det_regularization_matrix_term: Optional[float] = None,
-        traced_sparse_grids_list_of_planes=None,
-        sparse_image_plane_grid_list=None,
+        traced_mesh_grids_list_of_planes=None,
+        image_plane_mesh_grid_list=None,
         failed=False,
     ):
         """
@@ -57,7 +57,7 @@ class Preloads(aa.Preloads):
         traced_grids_of_planes_for_inversion
             The two dimensional grids corresponding to the traced grids in a lens fit. This can be preloaded when no
              mass profiles in the model vary.
-        sparse_image_plane_grid_pg_list
+        image_plane_mesh_grid_pg_list
             The two dimensional grids corresponding to the sparse image plane grids in a lens fit, that is ray-traced to
             the source plane to form the source pixelization. This can be preloaded when no pixelizations in the model
             vary.
@@ -79,7 +79,7 @@ class Preloads(aa.Preloads):
             w_tilde=w_tilde,
             use_w_tilde=use_w_tilde,
             relocated_grid=relocated_grid,
-            sparse_image_plane_grid_pg_list=sparse_image_plane_grid_pg_list,
+            image_plane_mesh_grid_pg_list=image_plane_mesh_grid_pg_list,
             mapper_list=mapper_list,
             linear_func_operated_mapping_matrix_dict=linear_func_operated_mapping_matrix_dict,
             data_linear_func_matrix_dict=data_linear_func_matrix_dict,
@@ -88,8 +88,8 @@ class Preloads(aa.Preloads):
             curvature_matrix=curvature_matrix,
             regularization_matrix=regularization_matrix,
             log_det_regularization_matrix_term=log_det_regularization_matrix_term,
-            traced_sparse_grids_list_of_planes=traced_sparse_grids_list_of_planes,
-            sparse_image_plane_grid_list=sparse_image_plane_grid_list,
+            traced_mesh_grids_list_of_planes=traced_mesh_grids_list_of_planes,
+            image_plane_mesh_grid_list=image_plane_mesh_grid_list,
         )
 
         self.mapper_galaxy_dict = mapper_galaxy_dict

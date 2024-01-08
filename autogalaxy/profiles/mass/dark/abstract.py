@@ -358,8 +358,3 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
     @property
     def ellipticity_rescale(self):
         return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
-
-    def with_new_normalization(self, normalization):
-        mass_profile = copy.copy(self)
-        mass_profile.kappa_s = normalization
-        return mass_profile

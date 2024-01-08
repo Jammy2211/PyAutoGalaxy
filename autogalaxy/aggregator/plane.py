@@ -43,14 +43,12 @@ def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> List[Plane]:
 
     from autogalaxy.plane.plane import Plane
 
-    galaxies = agg_util.galaxies_with_adapt_images_from(fit=fit, galaxies=galaxies)
-
     if len(fit.children) > 0:
         logger.info(
             """
             Using database for a fit with multiple summed Analysis objects.
 
-            Plane objects do not fully support this yet (e.g. adapt images may not be set up correctly)
+            Plane objects do not fully support this yet (e.g. variables across Analysis objects may not be correct)
             so proceed with caution!
             """
         )

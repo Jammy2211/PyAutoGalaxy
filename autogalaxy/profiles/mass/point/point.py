@@ -51,8 +51,3 @@ class PointMass(MassProfile):
     @property
     def is_point_mass(self):
         return True
-
-    def with_new_normalization(self, normalization):
-        mass_profile = copy.copy(self)
-        mass_profile.einstein_radius = normalization
-        return mass_profile

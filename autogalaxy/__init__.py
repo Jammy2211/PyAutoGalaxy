@@ -6,9 +6,13 @@ from autoarray.dataset.interferometer.dataset import Interferometer  # noqa
 from autoarray.dataset.interferometer.settings import SettingsInterferometer  # noqa
 from autoarray.inversion.pixelization import mesh  # noqa
 from autoarray.inversion import regularization as reg  # noqa
+from autoarray.inversion.pixelization import image_mesh
 from autoarray.inversion.pixelization.mappers.abstract import AbstractMapper  # noqa
 from autoarray.inversion.inversion.settings import SettingsInversion  # noqa
 from autoarray.inversion.inversion.factory import inversion_from as Inversion  # noqa
+from autoarray.inversion.pixelization.image_mesh.abstract import AbstractImageMesh
+from autoarray.inversion.pixelization.mesh.abstract import AbstractMesh
+from autoarray.inversion.regularization.abstract import AbstractRegularization
 from autoarray.inversion.inversion.factory import (
     inversion_imaging_unpacked_from as InversionImaging,
 )  # noqa
@@ -21,7 +25,6 @@ from autoarray.inversion.pixelization.mappers.mapper_grids import MapperGrids  #
 from autoarray.inversion.pixelization.mappers.factory import (
     mapper_from as Mapper,
 )  # noqa
-from autoarray.inversion.pixelization.settings import SettingsPixelization  # noqa
 from autoarray.mask.mask_1d import Mask1D  # noqa
 from autoarray.mask.mask_2d import Mask2D  # noqa
 from autoarray.operators.convolver import Convolver  # noqa
@@ -35,7 +38,6 @@ from autoarray.structures.arrays.irregular import ArrayIrregular  # noqa
 from autoarray.structures.header import Header  # noqa
 from autoarray.structures.grids.uniform_1d import Grid1D  # noqa
 from autoarray.structures.grids.uniform_2d import Grid2D  # noqa
-from autoarray.structures.grids.sparse_2d import Grid2DSparse  # noqa
 from autoarray.structures.grids.iterate_2d import Grid2DIterate  # noqa
 from autoarray.structures.grids.irregular_2d import Grid2DIrregular  # noqa
 from autoarray.structures.grids.irregular_2d import Grid2DIrregularUniform  # noqa
@@ -50,6 +52,7 @@ from autoarray.structures.arrays.kernel_2d import Kernel2D  # noqa
 from autoarray.structures.visibilities import Visibilities  # noqa
 from autoarray.structures.visibilities import VisibilitiesNoiseMap  # noqa
 
+from .analysis.adapt_images import AdaptImages
 from .analysis.maker import FitMaker
 from .analysis.preloads import Preloads
 from . import aggregator as agg

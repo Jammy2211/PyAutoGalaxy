@@ -59,35 +59,40 @@ def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
     assert lp_linear_func_list[1].light_profile_list[1] == lp_linear_1
 
 
-def test__sparse_image_plane_grid_list(masked_imaging_7x7):
+def test__image_plane_mesh_grid_list(masked_imaging_7x7):
     pixelization = ag.m.MockPixelization(
-        mesh=ag.m.MockMesh(image_plane_mesh_grid=np.array([1.0, 1.0]))
+        image_mesh=ag.m.MockImageMesh(image_plane_mesh_grid=np.array([1.0, 1.0]))
     )
 
     galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
+    plane_to_inversion = ag.PlaneToInversion(
+        plane=plane,
+        dataset=masked_imaging_7x7,
+    )
 
-    sparse_image_plane_grid_list = plane_to_inversion.sparse_image_plane_grid_list
+    image_plane_mesh_grid_list = plane_to_inversion.image_plane_mesh_grid_list
 
-    assert (sparse_image_plane_grid_list == np.array([[1.0, 1.0]])).all()
-
-    # In the ag.m.MockPixelization class the grid is returned if hyper image=None, and grid*hyper image is
-    # returned otherwise.
+    assert (image_plane_mesh_grid_list == np.array([[1.0, 1.0]])).all()
 
     galaxy_pix = ag.Galaxy(
-        redshift=0.5, pixelization=pixelization, adapt_galaxy_image=2
+        redshift=0.5,
+        pixelization=pixelization,
     )
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
+    adapt_images = ag.AdaptImages(galaxy_image_dict={galaxy_pix: 2})
 
-    sparse_image_plane_grid_list = plane_to_inversion.sparse_image_plane_grid_list
+    plane_to_inversion = ag.PlaneToInversion(
+        plane=plane, dataset=masked_imaging_7x7, adapt_images=adapt_images
+    )
 
-    assert (sparse_image_plane_grid_list == np.array([[2.0, 2.0]])).all()
+    image_plane_mesh_grid_list = plane_to_inversion.image_plane_mesh_grid_list
+
+    assert (image_plane_mesh_grid_list == np.array([[2.0, 2.0]])).all()
 
     # No Galalxies
 
@@ -97,9 +102,9 @@ def test__sparse_image_plane_grid_list(masked_imaging_7x7):
 
     plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
 
-    sparse_image_plane_grid_list = plane_to_inversion.sparse_image_plane_grid_list
+    image_plane_mesh_grid_list = plane_to_inversion.image_plane_mesh_grid_list
 
-    assert sparse_image_plane_grid_list is None
+    assert image_plane_mesh_grid_list is None
 
 
 def test__mapper_galaxy_dict(masked_imaging_7x7):
@@ -212,7 +217,6 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
         data=masked_imaging_7x7.data,
         noise_map=masked_imaging_7x7.noise_map,
         w_tilde=masked_imaging_7x7.w_tilde,
-        settings_pixelization=ag.SettingsPixelization(use_border=False),
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
@@ -235,7 +239,6 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
         data=masked_imaging_7x7.data,
         noise_map=masked_imaging_7x7.noise_map,
         w_tilde=masked_imaging_7x7.w_tilde,
-        settings_pixelization=ag.SettingsPixelization(use_border=False),
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
@@ -257,7 +260,6 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
         data=interferometer_7.visibilities,
         noise_map=interferometer_7.noise_map,
         w_tilde=None,
-        settings_pixelization=ag.SettingsPixelization(use_border=False),
         settings_inversion=ag.SettingsInversion(
             use_w_tilde=False, use_linear_operators=False
         ),
@@ -284,7 +286,6 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
         data=interferometer_7.visibilities,
         noise_map=interferometer_7.noise_map,
         w_tilde=None,
-        settings_pixelization=ag.SettingsPixelization(use_border=False),
         settings_inversion=ag.SettingsInversion(
             use_w_tilde=False, use_linear_operators=False
         ),
