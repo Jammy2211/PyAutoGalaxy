@@ -377,6 +377,7 @@ class Visualizer:
             pixelization_index=0,
             reconstructed_image=should_plot("reconstructed_image"),
             reconstruction=should_plot("reconstruction"),
+            mesh_pixels_per_image_pixels=should_plot("mesh_pixels_per_image_pixels"),
             errors=should_plot("errors"),
             regularization_weights=should_plot("regularization_weights"),
         )

@@ -1,7 +1,7 @@
 import json
 import logging
 import numpy as np
-from typing import Callable, Dict, Optional, Tuple, Union
+from typing import Dict, Optional, Tuple, Union
 from os import path
 import os
 import time
@@ -17,11 +17,8 @@ from autogalaxy.analysis.maker import FitMaker
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
-from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
 from autogalaxy.analysis.result import ResultDataset
-
-from autogalaxy.analysis import model_util
 
 logger = logging.getLogger(__name__)
 
@@ -232,30 +229,6 @@ class AnalysisDataset(Analysis):
 
         self.preloads = self.preloads_cls()
 
-    def modify_before_fit(self, paths: af.DirectoryPaths, model: af.Collection):
-        """
-        This function is called immediately before the non-linear search begins and performs final tasks and checks
-        before it begins.
-
-        This function:
-
-        - Checks if the model has a pixelization which uses an `image_mesh` which computes pixels from the image
-          (e.g. `Hilbert`, `KMeans`) and makes sure that the upper limit on the prior on its `pixels` is below the
-          number pixels in the mask. If it is not, the `pixels` prior upper limit is reduced.
-
-        Parameters
-        ----------
-        paths
-            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
-            visualization and the pickled objects used by the aggregator output by this function.
-        model
-            The PyAutoFit model object, which includes model components representing the galaxies that are fitted to
-            the imaging data.
-        """
-        model_util.set_upper_limit_of_pixelization_pixels_prior(
-            model=model, pixels_in_mask=self.dataset.mask.pixels_in_mask
-        )
-
     @property
     def preloads_cls(self):
         return Preloads
@@ -291,6 +264,8 @@ class AnalysisDataset(Analysis):
         logger.info(
             "PRELOADS - Setting up preloads, may take a few minutes for fits using an inversion."
         )
+
+        self.preloads = self.preloads_cls()
 
         fit_maker = self.fit_maker_cls(model=model, fit_from=self.fit_from)
 

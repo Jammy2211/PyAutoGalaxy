@@ -221,7 +221,9 @@ class PlaneToInversion(AbstractToInversion):
 
                 image_plane_mesh_grid = (
                     pixelization.image_mesh.image_plane_mesh_grid_from(
-                        grid=self.grid_pixelization, adapt_data=adapt_data
+                        grid=self.grid_pixelization,
+                        adapt_data=adapt_data,
+                        settings=self.settings_inversion,
                     )
                 )
 

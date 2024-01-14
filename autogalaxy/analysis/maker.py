@@ -93,17 +93,15 @@ class FitMaker:
             unit_vector=[unit_value] * self.model.prior_count, ignore_prior_limits=True
         )
 
-        # The use_w_tilde here is for speed, incase noise scalin is on.
-
         fit = self.fit_from(
-            instance=instance, preload_overwrite=self.preloads_cls(use_w_tilde=False)
+            instance=instance,
         )
         fit.figure_of_merit
         return fit
 
     def fit_random_instance_from(self) -> Union[aa.FitImaging, aa.FitInterferometer]:
         """
-        Create a fit via the model by guessing a  a sequence of random fits until an exception is not returned. If
+        Create a fit via the model by guessing a sequence of random fits until an exception is not returned. If
         the number of `preload_attempts` defined in the configuration files is exceeded a None is returned.
 
         Returns
@@ -118,11 +116,8 @@ class FitMaker:
             try:
                 instance = self.model.random_instance(ignore_prior_limits=True)
 
-                # The use_w_tilde here is for speed, incase noise scalin is on.
-
                 fit = self.fit_from(
                     instance=instance,
-                    preload_overwrite=self.preloads_cls(use_w_tilde=False),
                 )
 
                 fit.figure_of_merit
