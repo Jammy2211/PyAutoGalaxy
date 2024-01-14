@@ -156,6 +156,7 @@ class PowerLawBroken(MassProfile):
 
         return F
 
+
 class PowerLawBrokenSph(PowerLawBroken):
     def __init__(
         self,
