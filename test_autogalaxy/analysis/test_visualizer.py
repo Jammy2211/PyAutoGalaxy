@@ -26,9 +26,10 @@ def test__visualizes_plane__uses_configs(
         plane=plane_7x7, grid=masked_imaging_7x7.grid, during_analysis=False
     )
 
+    assert path.join(plot_path, "subplot_plane.png") in plot_patch.paths
+
     plot_path = path.join(plot_path, "plane")
 
-    assert path.join(plot_path, "subplot_plane.png") in plot_patch.paths
     assert path.join(plot_path, "subplot_galaxy_images.png") in plot_patch.paths
     assert path.join(plot_path, "image_2d.png") in plot_patch.paths
     assert path.join(plot_path, "convergence_2d.png") in plot_patch.paths
@@ -73,9 +74,10 @@ def test__visualizes_imaging__uses_configs(
 
     visualizer.visualize_imaging(dataset=imaging_7x7)
 
+    assert path.join(plot_path, "subplot_dataset.png") in plot_patch.paths
+
     plot_path = path.join(plot_path, "dataset")
 
-    assert path.join(plot_path, "subplot_dataset.png") in plot_patch.paths
     assert path.join(plot_path, "data.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map.png") not in plot_patch.paths
     assert path.join(plot_path, "psf.png") in plot_patch.paths
@@ -89,9 +91,10 @@ def test__visualizes_interferometer__uses_configs(
 
     visualizer.visualize_interferometer(dataset=interferometer_7)
 
+    assert path.join(plot_path, "subplot_dataset.png") in plot_patch.paths
+
     plot_path = path.join(plot_path, "dataset")
 
-    assert path.join(plot_path, "subplot_dataset.png") in plot_patch.paths
     assert path.join(plot_path, "data.png") in plot_patch.paths
     assert path.join(plot_path, "u_wavelengths.png") not in plot_patch.paths
     assert path.join(plot_path, "v_wavelengths.png") not in plot_patch.paths
@@ -109,9 +112,10 @@ def test__visualize_inversion__uses_configs(
         inversion=voronoi_inversion_9_3x3, during_analysis=True
     )
 
+    assert path.join(plot_path, "subplot_inversion_0.png") in plot_patch.paths
+
     plot_path = path.join(plot_path, "inversion")
 
-    assert path.join(plot_path, "subplot_inversion_0.png") in plot_patch.paths
     assert path.join(plot_path, "reconstructed_image.png") in plot_patch.paths
     assert path.join(plot_path, "reconstruction.png") in plot_patch.paths
     assert path.join(plot_path, "inversion", "errors.png") not in plot_patch.paths

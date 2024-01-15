@@ -1,37 +1,37 @@
 TangentialCriticalCurvesPlot:
   figure:
-    c: k
+    c: w
     linestyle: '-'
     linewidth: 2
   subplot:
-    c: k
+    c: w
     linestyle: '-'
     linewidth: 2
 TangentialCausticsPlot:
   figure:
-    c: k
+    c: w
     linestyle: '-'
     linewidth: 2
   subplot:
-    c: k
+    c: w
     linestyle: '-'
     linewidth: 2
 RadialCriticalCurvesPlot:
   figure:
-    c: w
+    c: y
     linestyle: '-'
     linewidth: 2
   subplot:
-    c: w
+    c: y
     linestyle: '-'
     linewidth: 2
 RadialCausticsPlot:
   figure:
-    c: w
+    c: y
     linestyle: '-'
     linewidth: 2
   subplot:
-    c: w
+    c: y
     linestyle: '-'
     linewidth: 2    
 LightProfileCentresScatter:

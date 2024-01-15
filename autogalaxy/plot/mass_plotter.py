@@ -70,6 +70,7 @@ class MassPlotter(Plotter):
                 auto_labels=aplt.AutoLabels(
                     title=f"Convergence{title_suffix}",
                     filename=f"convergence_2d{filename_suffix}",
+                    cb_unit="",
                 ),
             )
 
@@ -80,6 +81,7 @@ class MassPlotter(Plotter):
                 auto_labels=aplt.AutoLabels(
                     title=f"Potential{title_suffix}",
                     filename=f"potential_2d{filename_suffix}",
+                    cb_unit="",
                 ),
             )
 
@@ -95,6 +97,7 @@ class MassPlotter(Plotter):
                 auto_labels=aplt.AutoLabels(
                     title=f"Deflections Y{title_suffix}",
                     filename=f"deflections_y_2d{filename_suffix}",
+                    cb_unit="",
                 ),
             )
 
@@ -110,6 +113,7 @@ class MassPlotter(Plotter):
                 auto_labels=aplt.AutoLabels(
                     title=f"Deflections X{title_suffix}",
                     filename=f"deflections_x_2d{filename_suffix}",
+                    cb_unit="",
                 ),
             )
 
@@ -120,5 +124,6 @@ class MassPlotter(Plotter):
                 auto_labels=aplt.AutoLabels(
                     title=f"Magnification{title_suffix}",
                     filename=f"magnification_2d{filename_suffix}",
+                    cb_unit="",
                 ),
             )

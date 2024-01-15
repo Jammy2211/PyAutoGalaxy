@@ -159,6 +159,7 @@ def test__density_between_circular_annuli():
         density_between_annuli, 1e-4
     )
 
+
 def test__extract_attribute():
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 

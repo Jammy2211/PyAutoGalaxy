@@ -185,6 +185,7 @@ class PowerLawCore(MassProfile):
     def unit_mass(self):
         return "angular"
 
+
 class PowerLawCoreSph(PowerLawCore):
     def __init__(
         self,
