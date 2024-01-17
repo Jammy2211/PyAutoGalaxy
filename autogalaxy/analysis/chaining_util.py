@@ -97,54 +97,12 @@ def source_custom_model_from(result: Result, source_is_model: bool = False) -> a
             disk=result.instance.galaxies.source.disk,
         )
 
-    if hasattr(result, "adapt"):
-        if source_is_model:
-            pixelization = af.Model(
-                aa.Pixelization,
-                image_mesh=result.adapt.instance.galaxies.source.pixelization.image_mesh,
-                mesh=result.adapt.instance.galaxies.source.pixelization.mesh,
-                regularization=result.adapt.model.galaxies.source.pixelization.regularization,
-            )
-
-            return af.Model(
-                Galaxy,
-                redshift=redshift,
-                pixelization=pixelization,
-            )
-
-        pixelization = af.Model(
-            aa.Pixelization,
-            image_mesh=result.adapt.instance.galaxies.source.pixelization.image_mesh,
-            mesh=result.adapt.instance.galaxies.source.pixelization.mesh,
-            regularization=result.adapt.instance.galaxies.source.pixelization.regularization,
-        )
-
-        return af.Model(
-            Galaxy,
-            redshift=redshift,
-            pixelization=pixelization,
-        )
-
-    else:
-        if source_is_model:
-            pixelization = af.Model(
-                aa.Pixelization,
-                image_mesh=result.instance.galaxies.source.pixelization.image_mesh,
-                mesh=result.instance.galaxies.source.pixelization.mesh,
-                regularization=result.model.galaxies.source.pixelization.regularization,
-            )
-
-            return af.Model(
-                Galaxy,
-                redshift=redshift,
-                pixelization=pixelization,
-            )
-
+    if source_is_model:
         pixelization = af.Model(
             aa.Pixelization,
             image_mesh=result.instance.galaxies.source.pixelization.image_mesh,
             mesh=result.instance.galaxies.source.pixelization.mesh,
-            regularization=result.instance.galaxies.source.pixelization.regularization,
+            regularization=result.model.galaxies.source.pixelization.regularization,
         )
 
         return af.Model(
@@ -152,6 +110,19 @@ def source_custom_model_from(result: Result, source_is_model: bool = False) -> a
             redshift=redshift,
             pixelization=pixelization,
         )
+
+    pixelization = af.Model(
+        aa.Pixelization,
+        image_mesh=result.instance.galaxies.source.pixelization.image_mesh,
+        mesh=result.instance.galaxies.source.pixelization.mesh,
+        regularization=result.instance.galaxies.source.pixelization.regularization,
+    )
+
+    return af.Model(
+        Galaxy,
+        redshift=redshift,
+        pixelization=pixelization,
+    )
 
 
 def source_from(
