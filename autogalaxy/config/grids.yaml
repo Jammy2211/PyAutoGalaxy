@@ -4,6 +4,8 @@ radial_minimum:
     ChameleonSph: 1.0e-08
     DevVaucouleurs: 1.0e-06
     DevVaucouleursSph: 1.0e-06
+    dPIE: 1.0e-08
+    dPIESph: 1.0e-08
     ExponentialRadialGradient: 1.0e-06
     ExponentialRadialGradientSph: 1.0e-06
     ElsonFreeFall: 1.0e-08
