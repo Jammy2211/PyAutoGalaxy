@@ -145,6 +145,12 @@ class Visualizer:
             signal_to_noise_map=should_plot("signal_to_noise_map"),
         )
 
+        mat_plot_2d = self.mat_plot_2d_from(subfolders="")
+
+        dataset_plotter = aplt.ImagingPlotter(
+            dataset=dataset, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+        )
+
         if should_plot("subplot_dataset"):
             dataset_plotter.subplot_dataset()
 
@@ -178,9 +184,6 @@ class Visualizer:
             mat_plot_2d=mat_plot_2d,
         )
 
-        if should_plot("subplot_dataset"):
-            dataset_plotter.subplot_dataset()
-
         dataset_plotter.figures_2d(
             data=should_plot("data"),
             u_wavelengths=should_plot("uv_wavelengths"),
@@ -191,6 +194,17 @@ class Visualizer:
             dirty_noise_map=should_plot("dirty_noise_map"),
             dirty_signal_to_noise_map=should_plot("dirty_signal_to_noise_map"),
         )
+
+        mat_plot_2d = self.mat_plot_2d_from(subfolders="")
+
+        dataset_plotter = aplt.InterferometerPlotter(
+            dataset=dataset,
+            include_2d=self.include_2d,
+            mat_plot_2d=mat_plot_2d,
+        )
+
+        if should_plot("subplot_dataset"):
+            dataset_plotter.subplot_dataset()
 
     def visualize_plane(
         self, plane: Plane, grid: aa.type.Grid2DLike, during_analysis: bool
@@ -230,9 +244,6 @@ class Visualizer:
             plane=plane, grid=grid, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
-        if should_plot("subplot_plane"):
-            plane_plotter.subplot()
-
         if should_plot("subplot_galaxy_images"):
             plane_plotter.subplot_galaxy_images()
 
@@ -265,6 +276,15 @@ class Visualizer:
                 deflections_x=True,
                 magnification=True,
             )
+
+        mat_plot_2d = self.mat_plot_2d_from(subfolders="")
+
+        plane_plotter = PlanePlotter(
+            plane=plane, grid=grid, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+        )
+
+        if should_plot("subplot_plane"):
+            plane_plotter.subplot()
 
         if not during_analysis and should_plot("all_at_end_fits"):
             mat_plot_2d = self.mat_plot_2d_from(
@@ -377,8 +397,15 @@ class Visualizer:
             pixelization_index=0,
             reconstructed_image=should_plot("reconstructed_image"),
             reconstruction=should_plot("reconstruction"),
+            mesh_pixels_per_image_pixels=should_plot("mesh_pixels_per_image_pixels"),
             errors=should_plot("errors"),
             regularization_weights=should_plot("regularization_weights"),
+        )
+
+        mat_plot_2d = self.mat_plot_2d_from(subfolders="")
+
+        inversion_plotter = aplt.InversionPlotter(
+            inversion=inversion, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
         if should_plot("subplot_inversion"):

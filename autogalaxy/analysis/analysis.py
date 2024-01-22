@@ -1,7 +1,8 @@
+import copy
 import json
 import logging
 import numpy as np
-from typing import Callable, Dict, Optional, Tuple, Union
+from typing import Dict, Optional, Tuple, Union
 from os import path
 import os
 import time
@@ -17,11 +18,8 @@ from autogalaxy.analysis.maker import FitMaker
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
-from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
 from autogalaxy.analysis.result import ResultDataset
-
-from autogalaxy.analysis import model_util
 
 logger = logging.getLogger(__name__)
 
@@ -270,6 +268,11 @@ class AnalysisDataset(Analysis):
 
         self.preloads = self.preloads_cls()
 
+        settings_inversion_original = copy.copy(self.settings_inversion)
+
+        self.settings_inversion.image_mesh_min_mesh_pixels_per_pixel = None
+        self.settings_inversion.image_mesh_adapt_background_percent_threshold = None
+
         fit_maker = self.fit_maker_cls(model=model, fit_from=self.fit_from)
 
         fit_0 = fit_maker.fit_via_model_from(unit_value=0.45)
@@ -277,6 +280,9 @@ class AnalysisDataset(Analysis):
 
         if fit_0 is None or fit_1 is None:
             self.preloads = self.preloads_cls(failed=True)
+
+            self.settings_inversion = settings_inversion_original
+
         else:
             self.preloads = self.preloads_cls.setup_all_via_fits(
                 fit_0=fit_0, fit_1=fit_1
@@ -284,6 +290,8 @@ class AnalysisDataset(Analysis):
 
             if conf.instance["general"]["test"]["check_preloads"]:
                 self.preloads.check_via_fit(fit=fit_0)
+
+            self.settings_inversion = settings_inversion_original
 
         if isinstance(paths, af.DatabasePaths):
             return

@@ -212,7 +212,8 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         self, redshift_object, redshift_source, cosmology: LensingCosmology = Planck15()
     ):
         """
-        The Cosmic average density is defined at the redshift of the profile."""
+        The Cosmic average density is defined at the redshift of the profile.
+        """
 
         critical_surface_density = cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
             redshift_0=redshift_object, redshift_1=redshift_source
