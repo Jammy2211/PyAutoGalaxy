@@ -12,6 +12,7 @@ imaging:                                   # Settings for plots of imaging datas
   psf: false
 fit:                                       # Settings for plots of all fits (e.g. FitImagingPlotter, FitInterferometerPlotter).
   subplot_fit: true                        # Plot subplot of all fit quantities for any dataset (e.g. the model data, residual-map, etc.)?
+  subplot_fit_log10: true                  # Plot subplot of all fit quantities for any dataset using log10 color maps (e.g. the model data, residual-map, etc.)?
   all_at_end_png: true                     # Plot all individual plots listed below as .png (even if False)?
   all_at_end_fits: true                    # Plot all individual plots listed below as .fits (even if False)?
   all_at_end_pdf: false                    # Plot all individual plots listed below as publication-quality .pdf (even if False)?
@@ -49,6 +50,7 @@ inversion:                                 # Settings for plots of inversions (e
   all_at_end_png: true                     # Plot all individual plots listed below as .png (even if False)?
   all_at_end_fits: true                    # Plot all individual plots listed below as .fits (even if False)?
   all_at_end_pdf: false                    # Plot all individual plots listed below as publication-quality .pdf (even if False)?
+  data_subtracted: false                   # Plot individual plots of the data with the other inversion linear objects subtracted?
   errors: false                            # Plot image of the errors of every mesh-pixel reconstructed value?
   mesh_pixels_per_image_pixels : false     # Plot the number of image-plane mesh pixels per masked data pixels?
   reconstructed_image: false               # Plot image of the reconstructed data (e.g. in the image-plane)?
