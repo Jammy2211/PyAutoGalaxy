@@ -10,9 +10,9 @@ MaternKernel:
       lower: 0.0
       upper: inf
   scale:
-    type: Uniform
-    lower_limit: 0.0
-    upper_limit: 1.0
+    type: LogUniform
+    lower_limit: 1.0e-06
+    upper_limit: 1000000.0
     width_modifier:
       type: Relative
       value: 0.2
@@ -21,8 +21,8 @@ MaternKernel:
       upper: inf
   nu:
     type: Uniform
-    lower_limit: 0.0
-    upper_limit: 3.0
+    lower_limit: 0.5
+    upper_limit: 5.5
     width_modifier:
       type: Relative
       value: 0.2
