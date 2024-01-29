@@ -395,6 +395,7 @@ class Visualizer:
 
         inversion_plotter.figures_2d_of_pixelization(
             pixelization_index=0,
+            data_subtracted=should_plot("data_subtracted"),
             reconstructed_image=should_plot("reconstructed_image"),
             reconstruction=should_plot("reconstruction"),
             mesh_pixels_per_image_pixels=should_plot("mesh_pixels_per_image_pixels"),
