@@ -126,8 +126,8 @@ class MassProfileMGE:
 
         scale_factor = axis_ratio / (sigmas[0] * np.sqrt(2.0 * (1.0 - q2)))
 
-        xs = (grid[:, 1] * scale_factor).copy()
-        ys = (grid[:, 0] * scale_factor).copy()
+        xs = np.array((grid[:, 1] * scale_factor).copy())
+        ys = np.array((grid[:, 0] * scale_factor).copy())
 
         ys_minus = ys < 0.0
         ys[ys_minus] *= -1

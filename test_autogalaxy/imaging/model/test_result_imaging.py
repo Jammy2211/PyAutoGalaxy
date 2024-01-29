@@ -3,6 +3,7 @@ import pytest
 
 import autofit as af
 import autogalaxy as ag
+from autoarray import Array2D
 
 from autogalaxy.imaging.model.result import ResultImaging
 
@@ -32,14 +33,15 @@ def test___image_dict(analysis_imaging_7x7):
     result = ResultImaging(samples=samples, analysis=analysis_imaging_7x7)
 
     image_dict = result.image_galaxy_dict
-    assert isinstance(image_dict[str(("galaxies", "galaxy"))], np.ndarray)
-    assert isinstance(image_dict[str(("galaxies", "source"))], np.ndarray)
+
+    assert isinstance(image_dict["('galaxies', 'galaxy')"], Array2D)
+    assert isinstance(image_dict["('galaxies', 'source')"], Array2D)
 
     result.instance.galaxies.light = ag.Galaxy(redshift=0.5)
 
     image_dict = result.image_galaxy_dict
-    assert (image_dict[str(("galaxies", "galaxy"))].native == np.zeros((7, 7))).all()
-    assert isinstance(image_dict[str(("galaxies", "source"))], np.ndarray)
+    assert (image_dict["('galaxies', 'galaxy')"].native == np.zeros((7, 7))).all()
+    assert isinstance(image_dict["('galaxies', 'source')"], Array2D)
 
 
 def test___linear_light_profiles_in_result(analysis_imaging_7x7):
