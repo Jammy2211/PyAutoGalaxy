@@ -361,7 +361,7 @@ class OperateDeflections:
         tangential_eigen_values = self.tangential_eigen_value_from(grid=grid)
 
         tangential_critical_curve_indices_list = measure.find_contours(
-            tangential_eigen_values.native, 0
+            np.array(tangential_eigen_values.native), 0
         )
 
         if len(tangential_critical_curve_indices_list) == 0:
@@ -405,7 +405,7 @@ class OperateDeflections:
         radial_eigen_values = self.radial_eigen_value_from(grid=grid)
 
         radial_critical_curve_indices_list = measure.find_contours(
-            radial_eigen_values.native, 0
+            np.array(radial_eigen_values.native), 0
         )
 
         if len(radial_critical_curve_indices_list) == 0:

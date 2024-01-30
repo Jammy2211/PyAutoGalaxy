@@ -13,7 +13,9 @@ def critical_curve_via_magnification_from(mass_profile, grid):
 
     inverse_magnification = 1 / magnification
 
-    critical_curves_indices = measure.find_contours(inverse_magnification.native, 0)
+    critical_curves_indices = measure.find_contours(
+        np.array(inverse_magnification.native), 0
+    )
 
     no_critical_curves = len(critical_curves_indices)
     contours = []
