@@ -207,6 +207,36 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         return {**galaxy_blurred_image_2d_dict, **galaxy_linear_obj_image_dict}
 
     @property
+    def subtracted_images_of_galaxies_dict(self) -> Dict[Galaxy, aa.Array2D]:
+        """
+        A dictionary associating every galaxy in the plane with its `subtracted_image`.
+
+        A subtracted image of a galaxy is the data where all other galaxy images are subtracted from it, therefore
+        showing how a galaxy appears in the data in the absence of all other galaxies.
+
+        This is used to visualize the contribution of each galaxy in the data.
+        """
+
+        subtracted_images_of_galaxies_dict = {}
+
+        model_images_of_galaxies_list = self.model_images_of_galaxies_list
+
+        for galaxy_index in range(len(self.galaxies)):
+            other_galaxies_model_images = [
+                model_image
+                for i, model_image in enumerate(model_images_of_galaxies_list)
+                if i != galaxy_index
+            ]
+
+            subtracted_image = self.image - sum(other_galaxies_model_images)
+
+            subtracted_images_of_galaxies_dict[self.galaxies[galaxy_index]] = (
+                subtracted_image
+            )
+
+        return subtracted_images_of_galaxies_dict
+
+    @property
     def model_images_of_galaxies_list(self) -> List:
         """
         A list of the model images of each galaxy in the plane.
@@ -223,23 +253,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
 
         This is used to visualize the contribution of each galaxy in the data.
         """
-
-        subtracted_images_of_galaxies_list = []
-
-        model_images_of_galaxies_list = self.model_images_of_galaxies_list
-
-        for galaxy_index in range(len(self.galaxies)):
-            other_galaxies_model_images = [
-                model_image
-                for i, model_image in enumerate(model_images_of_galaxies_list)
-                if i != galaxy_index
-            ]
-
-            subtracted_image = self.image - sum(other_galaxies_model_images)
-
-            subtracted_images_of_galaxies_list.append(subtracted_image)
-
-        return subtracted_images_of_galaxies_list
+        return list(self.subtracted_images_of_galaxies_dict.values())
 
     @property
     def unmasked_blurred_image(self) -> aa.Array2D:
