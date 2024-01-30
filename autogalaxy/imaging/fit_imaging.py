@@ -214,9 +214,9 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         return list(self.galaxy_model_image_dict.values())
 
     @property
-    def subtracted_images_of_galaxies_list(self) -> List[aa.Array2D]:
+    def subtracted_images_of_galaxies_dict(self) -> Dict[Galaxy, aa.Array2D]:
         """
-        A list of the subtracted image of every galaxy.
+        A dictionary associating every galaxy in the plane with its `subtracted_image`.
 
         A subtracted image of a galaxy is the data where all other galaxy images are subtracted from it, therefore
         showing how a galaxy appears in the data in the absence of all other galaxies.
@@ -224,7 +224,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         This is used to visualize the contribution of each galaxy in the data.
         """
 
-        subtracted_images_of_galaxies_list = []
+        subtracted_images_of_galaxies_dict = {}
 
         model_images_of_galaxies_list = self.model_images_of_galaxies_list
 
@@ -237,9 +237,23 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
 
             subtracted_image = self.image - sum(other_galaxies_model_images)
 
-            subtracted_images_of_galaxies_list.append(subtracted_image)
+            subtracted_images_of_galaxies_dict[self.galaxies[galaxy_index]] = (
+                subtracted_image
+            )
 
-        return subtracted_images_of_galaxies_list
+        return subtracted_images_of_galaxies_dict
+
+    @property
+    def subtracted_images_of_galaxies_list(self) -> List[aa.Array2D]:
+        """
+        A list of the subtracted image of every galaxy.
+
+        A subtracted image of a galaxy is the data where all other galaxy images are subtracted from it, therefore
+        showing how a galaxy appears in the data in the absence of all other galaxies.
+
+        This is used to visualize the contribution of each galaxy in the data.
+        """
+        return list(self.subtracted_images_of_galaxies_dict.values())
 
     @property
     def unmasked_blurred_image(self) -> aa.Array2D:
