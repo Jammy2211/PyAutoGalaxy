@@ -86,7 +86,7 @@ class AdaptImages:
         return adapt_model_image
 
     @classmethod
-    def from_result(cls, result) -> "AdaptImages":
+    def from_result(cls, result, use_model_images : bool = True) -> "AdaptImages":
         """
         Returns the adapt-images from a non-linear search result.
 
@@ -97,6 +97,12 @@ class AdaptImages:
         This method uses attributes of a result (e.g. dictionary mapping galaxy instances to their model-images)
         to create the adapt-images.
 
+        This can use either:
+
+        - The model image of each galaxy in the best-fit model.
+        - The subtracted image of each galaxy in the best-fit model, where the subtracted image is the dataset
+          minus the model images of all other galaxies.
+
         Certain models produce galaxy-images with negative flux values (e.g. a pixelization), which can cause
         numerical issues with the adaptive schemes. To prevent this, we set a minimum flux value for each
         galaxy-image, which is a fraction of the maximum flux value of that image defined via a config file.
@@ -105,6 +111,9 @@ class AdaptImages:
         ----------
         result
             The result of a previous model-fit, which contains the model-image of each galaxy.
+        use_model_images
+            If True, the model images of the galaxies are used to create the adapt images. If False, the subtracted
+            images of the galaxies are used.
 
         Returns
         -------
@@ -117,7 +126,11 @@ class AdaptImages:
         galaxy_name_image_dict = {}
 
         for path, galaxy in result.path_galaxy_tuples:
-            galaxy_image = result.model_image_galaxy_dict[path]
+
+            if use_model_images:
+                galaxy_image = result.model_image_galaxy_dict[path]
+            else:
+                galaxy_image = result.subtracted_image_galaxy_dict[path]
 
             if not np.all(galaxy_image == 0):
                 minimum_galaxy_value = adapt_minimum_percent * max(galaxy_image)
