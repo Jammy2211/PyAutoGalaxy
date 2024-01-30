@@ -116,6 +116,23 @@ class ResultDataset(Result):
             for galaxy_path, galaxy in self.path_galaxy_tuples
         }
 
+    @cached_property
+    def subtracted_image_galaxy_dict(self) -> Dict[str, Galaxy]:
+        """
+        A dictionary associating galaxy names with subtracted images (the data minus all other galaxy images) of
+        those galaxies.
+
+        This is used for creating the adapt-dataset used by Analysis objects to adapt aspects of a subtracted to the
+        dataset being fitted.
+        """
+
+        galaxy_subtracted_image_dict = self.max_log_likelihood_fit.galaxy_subtracted_image_dict
+
+        return {
+            galaxy_path: galaxy_subtracted_image_dict[galaxy]
+            for galaxy_path, galaxy in self.path_galaxy_tuples
+        }
+
     @property
     def adapt_images(self) -> AdaptImages:
         """
