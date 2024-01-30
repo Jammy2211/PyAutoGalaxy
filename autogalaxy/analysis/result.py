@@ -126,7 +126,7 @@ class ResultDataset(Result):
         dataset being fitted.
         """
 
-        galaxy_subtracted_image_dict = self.max_log_likelihood_fit.galaxy_subtracted_image_dict
+        galaxy_subtracted_image_dict = self.max_log_likelihood_fit.subtracted_images_of_galaxies_dict
 
         return {
             galaxy_path: galaxy_subtracted_image_dict[galaxy]
