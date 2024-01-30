@@ -101,7 +101,7 @@ class ResultDataset(Result):
         return self.max_log_likelihood_fit.dataset
 
     @cached_property
-    def image_galaxy_dict(self) -> Dict[str, Galaxy]:
+    def model_image_galaxy_dict(self) -> Dict[str, Galaxy]:
         """
         A dictionary associating galaxy names with model images of those galaxies.
 

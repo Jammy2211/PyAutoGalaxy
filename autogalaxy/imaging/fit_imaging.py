@@ -207,13 +207,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         return {**galaxy_blurred_image_2d_dict, **galaxy_linear_obj_image_dict}
 
     @property
-    def model_images_of_galaxies_list(self) -> List:
-        """
-        A list of the model images of each galaxy in the plane.
-        """
-        return list(self.galaxy_model_image_dict.values())
-
-    @property
     def subtracted_images_of_galaxies_dict(self) -> Dict[Galaxy, aa.Array2D]:
         """
         A dictionary associating every galaxy in the plane with its `subtracted_image`.
@@ -242,6 +235,13 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             )
 
         return subtracted_images_of_galaxies_dict
+
+    @property
+    def model_images_of_galaxies_list(self) -> List:
+        """
+        A list of the model images of each galaxy in the plane.
+        """
+        return list(self.galaxy_model_image_dict.values())
 
     @property
     def subtracted_images_of_galaxies_list(self) -> List[aa.Array2D]:

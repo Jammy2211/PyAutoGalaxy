@@ -117,7 +117,7 @@ class AdaptImages:
         galaxy_name_image_dict = {}
 
         for path, galaxy in result.path_galaxy_tuples:
-            galaxy_image = result.image_galaxy_dict[path]
+            galaxy_image = result.model_image_galaxy_dict[path]
 
             if not np.all(galaxy_image == 0):
                 minimum_galaxy_value = adapt_minimum_percent * max(galaxy_image)
