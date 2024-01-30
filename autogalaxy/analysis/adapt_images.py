@@ -86,7 +86,7 @@ class AdaptImages:
         return adapt_model_image
 
     @classmethod
-    def from_result(cls, result, use_model_images : bool = True) -> "AdaptImages":
+    def from_result(cls, result, use_model_images : bool = True, use_signal_to_noise_map : bool = False) -> "AdaptImages":
         """
         Returns the adapt-images from a non-linear search result.
 
@@ -127,10 +127,16 @@ class AdaptImages:
 
         for path, galaxy in result.path_galaxy_tuples:
 
-            if use_model_images:
-                galaxy_image = result.model_image_galaxy_dict[path]
+            if use_signal_to_noise_map:
+
+                galaxy_image = result.subtracted_signal_to_noise_map_galaxy_dict[path]
+
             else:
-                galaxy_image = result.subtracted_image_galaxy_dict[path]
+
+                if use_model_images:
+                    galaxy_image = result.model_image_galaxy_dict[path]
+                else:
+                    galaxy_image = result.subtracted_image_galaxy_dict[path]
 
             if not np.all(galaxy_image == 0):
                 minimum_galaxy_value = adapt_minimum_percent * max(galaxy_image)

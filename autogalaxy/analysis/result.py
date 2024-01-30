@@ -127,13 +127,30 @@ class ResultDataset(Result):
         """
 
         galaxy_subtracted_image_dict = self.max_log_likelihood_fit.subtracted_images_of_galaxies_dict
-
+        
         return {
             galaxy_path: galaxy_subtracted_image_dict[galaxy]
             for galaxy_path, galaxy in self.path_galaxy_tuples
         }
 
-    def adapt_images_from(self, use_model_images : bool = True) -> AdaptImages:
+    @cached_property
+    def subtracted_signal_to_noise_map_galaxy_dict(self) -> Dict[str, Galaxy]:
+        """
+        A dictionary associating galaxy names with subtracted images (the data minus all other galaxy images) of
+        those galaxies.
+
+        This is used for creating the adapt-dataset used by Analysis objects to adapt aspects of a subtracted to the
+        dataset being fitted.
+        """
+
+        galaxy_subtracted_signal_to_noise_map_dict = self.max_log_likelihood_fit.subtracted_signal_to_noise_maps_of_galaxies_dict
+
+        return {
+            galaxy_path: galaxy_subtracted_signal_to_noise_map_dict[galaxy]
+            for galaxy_path, galaxy in self.path_galaxy_tuples
+        }
+
+    def adapt_images_from(self, use_model_images : bool = True, use_signal_to_noise_map : bool = False) -> AdaptImages:
         """
         Returns the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
         reconstructed galaxy's morphology.
@@ -155,6 +172,6 @@ class ResultDataset(Result):
         """
 
         return AdaptImages.from_result(
-            result=self, use_model_images=use_model_images
+            result=self, use_model_images=use_model_images, use_signal_to_noise_map=use_signal_to_noise_map
         )
 
