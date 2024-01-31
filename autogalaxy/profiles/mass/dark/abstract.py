@@ -133,13 +133,14 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         return amplitude_list, sigma_list
 
     def coord_func_f(self, grid_radius):
-        if isinstance(grid_radius, np.ndarray):
-            return self.coord_func_f_jit(
-                grid_radius=np.array(grid_radius),
-                f=np.ones(shape=grid_radius.shape[0], dtype="complex64"),
-            )
-        else:
-            return self.coord_func_f_float_jit(grid_radius=np.array(grid_radius))
+
+        if isinstance(grid_radius, float) or isinstance(grid_radius, complex):
+            grid_radius = np.array([grid_radius])
+
+        return self.coord_func_f_jit(
+            grid_radius=np.array(grid_radius),
+            f=np.ones(shape=grid_radius.shape[0], dtype="complex64"),
+        )
 
     @staticmethod
     @aa.util.numba.jit()
@@ -156,31 +157,18 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         return f
 
-    @staticmethod
-    @aa.util.numba.jit()
-    def coord_func_f_float_jit(grid_radius):
-        if np.real(grid_radius) > 1.0:
-            return (1.0 / np.sqrt(np.square(grid_radius) - 1.0)) * np.arccos(
-                np.divide(1.0, grid_radius)
-            )
-        elif np.real(grid_radius) < 1.0:
-            return (1.0 / np.sqrt(1.0 - np.square(grid_radius))) * np.arccosh(
-                np.divide(1.0, grid_radius)
-            )
-        else:
-            return 1.0
-
     def coord_func_g(self, grid_radius):
+
+        if isinstance(grid_radius, float) or isinstance(grid_radius, complex):
+            grid_radius = np.array([grid_radius])
+
         f_r = self.coord_func_f(grid_radius=grid_radius)
 
-        if isinstance(grid_radius, np.ndarray):
-            return self.coord_func_g_jit(
-                grid_radius=np.array(grid_radius),
-                f_r=f_r,
-                g=np.zeros(shape=grid_radius.shape[0], dtype="complex64"),
-            )
-        else:
-            return self.coord_func_g_float_jit(grid_radius=np.array(grid_radius), f_r=f_r)
+        return self.coord_func_g_jit(
+            grid_radius=np.array(grid_radius),
+            f_r=f_r,
+            g=np.zeros(shape=grid_radius.shape[0], dtype="complex64"),
+        )
 
     @staticmethod
     @aa.util.numba.jit()
@@ -194,16 +182,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
                 g[index] = 1.0 / 3.0
 
         return g
-
-    @staticmethod
-    @aa.util.numba.jit()
-    def coord_func_g_float_jit(grid_radius, f_r):
-        if np.real(grid_radius) > 1.0:
-            return (1.0 - f_r) / (np.square(grid_radius) - 1.0)
-        elif np.real(grid_radius) < 1.0:
-            return (f_r - 1.0) / (1.0 - np.square(grid_radius))
-        else:
-            return 1.0 / 3.0
 
     def coord_func_h(self, grid_radius):
         return np.log(grid_radius / 2.0) + self.coord_func_f(grid_radius=grid_radius)
