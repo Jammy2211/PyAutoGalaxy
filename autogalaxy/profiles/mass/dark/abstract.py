@@ -135,11 +135,11 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
     def coord_func_f(self, grid_radius):
         if isinstance(grid_radius, np.ndarray):
             return self.coord_func_f_jit(
-                grid_radius=grid_radius,
+                grid_radius=np.array(grid_radius),
                 f=np.ones(shape=grid_radius.shape[0], dtype="complex64"),
             )
         else:
-            return self.coord_func_f_float_jit(grid_radius=grid_radius)
+            return self.coord_func_f_float_jit(grid_radius=np.array(grid_radius))
 
     @staticmethod
     @aa.util.numba.jit()
@@ -175,12 +175,12 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         if isinstance(grid_radius, np.ndarray):
             return self.coord_func_g_jit(
-                grid_radius=grid_radius,
+                grid_radius=np.array(grid_radius),
                 f_r=f_r,
                 g=np.zeros(shape=grid_radius.shape[0], dtype="complex64"),
             )
         else:
-            return self.coord_func_g_float_jit(grid_radius=grid_radius, f_r=f_r)
+            return self.coord_func_g_float_jit(grid_radius=np.array(grid_radius), f_r=f_r)
 
     @staticmethod
     @aa.util.numba.jit()
