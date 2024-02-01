@@ -2,6 +2,7 @@ import autoarray as aa
 
 from typing import Dict
 
+from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.analysis.result import ResultDataset
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
