@@ -150,7 +150,7 @@ class ResultDataset(Result):
             for galaxy_path, galaxy in self.path_galaxy_tuples
         }
 
-    def adapt_images_from(self, use_model_images : bool = True, use_signal_to_noise_map : bool = False) -> AdaptImages:
+    def adapt_images_from(self, use_model_images : bool = False) -> AdaptImages:
         """
         Returns the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
         reconstructed galaxy's morphology.
@@ -172,6 +172,6 @@ class ResultDataset(Result):
         """
 
         return AdaptImages.from_result(
-            result=self, use_model_images=use_model_images, use_signal_to_noise_map=use_signal_to_noise_map
+            result=self, use_model_images=use_model_images,
         )
 
