@@ -17,7 +17,7 @@ def make_trivial_galaxy_dict():
     return {
         "type": "instance",
         "class_path": "autogalaxy.galaxy.galaxy.Galaxy",
-        "arguments": {"redshift": 1.0},
+        "arguments": {"redshift": 1.0, "label": "cls345"},
     }
 
 
@@ -51,6 +51,7 @@ def make_pixelization_galaxy_dict():
         "type": "instance",
         "class_path": "test_autogalaxy.galaxy.test_dict.PixelizationGalaxy",
         "arguments": {
+            "label": "cls345",
             "redshift": 1.0,
             "pixelization": {
                 "type": "instance",
@@ -103,6 +104,7 @@ def make_profiles_galaxy_dict():
         "type": "instance",
         "class_path": "autogalaxy.galaxy.galaxy.Galaxy",
         "arguments": {
+            "label": "cls345",
             "redshift": 2.0,
             "light": {
                 "type": "instance",
