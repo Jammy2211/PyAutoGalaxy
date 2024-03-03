@@ -3,19 +3,16 @@ import logging
 from typing import TYPE_CHECKING, List
 
 if TYPE_CHECKING:
-    from autogalaxy.galaxy.galaxy import Galaxy
     from autogalaxy.plane.plane import Plane
 
 import autofit as af
 
 from autogalaxy.aggregator.abstract import AbstractAgg
 
-from autogalaxy.aggregator import agg_util
-
 logger = logging.getLogger(__name__)
 
 
-def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> List[Plane]:
+def _plane_from(fit: af.Fit, instance: af.ModelInstance) -> List[Plane]:
     """
     Returns an `Plane` object from a `PyAutoFit` sqlite database `Fit` object.
 
@@ -42,6 +39,11 @@ def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> List[Plane]:
     """
 
     from autogalaxy.plane.plane import Plane
+
+    if instance is not None:
+        galaxies = instance.galaxies
+    else:
+        galaxies = fit.instance.galaxies
 
     if len(fit.children) > 0:
         logger.info(
@@ -90,7 +92,9 @@ class PlaneAgg(AbstractAgg):
         A `PyAutoFit` aggregator object which can load the results of model-fits.
     """
 
-    def object_via_gen_from(self, fit, galaxies) -> List[Plane]:
+    def object_via_gen_from(
+        self, fit, instance: af.ModelInstance = None
+    ) -> List[Plane]:
         """
         Returns a generator of `Plane` objects from an input aggregator.
 
@@ -104,4 +108,4 @@ class PlaneAgg(AbstractAgg):
             A list of galaxies corresponding to a sample of a non-linear search and model-fit.
         """
 
-        return _plane_from(fit=fit, galaxies=galaxies)
+        return _plane_from(fit=fit, instance=instance)

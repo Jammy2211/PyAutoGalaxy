@@ -133,7 +133,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         return amplitude_list, sigma_list
 
     def coord_func_f(self, grid_radius):
-
         if isinstance(grid_radius, float) or isinstance(grid_radius, complex):
             grid_radius = np.array([grid_radius])
 
@@ -158,7 +157,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         return f
 
     def coord_func_g(self, grid_radius):
-
         if isinstance(grid_radius, float) or isinstance(grid_radius, complex):
             grid_radius = np.array([grid_radius])
 

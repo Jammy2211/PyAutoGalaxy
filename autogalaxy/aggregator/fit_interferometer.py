@@ -2,7 +2,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional, List
 
 if TYPE_CHECKING:
-    from autogalaxy.galaxy.galaxy import Galaxy
     from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 
 import autofit as af
@@ -18,7 +17,7 @@ from autogalaxy.aggregator.plane import _plane_from
 
 def _fit_interferometer_from(
     fit: af.Fit,
-    galaxies: List[Galaxy],
+    instance: af.ModelInstance = None,
     real_space_mask: Optional[aa.Mask2D] = None,
     settings_dataset: aa.SettingsInterferometer = None,
     settings_inversion: aa.SettingsInversion = None,
@@ -69,7 +68,7 @@ def _fit_interferometer_from(
         settings_dataset=settings_dataset,
     )
 
-    plane_list = _plane_from(fit=fit, galaxies=galaxies)
+    plane_list = _plane_from(fit=fit, instance=instance)
 
     adapt_images_list = agg_util.adapt_images_from(fit=fit)
 
@@ -159,7 +158,9 @@ class FitInterferometerAgg(AbstractAgg):
         self.use_preloaded_grid = use_preloaded_grid
         self.real_space_mask = real_space_mask
 
-    def object_via_gen_from(self, fit, galaxies) -> List[FitInterferometer]:
+    def object_via_gen_from(
+        self, fit, instance: af.ModelInstance = None
+    ) -> List[FitInterferometer]:
         """
         Returns a generator of `FitInterferometer` objects from an input aggregator.
 
@@ -174,7 +175,7 @@ class FitInterferometerAgg(AbstractAgg):
         """
         return _fit_interferometer_from(
             fit=fit,
-            galaxies=galaxies,
+            instance=instance,
             settings_dataset=self.settings_dataset,
             settings_inversion=self.settings_inversion,
             use_preloaded_grid=self.use_preloaded_grid,

@@ -86,7 +86,7 @@ class AdaptImages:
         return adapt_model_image
 
     @classmethod
-    def from_result(cls, result, use_model_images : bool = False) -> "AdaptImages":
+    def from_result(cls, result, use_model_images: bool = False) -> "AdaptImages":
         """
         Returns the adapt-images from a non-linear search result.
 
@@ -126,7 +126,6 @@ class AdaptImages:
         galaxy_name_image_dict = {}
 
         for path, galaxy in result.path_galaxy_tuples:
-
             if use_model_images:
                 galaxy_image = result.model_image_galaxy_dict[path]
             else:

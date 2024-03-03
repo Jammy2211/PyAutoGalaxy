@@ -368,7 +368,6 @@ def test__model_images_of_galaxies_list(masked_imaging_7x7):
 
 
 def test__subtracted_images_of_galaxies_dict(masked_imaging_7x7_no_blur):
-
     g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
 
     g1 = ag.Galaxy(redshift=0.5)
