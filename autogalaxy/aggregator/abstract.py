@@ -1,10 +1,7 @@
 from __future__ import annotations
 from abc import ABC, abstractmethod
 from functools import partial
-from typing import TYPE_CHECKING, List, Generator
-
-if TYPE_CHECKING:
-    from autogalaxy.galaxy.galaxy import Galaxy
+from typing import List, Optional, Generator
 
 import autofit as af
 
@@ -26,7 +23,7 @@ class AbstractAgg(ABC):
 
     @abstractmethod
     def object_via_gen_from(
-        self, fit: af.Fit, instance: af.ModelInstance = None
+        self, fit: af.Fit, instance: Optional[af.ModelInstance] = None
     ) -> object:
         """
         For example, in the `PlaneAgg` object, this function is overwritten such that it creates a `Plane` from a
@@ -36,8 +33,9 @@ class AbstractAgg(ABC):
         ----------
         fit
             A PyAutoFit database Fit object containing the generators of the results of PyAutoGalaxy model-fits.
-        galaxies
-            A list of galaxies corresponding to a sample of a non-linear search and model-fit.
+        instance
+            A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
+            randomly from the PDF).
 
         Returns
         -------

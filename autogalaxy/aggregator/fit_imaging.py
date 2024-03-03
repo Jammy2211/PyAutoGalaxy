@@ -152,7 +152,7 @@ class FitImagingAgg(AbstractAgg):
         self.use_preloaded_grid = use_preloaded_grid
 
     def object_via_gen_from(
-        self, fit, instance: af.ModelInstance = None
+        self, fit, instance: Optional[af.ModelInstance] = None
     ) -> List[FitImaging]:
         """
         Returns a generator of `FitImaging` objects from an input aggregator.
@@ -163,8 +163,9 @@ class FitImagingAgg(AbstractAgg):
         ----------
         fit
             A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
-        galaxies
-            A list of galaxies corresponding to a sample of a non-linear search and model-fit.
+        instance
+            A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
+            randomly from the PDF).
         """
         return _fit_imaging_from(
             fit=fit,

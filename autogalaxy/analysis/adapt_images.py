@@ -172,6 +172,7 @@ class AdaptImages:
         galaxy_image_dict = {}
 
         for galaxy_name, galaxy in instance.path_instance_tuples_for_class(Galaxy):
+            
             galaxy_name = str(galaxy_name)
 
             if galaxy_name in self.galaxy_name_image_dict:

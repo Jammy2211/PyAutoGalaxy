@@ -1,6 +1,6 @@
 from __future__ import annotations
 import logging
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, Optional, List
 
 if TYPE_CHECKING:
     from autogalaxy.plane.plane import Plane
@@ -93,7 +93,7 @@ class PlaneAgg(AbstractAgg):
     """
 
     def object_via_gen_from(
-        self, fit, instance: af.ModelInstance = None
+        self, fit, instance: Optional[af.ModelInstance] = None
     ) -> List[Plane]:
         """
         Returns a generator of `Plane` objects from an input aggregator.
@@ -104,8 +104,9 @@ class PlaneAgg(AbstractAgg):
         ----------
         fit
             A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
-        galaxies
-            A list of galaxies corresponding to a sample of a non-linear search and model-fit.
+        instance
+            A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
+            randomly from the PDF).
         """
 
         return _plane_from(fit=fit, instance=instance)
