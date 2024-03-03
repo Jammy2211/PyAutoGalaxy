@@ -7,7 +7,6 @@ if TYPE_CHECKING:
 import autofit as af
 import autoarray as aa
 
-from autogalaxy.aggregator.abstract import AbstractAgg
 from autogalaxy.analysis.preloads import Preloads
 
 from autogalaxy.aggregator.imaging import _imaging_from
@@ -99,7 +98,7 @@ def _fit_imaging_from(
     return fit_dataset_list
 
 
-class FitImagingAgg(AbstractAgg):
+class FitImagingAgg(af.AbstractAgg):
     def __init__(
         self,
         aggregator: af.Aggregator,

@@ -7,7 +7,6 @@ if TYPE_CHECKING:
 
 import autofit as af
 
-from autogalaxy.aggregator.abstract import AbstractAgg
 
 logger = logging.getLogger(__name__)
 
@@ -61,7 +60,7 @@ def _plane_from(fit: af.Fit, instance: af.ModelInstance) -> List[Plane]:
     return [Plane(galaxies=galaxies)]
 
 
-class PlaneAgg(AbstractAgg):
+class PlaneAgg(af.AbstractAgg):
     """
     Interfaces with an `PyAutoFit` aggregator object to create instances of `Plane` objects from the results
     of a model-fit.

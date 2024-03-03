@@ -7,7 +7,6 @@ if TYPE_CHECKING:
 import autofit as af
 import autoarray as aa
 
-from autogalaxy.aggregator.abstract import AbstractAgg
 from autogalaxy.analysis.preloads import Preloads
 
 from autogalaxy.aggregator import agg_util
@@ -104,7 +103,7 @@ def _fit_interferometer_from(
     return fit_dataset_list
 
 
-class FitInterferometerAgg(AbstractAgg):
+class FitInterferometerAgg(af.AbstractAgg):
     def __init__(
         self,
         aggregator: af.Aggregator,
