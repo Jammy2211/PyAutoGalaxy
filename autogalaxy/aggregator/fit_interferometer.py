@@ -17,7 +17,7 @@ from autogalaxy.aggregator.plane import _plane_from
 
 def _fit_interferometer_from(
     fit: af.Fit,
-    instance: af.ModelInstance = None,
+    instance: Optional[af.ModelInstance] = None,
     real_space_mask: Optional[aa.Mask2D] = None,
     settings_dataset: aa.SettingsInterferometer = None,
     settings_inversion: aa.SettingsInversion = None,
@@ -49,8 +49,9 @@ def _fit_interferometer_from(
     ----------
     fit
         A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
-    galaxies
-        A list of galaxies corresponding to a sample of a non-linear search and model-fit.
+    instance
+        A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
+        randomly from the PDF).
     settings_dataset
         Optionally overwrite the `SettingsInterferometer` of the `Interferometer` object that is created from the fit.
     settings_inversion

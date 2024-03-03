@@ -17,7 +17,7 @@ from autogalaxy.aggregator import agg_util
 
 def _fit_imaging_from(
     fit: af.Fit,
-    instance: af.ModelInstance = None,
+    instance: Optional[af.ModelInstance] = None,
     settings_dataset: aa.SettingsImaging = None,
     settings_inversion: aa.SettingsInversion = None,
     use_preloaded_grid: bool = True,
@@ -47,8 +47,9 @@ def _fit_imaging_from(
     ----------
     fit
         A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
-    galaxies
-        A list of galaxies corresponding to a sample of a non-linear search and model-fit.
+    instance
+        A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
+        randomly from the PDF).
     settings_dataset
         Optionally overwrite the `SettingsImaging` of the `Imaging` object that is created from the fit.
     settings_inversion
