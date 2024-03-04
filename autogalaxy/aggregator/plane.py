@@ -60,7 +60,7 @@ def _plane_from(fit: af.Fit, instance: af.ModelInstance) -> List[Plane]:
     return [Plane(galaxies=galaxies)]
 
 
-class PlaneAgg(af.AbstractAgg):
+class PlaneAgg(af.AggBase):
     """
     Interfaces with an `PyAutoFit` aggregator object to create instances of `Plane` objects from the results
     of a model-fit.

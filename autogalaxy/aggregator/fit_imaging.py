@@ -98,7 +98,7 @@ def _fit_imaging_from(
     return fit_dataset_list
 
 
-class FitImagingAgg(af.AbstractAgg):
+class FitImagingAgg(af.AggBase):
     def __init__(
         self,
         aggregator: af.Aggregator,
