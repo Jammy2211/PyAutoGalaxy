@@ -1,9 +1,8 @@
 import numpy as np
-from scipy.special import factorial, genlaguerre
+from scipy.special import hermite, factorial
 from typing import Optional, Tuple
 
 import autoarray as aa
-
 
 from autogalaxy.profiles.light.decorators import (
     check_operated_only,
@@ -11,18 +10,18 @@ from autogalaxy.profiles.light.decorators import (
 from autogalaxy.profiles.light.standard.shapelets.abstract import AbstractShapelet
 
 
-class ShapeletPolarEll(AbstractShapelet):
+class ShapeletCartesianEll(AbstractShapelet):
     def __init__(
         self,
-        n: int,
-        m: int,
+        n_y: int,
+        n_x: int,
         centre: Tuple[float, float] = (0.0, 0.0),
         ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 1.0,
         beta: float = 1.0,
     ):
         """
-        Shapelets where the basis function is defined according to a Polar (r,theta) grid of coordinates.
+        Shapelets where the basis function is defined according to a Cartesian (y,x) grid of coordinates.
 
         Shapelets are defined according to:
 
@@ -34,10 +33,10 @@ class ShapeletPolarEll(AbstractShapelet):
 
         Parameters
         ----------
-        n
-            The n order of the shapelets basis function.
-        m
-            The m order of the shapelets basis function in the x-direction.
+        n_y
+            The order of the shapelets basis function in the y-direction.
+        n_x
+            The order of the shapelets basis function in the x-direction.
         centre
             The (y,x) arc-second coordinates of the profile (shapelet) centre.
         ell_comps
@@ -49,8 +48,8 @@ class ShapeletPolarEll(AbstractShapelet):
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.
         """
 
-        self.n = n
-        self.m = m
+        self.n_y = n_y
+        self.n_x = n_x
 
         super().__init__(centre=centre, ell_comps=ell_comps, beta=beta, intensity=intensity)
 
@@ -62,7 +61,7 @@ class ShapeletPolarEll(AbstractShapelet):
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> np.ndarray:
         """
-        Returns the Polar Shapelet light profile's 2D image from a 2D grid of Polar (y,x) coordinates.
+        Returns the Cartesian Shapelet light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
 
         If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
         profile `centre`), this is performed automatically.
@@ -75,46 +74,45 @@ class ShapeletPolarEll(AbstractShapelet):
         Returns
         -------
         image
-            The image of the Polar Shapelet evaluated at every (y,x) coordinate on the transformed grid.
+            The image of the Cartesian Shapelet evaluated at every (y,x) coordinate on the transformed grid.
         """
 
-        radial = (grid[:, 0] ** 2 + grid[:, 1] ** 2) / self.beta**2.0
-        theta = np.arctan(grid[:, 1] / grid[:, 0])
+        hermite_y = hermite(n=self.n_y)
+        hermite_x = hermite(n=self.n_x)
 
-        laguerre = genlaguerre(n=(self.n - np.abs(self.m)) / 2.0, alpha=np.abs(self.m))
+        y = grid[:, 0]
+        x = grid[:, 1]
 
-        shapelet = laguerre(radial)
+        shapelet_y = hermite_y(y / self.beta)
+        shapelet_x = hermite_x(x / self.beta)
 
-        const = (
-            ((-1) ** ((self.n - np.abs(self.m)) / 2))
-            * np.sqrt(
-                factorial((self.n - np.abs(self.m)) / 2)
-                / factorial((self.n + np.abs(self.m)) / 2)
-            )
+        return (
+            shapelet_y
+            * shapelet_x
+            * np.exp(-0.5 * (y**2 + x**2) / (self.beta**2))
             / self.beta
-            / np.sqrt(np.pi)
-        )
-        gauss = np.exp(-radial / 2.0)
-
-        return np.abs(
-            const
-            * radial ** (np.abs(self.m / 2.0))
-            * shapelet
-            * gauss
-            * np.exp(0.0 + 1j * -self.m * theta)
+            / (
+                np.sqrt(
+                    2 ** (self.n_x + self.n_y)
+                    * (np.pi)
+                    * factorial(self.n_y)
+                    * factorial(self.n_x)
+                )
+            )
         )
 
-class ShapeletPolar(ShapeletPolarEll):
+
+class ShapeletCartesian(ShapeletCartesianEll):
     def __init__(
         self,
-        n: int,
-        m: int,
+        n_y: int,
+        n_x: int,
         centre: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 1.0,
         beta: float = 1.0,
     ):
         """
-        Shapelets where the basis function is defined according to a Polar (r,theta) grid of coordinates.
+        Shapelets where the basis function is defined according to a Cartesian (y,x) grid of coordinates.
 
         Shapelets are defined according to:
 
@@ -139,4 +137,6 @@ class ShapeletPolar(ShapeletPolarEll):
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.
         """
 
-        super().__init__(n=n, m=m, centre=centre, ell_comps=(0.0, 0.0), intensity=intensity, beta=beta)
+        super().__init__(
+            n_y=n_y, n_x=n_x, centre=centre, ell_comps=(0.0, 0.0), beta=beta, intensity=intensity
+        )

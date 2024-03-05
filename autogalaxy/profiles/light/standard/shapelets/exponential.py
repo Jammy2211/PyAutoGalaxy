@@ -4,14 +4,13 @@ from typing import Optional, Tuple
 
 import autoarray as aa
 
-
 from autogalaxy.profiles.light.decorators import (
     check_operated_only,
 )
 from autogalaxy.profiles.light.standard.shapelets.abstract import AbstractShapelet
 
 
-class ShapeletPolarEll(AbstractShapelet):
+class ShapeletExponentialEll(AbstractShapelet):
     def __init__(
         self,
         n: int,
@@ -22,7 +21,8 @@ class ShapeletPolarEll(AbstractShapelet):
         beta: float = 1.0,
     ):
         """
-        Shapelets where the basis function is defined according to a Polar (r,theta) grid of coordinates.
+        Shapelets where the basis function is defined according to an Exponential using a polar (r,theta) grid of
+        coordinates.
 
         Shapelets are defined according to:
 
@@ -62,7 +62,7 @@ class ShapeletPolarEll(AbstractShapelet):
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> np.ndarray:
         """
-        Returns the Polar Shapelet light profile's 2D image from a 2D grid of Polar (y,x) coordinates.
+        Returns the Exponential Shapelet light profile's 2D image from a 2D grid of Exponential (y,x) coordinates.
 
         If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
         profile `centre`), this is performed automatically.
@@ -75,36 +75,38 @@ class ShapeletPolarEll(AbstractShapelet):
         Returns
         -------
         image
-            The image of the Polar Shapelet evaluated at every (y,x) coordinate on the transformed grid.
+            The image of the Exponential Shapelet evaluated at every (y,x) coordinate on the transformed grid.
         """
 
-        radial = (grid[:, 0] ** 2 + grid[:, 1] ** 2) / self.beta**2.0
+        radial = (grid[:, 0] ** 2 + grid[:, 1] ** 2) / self.beta
         theta = np.arctan(grid[:, 1] / grid[:, 0])
 
-        laguerre = genlaguerre(n=(self.n - np.abs(self.m)) / 2.0, alpha=np.abs(self.m))
-
-        shapelet = laguerre(radial)
-
-        const = (
-            ((-1) ** ((self.n - np.abs(self.m)) / 2))
-            * np.sqrt(
-                factorial((self.n - np.abs(self.m)) / 2)
-                / factorial((self.n + np.abs(self.m)) / 2)
-            )
+        prefactor = (
+            1.0
+            / np.sqrt(2 * np.pi)
             / self.beta
-            / np.sqrt(np.pi)
+            * (self.n + 0.5) ** (-1 - np.abs(self.m))
+            * (-1) ** (self.n + self.m)
+            * np.sqrt(
+                factorial(self.n - np.abs(self.m)) / 2 * self.n
+                + 1 / factorial(self.n + np.abs(self.m))
+            )
         )
-        gauss = np.exp(-radial / 2.0)
+
+        laguerre = genlaguerre(n=self.n - np.abs(self.m), alpha=2 * np.abs(self.m))
+        shapelet = laguerre(radial / (self.n + 0.5))
 
         return np.abs(
-            const
-            * radial ** (np.abs(self.m / 2.0))
+            prefactor
+            * np.exp(-radial / (2 * self.n + 1))
+            * radial ** (np.abs(self.m))
             * shapelet
-            * gauss
-            * np.exp(0.0 + 1j * -self.m * theta)
+            * np.cos(self.m * theta)
+            + -1.0j * np.sin(self.m * theta)
         )
 
-class ShapeletPolar(ShapeletPolarEll):
+
+class ShapeletExponential(ShapeletExponentialEll):
     def __init__(
         self,
         n: int,
@@ -114,7 +116,7 @@ class ShapeletPolar(ShapeletPolarEll):
         beta: float = 1.0,
     ):
         """
-        Shapelets where the basis function is defined according to a Polar (r,theta) grid of coordinates.
+        Shapelets where the basis function is defined according to a Exponential (r,theta) grid of coordinates.
 
         Shapelets are defined according to:
 
