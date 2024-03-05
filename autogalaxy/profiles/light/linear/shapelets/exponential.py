@@ -47,10 +47,7 @@ class ShapeletExponentialEll(lp.ShapeletExponentialEll, LightProfileLinear):
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.
         """
 
-        self.n = n
-        self.m = m
-
-        super().__init__(centre=centre, ell_comps=ell_comps, beta=beta)
+        super().__init__(n=n, m=m, centre=centre, ell_comps=ell_comps, beta=beta)
 
     @aa.grid_dec.grid_2d_to_structure
     @check_operated_only
