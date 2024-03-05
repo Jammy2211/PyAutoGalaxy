@@ -10,7 +10,7 @@ from autogalaxy.profiles.light.decorators import (
 from autogalaxy.profiles.light.standard.shapelets.abstract import AbstractShapelet
 
 
-class ShapeletCartesianEll(AbstractShapelet):
+class ShapeletCartesian(AbstractShapelet):
     def __init__(
         self,
         n_y: int,
@@ -102,7 +102,7 @@ class ShapeletCartesianEll(AbstractShapelet):
         )
 
 
-class ShapeletCartesian(ShapeletCartesianEll):
+class ShapeletCartesianSph(ShapeletCartesian):
     def __init__(
         self,
         n_y: int,

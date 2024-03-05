@@ -5,7 +5,7 @@ from autogalaxy.profiles.light import standard as lp
 from autogalaxy.profiles.light.linear.abstract import LightProfileLinear
 
 
-class ShapeletPolarEll(lp.ShapeletPolarEll, LightProfileLinear):
+class ShapeletPolar(lp.ShapeletPolar, LightProfileLinear):
     def __init__(
         self,
         n: int,
@@ -46,9 +46,9 @@ class ShapeletPolarEll(lp.ShapeletPolarEll, LightProfileLinear):
 
     @property
     def lp_cls(self):
-        return lp.ShapeletPolarEll
+        return lp.ShapeletPolar
 
-class ShapeletPolar(ShapeletPolarEll):
+class ShapeletPolarSph(ShapeletPolar):
     def __init__(
         self,
         n: int,
@@ -83,4 +83,4 @@ class ShapeletPolar(ShapeletPolarEll):
 
     @property
     def lp_cls(self):
-        return lp.ShapeletPolar
+        return lp.ShapeletPolarSph

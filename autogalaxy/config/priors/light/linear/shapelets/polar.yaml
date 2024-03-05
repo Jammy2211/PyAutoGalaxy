@@ -1,4 +1,4 @@
-ShapeletPolar:
+ShapeletPolarSph:
   centre_0:
     type: Gaussian
     mean: 0.0
@@ -33,7 +33,7 @@ ShapeletPolar:
     gaussian_limits:
       lower: 0.0
       upper: inf
-ShapeletPolarEll:
+ShapeletPolar:
   centre_0:
     type: Gaussian
     mean: 0.0

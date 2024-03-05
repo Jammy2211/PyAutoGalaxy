@@ -12,7 +12,7 @@ from autogalaxy.profiles.light.decorators import (
 from autogalaxy.profiles.light.linear.abstract import LightProfileLinear
 
 
-class ShapeletExponentialEll(lp.ShapeletExponentialEll, LightProfileLinear):
+class ShapeletExponential(lp.ShapeletExponential, LightProfileLinear):
     def __init__(
         self,
         n: int,
@@ -102,10 +102,10 @@ class ShapeletExponentialEll(lp.ShapeletExponentialEll, LightProfileLinear):
 
     @property
     def lp_cls(self):
-        return lp.ShapeletExponentialEll
+        return lp.ShapeletExponential
 
 
-class ShapeletExponential(ShapeletExponentialEll):
+class ShapeletExponentialSph(ShapeletExponential):
     def __init__(
         self,
         n: int,
@@ -140,4 +140,4 @@ class ShapeletExponential(ShapeletExponentialEll):
 
     @property
     def lp_cls(self):
-        return lp.ShapeletExponential
+        return lp.ShapeletExponentialSph

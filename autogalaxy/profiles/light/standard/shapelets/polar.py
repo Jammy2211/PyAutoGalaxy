@@ -11,7 +11,7 @@ from autogalaxy.profiles.light.decorators import (
 from autogalaxy.profiles.light.standard.shapelets.abstract import AbstractShapelet
 
 
-class ShapeletPolarEll(AbstractShapelet):
+class ShapeletPolar(AbstractShapelet):
     def __init__(
         self,
         n: int,
@@ -104,7 +104,7 @@ class ShapeletPolarEll(AbstractShapelet):
             * np.exp(0.0 + 1j * -self.m * theta)
         )
 
-class ShapeletPolar(ShapeletPolarEll):
+class ShapeletPolarSph(ShapeletPolar):
     def __init__(
         self,
         n: int,

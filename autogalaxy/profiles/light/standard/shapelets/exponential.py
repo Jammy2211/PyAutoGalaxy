@@ -10,7 +10,7 @@ from autogalaxy.profiles.light.decorators import (
 from autogalaxy.profiles.light.standard.shapelets.abstract import AbstractShapelet
 
 
-class ShapeletExponentialEll(AbstractShapelet):
+class ShapeletExponential(AbstractShapelet):
     def __init__(
         self,
         n: int,
@@ -106,7 +106,7 @@ class ShapeletExponentialEll(AbstractShapelet):
         )
 
 
-class ShapeletExponential(ShapeletExponentialEll):
+class ShapeletExponentialSph(ShapeletExponential):
     def __init__(
         self,
         n: int,

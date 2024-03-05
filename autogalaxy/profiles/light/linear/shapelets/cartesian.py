@@ -12,7 +12,7 @@ from autogalaxy.profiles.light.decorators import (
 from autogalaxy.profiles.light.linear.abstract import LightProfileLinear
 
 
-class ShapeletCartesianEll(lp.ShapeletCartesianEll, LightProfileLinear):
+class ShapeletCartesian(lp.ShapeletCartesian, LightProfileLinear):
     def __init__(
         self,
         n_y: int,
@@ -98,10 +98,10 @@ class ShapeletCartesianEll(lp.ShapeletCartesianEll, LightProfileLinear):
 
     @property
     def lp_cls(self):
-        return lp.ShapeletCartesianEll
+        return lp.ShapeletCartesian
 
 
-class ShapeletCartesian(ShapeletCartesianEll):
+class ShapeletCartesianSph(ShapeletCartesian):
     def __init__(
         self,
         n_y: int,
@@ -138,4 +138,4 @@ class ShapeletCartesian(ShapeletCartesianEll):
 
     @property
     def lp_cls(self):
-        return lp.ShapeletCartesianEll
+        return lp.ShapeletCartesian
