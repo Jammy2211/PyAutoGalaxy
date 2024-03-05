@@ -52,7 +52,9 @@ class ShapeletPolar(AbstractShapelet):
         self.n = n
         self.m = m
 
-        super().__init__(centre=centre, ell_comps=ell_comps, beta=beta, intensity=intensity)
+        super().__init__(
+            centre=centre, ell_comps=ell_comps, beta=beta, intensity=intensity
+        )
 
     @aa.grid_dec.grid_2d_to_structure
     @check_operated_only
@@ -104,6 +106,7 @@ class ShapeletPolar(AbstractShapelet):
             * np.exp(0.0 + 1j * -self.m * theta)
         )
 
+
 class ShapeletPolarSph(ShapeletPolar):
     def __init__(
         self,
@@ -139,4 +142,11 @@ class ShapeletPolarSph(ShapeletPolar):
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.
         """
 
-        super().__init__(n=n, m=m, centre=centre, ell_comps=(0.0, 0.0), intensity=intensity, beta=beta)
+        super().__init__(
+            n=n,
+            m=m,
+            centre=centre,
+            ell_comps=(0.0, 0.0),
+            intensity=intensity,
+            beta=beta,
+        )

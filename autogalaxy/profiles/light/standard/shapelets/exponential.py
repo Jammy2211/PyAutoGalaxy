@@ -52,7 +52,9 @@ class ShapeletExponential(AbstractShapelet):
         self.n = n
         self.m = m
 
-        super().__init__(centre=centre, ell_comps=ell_comps, beta=beta, intensity=intensity)
+        super().__init__(
+            centre=centre, ell_comps=ell_comps, beta=beta, intensity=intensity
+        )
 
     @aa.grid_dec.grid_2d_to_structure
     @check_operated_only
@@ -141,4 +143,11 @@ class ShapeletExponentialSph(ShapeletExponential):
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.
         """
 
-        super().__init__(n=n, m=m, centre=centre, ell_comps=(0.0, 0.0), intensity=intensity, beta=beta)
+        super().__init__(
+            n=n,
+            m=m,
+            centre=centre,
+            ell_comps=(0.0, 0.0),
+            intensity=intensity,
+            beta=beta,
+        )

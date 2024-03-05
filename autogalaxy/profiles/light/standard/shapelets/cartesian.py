@@ -51,7 +51,9 @@ class ShapeletCartesian(AbstractShapelet):
         self.n_y = n_y
         self.n_x = n_x
 
-        super().__init__(centre=centre, ell_comps=ell_comps, beta=beta, intensity=intensity)
+        super().__init__(
+            centre=centre, ell_comps=ell_comps, beta=beta, intensity=intensity
+        )
 
     @aa.grid_dec.grid_2d_to_structure
     @check_operated_only
@@ -138,5 +140,10 @@ class ShapeletCartesianSph(ShapeletCartesian):
         """
 
         super().__init__(
-            n_y=n_y, n_x=n_x, centre=centre, ell_comps=(0.0, 0.0), beta=beta, intensity=intensity
+            n_y=n_y,
+            n_x=n_x,
+            centre=centre,
+            ell_comps=(0.0, 0.0),
+            beta=beta,
+            intensity=intensity,
         )

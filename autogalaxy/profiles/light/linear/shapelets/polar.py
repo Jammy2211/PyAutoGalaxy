@@ -42,11 +42,14 @@ class ShapeletPolar(lp.ShapeletPolar, LightProfileLinear):
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.
         """
 
-        super().__init__(n=n, m=m, centre=centre, ell_comps=ell_comps, beta=beta, intensity=1.0)
+        super().__init__(
+            n=n, m=m, centre=centre, ell_comps=ell_comps, beta=beta, intensity=1.0
+        )
 
     @property
     def lp_cls(self):
         return lp.ShapeletPolar
+
 
 class ShapeletPolarSph(ShapeletPolar):
     def __init__(
