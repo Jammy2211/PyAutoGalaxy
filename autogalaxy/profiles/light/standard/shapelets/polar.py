@@ -4,24 +4,25 @@ from typing import Optional, Tuple
 
 import autoarray as aa
 
+
 from autogalaxy.profiles.light.decorators import (
     check_operated_only,
 )
-from autogalaxy.profiles.light.shapelets.abstract import AbstractShapelet
+from autogalaxy.profiles.light.standard.shapelets.abstract import AbstractShapelet
 
 
-class ShapeletExponentialEll(AbstractShapelet):
+class ShapeletPolarEll(AbstractShapelet):
     def __init__(
         self,
         n: int,
         m: int,
         centre: Tuple[float, float] = (0.0, 0.0),
         ell_comps: Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 1.0,
         beta: float = 1.0,
     ):
         """
-        Shapelets where the basis function is defined according to an Exponential using a polar (r,theta) grid of
-        coordinates.
+        Shapelets where the basis function is defined according to a Polar (r,theta) grid of coordinates.
 
         Shapelets are defined according to:
 
@@ -41,6 +42,9 @@ class ShapeletExponentialEll(AbstractShapelet):
             The (y,x) arc-second coordinates of the profile (shapelet) centre.
         ell_comps
             The first and second ellipticity components of the elliptical coordinate system.
+        intensity
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         beta
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.
         """
@@ -48,7 +52,7 @@ class ShapeletExponentialEll(AbstractShapelet):
         self.n = n
         self.m = m
 
-        super().__init__(centre=centre, ell_comps=ell_comps, beta=beta)
+        super().__init__(centre=centre, ell_comps=ell_comps, beta=beta, intensity=intensity)
 
     @aa.grid_dec.grid_2d_to_structure
     @check_operated_only
@@ -58,7 +62,7 @@ class ShapeletExponentialEll(AbstractShapelet):
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> np.ndarray:
         """
-        Returns the Exponential Shapelet light profile's 2D image from a 2D grid of Exponential (y,x) coordinates.
+        Returns the Polar Shapelet light profile's 2D image from a 2D grid of Polar (y,x) coordinates.
 
         If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
         profile `centre`), this is performed automatically.
@@ -71,47 +75,50 @@ class ShapeletExponentialEll(AbstractShapelet):
         Returns
         -------
         image
-            The image of the Exponential Shapelet evaluated at every (y,x) coordinate on the transformed grid.
+            The image of the Polar Shapelet evaluated at every (y,x) coordinate on the transformed grid.
         """
 
-        radial = (grid[:, 0] ** 2 + grid[:, 1] ** 2) / self.beta
+        radial = (grid[:, 0] ** 2 + grid[:, 1] ** 2) / self.beta**2.0
         theta = np.arctan(grid[:, 1] / grid[:, 0])
 
-        prefactor = (
-            1.0
-            / np.sqrt(2 * np.pi)
-            / self.beta
-            * (self.n + 0.5) ** (-1 - np.abs(self.m))
-            * (-1) ** (self.n + self.m)
-            * np.sqrt(
-                factorial(self.n - np.abs(self.m)) / 2 * self.n
-                + 1 / factorial(self.n + np.abs(self.m))
-            )
-        )
+        laguerre = genlaguerre(n=(self.n - np.abs(self.m)) / 2.0, alpha=np.abs(self.m))
 
-        laguerre = genlaguerre(n=self.n - np.abs(self.m), alpha=2 * np.abs(self.m))
-        shapelet = laguerre(radial / (self.n + 0.5))
+        shapelet = laguerre(radial)
+
+        const = (
+            ((-1) ** ((self.n - np.abs(self.m)) / 2))
+            * np.sqrt(
+                factorial((self.n - np.abs(self.m)) / 2)
+                / factorial((self.n + np.abs(self.m)) / 2)
+            )
+            / self.beta
+            / np.sqrt(np.pi)
+        )
+        gauss = np.exp(-radial / 2.0)
 
         return np.abs(
-            prefactor
-            * np.exp(-radial / (2 * self.n + 1))
-            * radial ** (np.abs(self.m))
+            const
+            * radial ** (np.abs(self.m / 2.0))
             * shapelet
-            * np.cos(self.m * theta)
-            + -1.0j * np.sin(self.m * theta)
+            * gauss
+            * np.exp(0.0 + 1j * -self.m * theta)
         )
 
+    @property
+    def lp_cls(self):
+        return ShapeletPolar
 
-class ShapeletExponential(ShapeletExponentialEll):
+class ShapeletPolar(ShapeletPolarEll):
     def __init__(
         self,
         n: int,
         m: int,
         centre: Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 1.0,
         beta: float = 1.0,
     ):
         """
-        Shapelets where the basis function is defined according to a Exponential (r,theta) grid of coordinates.
+        Shapelets where the basis function is defined according to a Polar (r,theta) grid of coordinates.
 
         Shapelets are defined according to:
 
@@ -129,8 +136,11 @@ class ShapeletExponential(ShapeletExponentialEll):
             The order of the shapelets basis function in the x-direction.
         centre
             The (y,x) arc-second coordinates of the profile (shapelet) centre.
+        intensity
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         beta
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.
         """
 
-        super().__init__(n=n, m=m, centre=centre, ell_comps=(0.0, 0.0), beta=beta)
+        super().__init__(n=n, m=m, centre=centre, ell_comps=(0.0, 0.0), intensity=intensity, beta=beta)
