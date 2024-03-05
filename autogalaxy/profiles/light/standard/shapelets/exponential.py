@@ -28,7 +28,7 @@ class ShapeletExponentialEll(AbstractShapelet):
 
           https://arxiv.org/abs/astro-ph/0105178
 
-        Shapelets are are described in the context of strong lens modeling in:
+        Shapelets are described in the context of strong lens modeling in:
 
           https://ui.adsabs.harvard.edu/abs/2016MNRAS.457.3066T/abstract
 

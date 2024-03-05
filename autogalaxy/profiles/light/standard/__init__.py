@@ -14,3 +14,5 @@ from .eff import (
     ElsonFreeFallSph,
 )
 from .shapelets.polar import ShapeletPolar, ShapeletPolarEll
+from .shapelets.cartesian import ShapeletCartesian, ShapeletCartesianEll
+from .shapelets.exponential import ShapeletExponential, ShapeletExponentialEll

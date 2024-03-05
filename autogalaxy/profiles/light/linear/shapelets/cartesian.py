@@ -4,13 +4,15 @@ from typing import Optional, Tuple
 
 import autoarray as aa
 
+from autogalaxy.profiles.light import standard as lp
+
 from autogalaxy.profiles.light.decorators import (
     check_operated_only,
 )
-from autogalaxy.profiles.light.shapelets.abstract import AbstractShapelet
+from autogalaxy.profiles.light.linear.abstract import LightProfileLinear
 
 
-class ShapeletCartesianEll(AbstractShapelet):
+class ShapeletCartesianEll(lp.ShapeletCartesianEll, LightProfileLinear):
     def __init__(
         self,
         n_y: int,
@@ -26,7 +28,7 @@ class ShapeletCartesianEll(AbstractShapelet):
 
           https://arxiv.org/abs/astro-ph/0105178
 
-        Shapelets are are described in the context of strong lens modeling in:
+        Shapelets are described in the context of strong lens modeling in:
 
           https://ui.adsabs.harvard.edu/abs/2016MNRAS.457.3066T/abstract
 
@@ -99,7 +101,7 @@ class ShapeletCartesianEll(AbstractShapelet):
 
     @property
     def lp_cls(self):
-        return ShapeletCartesianEll
+        return lp.ShapeletCartesianEll
 
 
 class ShapeletCartesian(ShapeletCartesianEll):
@@ -117,7 +119,7 @@ class ShapeletCartesian(ShapeletCartesianEll):
 
           https://arxiv.org/abs/astro-ph/0105178
 
-        Shapelets are are described in the context of strong lens modeling in:
+        Shapelets are described in the context of strong lens modeling in:
 
           https://ui.adsabs.harvard.edu/abs/2016MNRAS.457.3066T/abstract
 
@@ -139,4 +141,4 @@ class ShapeletCartesian(ShapeletCartesianEll):
 
     @property
     def lp_cls(self):
-        return ShapeletCartesianEll
+        return lp.ShapeletCartesianEll

@@ -5,7 +5,7 @@ from autogalaxy.profiles.light import standard as lp
 from autogalaxy.profiles.light.linear.abstract import LightProfileLinear
 
 
-class ShapeletPolarEll(lp.shapelets.polar.ShapeletPolarEll, LightProfileLinear):
+class ShapeletPolarEll(lp.ShapeletPolarEll, LightProfileLinear):
     def __init__(
         self,
         n: int,
@@ -21,7 +21,7 @@ class ShapeletPolarEll(lp.shapelets.polar.ShapeletPolarEll, LightProfileLinear):
 
           https://arxiv.org/abs/astro-ph/0105178
 
-        Shapelets are are described in the context of strong lens modeling in:
+        Shapelets are described in the context of strong lens modeling in:
 
           https://ui.adsabs.harvard.edu/abs/2016MNRAS.457.3066T/abstract
 
@@ -63,7 +63,7 @@ class ShapeletPolar(ShapeletPolarEll):
 
           https://arxiv.org/abs/astro-ph/0105178
 
-        Shapelets are are described in the context of strong lens modeling in:
+        Shapelets are described in the context of strong lens modeling in:
 
           https://ui.adsabs.harvard.edu/abs/2016MNRAS.457.3066T/abstract
 
