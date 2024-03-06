@@ -6,7 +6,6 @@ from autoconf import conf
 import autoarray as aa
 
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.plane.plane import Plane
 
 from autogalaxy import exc
 
@@ -209,7 +208,7 @@ def galaxies_in_redshift_ordered_planes_from(galaxies, plane_redshifts):
     return galaxies_in_redshift_ordered_planes
 
 
-def planes_via_galaxies_from(galaxies, run_time_dict=None, plane_cls=Plane):
+def planes_via_galaxies_from(galaxies, run_time_dict=None):
     plane_redshifts = ordered_plane_redshifts_from(galaxies=galaxies)
 
     galaxies_in_planes = galaxies_in_redshift_ordered_planes_from(
@@ -219,10 +218,7 @@ def planes_via_galaxies_from(galaxies, run_time_dict=None, plane_cls=Plane):
     planes = []
 
     for plane_index in range(0, len(plane_redshifts)):
-        planes.append(
-            plane_cls(
-                galaxies=galaxies_in_planes[plane_index], run_time_dict=run_time_dict
-            )
-        )
+
+        planes.append(galaxies=galaxies_in_planes[plane_index])
 
     return planes
