@@ -102,6 +102,70 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
 
         return galaxy_image_2d_dict
 
+
+    @aa.grid_dec.grid_2d_to_vector_yx
+    @aa.grid_dec.grid_2d_to_structure
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+        if self:
+            return sum(
+                map(lambda g: g.deflections_yx_2d_from(grid=grid), self)
+            )
+        return np.zeros(shape=(grid.shape[0], 2))
+
+    @aa.grid_dec.grid_2d_to_structure
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+        """
+        Returns the convergence of the list of galaxies of the plane's sub-grid, by summing the individual convergences \
+        of each galaxy's mass profile.
+
+        The convergence is calculated on the sub-grid and binned-up to the original grid by taking the mean
+        value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is `True`.
+
+        If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
+        sub-grid is returned.
+
+        Internally data structures are treated as ndarrays, however the decorator `grid_2d_to_structure` converts
+        the output to an `Array2D` using the input `grid`'s attributes.
+
+        Parameters
+        ----------
+        grid : Grid2D
+            The grid (or sub) of (y,x) arc-second coordinates at the centre of every unmasked pixel which the \
+            potential is calculated on.
+        galaxies : [Galaxy]
+            The galaxies whose mass profiles are used to compute the surface densities.
+        """
+        if self:
+            return sum(map(lambda g: g.convergence_2d_from(grid=grid), self))
+        return np.zeros((grid.shape[0],))
+
+    @aa.grid_dec.grid_2d_to_structure
+    def potential_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+        """
+        Returns the potential of the list of galaxies of the plane's sub-grid, by summing the individual potentials \
+        of each galaxy's mass profile.
+
+        The potential is calculated on the sub-grid and binned-up to the original grid by taking the mean
+        value of every set of sub-pixels, provided the *returned_binned_sub_grid* bool is `True`.
+
+        If the plane has no galaxies (or no galaxies have mass profiles) an arrays of all zeros the shape of the plane's
+        sub-grid is returned.
+
+        Internally data structures are treated as ndarrays, however the decorator `grid_2d_to_structure` converts
+        the output to an `Array2D` using the input `grid`'s attributes.
+
+        Parameters
+        ----------
+        grid : Grid2D
+            The grid (or sub) of (y,x) arc-second coordinates at the centre of every unmasked pixel which the \
+            potential is calculated on.
+        galaxies : [Galaxy]
+            The galaxies whose mass profiles are used to compute the surface densities.
+        """
+        if self:
+            return sum(map(lambda g: g.potential_2d_from(grid=grid), self))
+        return np.zeros((grid.shape[0],))
+
     def has(self, cls: Union[Type, Tuple[Type]]) -> bool:
         return any(list(map(lambda galaxy: galaxy.has(cls=cls), self)))
 

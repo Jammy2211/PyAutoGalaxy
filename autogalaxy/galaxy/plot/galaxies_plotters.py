@@ -12,6 +12,7 @@ from autogalaxy.plot.include.one_d import Include1D
 from autogalaxy.plot.include.two_d import Include2D
 from autogalaxy.plot.mass_plotter import MassPlotter
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.galaxy.plot.galaxy_plotters import GalaxyPlotter
 
 from autogalaxy import exc
@@ -62,15 +63,16 @@ class GalaxiesPlotter(Plotter):
             Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 2D plots.
         """
 
+        self.galaxies = Galaxies(galaxies=galaxies)
+
         from autogalaxy.profiles.light.linear import (
             LightProfileLinear,
         )
 
-        for galaxy in galaxies:
-            if galaxy.has(cls=LightProfileLinear):
-                raise exc.raise_linear_light_profile_in_plot(
-                    plotter_type=self.__class__.__name__,
-                )
+        if self.galaxies.has(cls=LightProfileLinear):
+            raise exc.raise_linear_light_profile_in_plot(
+                plotter_type=self.__class__.__name__,
+            )
 
         super().__init__(
             mat_plot_2d=mat_plot_2d,
@@ -80,8 +82,6 @@ class GalaxiesPlotter(Plotter):
             include_1d=include_1d,
             visuals_1d=visuals_1d,
         )
-
-        self.galaxies = galaxies
 
         self.grid = grid
 
@@ -172,77 +172,20 @@ class GalaxiesPlotter(Plotter):
         """
         if image:
             self.mat_plot_2d.plot_array(
-                array=sum([galaxy.image_2d_from(grid=self.grid) for galaxy in self.galaxies]),
+                array=self.galaxies.image_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title=f"Image{title_suffix}", filename=f"image_2d{filename_suffix}"
                 ),
             )
 
-        if convergence:
-            self.mat_plot_2d.plot_array(
-                array=sum([galaxy.convergence_2d_from(grid=self.grid) for galaxy in self.galaxies]),
-                visuals_2d=self.get_visuals_2d(),
-                auto_labels=aplt.AutoLabels(
-                    title=f"Convergence{title_suffix}",
-                    filename=f"convergence_2d{filename_suffix}",
-                    cb_unit="",
-                ),
-            )
-
-        if potential:
-            self.mat_plot_2d.plot_array(
-                array=sum([galaxy.potential_2d_from(grid=self.grid) for galaxy in self.galaxies]),
-                visuals_2d=self.get_visuals_2d(),
-                auto_labels=aplt.AutoLabels(
-                    title=f"Potential{title_suffix}",
-                    filename=f"potential_2d{filename_suffix}",
-                    cb_unit="",
-                ),
-            )
-
-        if deflections_y:
-            deflections = sum([galaxy.deflections_yx_2d_from(grid=self.grid) for galaxy in self.galaxies])
-            deflections_y = aa.Array2D(
-                values=deflections.slim[:, 0], mask=self.grid.mask
-            )
-
-            self.mat_plot_2d.plot_array(
-                array=deflections_y,
-                visuals_2d=self.get_visuals_2d(),
-                auto_labels=aplt.AutoLabels(
-                    title=f"Deflections Y{title_suffix}",
-                    filename=f"deflections_y_2d{filename_suffix}",
-                    cb_unit="",
-                ),
-            )
-
-        if deflections_x:
-            deflections = sum([galaxy.deflections_yx_2d_from(grid=self.grid) for galaxy in self.galaxies])
-            deflections_x = aa.Array2D(
-                values=deflections.slim[:, 1], mask=self.grid.mask
-            )
-
-            self.mat_plot_2d.plot_array(
-                array=deflections_x,
-                visuals_2d=self.get_visuals_2d(),
-                auto_labels=aplt.AutoLabels(
-                    title=f"Deflections X{title_suffix}",
-                    filename=f"deflections_x_2d{filename_suffix}",
-                    cb_unit="",
-                ),
-            )
-
-        if magnification:
-            self.mat_plot_2d.plot_array(
-                array=sum([galaxy.magnification_2d_from(grid=self.grid) for galaxy in self.galaxies]),
-                visuals_2d=self.get_visuals_2d(),
-                auto_labels=aplt.AutoLabels(
-                    title=f"Magnification{title_suffix}",
-                    filename=f"magnification_2d{filename_suffix}",
-                    cb_unit="",
-                ),
-            )
+        self._mass_plotter.figures_2d(
+            convergence=convergence,
+            potential=potential,
+            deflections_y=deflections_y,
+            deflections_x=deflections_x,
+            magnification=magnification,
+        )
 
     def galaxy_indexes_from(self, galaxy_index: Optional[int]) -> List[int]:
         """
