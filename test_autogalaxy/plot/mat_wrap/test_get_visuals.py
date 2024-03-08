@@ -277,7 +277,7 @@ def test__via_fit_imaging_from(fit_imaging_x2_galaxy_7x7, grid_2d_7x7):
     assert visuals_2d_via.mass_profile_centres.in_list == [(0.0, 0.0)]
     assert (
         visuals_2d_via.tangential_critical_curves[0]
-        == fit_imaging_x2_galaxy_7x7.plane.tangential_critical_curve_list_from(
+        == fit_imaging_x2_galaxy_7x7.galaxies.tangential_critical_curve_list_from(
             grid=grid_2d_7x7
         )[0]
     ).all()
