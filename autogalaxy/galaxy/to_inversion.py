@@ -14,6 +14,7 @@ from autogalaxy.profiles.light.linear import (
 from autogalaxy.profiles.light.basis import Basis
 from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.analysis.preloads import Preloads
 
 
@@ -102,7 +103,7 @@ class GalaxiesToInversion(AbstractToInversion):
         preloads=aa.Preloads(),
         run_time_dict: Optional[Dict] = None,
     ):
-        self.galaxies = galaxies
+        self.galaxies = Galaxies(galaxies)
 
         super().__init__(
             dataset=dataset,
@@ -146,7 +147,7 @@ class GalaxiesToInversion(AbstractToInversion):
         self, cls: Type
     ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
 
-        if not self.galaxy_has_cls(cls=cls):
+        if not self.galaxies.has(cls=cls):
             return {}
 
         lp_linear_func_galaxy_dict = {}
@@ -273,9 +274,8 @@ class GalaxiesToInversion(AbstractToInversion):
             cls=aa.Pixelization
         )
 
-        for galaxy in galaxies_with_pixelization_list:
-            for pix in galaxy.cls_list_from(cls=aa.Pixelization):
-                pixelization_list.append(pix)
+        for pix in self.galaxies.cls_list_from(cls=aa.Pixelization):
+            pixelization_list.append(pix)
 
         for mapper_index in range(len(mesh_grid_list)):
             galaxy = galaxies_with_pixelization_list[mapper_index]
