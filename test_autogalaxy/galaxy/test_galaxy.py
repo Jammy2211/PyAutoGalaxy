@@ -784,13 +784,9 @@ def test__output_to_and_load_from_json():
         ),
     )
 
-    print(g0)
-
     output_to_json(g0, file_path=json_file)
 
     galaxy_from_json = from_json(file_path=json_file)
-
-    print(galaxy_from_json)
 
     assert galaxy_from_json.redshift == 1.0
     assert galaxy_from_json.light.intensity == 1.0
