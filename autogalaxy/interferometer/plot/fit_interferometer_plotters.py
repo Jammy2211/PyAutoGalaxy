@@ -106,11 +106,11 @@ class FitInterferometerPlotter(Plotter):
 
         Returns
         -------
-        plane
-            The plane used to make the `GalaxiesPlotter`.
+        galaxies
+            The galaxies used to make the `GalaxiesPlotter`.
         """
         return GalaxiesPlotter(
-            plane=plane,
+            galaxies=galaxies,
             grid=self.fit.dataset.grid,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.get_visuals_2d_real_space(),
@@ -187,14 +187,15 @@ class FitInterferometerPlotter(Plotter):
         Depending on whether `LightProfile`'s or an `Inversion` are used to represent galaxies, different
         methods are called to create these real-space images.
         """
-        if not self.plane.has(cls=aa.Pixelization):
-            plane_plotter = self.plane_plotter_from(plane=self.plane)
+        if not self.galaxies.has(cls=aa.Pixelization):
+            galaxies_plotter = self.galaxies_plotter_from(galaxies=self.galaxies)
 
-            plane_plotter.subplot(
-                image=True, plane_image=True, auto_filename="subplot_fit_real_space"
+            galaxies_plotter.subplot(
+                image=True,
+                auto_filename="subplot_fit_real_space"
             )
 
-        elif self.plane.has(cls=aa.Pixelization):
+        elif self.galaxies.has(cls=aa.Pixelization):
             self.open_subplot_figure(number_subplots=6)
 
             mapper_index = 0
