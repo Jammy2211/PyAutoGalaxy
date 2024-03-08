@@ -95,16 +95,9 @@ class GalaxiesPlotter(Plotter):
         )
 
     def get_visuals_2d(self) -> Visuals2D:
-
-        visuals_2d = Visuals2D()
-
-        for galaxy in self.galaxies:
-
-            visuals_2d += self.get_2d.via_light_mass_obj_from(
-                light_mass_obj=galaxy, grid=self.grid
+        return self.get_2d.via_light_mass_obj_from(
+                light_mass_obj=self.galaxies, grid=self.grid
             )
-
-        return visuals_2d
 
     def get_visuals_2d_of_galaxy(self, galaxy_index: int) -> aplt.Visuals2D:
         return self.get_2d.via_galaxies_from(
