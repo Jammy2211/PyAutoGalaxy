@@ -195,7 +195,7 @@ class GalaxiesToInversion(AbstractToInversion):
     def image_plane_mesh_grid_list(
         self,
     ) -> Optional[List[aa.Grid2DIrregular]]:
-        if not self.plane.has(cls=aa.Pixelization):
+        if not any([galaxy.has(cls=aa.Pixelization) for galaxy in self.galaxies]):
             return None
 
         image_plane_mesh_grid_list = []

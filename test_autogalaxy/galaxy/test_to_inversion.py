@@ -54,46 +54,46 @@ def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
     assert lp_linear_func_list[1].light_profile_list[1] == lp_linear_1
 
 
-# def test__image_plane_mesh_grid_list(masked_imaging_7x7):
-#     pixelization = ag.m.MockPixelization(
-#         image_mesh=ag.m.MockImageMesh(image_plane_mesh_grid=np.array([1.0, 1.0]))
-#     )
-#
-#     galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
-#
-#     to_inversion = ag.GalaxiesToInversion(
-#         galaxies=[galaxy_pix],
-#         dataset=masked_imaging_7x7,
-#     )
-#
-#     image_plane_mesh_grid_list = to_inversion.image_plane_mesh_grid_list
-#
-#     assert (image_plane_mesh_grid_list == np.array([[1.0, 1.0]])).all()
-#
-#     galaxy_pix = ag.Galaxy(
-#         redshift=0.5,
-#         pixelization=pixelization,
-#     )
-#
-#     adapt_images = ag.AdaptImages(galaxy_image_dict={galaxy_pix: 2})
-#
-#     to_inversion = ag.GalaxiesToInversion(
-#         galaxies=[galaxy_pix], dataset=masked_imaging_7x7, adapt_images=adapt_images
-#     )
-#
-#     image_plane_mesh_grid_list = to_inversion.image_plane_mesh_grid_list
-#
-#     assert (image_plane_mesh_grid_list == np.array([[2.0, 2.0]])).all()
-#
-#     # No Galalxies
-#
-#     galaxy_no_pix = ag.Galaxy(redshift=0.5)
-#
-#     to_inversion = ag.GalaxiesToInversion(galaxies=[galaxy_no_pix], dataset=masked_imaging_7x7)
-#
-#     image_plane_mesh_grid_list = to_inversion.image_plane_mesh_grid_list
-#
-#     assert image_plane_mesh_grid_list is None
+def test__image_plane_mesh_grid_list(masked_imaging_7x7):
+    pixelization = ag.m.MockPixelization(
+        image_mesh=ag.m.MockImageMesh(image_plane_mesh_grid=np.array([1.0, 1.0]))
+    )
+
+    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
+
+    to_inversion = ag.GalaxiesToInversion(
+        galaxies=[galaxy_pix],
+        dataset=masked_imaging_7x7,
+    )
+
+    image_plane_mesh_grid_list = to_inversion.image_plane_mesh_grid_list
+
+    assert (image_plane_mesh_grid_list == np.array([[1.0, 1.0]])).all()
+
+    galaxy_pix = ag.Galaxy(
+        redshift=0.5,
+        pixelization=pixelization,
+    )
+
+    adapt_images = ag.AdaptImages(galaxy_image_dict={galaxy_pix: 2})
+
+    to_inversion = ag.GalaxiesToInversion(
+        galaxies=[galaxy_pix], dataset=masked_imaging_7x7, adapt_images=adapt_images
+    )
+
+    image_plane_mesh_grid_list = to_inversion.image_plane_mesh_grid_list
+
+    assert (image_plane_mesh_grid_list == np.array([[2.0, 2.0]])).all()
+
+    # No Galalxies
+
+    galaxy_no_pix = ag.Galaxy(redshift=0.5)
+
+    to_inversion = ag.GalaxiesToInversion(galaxies=[galaxy_no_pix], dataset=masked_imaging_7x7)
+
+    image_plane_mesh_grid_list = to_inversion.image_plane_mesh_grid_list
+
+    assert image_plane_mesh_grid_list is None
 #
 #
 # def test__mapper_galaxy_dict(masked_imaging_7x7):
