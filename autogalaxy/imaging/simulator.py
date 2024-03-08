@@ -4,6 +4,7 @@ from typing import List
 import autoarray as aa
 
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.galaxy.galaxies import Galaxies
 
 class SimulatorImaging(aa.SimulatorImaging):
     def via_galaxies_from(self, galaxies: List[Galaxy], grid: aa.type.Grid2DLike) -> aa.Imaging:
@@ -23,6 +24,8 @@ class SimulatorImaging(aa.SimulatorImaging):
             The image-plane grid which the image of the strong lens is generated on.
         """
 
+        galaxies = Galaxies(galaxies=galaxies)
+
         for galaxy in galaxies:
 
             galaxy.set_snr_of_snr_light_profiles(
@@ -32,9 +35,9 @@ class SimulatorImaging(aa.SimulatorImaging):
                 psf=self.psf,
             )
 
-        image = sum([galaxy.padded_image_2d_from(
+        image = galaxies.padded_image_2d_from(
             grid=grid, psf_shape_2d=self.psf.shape_native
-        ) for galaxy in galaxies])
+        )
 
         dataset = self.via_image_from(image=image.binned)
 
