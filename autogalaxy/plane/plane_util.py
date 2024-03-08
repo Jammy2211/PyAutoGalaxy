@@ -1,5 +1,5 @@
 import numpy as np
-from typing import List
+from typing import List, Optional
 
 from autoconf import conf
 
@@ -102,6 +102,77 @@ def plane_image_from(
     return aa.Array2D.no_mask(
         values=image.native, pixel_scales=grid.pixel_scales, origin=grid.origin
     )
+
+
+def plane_redshifts_from(galaxies : List[Galaxy]) -> List[float]:
+    """
+    Returns a list of plane redshifts from a list of galaxies, using the redshifts of the galaxies to determine the
+    unique redshifts of the planes.
+
+    Each plane redshift corresponds to a unique redshift in the list of galaxies, such that the returned list of
+    redshifts contains no duplicate values. This means multiple galaxies at the same redshift are assigned to the
+    same plane.
+
+    For example, if the input is three galaxies, two at redshift 1.0 and one at redshift 2.0, the returned list of
+    redshifts would be [1.0, 2.0].
+
+    Parameters
+    ----------
+    galaxies
+        The list of galaxies used to determine the unique redshifts of the planes.
+
+    Returns
+    -------
+    The list of unique redshifts of the planes.
+    """
+
+    galaxies_ascending_redshift = sorted(galaxies, key=lambda galaxy: galaxy.redshift)
+
+    plane_redshifts = [galaxy.redshift for galaxy in galaxies_ascending_redshift]
+
+    return list(dict.fromkeys(plane_redshifts))
+
+def planes_from(galaxies : List[Galaxy], plane_redshifts : Optional[List[float]] = None) -> List[List[Galaxy]]:
+    """
+    Returns a list of list of galaxies grouped into their planes, where planes contained all galaxies at the same
+    unique redshift.
+
+    Each plane redshift corresponds to a unique redshift in the list of galaxies, such that the returned list of
+    redshifts contains no duplicate values. This means multiple galaxies at the same redshift are assigned to the
+    same plane.
+
+    If the plane redshifts are not input, the redshifts of the galaxies are used to determine the unique redshifts of
+    the planes.
+
+    For example, if the input is three galaxies, two at redshift 1.0 and one at redshift 2.0, the returned list of
+    list of galaxies would be [[g1, g2], g3]].
+
+    Parameters
+    ----------
+    galaxies
+        The list of galaxies used to determine the unique redshifts of the planes.
+    plane_redshifts
+        The redshifts of the planes, which are used to group the galaxies into their respective planes. If not input,
+        the redshifts of the galaxies are used to determine the unique redshifts of the planes.
+
+    Returns
+    -------
+    The list of list of galaxies grouped into their planes.
+    """
+
+    galaxies_ascending_redshift = sorted(galaxies, key=lambda galaxy: galaxy.redshift)
+
+    if plane_redshifts is None:
+        plane_redshifts = plane_redshifts_from(galaxies=galaxies_ascending_redshift)
+
+    planes = [[] for i in range(len(plane_redshifts))]
+
+    for galaxy in galaxies_ascending_redshift:
+        index = (np.abs(np.asarray(plane_redshifts) - galaxy.redshift)).argmin()
+        planes[index].append(galaxy)
+
+    return planes
+
 
 
 def ordered_plane_redshifts_from(galaxies):
