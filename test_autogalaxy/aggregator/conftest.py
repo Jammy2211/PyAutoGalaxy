@@ -66,10 +66,12 @@ def make_model():
 
 @pytest.fixture(name="samples")
 def make_samples(model):
-    galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(centre=(0.0, 1.0)))
-    galaxy_1 = ag.Galaxy(redshift=1.0, light=ag.lp.Sersic())
+    # galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(centre=(0.0, 1.0)))
+    # galaxy_1 = ag.Galaxy(redshift=1.0, light=ag.lp.Sersic())
+    #
+    # galaxies = ag.Galaxies(galaxies=[galaxy_0, galaxy_1])
 
-    plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
+    instance = model.instance_from_prior_medians()
 
     parameters = [model.prior_count * [1.0], model.prior_count * [10.0]]
 
@@ -84,6 +86,6 @@ def make_samples(model):
     return ag.m.MockSamples(
         model=model,
         sample_list=sample_list,
-        max_log_likelihood_instance=plane,
+        max_log_likelihood_instance=instance,
         prior_means=[1.0] * model.prior_count,
     )

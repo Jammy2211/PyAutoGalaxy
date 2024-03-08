@@ -2,10 +2,10 @@ import autogalaxy as ag
 
 from test_autogalaxy.aggregator.conftest import clean, aggregator_from
 
-database_file = "db_plane"
+database_file = "db_galaxies"
 
 
-def test__plane_randomly_drawn_via_pdf_gen_from(
+def test__galaxies_randomly_drawn_via_pdf_gen_from(
     masked_imaging_7x7,
     samples,
     model,
@@ -21,25 +21,26 @@ def test__plane_randomly_drawn_via_pdf_gen_from(
         samples=samples,
     )
 
-    plane_agg = ag.agg.GalaxiesAgg(aggregator=agg)
-    plane_pdf_gen = plane_agg.randomly_drawn_via_pdf_gen_from(total_samples=2)
+    galaxies_agg = ag.agg.GalaxiesAgg(aggregator=agg)
+    galaxies_pdf_gen = galaxies_agg.randomly_drawn_via_pdf_gen_from(total_samples=2)
 
     i = 0
 
-    for plane_gen in plane_pdf_gen:
-        for plane_list in plane_gen:
+    for galaxies_gen in galaxies_pdf_gen:
+        for galaxy_list in galaxies_gen:
+
             i += 1
 
-            assert plane_list[0].galaxies[0].redshift == 0.5
-            assert plane_list[0].galaxies[0].light.centre == (10.0, 10.0)
-            assert plane_list[0].galaxies[1].redshift == 1.0
+            assert galaxy_list[0].g0.redshift == 0.5
+            assert galaxy_list[0].g0.light.centre == (10.0, 10.0)
+            assert galaxy_list[0].g1.redshift == 1.0
 
     assert i == 2
 
     clean(database_file=database_file)
 
 
-def test__plane_all_above_weight_gen(
+def test__galaxies_all_above_weight_gen(
     masked_imaging_7x7,
     samples,
     model,
@@ -55,25 +56,25 @@ def test__plane_all_above_weight_gen(
         samples=samples,
     )
 
-    plane_agg = ag.agg.GalaxiesAgg(aggregator=agg)
-    plane_pdf_gen = plane_agg.all_above_weight_gen_from(minimum_weight=-1.0)
-    weight_pdf_gen = plane_agg.weights_above_gen_from(minimum_weight=-1.0)
+    galaxies_agg = ag.agg.GalaxiesAgg(aggregator=agg)
+    galaxies_pdf_gen = galaxies_agg.all_above_weight_gen_from(minimum_weight=-1.0)
+    weight_pdf_gen = galaxies_agg.weights_above_gen_from(minimum_weight=-1.0)
 
     i = 0
 
-    for plane_gen, weight_gen in zip(plane_pdf_gen, weight_pdf_gen):
-        for plane_list in plane_gen:
+    for galaxies_gen, weight_gen in zip(galaxies_pdf_gen, weight_pdf_gen):
+        for galaxy_list in galaxies_gen:
             i += 1
 
             if i == 1:
-                assert plane_list[0].galaxies[0].redshift == 0.5
-                assert plane_list[0].galaxies[0].light.centre == (1.0, 1.0)
-                assert plane_list[0].galaxies[1].redshift == 1.0
+                assert galaxy_list[0].g0.redshift == 0.5
+                assert galaxy_list[0].g0.light.centre == (1.0, 1.0)
+                assert galaxy_list[0].g1.redshift == 1.0
 
             if i == 2:
-                assert plane_list[0].galaxies[0].redshift == 0.5
-                assert plane_list[0].galaxies[0].light.centre == (10.0, 10.0)
-                assert plane_list[0].galaxies[1].redshift == 1.0
+                assert galaxy_list[0].g0.redshift == 0.5
+                assert galaxy_list[0].g0.light.centre == (10.0, 10.0)
+                assert galaxy_list[0].g1.redshift == 1.0
 
         for weight in weight_gen:
             if i == 0:

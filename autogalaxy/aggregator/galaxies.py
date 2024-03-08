@@ -40,8 +40,15 @@ def _galaxies_from(fit: af.Fit, instance: af.ModelInstance) -> List[Galaxy]:
 
     if instance is not None:
         galaxies = instance.galaxies
+
+        if hasattr(instance, "clumps"):
+            galaxies = galaxies + fit.instance.clumps
+
     else:
         galaxies = fit.instance.galaxies
+
+        if hasattr(fit.instance, "clumps"):
+            galaxies = galaxies + fit.instance.clumps
 
     if len(fit.children) > 0:
         logger.info(
@@ -106,5 +113,4 @@ class GalaxiesAgg(af.AggBase):
             A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
             randomly from the PDF).
         """
-
         return _galaxies_from(fit=fit, instance=instance)
