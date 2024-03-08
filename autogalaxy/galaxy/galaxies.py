@@ -190,6 +190,49 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
 
         return cls_list
 
+    def extract_attribute(self, cls, attr_name):
+        """
+        Returns an attribute of a class in `Plane` as a `ValueIrregular` or `Grid2DIrregular` object.
+
+        For example, if a plane has a galaxy which two light profiles and we want its axis-ratios, the following:
+
+        `plane.extract_attribute(cls=LightProfile, name="axis_ratio")`
+
+        would return:
+
+        ArrayIrregular(values=[axis_ratio_0, axis_ratio_1])
+
+        If a galaxy has three mass profiles and we want their centres, the following:
+
+        `plane.extract_attribute(cls=MassProfile, name="centres")`
+
+        would return:
+
+        GridIrregular2D(grid=[(centre_y_0, centre_x_0), (centre_y_1, centre_x_1), (centre_y_2, centre_x_2)])
+
+        This is used for visualization, for example plotting the centres of all mass profiles colored by their profile.
+        """
+
+        def extract(value, name):
+            try:
+                return getattr(value, name)
+            except (AttributeError, IndexError):
+                return None
+
+        attributes = [
+            extract(value, attr_name)
+            for galaxy in self
+            for value in galaxy.__dict__.values()
+            if isinstance(value, cls)
+        ]
+
+        if attributes == []:
+            return None
+        elif isinstance(attributes[0], float):
+            return aa.ArrayIrregular(values=attributes)
+        elif isinstance(attributes[0], tuple):
+            return aa.Grid2DIrregular(values=attributes)
+
     @property
     def perform_inversion(self) -> bool:
         """

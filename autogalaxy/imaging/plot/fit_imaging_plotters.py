@@ -230,7 +230,7 @@ class FitImagingPlotter(Plotter):
             )
             self.figures_2d_of_galaxies(galaxy_index=galaxy_index, model_image=True)
 
-            if self.plane.has(cls=aa.Pixelization):
+            if self.galaxies.has(cls=aa.Pixelization):
                 self.inversion_plotter.figures_2d_of_pixelization(
                     pixelization_index=0, reconstruction=True
                 )

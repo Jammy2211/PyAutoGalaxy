@@ -56,9 +56,9 @@ def test___linear_light_profiles_in_result(analysis_imaging_7x7):
     result = ResultImaging(samples=samples, analysis=analysis_imaging_7x7)
 
     assert not isinstance(
-        result.max_log_likelihood_galaxies.galaxies[0].bulge,
+        result.max_log_likelihood_galaxies[0].bulge,
         ag.lp_linear.LightProfileLinear,
     )
-    assert result.max_log_likelihood_galaxies.galaxies[0].bulge.intensity == pytest.approx(
+    assert result.max_log_likelihood_galaxies[0].bulge.intensity == pytest.approx(
         0.0054343, 1.0e-4
     )

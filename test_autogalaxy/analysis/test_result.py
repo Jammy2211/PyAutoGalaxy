@@ -32,8 +32,8 @@ def test__max_log_likelihood_galaxies_available_as_result(analysis_imaging_7x7):
     result = search.fit(model=model, analysis=analysis_imaging_7x7)
 
     assert isinstance(result.max_log_likelihood_galaxies, ag.Plane)
-    assert result.max_log_likelihood_galaxies.galaxies[0].light.intensity == 1.0
-    assert result.max_log_likelihood_galaxies.galaxies[1].light.intensity == 2.0
+    assert result.max_log_likelihood_galaxies[0].light.intensity == 1.0
+    assert result.max_log_likelihood_galaxies[1].light.intensity == 2.0
 
 
 def test__results_include_pixelization__available_as_property(analysis_imaging_7x7):
