@@ -39,9 +39,9 @@ def test__figure_of_merit__matches_correct_fit_given_galaxy_profiles(
     instance = model.instance_from_unit_vector([])
     fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
 
-    plane = analysis.plane_via_instance_from(instance=instance)
+    galaxies = analysis.galaxies_via_instance_from(instance=instance)
 
-    fit = ag.FitImaging(dataset=masked_imaging_7x7, plane=plane)
+    fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=galaxies)
 
     assert fit.log_likelihood == fit_figure_of_merit
 
