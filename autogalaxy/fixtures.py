@@ -1,5 +1,6 @@
 from autoarray.fixtures import *
 
+import autofit as af
 import autogalaxy as ag
 import autogalaxy.plot as aplt
 
@@ -241,12 +242,14 @@ def make_fit_interferometer_x2_galaxy_inversion_7x7():
 
 
 def make_samples_with_result():
-    galaxies = [
-        ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0)),
-        ag.Galaxy(redshift=1.0, light=ag.lp.Sersic(intensity=2.0)),
-    ]
 
-    return ag.m.MockSamples(max_log_likelihood_instance=galaxies)
+    galaxy = af.Model(ag.Galaxy, redshift=0.5, bulge=af.Model(ag.lp.Sersic))
+
+    model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
+
+    instance = model.instance_from_prior_medians()
+
+    return ag.m.MockSamples(max_log_likelihood_instance=instance)
 
 
 def make_analysis_imaging_7x7():
