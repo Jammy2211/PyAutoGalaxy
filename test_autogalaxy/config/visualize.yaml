@@ -402,7 +402,7 @@ plots:
     normalized_residual_map: true
     residual_map: false
     subplot_fit: true
-  galaxies:
+  galaxies_1d:
     convergence: false
     image: true
     potential: true
@@ -433,7 +433,7 @@ plots:
     subplot_inversion: true
   other:
     stochastic_histogram: false
-  plane:
+  galaxies:
     all_at_end_fits: true
     all_at_end_png: false
     convergence: true

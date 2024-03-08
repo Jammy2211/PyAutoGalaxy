@@ -8,7 +8,9 @@ import autoarray.plot as aplt
 
 from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.galaxy.plot.galaxy_plotters import GalaxyPlotter
+from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
 from autogalaxy.galaxy.plot.adapt_plotters import AdaptPlotter
 
 from autogalaxy.plot.include.two_d import Include2D
@@ -231,6 +233,8 @@ class Visualizer:
             Whether visualization is performed during a non-linear search or once it is completed.
         """
 
+        galaxies = Galaxies(galaxies=galaxies)
+
         def should_plot(name):
             return plot_setting(section="galaxies", name=name)
 
@@ -238,8 +242,8 @@ class Visualizer:
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders=subfolders)
 
-        plotter = GalaxyPlotter(
-            plane=plane, grid=grid, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+        plotter = GalaxiesPlotter(
+            galaxies=galaxies, grid=grid, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
         if should_plot("subplot_galaxy_images"):
@@ -260,7 +264,7 @@ class Visualizer:
             )
 
             plotter = GalaxiesPlotter(
-                plane=plane,
+                galaxies=galaxies,
                 grid=grid,
                 mat_plot_2d=mat_plot_2d,
                 include_2d=self.include_2d,
@@ -278,7 +282,7 @@ class Visualizer:
         mat_plot_2d = self.mat_plot_2d_from(subfolders="")
 
         plotter = GalaxiesPlotter(
-            plane=plane, grid=grid, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+            galaxies=galaxies, grid=grid, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
         if should_plot("subplot_galaxies"):
@@ -290,7 +294,7 @@ class Visualizer:
             )
 
             plotter = GalaxiesPlotter(
-                plane=plane,
+                galaxies=galaxies,
                 grid=grid,
                 mat_plot_2d=mat_plot_2d,
                 include_2d=self.include_2d,
@@ -333,9 +337,9 @@ class Visualizer:
         """
 
         def should_plot(name):
-            return plot_setting(section="galaxies", name=name)
+            return plot_setting(section="galaxies_1d", name=name)
 
-        mat_plot_1d = self.mat_plot_1d_from(subfolders="galaxies")
+        mat_plot_1d = self.mat_plot_1d_from(subfolders="galaxies_1d")
 
         for galaxy in galaxies:
             galaxy_plotter = GalaxyPlotter(
@@ -509,6 +513,7 @@ class Visualizer:
         galaxies
             The maximum log likelihood galaxies of the non-linear search which is used to plot the contribution maps.
         """
+        galaxies = Galaxies(galaxies=galaxies)
 
         def should_plot(name):
             return plot_setting(section="adapt", name=name)
