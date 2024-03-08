@@ -137,7 +137,7 @@ and `PyNUFFT` [@pynufft].
     We can use the Grid2D and Plane to perform many calculations, for example
     plotting the image of the lensed source.
     """
-    plane_plotter = aplt.PlanePlotter(plane=plane, grid=grid)
+    plane_plotter = aplt.GalaxiesPlotter(plane=plane, grid=grid)
     plane_plotter.figures_2d(image=True)
 
 

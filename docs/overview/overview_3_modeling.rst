@@ -353,8 +353,8 @@ plotted.
 
 .. code-block:: python
 
-    plane_plotter = aplt.PlanePlotter(plane=result.max_log_likelihood_plane, grid=mask.derive_grid.masked)
-    plane_plotter.subplot_plane()
+    plane_plotter = aplt.GalaxiesPlotter(plane=result.max_log_likelihood_galaxies, grid=mask.derive_grid.masked)
+    plane_plotter.subplot_galaxies()
 
     fit_plotter = aplt.FitImagingPlotter(fit=result.max_log_likelihood_fit)
     fit_plotter.subplot_fit()

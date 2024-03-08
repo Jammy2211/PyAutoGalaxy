@@ -114,10 +114,10 @@ class AnalysisQuantity(Analysis):
             The fit of the plane to the imaging dataset, which includes the log likelihood.
         """
 
-        plane = self.plane_via_instance_from(instance=instance)
+        galaxies = self.galaxies_via_instance_from(instance=instance)
 
         return FitQuantity(
-            dataset=self.dataset, light_mass_obj=plane, func_str=self.func_str
+            dataset=self.dataset, light_mass_obj=galaxies, func_str=self.func_str
         )
 
     def visualize(

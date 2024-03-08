@@ -51,7 +51,7 @@ class ResultInterferometer(ResultDataset):
         return self.analysis.fit_from(instance=self.instance)
 
     @property
-    def max_log_likelihood_plane(self) -> Plane:
+    def max_log_likelihood_galaxies(self) -> Plane:
         """
         An instance of a `Plane` corresponding to the maximum log likelihood model inferred by the non-linear search.
 

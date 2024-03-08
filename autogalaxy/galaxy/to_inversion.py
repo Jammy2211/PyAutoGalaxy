@@ -89,7 +89,7 @@ class AbstractToInversion:
         return [linear_obj.regularization for linear_obj in self.linear_obj_list]
 
 
-class PlaneToInversion(AbstractToInversion):
+class GalaxiesToInversion(AbstractToInversion):
     def __init__(
         self,
         plane: Plane,
@@ -138,6 +138,9 @@ class PlaneToInversion(AbstractToInversion):
             self.grid_pixelization = dataset.grid_pixelization
         else:
             self.grid_pixelization = None
+
+    def galaxies_with_cls_list_from(self, cls: Type) -> List[Galaxy]:
+        return list(filter(lambda galaxy: galaxy.has(cls=cls), self.galaxies))
 
     def cls_light_profile_func_list_galaxy_dict_from(
         self, cls: Type

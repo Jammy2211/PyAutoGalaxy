@@ -178,9 +178,7 @@ class AnalysisInterferometer(AnalysisDataset):
         FitInterferometer
             The fit of the plane to the interferometer dataset, which includes the log likelihood.
         """
-        plane = self.plane_via_instance_from(
-            instance=instance, run_time_dict=run_time_dict
-        )
+        galaxies = self.galaxies_via_instance_from(instance=instance)
 
         adapt_images = self.adapt_images_via_instance_from(instance=instance)
 
@@ -188,7 +186,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
         return FitInterferometer(
             dataset=self.dataset,
-            plane=plane,
+            galaxies=galaxies,
             adapt_images=adapt_images,
             settings_inversion=self.settings_inversion,
             preloads=preloads,

@@ -24,17 +24,6 @@ class GalaxyException(Exception):
     pass
 
 
-class PlaneException(Exception):
-    """
-    Raises exceptions associated with the `plane` module and `Galaxy` class.
-
-    For example if no galaxies or redshifts are input into a plane, such that the plane does not know its redshift
-    relative to other planes.
-    """
-
-    pass
-
-
 class AnalysisException(Exception):
     """
     Raises exceptions associated with the `analysis` modules in the `model` packages and `Analysis` classes.
@@ -106,11 +95,11 @@ def raise_linear_light_profile_in_plot(
         `Tracer` with these converted light profiles.
 
         If you are using PyAutoGalaxy, you should instead use
-        `fit.plane_linear_light_profiles_to_light_profiles` to access a
-        `Plane` with these converted light profiles.
+        `fit.galaxies_linear_light_profiles_to_light_profiles` to access
+        `Galaxy` objects with these converted light profiles.
              
         If you are using database functionality and creating tracers
-        via the `TracerAgg` object or `PlaneAgg` object, you should 
+        via the `TracerAgg` object or `GalaxiesAgg` object, you should 
         instead use the `FitImagingAgg` object to create `FitImaging` 
         objects.
         

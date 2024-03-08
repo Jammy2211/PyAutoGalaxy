@@ -7,7 +7,7 @@ import autogalaxy as ag
 def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
+    plane_to_inversion = ag.GalaxiesToInversion(plane=plane, dataset=masked_imaging_7x7)
 
     lp_linear_func_galaxy_dict = plane_to_inversion.lp_linear_func_list_galaxy_dict
 
@@ -25,7 +25,7 @@ def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_0, galaxy_1], redshift=None)
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
+    plane_to_inversion = ag.GalaxiesToInversion(plane=plane, dataset=masked_imaging_7x7)
 
     lp_linear_func_galaxy_dict = plane_to_inversion.lp_linear_func_list_galaxy_dict
 
@@ -45,7 +45,7 @@ def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_0, galaxy_1], redshift=None)
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
+    plane_to_inversion = ag.GalaxiesToInversion(plane=plane, dataset=masked_imaging_7x7)
 
     lp_linear_func_galaxy_dict = plane_to_inversion.lp_linear_func_list_galaxy_dict
 
@@ -68,7 +68,7 @@ def test__image_plane_mesh_grid_list(masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_pix], redshift=0.5)
 
-    plane_to_inversion = ag.PlaneToInversion(
+    plane_to_inversion = ag.GalaxiesToInversion(
         plane=plane,
         dataset=masked_imaging_7x7,
     )
@@ -86,7 +86,7 @@ def test__image_plane_mesh_grid_list(masked_imaging_7x7):
 
     adapt_images = ag.AdaptImages(galaxy_image_dict={galaxy_pix: 2})
 
-    plane_to_inversion = ag.PlaneToInversion(
+    plane_to_inversion = ag.GalaxiesToInversion(
         plane=plane, dataset=masked_imaging_7x7, adapt_images=adapt_images
     )
 
@@ -100,7 +100,7 @@ def test__image_plane_mesh_grid_list(masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_no_pix], redshift=0.5)
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
+    plane_to_inversion = ag.GalaxiesToInversion(plane=plane, dataset=masked_imaging_7x7)
 
     image_plane_mesh_grid_list = plane_to_inversion.image_plane_mesh_grid_list
 
@@ -117,7 +117,7 @@ def test__mapper_galaxy_dict(masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_no_pix, galaxy_pix], redshift=0.5)
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
+    plane_to_inversion = ag.GalaxiesToInversion(plane=plane, dataset=masked_imaging_7x7)
 
     mapper_galaxy_dict = plane_to_inversion.mapper_galaxy_dict
 
@@ -136,7 +136,7 @@ def test__mapper_galaxy_dict(masked_imaging_7x7):
         galaxies=[galaxy_no_pix, galaxy_pix, galaxy_no_pix, galaxy_pix_2], redshift=0.5
     )
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
+    plane_to_inversion = ag.GalaxiesToInversion(plane=plane, dataset=masked_imaging_7x7)
 
     mapper_galaxy_dict = plane_to_inversion.mapper_galaxy_dict
 
@@ -152,7 +152,7 @@ def test__mapper_galaxy_dict(masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_no_pix], redshift=0.5)
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
+    plane_to_inversion = ag.GalaxiesToInversion(plane=plane, dataset=masked_imaging_7x7)
 
     mapper_galaxy_dict = plane_to_inversion.mapper_galaxy_dict
 
@@ -178,7 +178,7 @@ def test__regularization_list(masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_0, galaxy_1, galaxy_2])
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
+    plane_to_inversion = ag.GalaxiesToInversion(plane=plane, dataset=masked_imaging_7x7)
 
     regularization_list = plane_to_inversion.regularization_list
 
@@ -197,7 +197,7 @@ def test__regularization_list(masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[galaxy_0, galaxy_1, galaxy_3])
 
-    plane_to_inversion = ag.PlaneToInversion(plane=plane, dataset=masked_imaging_7x7)
+    plane_to_inversion = ag.GalaxiesToInversion(plane=plane, dataset=masked_imaging_7x7)
 
     regularization_list = plane_to_inversion.regularization_list
 
@@ -211,7 +211,7 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g_linear])
 
-    plane_to_inversion = ag.PlaneToInversion(
+    plane_to_inversion = ag.GalaxiesToInversion(
         plane=plane,
         dataset=masked_imaging_7x7,
         data=masked_imaging_7x7.data,
@@ -233,7 +233,7 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
-    plane_to_inversion = ag.PlaneToInversion(
+    plane_to_inversion = ag.GalaxiesToInversion(
         plane=plane,
         dataset=masked_imaging_7x7,
         data=masked_imaging_7x7.data,
@@ -254,7 +254,7 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g_linear])
 
-    plane_to_inversion = ag.PlaneToInversion(
+    plane_to_inversion = ag.GalaxiesToInversion(
         plane=plane,
         dataset=interferometer_7,
         data=interferometer_7.visibilities,
@@ -280,7 +280,7 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
 
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5), g0])
 
-    plane_to_inversion = ag.PlaneToInversion(
+    plane_to_inversion = ag.GalaxiesToInversion(
         plane=plane,
         dataset=interferometer_7,
         data=interferometer_7.visibilities,
@@ -302,4 +302,4 @@ def test__raises_exception_if_noise_covariance_input(masked_imaging_covariance_7
     plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5)], redshift=None)
 
     with pytest.raises(ag.exc.InversionException):
-        ag.PlaneToInversion(plane=plane, dataset=masked_imaging_covariance_7x7)
+        ag.GalaxiesToInversion(plane=plane, dataset=masked_imaging_covariance_7x7)

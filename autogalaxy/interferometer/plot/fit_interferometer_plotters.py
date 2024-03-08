@@ -13,7 +13,7 @@ from autogalaxy.plot.visuals.two_d import Visuals2D
 from autogalaxy.plot.include.one_d import Include1D
 from autogalaxy.plot.include.two_d import Include2D
 
-from autogalaxy.plane.plot.plane_plotters import PlanePlotter
+from autogalaxy.plane.plot.plane_plotters import GalaxiesPlotter
 
 
 class FitInterferometerPlotter(Plotter):
@@ -98,16 +98,16 @@ class FitInterferometerPlotter(Plotter):
     def plane(self) -> Plane:
         return self.fit.plane_linear_light_profiles_to_light_profiles
 
-    def plane_plotter_from(self, plane: Plane) -> PlanePlotter:
+    def plane_plotter_from(self, plane: Plane) -> GalaxiesPlotter:
         """
-        Returns an `PlanePlotter` corresponding to an input `Plane` of the fit.
+        Returns an `GalaxiesPlotter` corresponding to an input `Plane` of the fit.
 
         Returns
         -------
         plane
-            The plane used to make the `PlanePlotter`.
+            The plane used to make the `GalaxiesPlotter`.
         """
-        return PlanePlotter(
+        return GalaxiesPlotter(
             plane=plane,
             grid=self.fit.dataset.grid,
             mat_plot_2d=self.mat_plot_2d,

@@ -10,7 +10,7 @@ from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
-from autogalaxy.plane.to_inversion import PlaneToInversion
+from autogalaxy.plane.to_inversion import GalaxiesToInversion
 
 
 class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
@@ -105,8 +105,8 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         return self.visibilities - self.profile_visibilities
 
     @property
-    def plane_to_inversion(self) -> PlaneToInversion:
-        return PlaneToInversion(
+    def plane_to_inversion(self) -> GalaxiesToInversion:
+        return GalaxiesToInversion(
             plane=self.plane,
             dataset=self.dataset,
             data=self.profile_subtracted_visibilities,

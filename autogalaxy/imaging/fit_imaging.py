@@ -10,7 +10,7 @@ from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plane.plane import Plane
-from autogalaxy.plane.to_inversion import PlaneToInversion
+from autogalaxy.plane.to_inversion import GalaxiesToInversion
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.profiles.light.operated.abstract import LightProfileOperated
@@ -136,8 +136,8 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         return self.blurred_image
 
     @property
-    def plane_to_inversion(self) -> PlaneToInversion:
-        return PlaneToInversion(
+    def plane_to_inversion(self) -> GalaxiesToInversion:
+        return GalaxiesToInversion(
             plane=self.plane,
             dataset=self.dataset,
             data=self.profile_subtracted_image,

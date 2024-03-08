@@ -10,8 +10,6 @@ from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.plot.galaxy_plotters import GalaxyPlotter
 from autogalaxy.galaxy.plot.adapt_plotters import AdaptPlotter
-from autogalaxy.plane.plane import Plane
-from autogalaxy.plane.plot.plane_plotters import PlanePlotter
 
 from autogalaxy.plot.include.two_d import Include2D
 from autogalaxy.plot.mat_plot.one_d import MatPlot1D
@@ -206,26 +204,26 @@ class Visualizer:
         if should_plot("subplot_dataset"):
             dataset_plotter.subplot_dataset()
 
-    def visualize_plane(
-        self, plane: Plane, grid: aa.type.Grid2DLike, during_analysis: bool
+    def visualize_galaxies(
+        self, galaxies: List[Galaxy], grid: aa.type.Grid2DLike, during_analysis: bool
     ):
         """
-        Visualizes a `Plane` object.
+        Visualizes a list of galaxies.
 
-        Images are output to the `image` folder of the `visualize_path` in a subfolder called `plane`. When
+        Images are output to the `image` folder of the `visualize_path` in a subfolder called `galaxies`. When
         used with a non-linear search the `visualize_path` points to the search's results folder and this function
-        visualizes the maximum log likelihood `Plane` inferred by the search so far.
+        visualizes the maximum log likelihood galaxies inferred by the search so far.
 
-        Visualization includes individual images of attributes of the plane (e.g. its image, convergence, deflection
+        Visualization includes individual images of attributes of the galaxies (e.g. its image, convergence, deflection
         angles) and a subplot of all these attributes on the same figure.
 
         The images output by the `Visualizer` are customized using the file `config/visualize/plots.ini` under the
-        [plane] header.
+        [galaxies] header.
 
         Parameters
         ----------
-        plane
-            The maximum log likelihood `Plane` of the non-linear search.
+        galaxies
+            The maximum log likelihood galaxies of the non-linear search.
         grid
             A 2D grid of (y,x) arc-second coordinates used to perform ray-tracing, which is the masked grid tied to
             the dataset.
@@ -234,20 +232,20 @@ class Visualizer:
         """
 
         def should_plot(name):
-            return plot_setting(section="plane", name=name)
+            return plot_setting(section="galaxies", name=name)
 
-        subfolders = "plane"
+        subfolders = "galaxies"
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders=subfolders)
 
-        plane_plotter = PlanePlotter(
+        plotter = GalaxyPlotter(
             plane=plane, grid=grid, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
         if should_plot("subplot_galaxy_images"):
-            plane_plotter.subplot_galaxy_images()
+            plotter.subplot_galaxy_images()
 
-        plane_plotter.figures_2d(
+        plotter.figures_2d(
             image=should_plot("image"),
             convergence=should_plot("convergence"),
             potential=should_plot("potential"),
@@ -261,14 +259,14 @@ class Visualizer:
                 subfolders=path.join(subfolders, "end"),
             )
 
-            plane_plotter = PlanePlotter(
+            plotter = GalaxiesPlotter(
                 plane=plane,
                 grid=grid,
                 mat_plot_2d=mat_plot_2d,
                 include_2d=self.include_2d,
             )
 
-            plane_plotter.figures_2d(
+            plotter.figures_2d(
                 image=True,
                 convergence=True,
                 potential=True,
@@ -279,26 +277,26 @@ class Visualizer:
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="")
 
-        plane_plotter = PlanePlotter(
+        plotter = GalaxiesPlotter(
             plane=plane, grid=grid, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
-        if should_plot("subplot_plane"):
-            plane_plotter.subplot()
+        if should_plot("subplot_galaxies"):
+            plotter.subplot()
 
         if not during_analysis and should_plot("all_at_end_fits"):
             mat_plot_2d = self.mat_plot_2d_from(
                 subfolders=path.join(subfolders, "fits"), format="fits"
             )
 
-            plane_plotter = PlanePlotter(
+            plotter = GalaxiesPlotter(
                 plane=plane,
                 grid=grid,
                 mat_plot_2d=mat_plot_2d,
                 include_2d=self.include_2d,
             )
 
-            plane_plotter.figures_2d(
+            plotter.figures_2d(
                 image=True,
                 convergence=True,
                 potential=True,
@@ -307,7 +305,7 @@ class Visualizer:
                 magnification=True,
             )
 
-    def visualize_galaxies(
+    def visualize_galaxies_1d(
         self, galaxies: [List[Galaxy]], grid: aa.type.Grid2DLike, during_analysis: bool
     ):
         """

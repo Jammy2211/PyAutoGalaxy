@@ -11,16 +11,16 @@ from autogalaxy.plot.visuals.two_d import Visuals2D
 from autogalaxy.plot.include.one_d import Include1D
 from autogalaxy.plot.include.two_d import Include2D
 from autogalaxy.plot.mass_plotter import MassPlotter
+from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.plot.galaxy_plotters import GalaxyPlotter
 
 from autogalaxy import exc
-from autogalaxy.plane.plane import Plane
 
 
-class PlanePlotter(Plotter):
+class GalaxiesPlotter(Plotter):
     def __init__(
         self,
-        plane: Plane,
+        galaxies: List[Galaxy],
         grid: aa.type.Grid1D2DLike,
         mat_plot_1d: MatPlot1D = MatPlot1D(),
         visuals_1d: Visuals1D = Visuals1D(),
@@ -30,7 +30,7 @@ class PlanePlotter(Plotter):
         include_2d: Include2D = Include2D(),
     ):
         """
-        Plots the attributes of `Plane` objects using the matplotlib methods `plot()` and `imshow()` and many
+        Plots the attributes of a list of galaxies using the matplotlib methods `plot()` and `imshow()` and many
         other matplotlib functions which customize the plot's appearance.
 
         The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default,
@@ -44,10 +44,10 @@ class PlanePlotter(Plotter):
 
         Parameters
         ----------
-        plane
-            The plane the plotter plots.
+        galaxies
+            The galaxies the plotter plots.
         grid
-            The 2D (y,x) grid of coordinates used to evaluate the plane's light and mass quantities that are plotted.
+            The 2D (y,x) grid of coordinates used to evaluate the galaxies light and mass quantities that are plotted.
         mat_plot_1d
             Contains objects which wrap the matplotlib function calls that make 1D plots.
         visuals_1d
@@ -66,10 +66,11 @@ class PlanePlotter(Plotter):
             LightProfileLinear,
         )
 
-        if plane.has(cls=LightProfileLinear):
-            raise exc.raise_linear_light_profile_in_plot(
-                plotter_type=self.__class__.__name__,
-            )
+        for galaxy in galaxies:
+            if galaxy.has(cls=LightProfileLinear):
+                raise exc.raise_linear_light_profile_in_plot(
+                    plotter_type=self.__class__.__name__,
+                )
 
         super().__init__(
             mat_plot_2d=mat_plot_2d,
@@ -80,11 +81,12 @@ class PlanePlotter(Plotter):
             visuals_1d=visuals_1d,
         )
 
-        self.plane = plane
+        self.galaxies = galaxies
+
         self.grid = grid
 
         self._mass_plotter = MassPlotter(
-            mass_obj=self.plane,
+            mass_obj=self.galaxies,
             grid=self.grid,
             get_visuals_2d=self.get_visuals_2d,
             mat_plot_2d=self.mat_plot_2d,
@@ -94,12 +96,12 @@ class PlanePlotter(Plotter):
 
     def get_visuals_2d(self) -> Visuals2D:
         return self.get_2d.via_light_mass_obj_from(
-            light_mass_obj=self.plane, grid=self.grid
+            light_mass_obj=self.galaxies, grid=self.grid
         )
 
     def get_visuals_2d_of_galaxy(self, galaxy_index: int) -> aplt.Visuals2D:
-        return self.get_2d.via_plane_from(
-            plane=self.plane, grid=self.grid, galaxy_index=galaxy_index
+        return self.get_2d.via_galaxies_from(
+            galaxies=self.galaxies, grid=self.grid, galaxy_index=galaxy_index
         )
 
     def galaxy_plotter_from(self, galaxy_index: int) -> GalaxyPlotter:
@@ -113,7 +115,7 @@ class PlanePlotter(Plotter):
         """
 
         return GalaxyPlotter(
-            galaxy=self.plane.galaxies[galaxy_index],
+            galaxy=self.galaxies[galaxy_index],
             grid=self.grid,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.get_visuals_2d_of_galaxy(galaxy_index=galaxy_index),
@@ -123,8 +125,6 @@ class PlanePlotter(Plotter):
     def figures_2d(
         self,
         image: bool = False,
-        plane_image: bool = False,
-        plane_grid: bool = False,
         convergence: bool = False,
         potential: bool = False,
         deflections_y: bool = False,
@@ -133,23 +133,18 @@ class PlanePlotter(Plotter):
         zoom_to_brightest: bool = True,
         title_suffix: str = "",
         filename_suffix: str = "",
-        source_plane_title: bool = False,
     ):
         """
-        Plots the individual attributes of the plotter's `Plane` object in 2D, which are computed via the plotter's 2D
+        Plots the individual attributes of the plotter's `Galaxies` object in 2D, which are computed via the plotter's 2D
         grid object.
 
-        The API is such that every plottable attribute of the `Plane` object is an input parameter of type bool of
+        The API is such that every plottable attribute of the `Galaxies` object is an input parameter of type bool of
         the function, which if switched to `True` means that it is plotted.
 
         Parameters
         ----------
         image
-            Whether to make a 2D plot (via `imshow`) of the image of plane in its image-plane (e.g. after
-            lensing).
-        plane_image
-            Whether to make a 2D plot (via `imshow`) of the image of the plane in the soure-plane (e.g. its
-            unlensed light).
+            Whether to make a 2D plot (via `imshow`) of the image of the galaxies.
         convergence
             Whether to make a 2D plot (via `imshow`) of the convergence.
         potential
@@ -161,68 +156,91 @@ class PlanePlotter(Plotter):
         magnification
             Whether to make a 2D plot (via `imshow`) of the magnification.
         zoom_to_brightest
-            For images not in the image-plane (e.g. the `plane_image`), whether to automatically zoom the plot to
-            the brightest regions of the galaxies being plotted as opposed to the full extent of the grid.
+            Whether to automatically zoom the plot to the brightest regions of the galaxies being plotted as 
+            opposed to the full extent of the grid.
         title_suffix
             Add a suffix to the end of the matplotlib title label.
         filename_suffix
             Add a suffix to the end of the filename the plot is saved to hard-disk using.
-        source_plane_title
-            If `True`, the title of the plot is overwritten to read "source-plane image".
         """
         if image:
             self.mat_plot_2d.plot_array(
-                array=self.plane.image_2d_from(grid=self.grid),
+                array=sum([galaxy.image_2d_from(grid=self.grid) for galaxy in self.galaxies]),
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title=f"Image{title_suffix}", filename=f"image_2d{filename_suffix}"
                 ),
             )
 
-        if plane_image:
-            if source_plane_title:
-                title = "Source Plane Image"
-            else:
-                title = f"Plane Image{title_suffix}"
+        if convergence:
+            self.mat_plot_2d.plot_array(
+                array=sum([galaxy.convergence_2d_from(grid=self.grid) for galaxy in self.galaxies]),
+                visuals_2d=self.get_visuals_2d(),
+                auto_labels=aplt.AutoLabels(
+                    title=f"Convergence{title_suffix}",
+                    filename=f"convergence_2d{filename_suffix}",
+                    cb_unit="",
+                ),
+            )
+
+        if potential:
+            self.mat_plot_2d.plot_array(
+                array=sum([galaxy.potential_2d_from(grid=self.grid) for galaxy in self.galaxies]),
+                visuals_2d=self.get_visuals_2d(),
+                auto_labels=aplt.AutoLabels(
+                    title=f"Potential{title_suffix}",
+                    filename=f"potential_2d{filename_suffix}",
+                    cb_unit="",
+                ),
+            )
+
+        if deflections_y:
+            deflections = sum([galaxy.deflections_yx_2d_from(grid=self.grid) for galaxy in self.galaxies])
+            deflections_y = aa.Array2D(
+                values=deflections.slim[:, 0], mask=self.grid.mask
+            )
 
             self.mat_plot_2d.plot_array(
-                array=self.plane.plane_image_2d_from(
-                    grid=self.grid, zoom_to_brightest=zoom_to_brightest
-                ),
+                array=deflections_y,
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
-                    title=title,
-                    filename=f"plane_image{filename_suffix}",
+                    title=f"Deflections Y{title_suffix}",
+                    filename=f"deflections_y_2d{filename_suffix}",
+                    cb_unit="",
                 ),
             )
 
-        if plane_grid:
-            if source_plane_title:
-                title = "Source Plane Grid"
-            else:
-                title = f"Plane Grid{title_suffix}"
+        if deflections_x:
+            deflections = sum([galaxy.deflections_yx_2d_from(grid=self.grid) for galaxy in self.galaxies])
+            deflections_x = aa.Array2D(
+                values=deflections.slim[:, 1], mask=self.grid.mask
+            )
 
-            self.mat_plot_2d.plot_grid(
-                grid=self.grid,
+            self.mat_plot_2d.plot_array(
+                array=deflections_x,
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
-                    title=title,
-                    filename=f"plane_grid{filename_suffix}",
+                    title=f"Deflections X{title_suffix}",
+                    filename=f"deflections_x_2d{filename_suffix}",
+                    cb_unit="",
                 ),
             )
 
-        self._mass_plotter.figures_2d(
-            convergence=convergence,
-            potential=potential,
-            deflections_y=deflections_y,
-            deflections_x=deflections_x,
-            magnification=magnification,
-        )
+        if magnification:
+            self.mat_plot_2d.plot_array(
+                array=sum([galaxy.magnification_2d_from(grid=self.grid) for galaxy in self.galaxies]),
+                visuals_2d=self.get_visuals_2d(),
+                auto_labels=aplt.AutoLabels(
+                    title=f"Magnification{title_suffix}",
+                    filename=f"magnification_2d{filename_suffix}",
+                    cb_unit="",
+                ),
+            )
 
     def galaxy_indexes_from(self, galaxy_index: Optional[int]) -> List[int]:
         """
         Returns a list of all indexes of the galaxys in the fit, which is iterated over in figures that plot
-        individual figures of each galaxy in a plane.
+        individual figures of each galaxy.
 
         Parameters
         ----------
@@ -235,14 +253,14 @@ class PlanePlotter(Plotter):
             A list of galaxy indexes corresponding to galaxys in the galaxy.
         """
         if galaxy_index is None:
-            return list(range(len(self.plane.galaxies)))
+            return list(range(len(self.galaxies)))
         return [galaxy_index]
 
     def figures_2d_of_galaxies(
         self, image: bool = False, galaxy_index: Optional[int] = None
     ):
         """
-        Plots galaxy images for each individual `Galaxy` in the plotter's `Plane` in 2D,  which are computed via the
+        Plots galaxy images for each individual `Galaxy` in the plotter's `Galaxies` in 2D,  which are computed via the
         plotter's 2D grid object.
 
         The API is such that every plottable attribute of the `galaxy` object is an input parameter of type bool of
@@ -254,7 +272,7 @@ class PlanePlotter(Plotter):
             Whether to make a 2D plot (via `imshow`) of the image of the galaxy in the soure-galaxy (e.g. its
             unlensed light).
         galaxy_index
-            If input, plots for only a single galaxy based on its index in the plane are created.
+            If input, plots for only a single galaxy based on its index are created.
         """
         galaxy_indexes = self.galaxy_indexes_from(galaxy_index=galaxy_index)
 
@@ -271,47 +289,39 @@ class PlanePlotter(Plotter):
     def subplot(
         self,
         image: bool = False,
-        plane_image: bool = False,
-        plane_grid: bool = False,
         convergence: bool = False,
         potential: bool = False,
         deflections_y: bool = False,
         deflections_x: bool = False,
         magnification: bool = False,
-        auto_filename: str = "subplot_plane",
+        auto_filename: str = "subplot_galaxies",
     ):
         """
-        Plots the individual attributes of the plotter's `Plane` object in 2D on a subplot, which are computed via the
+        Plots the individual attributes of the plotter's `Galaxies` object in 2D on a subplot, which are computed via the
         plotter's 2D grid object.
 
-        The API is such that every plottable attribute of the `Plane` object is an input parameter of type bool of
+        The API is such that every plottable attribute of the `Galaxies` object is an input parameter of type bool of
         the function, which if switched to `True` means that it is included on the subplot.
 
         Parameters
         ----------
         image
-            Whether or not to  include a 2D plot (via `imshow`) of the image of plane in its image-plane (e.g. after
-            lensing).
-        plane_image
-            Whether or not to  include a 2D plot (via `imshow`) of the image of the plane in the soure-plane (e.g. its
-            unlensed light).
+            Whether or not to include a 2D plot (via `imshow`) of the image.
         convergence
-            Whether or not to  include a 2D plot (via `imshow`) of the convergence.
+            Whether or not to include a 2D plot (via `imshow`) of the convergence.
         potential
-            Whether or not to  include a 2D plot (via `imshow`) of the potential.
+            Whether or not to include a 2D plot (via `imshow`) of the potential.
         deflections_y
-            Whether or not to  include a 2D plot (via `imshow`) of the y component of the deflection angles.
+            Whether or not to include a 2D plot (via `imshow`) of the y component of the deflection angles.
         deflections_x
-            Whether or not to  include a 2D plot (via `imshow`) of the x component of the deflection angles.
+            Whether or not to include a 2D plot (via `imshow`) of the x component of the deflection angles.
         magnification
-            Whether or not to  include a 2D plot (via `imshow`) of the magnification.
+            Whether or not to include a 2D plot (via `imshow`) of the magnification.
         auto_filename
             The default filename of the output subplot if written to hard-disk.
         """
         self._subplot_custom_plot(
             image=image,
-            plane_image=plane_image,
-            plane_grid=plane_grid,
             convergence=convergence,
             potential=potential,
             deflections_y=deflections_y,
@@ -320,9 +330,9 @@ class PlanePlotter(Plotter):
             auto_labels=aplt.AutoLabels(filename=auto_filename),
         )
 
-    def subplot_plane(self):
+    def subplot_galaxies(self):
         """
-        Standard subplot of the attributes of the plotter's `Plane` object.
+        Standard subplot of the attributes of the plotter's `Galaxies` object.
         """
         return self.subplot(
             image=True,
@@ -334,18 +344,18 @@ class PlanePlotter(Plotter):
 
     def subplot_galaxy_images(self):
         """
-        Subplot of the image of every galaxy in the plane.
+        Subplot of the image of every galaxy.
 
-        For example, for a 2 galaxy `Plane`, this creates a subplot with 2 panels, one for each galaxy.
+        For example, for a 2 galaxy `Galaxies`, this creates a subplot with 2 panels, one for each galaxy.
         """
-        number_subplots = len(self.plane.galaxies)
+        number_subplots = len(self.alaxies)
 
         self.open_subplot_figure(number_subplots=number_subplots)
 
-        for galaxy_index in range(0, len(self.plane.galaxies)):
+        for galaxy_index in range(0, len(self.galaxies)):
             galaxy_plotter = self.galaxy_plotter_from(galaxy_index=galaxy_index)
             galaxy_plotter.figures_2d(
-                image=True, title_suffix=f" Of Plane {galaxy_index}"
+                image=True, title_suffix=f" Of Galaxies {galaxy_index}"
             )
 
         self.mat_plot_2d.output.subplot_to_figure(

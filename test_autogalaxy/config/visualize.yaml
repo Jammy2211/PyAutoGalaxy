@@ -442,7 +442,7 @@ plots:
     magnification: true
     potential: false
     source_plane_image: true
-    subplot_plane: true
+    subplot_galaxies: true
     subplot_galaxy_images: true
   positions:
     image_with_positions: true

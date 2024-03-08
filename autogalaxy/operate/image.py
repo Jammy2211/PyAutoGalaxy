@@ -13,7 +13,7 @@ from autogalaxy import exc
 class OperateImage:
     """
     Packages methods which operate on the 2D image returned from the `image_2d_from` function of a light object
-    (e.g. a `LightProfile`, `Galaxy`, `Plane`).
+    (e.g. a `LightProfile`, `Galaxy`).
 
     The majority of methods apply data operators to the 2D image which perform tasks such as a 2D convolution or
     Fourier transform.
@@ -209,7 +209,7 @@ class OperateImage:
 class OperateImageList(OperateImage):
     """
     Packages methods which operate on the list of 2D images returned from the `image_2d_list_from` function of a light
-    object which contains multiple light profiles (e.g. a `Galaxy`, `Plane`).
+    object which contains multiple light profiles (e.g. a `Galaxy`).
 
     The majority of methods apply data operators to the list of 2D images which perform tasks such as a 2D convolution
     of Fourier transform.
@@ -361,7 +361,7 @@ class OperateImageList(OperateImage):
 class OperateImageGalaxies(OperateImageList):
     """
     Packages methods which using a list of galaxies returns a dictionary of their 2D images using the function
-    `galaxy_image_2d_dict_from` (e.g. a `Plane`, a `Tracer` in the library **PyAutoLens**).
+    `galaxy_image_2d_dict_from` (e.g. galaxies, a `Tracer` in the library **PyAutoLens**).
 
     The majority of methods apply data operators to the dictionary of 2D images which perform tasks such as a 2D
     convolution of Fourier transform. This retains the keys of the dictionary to maintain information on the galaxies.

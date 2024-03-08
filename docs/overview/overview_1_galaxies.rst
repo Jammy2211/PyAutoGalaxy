@@ -186,7 +186,7 @@ The image of the plane consists of all galaxies.
 
     image = plane.image_2d_from(grid=grid)
 
-    plane_plotter = aplt.PlanePlotter(plane=plane, grid=grid)
+    plane_plotter = aplt.GalaxiesPlotter(plane=plane, grid=grid)
     plane_plotter.figures_2d(image=True)
     plane_plotter.subplot_galaxy_images()
 

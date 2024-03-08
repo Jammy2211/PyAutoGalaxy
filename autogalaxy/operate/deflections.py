@@ -96,7 +96,7 @@ def evaluation_grid(func):
 class OperateDeflections:
     """
     Packages methods which manipulate the 2D deflection angle map returned from the `deflections_yx_2d_from` function
-    of a mass object (e.g. a `MassProfile`, `Galaxy`, `Plane`).
+    of a mass object (e.g. a `MassProfile`, `Galaxy`).
 
     The majority of methods are those which from the 2D deflection angle map compute lensing quantities like a 2D
     shear field, magnification map or the Einstein Radius.

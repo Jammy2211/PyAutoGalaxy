@@ -26,7 +26,7 @@ def test__visualizes_plane__uses_configs(
         plane=plane_7x7, grid=masked_imaging_7x7.grid, during_analysis=False
     )
 
-    assert path.join(plot_path, "subplot_plane.png") in plot_patch.paths
+    assert path.join(plot_path, "subplot_galaxies.png") in plot_patch.paths
 
     plot_path = path.join(plot_path, "plane")
 

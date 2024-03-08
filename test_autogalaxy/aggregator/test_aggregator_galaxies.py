@@ -21,7 +21,7 @@ def test__plane_randomly_drawn_via_pdf_gen_from(
         samples=samples,
     )
 
-    plane_agg = ag.agg.PlaneAgg(aggregator=agg)
+    plane_agg = ag.agg.GalaxiesAgg(aggregator=agg)
     plane_pdf_gen = plane_agg.randomly_drawn_via_pdf_gen_from(total_samples=2)
 
     i = 0
@@ -55,7 +55,7 @@ def test__plane_all_above_weight_gen(
         samples=samples,
     )
 
-    plane_agg = ag.agg.PlaneAgg(aggregator=agg)
+    plane_agg = ag.agg.GalaxiesAgg(aggregator=agg)
     plane_pdf_gen = plane_agg.all_above_weight_gen_from(minimum_weight=-1.0)
     weight_pdf_gen = plane_agg.weights_above_gen_from(minimum_weight=-1.0)
 
