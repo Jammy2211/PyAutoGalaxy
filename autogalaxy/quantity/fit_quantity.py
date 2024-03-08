@@ -112,5 +112,5 @@ class FitQuantity(aa.FitImaging):
         return self.quantity_dataset.grid
 
     @property
-    def plane(self):
+    def galaxies(self):
         return self.light_mass_obj

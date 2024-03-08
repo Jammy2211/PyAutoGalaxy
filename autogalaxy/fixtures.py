@@ -121,11 +121,11 @@ def make_gal_x1_lp_x1_mp():
 
 
 def make_galaxies_7x7():
-    return [make_gal_x1_lp_x1_mp()]
+    return ag.Galaxies(galaxies=[make_gal_x1_lp_x1_mp()])
 
 
 def make_galaxies_x2_7x7():
-    return [make_gal_x1_lp_x1_mp(), make_gal_x1_lp_x1_mp()]
+    return ag.Galaxies(galaxies=[make_gal_x1_lp_x1_mp(), make_gal_x1_lp_x1_mp()])
 
 
 def make_galaxies_x2_inversion_7x7():
@@ -169,7 +169,7 @@ def make_dataset_quantity_7x7_vector_yx_2d():
 def make_fit_quantity_7x7_array_2d():
     return ag.FitQuantity(
         dataset=make_dataset_quantity_7x7_array_2d(),
-        light_mass_obj=make_plane_7x7(),
+        light_mass_obj=make_galaxies_7x7(),
         func_str="convergence_2d_from",
     )
 
@@ -177,7 +177,7 @@ def make_fit_quantity_7x7_array_2d():
 def make_fit_quantity_7x7_vector_yx_2d():
     return ag.FitQuantity(
         dataset=make_dataset_quantity_7x7_vector_yx_2d(),
-        light_mass_obj=make_plane_7x7(),
+        light_mass_obj=make_galaxies_7x7(),
         func_str="deflections_yx_2d_from",
     )
 
@@ -211,7 +211,7 @@ def make_adapt_images_7x7():
 
 
 def make_fit_imaging_7x7():
-    return ag.FitImaging(dataset=make_masked_imaging_7x7(), plane=make_plane_7x7())
+    return ag.FitImaging(dataset=make_masked_imaging_7x7(), plane=make_galaxies_7x7())
 
 
 def make_fit_imaging_x2_galaxy_7x7():
