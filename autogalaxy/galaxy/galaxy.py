@@ -158,56 +158,25 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             centre=centre, angle=angle + 90, shape_slim=radial_projected_shape_slim
         )
 
-    @aa.grid_dec.grid_2d_to_structure
-    def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
-    ) -> Union[np.ndarray, aa.Array2D]:
-        """
-        Returns the summed 2D image of the galaxy's light profiles from a 2D grid of Cartesian (y,x) coordinates.
-
-        If the galaxy has no light profiles, a numpy array of zeros is returned.
-
-        If the `operated_only` input is included, the function omits light profiles which are parents of
-        the `LightProfileOperated` object, which signifies that the light profile represents emission that has
-        already had the instrument operations (e.g. PSF convolution, a Fourier transform) applied to it.
-
-        See the `autogalaxy.profiles.light` package for details of how images are computed from a light
-        profile.
-
-        The decorator `grid_2d_to_structure` converts the output arrays from ndarrays to an `Array2D` data structure
-        using the input `grid`'s attributes.
-
-        Parameters
-        ----------
-        grid
-            The 2D (y, x) coordinates where values of the image are evaluated.
-        operated_only
-            By default, the image is the sum of light profile images (irrespective of whether they have been operatd on
-            or not). If this input is included as a bool, only images which are or are not already operated are summed
-            and returned.
-        """
-        if (
-            len(self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear))
-            > 0
-        ):
-            return sum(self.image_2d_list_from(grid=grid, operated_only=operated_only))
-
-        return np.zeros((grid.shape[0],))
-
     def image_2d_list_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> List[aa.Array2D]:
         """
         Returns a list of the 2D images of the galaxy's light profiles from a 2D grid of Cartesian (y,x) coordinates.
 
-        This function is primarily used in the `autogalaxy.operate.image` package, to output images of the `Galaxy`
-        that have operations such as a 2D convolution or Fourier transform applied to them.
-
         If the galaxy has no light profiles, a numpy array of zeros is returned.
+
+        The images output by this function do not include instrument operations, such as PSF convolution (for imaging
+        data) or a Fourier transform (for interferometer data).
+
+        Inherited methods in the `autogalaxy.operate.image` package can apply these operations to the images.
+        These functions may have the `operated_only` input passed to them, which is why this function includes
+        the `operated_only` input.
 
         If the `operated_only` input is included, the function omits light profiles which are parents of
         the `LightProfileOperated` object, which signifies that the light profile represents emission that has
-        already had the instrument operations (e.g. PSF convolution, a Fourier transform) applied to it.
+        already had the instrument operations (e.g. PSF convolution, a Fourier transform) applied to it and therefore
+        that operation is not performed again.
 
         See the `autogalaxy.profiles.light` package for details of how images are computed from a light
         profile.
@@ -228,6 +197,37 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
                 cls=LightProfile, cls_filtered=LightProfileLinear
             )
         ]
+
+    @aa.grid_dec.grid_2d_to_structure
+    def image_2d_from(
+        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+    ) -> Union[np.ndarray, aa.Array2D]:
+        """
+        Returns the 2D image of all galaxy light profiles summed from a 2D grid of Cartesian (y,x) coordinates.
+
+        This function first computes the image of each galaxy, via the function `image_2d_list_from`. The
+        images are then summed to give the overall image of the galaxies.
+
+        Refer to the function `image_2d_list_from` for a full description of the calculation and how the `operated_only`
+        input is used.
+
+        Parameters
+        ----------
+        grid
+            The 2D (y, x) coordinates where values of the image are evaluated.
+        operated_only
+            The returned list from this function contains all light profile images, and they are never operated on
+            (e.g. via the imaging PSF). However, inherited methods in the `autogalaxy.operate.image` package can
+            apply these operations to the images, which may have the `operated_only` input passed to them. This input
+            therefore is used to pass the `operated_only` input to these methods.
+        """
+        if (
+            len(self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear))
+            > 0
+        ):
+            return sum(self.image_2d_list_from(grid=grid, operated_only=operated_only))
+
+        return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_1d_output_structure
     def image_1d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
