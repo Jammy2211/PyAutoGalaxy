@@ -11,7 +11,7 @@ import autogalaxy as ag
 directory = path.dirname(path.realpath(__file__))
 
 
-def test__plane_via_instance(masked_imaging_7x7):
+def test__galaxies_via_instance(masked_imaging_7x7):
     galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=0.1))
     clump = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=0.2))
 
@@ -23,10 +23,10 @@ def test__plane_via_instance(masked_imaging_7x7):
 
     instance = model.instance_from_unit_vector([])
 
-    plane = analysis.plane_via_instance_from(instance=instance)
+    galaxies = analysis.galaxies_via_instance_from(instance=instance)
 
-    assert plane.galaxies[0].light.intensity == 0.1
-    assert plane.galaxies[1].light.intensity == 0.2
+    assert galaxies[0].light.intensity == 0.1
+    assert galaxies[1].light.intensity == 0.2
 
 
 def test__instance_with_associated_adapt_images_from(masked_imaging_7x7):
@@ -62,21 +62,19 @@ def test__instance_with_associated_adapt_images_from(masked_imaging_7x7):
     )
 
 
-def test__save_results__plane_output_to_json(analysis_imaging_7x7):
+def test__save_results__galaxies_output_to_json(analysis_imaging_7x7):
     galaxy = ag.Galaxy(redshift=0.5)
 
     model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
-    plane = ag.Plane(galaxies=[galaxy])
-
     paths = af.DirectoryPaths()
 
     analysis_imaging_7x7.save_results(
-        paths=paths, result=ag.m.MockResult(max_log_likelihood_galaxies=plane, model=model)
+        paths=paths, result=ag.m.MockResult(max_log_likelihood_galaxies=[galaxy], model=model)
     )
 
-    plane = from_json(file_path=paths._files_path / "plane.json")
+    galaxies = from_json(file_path=paths._files_path / "galaxies.json")
 
-    assert plane.galaxies[0].redshift == 0.5
+    assert galaxies[0].redshift == 0.5
 
-    os.remove(paths._files_path / "plane.json")
+    os.remove(paths._files_path / "galaxies.json")

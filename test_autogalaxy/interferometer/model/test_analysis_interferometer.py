@@ -40,7 +40,7 @@ def test__fit_figure_of_merit__matches_correct_fit_given_galaxy_profiles(
     instance = model.instance_from_unit_vector([])
     fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
 
-    plane = analysis.plane_via_instance_from(instance=instance)
+    plane = analysis.galaxies_via_instance_from(instance=instance)
 
     fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
 

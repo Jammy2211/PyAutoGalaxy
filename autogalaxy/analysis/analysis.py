@@ -399,7 +399,7 @@ class AnalysisDataset(Analysis):
         try:
             output_to_json(
                 obj=result.max_log_likelihood_galaxies,
-                file_path=paths._files_path / "plane.json",
+                file_path=paths._files_path / "galaxies.json",
             )
         except AttributeError:
             pass
