@@ -95,9 +95,16 @@ class GalaxiesPlotter(Plotter):
         )
 
     def get_visuals_2d(self) -> Visuals2D:
-        return self.get_2d.via_light_mass_obj_from(
-            light_mass_obj=self.galaxies, grid=self.grid
-        )
+
+        visuals_2d = Visuals2D()
+
+        for galaxy in self.galaxies:
+
+            visuals_2d += self.get_2d.via_light_mass_obj_from(
+                light_mass_obj=galaxy, grid=self.grid
+            )
+
+        return visuals_2d
 
     def get_visuals_2d_of_galaxy(self, galaxy_index: int) -> aplt.Visuals2D:
         return self.get_2d.via_galaxies_from(
@@ -348,7 +355,7 @@ class GalaxiesPlotter(Plotter):
 
         For example, for a 2 galaxy `Galaxies`, this creates a subplot with 2 panels, one for each galaxy.
         """
-        number_subplots = len(self.alaxies)
+        number_subplots = len(self.galaxies)
 
         self.open_subplot_figure(number_subplots=number_subplots)
 

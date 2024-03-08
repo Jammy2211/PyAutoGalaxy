@@ -295,14 +295,14 @@ def make_gal_x1_lp_x1_mp():
     return fixtures.make_gal_x1_lp_x1_mp()
 
 
-@pytest.fixture(name="plane_7x7")
-def make_plane_7x7():
-    return fixtures.make_plane_7x7()
+@pytest.fixture(name="galaxies_7x7")
+def make_galaxies_7x7():
+    return fixtures.make_galaxies_7x7()
 
 
-@pytest.fixture(name="plane_x2_gal_7x7")
-def make_plane_x2_gal_7x7():
-    return fixtures.make_plane_x2_gal_7x7()
+@pytest.fixture(name="galaxies_x2_7x7")
+def make_galaxies_x2_7x7():
+    return fixtures.make_galaxies_x2_7x7()
 
 
 @pytest.fixture(name="Planck15")

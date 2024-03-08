@@ -123,7 +123,7 @@ def make_galaxies_7x7():
     return [make_gal_x1_lp_x1_mp()]
 
 
-def make_galaxies_x2_gal_7x7():
+def make_galaxies_x2_7x7():
     return [make_gal_x1_lp_x1_mp(), make_gal_x1_lp_x1_mp()]
 
 
