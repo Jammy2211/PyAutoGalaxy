@@ -109,7 +109,7 @@ class AnalysisImaging(AnalysisDataset):
         3) Extracts all galaxies from the model instance.
 
         4) Use the galaxies and other attributes to create a `FitImaging` object, which performs steps such as creating
-           model images of every galaxy in the plane, blurring them with the imaging dataset's PSF and computing residuals,
+           model images of every galaxy, blurring them with the imaging dataset's PSF and computing residuals,
            a chi-squared statistic and the log likelihood.
 
         Certain models will fail to fit the dataset and raise an exception. For example if an `Inversion` is used, the
@@ -167,7 +167,7 @@ class AnalysisImaging(AnalysisDataset):
         Returns
         -------
         FitImaging
-            The fit of the plane to the imaging dataset, which includes the log likelihood.
+            The fit of the galaxies to the imaging dataset, which includes the log likelihood.
         """
 
         galaxies = self.galaxies_via_instance_from(
@@ -255,13 +255,13 @@ class AnalysisImaging(AnalysisDataset):
         except exc.InversionException:
             pass
 
-        plane = fit.galaxies_linear_light_profiles_to_light_profiles
+        galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
 
-        visualizer.visualize_plane(
-            plane=plane, grid=fit.grid, during_analysis=during_analysis
-        )
         visualizer.visualize_galaxies(
-            galaxies=plane.galaxies, grid=fit.grid, during_analysis=during_analysis
+            galaxies=galaxies, grid=fit.grid, during_analysis=during_analysis
+        )
+        visualizer.visualize_galaxies_1d(
+            galaxies=galaxies, grid=fit.grid, during_analysis=during_analysis
         )
         if fit.inversion is not None:
             visualizer.visualize_inversion(

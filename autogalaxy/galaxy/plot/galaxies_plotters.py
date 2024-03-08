@@ -158,9 +158,6 @@ class GalaxiesPlotter(Plotter):
             Whether to make a 2D plot (via `imshow`) of the x component of the deflection angles.
         magnification
             Whether to make a 2D plot (via `imshow`) of the magnification.
-       image
-            Whether to make a 2D plot (via `imshow`) of the image of plane in its image-plane (e.g. after
-            lensing).
         plane_image
             Whether to make a 2D plot (via `imshow`) of the image of the plane in the soure-plane (e.g. its
             unlensed light).

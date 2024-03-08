@@ -115,7 +115,7 @@ class AnalysisInterferometer(AnalysisDataset):
         3) Extracts all galaxies from the model instance.
 
         4) Use the galaxies and other attributes to create a `FitInterferometer` object, which performs steps such as
-           creating model images of every galaxy in the plane, transforming them to the uv-plane via a Fourier transform
+           creating model images of every galaxy, transforming them to the uv-plane via a Fourier transform
            and computing residuals, a chi-squared statistic and the log likelihood.
 
         Certain models will fail to fit the dataset and raise an exception. For example if an `Inversion` is used, the
@@ -173,7 +173,7 @@ class AnalysisInterferometer(AnalysisDataset):
         Returns
         -------
         FitInterferometer
-            The fit of the plane to the interferometer dataset, which includes the log likelihood.
+            The fit of the galaxies to the interferometer dataset, which includes the log likelihood.
         """
         galaxies = self.galaxies_via_instance_from(
             instance=instance, run_time_dict=run_time_dict
@@ -253,13 +253,13 @@ class AnalysisInterferometer(AnalysisDataset):
         visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
         visualizer.visualize_interferometer(dataset=self.interferometer)
 
-        plane = fit.galaxies_linear_light_profiles_to_light_profiles
+        galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
 
         visualizer.visualize_plane(
-            plane=plane, grid=fit.grid, during_analysis=during_analysis
+            galaxies=galaxies, grid=fit.grid, during_analysis=during_analysis
         )
-        visualizer.visualize_galaxies(
-            galaxies=plane.galaxies, grid=fit.grid, during_analysis=during_analysis
+        visualizer.visualize_galaxies_1d(
+            galaxies=galaxies, grid=fit.grid, during_analysis=during_analysis
         )
 
         try:

@@ -137,12 +137,6 @@ class GalaxiesToInversion(AbstractToInversion):
         else:
             self.grid_pixelization = None
 
-    def galaxies_with_cls_list_from(self, cls: Type) -> List[Galaxy]:
-        return list(filter(lambda galaxy: galaxy.has(cls=cls), self.galaxies))
-
-    def galaxy_has_cls(self, cls: Type) -> bool:
-        return any([galaxy.has(cls=cls) for galaxy in self.galaxies])
-
     def cls_light_profile_func_list_galaxy_dict_from(
         self, cls: Type
     ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
@@ -198,12 +192,12 @@ class GalaxiesToInversion(AbstractToInversion):
     def image_plane_mesh_grid_list(
         self,
     ) -> Optional[List[aa.Grid2DIrregular]]:
-        if not self.galaxy_has_cls(cls=aa.Pixelization):
+        if not self.galaxies.galaxy_has_cls(cls=aa.Pixelization):
             return None
 
         image_plane_mesh_grid_list = []
 
-        for galaxy in self.galaxies_with_cls_list_from(cls=aa.Pixelization):
+        for galaxy in self.galaxies.galaxies_with_cls_list_from(cls=aa.Pixelization):
             pixelization = galaxy.cls_list_from(cls=aa.Pixelization)[0]
 
             if pixelization.image_mesh is not None:
@@ -260,7 +254,7 @@ class GalaxiesToInversion(AbstractToInversion):
 
     @cached_property
     def mapper_galaxy_dict(self) -> Dict[aa.AbstractMapper, Galaxy]:
-        if not self.galaxy_has_cls(cls=aa.Pixelization):
+        if not self.galaxies.galaxy_has_cls(cls=aa.Pixelization):
             return {}
 
         mesh_grid_list = self.image_plane_mesh_grid_list
@@ -269,7 +263,7 @@ class GalaxiesToInversion(AbstractToInversion):
 
         pixelization_list = []
 
-        galaxies_with_pixelization_list = self.galaxies_with_cls_list_from(
+        galaxies_with_pixelization_list = self.galaxies.galaxies_with_cls_list_from(
             cls=aa.Pixelization
         )
 

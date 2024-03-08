@@ -321,7 +321,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
     @aa.grid_dec.grid_2d_to_structure
     def traced_grid_from(self, grid: aa.type.Grid2DLike) -> aa.type.Grid2DLike:
         """
-        Trace this plane's grid_stacks to the next plane, using its deflection angles.
+        Trace an input grid using the galaxy's its deflection angles.
         """
         return grid - self.deflections_yx_2d_from(grid=grid)
 

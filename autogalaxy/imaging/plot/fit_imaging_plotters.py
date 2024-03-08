@@ -95,8 +95,7 @@ class FitImagingPlotter(Plotter):
     def galaxy_indices(self) -> List[int]:
         """
         Returns a list of all indexes of the galaxies in the fit, which is iterated over in figures that plot
-        individual figures of each galaxy in a plane.
-
+        individual figures of each galaxy.
 
         Parameters
         ----------
@@ -106,7 +105,7 @@ class FitImagingPlotter(Plotter):
         Returns
         -------
         list
-            A list of galaxy indexes corresponding to galaxies in the plane.
+            A list of galaxy indexes corresponding to the galaxies.
         """
         return list(range(len(self.fit.galaxies)))
 
@@ -120,7 +119,7 @@ class FitImagingPlotter(Plotter):
         Plots images representing each individual `Galaxy` in the plotter's list of galaxies in 2D, which are
         computed via the plotter's 2D grid object.
 
-        These images subtract or omit the contribution of other galaxies in the plane, such that plots showing
+        These images subtract or omit the contribution of other galaxies, such that plots showing
         each individual galaxy are made.
 
         The API is such that every plottable attribute of the `Galaxy` object is an input parameter of type bool of
@@ -136,7 +135,7 @@ class FitImagingPlotter(Plotter):
             Whether to make a 2D plot (via `imshow`) of the model image of a galaxy, where this image is the
             model image of one galaxy, thereby showing how much it contributes to the overall model image.
         galaxy_index
-            If input, plots for only a single galaxy based on its index in the plane are created.
+            If input, plots for only a single galaxy based on its index are created.
         """
         if galaxy_index is None:
             galaxy_indices = self.galaxy_indices
@@ -204,8 +203,8 @@ class FitImagingPlotter(Plotter):
         Plots images representing each individual `Galaxy` in the plotter's list of galaxies in 2D on a subplot,
         which are computed via the plotter's 2D grid object.
 
-        These images subtract or omit the contribution of other galaxies in the plane, such that plots showing
-        each individual galaxy are made.
+        These images subtract or omit the contribution of other galaxies, such that plots showing each individual
+        galaxy are made.
 
         The subplot plots the subtracted image and model image of each galaxy, where are described in the
         `figures_2d_of_galaxies` function.
@@ -213,7 +212,7 @@ class FitImagingPlotter(Plotter):
         Parameters
         ----------
         galaxy_index
-            If input, plots for only a single galaxy based on its index in the plane are created.
+            If input, plots for only a single galaxy based on its index are created.
         """
 
         if galaxy_index is None:

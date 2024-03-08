@@ -32,8 +32,8 @@ class Analysis(af.Analysis):
         """
         Fits a model to a dataset via a non-linear search.
 
-        This abstract Analysis class for all model-fits which fit galaxies (or objects containing galaxies like a
-        plane), but does not perform a model-fit by itself (and is therefore only inherited from).
+        This abstract Analysis class for all model-fits which fit galaxies, but does not perform a model-fit by
+        itself (and is therefore only inherited from).
 
         This class stores the Cosmology used for the analysis and adapt images used for certain model classes.
 
@@ -207,8 +207,7 @@ class AnalysisDataset(Analysis):
         settings_inversion: aa.SettingsInversion = None,
     ):
         """
-        Abstract Analysis class for all model-fits which fit galaxies (or objects containing galaxies like a plane)
-        to a dataset, like imaging or interferometer data.
+        Abstract Analysis class for all model-fits which fit galaxies to a dataset, like imaging or interferometer data.
 
         This class stores the settings used to perform the model-fit for certain components of the model (e.g. a
         pixelization or inversion), the Cosmology used for the analysis and adapt images used for certain model
@@ -390,7 +389,7 @@ class AnalysisDataset(Analysis):
 
         For this analysis it outputs the following:
 
-        - The maximum log likelihood plane of the fit.
+        - The maximum log likelihood galaxies of the fit.
 
         Parameters
         ----------

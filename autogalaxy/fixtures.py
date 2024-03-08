@@ -210,9 +210,6 @@ def make_adapt_images_7x7():
     )
 
 
-def make_fit_imaging_7x7():
-    return ag.FitImaging(dataset=make_masked_imaging_7x7(), plane=make_galaxies_7x7())
-
 
 def make_fit_imaging_x2_galaxy_7x7():
     return ag.FitImaging(

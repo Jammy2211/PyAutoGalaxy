@@ -273,7 +273,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
 
         Returns
         -------
-            The list of objects in the plane that inherit from input `cls`.
+            The list of objects in the galaxies that inherit from input `cls`.
         """
         cls_list = []
 
@@ -284,13 +284,19 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
 
         return cls_list
 
+    def galaxies_with_cls_list_from(self, cls: Type) -> List[Galaxy]:
+        return list(filter(lambda galaxy: galaxy.has(cls=cls), self))
+
+    def galaxy_has_cls(self, cls: Type) -> bool:
+        return any([galaxy.has(cls=cls) for galaxy in self])
+
     def extract_attribute(self, cls, attr_name):
         """
         Returns an attribute of a class in all galaxies as a `ValueIrregular` or `Grid2DIrregular` object.
 
         For example, if there is one galaxy with two light profiles and we want its axis-ratios, the following:
 
-        `plane.extract_attribute(cls=LightProfile, name="axis_ratio")`
+        `galaxies.extract_attribute(cls=LightProfile, name="axis_ratio")`
 
         would return:
 
@@ -298,7 +304,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
 
         If a galaxy has three mass profiles and we want their centres, the following:
 
-        `plane.extract_attribute(cls=MassProfile, name="centres")`
+        `galaxies.extract_attribute(cls=MassProfile, name="centres")`
 
         would return:
 

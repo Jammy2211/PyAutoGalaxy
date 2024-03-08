@@ -111,7 +111,7 @@ class AnalysisQuantity(Analysis):
         Returns
         -------
         FitQuantity
-            The fit of the plane to the imaging dataset, which includes the log likelihood.
+            The fit of the galaxies to the imaging dataset, which includes the log likelihood.
         """
 
         galaxies = self.galaxies_via_instance_from(instance=instance)

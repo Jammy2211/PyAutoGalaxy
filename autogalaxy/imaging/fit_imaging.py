@@ -297,7 +297,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         settings_inversion: Optional[aa.SettingsInversion] = None,
     ) -> "FitImaging":
         """
-        Returns a new fit which uses the dataset, plane and other objects of this fit, but uses a different set of
+        Returns a new fit which uses the dataset, galaxies and other objects of this fit, but uses a different set of
         preloads input into this function.
 
         This is used when setting up the preloads objects, to concisely test how using different preloads objects

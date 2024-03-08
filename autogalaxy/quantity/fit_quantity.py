@@ -37,7 +37,7 @@ class FitQuantity(aa.FitImaging):
             The quantity that is to be fitted, which has a noise-map associated it with for computing goodness-of-fit
             metrics.
         light_mass_obj
-            An object containing functions which computes a light and / or mass quantity (e.g. a plane of galaxies)
+            An object containing functions which computes a light and / or mass quantity (e.g. galaxies)
             whose model quantities are used to fit the quantity data.
         func_str
             A string giving the name of the method of the input galaxy used to compute the quantity that fits
