@@ -17,7 +17,7 @@ from autogalaxy import exc
 class Galaxies(List, OperateImageGalaxies, OperateDeflections):
     def __init__(
         self,
-        galaxies : List[Galaxy],
+        galaxies: List[Galaxy],
         run_time_dict: Optional[Dict] = None,
     ):
         """
@@ -106,9 +106,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
     @aa.grid_dec.grid_2d_to_structure
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         if self:
-            return sum(
-                map(lambda g: g.deflections_yx_2d_from(grid=grid), self)
-            )
+            return sum(map(lambda g: g.deflections_yx_2d_from(grid=grid), self))
         return np.zeros(shape=(grid.shape[0], 2))
 
     @aa.grid_dec.grid_2d_to_structure

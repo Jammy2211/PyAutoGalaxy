@@ -215,8 +215,10 @@ def make_fit_imaging_7x7():
 
 
 def make_fit_imaging_x2_galaxy_7x7():
-
-    return ag.FitImaging(dataset=make_masked_imaging_7x7(), galaxies=[make_gal_x1_lp(), make_gal_x1_lp(), make_gal_x1_mp()])
+    return ag.FitImaging(
+        dataset=make_masked_imaging_7x7(),
+        galaxies=[make_gal_x1_lp(), make_gal_x1_lp(), make_gal_x1_mp()],
+    )
 
 
 def make_fit_imaging_x2_galaxy_inversion_7x7():
@@ -242,7 +244,6 @@ def make_fit_interferometer_x2_galaxy_inversion_7x7():
 
 
 def make_samples_with_result():
-
     galaxy = af.Model(ag.Galaxy, redshift=0.5, bulge=af.Model(ag.lp.Sersic))
 
     model = af.Collection(galaxies=af.Collection(galaxy=galaxy))

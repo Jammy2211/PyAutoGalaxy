@@ -65,7 +65,10 @@ class Analysis(af.Analysis):
         A list of galaxies that is used to then fit the dataset.
         """
         if hasattr(instance, "clumps"):
-            return Galaxies(galaxies=instance.galaxies + instance.clumps, run_time_dict=run_time_dict)
+            return Galaxies(
+                galaxies=instance.galaxies + instance.clumps,
+                run_time_dict=run_time_dict,
+            )
 
         return Galaxies(galaxies=instance.galaxies, run_time_dict=run_time_dict)
 

@@ -87,7 +87,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             if isinstance(value, GeometryProfile) or isinstance(value, aa.Pixelization)
         }
 
-
     def dict(self) -> Dict:
         d = instance_as_dict(self)
         d["arguments"] = {

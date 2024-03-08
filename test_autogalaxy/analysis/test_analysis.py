@@ -70,7 +70,8 @@ def test__save_results__galaxies_output_to_json(analysis_imaging_7x7):
     paths = af.DirectoryPaths()
 
     analysis_imaging_7x7.save_results(
-        paths=paths, result=ag.m.MockResult(max_log_likelihood_galaxies=[galaxy], model=model)
+        paths=paths,
+        result=ag.m.MockResult(max_log_likelihood_galaxies=[galaxy], model=model),
     )
 
     galaxies = from_json(file_path=paths._files_path / "galaxies.json")

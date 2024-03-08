@@ -8,6 +8,7 @@ from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
 
+
 class FitQuantity(aa.FitImaging):
     def __init__(
         self,

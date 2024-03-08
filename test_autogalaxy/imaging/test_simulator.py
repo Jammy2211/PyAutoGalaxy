@@ -92,7 +92,9 @@ def test__simulator__via_galaxies_from():
 
     galaxies = ag.Galaxies(galaxies=[galaxy_0, galaxy_1])
 
-    imaging_via_image = simulator.via_image_from(image=galaxies.image_2d_from(grid=grid))
+    imaging_via_image = simulator.via_image_from(
+        image=galaxies.image_2d_from(grid=grid)
+    )
 
     assert dataset.shape_native == (20, 20)
     assert dataset.data.native[0, 0] != imaging_via_image.data.native[0, 0]
@@ -136,7 +138,9 @@ def test__simulator__simulate_imaging_from_galaxy__source_galaxy__compare_to_ima
 
     galaxies = ag.Galaxies(galaxies=[galaxy_0, galaxy_1])
 
-    imaging_via_image = simulator.via_image_from(image=galaxies.image_2d_from(grid=grid))
+    imaging_via_image = simulator.via_image_from(
+        image=galaxies.image_2d_from(grid=grid)
+    )
 
     assert dataset.shape_native == (11, 11)
     assert dataset.data == pytest.approx(imaging_via_image.data, 1.0e-4)

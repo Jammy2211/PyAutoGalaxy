@@ -28,7 +28,6 @@ def test__galaxies_randomly_drawn_via_pdf_gen_from(
 
     for galaxies_gen in galaxies_pdf_gen:
         for galaxy_list in galaxies_gen:
-
             i += 1
 
             assert galaxy_list[0].g0.redshift == 0.5

@@ -6,8 +6,9 @@ import autoarray as aa
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
 
+
 class SimulatorInterferometer(aa.SimulatorInterferometer):
-    def via_galaxies_from(self, galaxies:List[Galaxy], grid : aa.type.Grid2DLike):
+    def via_galaxies_from(self, galaxies: List[Galaxy], grid: aa.type.Grid2DLike):
         """
         Returns a realistic simulated image by applying effects to a plain simulated image.
 
@@ -33,5 +34,3 @@ class SimulatorInterferometer(aa.SimulatorInterferometer):
         image = galaxies.image_2d_from(grid=grid)
 
         return self.via_image_from(image=image.binned)
-
-

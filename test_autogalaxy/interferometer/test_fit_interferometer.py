@@ -79,7 +79,9 @@ def test__fit_figure_of_merit(interferometer_7):
         redshift=0.5, bulge=ag.lp_linear.Sersic(sersic_index=4.0)
     )
 
-    fit = ag.FitInterferometer(dataset=interferometer_7, galaxies=[g0_linear_light, g1_linear_light])
+    fit = ag.FitInterferometer(
+        dataset=interferometer_7, galaxies=[g0_linear_light, g1_linear_light]
+    )
 
     assert fit.perform_inversion is True
     assert fit.figure_of_merit == pytest.approx(-23.44419, 1.0e-4)
@@ -91,12 +93,16 @@ def test__fit_figure_of_merit(interferometer_7):
         ]
     )
 
-    fit = ag.FitInterferometer(dataset=interferometer_7, galaxies=[g0_linear_light, g1_linear_light])
+    fit = ag.FitInterferometer(
+        dataset=interferometer_7, galaxies=[g0_linear_light, g1_linear_light]
+    )
 
     assert fit.perform_inversion is True
     assert fit.figure_of_merit == pytest.approx(-23.44419, 1.0e-4)
 
-    fit = ag.FitInterferometer(dataset=interferometer_7, galaxies=[g0_linear_light, galaxy_pix])
+    fit = ag.FitInterferometer(
+        dataset=interferometer_7, galaxies=[g0_linear_light, galaxy_pix]
+    )
 
     assert fit.log_evidence == pytest.approx(-35.16806296, 1e-4)
     assert fit.figure_of_merit == pytest.approx(-35.16806296, 1.0e-4)
@@ -370,7 +376,9 @@ def test__model_visibilities_of_galaxies_list(interferometer_7):
 
     galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
-    fit = ag.FitInterferometer(dataset=interferometer_7, galaxies=[galaxy_light, galaxy_linear, galaxy_pix])
+    fit = ag.FitInterferometer(
+        dataset=interferometer_7, galaxies=[galaxy_light, galaxy_linear, galaxy_pix]
+    )
 
     assert fit.model_visibilities_of_galaxies_list[0] == pytest.approx(
         fit.galaxy_model_visibilities_dict[galaxy_light], 1.0e-4

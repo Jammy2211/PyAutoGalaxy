@@ -190,10 +190,7 @@ class FitInterferometerPlotter(Plotter):
         if not self.galaxies.has(cls=aa.Pixelization):
             galaxies_plotter = self.galaxies_plotter_from(galaxies=self.galaxies)
 
-            galaxies_plotter.subplot(
-                image=True,
-                auto_filename="subplot_fit_real_space"
-            )
+            galaxies_plotter.subplot(image=True, auto_filename="subplot_fit_real_space")
 
         elif self.galaxies.has(cls=aa.Pixelization):
             self.open_subplot_figure(number_subplots=6)

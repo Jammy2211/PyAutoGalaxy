@@ -96,8 +96,8 @@ class GalaxiesPlotter(Plotter):
 
     def get_visuals_2d(self) -> Visuals2D:
         return self.get_2d.via_light_mass_obj_from(
-                light_mass_obj=self.galaxies, grid=self.grid
-            )
+            light_mass_obj=self.galaxies, grid=self.grid
+        )
 
     def get_visuals_2d_of_galaxy(self, galaxy_index: int) -> aplt.Visuals2D:
         return self.get_2d.via_galaxies_from(
@@ -156,7 +156,7 @@ class GalaxiesPlotter(Plotter):
         magnification
             Whether to make a 2D plot (via `imshow`) of the magnification.
         zoom_to_brightest
-            Whether to automatically zoom the plot to the brightest regions of the galaxies being plotted as 
+            Whether to automatically zoom the plot to the brightest regions of the galaxies being plotted as
             opposed to the full extent of the grid.
         title_suffix
             Add a suffix to the end of the matplotlib title label.

@@ -146,7 +146,6 @@ class GalaxiesToInversion(AbstractToInversion):
     def cls_light_profile_func_list_galaxy_dict_from(
         self, cls: Type
     ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
-
         if not self.galaxies.has(cls=cls):
             return {}
 

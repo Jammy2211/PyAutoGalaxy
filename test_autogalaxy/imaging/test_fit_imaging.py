@@ -60,7 +60,9 @@ def test__fit_figure_of_merit(
 
     galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
-    fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=[ag.Galaxy(redshift=0.5), galaxy_pix])
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7, galaxies=[ag.Galaxy(redshift=0.5), galaxy_pix]
+    )
 
     assert fit.perform_inversion is True
     assert fit.figure_of_merit == pytest.approx(-22.9005, 1.0e-4)
@@ -80,7 +82,9 @@ def test__fit_figure_of_merit(
         redshift=0.5, bulge=ag.lp_linear.Sersic(sersic_index=4.0)
     )
 
-    fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=[g0_linear_light, g1_linear_light])
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7, galaxies=[g0_linear_light, g1_linear_light]
+    )
 
     assert fit.perform_inversion is True
     assert fit.figure_of_merit == pytest.approx(-14.52327, 1.0e-4)
@@ -121,7 +125,9 @@ def test__fit_figure_of_merit(
         redshift=0.5, bulge=ag.lp_operated.Sersic(intensity=1.0)
     )
 
-    fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=[g0_operated_light, g1_operated_light])
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7, galaxies=[g0_operated_light, g1_operated_light]
+    )
 
     assert fit.perform_inversion is False
     assert fit.figure_of_merit == pytest.approx(-342374.9618, 1.0e-4)
@@ -133,12 +139,17 @@ def test__fit_figure_of_merit(
         redshift=0.5, bulge=ag.lp_linear_operated.Sersic(sersic_index=4.0)
     )
 
-    fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=[g0_linear_operated_light, g1_linear_operated_light])
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7,
+        galaxies=[g0_linear_operated_light, g1_linear_operated_light],
+    )
 
     assert fit.perform_inversion is True
     assert fit.figure_of_merit == pytest.approx(-14.7237273, 1.0e-4)
 
-    fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=[g0_linear_light, galaxy_pix])
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7, galaxies=[g0_linear_light, galaxy_pix]
+    )
 
     assert fit.perform_inversion is True
     assert fit.figure_of_merit == pytest.approx(-22.87827302, 1.0e-4)
@@ -169,7 +180,9 @@ def test__fit_figure_of_merit(
     )
 
     fit = ag.FitImaging(
-        dataset=masked_imaging_7x7, galaxies=[ag.Galaxy(redshift=0.5), galaxy_pix], adapt_images=adapt_images
+        dataset=masked_imaging_7x7,
+        galaxies=[ag.Galaxy(redshift=0.5), galaxy_pix],
+        adapt_images=adapt_images,
     )
 
     assert fit.perform_inversion is True
@@ -315,7 +328,9 @@ def test__model_images_of_galaxies_list(masked_imaging_7x7):
 
     galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
-    fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=[galaxy_light, galaxy_linear, galaxy_pix])
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7, galaxies=[galaxy_light, galaxy_linear, galaxy_pix]
+    )
 
     assert fit.model_images_of_galaxies_list[0] == pytest.approx(
         fit.galaxy_model_image_dict[galaxy_light], 1.0e-4
@@ -383,8 +398,10 @@ def test___unmasked_blurred_images(masked_imaging_7x7):
 
     assert (fit.unmasked_blurred_image == unmasked_blurred_image).all()
 
-    unmasked_blurred_image_of_galaxies_list = galaxies.unmasked_blurred_image_2d_list_from(
-        grid=masked_imaging_7x7.grid, psf=masked_imaging_7x7.psf
+    unmasked_blurred_image_of_galaxies_list = (
+        galaxies.unmasked_blurred_image_2d_list_from(
+            grid=masked_imaging_7x7.grid, psf=masked_imaging_7x7.psf
+        )
     )
 
     assert (
@@ -405,7 +422,9 @@ def test__light_profile_linear__intensity_dict(masked_imaging_7x7):
 
     g1_linear_light = ag.Galaxy(redshift=0.5, bulge=linear_light_1)
 
-    fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=[g0_linear_light, g1_linear_light])
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7, galaxies=[g0_linear_light, g1_linear_light]
+    )
 
     assert fit.linear_light_profile_intensity_dict[linear_light_0] == pytest.approx(
         7.093227476666252, 1.0e-4

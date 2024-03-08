@@ -6,8 +6,11 @@ import autoarray as aa
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
 
+
 class SimulatorImaging(aa.SimulatorImaging):
-    def via_galaxies_from(self, galaxies: List[Galaxy], grid: aa.type.Grid2DLike) -> aa.Imaging:
+    def via_galaxies_from(
+        self, galaxies: List[Galaxy], grid: aa.type.Grid2DLike
+    ) -> aa.Imaging:
         """
         Simulate an `Imaging` dataset from an input plane and grid.
 
@@ -27,7 +30,6 @@ class SimulatorImaging(aa.SimulatorImaging):
         galaxies = Galaxies(galaxies=galaxies)
 
         for galaxy in galaxies:
-
             galaxy.set_snr_of_snr_light_profiles(
                 grid=grid,
                 exposure_time=self.exposure_time,

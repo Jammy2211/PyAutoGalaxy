@@ -22,7 +22,7 @@ def _galaxies_from(fit: af.Fit, instance: af.ModelInstance) -> List[Galaxy]:
 
     Each individual attribute can be loaded from the database via the `fit.value()` method.
 
-    This method combines all of these attributes and returns a list of `Galaxy` object for a given non-linear search 
+    This method combines all of these attributes and returns a list of `Galaxy` object for a given non-linear search
     sample (e.g. the maximum likelihood model). This includes associating adapt images with their respective galaxies.
 
     If multiple `Galaxy` objects were fitted simultaneously via analysis summing, the `fit.child_values()` method

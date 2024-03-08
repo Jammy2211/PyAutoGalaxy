@@ -155,9 +155,7 @@ class GetVisuals2D(aplt.GetVisuals2D):
             )
         )
 
-    def via_light_mass_obj_from(
-        self, light_mass_obj: Union[Galaxy], grid
-    ) -> Visuals2D:
+    def via_light_mass_obj_from(self, light_mass_obj: Union[Galaxy], grid) -> Visuals2D:
         """
         From an object that contains both light profiles and / or mass profiles (e.g. a `Galaxy`), get the
         attributes that can be plotted and returns them in a `Visuals2D` object.
@@ -196,7 +194,7 @@ class GetVisuals2D(aplt.GetVisuals2D):
         )
 
     def via_galaxies_from(
-        self, galaxies : List[Galaxy], grid: aa.type.Grid2DLike, galaxy_index: int
+        self, galaxies: List[Galaxy], grid: aa.type.Grid2DLike, galaxy_index: int
     ) -> Visuals2D:
         """
         From a list of galaxies get the attributes that can be plotted and returns them in a `Visuals2D` object.

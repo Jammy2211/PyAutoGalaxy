@@ -22,7 +22,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
     def __init__(
         self,
         dataset: aa.Imaging,
-        galaxies : List[Galaxy],
+        galaxies: List[Galaxy],
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads: aa.Preloads = Preloads(),
@@ -99,7 +99,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         """
 
         if len(self.galaxies.cls_list_from(cls=LightProfile)) == len(
-             self.galaxies.cls_list_from(cls=LightProfileOperated)
+            self.galaxies.cls_list_from(cls=LightProfileOperated)
         ):
             return self.galaxies.image_2d_from(
                 grid=self.dataset.grid,

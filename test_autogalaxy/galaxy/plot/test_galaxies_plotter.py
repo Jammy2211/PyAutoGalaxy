@@ -30,9 +30,7 @@ def test__all_individual_plotter__output_file_with_default_name(
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
 
-    plotter.figures_2d(
-        image=True, convergence=True
-    )
+    plotter.figures_2d(image=True, convergence=True)
 
     assert path.join(plot_path, "image_2d.png") in plot_patch.paths
     assert path.join(plot_path, "convergence_2d.png") in plot_patch.paths

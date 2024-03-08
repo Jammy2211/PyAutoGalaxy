@@ -126,17 +126,23 @@ def test__image_2d_list_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_oper
 
     galaxies = ag.Galaxies(galaxies=[galaxy_0, galaxy_1, galaxy_2])
 
-    image_2d_list = galaxies.image_2d_list_from(grid=sub_grid_2d_7x7, operated_only=False)
+    image_2d_list = galaxies.image_2d_list_from(
+        grid=sub_grid_2d_7x7, operated_only=False
+    )
     assert image_2d_list[0] == pytest.approx(image_2d_not_operated, 1.0e-4)
     assert image_2d_list[1] == pytest.approx(np.zeros((36)), 1.0e-4)
     assert image_2d_list[2] == pytest.approx(np.zeros((36)), 1.0e-4)
 
-    image_2d_list = galaxies.image_2d_list_from(grid=sub_grid_2d_7x7, operated_only=True)
+    image_2d_list = galaxies.image_2d_list_from(
+        grid=sub_grid_2d_7x7, operated_only=True
+    )
     assert image_2d_list[0] == pytest.approx(image_2d_operated, 1.0e-4)
     assert image_2d_list[1] == pytest.approx(2.0 * image_2d_operated, 1.0e-4)
     assert image_2d_list[2] == pytest.approx(np.zeros((36)), 1.0e-4)
 
-    image_2d_list = galaxies.image_2d_list_from(grid=sub_grid_2d_7x7, operated_only=None)
+    image_2d_list = galaxies.image_2d_list_from(
+        grid=sub_grid_2d_7x7, operated_only=None
+    )
     assert image_2d_list[0] + image_2d_list[1] == pytest.approx(
         image_2d_not_operated + 3.0 * image_2d_operated, 1.0e-4
     )
@@ -256,9 +262,7 @@ def test__cls_list_from():
     sis_1 = ag.mp.IsothermalSph(einstein_radius=2.0)
     sis_2 = ag.mp.IsothermalSph(einstein_radius=3.0)
 
-    galaxies = ag.Galaxies(
-        galaxies=[ag.Galaxy(redshift=0.5, mass_profile=sis_0)]
-    )
+    galaxies = ag.Galaxies(galaxies=[ag.Galaxy(redshift=0.5, mass_profile=sis_0)])
     assert galaxies.cls_list_from(cls=ag.mp.MassProfile) == [sis_0]
 
     galaxies = ag.Galaxies(

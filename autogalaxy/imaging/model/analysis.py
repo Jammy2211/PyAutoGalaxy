@@ -170,7 +170,9 @@ class AnalysisImaging(AnalysisDataset):
             The fit of the plane to the imaging dataset, which includes the log likelihood.
         """
 
-        galaxies = self.galaxies_via_instance_from(instance=instance, run_time_dict=run_time_dict)
+        galaxies = self.galaxies_via_instance_from(
+            instance=instance, run_time_dict=run_time_dict
+        )
 
         adapt_images = self.adapt_images_via_instance_from(instance=instance)
 

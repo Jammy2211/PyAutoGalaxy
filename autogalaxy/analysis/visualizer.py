@@ -243,7 +243,10 @@ class Visualizer:
         mat_plot_2d = self.mat_plot_2d_from(subfolders=subfolders)
 
         plotter = GalaxiesPlotter(
-            galaxies=galaxies, grid=grid, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+            galaxies=galaxies,
+            grid=grid,
+            mat_plot_2d=mat_plot_2d,
+            include_2d=self.include_2d,
         )
 
         if should_plot("subplot_galaxy_images"):
@@ -282,7 +285,10 @@ class Visualizer:
         mat_plot_2d = self.mat_plot_2d_from(subfolders="")
 
         plotter = GalaxiesPlotter(
-            galaxies=galaxies, grid=grid, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+            galaxies=galaxies,
+            grid=grid,
+            mat_plot_2d=mat_plot_2d,
+            include_2d=self.include_2d,
         )
 
         if should_plot("subplot_galaxies"):
