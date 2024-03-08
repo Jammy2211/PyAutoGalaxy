@@ -14,6 +14,7 @@ import autoarray as aa
 
 from autogalaxy import exc
 from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.analysis.maker import FitMaker
 from autogalaxy.analysis.preloads import Preloads
@@ -64,9 +65,9 @@ class Analysis(af.Analysis):
         A list of galaxies that is used to then fit the dataset.
         """
         if hasattr(instance, "clumps"):
-            return instance.galaxies + instance.clumps
+            return Galaxies(galaxies=instance.galaxies + instance.clumps)
 
-        return instance.galaxies
+        return Galaxies(galaxies=instance.galaxies)
 
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None

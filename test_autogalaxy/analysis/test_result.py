@@ -13,7 +13,6 @@ def test__result_contains_instance_with_galaxies(
     )
 
     assert isinstance(result.instance.galaxies[0], ag.Galaxy)
-    assert isinstance(result.instance.galaxies[1], ag.Galaxy)
 
 
 def test__max_log_likelihood_galaxies_available_as_result(analysis_imaging_7x7):
@@ -22,16 +21,16 @@ def test__max_log_likelihood_galaxies_available_as_result(analysis_imaging_7x7):
 
     model = af.Collection(galaxies=af.Collection(galaxy_0=galaxy_0, galaxy_1=galaxy_1))
 
-    max_log_likelihood_galaxies = ag.Plane(galaxies=[galaxy_0, galaxy_1])
+    max_log_likelihood_instance = model.instance_from_prior_medians()
 
     search = ag.m.MockSearch(
         name="test_search",
-        samples=ag.m.MockSamples(max_log_likelihood_instance=max_log_likelihood_galaxies),
+        samples=ag.m.MockSamples(max_log_likelihood_instance=max_log_likelihood_instance),
     )
 
     result = search.fit(model=model, analysis=analysis_imaging_7x7)
 
-    assert isinstance(result.max_log_likelihood_galaxies, ag.Plane)
+    assert isinstance(result.max_log_likelihood_galaxies[0], ag.Galaxy)
     assert result.max_log_likelihood_galaxies[0].light.intensity == 1.0
     assert result.max_log_likelihood_galaxies[1].light.intensity == 2.0
 
@@ -39,11 +38,13 @@ def test__max_log_likelihood_galaxies_available_as_result(analysis_imaging_7x7):
 def test__results_include_pixelization__available_as_property(analysis_imaging_7x7):
     pixelization = ag.m.MockPixelization(mapper=1)
 
-    source = ag.Galaxy(redshift=1.0, pixelization=pixelization)
+    galaxy_0 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
-    max_log_likelihood_galaxies = ag.Plane(galaxies=[source])
+    model = af.Collection(galaxies=af.Collection(galaxy_0=galaxy_0, galaxy_1=galaxy_0))
 
-    samples = ag.m.MockSamples(max_log_likelihood_instance=max_log_likelihood_galaxies)
+    max_log_likelihood_instance = model.instance_from_prior_medians()
+
+    samples = ag.m.MockSamples(max_log_likelihood_instance=max_log_likelihood_instance)
 
     result = res.ResultDataset(
         samples=samples,
