@@ -2,13 +2,11 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Optional, List
 
 if TYPE_CHECKING:
-    from autogalaxy.galaxy.galaxy import Galaxy
     from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 
 import autofit as af
 import autoarray as aa
 
-from autogalaxy.aggregator.abstract import AbstractAgg
 from autogalaxy.analysis.preloads import Preloads
 
 from autogalaxy.aggregator import agg_util
@@ -18,7 +16,7 @@ from autogalaxy.aggregator.plane import _plane_from
 
 def _fit_interferometer_from(
     fit: af.Fit,
-    galaxies: List[Galaxy],
+    instance: Optional[af.ModelInstance] = None,
     real_space_mask: Optional[aa.Mask2D] = None,
     settings_dataset: aa.SettingsInterferometer = None,
     settings_inversion: aa.SettingsInversion = None,
@@ -50,8 +48,9 @@ def _fit_interferometer_from(
     ----------
     fit
         A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
-    galaxies
-        A list of galaxies corresponding to a sample of a non-linear search and model-fit.
+    instance
+        A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
+        randomly from the PDF).
     settings_dataset
         Optionally overwrite the `SettingsInterferometer` of the `Interferometer` object that is created from the fit.
     settings_inversion
@@ -69,7 +68,7 @@ def _fit_interferometer_from(
         settings_dataset=settings_dataset,
     )
 
-    plane_list = _plane_from(fit=fit, galaxies=galaxies)
+    plane_list = _plane_from(fit=fit, instance=instance)
 
     adapt_images_list = agg_util.adapt_images_from(fit=fit)
 
@@ -104,7 +103,7 @@ def _fit_interferometer_from(
     return fit_dataset_list
 
 
-class FitInterferometerAgg(AbstractAgg):
+class FitInterferometerAgg(af.AggBase):
     def __init__(
         self,
         aggregator: af.Aggregator,
@@ -159,7 +158,9 @@ class FitInterferometerAgg(AbstractAgg):
         self.use_preloaded_grid = use_preloaded_grid
         self.real_space_mask = real_space_mask
 
-    def object_via_gen_from(self, fit, galaxies) -> List[FitInterferometer]:
+    def object_via_gen_from(
+        self, fit, instance: Optional[af.ModelInstance] = None
+    ) -> List[FitInterferometer]:
         """
         Returns a generator of `FitInterferometer` objects from an input aggregator.
 
@@ -169,12 +170,13 @@ class FitInterferometerAgg(AbstractAgg):
         ----------
         fit
             A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
-        galaxies
-            A list of galaxies corresponding to a sample of a non-linear search and model-fit.
+        instance
+            A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
+            randomly from the PDF).
         """
         return _fit_interferometer_from(
             fit=fit,
-            galaxies=galaxies,
+            instance=instance,
             settings_dataset=self.settings_dataset,
             settings_inversion=self.settings_inversion,
             use_preloaded_grid=self.use_preloaded_grid,

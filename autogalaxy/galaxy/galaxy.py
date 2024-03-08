@@ -317,6 +317,13 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             )
         return np.zeros((grid.shape[0],))
 
+    @aa.grid_dec.grid_2d_to_structure
+    def traced_grid_from(self, grid: aa.type.Grid2DLike) -> aa.type.Grid2DLike:
+        """
+        Trace this plane's grid_stacks to the next plane, using its deflection angles.
+        """
+        return grid - self.deflections_yx_2d_from(grid=grid)
+
     @aa.grid_dec.grid_1d_output_structure
     def convergence_1d_from(self, grid: aa.type.Grid1D2DLike) -> np.ndarray:
         """

@@ -1,6 +1,4 @@
-import json
 import numpy as np
-from pathlib import Path
 from typing import Dict, List, Optional, Tuple, Type, Union
 
 import autoarray as aa
@@ -51,7 +49,6 @@ class Plane(OperateImageGalaxies, OperateDeflections):
         self.redshift = redshift
         self.galaxies = galaxies
 
-        self.run_time_dict = run_time_dict
         self.run_time_dict = run_time_dict
 
     @property

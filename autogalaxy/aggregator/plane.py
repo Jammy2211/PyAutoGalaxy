@@ -1,21 +1,17 @@
 from __future__ import annotations
 import logging
-from typing import TYPE_CHECKING, List
+from typing import TYPE_CHECKING, Optional, List
 
 if TYPE_CHECKING:
-    from autogalaxy.galaxy.galaxy import Galaxy
     from autogalaxy.plane.plane import Plane
 
 import autofit as af
 
-from autogalaxy.aggregator.abstract import AbstractAgg
-
-from autogalaxy.aggregator import agg_util
 
 logger = logging.getLogger(__name__)
 
 
-def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> List[Plane]:
+def _plane_from(fit: af.Fit, instance: af.ModelInstance) -> List[Plane]:
     """
     Returns an `Plane` object from a `PyAutoFit` sqlite database `Fit` object.
 
@@ -37,11 +33,17 @@ def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> List[Plane]:
     ----------
     fit
         A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
-    galaxies
-        A list of galaxies corresponding to a sample of a non-linear search and model-fit.
+    instance
+        A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
+        randomly from the PDF).
     """
 
     from autogalaxy.plane.plane import Plane
+
+    if instance is not None:
+        galaxies = instance.galaxies
+    else:
+        galaxies = fit.instance.galaxies
 
     if len(fit.children) > 0:
         logger.info(
@@ -58,7 +60,7 @@ def _plane_from(fit: af.Fit, galaxies: List[Galaxy]) -> List[Plane]:
     return [Plane(galaxies=galaxies)]
 
 
-class PlaneAgg(AbstractAgg):
+class PlaneAgg(af.AggBase):
     """
     Interfaces with an `PyAutoFit` aggregator object to create instances of `Plane` objects from the results
     of a model-fit.
@@ -90,7 +92,9 @@ class PlaneAgg(AbstractAgg):
         A `PyAutoFit` aggregator object which can load the results of model-fits.
     """
 
-    def object_via_gen_from(self, fit, galaxies) -> List[Plane]:
+    def object_via_gen_from(
+        self, fit, instance: Optional[af.ModelInstance] = None
+    ) -> List[Plane]:
         """
         Returns a generator of `Plane` objects from an input aggregator.
 
@@ -100,8 +104,9 @@ class PlaneAgg(AbstractAgg):
         ----------
         fit
             A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
-        galaxies
-            A list of galaxies corresponding to a sample of a non-linear search and model-fit.
+        instance
+            A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
+            randomly from the PDF).
         """
 
-        return _plane_from(fit=fit, galaxies=galaxies)
+        return _plane_from(fit=fit, instance=instance)

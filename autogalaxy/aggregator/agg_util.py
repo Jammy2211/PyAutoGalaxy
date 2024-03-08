@@ -1,8 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, List, Optional
-
-if TYPE_CHECKING:
-    from autogalaxy.galaxy.galaxy import Galaxy
+from typing import List, Optional
 
 import autofit as af
 import autoarray as aa
