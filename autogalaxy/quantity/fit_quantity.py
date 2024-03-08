@@ -6,13 +6,13 @@ from autogalaxy.quantity.dataset_quantity import DatasetQuantity
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.galaxy.galaxy import Galaxy
-
+from autogalaxy.galaxy.galaxies import Galaxies
 
 class FitQuantity(aa.FitImaging):
     def __init__(
         self,
         dataset: DatasetQuantity,
-        light_mass_obj: Union[LightProfile, MassProfile, Galaxy, List[Galaxy]],
+        light_mass_obj: Union[LightProfile, MassProfile, Galaxy, Galaxies],
         func_str: str,
         model_data_manual: Optional[Union[aa.Array2D, aa.VectorYX2D]] = None,
     ):
