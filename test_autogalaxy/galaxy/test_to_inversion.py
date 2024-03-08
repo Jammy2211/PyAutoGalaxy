@@ -94,52 +94,52 @@ def test__image_plane_mesh_grid_list(masked_imaging_7x7):
     image_plane_mesh_grid_list = to_inversion.image_plane_mesh_grid_list
 
     assert image_plane_mesh_grid_list is None
-#
-#
-# def test__mapper_galaxy_dict(masked_imaging_7x7):
-#     mesh = ag.mesh.Rectangular(shape=(3, 3))
-#
-#     pixelization = ag.m.MockPixelization(mesh=mesh)
-#
-#     galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
-#     galaxy_no_pix = ag.Galaxy(redshift=0.5)
-#
-#     to_inversion = ag.GalaxiesToInversion(galaxies=[galaxy_no_pix, galaxy_pix], dataset=masked_imaging_7x7)
-#
-#     mapper_galaxy_dict = to_inversion.mapper_galaxy_dict
-#
-#     mapper_list = list(mapper_galaxy_dict.keys())
-#
-#     assert mapper_list[0].pixels == 9
-#     assert mapper_galaxy_dict[mapper_list[0]] == galaxy_pix
-#
-#     mesh = ag.mesh.Rectangular(shape=(4, 3))
-#     pixelization = ag.m.MockPixelization(mesh=mesh)
-#
-#     galaxy_pix_2 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
-#     galaxy_no_pix = ag.Galaxy(redshift=0.5)
-#
-#     to_inversion = ag.GalaxiesToInversion(galaxies=[galaxy_no_pix, galaxy_pix, galaxy_no_pix, galaxy_pix_2], dataset=masked_imaging_7x7)
-#
-#     mapper_galaxy_dict = to_inversion.mapper_galaxy_dict
-#
-#     mapper_list = list(mapper_galaxy_dict.keys())
-#
-#     assert mapper_list[0].pixels == 9
-#     assert mapper_list[1].pixels == 12
-#
-#     assert mapper_galaxy_dict[mapper_list[0]] == galaxy_pix
-#     assert mapper_galaxy_dict[mapper_list[1]] == galaxy_pix_2
-#
-#     galaxy_no_pix = ag.Galaxy(redshift=0.5)
-#
-#     to_inversion = ag.GalaxiesToInversion(galaxies=[galaxy_no_pix], dataset=masked_imaging_7x7)
-#
-#     mapper_galaxy_dict = to_inversion.mapper_galaxy_dict
-#
-#     assert mapper_galaxy_dict == {}
-#
-#
+
+
+def test__mapper_galaxy_dict(masked_imaging_7x7):
+    mesh = ag.mesh.Rectangular(shape=(3, 3))
+
+    pixelization = ag.m.MockPixelization(mesh=mesh)
+
+    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
+    galaxy_no_pix = ag.Galaxy(redshift=0.5)
+
+    to_inversion = ag.GalaxiesToInversion(galaxies=[galaxy_no_pix, galaxy_pix], dataset=masked_imaging_7x7)
+
+    mapper_galaxy_dict = to_inversion.mapper_galaxy_dict
+
+    mapper_list = list(mapper_galaxy_dict.keys())
+
+    assert mapper_list[0].pixels == 9
+    assert mapper_galaxy_dict[mapper_list[0]] == galaxy_pix
+
+    mesh = ag.mesh.Rectangular(shape=(4, 3))
+    pixelization = ag.m.MockPixelization(mesh=mesh)
+
+    galaxy_pix_2 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
+    galaxy_no_pix = ag.Galaxy(redshift=0.5)
+
+    to_inversion = ag.GalaxiesToInversion(galaxies=[galaxy_no_pix, galaxy_pix, galaxy_no_pix, galaxy_pix_2], dataset=masked_imaging_7x7)
+
+    mapper_galaxy_dict = to_inversion.mapper_galaxy_dict
+
+    mapper_list = list(mapper_galaxy_dict.keys())
+
+    assert mapper_list[0].pixels == 9
+    assert mapper_list[1].pixels == 12
+
+    assert mapper_galaxy_dict[mapper_list[0]] == galaxy_pix
+    assert mapper_galaxy_dict[mapper_list[1]] == galaxy_pix_2
+
+    galaxy_no_pix = ag.Galaxy(redshift=0.5)
+
+    to_inversion = ag.GalaxiesToInversion(galaxies=[galaxy_no_pix], dataset=masked_imaging_7x7)
+
+    mapper_galaxy_dict = to_inversion.mapper_galaxy_dict
+
+    assert mapper_galaxy_dict == {}
+
+
 # def test__regularization_list(masked_imaging_7x7):
 #     regularization_0 = ag.reg.Constant(coefficient=1.0)
 #     regularization_1 = ag.reg.ConstantSplit(coefficient=2.0)

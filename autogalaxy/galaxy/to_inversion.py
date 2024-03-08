@@ -139,11 +139,14 @@ class GalaxiesToInversion(AbstractToInversion):
     def galaxies_with_cls_list_from(self, cls: Type) -> List[Galaxy]:
         return list(filter(lambda galaxy: galaxy.has(cls=cls), self.galaxies))
 
+    def galaxy_has_cls(self, cls: Type) -> bool:
+        return any([galaxy.has(cls=cls) for galaxy in self.galaxies])
+
     def cls_light_profile_func_list_galaxy_dict_from(
         self, cls: Type
     ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
 
-        if not any([galaxy.has(cls=cls) for galaxy in self.galaxies]):
+        if not self.galaxy_has_cls(cls=cls):
             return {}
 
         lp_linear_func_galaxy_dict = {}
@@ -195,7 +198,7 @@ class GalaxiesToInversion(AbstractToInversion):
     def image_plane_mesh_grid_list(
         self,
     ) -> Optional[List[aa.Grid2DIrregular]]:
-        if not any([galaxy.has(cls=aa.Pixelization) for galaxy in self.galaxies]):
+        if not self.galaxy_has_cls(cls=aa.Pixelization):
             return None
 
         image_plane_mesh_grid_list = []
@@ -257,17 +260,22 @@ class GalaxiesToInversion(AbstractToInversion):
 
     @cached_property
     def mapper_galaxy_dict(self) -> Dict[aa.AbstractMapper, Galaxy]:
-        if not self.galaxies.has(cls=aa.Pixelization):
+        if not self.galaxy_has_cls(cls=aa.Pixelization):
             return {}
 
         mesh_grid_list = self.image_plane_mesh_grid_list
 
         mapper_galaxy_dict = {}
 
-        pixelization_list = self.galaxies.cls_list_from(cls=aa.Pixelization)
-        galaxies_with_pixelization_list = self.galaxies.galaxies_with_cls_list_from(
+        pixelization_list = []
+
+        galaxies_with_pixelization_list = self.galaxies_with_cls_list_from(
             cls=aa.Pixelization
         )
+
+        for galaxy in galaxies_with_pixelization_list:
+            for pix in galaxy.cls_list_from(cls=aa.Pixelization):
+                pixelization_list.append(pix)
 
         for mapper_index in range(len(mesh_grid_list)):
             galaxy = galaxies_with_pixelization_list[mapper_index]
