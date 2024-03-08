@@ -45,7 +45,7 @@ class Analysis(af.Analysis):
         self.cosmology = cosmology
 
     def galaxies_via_instance_from(
-        self, instance: af.ModelInstance,
+        self, instance: af.ModelInstance, run_time_dict: Optional[Dict] = None
     ) -> List[Galaxy]:
         """
         Create a list of galaxies from a model instance, which is used to fit the dataset.
@@ -65,9 +65,9 @@ class Analysis(af.Analysis):
         A list of galaxies that is used to then fit the dataset.
         """
         if hasattr(instance, "clumps"):
-            return Galaxies(galaxies=instance.galaxies + instance.clumps)
+            return Galaxies(galaxies=instance.galaxies + instance.clumps, run_time_dict=run_time_dict)
 
-        return Galaxies(galaxies=instance.galaxies)
+        return Galaxies(galaxies=instance.galaxies, run_time_dict=run_time_dict)
 
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None

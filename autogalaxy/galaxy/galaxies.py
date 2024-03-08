@@ -102,7 +102,6 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
 
         return galaxy_image_2d_dict
 
-
     @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:

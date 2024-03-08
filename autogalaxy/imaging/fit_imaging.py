@@ -71,7 +71,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             decorator take to run.
         """
 
-        self.galaxies = Galaxies(galaxies=galaxies)
+        self.galaxies = Galaxies(galaxies=galaxies, run_time_dict=run_time_dict)
         self.preloads = preloads
 
         super().__init__(

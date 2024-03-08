@@ -72,7 +72,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         except ImportError:
             settings_inversion.use_w_tilde = False
 
-        self.galaxies = Galaxies(galaxies=galaxies)
+        self.galaxies = Galaxies(galaxies=galaxies, run_time_dict=run_time_dict)
 
         super().__init__(
             dataset=dataset, use_mask_in_fit=False, run_time_dict=run_time_dict
@@ -114,6 +114,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             adapt_images=self.adapt_images,
             settings_inversion=self.settings_inversion,
             preloads=self.preloads,
+            run_time_dict=self.run_time_dict,
         )
 
     @cached_property
