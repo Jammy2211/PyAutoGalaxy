@@ -75,6 +75,7 @@ from .quantity.fit_quantity import FitQuantity
 from .quantity.model.analysis import AnalysisQuantity
 from .quantity.dataset_quantity import DatasetQuantity
 from .galaxy.galaxy import Galaxy
+from .galaxy.galaxies import Galaxies
 from .galaxy.redshift import Redshift
 from .galaxy.stellar_dark_decomp import StellarDarkDecomp
 from .galaxy.to_inversion import AbstractToInversion

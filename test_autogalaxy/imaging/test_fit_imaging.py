@@ -373,15 +373,17 @@ def test___unmasked_blurred_images(masked_imaging_7x7):
 
     g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
 
+    galaxies = ag.Galaxies(galaxies=[g0, g1])
+
     fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=[g0, g1])
 
-    unmasked_blurred_image = plane.unmasked_blurred_image_2d_from(
+    unmasked_blurred_image = galaxies.unmasked_blurred_image_2d_from(
         grid=masked_imaging_7x7.grid, psf=masked_imaging_7x7.psf
     )
 
     assert (fit.unmasked_blurred_image == unmasked_blurred_image).all()
 
-    unmasked_blurred_image_of_galaxies_list = plane.unmasked_blurred_image_2d_list_from(
+    unmasked_blurred_image_of_galaxies_list = galaxies.unmasked_blurred_image_2d_list_from(
         grid=masked_imaging_7x7.grid, psf=masked_imaging_7x7.psf
     )
 
