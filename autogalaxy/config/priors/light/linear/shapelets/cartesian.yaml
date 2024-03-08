@@ -1,4 +1,4 @@
-ShapeletExponential:
+ShapeletCartesianSph:
   centre_0:
     type: Gaussian
     mean: 0.0
@@ -33,7 +33,7 @@ ShapeletExponential:
     gaussian_limits:
       lower: 0.0
       upper: inf
-ShapeletExponentialEll:
+ShapeletCartesian:
   centre_0:
     type: Gaussian
     mean: 0.0

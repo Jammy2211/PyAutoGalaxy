@@ -4,19 +4,21 @@ from typing import Optional, Tuple
 
 import autoarray as aa
 
+
 from autogalaxy.profiles.light.decorators import (
     check_operated_only,
 )
-from autogalaxy.profiles.light.shapelets.abstract import AbstractShapelet
+from autogalaxy.profiles.light.standard.shapelets.abstract import AbstractShapelet
 
 
-class ShapeletPolarEll(AbstractShapelet):
+class ShapeletPolar(AbstractShapelet):
     def __init__(
         self,
         n: int,
         m: int,
         centre: Tuple[float, float] = (0.0, 0.0),
         ell_comps: Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 1.0,
         beta: float = 1.0,
     ):
         """
@@ -26,7 +28,7 @@ class ShapeletPolarEll(AbstractShapelet):
 
           https://arxiv.org/abs/astro-ph/0105178
 
-        Shapelets are are described in the context of strong lens modeling in:
+        Shapelets are described in the context of strong lens modeling in:
 
           https://ui.adsabs.harvard.edu/abs/2016MNRAS.457.3066T/abstract
 
@@ -40,6 +42,9 @@ class ShapeletPolarEll(AbstractShapelet):
             The (y,x) arc-second coordinates of the profile (shapelet) centre.
         ell_comps
             The first and second ellipticity components of the elliptical coordinate system.
+        intensity
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         beta
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.
         """
@@ -47,7 +52,9 @@ class ShapeletPolarEll(AbstractShapelet):
         self.n = n
         self.m = m
 
-        super().__init__(centre=centre, ell_comps=ell_comps, beta=beta)
+        super().__init__(
+            centre=centre, ell_comps=ell_comps, beta=beta, intensity=intensity
+        )
 
     @aa.grid_dec.grid_2d_to_structure
     @check_operated_only
@@ -100,12 +107,13 @@ class ShapeletPolarEll(AbstractShapelet):
         )
 
 
-class ShapeletPolar(ShapeletPolarEll):
+class ShapeletPolarSph(ShapeletPolar):
     def __init__(
         self,
         n: int,
         m: int,
         centre: Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 1.0,
         beta: float = 1.0,
     ):
         """
@@ -115,7 +123,7 @@ class ShapeletPolar(ShapeletPolarEll):
 
           https://arxiv.org/abs/astro-ph/0105178
 
-        Shapelets are are described in the context of strong lens modeling in:
+        Shapelets are described in the context of strong lens modeling in:
 
           https://ui.adsabs.harvard.edu/abs/2016MNRAS.457.3066T/abstract
 
@@ -127,8 +135,18 @@ class ShapeletPolar(ShapeletPolarEll):
             The order of the shapelets basis function in the x-direction.
         centre
             The (y,x) arc-second coordinates of the profile (shapelet) centre.
+        intensity
+            Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
+            the light profile's image is compared too, which is expected to be electrons per second).
         beta
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.
         """
 
-        super().__init__(n=n, m=m, centre=centre, ell_comps=(0.0, 0.0), beta=beta)
+        super().__init__(
+            n=n,
+            m=m,
+            centre=centre,
+            ell_comps=(0.0, 0.0),
+            intensity=intensity,
+            beta=beta,
+        )

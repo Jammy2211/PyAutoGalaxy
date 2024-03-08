@@ -1,41 +1,44 @@
 import numpy as np
-from scipy.special import hermite, factorial
+from scipy.special import factorial, genlaguerre
 from typing import Optional, Tuple
 
 import autoarray as aa
 
+from autogalaxy.profiles.light import standard as lp
+
 from autogalaxy.profiles.light.decorators import (
     check_operated_only,
 )
-from autogalaxy.profiles.light.shapelets.abstract import AbstractShapelet
+from autogalaxy.profiles.light.linear.abstract import LightProfileLinear
 
 
-class ShapeletCartesianEll(AbstractShapelet):
+class ShapeletExponential(lp.ShapeletExponential, LightProfileLinear):
     def __init__(
         self,
-        n_y: int,
-        n_x: int,
+        n: int,
+        m: int,
         centre: Tuple[float, float] = (0.0, 0.0),
         ell_comps: Tuple[float, float] = (0.0, 0.0),
         beta: float = 1.0,
     ):
         """
-        Shapelets where the basis function is defined according to a Cartesian (y,x) grid of coordinates.
+        Shapelets where the basis function is defined according to an Exponential using a polar (r,theta) grid of
+        coordinates.
 
         Shapelets are defined according to:
 
           https://arxiv.org/abs/astro-ph/0105178
 
-        Shapelets are are described in the context of strong lens modeling in:
+        Shapelets are described in the context of strong lens modeling in:
 
           https://ui.adsabs.harvard.edu/abs/2016MNRAS.457.3066T/abstract
 
         Parameters
         ----------
-        n_y
-            The order of the shapelets basis function in the y-direction.
-        n_x
-            The order of the shapelets basis function in the x-direction.
+        n
+            The n order of the shapelets basis function.
+        m
+            The m order of the shapelets basis function in the x-direction.
         centre
             The (y,x) arc-second coordinates of the profile (shapelet) centre.
         ell_comps
@@ -44,10 +47,7 @@ class ShapeletCartesianEll(AbstractShapelet):
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.
         """
 
-        self.n_y = n_y
-        self.n_x = n_x
-
-        super().__init__(centre=centre, ell_comps=ell_comps, beta=beta)
+        super().__init__(n=n, m=m, centre=centre, ell_comps=ell_comps, beta=beta)
 
     @aa.grid_dec.grid_2d_to_structure
     @check_operated_only
@@ -57,7 +57,7 @@ class ShapeletCartesianEll(AbstractShapelet):
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> np.ndarray:
         """
-        Returns the Cartesian Shapelet light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
+        Returns the Exponential Shapelet light profile's 2D image from a 2D grid of Exponential (y,x) coordinates.
 
         If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
         profile `centre`), this is performed automatically.
@@ -70,50 +70,57 @@ class ShapeletCartesianEll(AbstractShapelet):
         Returns
         -------
         image
-            The image of the Cartesian Shapelet evaluated at every (y,x) coordinate on the transformed grid.
+            The image of the Exponential Shapelet evaluated at every (y,x) coordinate on the transformed grid.
         """
 
-        hermite_y = hermite(n=self.n_y)
-        hermite_x = hermite(n=self.n_x)
+        radial = (grid[:, 0] ** 2 + grid[:, 1] ** 2) / self.beta
+        theta = np.arctan(grid[:, 1] / grid[:, 0])
 
-        y = grid[:, 0]
-        x = grid[:, 1]
-
-        shapelet_y = hermite_y(y / self.beta)
-        shapelet_x = hermite_x(x / self.beta)
-
-        return (
-            shapelet_y
-            * shapelet_x
-            * np.exp(-0.5 * (y**2 + x**2) / (self.beta**2))
+        prefactor = (
+            1.0
+            / np.sqrt(2 * np.pi)
             / self.beta
-            / (
-                np.sqrt(
-                    2 ** (self.n_x + self.n_y)
-                    * (np.pi)
-                    * factorial(self.n_y)
-                    * factorial(self.n_x)
-                )
+            * (self.n + 0.5) ** (-1 - np.abs(self.m))
+            * (-1) ** (self.n + self.m)
+            * np.sqrt(
+                factorial(self.n - np.abs(self.m)) / 2 * self.n
+                + 1 / factorial(self.n + np.abs(self.m))
             )
         )
 
+        laguerre = genlaguerre(n=self.n - np.abs(self.m), alpha=2 * np.abs(self.m))
+        shapelet = laguerre(radial / (self.n + 0.5))
 
-class ShapeletCartesian(ShapeletCartesianEll):
+        return np.abs(
+            prefactor
+            * np.exp(-radial / (2 * self.n + 1))
+            * radial ** (np.abs(self.m))
+            * shapelet
+            * np.cos(self.m * theta)
+            + -1.0j * np.sin(self.m * theta)
+        )
+
+    @property
+    def lp_cls(self):
+        return lp.ShapeletExponential
+
+
+class ShapeletExponentialSph(ShapeletExponential):
     def __init__(
         self,
-        n_y: int,
-        n_x: int,
+        n: int,
+        m: int,
         centre: Tuple[float, float] = (0.0, 0.0),
         beta: float = 1.0,
     ):
         """
-        Shapelets where the basis function is defined according to a Cartesian (y,x) grid of coordinates.
+        Shapelets where the basis function is defined according to a Exponential (r,theta) grid of coordinates.
 
         Shapelets are defined according to:
 
           https://arxiv.org/abs/astro-ph/0105178
 
-        Shapelets are are described in the context of strong lens modeling in:
+        Shapelets are described in the context of strong lens modeling in:
 
           https://ui.adsabs.harvard.edu/abs/2016MNRAS.457.3066T/abstract
 
@@ -129,6 +136,8 @@ class ShapeletCartesian(ShapeletCartesianEll):
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.
         """
 
-        super().__init__(
-            n_y=n_y, n_x=n_x, centre=centre, ell_comps=(0.0, 0.0), beta=beta
-        )
+        super().__init__(n=n, m=m, centre=centre, ell_comps=(0.0, 0.0), beta=beta)
+
+    @property
+    def lp_cls(self):
+        return lp.ShapeletExponentialSph
