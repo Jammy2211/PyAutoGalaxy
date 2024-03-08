@@ -130,9 +130,12 @@ class GalaxiesPlotter(Plotter):
         deflections_y: bool = False,
         deflections_x: bool = False,
         magnification: bool = False,
+        plane_image: bool = False,
+        plane_grid: bool = False,
         zoom_to_brightest: bool = True,
         title_suffix: str = "",
         filename_suffix: str = "",
+        source_plane_title: bool = False,
     ):
         """
         Plots the individual attributes of the plotter's `Galaxies` object in 2D, which are computed via the plotter's 2D
@@ -155,6 +158,12 @@ class GalaxiesPlotter(Plotter):
             Whether to make a 2D plot (via `imshow`) of the x component of the deflection angles.
         magnification
             Whether to make a 2D plot (via `imshow`) of the magnification.
+       image
+            Whether to make a 2D plot (via `imshow`) of the image of plane in its image-plane (e.g. after
+            lensing).
+        plane_image
+            Whether to make a 2D plot (via `imshow`) of the image of the plane in the soure-plane (e.g. its
+            unlensed light).
         zoom_to_brightest
             Whether to automatically zoom the plot to the brightest regions of the galaxies being plotted as
             opposed to the full extent of the grid.
@@ -169,6 +178,38 @@ class GalaxiesPlotter(Plotter):
                 visuals_2d=self.get_visuals_2d(),
                 auto_labels=aplt.AutoLabels(
                     title=f"Image{title_suffix}", filename=f"image_2d{filename_suffix}"
+                ),
+            )
+
+        if plane_image:
+            if source_plane_title:
+                title = "Source Plane Image"
+            else:
+                title = f"Plane Image{title_suffix}"
+
+            self.mat_plot_2d.plot_array(
+                array=self.galaxies.plane_image_2d_from(
+                    grid=self.grid, zoom_to_brightest=zoom_to_brightest
+                ),
+                visuals_2d=self.get_visuals_2d(),
+                auto_labels=aplt.AutoLabels(
+                    title=title,
+                    filename=f"plane_image{filename_suffix}",
+                ),
+            )
+
+        if plane_grid:
+            if source_plane_title:
+                title = "Source Plane Grid"
+            else:
+                title = f"Plane Grid{title_suffix}"
+
+            self.mat_plot_2d.plot_grid(
+                grid=self.grid,
+                visuals_2d=self.get_visuals_2d(),
+                auto_labels=aplt.AutoLabels(
+                    title=title,
+                    filename=f"plane_grid{filename_suffix}",
                 ),
             )
 
