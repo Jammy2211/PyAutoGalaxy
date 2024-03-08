@@ -77,8 +77,8 @@ from .quantity.dataset_quantity import DatasetQuantity
 from .galaxy.galaxy import Galaxy
 from .galaxy.redshift import Redshift
 from .galaxy.stellar_dark_decomp import StellarDarkDecomp
-from .plane.to_inversion import AbstractToInversion
-from .plane.to_inversion import GalaxiesToInversion
+from .galaxy.to_inversion import AbstractToInversion
+from .galaxy.to_inversion import GalaxiesToInversion
 from .profiles.geometry_profiles import EllProfile
 from .profiles import (
     point_sources as ps,

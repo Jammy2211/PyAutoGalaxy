@@ -9,7 +9,7 @@ from autogalaxy.abstract_fit import AbstractFitInversion
 from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.plane.to_inversion import GalaxiesToInversion
+from autogalaxy.galaxy.to_inversion import GalaxiesToInversion
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.profiles.light.operated.abstract import LightProfileOperated

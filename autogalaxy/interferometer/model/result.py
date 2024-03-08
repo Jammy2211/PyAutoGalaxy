@@ -1,6 +1,6 @@
 import autoarray as aa
 
-from typing import Dict
+from typing import Dict, List
 
 from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.analysis.result import ResultDataset

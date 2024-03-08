@@ -10,7 +10,7 @@ import autoarray as aa
 from autogalaxy.analysis.preloads import Preloads
 
 from autogalaxy.aggregator.imaging import _imaging_from
-from autogalaxy.aggregator.plane import _plane_from
+from autogalaxy.aggregator.galaxies import _galaxies_from
 from autogalaxy.aggregator import agg_util
 
 
@@ -63,7 +63,7 @@ def _fit_imaging_from(
 
     dataset_list = _imaging_from(fit=fit, settings_dataset=settings_dataset)
 
-    plane_list = _plane_from(fit=fit, instance=instance)
+    plane_list = _galaxies_from(fit=fit, instance=instance)
 
     adapt_images_list = agg_util.adapt_images_from(fit=fit)
 

@@ -15,7 +15,7 @@ from autogalaxy.plot.visuals.two_d import Visuals2D
 from autogalaxy.plot.include.one_d import Include1D
 from autogalaxy.plot.include.two_d import Include2D
 
-from autogalaxy.plane.plot.plane_plotters import GalaxiesPlotter
+from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
 
 
 class FitInterferometerPlotter(Plotter):
@@ -97,7 +97,7 @@ class FitInterferometerPlotter(Plotter):
         return self.get_2d.via_mask_from(mask=self.fit.dataset.real_space_mask)
 
     @property
-    def galaxies(self) -> List[Galaxies]:
+    def galaxies(self) -> List[Galaxy]:
         return self.fit.galaxies_linear_light_profiles_to_light_profiles
 
     def galaxies_plotter_from(self, galaxies: List[Galaxy]) -> GalaxiesPlotter:

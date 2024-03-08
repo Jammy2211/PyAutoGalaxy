@@ -12,6 +12,7 @@ from autogalaxy.operate.image import OperateImageList
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
+from autogalaxy.profiles.light.snr.abstract import LightProfileSNR
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
@@ -522,3 +523,41 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             raise exc.GalaxyException(
                 "You cannot perform a mass-based calculation on a galaxy which does not have a mass-profile"
             )
+
+    def set_snr_of_snr_light_profiles(
+        self,
+        grid: aa.type.Grid2DLike,
+        exposure_time: float,
+        background_sky_level: float = 0.0,
+        psf: Optional[aa.Kernel2D] = None,
+    ):
+        """
+        Iterate over every galaxy finding all `LightProfileSNR` light profiles and set their `intensity` values to
+        values which give their input `signal_to_noise_ratio` value, which is performed as follows:
+
+        - Evaluate the image of each light profile on the input grid.
+        - Blur this image with a PSF, if included.
+        - Take the value of the brightest pixel.
+        - Use an input `exposure_time` and `background_sky` (e.g. from the `SimulatorImaging` object) to determine
+          what value of `intensity` gives the desired signal to noise ratio for the image.
+
+        Parameters
+        ----------
+        grid
+            The (y, x) coordinates in the original reference frame of the grid.
+        exposure_time
+            The exposure time of the simulated imaging.
+        background_sky_level
+            The level of the background sky of the simulated imaging.
+        psf
+            The psf of the simulated imaging which can change the S/N of the light profile due to spreading out
+            the emission.
+        """
+        for light_profile in self.cls_list_from(cls=LightProfile):
+            if isinstance(light_profile, LightProfileSNR):
+                light_profile.set_intensity_from(
+                    grid=grid,
+                    exposure_time=exposure_time,
+                    background_sky_level=background_sky_level,
+                    psf=psf,
+                )

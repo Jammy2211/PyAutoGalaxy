@@ -23,44 +23,21 @@ class SimulatorImaging(aa.SimulatorImaging):
             The image-plane grid which the image of the strong lens is generated on.
         """
 
-        plane.set_snr_of_snr_light_profiles(
-            grid=grid,
-            exposure_time=self.exposure_time,
-            background_sky_level=self.background_sky_level,
-            psf=self.psf,
-        )
+        for galaxy in galaxies:
 
-        image = plane.padded_image_2d_from(
+            galaxy.set_snr_of_snr_light_profiles(
+                grid=grid,
+                exposure_time=self.exposure_time,
+                background_sky_level=self.background_sky_level,
+                psf=self.psf,
+            )
+
+        image = sum([galaxy.padded_image_2d_from(
             grid=grid, psf_shape_2d=self.psf.shape_native
-        )
+        ) for galaxy in galaxies])
 
         dataset = self.via_image_from(image=image.binned)
 
         return dataset.trimmed_after_convolution_from(
             kernel_shape=self.psf.shape_native
         )
-
-    def via_galaxies_from(self, galaxies, grid):
-        """
-        Simulate an `Imaging` dataset from an input list of galaxies and grid.
-
-        The galaxies are used to create a plane, which generates the image which is simulated.
-
-        The steps of the `SimulatorImaging` simulation process (e.g. PSF convolution, noise addition) are
-        described in the `SimulatorImaging` `__init__` method docstring.
-
-        Parameters
-        ----------
-        galaxies
-            The galaxies used to create the tracer, which describes the galaxy images used to simulate the imaging
-            dataset.
-        grid
-            The image-plane grid which the image of the strong lens is generated on.
-        """
-
-        plane = Plane(
-            redshift=float(np.mean([galaxy.redshift for galaxy in galaxies])),
-            galaxies=galaxies,
-        )
-
-        return self.via_galaxies_from(plane=plane, grid=grid)
