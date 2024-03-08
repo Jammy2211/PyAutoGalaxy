@@ -15,7 +15,6 @@ from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.imaging.model.visualizer import VisualizerImaging
 from autogalaxy.imaging.model.result import ResultImaging
 from autogalaxy.imaging.fit_imaging import FitImaging
-from autogalaxy.plane.plane import Plane
 
 from autogalaxy import exc
 
@@ -37,8 +36,7 @@ class AnalysisImaging(AnalysisDataset):
         It handles many other tasks, such as visualization, outputting results to hard-disk and storing results in
         a format that can be loaded after the model-fit is complete.
 
-        This class is used for model-fits which fit galaxies (or objects containing galaxies like a `Plane`)
-        to an imaging dataset.
+        This class is used for model-fits which fit galaxies to an imaging dataset.
 
         This class stores the settings used to perform the model-fit for certain components of the model (e.g. a
         pixelization or inversion), the Cosmology used for the analysis and adapt images used for certain model
@@ -108,9 +106,9 @@ class AnalysisImaging(AnalysisDataset):
         2) Extract attributes which model aspects of the data reductions, like the scaling the background sky
            and background noise.
 
-        3) Extracts all galaxies from the model instance and set up a `Plane`.
+        3) Extracts all galaxies from the model instance.
 
-        4) Use the `Plane` and other attributes to create a `FitImaging` object, which performs steps such as creating
+        4) Use the galaxies and other attributes to create a `FitImaging` object, which performs steps such as creating
            model images of every galaxy in the plane, blurring them with the imaging dataset's PSF and computing residuals,
            a chi-squared statistic and the log likelihood.
 
@@ -223,7 +221,7 @@ class AnalysisImaging(AnalysisDataset):
 
         The visualization performed by this function includes:
 
-        - Images of the best-fit `Plane`, including the images of each of its galaxies.
+        - Images of the best-fit galaxies, including the images of each of its galaxies.
 
         - Images of the best-fit `FitImaging`, including the model-image, residuals and chi-squared of its fit to
           the imaging data.
@@ -255,7 +253,7 @@ class AnalysisImaging(AnalysisDataset):
         except exc.InversionException:
             pass
 
-        plane = fit.plane_linear_light_profiles_to_light_profiles
+        plane = fit.galaxies_linear_light_profiles_to_light_profiles
 
         visualizer.visualize_plane(
             plane=plane, grid=fit.grid, during_analysis=during_analysis
@@ -284,7 +282,7 @@ class AnalysisImaging(AnalysisDataset):
         - The non-linear search used to perform the model fit.
 
         The `ResultImaging` object contains a number of methods which use the above objects to create the max
-        log likelihood `Plane`, `FitImaging`, adapt-galaxy images,etc.
+        log likelihood galaxies `FitImaging`, adapt-galaxy images,etc.
 
         Parameters
         ----------

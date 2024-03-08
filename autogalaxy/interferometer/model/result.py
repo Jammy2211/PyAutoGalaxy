@@ -5,7 +5,6 @@ from typing import Dict
 from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.analysis.result import ResultDataset
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.plane.plane import Plane
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 
 
@@ -22,7 +21,7 @@ class ResultInterferometer(ResultDataset):
 
     - The non-linear search used to perform the model fit.
 
-    This class contains a number of methods which use the above objects to create the max log likelihood `Plane`,
+    This class contains a number of methods which use the above objects to create the max log likelihood galaxies,
     `FitInterferometer`, adapt-galaxy images,etc.
 
     Parameters
@@ -51,11 +50,11 @@ class ResultInterferometer(ResultDataset):
         return self.analysis.fit_from(instance=self.instance)
 
     @property
-    def max_log_likelihood_galaxies(self) -> Plane:
+    def max_log_likelihood_galaxies(self) -> List[Galaxy]:
         """
-        An instance of a `Plane` corresponding to the maximum log likelihood model inferred by the non-linear search.
+        An instance of the galaxies corresponding to the maximum log likelihood model inferred by the non-linear search.
 
-        The `Plane` is computed from the `max_log_likelihood_fit`, as this ensures that all linear light profiles
+        The galaxies are computed from the `max_log_likelihood_fit`, as this ensures that all linear light profiles
         are converted to normal light profiles with their `intensity` values updated.
         """
         return (

@@ -9,7 +9,6 @@ from autogalaxy.abstract_fit import AbstractFitInversion
 from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.plane.plane import Plane
 from autogalaxy.plane.to_inversion import GalaxiesToInversion
 
 
@@ -17,25 +16,25 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
     def __init__(
         self,
         dataset: aa.Interferometer,
-        plane: Plane,
+        galaxies: List[Galaxy],
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads: aa.Preloads = Preloads(),
         run_time_dict: Optional[Dict] = None,
     ):
         """
-        Fits an interferometer dataset using a `Plane` object.
+        Fits an interferometer dataset using a list of galaxies.
 
         The fit performs the following steps:
 
-        1) Compute the sum of all images of galaxy light profiles in the `Plane`.
+        1) Compute the sum of all images of galaxy light profiles.
 
         2) Fourier transform this image with the transformer object and `uv_wavelengths` to create
            the `profile_visibilities`.
 
         3) Subtract these visibilities from the `data` to create the `profile_subtracted_visibilities`.
 
-        4) If the `Plane` has any linear algebra objects (e.g. linear light profiles, a pixelization / regulariation)
+        4) If the galaxies have any linear algebra objects (e.g. linear light profiles, a pixelization / regulariation)
            fit the `profile_subtracted_visibilities` with these objects via an inversion.
 
         5) Compute the `model_data` as the sum of the `profile_visibilities` and `reconstructed_data` of the inversion
@@ -209,9 +208,9 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         return list(self.galaxy_model_visibilities_dict.values())
 
     @property
-    def plane_linear_light_profiles_to_light_profiles(self) -> Plane:
+    def galaxies_linear_light_profiles_to_light_profiles(self) -> List[Galaxy]:
         """
-        The `Plane` where all linear light profiles have been converted to ordinary light profiles, where their
+        The galaxies where all linear light profiles have been converted to ordinary light profiles, where their
         `intensity` values are set to the values inferred by this fit.
 
         This is typically used for visualization, because linear light profiles cannot be used in `LightProfilePlotter`

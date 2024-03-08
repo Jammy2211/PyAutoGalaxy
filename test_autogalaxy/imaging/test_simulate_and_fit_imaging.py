@@ -27,7 +27,7 @@ def test__perfect_fit__chi_squared_0():
         exposure_time=300.0, psf=psf, add_poisson_noise=False
     )
 
-    dataset = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset = simulator.via_galaxies_from(plane=plane, grid=grid)
     dataset.noise_map = ag.Array2D.ones(
         shape_native=dataset.data.shape_native, pixel_scales=0.2
     )
@@ -109,7 +109,7 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
 
     simulator = ag.SimulatorImaging(exposure_time=300.0, psf=psf, noise_seed=1)
 
-    dataset = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset = simulator.via_galaxies_from(plane=plane, grid=grid)
 
     mask = ag.Mask2D.circular(
         shape_native=dataset.data.shape_native, pixel_scales=0.2, radius=2.0
@@ -134,7 +134,7 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
 
     plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
-    dataset = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset = simulator.via_galaxies_from(plane=plane, grid=grid)
 
     masked_dataset = dataset.apply_mask(mask=mask)
 
@@ -162,7 +162,7 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
         exposure_time=300.0, psf=psf, add_poisson_noise=False
     )
 
-    dataset = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset = simulator.via_galaxies_from(plane=plane, grid=grid)
     dataset.noise_map = ag.Array2D.ones(
         shape_native=dataset.data.shape_native, pixel_scales=0.2
     )

@@ -489,7 +489,7 @@ class Visualizer:
                 adapt_galaxy_name_image_dict=adapt_images.galaxy_image_dict
             )
 
-    def visualize_contribution_maps(self, plane: Plane):
+    def visualize_contribution_maps(self, galaxies: List[Galaxy]):
         """
         Visualizes the contribution maps that are used for adapt features which adapt a model to the dataset it is
         fitting.
@@ -506,8 +506,8 @@ class Visualizer:
 
         Parameters
         ----------
-        plane
-            The maximum log likelihood `Plane` of the non-linear search which is used to plot the contribution maps.
+        galaxies
+            The maximum log likelihood galaxies of the non-linear search which is used to plot the contribution maps.
         """
 
         def should_plot(name):

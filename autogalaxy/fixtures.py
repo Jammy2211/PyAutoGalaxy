@@ -116,25 +116,25 @@ def make_gal_x1_lp_x1_mp():
     )
 
 
-# Plane #
+# Galaxies #
 
 
-def make_plane_7x7():
-    return ag.Plane(galaxies=[make_gal_x1_lp_x1_mp()])
+def make_galaxies_7x7():
+    return [make_gal_x1_lp_x1_mp()]
 
 
-def make_plane_x2_gal_7x7():
-    return ag.Plane(galaxies=[make_gal_x1_lp_x1_mp(), make_gal_x1_lp_x1_mp()])
+def make_galaxies_x2_gal_7x7():
+    return [make_gal_x1_lp_x1_mp(), make_gal_x1_lp_x1_mp()]
 
 
-def make_plane_x2_galaxy_inversion_7x7():
+def make_galaxies_x2_inversion_7x7():
     source_gal_inversion = ag.Galaxy(
         redshift=1.0,
         pixelization=ag.mesh.Rectangular(),
         regularization=ag.reg.Constant(),
     )
 
-    return ag.Plane(galaxies=[make_gal_x1_lp(), source_gal_inversion])
+    return [make_gal_x1_lp(), source_gal_inversion]
 
 
 # COSMOLOGY #
@@ -214,9 +214,8 @@ def make_fit_imaging_7x7():
 
 
 def make_fit_imaging_x2_galaxy_7x7():
-    plane = ag.Plane(galaxies=[make_gal_x1_lp(), make_gal_x1_lp(), make_gal_x1_mp()])
 
-    return ag.FitImaging(dataset=make_masked_imaging_7x7(), plane=plane)
+    return ag.FitImaging(dataset=make_masked_imaging_7x7(), galaxies=[make_gal_x1_lp(), make_gal_x1_lp(), make_gal_x1_mp()])
 
 
 def make_fit_imaging_x2_galaxy_inversion_7x7():
@@ -247,9 +246,7 @@ def make_samples_with_result():
         ag.Galaxy(redshift=1.0, light=ag.lp.Sersic(intensity=2.0)),
     ]
 
-    plane = ag.Plane(galaxies=galaxies)
-
-    return ag.m.MockSamples(max_log_likelihood_instance=plane)
+    return ag.m.MockSamples(max_log_likelihood_instance=galaxies)
 
 
 def make_analysis_imaging_7x7():

@@ -1,9 +1,11 @@
+from typing import List
+
 import autoarray as aa
 import autoarray.plot as aplt
 
 from autoarray.fit.plot.fit_interferometer_plotters import FitInterferometerPlotterMeta
 
-from autogalaxy.plane.plane import Plane
+from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_plot.one_d import MatPlot1D
@@ -95,12 +97,12 @@ class FitInterferometerPlotter(Plotter):
         return self.get_2d.via_mask_from(mask=self.fit.dataset.real_space_mask)
 
     @property
-    def plane(self) -> Plane:
-        return self.fit.plane_linear_light_profiles_to_light_profiles
+    def galaxies(self) -> List[Galaxies]:
+        return self.fit.galaxies_linear_light_profiles_to_light_profiles
 
-    def plane_plotter_from(self, plane: Plane) -> GalaxiesPlotter:
+    def galaxies_plotter_from(self, galaxies: List[Galaxy]) -> GalaxiesPlotter:
         """
-        Returns an `GalaxiesPlotter` corresponding to an input `Plane` of the fit.
+        Returns a `GalaxiesPlotter` corresponding to an input galaxies list.
 
         Returns
         -------
@@ -182,7 +184,7 @@ class FitInterferometerPlotter(Plotter):
         """
         Standard subplot of the real-space attributes of the plotter's `FitInterferometer` object.
 
-        Depending on whether `LightProfile`'s or an `Inversion` are used to represent galaxies in the `Plane`, different
+        Depending on whether `LightProfile`'s or an `Inversion` are used to represent galaxies, different
         methods are called to create these real-space images.
         """
         if not self.plane.has(cls=aa.Pixelization):

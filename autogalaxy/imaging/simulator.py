@@ -1,12 +1,12 @@
 import numpy as np
+from typing import List
 
 import autoarray as aa
 
-from autogalaxy.plane.plane import Plane
-
+from autogalaxy.galaxy.galaxy import Galaxy
 
 class SimulatorImaging(aa.SimulatorImaging):
-    def via_plane_from(self, plane: Plane, grid: aa.type.Grid2DLike) -> aa.Imaging:
+    def via_galaxies_from(self, galaxies: List[Galaxy], grid: aa.type.Grid2DLike) -> aa.Imaging:
         """
         Simulate an `Imaging` dataset from an input plane and grid.
 
@@ -17,8 +17,8 @@ class SimulatorImaging(aa.SimulatorImaging):
 
         Parameters
         ----------
-        plane
-            The plane, which contains all galaxies whose light is simulated.
+        galaxies
+            The galaxies whose light is simulated.
         grid
             The image-plane grid which the image of the strong lens is generated on.
         """
@@ -63,4 +63,4 @@ class SimulatorImaging(aa.SimulatorImaging):
             galaxies=galaxies,
         )
 
-        return self.via_plane_from(plane=plane, grid=grid)
+        return self.via_galaxies_from(plane=plane, grid=grid)

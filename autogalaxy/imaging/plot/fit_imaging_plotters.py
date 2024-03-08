@@ -6,7 +6,7 @@ import autoarray.plot as aplt
 
 from autoarray.fit.plot.fit_imaging_plotters import FitImagingPlotterMeta
 
-from autogalaxy.plane.plane import Plane
+from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
@@ -88,8 +88,8 @@ class FitImagingPlotter(Plotter):
         )
 
     @property
-    def plane(self) -> Plane:
-        return self.fit.plane_linear_light_profiles_to_light_profiles
+    def galaxies(self) -> List[Galaxy]:
+        return self.fit.galaxies_linear_light_profiles_to_light_profiles
 
     @property
     def galaxy_indices(self) -> List[int]:
@@ -117,8 +117,8 @@ class FitImagingPlotter(Plotter):
         model_image: bool = False,
     ):
         """
-        Plots images representing each individual `Galaxy` in the plotter's `Plane` in 2D, which are computed via the
-        plotter's 2D grid object.
+        Plots images representing each individual `Galaxy` in the plotter's list of galaxies in 2D, which are
+        computed via the plotter's 2D grid object.
 
         These images subtract or omit the contribution of other galaxies in the plane, such that plots showing
         each individual galaxy are made.
@@ -201,8 +201,8 @@ class FitImagingPlotter(Plotter):
 
     def subplot_of_galaxies(self, galaxy_index: Optional[int] = None):
         """
-        Plots images representing each individual `Galaxy` in the plotter's `Plane` in 2D on a subplot, which are
-        computed via the plotter's 2D grid object.
+        Plots images representing each individual `Galaxy` in the plotter's list of galaxies in 2D on a subplot,
+        which are computed via the plotter's 2D grid object.
 
         These images subtract or omit the contribution of other galaxies in the plane, such that plots showing
         each individual galaxy are made.

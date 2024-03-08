@@ -24,7 +24,7 @@ class TestSimulatorInterferometer:
             noise_seed=1,
         )
 
-        dataset = simulator.via_plane_from(plane=plane, grid=grid)
+        dataset = simulator.via_galaxies_from(plane=plane, grid=grid)
 
         interferometer_via_image = simulator.via_image_from(
             image=plane.image_2d_from(grid=grid)

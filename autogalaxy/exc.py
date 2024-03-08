@@ -105,6 +105,6 @@ def raise_linear_light_profile_in_plot(
         
         You should then access what you need via 
         `fit.tracer_linear_light_profiles_to_light_profiles` or
-        `fit.plane_linear_light_profiles_to_light_profiles`.
+        `fit.galaxies_linear_light_profiles_to_light_profiles`.
         """
     )

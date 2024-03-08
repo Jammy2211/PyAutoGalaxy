@@ -29,7 +29,7 @@ def test__perfect_fit__chi_squared_0():
         noise_sigma=None,
     )
 
-    dataset = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset = simulator.via_galaxies_from(plane=plane, grid=grid)
 
     file_path = path.join(
         "{}".format(path.dirname(path.realpath(__file__))),
@@ -131,7 +131,7 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
         noise_seed=1,
     )
 
-    dataset = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset = simulator.via_galaxies_from(plane=plane, grid=grid)
 
     dataset = dataset.apply_settings(
         settings=ag.SettingsInterferometer(transformer_class=ag.TransformerDFT)
@@ -170,7 +170,7 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
         noise_sigma=None,
     )
 
-    dataset = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset = simulator.via_galaxies_from(plane=plane, grid=grid)
 
     dataset = dataset.apply_settings(
         settings=ag.SettingsInterferometer(

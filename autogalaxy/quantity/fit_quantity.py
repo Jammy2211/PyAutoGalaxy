@@ -6,14 +6,13 @@ from autogalaxy.quantity.dataset_quantity import DatasetQuantity
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.plane.plane import Plane
 
 
 class FitQuantity(aa.FitImaging):
     def __init__(
         self,
         dataset: DatasetQuantity,
-        light_mass_obj: Union[LightProfile, MassProfile, Galaxy, Plane],
+        light_mass_obj: Union[LightProfile, MassProfile, Galaxy, List[Galaxy]],
         func_str: str,
         model_data_manual: Optional[Union[aa.Array2D, aa.VectorYX2D]] = None,
     ):
@@ -21,7 +20,7 @@ class FitQuantity(aa.FitImaging):
         Fits a `DatasetQuantity` object with model data.
 
         This is used to fit a quantity (e.g. a convergence, deflection angles), from an object like
-        a `LightProfile`, `MassProfile`, `Galaxy` or `Plane`, to the same quantity derived from another of that object.
+        a `LightProfile`, `MassProfile`, `Galaxy`, to the same quantity derived from another of that object.
 
         For example, we may have the 2D convergence of a power-law mass profile and wish to determine how closely the
         2D convergence of an nfw mass profile's matches it. The `FitQuantity` can fit the two, where a noise-map
@@ -40,7 +39,7 @@ class FitQuantity(aa.FitImaging):
             An object containing functions which computes a light and / or mass quantity (e.g. a plane of galaxies)
             whose model quantities are used to fit the quantity data.
         func_str
-            A string giving the name of the method of the input `Plane` used to compute the quantity that fits
+            A string giving the name of the method of the input galaxy used to compute the quantity that fits
             the dataset.
         model_data_manual
             Manually pass the model-data, omitting its calculation via the function defined by the `func_str`.

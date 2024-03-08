@@ -27,7 +27,7 @@ Point Spread Function (PSF) by passing it a plane and grid.
 
 .. code-block:: python
 
-    dataset = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset = simulator.via_galaxies_from(plane=plane, grid=grid)
 
 Here is what our dataset looks like:
 

@@ -72,7 +72,7 @@ def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
     clean_fits(fits_path=fits_path)
 
 
-def test__simulator__via_plane_from__same_as_plane_image():
+def test__simulator__via_galaxies_from__same_as_plane_image():
     psf = ag.Kernel2D.from_gaussian(shape_native=(7, 7), sigma=0.5, pixel_scales=0.05)
 
     grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
@@ -90,7 +90,7 @@ def test__simulator__via_plane_from__same_as_plane_image():
         add_poisson_noise=False,
     )
 
-    dataset = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset = simulator.via_galaxies_from(plane=plane, grid=grid)
 
     imaging_via_image = simulator.via_image_from(image=plane.image_2d_from(grid=grid))
 

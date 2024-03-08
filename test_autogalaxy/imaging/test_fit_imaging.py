@@ -496,7 +496,7 @@ def test__light_profile_linear__intensity_dict(masked_imaging_7x7):
     )
 
 
-def test__plane_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
+def test__galaxies_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
     g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
 
     g0_linear = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.Sersic(sersic_index=1.0))
@@ -509,7 +509,7 @@ def test__plane_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
 
     assert fit.galaxies[0].bulge.intensity == pytest.approx(1.0, 1.0e-4)
 
-    plane = fit.plane_linear_light_profiles_to_light_profiles
+    plane = fit.galaxies_linear_light_profiles_to_light_profiles
 
     assert plane.galaxies[0].bulge.intensity == pytest.approx(1.0, 1.0e-4)
     assert plane.galaxies[1].bulge.intensity == pytest.approx(7.0932274, 1.0e-4)
@@ -544,7 +544,7 @@ def test__plane_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
     )
     assert fit.galaxies[2].bulge.intensity == pytest.approx(1.0, 1.0e-4)
 
-    plane = fit.plane_linear_light_profiles_to_light_profiles
+    plane = fit.galaxies_linear_light_profiles_to_light_profiles
 
     assert plane.galaxies[0].bulge.intensity == pytest.approx(1.0, 1.0e-4)
     assert plane.galaxies[1].bulge.light_profile_list[0].intensity == pytest.approx(
