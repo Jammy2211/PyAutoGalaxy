@@ -63,7 +63,7 @@ def _fit_imaging_from(
 
     dataset_list = _imaging_from(fit=fit, settings_dataset=settings_dataset)
 
-    plane_list = _galaxies_from(fit=fit, instance=instance)
+    galaxies_list = _galaxies_from(fit=fit, instance=instance)
 
     adapt_images_list = agg_util.adapt_images_from(fit=fit)
 
@@ -75,8 +75,8 @@ def _fit_imaging_from(
 
     fit_dataset_list = []
 
-    for dataset, plane, adapt_images, mesh_grids_of_planes in zip(
-        dataset_list, plane_list, adapt_images_list, mesh_grids_of_planes_list
+    for dataset, galaxies, adapt_images, mesh_grids_of_planes in zip(
+        dataset_list, galaxies_list, adapt_images_list, mesh_grids_of_planes_list
     ):
         preloads = agg_util.preloads_from(
             preloads_cls=Preloads,
@@ -88,7 +88,7 @@ def _fit_imaging_from(
         fit_dataset_list.append(
             FitImaging(
                 dataset=dataset,
-                plane=plane,
+                galaxies=galaxies,
                 adapt_images=adapt_images,
                 settings_inversion=settings_inversion,
                 preloads=preloads,
