@@ -3,7 +3,6 @@ from os import path
 import pytest
 
 import autogalaxy as ag
-from autoconf import conf
 from autogalaxy.quantity.model.visualizer import VisualizerQuantity
 
 directory = path.dirname(path.abspath(__file__))
