@@ -23,11 +23,11 @@ and accounting for the background sky in the exposure which adds Poisson noise.
     )
 
 Once we have a simulator, we can use it to create an imaging dataset which consists of an image, noise-map and
-Point Spread Function (PSF) by passing it a plane and grid.
+Point Spread Function (PSF) by passing it galaxies and grid.
 
 .. code-block:: python
 
-    dataset = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset = simulator.via_galaxies_from(galaxies=galaxies, grid=grid)
 
 Here is what our dataset looks like:
 

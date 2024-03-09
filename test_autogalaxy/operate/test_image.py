@@ -69,7 +69,7 @@ def test__blurred_image_2d_from(
     )
 
 
-def test__x1_plane__padded_image__compare_to_galaxy_images_using_padded_grid_stack(
+def test__x1_galaxies__padded_image__compare_to_galaxy_images_using_padded_grid_stack(
     sub_grid_2d_7x7,
 ):
     padded_grid = sub_grid_2d_7x7.padded_grid_from(kernel_shape_native=(3, 3))
@@ -84,14 +84,14 @@ def test__x1_plane__padded_image__compare_to_galaxy_images_using_padded_grid_sta
 
     padded_g2_image = g2.image_2d_from(grid=padded_grid)
 
-    plane = ag.Plane(galaxies=[g0, g1, g2])
+    galaxies = ag.Galaxies(galaxies=[g0, g1, g2])
 
-    padded_plane_image = plane.padded_image_2d_from(
+    padded_image = galaxies.padded_image_2d_from(
         grid=sub_grid_2d_7x7, psf_shape_2d=(3, 3)
     )
 
-    assert padded_plane_image.shape_native == (9, 9)
-    assert padded_plane_image == pytest.approx(
+    assert padded_image.shape_native == (9, 9)
+    assert padded_image == pytest.approx(
         padded_g0_image + padded_g1_image + padded_g2_image, 1.0e-4
     )
 
@@ -316,15 +316,15 @@ def test__galaxy_blurred_image_2d_dict_from(
 
     g2 = ag.Galaxy(redshift=0.5, light_profile_operated=light_profile_operated)
 
-    plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
+    galaxies = ag.Galaxies(galaxies=[g1, g0, g2])
 
-    blurred_image_2d_list = plane.blurred_image_2d_list_from(
+    blurred_image_2d_list = galaxies.blurred_image_2d_list_from(
         grid=sub_grid_2d_7x7,
         convolver=convolver_7x7,
         blurring_grid=blurring_grid_2d_7x7,
     )
 
-    blurred_image_dict = plane.galaxy_blurred_image_2d_dict_from(
+    blurred_image_dict = galaxies.galaxy_blurred_image_2d_dict_from(
         grid=sub_grid_2d_7x7,
         convolver=convolver_7x7,
         blurring_grid=blurring_grid_2d_7x7,
@@ -357,13 +357,13 @@ def test__galaxy_visibilities_dict_from(sub_grid_2d_7x7, transformer_7x7_7):
     )
     g2 = ag.Galaxy(redshift=0.5, light_profile=ag.lp.Sersic(intensity=3.0))
 
-    plane = ag.Plane(redshift=-0.75, galaxies=[g1, g0, g2])
+    galaxies = ag.Galaxies(galaxies=[g1, g0, g2])
 
-    visibilities_list = plane.visibilities_list_from(
+    visibilities_list = galaxies.visibilities_list_from(
         grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
     )
 
-    visibilities_dict = plane.galaxy_visibilities_dict_from(
+    visibilities_dict = galaxies.galaxy_visibilities_dict_from(
         grid=sub_grid_2d_7x7, transformer=transformer_7x7_7
     )
 

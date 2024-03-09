@@ -14,21 +14,21 @@ def make_visualizer_plotter_setup():
     return path.join("{}".format(directory), "files")
 
 
-def test__visualizes_plane__uses_configs(
-    masked_imaging_7x7, plane_7x7, include_2d_all, plot_path, plot_patch
+def test__visualizes_galaxies__uses_configs(
+    masked_imaging_7x7, galaxies_7x7, include_2d_all, plot_path, plot_patch
 ):
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
     visualizer = vis.Visualizer(visualize_path=plot_path)
 
-    visualizer.visualize_plane(
-        plane=plane_7x7, grid=masked_imaging_7x7.grid, during_analysis=False
+    visualizer.visualize_galaxies(
+        galaxies=galaxies_7x7, grid=masked_imaging_7x7.grid, during_analysis=False
     )
 
-    assert path.join(plot_path, "subplot_plane.png") in plot_patch.paths
+    assert path.join(plot_path, "subplot_galaxies.png") in plot_patch.paths
 
-    plot_path = path.join(plot_path, "plane")
+    plot_path = path.join(plot_path, "galaxies")
 
     assert path.join(plot_path, "subplot_galaxy_images.png") in plot_patch.paths
     assert path.join(plot_path, "image_2d.png") in plot_patch.paths
@@ -45,19 +45,19 @@ def test__visualizes_plane__uses_configs(
     assert convergence.shape == (7, 7)
 
 
-def test__visualizes_galaxies__uses_configs(
-    masked_imaging_7x7, plane_7x7, include_2d_all, plot_path, plot_patch
+def test__visualizes_galaxies_1d__uses_configs(
+    masked_imaging_7x7, galaxies_7x7, include_2d_all, plot_path, plot_patch
 ):
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
     visualizer = vis.Visualizer(visualize_path=plot_path)
 
-    visualizer.visualize_galaxies(
-        galaxies=plane_7x7.galaxies, grid=masked_imaging_7x7.grid, during_analysis=False
+    visualizer.visualize_galaxies_1d(
+        galaxies=galaxies_7x7, grid=masked_imaging_7x7.grid, during_analysis=False
     )
 
-    plot_path = path.join(plot_path, "galaxies")
+    plot_path = path.join(plot_path, "galaxies_1d")
 
     assert path.join(plot_path, "image_1d_decomposed.png") in plot_patch.paths
     assert path.join(plot_path, "convergence_1d_decomposed.png") not in plot_patch.paths
@@ -145,13 +145,4 @@ def test__visualize_adapt_images__uses_config(
     assert path.join(plot_path, "adapt_model_image.png") in plot_patch.paths
     assert (
         path.join(plot_path, "subplot_adapt_images_of_galaxies.png") in plot_patch.paths
-    )
-
-    visualizer.visualize_contribution_maps(
-        plane=fit_imaging_x2_galaxy_inversion_7x7.plane
-    )
-
-    assert (
-        path.join(plot_path, "subplot_contribution_map_list.png")
-        not in plot_patch.paths
     )

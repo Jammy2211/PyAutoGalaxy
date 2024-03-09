@@ -30,8 +30,8 @@ def test__fit_interferometer_randomly_drawn_via_pdf_gen_from(
         for fit_list in fit_gen:
             i += 1
 
-            assert fit_list[0].plane.galaxies[0].redshift == 0.5
-            assert fit_list[0].plane.galaxies[0].light.centre == (10.0, 10.0)
+            assert fit_list[0].galaxies[0].redshift == 0.5
+            assert fit_list[0].galaxies[0].light.centre == (10.0, 10.0)
 
     assert i == 2
 
@@ -60,11 +60,11 @@ def test__fit_interferometer_randomly_drawn_via_pdf_gen_from(
 #         for fit_list in fit_gen:
 #             i += 1
 #
-#             assert fit_list[0].plane.galaxies[0].redshift == 0.5
-#             assert fit_list[0].plane.galaxies[0].light.centre == (10.0, 10.0)
+#             assert fit_list[0].galaxies[0].redshift == 0.5
+#             assert fit_list[0].galaxies[0].light.centre == (10.0, 10.0)
 #
-#             assert fit_list[1].plane.galaxies[0].redshift == 0.5
-#             assert fit_list[1].plane.galaxies[0].light.centre == (10.0, 10.0)
+#             assert fit_list[1].galaxies[0].redshift == 0.5
+#             assert fit_list[1].galaxies[0].light.centre == (10.0, 10.0)
 #
 #     assert i == 2
 #
@@ -93,12 +93,12 @@ def test__fit_interferometer_all_above_weight_gen(interferometer_7, samples, mod
             i += 1
 
             if i == 1:
-                assert fit_list[0].plane.galaxies[0].redshift == 0.5
-                assert fit_list[0].plane.galaxies[0].light.centre == (1.0, 1.0)
+                assert fit_list[0].galaxies[0].redshift == 0.5
+                assert fit_list[0].galaxies[0].light.centre == (1.0, 1.0)
 
             if i == 2:
-                assert fit_list[0].plane.galaxies[0].redshift == 0.5
-                assert fit_list[0].plane.galaxies[0].light.centre == (10.0, 10.0)
+                assert fit_list[0].galaxies[0].redshift == 0.5
+                assert fit_list[0].galaxies[0].light.centre == (10.0, 10.0)
 
     assert i == 2
 

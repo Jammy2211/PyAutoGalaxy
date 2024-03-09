@@ -7,7 +7,6 @@ import autoarray as aa
 
 from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.plane.plane import Plane
 
 
 class Result(af.Result):
@@ -23,7 +22,7 @@ class Result(af.Result):
 
         - The non-linear search used to perform the model fit.
 
-        This class contains a number of methods which use the above objects to create the max log likelihood `Plane`,
+        This class contains a number of methods which use the above objects to create the max log likelihood galaxies,
         `FitIamging`, adapt-galaxy images,etc.
 
         Parameters
@@ -53,11 +52,12 @@ class Result(af.Result):
         raise NotImplementedError
 
     @property
-    def max_log_likelihood_plane(self) -> Plane:
+    def max_log_likelihood_galaxies(self) -> List[Galaxy]:
         """
-        An instance of a `Plane` corresponding to the maximum log likelihood model inferred by the non-linear search.
+        An instance of the list of galaxies corresponding to the maximum log likelihood model inferred by the
+        non-linear search.
         """
-        return self.analysis.plane_via_instance_from(instance=self.instance)
+        return self.analysis.galaxies_via_instance_from(instance=self.instance)
 
     @property
     def path_galaxy_tuples(self) -> List[Tuple[str, Galaxy]]:
@@ -77,7 +77,7 @@ class ResultDataset(Result):
         """
         A list of all pixelization classes used by the model-fit.
         """
-        return self.max_log_likelihood_plane.cls_list_from(cls=cls)
+        return self.max_log_likelihood_galaxies.cls_list_from(cls=cls)
 
     @property
     def mask(self) -> aa.Mask2D:

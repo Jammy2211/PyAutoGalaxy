@@ -102,7 +102,7 @@ and `PyNUFFT` [@pynufft].
     """
     The galaxy has an elliptical sersic light profile representing its bulge.
     """
-    bulge=ag.lp.Sersic(
+    bulge = ag.lp.Sersic(
         centre=(0.0, 0.0),
         ell_comps=ag.convert.ell_comps_from(axis_ratio=0.9, angle=45.0),
         intensity=1.0,
@@ -126,19 +126,11 @@ and `PyNUFFT` [@pynufft].
     galaxy = ag.Galaxy(redshift=1.0, bulge=bulge, disk=disk)
 
     """
-    We create a Plane, which in this example has just one galaxy but can
-    be extended for datasets with many galaxies.
+    We can use the grid and galaxies to perform many calculations, for example
+    plotting the image of the galaxies.
     """
-    plane = ag.Plane(
-        galaxies=[galaxy],
-    )
-
-    """
-    We can use the Grid2D and Plane to perform many calculations, for example
-    plotting the image of the lensed source.
-    """
-    plane_plotter = aplt.PlanePlotter(plane=plane, grid=grid)
-    plane_plotter.figures_2d(image=True)
+    galaxies_plotter = aplt.GalaxiesPlotter(galaxies=[galaxy], grid=grid)
+    galaxies_plotter.figures_2d(image=True)
 
 
 To perform model-fitting, `PyAutoGalaxy` adopts the probabilistic programming

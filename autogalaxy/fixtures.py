@@ -1,5 +1,6 @@
 from autoarray.fixtures import *
 
+import autofit as af
 import autogalaxy as ag
 import autogalaxy.plot as aplt
 
@@ -116,25 +117,25 @@ def make_gal_x1_lp_x1_mp():
     )
 
 
-# Plane #
+# Galaxies #
 
 
-def make_plane_7x7():
-    return ag.Plane(galaxies=[make_gal_x1_lp_x1_mp()])
+def make_galaxies_7x7():
+    return ag.Galaxies(galaxies=[make_gal_x1_lp_x1_mp()])
 
 
-def make_plane_x2_gal_7x7():
-    return ag.Plane(galaxies=[make_gal_x1_lp_x1_mp(), make_gal_x1_lp_x1_mp()])
+def make_galaxies_x2_7x7():
+    return ag.Galaxies(galaxies=[make_gal_x1_lp_x1_mp(), make_gal_x1_lp_x1_mp()])
 
 
-def make_plane_x2_galaxy_inversion_7x7():
+def make_galaxies_x2_inversion_7x7():
     source_gal_inversion = ag.Galaxy(
         redshift=1.0,
         pixelization=ag.mesh.Rectangular(),
         regularization=ag.reg.Constant(),
     )
 
-    return ag.Plane(galaxies=[make_gal_x1_lp(), source_gal_inversion])
+    return [make_gal_x1_lp(), source_gal_inversion]
 
 
 # COSMOLOGY #
@@ -168,7 +169,7 @@ def make_dataset_quantity_7x7_vector_yx_2d():
 def make_fit_quantity_7x7_array_2d():
     return ag.FitQuantity(
         dataset=make_dataset_quantity_7x7_array_2d(),
-        light_mass_obj=make_plane_7x7(),
+        light_mass_obj=make_galaxies_7x7(),
         func_str="convergence_2d_from",
     )
 
@@ -176,7 +177,7 @@ def make_fit_quantity_7x7_array_2d():
 def make_fit_quantity_7x7_vector_yx_2d():
     return ag.FitQuantity(
         dataset=make_dataset_quantity_7x7_vector_yx_2d(),
-        light_mass_obj=make_plane_7x7(),
+        light_mass_obj=make_galaxies_7x7(),
         func_str="deflections_yx_2d_from",
     )
 
@@ -209,26 +210,23 @@ def make_adapt_images_7x7():
     )
 
 
-def make_fit_imaging_7x7():
-    return ag.FitImaging(dataset=make_masked_imaging_7x7(), plane=make_plane_7x7())
-
-
 def make_fit_imaging_x2_galaxy_7x7():
-    plane = ag.Plane(galaxies=[make_gal_x1_lp(), make_gal_x1_lp(), make_gal_x1_mp()])
-
-    return ag.FitImaging(dataset=make_masked_imaging_7x7(), plane=plane)
+    return ag.FitImaging(
+        dataset=make_masked_imaging_7x7(),
+        galaxies=[make_gal_x1_lp(), make_gal_x1_lp(), make_gal_x1_mp()],
+    )
 
 
 def make_fit_imaging_x2_galaxy_inversion_7x7():
     return ag.FitImaging(
-        dataset=make_masked_imaging_7x7(), plane=make_plane_x2_galaxy_inversion_7x7()
+        dataset=make_masked_imaging_7x7(), galaxies=make_galaxies_x2_inversion_7x7()
     )
 
 
 def make_fit_interferometer_7x7():
     return ag.FitInterferometer(
         dataset=make_interferometer_7(),
-        plane=make_plane_7x7(),
+        galaxies=make_galaxies_7x7(),
         settings_inversion=aa.SettingsInversion(use_w_tilde=False),
     )
 
@@ -236,20 +234,19 @@ def make_fit_interferometer_7x7():
 def make_fit_interferometer_x2_galaxy_inversion_7x7():
     return ag.FitInterferometer(
         dataset=make_interferometer_7(),
-        plane=make_plane_x2_galaxy_inversion_7x7(),
+        galaxies=make_galaxies_x2_inversion_7x7(),
         settings_inversion=aa.SettingsInversion(use_w_tilde=False),
     )
 
 
 def make_samples_with_result():
-    galaxies = [
-        ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0)),
-        ag.Galaxy(redshift=1.0, light=ag.lp.Sersic(intensity=2.0)),
-    ]
+    galaxy = af.Model(ag.Galaxy, redshift=0.5, bulge=af.Model(ag.lp.Sersic))
 
-    plane = ag.Plane(galaxies=galaxies)
+    model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
-    return ag.m.MockSamples(max_log_likelihood_instance=plane)
+    instance = model.instance_from_prior_medians()
+
+    return ag.m.MockSamples(max_log_likelihood_instance=instance)
 
 
 def make_analysis_imaging_7x7():

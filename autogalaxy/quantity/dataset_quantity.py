@@ -29,7 +29,7 @@ class SettingsQuantity(AbstractSettingsDataset):
         Parameters
         ----------
         grid_class : ag.Grid2D
-            The type of grid used to create the image from the `Galaxy` and `Plane`. The options are `Grid2D`,
+            The type of grid used to create the image from the galaxies. The options are `Grid2D`,
             and `Grid2DIterate` (see the `Grid2D` documentation for a description of these options).
         grid_pixelization_class : ag.Grid2D
             The type of grid used to create the grid that maps the `LEq` source pixels to the data's image-pixels.
@@ -70,11 +70,11 @@ class DatasetQuantity(AbstractDataset):
         settings: SettingsQuantity = SettingsQuantity(),
     ):
         """
-        Represents a derived quantity of a light profile, mass profile, galaxy or plane as a dataset that can be fitted
+        Represents a derived quantity of a light profile, mass profile, galaxy or galaxies as a dataset that can be fitted
         with a model via a non-linear.
 
         For example, the `DatasetQuantity` could represent the `convergence` of a mass profile, and this dataset could
-        then be fit with a `plane` via the `AnalysisQuantity` class. The benefit of doing this is that the components
+        then be fit with a galaxies via the `AnalysisQuantity` class. The benefit of doing this is that the components
         of different models can be fitted to one another and matched for example, the power-law model whose convergence
         best matches the convergence of a dark matter profile could be inferred).
 
@@ -110,8 +110,8 @@ class DatasetQuantity(AbstractDataset):
         settings: SettingsQuantity = SettingsQuantity(),
     ):
         """
-        Represents a derived quantity of a light profile, mass profile, galaxy or plane as a dataset that can be fitted
-        with a model via a non-linear (see `DatasetQuantity.__init__`).
+        Represents a derived quantity of a light profile, mass profile, galaxy or galaxies as a dataset that can be
+        fitted with a model via a non-linear (see `DatasetQuantity.__init__`).
 
         This classmethod takes as input a signal-to-noise map, as opposed to the noise map used in the `__init__`
         constructor. The noise-map is then derived from this signal-to-noise map, such that this is the signal to

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Dict
+from typing import TYPE_CHECKING, Dict, List
 
 if TYPE_CHECKING:
     from autogalaxy import mock
@@ -16,7 +16,7 @@ class MockResult(af.m.MockResult):
         model: af.Model = None,
         analysis: mock.MockAnalysis = None,
         search: af.mock.MockSearch = None,
-        max_log_likelihood_plane: ag.Plane = None,
+        max_log_likelihood_galaxies: List[ag.Galaxy] = None,
         max_log_likelihood_tracer=None,
     ):
         super().__init__(
@@ -27,7 +27,7 @@ class MockResult(af.m.MockResult):
             search=search,
         )
 
-        self.max_log_likelihood_plane = max_log_likelihood_plane
+        self.max_log_likelihood_galaxies = max_log_likelihood_galaxies
         self.max_log_likelihood_tracer = max_log_likelihood_tracer
 
     @property

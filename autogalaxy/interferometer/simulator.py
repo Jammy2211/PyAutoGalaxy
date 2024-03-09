@@ -1,11 +1,14 @@
 import numpy as np
+from typing import List
+
 import autoarray as aa
 
-from autogalaxy.plane.plane import Plane
+from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.galaxy.galaxies import Galaxies
 
 
 class SimulatorInterferometer(aa.SimulatorInterferometer):
-    def via_plane_from(self, plane, grid):
+    def via_galaxies_from(self, galaxies: List[Galaxy], grid: aa.type.Grid2DLike):
         """
         Returns a realistic simulated image by applying effects to a plain simulated image.
 
@@ -26,29 +29,8 @@ class SimulatorInterferometer(aa.SimulatorInterferometer):
             A seed for random noise_maps generation
         """
 
-        image = plane.image_2d_from(grid=grid)
+        galaxies = Galaxies(galaxies=galaxies)
+
+        image = galaxies.image_2d_from(grid=grid)
 
         return self.via_image_from(image=image.binned)
-
-    def via_galaxies_from(self, galaxies, grid):
-        """Simulate imaging data for this data, as follows:
-
-        1)  Setup the image-plane grid of the Imaging arrays, which defines the coordinates used for the ray-tracing.
-
-        2) Use this grid and the lens and source galaxies to setup a plane, which generates the image of \
-           the simulated imaging data.
-
-        3) Simulate the imaging data, using a special image which ensures edge-effects don't
-           degrade simulator of the telescope optics (e.g. the PSF convolution).
-
-        4) Plot the image using Matplotlib, if the plot_imaging bool is True.
-
-        5) Output the dataset to .fits format if a dataset_path and data_name are specified. Otherwise, return the simulated \
-           imaging data instance."""
-
-        plane = Plane(
-            redshift=float(np.mean([galaxy.redshift for galaxy in galaxies])),
-            galaxies=galaxies,
-        )
-
-        return self.via_plane_from(plane=plane, grid=grid)

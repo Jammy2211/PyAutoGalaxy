@@ -3,9 +3,7 @@
 Fitting Data
 ============
 
-**PyAutoGalaxy** uses `Plane` objects to represent multi-galaxy systems.
-
-We now use these objects to fit `Imaging` data of a galaxy.
+We now use galaxies to fit imaging data of a galaxy.
 
 Loading Data
 ------------
@@ -70,13 +68,11 @@ Here is what our image looks like with the mask applied, where **PyAutoGalaxy** 
 Fitting
 -------
 
-Following the previous overview, we can make a plane from a collection of `LightProfile` and `Galaxy`
-objects.
+Following the previous overview, we can make a collection of galaxies from light profiles and individual galaxy objects..
 
-The combination of `LightProfile`'s below is the same as those used to generate the simulated
-dataset we loaded above.
+The combination of light profiles below is the same as those used to generate the simulated dataset we loaded above.
 
-It therefore produces a plane whose image looks exactly like the dataset.
+It therefore produces galaxies whose image looks exactly like the dataset.
 
 .. code-block:: python
 
@@ -91,22 +87,22 @@ It therefore produces a plane whose image looks exactly like the dataset.
         ),
     )
 
-    plane = ag.Plane(galaxies=[galaxy])
+    galaxies = ag.Galaxies(galaxies=[galaxy])
 
-We now use the `FitImaging` object to fit this plane to the dataset.
+We now use the `FitImaging` object to fit the galaxies to the dataset.
 
-The fit performs the necessary tasks to create the `model_image` we fit the data with, such as blurring the plane`s
-image with the `Imaging` Point Spread Function (PSF). We can see this by comparing the plane`s image (which isn't PSF
-convolved) and the fit`s model image (which is).
+The fit performs the necessary tasks to create the `model_image` we fit the data with, such as blurring the
+image of the galaxies with the imaging data's Point Spread Function (PSF). We can see this by comparing the galaxies
+image (which isn't PSF convolved) and the fit`s model image (which is).
 
 .. code-block:: python
 
-    fit = ag.FitImaging(dataset=dataset, plane=plane)
+    fit = ag.FitImaging(dataset=dataset, galaxies=galaxies)
 
     fit_plotter = aplt.FitImagingPlotter(fit=fit)
     fit_plotter.figures_2d(model_image=True)
 
-Here is how the ``Plane``'s image of the galaxy and the ``FitImaging``'s model-image look.
+Here is how the ``Galaxies``'s image of the galaxy and the ``FitImaging``'s model-image look.
 
 Note how the model-image has been blurred with the PSF of our dataset:
 
@@ -136,7 +132,7 @@ We can plot all three of these quantities
         chi_squared_map=True
     )
 
-For a good model where the model image and plane are representative of the galaxy system the
+For a good model where the model image and galaxies are representative of the galaxy system the
 residuals, normalized residuals and chi-squared are minimized:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/fitting/residual_map.png
@@ -174,7 +170,7 @@ In contrast, a bad lens model will show features in the residual-map and chi-squ
   :width: 400
   :alt: Alternative text
 
-If we can find a ``Plane`` that produces a high log likelihood, we'll have a model which is representative of our
+If we can find galaxies that produces a high log likelihood, we'll have a model which is representative of our
 galaxy data!
 
 This task, called modeling, is covered in the next API overview.

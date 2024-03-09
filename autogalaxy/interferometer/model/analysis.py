@@ -15,8 +15,6 @@ from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.interferometer.model.result import ResultInterferometer
 from autogalaxy.interferometer.model.visualizer import VisualizerInterferometer
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
-from autogalaxy.plane.plane import Plane
-
 from autogalaxy import exc
 
 logger = logging.getLogger(__name__)
@@ -41,8 +39,7 @@ class AnalysisInterferometer(AnalysisDataset):
         It handles many other tasks, such as visualization, outputting results to hard-disk and storing results in
         a format that can be loaded after the model-fit is complete.
 
-        This Analysis class is used for all model-fits which fit galaxies (or objects containing galaxies like a
-        `Plane`) to an interferometer dataset.
+        This Analysis class is used for all model-fits which fit galaxies to an interferometer dataset.
 
         This class stores the settings used to perform the model-fit for certain components of the model (e.g. a
         pixelization or inversion), the Cosmology used for the analysis and adapt images used for certain model
@@ -115,10 +112,10 @@ class AnalysisInterferometer(AnalysisDataset):
 
         2) Extract attributes which model aspects of the data reductions, like scaling the background background noise.
 
-        3) Extracts all galaxies from the model instance and set up a `Plane`.
+        3) Extracts all galaxies from the model instance.
 
-        4) Use the `Plane` and other attributes to create a `FitInterferometer` object, which performs steps such as
-           creating model images of every galaxy in the plane, transforming them to the uv-plane via a Fourier transform
+        4) Use the galaxies and other attributes to create a `FitInterferometer` object, which performs steps such as
+           creating model images of every galaxy, transforming them to the uv-plane via a Fourier transform
            and computing residuals, a chi-squared statistic and the log likelihood.
 
         Certain models will fail to fit the dataset and raise an exception. For example if an `Inversion` is used, the
@@ -176,9 +173,9 @@ class AnalysisInterferometer(AnalysisDataset):
         Returns
         -------
         FitInterferometer
-            The fit of the plane to the interferometer dataset, which includes the log likelihood.
+            The fit of the galaxies to the interferometer dataset, which includes the log likelihood.
         """
-        plane = self.plane_via_instance_from(
+        galaxies = self.galaxies_via_instance_from(
             instance=instance, run_time_dict=run_time_dict
         )
 
@@ -188,7 +185,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
         return FitInterferometer(
             dataset=self.dataset,
-            plane=plane,
+            galaxies=galaxies,
             adapt_images=adapt_images,
             settings_inversion=self.settings_inversion,
             preloads=preloads,
@@ -226,7 +223,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
         The visualization performed by this function includes:
 
-        - Images of the best-fit `Plane`, including the images of each of its galaxies.
+        - Images of the best-fit galaxies, including the images of each galaxy.
 
         - Images of the best-fit `FitInterferometer`, including the model-image, residuals and chi-squared of its fit
           to the imaging data.
@@ -256,13 +253,13 @@ class AnalysisInterferometer(AnalysisDataset):
         visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
         visualizer.visualize_interferometer(dataset=self.interferometer)
 
-        plane = fit.plane_linear_light_profiles_to_light_profiles
+        galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
 
         visualizer.visualize_plane(
-            plane=plane, grid=fit.grid, during_analysis=during_analysis
+            galaxies=galaxies, grid=fit.grid, during_analysis=during_analysis
         )
-        visualizer.visualize_galaxies(
-            galaxies=plane.galaxies, grid=fit.grid, during_analysis=during_analysis
+        visualizer.visualize_galaxies_1d(
+            galaxies=galaxies, grid=fit.grid, during_analysis=during_analysis
         )
 
         try:
@@ -296,7 +293,7 @@ class AnalysisInterferometer(AnalysisDataset):
         - The non-linear search used to perform the model fit.
 
         The `ResultInterferometer` object contains a number of methods which use the above objects to create the max
-        log likelihood `Plane`, `FitInterferometer`, adapt-galaxy images,etc.
+        log likelihood galaxies, `FitInterferometer`, adapt-galaxy images,etc.
 
         Parameters
         ----------

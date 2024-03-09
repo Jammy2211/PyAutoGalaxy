@@ -2,7 +2,7 @@ import copy
 import json
 import logging
 import numpy as np
-from typing import Dict, Optional, Tuple, Union
+from typing import Dict, List, Optional, Tuple, Union
 from os import path
 import os
 import time
@@ -13,12 +13,13 @@ import autofit as af
 import autoarray as aa
 
 from autogalaxy import exc
+from autogalaxy.galaxy.galaxy import Galaxy
+from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.analysis.maker import FitMaker
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
-from autogalaxy.plane.plane import Plane
 from autogalaxy.analysis.result import ResultDataset
 
 logger = logging.getLogger(__name__)
@@ -31,8 +32,8 @@ class Analysis(af.Analysis):
         """
         Fits a model to a dataset via a non-linear search.
 
-        This abstract Analysis class for all model-fits which fit galaxies (or objects containing galaxies like a
-        plane), but does not perform a model-fit by itself (and is therefore only inherited from).
+        This abstract Analysis class for all model-fits which fit galaxies, but does not perform a model-fit by
+        itself (and is therefore only inherited from).
 
         This class stores the Cosmology used for the analysis and adapt images used for certain model classes.
 
@@ -43,11 +44,15 @@ class Analysis(af.Analysis):
         """
         self.cosmology = cosmology
 
-    def plane_via_instance_from(
+    def galaxies_via_instance_from(
         self, instance: af.ModelInstance, run_time_dict: Optional[Dict] = None
-    ) -> Plane:
+    ) -> List[Galaxy]:
         """
-        Create a `Plane` from the galaxies contained in a model instance.
+        Create a list of galaxies from a model instance, which is used to fit the dataset.
+
+        The instance may only contain galaxies, in which case this function is redundant. However, if the clumns
+        API is being used, the instance will contain both galaxies and clumps, and they should be added to create
+        the single list of galaxies used to fit the dataset.
 
         Parameters
         ----------
@@ -57,14 +62,15 @@ class Analysis(af.Analysis):
 
         Returns
         -------
-        An instance of the Plane class that is used to then fit the dataset.
+        A list of galaxies that is used to then fit the dataset.
         """
         if hasattr(instance, "clumps"):
-            return Plane(
+            return Galaxies(
                 galaxies=instance.galaxies + instance.clumps,
                 run_time_dict=run_time_dict,
             )
-        return Plane(galaxies=instance.galaxies, run_time_dict=run_time_dict)
+
+        return Galaxies(galaxies=instance.galaxies, run_time_dict=run_time_dict)
 
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None
@@ -201,8 +207,7 @@ class AnalysisDataset(Analysis):
         settings_inversion: aa.SettingsInversion = None,
     ):
         """
-        Abstract Analysis class for all model-fits which fit galaxies (or objects containing galaxies like a plane)
-        to a dataset, like imaging or interferometer data.
+        Abstract Analysis class for all model-fits which fit galaxies to a dataset, like imaging or interferometer data.
 
         This class stores the settings used to perform the model-fit for certain components of the model (e.g. a
         pixelization or inversion), the Cosmology used for the analysis and adapt images used for certain model
@@ -384,7 +389,7 @@ class AnalysisDataset(Analysis):
 
         For this analysis it outputs the following:
 
-        - The maximum log likelihood plane of the fit.
+        - The maximum log likelihood galaxies of the fit.
 
         Parameters
         ----------
@@ -396,8 +401,8 @@ class AnalysisDataset(Analysis):
         """
         try:
             output_to_json(
-                obj=result.max_log_likelihood_plane,
-                file_path=paths._files_path / "plane.json",
+                obj=result.max_log_likelihood_galaxies,
+                file_path=paths._files_path / "galaxies.json",
             )
         except AttributeError:
             pass

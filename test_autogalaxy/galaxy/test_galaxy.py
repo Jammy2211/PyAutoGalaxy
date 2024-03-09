@@ -1,6 +1,8 @@
 import numpy as np
+from os import path
 import pytest
 
+from autoconf.dictable import from_json, output_to_json
 import autogalaxy as ag
 
 from autogalaxy import exc
@@ -764,3 +766,29 @@ def test__decorator__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
     deflections_sub_8 = galaxy.deflections_yx_2d_from(grid=grid_sub_8).binned
 
     assert deflections[4, 0] == deflections_sub_8[4, 0]
+
+
+def test__output_to_and_load_from_json():
+    json_file = path.join(
+        "{}".format(path.dirname(path.realpath(__file__))), "files", "galaxy.json"
+    )
+
+    g0 = ag.Galaxy(
+        redshift=1.0,
+        light=ag.lp.Sersic(intensity=1.0),
+        mass=ag.mp.Isothermal(einstein_radius=1.0),
+        pixelization=ag.Pixelization(
+            image_mesh=ag.image_mesh.Overlay(shape=(3, 3)),
+            mesh=ag.mesh.Voronoi(),
+            regularization=ag.reg.Constant(),
+        ),
+    )
+
+    output_to_json(g0, file_path=json_file)
+
+    galaxy_from_json = from_json(file_path=json_file)
+
+    assert galaxy_from_json.redshift == 1.0
+    assert galaxy_from_json.light.intensity == 1.0
+    assert galaxy_from_json.mass.einstein_radius == 1.0
+    assert galaxy_from_json.pixelization.image_mesh.shape == (3, 3)

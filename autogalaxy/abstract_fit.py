@@ -17,14 +17,15 @@ class AbstractFitInversion:
         """
         An abstract fit object which fits to datasets (e.g. imaging, interferometer) inherit from.
 
-        This object primarily inspects the `model_obj` (e.g. a plane object PyAutoGalaxy or tracer in PyAutoLens)
+        This object primarily inspects the `model_obj` (e.g. a galaxies object PyAutoGalaxy or tracer in PyAutoLens)
         and determines the properties used for the fit by inspecting the galaxies / light profiles in this object.
 
         Parameters
         ----------
         model_obj
             The object which contains the model components (e.g. light profiles, galaxies, etc) which are used to
-            create the model-data that fits the data. In PyAutoGalaxy this is a `Plane` and PyAutoLens it is a `Tracer`.
+            create the model-data that fits the data. In PyAutoGalaxy this is a list of galaxies and PyAutoLens
+            it is a `Tracer`.
         settings_inversion
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
         """
@@ -178,7 +179,7 @@ class AbstractFitInversion:
 
         Returns
         -------
-        A `model_obj` (E.g. `Plane` or `Tracer`) where the light profile intensity values are set to the results
+        A `model_obj` (E.g. galaxies or `Tracer`) where the light profile intensity values are set to the results
         of those inferred via the `Inversion`.
         """
 

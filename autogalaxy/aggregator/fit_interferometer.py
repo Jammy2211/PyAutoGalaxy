@@ -11,7 +11,7 @@ from autogalaxy.analysis.preloads import Preloads
 
 from autogalaxy.aggregator import agg_util
 from autogalaxy.aggregator.interferometer import _interferometer_from
-from autogalaxy.aggregator.plane import _plane_from
+from autogalaxy.aggregator.galaxies import _galaxies_from
 
 
 def _fit_interferometer_from(
@@ -68,7 +68,7 @@ def _fit_interferometer_from(
         settings_dataset=settings_dataset,
     )
 
-    plane_list = _plane_from(fit=fit, instance=instance)
+    galaxies_list = _galaxies_from(fit=fit, instance=instance)
 
     adapt_images_list = agg_util.adapt_images_from(fit=fit)
 
@@ -80,8 +80,8 @@ def _fit_interferometer_from(
 
     fit_dataset_list = []
 
-    for dataset, plane, adapt_images, mesh_grids_of_planes in zip(
-        dataset_list, plane_list, adapt_images_list, mesh_grids_of_planes_list
+    for dataset, galaxies, adapt_images, mesh_grids_of_planes in zip(
+        dataset_list, galaxies_list, adapt_images_list, mesh_grids_of_planes_list
     ):
         preloads = agg_util.preloads_from(
             preloads_cls=Preloads,
@@ -93,7 +93,7 @@ def _fit_interferometer_from(
         fit_dataset_list.append(
             FitInterferometer(
                 dataset=dataset,
-                plane=plane,
+                galaxies=galaxies,
                 adapt_images=adapt_images,
                 settings_inversion=settings_inversion,
                 preloads=preloads,
