@@ -7,7 +7,6 @@ label:
     centre_0: y
     centre_1: x
     coefficient: \lambda
-    contribution_factor: \omega_{\rm 0}
     core_radius: C_{\rm r}
     core_radius_0: C_{rm r0}
     core_radius_1: C_{\rm r1}
