@@ -3,17 +3,16 @@
 Modeling
 ========
 
-We can use a ``Plane`` to fit data of a galaxy and quantify its goodness-of-fit via a
-*log_likelihood*.
+We can use a galaxies to fit data of a galaxy and quantify its goodness-of-fit via a *log_likelihood*.
 
-Of course, when observe an image of a galaxy, we have no idea what combination of
-``LightProfile``'s will produce a model-image that looks like the galaxy we observed:
+Of course, when we observe an image of a galaxy, we have no idea what combination of galaxies and light profiles
+will produce a model-image that looks like the galaxy we observed:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/fitting/image.png
   :width: 400
   :alt: Alternative text
 
-The task of finding these ``LightProfiles``'is called *modeling*.
+The task of finding these galaxies and light profiles is called *modeling*.
 
 PyAutoFit
 ---------
@@ -348,13 +347,13 @@ Here is an example of how a PDF estimated for a model appears:
   :width: 600
   :alt: Alternative text
 
-The result also contains the maximum log likelihood ``Plane`` and ``FitImaging`` objects and which can easily be
+The result also contains the maximum log likelihood ``Galaxies`` and ``FitImaging`` objects and which can easily be
 plotted.
 
 .. code-block:: python
 
-    plane_plotter = aplt.GalaxiesPlotter(plane=result.max_log_likelihood_galaxies, grid=mask.derive_grid.masked)
-    plane_plotter.subplot_galaxies()
+    galaxies_plotter = aplt.GalaxiesPlotter(galaxies=result.max_log_likelihood_galaxies, grid=mask.derive_grid.masked)
+    galaxies_plotter.subplot_galaxies()
 
     fit_plotter = aplt.FitImagingPlotter(fit=result.max_log_likelihood_fit)
     fit_plotter.subplot_fit()

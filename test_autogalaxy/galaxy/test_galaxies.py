@@ -304,8 +304,6 @@ def test__cls_list_from():
 def test__plane_image_from(sub_grid_2d_7x7):
     galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
 
-    plane_image = plane_image_from(
-        grid=sub_grid_2d_7x7, galaxies=[galaxy], buffer=0.1
-    )
+    plane_image = plane_image_from(grid=sub_grid_2d_7x7, galaxies=[galaxy], buffer=0.1)
 
     assert plane_image[0] == pytest.approx(12.5227, 1.0e-4)

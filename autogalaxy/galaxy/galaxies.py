@@ -6,13 +6,9 @@ import autoarray as aa
 
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.profiles.light.basis import Basis
-from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
-from autogalaxy.profiles.light.snr import LightProfileSNR
 from autogalaxy.operate.image import OperateImageGalaxies
 from autogalaxy.operate.deflections import OperateDeflections
-
-from autogalaxy import exc
 
 
 class Galaxies(List, OperateImageGalaxies, OperateDeflections):
@@ -26,22 +22,22 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
 
         It is common for a user to have multiple galaxies in a list, for which they may perform operations like
         creating the image of the light profiles or all galaxies or the potential of the mass profiles of all galaxies.
-        
+
         Many of these calculations are straight forward, for example for the image of all galaxies we simply sum the
-        images of each galaxy. 
-        
+        images of each galaxy.
+
         However, there are more complex operations that can be performed on the galaxies as a group, for example
-        computing the blured image of a group of galaxies where some galaxies have operated light profiles (meaning 
-        that PSF blurring is already applied to them and thus should be skipped) and another subset of galaxies have 
+        computing the blured image of a group of galaxies where some galaxies have operated light profiles (meaning
+        that PSF blurring is already applied to them and thus should be skipped) and another subset of galaxies have
         normal light profiles (meaning that PSF blurring should be applied to them).
-        
+
         This calculation requires a careful set of operations to ensure that the PSF blurring is only applied to the
         subset of galaxies that do not have operated light profiles. This is an example of a calculation that is
         performed by the `Galaxies` class, simplifing the code required to perform this operation.
-        
+
         Users may find that they often omit the `Galaxies` class and instead perform these operations in a more manual
         way. This is fine, but care must be taken to ensure that the operations are performed correctly.
-        
+
         Parameters
         ----------
         galaxies
@@ -54,23 +50,27 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         super().__init__(galaxies)
         self.run_time_dict = run_time_dict
 
+    @property
+    def redshift(self):
+        return self[0].redshift
+
     def image_2d_list_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> List[aa.Array2D]:
         """
         Returns a list of the 2D images for each galaxy from a 2D grid of Cartesian (y,x) coordinates.
 
-        The image of each galaxy is computed by summing the images of all light profiles in that galaxy. If a galaxy 
+        The image of each galaxy is computed by summing the images of all light profiles in that galaxy. If a galaxy
         has no light profiles, a numpy array of zeros is returned.
 
-        For example, if there are 3 galaxies and only the first two have light profiles, the returned list of images 
+        For example, if there are 3 galaxies and only the first two have light profiles, the returned list of images
         will be the image of the first two galaxies. The image of the third galaxies will be a numpy array of zeros.
 
         The images output by this function do not include instrument operations, such as PSF convolution (for imaging
         data) or a Fourier transform (for interferometer data).
 
-        Inherited methods in the `autogalaxy.operate.image` package can apply these operations to the images. 
-        These functions may have the `operated_only` input passed to them, which is why this function includes 
+        Inherited methods in the `autogalaxy.operate.image` package can apply these operations to the images.
+        These functions may have the `operated_only` input passed to them, which is why this function includes
         the `operated_only` input.
 
         If the `operated_only` input is included, the function omits light profiles which are parents of
@@ -125,7 +125,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> {Galaxy: np.ndarray}:
         """
-        Returns a dictionary associating every `Galaxy` object with its corresponding 2D image, using the instance 
+        Returns a dictionary associating every `Galaxy` object with its corresponding 2D image, using the instance
         of each galaxy as the dictionary keys.
 
         This object is used for adaptive-features, which use the image of each galaxy in a model-fit in order to
@@ -168,7 +168,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         of all galaxies. The `Tracer` class in PyAutoLens is required for this.
 
         For example, if there are 3 galaxies and only the first two have mass profiles, the returned list of deflections
-        will be the deflections of the first two galaxies. The deflections of the third galaxies will be a numpy 
+        will be the deflections of the first two galaxies. The deflections of the third galaxies will be a numpy
         array of zeros.
 
         See the `autogalaxy.profiles.mass` package for details of how deflections are computed from a mass profile.
@@ -183,6 +183,13 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         return np.zeros(shape=(grid.shape[0], 2))
 
     @aa.grid_dec.grid_2d_to_structure
+    def traced_grid_2d_from(self, grid: aa.type.Grid2DLike) -> aa.type.Grid2DLike:
+        """
+        Trace this plane's grid_stacks to the next plane, using its deflection angles.
+        """
+        return grid - self.deflections_yx_2d_from(grid=grid)
+
+    @aa.grid_dec.grid_2d_to_structure
     def convergence_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Returns the summed 2D convergence of all galaxies from a 2D grid of Cartesian (y,x) coordinates.
@@ -194,7 +201,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         of all galaxies. The `Tracer` class in PyAutoLens is required for this.
 
         For example, if there are 3 galaxies and only the first two have mass profiles, the returned list of convergence
-        will be the convergence of the first two galaxies. The convergence of the third galaxies will be a numpy 
+        will be the convergence of the first two galaxies. The convergence of the third galaxies will be a numpy
         array of zeros.
 
         See the `autogalaxy.profiles.mass` package for details of how convergence are computed from a mass profile.
@@ -220,7 +227,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         of all galaxies. The `Tracer` class in PyAutoLens is required for this.
 
         For example, if there are 3 galaxies and only the first two have mass profiles, the returned list of potential
-        will be the potential of the first two galaxies. The potential of the third galaxies will be a numpy 
+        will be the potential of the first two galaxies. The potential of the third galaxies will be a numpy
         array of zeros.
 
         See the `autogalaxy.profiles.mass` package for details of how potential are computed from a mass profile.
@@ -233,15 +240,6 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         if self:
             return sum(map(lambda g: g.potential_2d_from(grid=grid), self))
         return np.zeros((grid.shape[0],))
-
-    def plane_image_2d_from(
-        self, grid: aa.type.Grid2DLike, zoom_to_brightest: bool = True
-    ) -> aa.Array2D:
-        return plane_util.plane_image_from(
-            galaxies=self.galaxies,
-            grid=grid.mask.derive_grid.all_false_sub_1,
-            zoom_to_brightest=zoom_to_brightest,
-        )
 
     def has(self, cls: Union[Type, Tuple[Type]]) -> bool:
         """

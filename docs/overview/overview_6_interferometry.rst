@@ -214,7 +214,7 @@ Gaussian noise to the visibilities:
         noise_sigma=0.01,
     )
 
-    dataset = simulator.via_galaxies_from(plane=plane, grid=real_space_grid)
+    dataset = simulator.via_galaxies_from(galaxies=galaxies, grid=real_space_grid)
 
 Wrap-Up
 -------

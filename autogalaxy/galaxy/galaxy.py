@@ -319,7 +319,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
         return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_structure
-    def traced_grid_from(self, grid: aa.type.Grid2DLike) -> aa.type.Grid2DLike:
+    def traced_grid_2d_from(self, grid: aa.type.Grid2DLike) -> aa.type.Grid2DLike:
         """
         Trace an input grid using the galaxy's its deflection angles.
         """
