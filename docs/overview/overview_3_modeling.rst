@@ -339,11 +339,11 @@ make a corner plot of the probability density function (PDF):
 .. code-block:: python
 
     search_plotter = aplt.DynestyPlotter(samples=result.samples)
-    search_plotter.cornerplot()
+    search_plotter.corner()
 
 Here is an example of how a PDF estimated for a model appears:
 
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/modeling/cornerplot.png
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/modeling/corner.png
   :width: 600
   :alt: Alternative text
 
