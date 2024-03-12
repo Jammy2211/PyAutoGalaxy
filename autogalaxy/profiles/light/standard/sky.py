@@ -2,9 +2,7 @@ import numpy as np
 
 import autoarray as aa
 
-from autogalaxy.profiles.light.abstract import LightProfile
-
-class Sky(LightProfile):
+class Sky:
 
     def __init__(
         self,
@@ -23,7 +21,6 @@ class Sky(LightProfile):
             Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
             the light profile's image is compared too, which is expected to be electrons per second).
         """
-        super().__init__(centre = (0.0, 0.0), ell_comps = (0.0, 0.0))
 
         self.intensity = intensity
 
@@ -32,3 +29,10 @@ class Sky(LightProfile):
         return np.full(shape=grid.shape[0], fill_value=self.intensity)
 
 
+    @property
+    def centre(self):
+        return (0.0, 0.0)
+
+    @property
+    def ell_comps(self):
+        return (0.0, 0.0)
