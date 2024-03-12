@@ -1,12 +1,7 @@
 import numpy as np
-from typing import Optional, Tuple
 
 import autoarray as aa
 
-from autogalaxy.profiles.light.abstract import LightProfile
-from autogalaxy.profiles.light.decorators import (
-    check_operated_only,
-)
 
 
 class Sky:
