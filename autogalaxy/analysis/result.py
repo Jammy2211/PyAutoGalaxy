@@ -10,7 +10,7 @@ from autogalaxy.galaxy.galaxy import Galaxy
 
 
 class Result(af.Result):
-    def __init__(self, samples: af.SamplesPDF, analysis):
+    def __init__(self, samples: af.SamplesPDF, analysis, search_internal = None):
         """
         After the non-linear search of a fit to a dataset is complete it creates a `Result` object which includes:
 
@@ -43,7 +43,7 @@ class Result(af.Result):
         ResultImaging
             The result of fitting the model to the imaging dataset, via a non-linear search.
         """
-        super().__init__(samples=samples)
+        super().__init__(samples=samples, search_internal=search_internal)
 
         self.analysis = analysis
 
