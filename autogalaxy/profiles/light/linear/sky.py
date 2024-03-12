@@ -10,12 +10,21 @@ class Sky(Basis):
     ):
         """
         The linear sky light profile, representing the background sky emission as a constant sheet of values.
+
+        For a positive only linear solver, a single sky profile cannot be used to solve for the sky background.
+        This is because the solution must be positive, meaning that if the sky background is positive, negative
+        solutions are not accessible and visa-versa.
+
+        To address this, the sky is represented by two profiles, one with a positive intensity and one with a negative
+        intensity. The positive linear solver then fits for the both the positive and negative sky values. The solution
+        will have one of these values as zero, and the other as the sky background value.
+
+        When a positive-negative solver is used, no loss of performance is incurred by using two profiles, even though
+        the two solutions are fully degenerate. The same API is therefore used for both solvers, for convenience.
         """
         super().__init__(
             light_profile_list=[SkyPos(), SkyNeg()]
         )
-
-
 
 class SkyPos(lp.Sky, LightProfileLinear):
     def __init__(
