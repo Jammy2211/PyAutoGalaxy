@@ -1,7 +1,4 @@
-from typing import List
-
 from autogalaxy.profiles.light.basis import Basis
-from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear.abstract import LightProfileLinear
 
 from autogalaxy.profiles.light import standard as lp
