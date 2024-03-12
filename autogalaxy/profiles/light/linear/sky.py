@@ -1,17 +1,32 @@
+from typing import List
+
+from autogalaxy.profiles.light.basis import Basis
+from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear.abstract import LightProfileLinear
 
 from autogalaxy.profiles.light import standard as lp
-from autogalaxy.profiles import light_and_mass_profiles as lmp
 
 
-class Sky(lp.Sky, LightProfileLinear):
+class Sky(Basis):
     def __init__(
         self,
     ):
         """
         The linear sky light profile, representing the background sky emission as a constant sheet of values.
         """
+        super().__init__(
+            light_profile_list=[SkyPos(), SkyNeg()]
+        )
 
+
+
+class SkyPos(lp.Sky, LightProfileLinear):
+    def __init__(
+        self,
+    ):
+        """
+        The linear sky light profile, representing the background sky emission as a constant sheet of values.
+        """
         super().__init__(
             intensity=1.0,
         )
@@ -20,6 +35,18 @@ class Sky(lp.Sky, LightProfileLinear):
     def lp_cls(self):
         return lp.Sky
 
+
+class SkyNeg(lp.Sky, LightProfileLinear):
+    def __init__(
+        self,
+    ):
+        """
+        The linear sky light profile, representing the background sky emission as a constant sheet of values.
+        """
+        super().__init__(
+            intensity=-1.0,
+        )
+
     @property
-    def lmp_cls(self):
-        return lmp.sky
+    def lp_cls(self):
+        return lp.Sky
