@@ -189,6 +189,24 @@ def test__fit_figure_of_merit(
     assert fit.figure_of_merit == pytest.approx(-23.146720, 1.0e-4)
 
 
+def test__fit__sky_linear_light_profile__handles_special_behaviour(masked_imaging_7x7):
+
+    g0_linear_light = ag.Galaxy(
+        redshift=0.5, bulge=ag.lp_linear.Sersic(sersic_index=1.0), sky=ag.lp_linear.Sky()
+    )
+
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7, galaxies=[g0_linear_light]
+    )
+
+    assert fit.perform_inversion is True
+    assert fit.figure_of_merit == pytest.approx(-14.5087714, 1.0e-4)
+
+    galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
+
+    assert galaxies[0].sky.light_profile_list[0].intensity == pytest.approx(0.5, 1.0e-4)
+    assert galaxies[0].sky.light_profile_list[1].intensity == pytest.approx(-0.5, 1.0e-4)
+
 def test__galaxy_model_image_dict(masked_imaging_7x7):
     # Normal Light Profiles Only
 
