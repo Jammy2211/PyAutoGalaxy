@@ -1,4 +1,5 @@
 import numpy as np
+from typing import Optional
 
 import autoarray as aa
 
@@ -25,7 +26,7 @@ class Sky:
         self.intensity = intensity
 
     @aa.grid_dec.grid_2d_to_structure
-    def image_2d_from(self, grid: aa.type.Grid2DLike):
+    def image_2d_from(self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None):
         return np.full(shape=grid.shape[0], fill_value=self.intensity)
 
 
