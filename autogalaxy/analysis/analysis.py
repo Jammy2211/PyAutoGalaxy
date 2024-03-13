@@ -443,7 +443,7 @@ class AnalysisDataset(Analysis):
         if os.environ.get("PYAUTOFIT_TEST_MODE") == "1":
             return
 
-        if conf.instance["general"]["test"]["bypass_figure_of_merit_sanity"]:
+        if not conf.instance["general"]["test"]["check_figure_of_merit_sanity"]:
             return
 
         figure_of_merit = result.max_log_likelihood_fit.figure_of_merit
@@ -451,16 +451,15 @@ class AnalysisDataset(Analysis):
         try:
             figure_of_merit_sanity = paths.load_json(name="figure_of_merit_sanity")
 
-            if conf.instance["general"]["test"]["check_figure_of_merit_sanity"]:
-                if not np.isclose(figure_of_merit, figure_of_merit_sanity):
-                    raise exc.AnalysisException(
-                        "Figure of merit sanity check failed. "
-                        ""
-                        "This means that the existing results of a model fit used a different "
-                        "likelihood function compared to the one implemented now.\n\n"
-                        f"Old Figure of Merit = {figure_of_merit_sanity}\n"
-                        f"New Figure of Merit = {figure_of_merit}"
-                    )
+            if not np.isclose(figure_of_merit, figure_of_merit_sanity):
+                raise exc.AnalysisException(
+                    "Figure of merit sanity check failed. "
+                    ""
+                    "This means that the existing results of a model fit used a different "
+                    "likelihood function compared to the one implemented now.\n\n"
+                    f"Old Figure of Merit = {figure_of_merit_sanity}\n"
+                    f"New Figure of Merit = {figure_of_merit}"
+                )
 
         except (FileNotFoundError, KeyError):
             paths.save_json(
