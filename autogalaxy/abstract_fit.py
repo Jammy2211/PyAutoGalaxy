@@ -197,3 +197,34 @@ class AbstractFitInversion:
             )
 
         return model_instance.model_obj
+
+    @property
+    def sky_linear_light_profiles_to_light_profiles(self):
+        """
+        The model object may contain linear light profiles, which solve for the `intensity` during the `Inversion`.
+
+        This means they are difficult to visualize, because they do not have a valid `intensity` parameter.
+
+        To address this, this property creates a new `model_obj` where all linear light profiles are converted to
+        ordinary light profiles whose `intensity` parameters are set to the results of the Inversion.
+
+        Returns
+        -------
+        A `model_obj` (E.g. galaxies or `Tracer`) where the light profile intensity values are set to the results
+        of those inferred via the `Inversion`.
+        """
+
+        if self.linear_light_profile_intensity_dict is None:
+            return self.model_obj
+
+        model_instance = ModelInstance(dict(sky=self.sky))
+
+        for path, instance in model_instance.path_instance_tuples_for_class(
+            (LightProfileLinear, Basis)
+        ):
+            model_instance = model_instance.replacing_for_path(
+                path,
+                instance.lp_instance_from(self.linear_light_profile_intensity_dict),
+            )
+
+        return model_instance.sky

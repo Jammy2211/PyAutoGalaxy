@@ -26,7 +26,7 @@ class AbstractToInversion:
         data: Optional[Union[aa.Array2D, aa.Visibilities]] = None,
         noise_map: Optional[Union[aa.Array2D, aa.VisibilitiesNoiseMap]] = None,
         w_tilde: Optional[Union[aa.WTildeImaging, aa.WTildeInterferometer]] = None,
-        sky: Optional[LightProfile] = None,
+        sky: Optional[Basis] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads=Preloads(),
@@ -86,16 +86,23 @@ class AbstractToInversion:
     def linear_obj_list(self) -> List[aa.LinearObj]:
 
         if isinstance(self.sky, Basis):
-            sky_linear_obj_list = self.sky.light_profile_list
-        else:
-            sky_linear_obj_list = []
 
-        return list(self.linear_obj_galaxy_dict.keys()) # + sky_linear_obj_list
+            sky_linear_obj_list = LightProfileLinearObjFuncList(
+                grid=self.dataset.grid,
+                blurring_grid=self.dataset.blurring_grid,
+                convolver=self.dataset.convolver,
+                light_profile_list=self.sky.light_profile_list,
+                regularization=None,
+                run_time_dict=self.run_time_dict,
+            )
+
+            return list(self.linear_obj_galaxy_dict.keys()) + [sky_linear_obj_list]
+
+        return list(self.linear_obj_galaxy_dict.keys())
 
     @cached_property
     def regularization_list(self) -> List[aa.AbstractRegularization]:
         return [linear_obj.regularization for linear_obj in self.linear_obj_list]
-
 
 class GalaxiesToInversion(AbstractToInversion):
     def __init__(

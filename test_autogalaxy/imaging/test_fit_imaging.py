@@ -197,44 +197,47 @@ def test__fit__sky___handles_special_behaviour(masked_imaging_7x7):
     masked_imaging_7x7.data -= 100.0
 
     g0_linear_light = ag.Galaxy(
-        redshift=0.5, bulge=ag.lp_linear.Sersic(sersic_index=1.0), sky=ag.lp_linear.Sky()
+        redshift=0.5, bulge=ag.lp_linear.Sersic(sersic_index=1.0),
     )
 
     fit = ag.FitImaging(
         dataset=masked_imaging_7x7,
         galaxies=[g0_linear_light],
+        sky=ag.lp_linear.Sky(),
         settings_inversion=ag.SettingsInversion(use_positive_only_solver=False)
     )
 
     assert fit.perform_inversion is True
     assert fit.figure_of_merit == pytest.approx(-14.5087714, 1.0e-4)
 
-    galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
+    sky = fit.sky_linear_light_profiles_to_light_profiles
 
-    assert galaxies[0].sky.light_profile_list[0].intensity == pytest.approx(-49.5, 1.0e-4)
-    assert galaxies[0].sky.light_profile_list[1].intensity == pytest.approx(49.5, 1.0e-4)
+    assert sky.light_profile_list[0].intensity == pytest.approx(-49.5, 1.0e-4)
+    assert sky.light_profile_list[1].intensity == pytest.approx(49.5, 1.0e-4)
 
     fit = ag.FitImaging(
         dataset=masked_imaging_7x7,
         galaxies=[g0_linear_light],
+        sky=ag.lp_linear.Sky(),
         settings_inversion=ag.SettingsInversion(use_positive_only_solver=True)
     )
 
     assert fit.perform_inversion is True
     assert fit.figure_of_merit == pytest.approx(-14.5087714, 1.0e-4)
 
-    galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
+    sky = fit.sky_linear_light_profiles_to_light_profiles
 
-    assert galaxies[0].sky.light_profile_list[0].intensity == pytest.approx(0.0, 1.0e-4)
-    assert galaxies[0].sky.light_profile_list[1].intensity == pytest.approx(99.0, 1.0e-4)
+    assert sky.light_profile_list[0].intensity == pytest.approx(0.0, 1.0e-4)
+    assert sky.light_profile_list[1].intensity == pytest.approx(99.0, 1.0e-4)
 
     g0_light = ag.Galaxy(
-        redshift=0.5, bulge=ag.lp_linear.Sersic(sersic_index=1.0), sky=ag.lp.Sky(intensity=-99.0)
+        redshift=0.5, bulge=ag.lp_linear.Sersic(sersic_index=1.0),
     )
 
     fit = ag.FitImaging(
         dataset=masked_imaging_7x7,
         galaxies=[g0_light],
+        sky=ag.lp.Sky(intensity=-99.0)
     )
 
     assert fit.perform_inversion is True
