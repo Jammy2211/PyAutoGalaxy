@@ -75,7 +75,6 @@ class AbstractToInversion:
     def linear_obj_galaxy_dict(
         self,
     ) -> Dict[Union[LightProfileLinearObjFuncList, aa.AbstractMapper], Galaxy]:
-
         lp_linear_func_galaxy_dict = self.lp_linear_func_list_galaxy_dict
 
         mapper_galaxy_dict = self.mapper_galaxy_dict
@@ -84,9 +83,7 @@ class AbstractToInversion:
 
     @cached_property
     def linear_obj_list(self) -> List[aa.LinearObj]:
-
         if isinstance(self.sky, Basis):
-
             sky_linear_obj_list = LightProfileLinearObjFuncList(
                 grid=self.dataset.grid,
                 blurring_grid=self.dataset.blurring_grid,
@@ -103,6 +100,7 @@ class AbstractToInversion:
     @cached_property
     def regularization_list(self) -> List[aa.AbstractRegularization]:
         return [linear_obj.regularization for linear_obj in self.linear_obj_list]
+
 
 class GalaxiesToInversion(AbstractToInversion):
     def __init__(

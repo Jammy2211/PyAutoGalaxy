@@ -21,9 +21,8 @@ class Sky(Basis):
         When a positive-negative solver is used, no loss of performance is incurred by using two profiles, even though
         the two solutions are fully degenerate. The same API is therefore used for both solvers, for convenience.
         """
-        super().__init__(
-            light_profile_list=[SkyPos(), SkyNeg()]
-        )
+        super().__init__(light_profile_list=[SkyPos(), SkyNeg()])
+
 
 class SkyPos(lp.Sky, LightProfileLinear):
     def __init__(

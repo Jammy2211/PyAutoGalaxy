@@ -5,8 +5,8 @@ import autoarray as aa
 
 from autogalaxy.profiles.light.abstract import LightProfile
 
-class Sky(LightProfile):
 
+class Sky(LightProfile):
     def __init__(
         self,
         intensity: float = 0.1,
@@ -30,5 +30,7 @@ class Sky(LightProfile):
         self.intensity = intensity
 
     @aa.grid_dec.grid_2d_to_structure
-    def image_2d_from(self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None):
+    def image_2d_from(
+        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+    ):
         return np.full(shape=grid.shape[0], fill_value=self.intensity)

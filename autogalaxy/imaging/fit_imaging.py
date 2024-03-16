@@ -12,6 +12,7 @@ from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.galaxy.to_inversion import GalaxiesToInversion
 from autogalaxy.profiles.light.abstract import LightProfile
+from autogalaxy.profiles.light.standard.sky import Sky
 from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.profiles.light.operated.abstract import LightProfileOperated
 
@@ -23,7 +24,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         self,
         dataset: aa.Imaging,
         galaxies: List[Galaxy],
-        sky : Optional[LightProfile] = None,
+        sky: Optional[LightProfile] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads: aa.Preloads = Preloads(),
@@ -100,17 +101,28 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         altogether.
         """
 
+        if isinstance(self.sky, Sky):
+            image = self.sky.image_2d_from(grid=self.dataset.grid)
+        else:
+            image = np.zeros(self.dataset.shape_slim)
+
         if len(self.galaxies.cls_list_from(cls=LightProfile)) == len(
             self.galaxies.cls_list_from(cls=LightProfileOperated)
         ):
-            return self.galaxies.image_2d_from(
-                grid=self.dataset.grid,
+            return (
+                self.galaxies.image_2d_from(
+                    grid=self.dataset.grid,
+                )
+                + image
             )
 
-        return self.galaxies.blurred_image_2d_from(
-            grid=self.dataset.grid,
-            convolver=self.dataset.convolver,
-            blurring_grid=self.dataset.blurring_grid,
+        return (
+            self.galaxies.blurred_image_2d_from(
+                grid=self.dataset.grid,
+                convolver=self.dataset.convolver,
+                blurring_grid=self.dataset.blurring_grid,
+            )
+            + image
         )
 
     @property
