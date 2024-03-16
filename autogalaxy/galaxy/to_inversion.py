@@ -12,6 +12,7 @@ from autogalaxy.profiles.light.linear import (
     LightProfileLinearObjFuncList,
 )
 from autogalaxy.profiles.light.basis import Basis
+from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
@@ -25,6 +26,7 @@ class AbstractToInversion:
         data: Optional[Union[aa.Array2D, aa.Visibilities]] = None,
         noise_map: Optional[Union[aa.Array2D, aa.VisibilitiesNoiseMap]] = None,
         w_tilde: Optional[Union[aa.WTildeImaging, aa.WTildeInterferometer]] = None,
+        sky: Optional[LightProfile] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads=Preloads(),
@@ -46,6 +48,7 @@ class AbstractToInversion:
         self.data = data
         self.noise_map = noise_map
         self.w_tilde = w_tilde
+        self.sky = sky
         self.adapt_images = adapt_images
 
         self.settings_inversion = settings_inversion
@@ -72,6 +75,7 @@ class AbstractToInversion:
     def linear_obj_galaxy_dict(
         self,
     ) -> Dict[Union[LightProfileLinearObjFuncList, aa.AbstractMapper], Galaxy]:
+
         lp_linear_func_galaxy_dict = self.lp_linear_func_list_galaxy_dict
 
         mapper_galaxy_dict = self.mapper_galaxy_dict
@@ -80,7 +84,13 @@ class AbstractToInversion:
 
     @cached_property
     def linear_obj_list(self) -> List[aa.LinearObj]:
-        return list(self.linear_obj_galaxy_dict.keys())
+
+        if isinstance(self.sky, Basis):
+            sky_linear_obj_list = self.sky.light_profile_list
+        else:
+            sky_linear_obj_list = []
+
+        return list(self.linear_obj_galaxy_dict.keys()) # + sky_linear_obj_list
 
     @cached_property
     def regularization_list(self) -> List[aa.AbstractRegularization]:
@@ -95,6 +105,7 @@ class GalaxiesToInversion(AbstractToInversion):
         data: Optional[Union[aa.Array2D, aa.Visibilities]] = None,
         noise_map: Optional[Union[aa.Array2D, aa.VisibilitiesNoiseMap]] = None,
         w_tilde: Optional[Union[aa.WTildeImaging, aa.WTildeInterferometer]] = None,
+        sky: Optional[LightProfile] = None,
         adapt_images: Optional[AdaptImages] = None,
         grid: Optional[aa.type.Grid2DLike] = None,
         blurring_grid: Optional[aa.type.Grid2DLike] = None,
@@ -106,6 +117,7 @@ class GalaxiesToInversion(AbstractToInversion):
         self.galaxies = Galaxies(galaxies)
 
         super().__init__(
+            sky=sky,
             dataset=dataset,
             data=data,
             noise_map=noise_map,

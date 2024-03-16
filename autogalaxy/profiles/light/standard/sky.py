@@ -3,7 +3,9 @@ from typing import Optional
 
 import autoarray as aa
 
-class Sky:
+from autogalaxy.profiles.light.abstract import LightProfile
+
+class Sky(LightProfile):
 
     def __init__(
         self,
@@ -23,17 +25,10 @@ class Sky:
             the light profile's image is compared too, which is expected to be electrons per second).
         """
 
+        super().__init__(centre=None, ell_comps=None)
+
         self.intensity = intensity
 
     @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None):
         return np.full(shape=grid.shape[0], fill_value=self.intensity)
-
-
-    @property
-    def centre(self):
-        return (0.0, 0.0)
-
-    @property
-    def ell_comps(self):
-        return (0.0, 0.0)

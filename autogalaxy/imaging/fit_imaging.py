@@ -23,6 +23,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         self,
         dataset: aa.Imaging,
         galaxies: List[Galaxy],
+        sky : Optional[LightProfile] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads: aa.Preloads = Preloads(),
@@ -82,6 +83,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             self=self, model_obj=self.galaxies, settings_inversion=settings_inversion
         )
 
+        self.sky = sky
         self.adapt_images = adapt_images
         self.settings_inversion = settings_inversion
 
@@ -134,6 +136,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
     def plane_to_inversion(self) -> GalaxiesToInversion:
         return GalaxiesToInversion(
             galaxies=self.galaxies,
+            sky=self.sky,
             dataset=self.dataset,
             data=self.profile_subtracted_image,
             noise_map=self.noise_map,
