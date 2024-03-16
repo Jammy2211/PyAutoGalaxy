@@ -60,6 +60,8 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             The imaging dataset which is fitted by the galaxies.
         galaxies
             The galaxies whose light profile images are used to fit the imaging data.
+        sky
+            Model component used to represent the background sky emission in an image (e.g. a `Sky` light profile).
         adapt_images
             Contains the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
             reconstructed galaxy's morphology.
@@ -81,7 +83,10 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             run_time_dict=run_time_dict,
         )
         AbstractFitInversion.__init__(
-            self=self, model_obj=self.galaxies, settings_inversion=settings_inversion
+            self=self,
+            model_obj=self.galaxies,
+            sky=sky,
+            settings_inversion=settings_inversion
         )
 
         self.sky = sky
