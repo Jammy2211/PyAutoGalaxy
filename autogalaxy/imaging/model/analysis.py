@@ -174,10 +174,7 @@ class AnalysisImaging(AnalysisDataset):
             instance=instance, run_time_dict=run_time_dict
         )
 
-        if hasattr(instance, "sky"):
-            sky = instance.sky
-        else:
-            sky = None
+        sky = self.sky_via_instance_from(instance=instance)
 
         adapt_images = self.adapt_images_via_instance_from(instance=instance)
 

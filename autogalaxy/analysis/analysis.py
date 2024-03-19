@@ -22,6 +22,9 @@ from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.analysis.result import ResultDataset
 
+from autogalaxy.profiles.light import standard as lp
+from autogalaxy.profiles.light import linear as lp_linear
+
 logger = logging.getLogger(__name__)
 
 logger.setLevel(level="INFO")
@@ -71,6 +74,23 @@ class Analysis(af.Analysis):
             )
 
         return Galaxies(galaxies=instance.galaxies, run_time_dict=run_time_dict)
+
+    def sky_via_instance_from(self, instance: af.ModelInstance) -> Union[lp.Sky, lp_linear.Sky]:
+        """
+        Create a sky from a model instance, which is used to fit the dataset.
+
+        Parameters
+        ----------
+        instance
+            An instance of the model that is fitted to the data by this analysis (whose parameters may have been set
+            via a non-linear search).
+
+        Returns
+        -------
+        A sky that is used to then fit the dataset.
+        """
+        if hasattr(instance, "sky"):
+            return instance.sky
 
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None
