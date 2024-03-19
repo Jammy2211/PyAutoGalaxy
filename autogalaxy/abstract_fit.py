@@ -152,7 +152,11 @@ class AbstractFitInversion:
         galaxy_linear_obj_image_dict = {}
 
         for linear_obj in self.inversion.linear_obj_list:
-            galaxy = self.inversion.linear_obj_galaxy_dict[linear_obj]
+
+            try:
+                galaxy = self.inversion.linear_obj_galaxy_dict[linear_obj]
+            except KeyError:
+                continue
 
             if not use_image:
                 mapped_reconstructed = self.inversion.mapped_reconstructed_data_dict[
