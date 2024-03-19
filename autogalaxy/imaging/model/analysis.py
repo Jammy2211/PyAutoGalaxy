@@ -174,6 +174,8 @@ class AnalysisImaging(AnalysisDataset):
             instance=instance, run_time_dict=run_time_dict
         )
 
+        sky = self.sky_via_instance_from(instance=instance)
+
         adapt_images = self.adapt_images_via_instance_from(instance=instance)
 
         preloads = self.preloads if preload_overwrite is None else preload_overwrite
@@ -181,6 +183,7 @@ class AnalysisImaging(AnalysisDataset):
         return FitImaging(
             dataset=self.dataset,
             galaxies=galaxies,
+            sky=sky,
             adapt_images=adapt_images,
             settings_inversion=self.settings_inversion,
             preloads=preloads,
@@ -271,7 +274,7 @@ class AnalysisImaging(AnalysisDataset):
     def make_result(
         self,
         samples: af.SamplesPDF,
-        search_internal = None,
+        search_internal=None,
     ) -> ResultImaging:
         """
         After the non-linear search is complete create its `Result`, which includes:
@@ -300,7 +303,9 @@ class AnalysisImaging(AnalysisDataset):
         ResultImaging
             The result of fitting the model to the imaging dataset, via a non-linear search.
         """
-        return ResultImaging(samples=samples, analysis=self, search_internal=search_internal)
+        return ResultImaging(
+            samples=samples, analysis=self, search_internal=search_internal
+        )
 
     def save_attributes(self, paths: af.DirectoryPaths):
         """
