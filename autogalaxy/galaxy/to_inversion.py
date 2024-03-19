@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TYPE_CHECKING, Dict, List, Optional, Type, Union
+from typing import Dict, List, Optional, Type, Union
 
 from autoconf import cached_property
 

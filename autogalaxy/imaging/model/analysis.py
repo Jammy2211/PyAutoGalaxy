@@ -174,6 +174,11 @@ class AnalysisImaging(AnalysisDataset):
             instance=instance, run_time_dict=run_time_dict
         )
 
+        if hasattr(instance, "sky"):
+            sky = instance.sky
+        else:
+            sky = None
+
         adapt_images = self.adapt_images_via_instance_from(instance=instance)
 
         preloads = self.preloads if preload_overwrite is None else preload_overwrite
@@ -181,6 +186,7 @@ class AnalysisImaging(AnalysisDataset):
         return FitImaging(
             dataset=self.dataset,
             galaxies=galaxies,
+            sky=sky,
             adapt_images=adapt_images,
             settings_inversion=self.settings_inversion,
             preloads=preloads,

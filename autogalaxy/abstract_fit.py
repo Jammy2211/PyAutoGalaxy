@@ -63,7 +63,7 @@ class AbstractFitInversion:
             A bool which is True if an inversion is performed.
         """
 
-        return self.model_obj.perform_inversion
+        return self.model_obj.perform_inversion or isinstance(self.sky, Basis)
 
     @property
     def w_tilde(self) -> Optional[aa.WTildeImaging]:

@@ -191,6 +191,20 @@ def test__fit_figure_of_merit(
 
 
 def test__fit__sky___handles_special_behaviour(masked_imaging_7x7):
+
+    g0 = ag.Galaxy(
+        redshift=0.5,
+        bulge=ag.lp.Sersic(sersic_index=1.0),
+    )
+
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7,
+        galaxies=[g0],
+        sky=ag.lp_linear.Sky(),
+    )
+
+    assert fit.perform_inversion is True
+
     masked_imaging_7x7 = copy.copy(masked_imaging_7x7)
 
     masked_imaging_7x7.data -= 100.0
