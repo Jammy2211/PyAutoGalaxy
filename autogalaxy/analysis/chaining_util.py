@@ -157,6 +157,23 @@ def source_from(
     return source_custom_model_from(result=result, source_is_model=True)
 
 
+def sky_from(result: Result) -> Optional[af.Model]:
+    """
+
+
+    Parameters
+    ----------
+    result
+
+    Returns
+    -------
+
+    """
+    try:
+        return result.model.sky
+    except AttributeError:
+        return None
+
 def clumps_from(
     result: Result,
     light_as_model: bool = False,

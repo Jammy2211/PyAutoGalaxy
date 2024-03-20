@@ -122,11 +122,11 @@ class GalaxiesToInversion(AbstractToInversion):
         self.galaxies = Galaxies(galaxies)
 
         super().__init__(
-            sky=sky,
             dataset=dataset,
             data=data,
             noise_map=noise_map,
             w_tilde=w_tilde,
+            sky=sky,
             adapt_images=adapt_images,
             settings_inversion=settings_inversion,
             preloads=preloads,
