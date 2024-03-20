@@ -150,7 +150,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         return self.blurred_image
 
     @property
-    def plane_to_inversion(self) -> GalaxiesToInversion:
+    def galaxies_to_inversion(self) -> GalaxiesToInversion:
         return GalaxiesToInversion(
             galaxies=self.galaxies,
             sky=self.sky,
@@ -176,7 +176,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         """
 
         if self.perform_inversion:
-            return self.plane_to_inversion.inversion
+            return self.galaxies_to_inversion.inversion
 
     @property
     def model_data(self) -> aa.Array2D:
