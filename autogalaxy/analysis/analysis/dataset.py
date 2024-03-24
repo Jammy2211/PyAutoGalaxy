@@ -139,29 +139,6 @@ class AnalysisDataset(Analysis):
         os.makedirs(paths.profile_path, exist_ok=True)
         self.preloads.output_info_to_summary(file_path=paths.profile_path)
 
-    def modify_after_fit(
-        self, paths: af.DirectoryPaths, model: af.AbstractPriorModel, result: af.Result
-    ) -> "AnalysisDataset":
-        """
-        Call functions that perform tasks after a model-fit is completed, for example ensuring the figure of merit
-        has not changed from previous estimates and resetting preloads.
-
-        Parameters
-        ----------
-        paths
-            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
-            visualization and the pickled objects used by the aggregator output by this function.
-        model
-            The PyAutoFit model object, which includes model components representing the galaxies that are fitted to
-            the imaging data.
-        result
-            The result of the model fit that has just been completed.
-        """
-
-        self.output_or_check_figure_of_merit_sanity(paths=paths, result=result)
-
-        return self
-
     def save_attributes(self, paths: af.DirectoryPaths):
         """
         Before the model-fit via the non-linear search begins, this routine saves attributes of the `Analysis` object
@@ -247,57 +224,3 @@ class AnalysisDataset(Analysis):
             return self.adapt_images.updated_via_instance_from(instance=instance)
         except AttributeError:
             pass
-
-    def output_or_check_figure_of_merit_sanity(
-        self, paths: af.DirectoryPaths, result: af.Result
-    ):
-        """
-        Changes to the PyAutoGalaxy source code may inadvertantly change the numerics of how a log likelihood is
-        computed. Equally, one may set off a model-fit that resumes from previous results, but change the settings of
-        the pixelization or inversion in a way that changes the log likelihood function.
-
-        This function performs an optional sanity check, which raises an exception if the log likelihood calculation
-        changes, to ensure a model-fit is not resumed with a different likelihood calculation to the previous run.
-
-        If the model-fit has not been performed before (e.g. it is not a resume) this function outputs
-        the `figure_of_merit` (e.g. the log likelihood) of the maximum log likelihood model at the end of the model-fit.
-
-        If the model-fit is a resume, it loads this `figure_of_merit` and compares it against a new value computed for
-        the resumed run (again using the maximum log likelihood model inferred). If the two likelihoods do not agree
-        and therefore the log likelihood function has changed, an exception is raised and the code execution terminated.
-
-        Parameters
-        ----------
-        paths
-            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
-            visualization, and pickled objects used by the database and aggregator.
-        result
-            The result containing the maximum log likelihood fit of the model.
-        """
-
-        if os.environ.get("PYAUTOFIT_TEST_MODE") == "1":
-            return
-
-        if not conf.instance["general"]["test"]["check_figure_of_merit_sanity"]:
-            return
-
-        figure_of_merit = result.max_log_likelihood_fit.figure_of_merit
-
-        try:
-            figure_of_merit_sanity = paths.load_json(name="figure_of_merit_sanity")
-
-            if not np.isclose(figure_of_merit, figure_of_merit_sanity):
-                raise exc.AnalysisException(
-                    "Figure of merit sanity check failed. "
-                    ""
-                    "This means that the existing results of a model fit used a different "
-                    "likelihood function compared to the one implemented now.\n\n"
-                    f"Old Figure of Merit = {figure_of_merit_sanity}\n"
-                    f"New Figure of Merit = {figure_of_merit}"
-                )
-
-        except (FileNotFoundError, KeyError):
-            paths.save_json(
-                name="figure_of_merit_sanity",
-                object_dict=figure_of_merit,
-            )
