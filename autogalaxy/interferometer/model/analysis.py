@@ -7,7 +7,7 @@ import autoarray as aa
 
 from autoarray.exc import PixelizationException
 
-from autogalaxy.analysis.adapt_images import AdaptImageMaker
+from autogalaxy.analysis.adapt_images.adapt_image_maker import AdaptImageMaker
 from autogalaxy.analysis.analysis.dataset import AnalysisDataset
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
@@ -49,8 +49,8 @@ class AnalysisInterferometer(AnalysisDataset):
         ----------
         dataset
             The interferometer dataset that the model is fitted too.
-        adapt_images
-            The adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
+        adapt_image_maker
+            Makes the adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.

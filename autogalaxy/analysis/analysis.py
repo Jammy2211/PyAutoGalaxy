@@ -2,10 +2,8 @@ import copy
 import json
 import logging
 import numpy as np
-from typing import Dict, List, Optional, Tuple, Union
-from os import path
+from typing import Optional, Union
 import os
-import time
 
 from autoconf import conf
 from autoconf.dictable import to_dict, output_to_json
@@ -13,17 +11,12 @@ import autofit as af
 import autoarray as aa
 
 from autogalaxy import exc
-from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.galaxy.galaxies import Galaxies
-from autogalaxy.analysis.adapt_images import AdaptImages
+from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.analysis.maker import FitMaker
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.analysis.result import ResultDataset
-
-from autogalaxy.profiles.light import standard as lp
-from autogalaxy.profiles.light import linear as lp_linear
 
 logger = logging.getLogger(__name__)
 
@@ -49,8 +42,8 @@ class AnalysisDataset(Analysis):
         ----------
         dataset
             The dataset that is the model is fitted too.
-        adapt_images
-            The adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
+        adapt_image_maker
+            Makes the adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.

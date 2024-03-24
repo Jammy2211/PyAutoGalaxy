@@ -10,8 +10,8 @@ import autofit as af
 import autoarray as aa
 
 from autogalaxy import exc
-from autogalaxy.analysis.adapt_images import AdaptImageMaker
-from autogalaxy.analysis.adapt_images import AdaptImages
+from autogalaxy.analysis.adapt_images.adapt_image_maker import AdaptImageMaker
+from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.analysis.maker import FitMaker
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
@@ -42,8 +42,8 @@ class AnalysisDataset(Analysis):
         ----------
         dataset
             The dataset that is the model is fitted too.
-        adapt_images
-            The adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
+        adapt_image_maker
+            Makes the adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
@@ -55,6 +55,7 @@ class AnalysisDataset(Analysis):
 
         self.dataset = dataset
         self.adapt_image_maker = adapt_image_maker
+        self._adapt_images = None
 
         self.settings_inversion = settings_inversion or aa.SettingsInversion()
 
@@ -70,7 +71,12 @@ class AnalysisDataset(Analysis):
 
     @property
     def adapt_images(self):
-        return self.adapt_image_maker.adapt_images
+
+        if self._adapt_images is not None:
+            return self._adapt_images
+
+        if self.adapt_image_maker is not None:
+            return self.adapt_image_maker.adapt_images
 
     def set_preloads(self, paths: af.DirectoryPaths, model: af.Collection):
         """

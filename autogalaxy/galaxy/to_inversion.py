@@ -7,7 +7,7 @@ import autoarray as aa
 
 from autoarray.inversion.pixelization.mappers.factory import mapper_from
 from autoarray.inversion.inversion.factory import inversion_unpacked_from
-from autogalaxy.analysis.adapt_images import AdaptImages
+from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.profiles.light.linear import (
     LightProfileLinearObjFuncList,
 )

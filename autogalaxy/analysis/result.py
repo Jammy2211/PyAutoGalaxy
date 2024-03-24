@@ -12,7 +12,7 @@ from autoconf import cached_property
 import autofit as af
 import autoarray as aa
 
-from autogalaxy.analysis.adapt_images import AdaptImages
+from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.galaxy.galaxy import Galaxy
 
 
