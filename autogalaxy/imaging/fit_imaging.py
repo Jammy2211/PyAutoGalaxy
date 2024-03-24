@@ -345,6 +345,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         return FitImaging(
             dataset=self.dataset,
             galaxies=self.galaxies,
+            sky=self.sky,
             adapt_images=self.adapt_images,
             settings_inversion=settings_inversion,
             preloads=preloads,
