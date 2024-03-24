@@ -53,6 +53,7 @@ from autoarray.structures.visibilities import Visibilities  # noqa
 from autoarray.structures.visibilities import VisibilitiesNoiseMap  # noqa
 
 from .analysis.adapt_images import AdaptImages
+from .analysis.adapt_images import AdaptImageMaker
 from .analysis.maker import FitMaker
 from .analysis.preloads import Preloads
 from . import aggregator as agg

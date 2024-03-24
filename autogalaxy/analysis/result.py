@@ -193,3 +193,7 @@ class ResultDataset(Result):
             result=self,
             use_model_images=use_model_images,
         )
+
+    @property
+    def adapt_image_maker(self):
+        return self.analysis.adapt_image_maker

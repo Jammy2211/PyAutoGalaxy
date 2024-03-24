@@ -7,7 +7,7 @@ import autoarray as aa
 
 from autoarray.exc import PixelizationException
 
-from autogalaxy.analysis.adapt_images import AdaptImages
+from autogalaxy.analysis.adapt_images import AdaptImageMaker
 from autogalaxy.analysis.analysis.dataset import AnalysisDataset
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
@@ -23,7 +23,7 @@ class AnalysisImaging(AnalysisDataset):
     def __init__(
         self,
         dataset: aa.Imaging,
-        adapt_images: Optional[AdaptImages] = None,
+        adapt_image_maker: Optional[AdaptImageMaker] = None,
         cosmology: LensingCosmology = Planck15(),
         settings_inversion: aa.SettingsInversion = None,
     ):
@@ -56,7 +56,7 @@ class AnalysisImaging(AnalysisDataset):
         """
         super().__init__(
             dataset=dataset,
-            adapt_images=adapt_images,
+            adapt_image_maker=adapt_image_maker,
             cosmology=cosmology,
             settings_inversion=settings_inversion,
         )

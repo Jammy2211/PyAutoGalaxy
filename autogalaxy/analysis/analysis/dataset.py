@@ -10,6 +10,7 @@ import autofit as af
 import autoarray as aa
 
 from autogalaxy import exc
+from autogalaxy.analysis.adapt_images import AdaptImageMaker
 from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.analysis.maker import FitMaker
 from autogalaxy.analysis.preloads import Preloads
@@ -26,7 +27,7 @@ class AnalysisDataset(Analysis):
     def __init__(
         self,
         dataset: Union[aa.Imaging, aa.Interferometer],
-        adapt_images: Optional[AdaptImages] = None,
+        adapt_image_maker: Optional[AdaptImageMaker] = None,
         cosmology: LensingCosmology = Planck15(),
         settings_inversion: aa.SettingsInversion = None,
     ):
@@ -53,7 +54,7 @@ class AnalysisDataset(Analysis):
         super().__init__(cosmology=cosmology)
 
         self.dataset = dataset
-        self.adapt_images = adapt_images
+        self.adapt_image_maker = adapt_image_maker
 
         self.settings_inversion = settings_inversion or aa.SettingsInversion()
 
@@ -66,6 +67,10 @@ class AnalysisDataset(Analysis):
     @property
     def fit_maker_cls(self):
         return FitMaker
+
+    @property
+    def adapt_images(self):
+        return self.adapt_image_maker.adapt_images
 
     def set_preloads(self, paths: af.DirectoryPaths, model: af.Collection):
         """
