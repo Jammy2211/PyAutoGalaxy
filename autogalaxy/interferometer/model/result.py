@@ -91,5 +91,5 @@ class ResultInterferometer(ResultDataset):
 
         return AdaptImages.from_result(
             result=self,
-            use_model_images=use_model_images,
+            use_model_images=True,
         )
