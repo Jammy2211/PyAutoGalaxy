@@ -11,6 +11,19 @@ if TYPE_CHECKING:
     from autogalaxy.galaxy.galaxy import Galaxy
 
 
+class AdaptImageMaker:
+
+    def __init__(self, result, use_model_images: bool = False):
+
+        self.result = result
+        self.use_model_images = use_model_images
+
+    @cached_property
+    def adapt_images(self):
+        return AdaptImages.from_result(
+            result=self.result, use_model_images=self.use_model_images
+        )
+
 class AdaptImages:
     def __init__(
         self,
