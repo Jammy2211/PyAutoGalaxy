@@ -1,5 +1,4 @@
 import copy
-import json
 import logging
 import numpy as np
 from typing import Optional, Union
@@ -11,23 +10,24 @@ import autofit as af
 import autoarray as aa
 
 from autogalaxy import exc
+from autogalaxy.analysis.adapt_images.adapt_image_maker import AdaptImageMaker
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.analysis.maker import FitMaker
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
+from autogalaxy.analysis.analysis.analysis import Analysis
 from autogalaxy.analysis.result import ResultDataset
 
 logger = logging.getLogger(__name__)
 
 logger.setLevel(level="INFO")
 
-
 class AnalysisDataset(Analysis):
     def __init__(
         self,
         dataset: Union[aa.Imaging, aa.Interferometer],
-        adapt_images: Optional[AdaptImages] = None,
+        adapt_image_maker: Optional[AdaptImageMaker] = None,
         cosmology: LensingCosmology = Planck15(),
         settings_inversion: aa.SettingsInversion = None,
     ):
@@ -54,7 +54,8 @@ class AnalysisDataset(Analysis):
         super().__init__(cosmology=cosmology)
 
         self.dataset = dataset
-        self.adapt_images = adapt_images
+        self.adapt_image_maker = adapt_image_maker
+        self._adapt_images = None
 
         self.settings_inversion = settings_inversion or aa.SettingsInversion()
 
@@ -67,6 +68,15 @@ class AnalysisDataset(Analysis):
     @property
     def fit_maker_cls(self):
         return FitMaker
+
+    @property
+    def adapt_images(self):
+
+        if self._adapt_images is not None:
+            return self._adapt_images
+
+        if self.adapt_image_maker is not None:
+            return self.adapt_image_maker.adapt_images
 
     def set_preloads(self, paths: af.DirectoryPaths, model: af.Collection):
         """

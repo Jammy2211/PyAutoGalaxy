@@ -1,16 +1,30 @@
-from typing import Dict, List, Tuple, Type, Union
+from __future__ import annotations
+
+from typing import Dict, List, Optional, Tuple, Type, Union
+
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from autogalaxy.analysis.analysis.dataset import AnalysisDataset
 
 from autoconf import cached_property
 
 import autofit as af
 import autoarray as aa
 
-from autogalaxy.analysis.adapt_images import AdaptImages
+from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.galaxy.galaxy import Galaxy
 
 
 class Result(af.Result):
-    def __init__(self, samples: af.SamplesPDF, analysis, search_internal=None):
+    def __init__(
+            self,
+            samples_summary : af.SamplesSummary,
+            paths : af.AbstractPaths,
+            samples: Optional[af.SamplesPDF] = None,
+            search_internal : Optional[object] = None,
+            analysis : Optional[AnalysisDataset] = None
+    ):
         """
         After the non-linear search of a fit to a dataset is complete it creates a `Result` object which includes:
 
@@ -43,7 +57,7 @@ class Result(af.Result):
         ResultImaging
             The result of fitting the model to the imaging dataset, via a non-linear search.
         """
-        super().__init__(samples=samples, search_internal=search_internal)
+        super().__init__(samples_summary=samples_summary, paths=paths, samples=samples, search_internal=search_internal)
 
         self.analysis = analysis
 
@@ -179,3 +193,7 @@ class ResultDataset(Result):
             result=self,
             use_model_images=use_model_images,
         )
+
+    @property
+    def adapt_image_maker(self):
+        return self.analysis.adapt_image_maker
