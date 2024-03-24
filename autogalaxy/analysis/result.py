@@ -5,7 +5,7 @@ from typing import Dict, List, Optional, Tuple, Type, Union
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from autogalaxy.analysis.analysis import AnalysisDataset
+    from autogalaxy.analysis.analysis.dataset import AnalysisDataset
 
 from autoconf import cached_property
 

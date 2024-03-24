@@ -8,7 +8,7 @@ import autoarray as aa
 from autoarray.exc import PixelizationException
 
 from autogalaxy.analysis.adapt_images import AdaptImages
-from autogalaxy.analysis.analysis import AnalysisDataset
+from autogalaxy.analysis.analysis.dataset import AnalysisDataset
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15

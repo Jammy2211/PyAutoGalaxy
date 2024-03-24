@@ -5,7 +5,7 @@ from autoconf.dictable import to_dict
 
 import autofit as af
 
-from autogalaxy.analysis.analysis import Analysis
+from autogalaxy.analysis.analysis.analysis import Analysis
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.quantity.model.visualizer import VisualizerQuantity

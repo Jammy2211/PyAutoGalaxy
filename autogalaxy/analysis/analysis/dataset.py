@@ -1,11 +1,8 @@
 import copy
-import json
 import logging
 import numpy as np
-from typing import Dict, List, Optional, Tuple, Union
-from os import path
+from typing import Optional, Union
 import os
-import time
 
 from autoconf import conf
 from autoconf.dictable import to_dict, output_to_json
@@ -13,22 +10,17 @@ import autofit as af
 import autoarray as aa
 
 from autogalaxy import exc
-from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.analysis.adapt_images import AdaptImages
 from autogalaxy.analysis.maker import FitMaker
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
+from autogalaxy.analysis.analysis.analysis import Analysis
 from autogalaxy.analysis.result import ResultDataset
-
-from autogalaxy.profiles.light import standard as lp
-from autogalaxy.profiles.light import linear as lp_linear
 
 logger = logging.getLogger(__name__)
 
 logger.setLevel(level="INFO")
-
 
 class AnalysisDataset(Analysis):
     def __init__(
