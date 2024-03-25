@@ -86,7 +86,8 @@ class MassProfile(EllProfile, OperateDeflections):
     def density_between_circular_annuli(
         self, inner_annuli_radius: float, outer_annuli_radius: float
     ):
-        """Calculate the mass between two circular annuli and compute the density by dividing by the annuli surface
+        """
+        Calculate the mass between two circular annuli and compute the density by dividing by the annuli surface
         area.
 
         The value returned by the mass integral is dimensionless, therefore the density between annuli is returned in \
