@@ -14,7 +14,12 @@ from autogalaxy.profiles.light.basis import Basis
 
 
 class AbstractFitInversion:
-    def __init__(self, model_obj, sky: Optional[LightProfile], settings_inversion: aa.SettingsInversion):
+    def __init__(
+        self,
+        model_obj,
+        sky: Optional[LightProfile],
+        settings_inversion: aa.SettingsInversion,
+    ):
         """
         An abstract fit object which fits to datasets (e.g. imaging, interferometer) inherit from.
 
@@ -152,7 +157,6 @@ class AbstractFitInversion:
         galaxy_linear_obj_image_dict = {}
 
         for linear_obj in self.inversion.linear_obj_list:
-
             try:
                 galaxy = self.inversion.linear_obj_galaxy_dict[linear_obj]
             except KeyError:

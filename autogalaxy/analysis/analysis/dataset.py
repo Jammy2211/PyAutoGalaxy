@@ -1,6 +1,5 @@
 import copy
 import logging
-import numpy as np
 from typing import Optional, Union
 import os
 
@@ -9,7 +8,6 @@ from autoconf.dictable import to_dict, output_to_json
 import autofit as af
 import autoarray as aa
 
-from autogalaxy import exc
 from autogalaxy.analysis.adapt_images.adapt_image_maker import AdaptImageMaker
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.analysis.maker import FitMaker
