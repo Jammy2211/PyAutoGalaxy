@@ -239,7 +239,7 @@ def make_fit_interferometer_x2_galaxy_inversion_7x7():
     )
 
 
-def make_samples_with_result():
+def make_samples_summary_with_result():
     galaxy = af.Model(ag.Galaxy, redshift=0.5, bulge=af.Model(ag.lp.Sersic))
 
     model = af.Collection(galaxies=af.Collection(galaxy=galaxy))

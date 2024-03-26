@@ -9,10 +9,10 @@ from autogalaxy.imaging.model.result import ResultImaging
 
 
 def test__results_include_masked_dataset_and_mask(
-    analysis_imaging_7x7, masked_imaging_7x7, samples_with_result
+    analysis_imaging_7x7, masked_imaging_7x7, samples_summary_with_result
 ):
     result = ResultImaging(
-        samples=samples_with_result,
+        samples=samples_summary_with_result,
         analysis=analysis_imaging_7x7,
     )
 

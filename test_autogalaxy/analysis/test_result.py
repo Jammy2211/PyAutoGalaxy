@@ -5,10 +5,10 @@ from autogalaxy.analysis import result as res
 
 
 def test__result_contains_instance_with_galaxies(
-    analysis_imaging_7x7, samples_with_result
+    analysis_imaging_7x7, samples_summary_with_result
 ):
     result = res.Result(
-        samples_summary=samples_with_result,
+        samples_summary=samples_summary_with_result,
         analysis=analysis_imaging_7x7,
     )
 
