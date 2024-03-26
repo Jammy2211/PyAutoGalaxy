@@ -174,6 +174,7 @@ def sky_from(result: Result) -> Optional[af.Model]:
     except AttributeError:
         return None
 
+
 def clumps_from(
     result: Result,
     light_as_model: bool = False,

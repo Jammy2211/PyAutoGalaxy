@@ -27,7 +27,7 @@ def test__max_log_likelihood_galaxies_available_as_result(analysis_imaging_7x7):
         name="test_search",
         samples_summary=ag.m.MockSamplesSummary(
             max_log_likelihood_instance=max_log_likelihood_instance
-        )
+        ),
     )
 
     result = search.fit(model=model, analysis=analysis_imaging_7x7)

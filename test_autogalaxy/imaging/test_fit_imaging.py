@@ -191,7 +191,6 @@ def test__fit_figure_of_merit(
 
 
 def test__fit__sky___handles_special_behaviour(masked_imaging_7x7):
-
     g0 = ag.Galaxy(
         redshift=0.5,
         bulge=ag.lp.Sersic(sersic_index=1.0),

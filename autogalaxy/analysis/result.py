@@ -18,12 +18,12 @@ from autogalaxy.galaxy.galaxy import Galaxy
 
 class Result(af.Result):
     def __init__(
-            self,
-            samples_summary : af.SamplesSummary,
-            paths : Optional[af.AbstractPaths] = None,
-            samples: Optional[af.SamplesPDF] = None,
-            search_internal : Optional[object] = None,
-            analysis : Optional[AnalysisDataset] = None
+        self,
+        samples_summary: af.SamplesSummary,
+        paths: Optional[af.AbstractPaths] = None,
+        samples: Optional[af.SamplesPDF] = None,
+        search_internal: Optional[object] = None,
+        analysis: Optional[AnalysisDataset] = None,
     ):
         """
         After the non-linear search of a fit to a dataset is complete it creates a `Result` object which includes:
@@ -57,7 +57,12 @@ class Result(af.Result):
         ResultImaging
             The result of fitting the model to the imaging dataset, via a non-linear search.
         """
-        super().__init__(samples_summary=samples_summary, paths=paths, samples=samples, search_internal=search_internal)
+        super().__init__(
+            samples_summary=samples_summary,
+            paths=paths,
+            samples=samples,
+            search_internal=search_internal,
+        )
 
         self.analysis = analysis
 

@@ -43,7 +43,7 @@ def aggregator_from(database_file, analysis, model, samples):
     search = ag.m.MockSearch(
         samples=samples,
         result=ag.m.MockResult(model=model, samples=samples),
-        save_for_aggregator=True
+        save_for_aggregator=True,
     )
     search.paths = af.DirectoryPaths(path_prefix=database_file)
     search.fit(model=model, analysis=analysis)
@@ -87,7 +87,7 @@ def make_samples(model):
 
     return ag.m.MockSamples(
         model=model,
-    #    max_log_likelihood_instance=instance,
+        #    max_log_likelihood_instance=instance,
         prior_means=[1.0] * model.prior_count,
         sample_list=sample_list,
     )
