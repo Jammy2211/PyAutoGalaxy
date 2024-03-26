@@ -79,6 +79,8 @@ def source_custom_model_from(result: Result, source_is_model: bool = False) -> a
         the input `source_is_model`.
     """
 
+    print(source_is_model)
+
     redshift = result.instance.galaxies.source.redshift
 
     if not hasattr(result.instance.galaxies.source, "pixelization"):
@@ -173,6 +175,7 @@ def sky_from(result: Result) -> Optional[af.Model]:
         return result.model.sky
     except AttributeError:
         return None
+
 
 def clumps_from(
     result: Result,
