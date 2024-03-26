@@ -20,7 +20,7 @@ class Result(af.Result):
     def __init__(
             self,
             samples_summary : af.SamplesSummary,
-            paths : af.AbstractPaths,
+            paths : Optional[af.AbstractPaths] = None,
             samples: Optional[af.SamplesPDF] = None,
             search_internal : Optional[object] = None,
             analysis : Optional[AnalysisDataset] = None

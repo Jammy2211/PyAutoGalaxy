@@ -246,7 +246,7 @@ def make_samples_with_result():
 
     instance = model.instance_from_prior_medians()
 
-    return ag.m.MockSamples(max_log_likelihood_instance=instance)
+    return ag.m.MockSamplesSummary(max_log_likelihood_instance=instance)
 
 
 def make_analysis_imaging_7x7():
