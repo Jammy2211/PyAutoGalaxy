@@ -5,10 +5,10 @@ from autogalaxy.analysis import result as res
 
 
 def test__result_contains_instance_with_galaxies(
-    analysis_imaging_7x7, samples_with_result
+    analysis_imaging_7x7, samples_summary_with_result
 ):
     result = res.Result(
-        samples=samples_with_result,
+        samples_summary=samples_summary_with_result,
         analysis=analysis_imaging_7x7,
     )
 
@@ -25,7 +25,7 @@ def test__max_log_likelihood_galaxies_available_as_result(analysis_imaging_7x7):
 
     search = ag.m.MockSearch(
         name="test_search",
-        samples=ag.m.MockSamples(
+        samples_summary=ag.m.MockSamplesSummary(
             max_log_likelihood_instance=max_log_likelihood_instance
         ),
     )
@@ -46,10 +46,12 @@ def test__results_include_pixelization__available_as_property(analysis_imaging_7
 
     max_log_likelihood_instance = model.instance_from_prior_medians()
 
-    samples = ag.m.MockSamples(max_log_likelihood_instance=max_log_likelihood_instance)
+    samples_summary = ag.m.MockSamplesSummary(
+        max_log_likelihood_instance=max_log_likelihood_instance
+    )
 
     result = res.ResultDataset(
-        samples=samples,
+        samples_summary=samples_summary,
         analysis=analysis_imaging_7x7,
     )
 

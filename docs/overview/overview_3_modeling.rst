@@ -339,7 +339,7 @@ make a corner plot of the probability density function (PDF):
 .. code-block:: python
 
     search_plotter = aplt.NestPlotter(samples=result.samples)
-    search_plotter.corner()
+    search_plotter.corner_cornerpy()
 
 Here is an example of how a PDF estimated for a model appears:
 

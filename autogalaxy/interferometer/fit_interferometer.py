@@ -81,7 +81,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             self=self,
             model_obj=self.galaxies,
             sky=None,
-            settings_inversion=settings_inversion
+            settings_inversion=settings_inversion,
         )
 
         self.adapt_images = adapt_images

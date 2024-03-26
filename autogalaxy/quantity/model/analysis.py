@@ -1,4 +1,5 @@
 import os
+from typing import Optional
 
 from autoconf.dictable import to_dict
 
@@ -162,7 +163,11 @@ class AnalysisQuantity(Analysis):
         visualizer.visualize_fit_quantity(fit=fit)
 
     def make_result(
-        self, samples: af.SamplesPDF, search_internal=None
+        self,
+        samples_summary: af.SamplesSummary,
+        paths: af.AbstractPaths,
+        samples: Optional[af.SamplesPDF] = None,
+        search_internal: Optional[object] = None,
     ) -> ResultQuantity:
         """
         After the non-linear search is complete create its `ResultQuantity`, which includes:
@@ -192,7 +197,11 @@ class AnalysisQuantity(Analysis):
             The result of fitting the model to the imaging dataset, via a non-linear search.
         """
         return ResultQuantity(
-            samples=samples, analysis=self, search_internal=search_internal
+            samples_summary=samples_summary,
+            paths=paths,
+            samples=samples,
+            search_internal=search_internal,
+            analysis=self,
         )
 
     def save_attributes(self, paths: af.DirectoryPaths):
