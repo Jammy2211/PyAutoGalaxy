@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 logger.setLevel(level="INFO")
 
+
 class AnalysisDataset(Analysis):
     def __init__(
         self,
@@ -69,7 +70,6 @@ class AnalysisDataset(Analysis):
 
     @property
     def adapt_images(self):
-
         if self._adapt_images is not None:
             return self._adapt_images
 

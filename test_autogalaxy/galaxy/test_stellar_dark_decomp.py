@@ -42,6 +42,7 @@ def test__stellar_mass_angular_within_galaxy__is_sum_of_individual_profiles(
     with pytest.raises(exc.GalaxyException):
         decomp.stellar_mass_angular_within_circle_from(radius=1.0)
 
+
 @pytest.mark.filterwarnings("ignore")
 def test__stellar_fraction_at_radius(dmp_0, dmp_1, smp_0, smp_1):
     galaxy = ag.Galaxy(redshift=0.5, stellar_0=smp_0, dark_0=dmp_0)
@@ -82,6 +83,7 @@ def test__stellar_fraction_at_radius(dmp_0, dmp_1, smp_0, smp_1):
         1.0e-4,
     )
 
+
 @pytest.mark.filterwarnings("ignore")
 def test__dark_mass_within_galaxy__is_sum_of_individual_profiles(dmp_0, dmp_1):
     galaxy = ag.Galaxy(
@@ -116,6 +118,7 @@ def test__dark_mass_within_galaxy__is_sum_of_individual_profiles(dmp_0, dmp_1):
 
     with pytest.raises(exc.GalaxyException):
         decomp.dark_mass_angular_within_circle_from(radius=1.0)
+
 
 @pytest.mark.filterwarnings("ignore")
 def test__dark_fraction_at_radius(dmp_0, dmp_1, smp_0, smp_1):

@@ -2,8 +2,8 @@ from autoconf import cached_property
 
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 
-class AdaptImageMaker:
 
+class AdaptImageMaker:
     def __init__(self, result, use_model_images: bool = False):
         """
         Class used for making adapt images on-the-fly for efficient computations.
@@ -44,8 +44,4 @@ class AdaptImageMaker:
         -------
         The adapt images from the result.
         """
-        return self.result.adapt_images_from(
-            use_model_images=self.use_model_images
-        )
-
-
+        return self.result.adapt_images_from(use_model_images=self.use_model_images)
