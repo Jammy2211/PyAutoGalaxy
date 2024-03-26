@@ -12,14 +12,17 @@ from autogalaxy.analysis.analysis.dataset import AnalysisDataset
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
-from autogalaxy.imaging.model.visualizer import VisualizerImaging
 from autogalaxy.imaging.model.result import ResultImaging
+from autogalaxy.imaging.model.visualizer import VisualizerImaging
 from autogalaxy.imaging.fit_imaging import FitImaging
 
 from autogalaxy import exc
 
 
 class AnalysisImaging(AnalysisDataset):
+
+    Result = ResultImaging
+
     def __init__(
         self,
         dataset: aa.Imaging,
@@ -270,48 +273,6 @@ class AnalysisImaging(AnalysisDataset):
             visualizer.visualize_inversion(
                 inversion=fit.inversion, during_analysis=during_analysis
             )
-
-    def make_result(
-        self,
-        samples_summary: af.SamplesSummary,
-        paths: af.AbstractPaths,
-        samples: Optional[af.SamplesPDF] = None,
-        search_internal: Optional[object] = None,
-    ) -> ResultImaging:
-        """
-        After the non-linear search is complete create its `Result`, which includes:
-
-        - The samples of the non-linear search (E.g. MCMC chains, nested sampling samples) which are used to compute
-          the maximum likelihood model, posteriors and other properties.
-
-        - The model used to fit the data, which uses the samples to create specific instances of the model (e.g.
-          an instance of the maximum log likelihood model).
-
-        - The non-linear search used to perform the model fit.
-
-        The `ResultImaging` object contains a number of methods which use the above objects to create the max
-        log likelihood galaxies `FitImaging`, adapt-galaxy images,etc.
-
-        Parameters
-        ----------
-        samples
-            A PyAutoFit object which contains the samples of the non-linear search, for example the chains of an MCMC
-            run of samples of the nested sampler.
-        search
-            The non-linear search used to perform this model-fit.
-
-        Returns
-        -------
-        ResultImaging
-            The result of fitting the model to the imaging dataset, via a non-linear search.
-        """
-        return ResultImaging(
-            samples_summary=samples_summary,
-            paths=paths,
-            samples=samples,
-            search_internal=search_internal,
-            analysis=self,
-        )
 
     def save_attributes(self, paths: af.DirectoryPaths):
         """
