@@ -6,18 +6,19 @@ database_file = "db_imaging"
 
 
 def test__dataset_generator_from_aggregator__analysis_has_single_dataset(
-    imaging_7x7, mask_2d_7x7, samples, model
+    image_7x7, psf_3x3, noise_map_7x7, mask_2d_7x7, samples, model
 ):
-    masked_imaging_7x7 = imaging_7x7.apply_mask(mask=mask_2d_7x7)
-
-    masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
-        settings=ag.SettingsImaging(
-            grid_class=ag.Grid2DIterate,
-            grid_pixelization_class=ag.Grid2DIterate,
-            fractional_accuracy=0.5,
-            sub_steps=[2],
-        )
+    imaging = ag.Imaging(
+        data=image_7x7,
+        psf=psf_3x3,
+        noise_map=noise_map_7x7,
+        over_sample=ag.OverSampleIterate(fractional_accuracy=0.5, sub_steps=[2]),
+        over_sample_pixelization=ag.OverSampleIterate(
+            fractional_accuracy=0.5, sub_steps=[2]
+        ),
     )
+
+    masked_imaging_7x7 = imaging.apply_mask(mask=mask_2d_7x7)
 
     analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
 
@@ -33,11 +34,12 @@ def test__dataset_generator_from_aggregator__analysis_has_single_dataset(
 
     for dataset_list in dataset_gen:
         assert (dataset_list[0].data == masked_imaging_7x7.data).all()
-        assert isinstance(dataset_list[0].grid, ag.Grid2DIterate)
-        assert isinstance(dataset_list[0].grid_pixelization, ag.Grid2DIterate)
+        assert isinstance(dataset_list[0].grid.over_sample, ag.OverSampleIterate)
+        assert isinstance(
+            dataset_list[0].grid_pixelization.over_sample, ag.OverSampleIterate
+        )
         assert dataset_list[0].grid.sub_steps == [2]
         assert dataset_list[0].grid.fractional_accuracy == 0.5
-        assert isinstance(dataset_list[0].settings, ag.SettingsImaging)
 
     clean(database_file=database_file)
 

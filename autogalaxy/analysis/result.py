@@ -14,7 +14,6 @@ from autogalaxy.galaxy.galaxy import Galaxy
 
 
 class Result(af.Result):
-
     @property
     def max_log_likelihood_fit(self):
         raise NotImplementedError

@@ -3,7 +3,6 @@ from autogalaxy.quantity.fit_quantity import FitQuantity
 
 
 class ResultQuantity(Result):
-
     @property
     def max_log_likelihood_fit(self) -> FitQuantity:
         """

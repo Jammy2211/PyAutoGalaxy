@@ -85,7 +85,10 @@ def test__decorators__grid_iterate_in__iterates_grid_correctly():
         pixel_scales=(1.0, 1.0),
     )
 
-    grid = ag.Grid2DIterate.from_mask(mask=mask, fractional_accuracy=1.0, sub_steps=[2])
+    grid = ag.Grid2D.from_mask(
+        mask=mask,
+        over_sample=ag.OverSampleIterate(fractional_accuracy=1.0, sub_steps=[2]),
+    )
 
     light_profile = ag.lp.Sersic(intensity=1.0)
 
@@ -97,8 +100,9 @@ def test__decorators__grid_iterate_in__iterates_grid_correctly():
 
     assert (image == image_sub_2).all()
 
-    grid = ag.Grid2DIterate.from_mask(
-        mask=mask, fractional_accuracy=0.95, sub_steps=[2, 4, 8]
+    grid = ag.Grid2D.from_mask(
+        mask=mask,
+        over_sample=ag.OverSampleIterate(fractional_accuracy=0.95, sub_steps=[2, 4, 8]),
     )
 
     light_profile = ag.lp.Sersic(centre=(0.08, 0.08), intensity=1.0)
@@ -131,11 +135,10 @@ def test__regression__centre_of_profile_in_right_place():
     max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
     assert max_indexes == (1, 4)
 
-    grid = ag.Grid2DIterate.uniform(
+    grid = ag.Grid2D.uniform(
         shape_native=(7, 7),
         pixel_scales=1.0,
-        fractional_accuracy=0.99,
-        sub_steps=[2, 4],
+        over_sample=ag.OverSampleIterate(fractional_accuracy=0.99, sub_steps=[2, 4]),
     )
 
     light_profile = ag.lp.Sersic(centre=(2.0, 1.0), intensity=1.0)

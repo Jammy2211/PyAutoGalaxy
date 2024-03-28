@@ -145,7 +145,7 @@ class AnalysisDataset(Analysis):
 
         For this analysis the following are output:
 
-        - The dataset (data / noise-map / settings / etc.).
+        - The dataset (data / noise-map / over sampler / etc.).
         - The settings associated with the inversion.
         - The settings associated with the pixelization.
         - The Cosmology.
@@ -173,8 +173,13 @@ class AnalysisDataset(Analysis):
             prefix="dataset",
         )
         paths.save_json(
-            name="settings",
-            object_dict=to_dict(self.dataset.settings),
+            name="over_sample",
+            object_dict=to_dict(self.dataset.over_sample),
+            prefix="dataset",
+        )
+        paths.save_json(
+            name="over_sample_pixelization",
+            object_dict=to_dict(self.dataset.over_sample_pixelization),
             prefix="dataset",
         )
         paths.save_json(

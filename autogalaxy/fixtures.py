@@ -8,17 +8,13 @@ import autogalaxy.plot as aplt
 def make_masked_imaging_7x7():
     imaging_7x7 = make_imaging_7x7()
 
-    masked_imaging_7x7 = imaging_7x7.apply_mask(mask=make_sub_mask_2d_7x7())
-
-    return masked_imaging_7x7.apply_settings(settings=ag.SettingsImaging(sub_size=1))
+    return imaging_7x7.apply_mask(mask=make_sub_mask_2d_7x7())
 
 
 def make_masked_imaging_covariance_7x7():
     imaging_7x7 = make_imaging_covariance_7x7()
 
-    masked_imaging_7x7 = imaging_7x7.apply_mask(mask=make_sub_mask_2d_7x7())
-
-    return masked_imaging_7x7.apply_settings(settings=ag.SettingsImaging(sub_size=1))
+    return imaging_7x7.apply_mask(mask=make_sub_mask_2d_7x7())
 
 
 # PROFILES #
