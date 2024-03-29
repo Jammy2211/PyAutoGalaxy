@@ -56,6 +56,7 @@ def test__perfect_fit__chi_squared_0():
         noise_map_path=path.join(file_path, "noise_map.fits"),
         psf_path=path.join(file_path, "psf.fits"),
         pixel_scales=0.2,
+        sub_size=1
     )
 
     mask = ag.Mask2D.circular(
