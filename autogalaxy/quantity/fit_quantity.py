@@ -97,10 +97,6 @@ class FitQuantity(aa.FitImaging):
             )
 
     @property
-    def quantity_dataset(self):
-        return self.dataset
-
-    @property
     def mask(self):
         return self.dataset.mask
 
@@ -110,7 +106,7 @@ class FitQuantity(aa.FitImaging):
 
     @property
     def grid(self):
-        return self.quantity_dataset.grid
+        return self.dataset.grid
 
     @property
     def galaxies(self):
