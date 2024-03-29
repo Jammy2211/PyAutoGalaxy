@@ -75,24 +75,24 @@ def test__grid(
     grid_2d_7x7,
     sub_grid_2d_7x7,
     blurring_grid_2d_7x7,
-    grid_2d_iterate_7x7,
 ):
-    masked_imaging_7x7 = dataset_quantity_7x7_array_2d.apply_mask(mask=sub_mask_2d_7x7)
-    masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
-        settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=2)
+    dataset = dataset_quantity_7x7_array_2d.apply_mask(mask=sub_mask_2d_7x7)
+
+    assert isinstance(dataset.grid, ag.Grid2D)
+    assert (dataset.grid.binned == grid_2d_7x7).all()
+
+    dataset_quantity = ag.DatasetQuantity(
+        data=ag.Array2D.ones(shape_native=(7, 7), pixel_scales=1.0),
+        noise_map=ag.Array2D.full(
+            fill_value=2.0, shape_native=(7, 7), pixel_scales=1.0
+        ),
+        over_sample=ag.OverSampleIterate()
     )
 
-    assert isinstance(masked_imaging_7x7.grid, ag.Grid2D)
-    assert (masked_imaging_7x7.grid.binned == grid_2d_7x7).all()
-    assert (masked_imaging_7x7.grid.slim == sub_grid_2d_7x7).all()
+    dataset = dataset_quantity.apply_mask(mask=sub_mask_2d_7x7)
 
-    masked_imaging_7x7 = dataset_quantity_7x7_array_2d.apply_mask(mask=sub_mask_2d_7x7)
-    masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
-        settings=ag.SettingsImaging(grid_class=ag.Grid2DIterate)
-    )
-
-    assert isinstance(masked_imaging_7x7.grid, ag.Grid2DIterate)
-    assert (masked_imaging_7x7.grid.binned == grid_2d_iterate_7x7).all()
+    assert isinstance(dataset.grid.over_sample, ag.OverSampleIterate)
+    assert (dataset.grid.binned == grid_2d_7x7).all()
 
 
 def test__vector_data__y_x():

@@ -112,8 +112,6 @@ class DatasetQuantity(AbstractDataset):
             The data of the quantity (e.g. 2D convergence, 2D potential, 2D deflections) that is fitted.
         signal_to_noise_map
             The 2D signal to noise map of the quantity's data.
-        settings
-            Controls settings of how the dataset is set up (e.g. the types of grids used to perform calculations).
         """
         try:
             noise_map = data / signal_to_noise_map
@@ -148,7 +146,9 @@ class DatasetQuantity(AbstractDataset):
         """
         if isinstance(self.data, aa.VectorYX2D):
             return DatasetQuantity(
-                data=self.data.y, noise_map=self.noise_map.y, settings=self.settings
+                data=self.data.y, noise_map=self.noise_map.y,
+                sub_size=self.sub_size, sub_size_pixelization=self.sub_size_pixelization,
+                over_sample=self.over_sample, over_sample_pixelization=self.over_sample_pixelization
             )
 
     @property
@@ -162,7 +162,9 @@ class DatasetQuantity(AbstractDataset):
         """
         if isinstance(self.data, aa.VectorYX2D):
             return DatasetQuantity(
-                data=self.data.x, noise_map=self.noise_map.x, settings=self.settings
+                data=self.data.x, noise_map=self.noise_map.x,
+                sub_size=self.sub_size, sub_size_pixelization=self.sub_size_pixelization,
+                over_sample=self.over_sample, over_sample_pixelization=self.over_sample_pixelization
             )
 
     def apply_mask(self, mask: aa.Mask2D) -> "DatasetQuantity":
@@ -187,7 +189,9 @@ class DatasetQuantity(AbstractDataset):
         noise_map = self.noise_map.apply_mask(mask=mask.derive_mask.sub_1)
 
         dataset = DatasetQuantity(
-            data=data, noise_map=noise_map, settings=self.settings
+            data=data, noise_map=noise_map,
+            sub_size=self.sub_size, sub_size_pixelization=self.sub_size_pixelization,
+            over_sample=self.over_sample, over_sample_pixelization=self.over_sample_pixelization
         )
 
         dataset.unmasked = unmasked_dataset
