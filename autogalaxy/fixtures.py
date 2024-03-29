@@ -150,7 +150,7 @@ def make_dataset_quantity_7x7_array_2d():
         noise_map=aa.Array2D.full(
             fill_value=2.0, shape_native=(7, 7), pixel_scales=1.0
         ),
-        sub_size=1
+        sub_size=1,
     )
 
 
@@ -160,7 +160,7 @@ def make_dataset_quantity_7x7_vector_yx_2d():
         noise_map=aa.VectorYX2D.full(
             fill_value=2.0, shape_native=(7, 7), pixel_scales=1.0
         ),
-        sub_size=1
+        sub_size=1,
     )
 
 

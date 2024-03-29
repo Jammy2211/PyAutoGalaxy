@@ -146,9 +146,12 @@ class DatasetQuantity(AbstractDataset):
         """
         if isinstance(self.data, aa.VectorYX2D):
             return DatasetQuantity(
-                data=self.data.y, noise_map=self.noise_map.y,
-                sub_size=self.sub_size, sub_size_pixelization=self.sub_size_pixelization,
-                over_sample=self.over_sample, over_sample_pixelization=self.over_sample_pixelization
+                data=self.data.y,
+                noise_map=self.noise_map.y,
+                sub_size=self.sub_size,
+                sub_size_pixelization=self.sub_size_pixelization,
+                over_sample=self.over_sample,
+                over_sample_pixelization=self.over_sample_pixelization,
             )
 
     @property
@@ -162,9 +165,12 @@ class DatasetQuantity(AbstractDataset):
         """
         if isinstance(self.data, aa.VectorYX2D):
             return DatasetQuantity(
-                data=self.data.x, noise_map=self.noise_map.x,
-                sub_size=self.sub_size, sub_size_pixelization=self.sub_size_pixelization,
-                over_sample=self.over_sample, over_sample_pixelization=self.over_sample_pixelization
+                data=self.data.x,
+                noise_map=self.noise_map.x,
+                sub_size=self.sub_size,
+                sub_size_pixelization=self.sub_size_pixelization,
+                over_sample=self.over_sample,
+                over_sample_pixelization=self.over_sample_pixelization,
             )
 
     def apply_mask(self, mask: aa.Mask2D) -> "DatasetQuantity":
@@ -189,9 +195,12 @@ class DatasetQuantity(AbstractDataset):
         noise_map = self.noise_map.apply_mask(mask=mask.derive_mask.sub_1)
 
         dataset = DatasetQuantity(
-            data=data, noise_map=noise_map,
-            sub_size=self.sub_size, sub_size_pixelization=self.sub_size_pixelization,
-            over_sample=self.over_sample, over_sample_pixelization=self.over_sample_pixelization
+            data=data,
+            noise_map=noise_map,
+            sub_size=self.sub_size,
+            sub_size_pixelization=self.sub_size_pixelization,
+            over_sample=self.over_sample,
+            over_sample_pixelization=self.over_sample_pixelization,
         )
 
         dataset.unmasked = unmasked_dataset
