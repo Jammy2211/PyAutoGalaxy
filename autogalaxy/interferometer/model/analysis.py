@@ -2,6 +2,8 @@ import logging
 import numpy as np
 from typing import Dict, Optional, Tuple
 
+from autoconf.dictable import to_dict
+
 import autofit as af
 import autoarray as aa
 
@@ -319,6 +321,9 @@ class AnalysisInterferometer(AnalysisDataset):
             name="real_space_mask",
             hdu=self.dataset.real_space_mask.hdu_for_output,
             prefix="dataset",
+        )
+        paths.save_json(
+            "transformer_class", to_dict(self.dataset.transformer.__class__), "dataset"
         )
 
     def profile_log_likelihood_function(

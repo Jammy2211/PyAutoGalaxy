@@ -42,10 +42,10 @@ def test__interferometer_generator_from_aggregator__analysis_has_single_dataset(
         assert (dataset_list[0].real_space_mask == mask_2d_7x7).all()
         assert isinstance(dataset_list[0].grid.over_sample, ag.OverSampleIterate)
         assert isinstance(
-            dataset_list[0].grid_pixelization.over_Sample, ag.OverSampleIterate
+            dataset_list[0].grid_pixelization.over_sample, ag.OverSampleIterate
         )
-        assert dataset_list[0].grid.sub_steps == [2]
-        assert dataset_list[0].grid.fractional_accuracy == 0.5
+        assert dataset_list[0].grid.over_sample.sub_steps == [2]
+        assert dataset_list[0].grid.over_sample.fractional_accuracy == 0.5
         assert isinstance(dataset_list[0].transformer, ag.TransformerDFT)
 
     clean(database_file=database_file)

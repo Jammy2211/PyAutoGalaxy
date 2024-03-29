@@ -38,8 +38,8 @@ def test__dataset_generator_from_aggregator__analysis_has_single_dataset(
         assert isinstance(
             dataset_list[0].grid_pixelization.over_sample, ag.OverSampleIterate
         )
-        assert dataset_list[0].grid.sub_steps == [2]
-        assert dataset_list[0].grid.fractional_accuracy == 0.5
+        assert dataset_list[0].grid.over_sample.sub_steps == [2]
+        assert dataset_list[0].grid.over_sample.fractional_accuracy == 0.5
 
     clean(database_file=database_file)
 

@@ -58,6 +58,7 @@ def _interferometer_from(
 
         over_sample = fit.value(name="dataset.over_sample")
         over_sample_pixelization = fit.value(name="dataset.over_sample_pixelization")
+        transformer_class = fit.value(name="dataset.transformer_class")
 
         dataset = aa.Interferometer(
             data=data,
@@ -66,6 +67,7 @@ def _interferometer_from(
             real_space_mask=real_space_mask,
             over_sample=over_sample,
             over_sample_pixelization=over_sample_pixelization,
+            transformer_class=transformer_class,
         )
 
         dataset_list.append(dataset)
