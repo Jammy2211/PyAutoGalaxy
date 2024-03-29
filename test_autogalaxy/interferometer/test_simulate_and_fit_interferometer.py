@@ -50,7 +50,8 @@ def test__perfect_fit__chi_squared_0():
     )
 
     real_space_mask = ag.Mask2D.all_false(
-        shape_native=(51, 51), pixel_scales=0.1,
+        shape_native=(51, 51),
+        pixel_scales=0.1,
     )
 
     dataset = ag.Interferometer.from_fits(
@@ -58,7 +59,7 @@ def test__perfect_fit__chi_squared_0():
         noise_map_path=path.join(file_path, "noise_map.fits"),
         uv_wavelengths_path=path.join(file_path, "uv_wavelengths.fits"),
         real_space_mask=real_space_mask,
-        transformer_class=ag.TransformerDFT
+        transformer_class=ag.TransformerDFT,
     )
 
     fit = ag.FitInterferometer(
@@ -161,7 +162,7 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
         noise_map=dataset.noise_map,
         uv_wavelengths=dataset.uv_wavelengths,
         real_space_mask=dataset.real_space_mask,
-        transformer_class=ag.TransformerDFT
+        transformer_class=ag.TransformerDFT,
     )
 
     fit = ag.FitInterferometer(
