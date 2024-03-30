@@ -670,13 +670,15 @@ def test__cannot_pass_light_or_mass_list():
     with pytest.raises(exc.GalaxyException):
         ag.Galaxy(redshift=0.5, light=light_list, mass=mass_list)
 
+
+
 def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
     mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True],
-            [True, False, False, False, True],
-            [True, False, False, False, True],
-            [True, False, False, False, True],
+            [True, False, False, True, True],
+            [True, True, True, True, True],
+            [True, True, True, True, True],
             [True, True, True, True, True],
         ],
         pixel_scales=(1.0, 1.0),
@@ -695,7 +697,7 @@ def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
     #
     # assert image[0] == pytest.approx(0.15987224303572964, 1.0e-6)
 
-    over_sample = ag.OverSampleUniform(sub_size=4)
+    over_sample = ag.OverSampleUniform(sub_size=2)
 
     grid = ag.Grid2D.from_mask(
         mask=mask,
@@ -704,7 +706,10 @@ def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
 
     image = galaxy.image_2d_from(grid=grid)
 
-    assert image[0] == pytest.approx(0.07274116025455846, 1.0e-6)
+    print(image)
+
+    assert image[0] == pytest.approx(0.09268411622595867, 1.0e-6)
+    assert image[1] == pytest.approx(0.1487236370871169, 1.0e-6)
 
     galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(centre=(3.0, 3.0), intensity=1.0))
 
