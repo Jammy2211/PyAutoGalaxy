@@ -96,7 +96,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
             for galaxy in self
         ]
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure_over_sample
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> aa.Array2D:

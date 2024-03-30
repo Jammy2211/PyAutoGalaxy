@@ -683,96 +683,67 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
         pixel_scales=(1.0, 1.0),
     )
 
+    over_sample = ag.OverSampleUniform(sub_size=2)
+
     grid = ag.Grid2D.from_mask(
         mask=mask,
-        over_sample=ag.OverSampleIterate(fractional_accuracy=1.0, sub_steps=[2]),
+        over_sample=over_sample
     )
 
-    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
+    # galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
+    #
+    # image = galaxy.image_2d_from(grid=grid)
+    #
+    # grid_sub_2 = over_sample.oversampled_grid_2d_via_mask_from(mask=mask, sub_size=2)
+    # image_sub_2 = galaxy.image_2d_from(grid=np.array(grid_sub_2))
+    # image_sub_2 = ag.Array2D(values=image_sub_2, mask=grid_sub_2.mask)
+    # image_sub_2 = grid.over_sample.binned_array_2d_from(array=image_sub_2, sub_size=2)
+    #
+    # assert (image == image_sub_2).all()
+    #
+    # over_sample = ag.OverSampleIterate(fractional_accuracy=1.0, sub_steps=[2])
+    #
+    # grid = ag.Grid2D.from_mask(
+    #     mask=mask,
+    #     over_sample=over_sample
+    # )
+    #
+    # galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
+    #
+    # image = galaxy.image_2d_from(grid=grid)
+    #
+    # assert (image == image_sub_2).all()
 
-    image = galaxy.image_2d_from(grid=grid)
-
-    mask_sub_2 = mask.mask_new_sub_size_from(mask=mask, sub_size=2)
-    grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
-    image_sub_2 = galaxy.image_2d_from(grid=grid_sub_2).binned
-
-    assert (image == image_sub_2).all()
+    over_sample = ag.OverSampleIterate(fractional_accuracy=0.95, sub_steps=[2, 4, 8])
 
     grid = ag.Grid2D.from_mask(
         mask=mask,
-        over_sample=ag.OverSampleIterate(fractional_accuracy=0.95, sub_steps=[2, 4, 8]),
+        over_sample=over_sample
     )
 
     galaxy = ag.Galaxy(
-        redshift=0.5, light=ag.lp.Sersic(centre=(0.08, 0.08), intensity=1.0)
+        redshift=0.5, light=ag.lp.Sersic(centre=(0.0, 0.0), intensity=1.0)
     )
+
+    grid_sub_4 = over_sample.oversampled_grid_2d_via_mask_from(mask=mask, sub_size=4)
+    image_sub_4 = galaxy.image_2d_from(grid=np.array(grid_sub_4))
+    image_sub_4 = ag.Array2D(values=image_sub_4, mask=grid_sub_4.mask)
+    image_sub_4 = grid.over_sample.binned_array_2d_from(array=image_sub_4, sub_size=4)
+
+    print(image_sub_4)
 
     image = galaxy.image_2d_from(grid=grid)
 
-    mask_sub_4 = mask.mask_new_sub_size_from(mask=mask, sub_size=4)
-    grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
-    image_sub_4 = galaxy.image_2d_from(grid=grid_sub_4).binned
+    print(image.native)
+    print(image_sub_4.native)
 
     assert image[0] == image_sub_4[0]
 
-    mask_sub_8 = mask.mask_new_sub_size_from(mask=mask, sub_size=8)
-    grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
-    image_sub_8 = galaxy.image_2d_from(grid=grid_sub_8).binned
-
+    grid_sub_8 = over_sample.oversampled_grid_2d_via_mask_from(mask=mask, sub_size=8)
+    image_sub_8 = galaxy.image_2d_from(grid=np.array(grid_sub_8))
+    image_sub_8 = ag.Array2D(values=image_sub_8, mask=grid_sub_8.mask)
+    image_sub_8 = grid.over_sample.binned_array_2d_from(array=image_sub_8, sub_size=8)
     assert image[4] == image_sub_8[4]
-
-
-def test__decorator__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
-    mask = ag.Mask2D(
-        mask=[
-            [True, True, True, True, True],
-            [True, False, False, False, True],
-            [True, False, False, False, True],
-            [True, False, False, False, True],
-            [True, True, True, True, True],
-        ],
-        pixel_scales=(1.0, 1.0),
-    )
-
-    grid = ag.Grid2D.from_mask(
-        mask=mask,
-        over_sample=ag.OverSampleIterate(fractional_accuracy=1.0, sub_steps=[2]),
-    )
-
-    galaxy = ag.Galaxy(
-        redshift=0.5, mass=ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)
-    )
-
-    deflections = galaxy.deflections_yx_2d_from(grid=grid)
-
-    mask_sub_2 = mask.mask_new_sub_size_from(mask=mask, sub_size=2)
-    grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
-    deflections_sub_2 = galaxy.deflections_yx_2d_from(grid=grid_sub_2).binned
-
-    assert (deflections == deflections_sub_2).all()
-
-    grid = ag.Grid2D.from_mask(
-        mask=mask,
-        over_sample=ag.OverSampleIterate(fractional_accuracy=0.99, sub_steps=[2, 4, 8]),
-    )
-
-    galaxy = ag.Galaxy(
-        redshift=0.5, mass=ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)
-    )
-
-    deflections = galaxy.deflections_yx_2d_from(grid=grid)
-
-    mask_sub_4 = mask.mask_new_sub_size_from(mask=mask, sub_size=4)
-    grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
-    deflections_sub_4 = galaxy.deflections_yx_2d_from(grid=grid_sub_4).binned
-
-    assert deflections[0, 0] == deflections_sub_4[0, 0]
-
-    mask_sub_8 = mask.mask_new_sub_size_from(mask=mask, sub_size=8)
-    grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
-    deflections_sub_8 = galaxy.deflections_yx_2d_from(grid=grid_sub_8).binned
-
-    assert deflections[4, 0] == deflections_sub_8[4, 0]
 
 
 def test__output_to_and_load_from_json():

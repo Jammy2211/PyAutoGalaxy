@@ -57,7 +57,7 @@ class ElsonFreeFall(LightProfile):
             -self.eta
         )
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure_over_sample
     @check_operated_only
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum

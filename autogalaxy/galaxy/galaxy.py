@@ -198,7 +198,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             )
         ]
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_structure_over_sample
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> Union[np.ndarray, aa.Array2D]:
