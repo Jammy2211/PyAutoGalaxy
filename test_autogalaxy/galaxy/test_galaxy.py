@@ -699,6 +699,7 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
     image_sub_2 = ag.Array2D(values=image_sub_2, mask=grid_sub_2.mask)
     image_sub_2 = grid.over_sample.binned_array_2d_from(array=image_sub_2, sub_size=2)
 
+    assert image[0] == pytest.approx(0.1748191716, 1.0e-6)
     assert (image == image_sub_2).all()
 
     over_sample = ag.OverSampleIterate(fractional_accuracy=1.0, sub_steps=[2])
