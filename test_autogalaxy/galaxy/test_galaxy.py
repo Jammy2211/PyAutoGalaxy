@@ -763,6 +763,7 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
     image_sub_2 = ag.Array2D(values=image_sub_2, mask=grid_sub_2.mask)
     image_sub_2 = grid.over_sample.binned_array_2d_from(array=image_sub_2, sub_size=2)
 
+    assert image[0] == pytest.approx(0.17481917162057087, 1.0e-6)
     assert (image == image_sub_2).all()
 
     over_sample = ag.OverSampleIterate(fractional_accuracy=0.95, sub_steps=[2, 4, 8])
@@ -776,23 +777,31 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
         redshift=0.5, light=ag.lp.Sersic(centre=(0.08, 0.08), intensity=1.0)
     )
 
-    # grid_sub_4 = over_sample.oversampled_grid_2d_via_mask_from(mask=mask, sub_size=4)
-    # image_sub_4 = galaxy.image_2d_from(grid=np.array(grid_sub_4))
-    # image_sub_4 = ag.Array2D(values=image_sub_4, mask=grid_sub_4.mask)
-    # image_sub_4 = grid.over_sample.binned_array_2d_from(array=image_sub_4, sub_size=4)
-    #
-    # image = galaxy.image_2d_from(grid=grid)
-    #
-    # assert image[0] == image_sub_4[0]
+    image = galaxy.image_2d_from(grid=grid)
+
+    grid_sub_4 = over_sample.oversampled_grid_2d_via_mask_from(mask=mask, sub_size=4)
+    image_sub_4 = galaxy.image_2d_from(grid=np.array(grid_sub_4))
+    image_sub_4 = ag.Array2D(values=image_sub_4, mask=grid_sub_4.mask)
+    image_sub_4 = grid.over_sample.binned_array_2d_from(array=image_sub_4, sub_size=4)
+
+    assert image[0] == pytest.approx(0.17754459861988386, 1.0e-6)
+    assert image[0] == image_sub_4[0]
 
     grid_sub_8 = over_sample.oversampled_grid_2d_via_mask_from(mask=mask, sub_size=8)
     image_sub_8 = galaxy.image_2d_from(grid=np.array(grid_sub_8))
     image_sub_8 = ag.Array2D(values=image_sub_8, mask=grid_sub_8.mask)
     image_sub_8 = over_sample.binned_array_2d_from(array=image_sub_8, sub_size=8)
 
-    print(image)
-    print(image_sub_8)
+    over_sample = ag.OverSampleUniform(sub_size=8)
 
+    grid = ag.Grid2D.from_mask(
+        mask=mask,
+        over_sample=over_sample
+    )
+
+    image = galaxy.image_2d_from(grid=grid)
+
+    assert image[4] == pytest.approx(4.173185729427679, 1.0e-6)
     assert image[4] == image_sub_8[4]
 
 
