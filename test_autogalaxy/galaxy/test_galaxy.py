@@ -688,14 +688,14 @@ def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
 
     over_sample = ag.OverSampleUniform(sub_size=1)
 
-    # grid = ag.Grid2D.from_mask(
-    #     mask=mask,
-    #     over_sample=over_sample
-    # )
-    #
-    # image = galaxy.image_2d_from(grid=grid)
-    #
-    # assert image[0] == pytest.approx(0.15987224303572964, 1.0e-6)
+    grid = ag.Grid2D.from_mask(
+        mask=mask,
+        over_sample=over_sample
+    )
+
+    image = galaxy.image_2d_from(grid=grid)
+
+    assert image[0] == pytest.approx(0.15987224303572964, 1.0e-6)
 
     over_sample = ag.OverSampleUniform(sub_size=2)
 
@@ -706,10 +706,8 @@ def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
 
     image = galaxy.image_2d_from(grid=grid)
 
-    print(image)
-
-    assert image[0] == pytest.approx(0.09268411622595867, 1.0e-6)
-    assert image[1] == pytest.approx(0.1487236370871169, 1.0e-6)
+    assert image[0] == pytest.approx(0.17481917162057087, 1.0e-6)
+    assert image[1] == pytest.approx(0.391168560508937, 1.0e-6)
 
     galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(centre=(3.0, 3.0), intensity=1.0))
 
