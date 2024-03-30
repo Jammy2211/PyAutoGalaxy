@@ -687,7 +687,7 @@ def test__decorator__grid_sub_in__numericas():
 
     grid = ag.Grid2D.from_mask(mask=mask)
 
-    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
+    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(centre=(3.0, 3.0), intensity=1.0))
 
     image = galaxy.image_2d_from(grid=grid)
 
