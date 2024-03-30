@@ -670,6 +670,66 @@ def test__cannot_pass_light_or_mass_list():
     with pytest.raises(exc.GalaxyException):
         ag.Galaxy(redshift=0.5, light=light_list, mass=mass_list)
 
+def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
+    mask = ag.Mask2D(
+        mask=[
+            [True, True, True, True, True],
+            [True, False, False, False, True],
+            [True, False, False, False, True],
+            [True, False, False, False, True],
+            [True, True, True, True, True],
+        ],
+        pixel_scales=(1.0, 1.0),
+    )
+
+    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
+
+    over_sample = ag.OverSampleUniform(sub_size=1)
+
+    # grid = ag.Grid2D.from_mask(
+    #     mask=mask,
+    #     over_sample=over_sample
+    # )
+    #
+    # image = galaxy.image_2d_from(grid=grid)
+    #
+    # assert image[0] == pytest.approx(0.15987224303572964, 1.0e-6)
+
+    over_sample = ag.OverSampleUniform(sub_size=4)
+
+    grid = ag.Grid2D.from_mask(
+        mask=mask,
+        over_sample=over_sample
+    )
+
+    image = galaxy.image_2d_from(grid=grid)
+
+    assert image[0] == pytest.approx(0.07274116025455846, 1.0e-6)
+
+    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(centre=(3.0, 3.0), intensity=1.0))
+
+    over_sample = ag.OverSampleUniform(sub_size=1)
+
+    grid = ag.Grid2D.from_mask(
+        mask=mask,
+        over_sample=over_sample
+    )
+
+    image = galaxy.image_2d_from(grid=grid)
+
+    assert image[0] == pytest.approx(0.006719704400094508, 1.0e-6)
+
+    over_sample = ag.OverSampleUniform(sub_size=4)
+
+    grid = ag.Grid2D.from_mask(
+        mask=mask,
+        over_sample=over_sample
+    )
+
+    image = galaxy.image_2d_from(grid=grid)
+
+    assert image[0] == pytest.approx(0.005866034727569834, 1.0e-6)
+
 
 def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp):
     mask = ag.Mask2D(
