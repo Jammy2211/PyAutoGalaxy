@@ -691,10 +691,6 @@ def test__decorator__grid_sub_in__numericas():
 
     image = galaxy.image_2d_from(grid=grid)
 
-    print(image.binned[0])
-    print(image.binned[1])
-    sads
-
 def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp):
     mask = ag.Mask2D(
         mask=[
@@ -717,7 +713,6 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
     grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
     image_sub_2 = galaxy.image_2d_from(grid=grid_sub_2).binned
 
-    print(image[0])
     assert (image == image_sub_2).all()
 
     grid = ag.Grid2DIterate.from_mask(
@@ -734,16 +729,13 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
     grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
     image_sub_4 = galaxy.image_2d_from(grid=grid_sub_4).binned
 
-    print(image[0])
     assert image[0] == image_sub_4[0]
 
     mask_sub_8 = mask.mask_new_sub_size_from(mask=mask, sub_size=8)
     grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
     image_sub_8 = galaxy.image_2d_from(grid=grid_sub_8).binned
 
-    print(image[4])
     assert image[4] == image_sub_8[4]
-    fsdd
 
 def test__decorator__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
     mask = ag.Mask2D(
