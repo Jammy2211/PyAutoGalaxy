@@ -34,7 +34,7 @@ def test__cls_list_from(lp_0, lp_linear_0):
     assert cls_list == [lp_linear_0, lp_linear_0]
 
 
-def test__image_1d_from(sub_grid_1d_7, lp_0, lp_1, gal_x2_lp):
+def test__image_1d_from(lp_0, lp_1, gal_x2_lp):
     grid = ag.Grid2D.no_mask(values=[[[1.05, -0.55]]], pixel_scales=1.0)
 
     lp_image = lp_0.image_1d_from(grid=grid)
@@ -45,53 +45,49 @@ def test__image_1d_from(sub_grid_1d_7, lp_0, lp_1, gal_x2_lp):
     assert lp_image == gal_image
 
 
-def test__image_2d_from(sub_grid_2d_7x7, gal_x2_lp):
-    lp_0_image = gal_x2_lp.light_profile_0.image_2d_from(grid=sub_grid_2d_7x7)
-    lp_1_image = gal_x2_lp.light_profile_1.image_2d_from(grid=sub_grid_2d_7x7)
+def test__image_2d_from(grid_2d_7x7, gal_x2_lp):
+
+    lp_0_image = gal_x2_lp.light_profile_0.image_2d_from(grid=grid_2d_7x7)
+    lp_1_image = gal_x2_lp.light_profile_1.image_2d_from(grid=grid_2d_7x7)
 
     lp_image = lp_0_image + lp_1_image
 
-    lp_image_0 = (lp_image[0] + lp_image[1] + lp_image[2] + lp_image[3]) / 4.0
+    gal_image = gal_x2_lp.image_2d_from(grid=grid_2d_7x7)
 
-    lp_image_1 = (lp_image[4] + lp_image[5] + lp_image[6] + lp_image[7]) / 4.0
-
-    gal_image = gal_x2_lp.image_2d_from(grid=sub_grid_2d_7x7)
-
-    assert gal_image.binned[0] == lp_image_0
-    assert gal_image.binned[1] == lp_image_1
+    assert gal_image == pytest.approx(lp_image, 1.0e-4)
 
 
-def test__image_2d_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_0):
-    image_2d_not_operated = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
-    image_2d_operated = lp_operated_0.image_2d_from(grid=sub_grid_2d_7x7)
+def test__image_2d_from__operated_only_input(grid_2d_7x7, lp_0, lp_operated_0):
+    image_2d_not_operated = lp_0.image_2d_from(grid=grid_2d_7x7)
+    image_2d_operated = lp_operated_0.image_2d_from(grid=grid_2d_7x7)
 
     galaxy = ag.Galaxy(redshift=0.5, light=lp_0, light_operated=lp_operated_0)
 
-    image_2d = galaxy.image_2d_from(grid=sub_grid_2d_7x7, operated_only=False)
+    image_2d = galaxy.image_2d_from(grid=grid_2d_7x7, operated_only=False)
     assert (image_2d == image_2d_not_operated).all()
 
-    image_2d = galaxy.image_2d_from(grid=sub_grid_2d_7x7, operated_only=True)
+    image_2d = galaxy.image_2d_from(grid=grid_2d_7x7, operated_only=True)
     assert (image_2d == image_2d_operated).all()
 
-    image_2d = galaxy.image_2d_from(grid=sub_grid_2d_7x7, operated_only=None)
+    image_2d = galaxy.image_2d_from(grid=grid_2d_7x7, operated_only=None)
     assert (image_2d == image_2d_not_operated + image_2d_operated).all()
 
 
-def test__image_2d_list_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_0):
-    image_2d_not_operated = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
-    image_2d_operated = lp_operated_0.image_2d_from(grid=sub_grid_2d_7x7)
+def test__image_2d_list_from__operated_only_input(grid_2d_7x7, lp_0, lp_operated_0):
+    image_2d_not_operated = lp_0.image_2d_from(grid=grid_2d_7x7)
+    image_2d_operated = lp_operated_0.image_2d_from(grid=grid_2d_7x7)
 
     galaxy = ag.Galaxy(redshift=0.5, light=lp_0, light_operated=lp_operated_0)
 
-    image_2d_list = galaxy.image_2d_list_from(grid=sub_grid_2d_7x7, operated_only=False)
+    image_2d_list = galaxy.image_2d_list_from(grid=grid_2d_7x7, operated_only=False)
     assert (image_2d_list[0] == image_2d_not_operated).all()
-    assert (image_2d_list[1] == np.zeros((36))).all()
+    assert (image_2d_list[1] == np.zeros((9))).all()
 
-    image_2d_list = galaxy.image_2d_list_from(grid=sub_grid_2d_7x7, operated_only=True)
-    assert (image_2d_list[0] == np.zeros((36))).all()
+    image_2d_list = galaxy.image_2d_list_from(grid=grid_2d_7x7, operated_only=True)
+    assert (image_2d_list[0] == np.zeros((9))).all()
     assert (image_2d_list[1] == image_2d_operated).all()
 
-    image_2d_list = galaxy.image_2d_list_from(grid=sub_grid_2d_7x7, operated_only=None)
+    image_2d_list = galaxy.image_2d_list_from(grid=grid_2d_7x7, operated_only=None)
     assert (
         image_2d_list[0] + image_2d_list[1] == image_2d_not_operated + image_2d_operated
     ).all()
