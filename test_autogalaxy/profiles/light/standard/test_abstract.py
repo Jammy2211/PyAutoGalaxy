@@ -90,25 +90,17 @@ def test__decorators__grid_iterate_in__iterates_grid_correctly():
         over_sample=ag.OverSampleIterate(fractional_accuracy=1.0, sub_steps=[2]),
     )
 
-    grid = ag.Grid2D.from_mask(
-        mask=mask,
-        over_sample=ag.OverSampleUniform(sub_size=2),
-    )
-
     light_profile = ag.lp.Sersic(intensity=1.0)
 
     image = light_profile.image_2d_from(grid=grid)
 
-#    grid_sub_2 = ag.Grid2D(values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=2))
-
-    over_sample = ag.OverSampleUniformFunc(mask=mask, sub_size=2)
-    grid_sub_2 = over_sample.oversampled_grid
-    image_sub_2 = light_profile.image_2d_from(grid=grid_sub_2)
-    image_sub_2 = over_sample.binned_array_2d_from(array=image_sub_2)
+    grid_sub_2 = ag.Grid2D(values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=2))
+    image_sub_2 = light_profile.image_2d_from(grid=grid)
 
     print(image)
     print(image_sub_2)
 
+    assert image[0] == pytest.approx(0.17481917, 1.0e-4)
     assert (image == image_sub_2).all()
 
     grid = ag.Grid2D.from_mask(
