@@ -29,7 +29,7 @@ def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
 def test__deflections_2d_via_potential_2d_from():
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05)
 
     deflections_via_calculation = sis.deflections_yx_2d_from(grid=grid)
 
@@ -45,7 +45,7 @@ def test__deflections_2d_via_potential_2d_from():
         centre=(0.0, 0.0), ell_comps=(0.111111, 0.0), einstein_radius=2.0
     )
 
-    grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05)
 
     deflections_via_calculation = sie.deflections_yx_2d_from(grid=grid)
 
@@ -61,7 +61,7 @@ def test__deflections_2d_via_potential_2d_from():
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
-    grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05)
 
     deflections_via_calculation = sie.deflections_yx_2d_from(grid=grid)
 
@@ -362,10 +362,12 @@ def test__decorators__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp)
     mass_profile = ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)
 
     deflections = mass_profile.deflections_yx_2d_from(grid=grid)
-
-    mask_sub_2 = mask.mask_new_sub_size_from(mask=mask, sub_size=2)
-    grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
-    deflections_sub_2 = mass_profile.deflections_yx_2d_from(grid=grid_sub_2).binned
+    
+    over_sample = ag.OverSampleUniformFunc(
+        mask=mask, sub_size=2
+    )
+    grid_sub_2 = over_sample.oversampled_grid
+    deflections_sub_2 = mass_profile.deflections_yx_2d_from(grid=grid_sub_2)
 
     assert deflections == pytest.approx(deflections_sub_2, 1.0e-6)
 
@@ -378,14 +380,18 @@ def test__decorators__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp)
 
     deflections = mass_profile.deflections_yx_2d_from(grid=grid)
 
-    mask_sub_4 = mask.mask_new_sub_size_from(mask=mask, sub_size=4)
-    grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
-    deflections_sub_4 = mass_profile.deflections_yx_2d_from(grid=grid_sub_4).binned
+    over_sample = ag.OverSampleUniformFunc(
+        mask=mask, sub_size=4
+    )
+    grid_sub_4 = over_sample.oversampled_grid
+    deflections_sub_4 = mass_profile.deflections_yx_2d_from(grid=grid_sub_4)
 
     assert deflections[0, 0] == deflections_sub_4[0, 0]
 
-    mask_sub_8 = mask.mask_new_sub_size_from(mask=mask, sub_size=8)
-    grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
-    deflections_sub_8 = mass_profile.deflections_yx_2d_from(grid=grid_sub_8).binned
+    over_sample = ag.OverSampleUniformFunc(
+        mask=mask, sub_size=8
+    )
+    grid_sub_8 = over_sample.oversampled_grid
+    deflections_sub_8 = mass_profile.deflections_yx_2d_from(grid=grid_sub_8)
 
     assert deflections[4, 0] == deflections_sub_8[4, 0]
