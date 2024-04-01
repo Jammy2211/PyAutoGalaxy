@@ -137,7 +137,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         mapping_matrix = np.zeros(shape=(self.grid.mask.pixels_in_mask, self.params))
 
         for pixel, light_profile in enumerate(self.light_profile_list):
-            image_2d = light_profile.image_2d_from(grid=self.grid).binned.slim
+            image_2d = light_profile.image_2d_from(grid=self.grid).slim
 
             mapping_matrix[:, pixel] = image_2d
 
