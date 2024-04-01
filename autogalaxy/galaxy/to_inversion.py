@@ -261,7 +261,7 @@ class GalaxiesToInversion(AbstractToInversion):
             source_plane_data_grid=self.grid_pixelization,
             source_plane_mesh_grid=source_plane_mesh_grid,
             image_plane_mesh_grid=image_plane_mesh_grid,
-            relocate_pix_border=self.settings_inversion.relocate_pix_border,
+            use_border_relocator=self.settings_inversion.use_border_relocator,
             adapt_data=adapt_galaxy_image,
             preloads=self.preloads,
             run_time_dict=self.run_time_dict,

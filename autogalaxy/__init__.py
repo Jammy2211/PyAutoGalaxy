@@ -38,8 +38,8 @@ from autoarray.structures.grids.uniform_1d import Grid1D  # noqa
 from autoarray.structures.grids.uniform_2d import Grid2D  # noqa
 from autoarray.structures.grids.irregular_2d import Grid2DIrregular  # noqa
 from autoarray.structures.grids.irregular_2d import Grid2DIrregularUniform  # noqa
-from autoarray.structures.grids.over_sample.uniform import OverSampleUniform  # noqa
-from autoarray.structures.grids.over_sample.iterate import OverSampleIterate
+from autoarray.operators.over_sample.uniform import OverSampleUniform  # noqa
+from autoarray.operators.over_sample.iterate import OverSampleIterate
 from autoarray.structures.mesh.rectangular_2d import Mesh2DRectangular  # noqa
 from autoarray.structures.mesh.voronoi_2d import Mesh2DVoronoi  # noqa
 from autoarray.structures.mesh.delaunay_2d import Mesh2DDelaunay  # noqa
