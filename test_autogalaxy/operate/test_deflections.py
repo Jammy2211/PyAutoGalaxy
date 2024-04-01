@@ -28,7 +28,7 @@ def critical_curve_via_magnification_from(mass_profile, grid):
 
         critical_curve = grid_scaled_2d_for_marching_squares_from(
             grid_pixels_2d=pixel_coord,
-            shape_native=magnification.sub_shape_native,
+            shape_native=magnification.shape_native,
             mask=grid.mask,
         )
 
@@ -121,7 +121,7 @@ def test__magnification_2d_via_hessian_from():
 
 
 def test__magnification_2d_from__compare_eigen_values_and_determinant():
-    grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05)
 
     sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
@@ -131,26 +131,6 @@ def test__magnification_2d_from__compare_eigen_values_and_determinant():
     tangential_eigen_value = sie.tangential_eigen_value_from(grid=grid)
 
     radal_eigen_value = sie.radial_eigen_value_from(grid=grid)
-    magnification_via_eigen_values = 1 / (tangential_eigen_value * radal_eigen_value)
-
-    mean_error = np.mean(
-        magnification_via_determinant.slim - magnification_via_eigen_values.slim
-    )
-
-    assert mean_error < 1e-4
-
-    grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=2)
-
-    sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
-    )
-
-    magnification_via_determinant = sie.magnification_2d_from(grid=grid)
-
-    tangential_eigen_value = sie.tangential_eigen_value_from(grid=grid)
-
-    radal_eigen_value = sie.radial_eigen_value_from(grid=grid)
-
     magnification_via_eigen_values = 1 / (tangential_eigen_value * radal_eigen_value)
 
     mean_error = np.mean(
@@ -161,7 +141,7 @@ def test__magnification_2d_from__compare_eigen_values_and_determinant():
 
 
 def test__magnification_2d_from__compare_determinant_and_convergence_and_shear():
-    grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05)
 
     sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
@@ -182,25 +162,6 @@ def test__magnification_2d_from__compare_determinant_and_convergence_and_shear()
     )
 
     assert mean_error < 1e-4
-
-    grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=2)
-
-    magnification_via_determinant = sie.magnification_2d_from(grid=grid)
-
-    convergence = sie.convergence_2d_via_jacobian_from(grid=grid)
-    shear = sie.shear_yx_2d_via_jacobian_from(grid=grid)
-
-    magnification_via_convergence_and_shear = 1 / (
-        (1 - convergence) ** 2 - shear.magnitudes**2
-    )
-
-    mean_error = np.mean(
-        magnification_via_determinant.slim
-        - magnification_via_convergence_and_shear.slim
-    )
-
-    assert mean_error < 1e-4
-
 
 def test__tangential_critical_curve_list_from():
     grid = ag.Grid2D.uniform(shape_native=(15, 15), pixel_scales=0.3)
@@ -501,7 +462,7 @@ def test__einstein_mass_angular_from():
 
 
 def test__jacobian_from():
-    grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05)
 
     sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
@@ -516,20 +477,9 @@ def test__jacobian_from():
 
     assert mean_error < 1e-4
 
-    grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05, sub_size=2)
-
-    jacobian = sie.jacobian_from(grid=grid)
-
-    A_12 = jacobian[0][1]
-    A_21 = jacobian[1][0]
-
-    mean_error = np.mean(A_12.slim - A_21.slim)
-
-    assert mean_error < 1e-4
-
 
 def test__convergence_2d_via_jacobian_from__compare_via_jacobian_and_analytic():
-    grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05)
 
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
@@ -539,14 +489,14 @@ def test__convergence_2d_via_jacobian_from__compare_via_jacobian_and_analytic():
 
     mean_error = np.mean(convergence_via_jacobian.slim - convergence_via_analytic.slim)
 
-    assert convergence_via_jacobian.binned.native.shape == (20, 20)
+    assert convergence_via_jacobian.native.shape == (20, 20)
     assert mean_error < 1e-1
 
     mean_error = np.mean(convergence_via_jacobian.slim - convergence_via_analytic.slim)
 
     assert mean_error < 1e-1
 
-    grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05)
 
     sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), ell_comps=(0.111111, 0.0), einstein_radius=2.0
@@ -620,117 +570,3 @@ def test__evaluation_grid__changes_to_uniform_and_zoomed_in_if_masked():
 
     assert (evaluation_grid[0] == np.array([8.0, 2.0])).all()
     assert (evaluation_grid == grid_uniform).all()
-
-
-def test__binning_works_on_all_from_grid_methods():
-    sie = ag.mp.Isothermal(
-        centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
-    )
-
-    grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05, sub_size=2)
-
-    deflections = sie.deflections_2d_via_potential_2d_from(grid=grid)
-
-    deflections_first_binned_pixel = (
-        deflections[0] + deflections[1] + deflections[2] + deflections[3]
-    ) / 4
-
-    assert deflections.binned[0] == pytest.approx(deflections_first_binned_pixel, 1e-4)
-
-    deflections_100th_binned_pixel = (
-        deflections[399] + deflections[398] + deflections[397] + deflections[396]
-    ) / 4
-
-    assert deflections.binned[99] == pytest.approx(deflections_100th_binned_pixel, 1e-4)
-
-    jacobian = sie.jacobian_from(grid=grid)
-
-    jacobian_1st_pixel_binned_up = (
-        jacobian[0][0][0] + jacobian[0][0][1] + jacobian[0][0][2] + jacobian[0][0][3]
-    ) / 4
-
-    assert jacobian[0][0].binned.native.shape == (10, 10)
-    assert jacobian[0][0].sub_shape_native == (20, 20)
-    assert jacobian[0][0].binned[0] == pytest.approx(jacobian_1st_pixel_binned_up, 1e-4)
-
-    jacobian_last_pixel_binned_up = (
-        jacobian[0][0][399]
-        + jacobian[0][0][398]
-        + jacobian[0][0][397]
-        + jacobian[0][0][396]
-    ) / 4
-
-    assert jacobian[0][0].binned[99] == pytest.approx(
-        jacobian_last_pixel_binned_up, 1e-4
-    )
-
-    shear_yx_via_jacobian = sie.shear_yx_2d_via_jacobian_from(grid=grid)
-    shear_via_jacobian = shear_yx_via_jacobian.magnitudes
-
-    shear_1st_pixel_binned_up = (
-        shear_via_jacobian[0]
-        + shear_via_jacobian[1]
-        + shear_via_jacobian[2]
-        + shear_via_jacobian[3]
-    ) / 4
-
-    assert shear_via_jacobian.binned[0] == pytest.approx(
-        shear_1st_pixel_binned_up, 1e-4
-    )
-
-    shear_last_pixel_binned_up = (
-        shear_via_jacobian[399]
-        + shear_via_jacobian[398]
-        + shear_via_jacobian[397]
-        + shear_via_jacobian[396]
-    ) / 4
-
-    assert shear_via_jacobian.binned[99] == pytest.approx(
-        shear_last_pixel_binned_up, 1e-4
-    )
-
-    tangential_eigen_values = sie.tangential_eigen_value_from(grid=grid)
-
-    first_pixel_binned_up = (
-        tangential_eigen_values[0]
-        + tangential_eigen_values[1]
-        + tangential_eigen_values[2]
-        + tangential_eigen_values[3]
-    ) / 4
-
-    assert tangential_eigen_values.binned[0] == pytest.approx(
-        first_pixel_binned_up, 1e-4
-    )
-
-    pixel_10000_from_av_sub_grid = (
-        tangential_eigen_values[399]
-        + tangential_eigen_values[398]
-        + tangential_eigen_values[397]
-        + tangential_eigen_values[396]
-    ) / 4
-
-    assert tangential_eigen_values.binned[99] == pytest.approx(
-        pixel_10000_from_av_sub_grid, 1e-4
-    )
-
-    radial_eigen_values = sie.radial_eigen_value_from(grid=grid)
-
-    first_pixel_binned_up = (
-        radial_eigen_values[0]
-        + radial_eigen_values[1]
-        + radial_eigen_values[2]
-        + radial_eigen_values[3]
-    ) / 4
-
-    assert radial_eigen_values.binned[0] == pytest.approx(first_pixel_binned_up, 1e-4)
-
-    pixel_10000_from_av_sub_grid = (
-        radial_eigen_values[399]
-        + radial_eigen_values[398]
-        + radial_eigen_values[397]
-        + radial_eigen_values[396]
-    ) / 4
-
-    assert radial_eigen_values.binned[99] == pytest.approx(
-        pixel_10000_from_av_sub_grid, 1e-4
-    )
