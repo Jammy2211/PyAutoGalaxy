@@ -14,10 +14,7 @@ class DatasetQuantity(AbstractDataset):
         self,
         data: Union[aa.Array2D, aa.VectorYX2D],
         noise_map: Union[aa.Array2D, aa.VectorYX2D],
-        sub_size: int = 4,  # Temporary before refactor
-        sub_size_pixelization: int = 1,  # Temporary before refactor
         over_sample: Optional[aa.OverSampleIterate] = None,
-        over_sample_pixelization: Optional[aa.OverSampleIterate] = None,
     ):
         """
         A quantity dataset, which represents a derived quantity of a light profile, mass profile, galaxy or galaxies
@@ -82,10 +79,7 @@ class DatasetQuantity(AbstractDataset):
         super().__init__(
             data=data,
             noise_map=noise_map,
-            sub_size=sub_size,
-            sub_size_pixelization=sub_size_pixelization,
             over_sample=over_sample,
-            over_sample_pixelization=over_sample_pixelization,
         )
 
     @classmethod

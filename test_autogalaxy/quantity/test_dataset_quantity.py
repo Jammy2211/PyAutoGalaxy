@@ -99,13 +99,11 @@ def test__vector_data__y_x():
     data = ag.VectorYX2D.no_mask(
         values=[[[1.0, 5.0], [2.0, 6.0]], [[3.0, 7.0], [4.0, 8.0]]],
         pixel_scales=1.0,
-        sub_size=1,
     )
 
     noise_map = ag.VectorYX2D.no_mask(
         values=[[[1.1, 5.1], [2.1, 6.1]], [[3.1, 7.1], [4.1, 8.1]]],
         pixel_scales=1.0,
-        sub_size=1,
     )
 
     dataset_quantity = ag.DatasetQuantity(data=data, noise_map=noise_map)
@@ -156,13 +154,11 @@ def test__output_to_fits(dataset_quantity_7x7_array_2d, test_data_path):
     data = ag.VectorYX2D.no_mask(
         values=[[[1.0, 5.0], [2.0, 6.0]], [[3.0, 7.0], [4.0, 8.0]]],
         pixel_scales=1.0,
-        sub_size=1,
     )
 
     noise_map = ag.VectorYX2D.no_mask(
         values=[[[1.1, 5.1], [2.1, 6.1]], [[3.1, 7.1], [4.1, 8.1]]],
         pixel_scales=1.0,
-        sub_size=1,
     )
 
     dataset_quantity = ag.DatasetQuantity(data=data, noise_map=noise_map)
