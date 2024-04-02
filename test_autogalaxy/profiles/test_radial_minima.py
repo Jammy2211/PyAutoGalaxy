@@ -10,7 +10,7 @@ directory = path.dirname(path.realpath(__file__))
 
 def test__grid_2d__moves_radial_coordinates__does_not_double_transform():
     grid_2d = ag.Grid2D.no_mask(values=[[[0.0, 0.0]]], pixel_scales=1.0)
-    grid_2d_offset = ag.Grid2D.no_mask(values=[[[0.0001, 0.0001]]], pixel_scales=1)
+    grid_2d_offset = ag.Grid2D.no_mask(values=[[[0.0001, 0.0001]]], pixel_scales=1.0)
 
     isothermal = ag.mp.Isothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 
@@ -20,7 +20,7 @@ def test__grid_2d__moves_radial_coordinates__does_not_double_transform():
     assert convergence_0 == pytest.approx(convergence_1, 1.0e-8)
 
     grid_2d = ag.Grid2D.no_mask(values=[[[0.5, 0.5]]], pixel_scales=1.0)
-    grid_2d_offset = ag.Grid2D.no_mask(values=[[[0.5001, 0.5001]]], pixel_scales=1)
+    grid_2d_offset = ag.Grid2D.no_mask(values=[[[0.5001, 0.5001]]], pixel_scales=1.0)
 
     isothermal = ag.mp.Isothermal(centre=(0.0, 0.0), einstein_radius=1.0)
 

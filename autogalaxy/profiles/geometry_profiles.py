@@ -80,7 +80,7 @@ class SphProfile(GeometryProfile):
     def __init__(self, centre: Tuple[float, float] = (0.0, 0.0)):
         super().__init__(centre=centre)
 
-    @aa.grid_dec.grid_2d_to_array
+    #@aa.grid_dec.grid_2d_to_array
     @aa.grid_dec.transform
     def radial_grid_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
@@ -108,7 +108,7 @@ class SphProfile(GeometryProfile):
         """
         return np.cos(grid_angles), np.sin(grid_angles)
 
-    @aa.grid_dec.grid_2d_to_array
+    #@aa.grid_dec.grid_2d_to_array
     def _cartesian_grid_via_radial_from(
         self, grid: aa.type.Grid2DLike, radius: np.ndarray
     ) -> aa.type.Grid2DLike:
@@ -292,7 +292,7 @@ class EllProfile(SphProfile):
             grid_2d=grid, centre=(0.0, 0.0), angle=angle
         )
 
-    @aa.grid_dec.grid_2d_to_array
+    #@aa.grid_dec.grid_2d_to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def elliptical_radii_grid_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
@@ -313,7 +313,7 @@ class EllProfile(SphProfile):
             )
         )
 
-    @aa.grid_dec.grid_2d_to_array
+    #@aa.grid_dec.grid_2d_to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def eccentric_radii_grid_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
