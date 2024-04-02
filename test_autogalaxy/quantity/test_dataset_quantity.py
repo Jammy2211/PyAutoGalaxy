@@ -78,7 +78,7 @@ def test__grid(
     dataset = dataset_quantity_7x7_array_2d.apply_mask(mask=mask_2d_7x7)
 
     assert isinstance(dataset.grid, ag.Grid2D)
-    assert (dataset.grid.binned == grid_2d_7x7).all()
+    assert (dataset.grid == grid_2d_7x7).all()
 
     dataset_quantity = ag.DatasetQuantity(
         data=ag.Array2D.ones(shape_native=(7, 7), pixel_scales=1.0),
@@ -91,7 +91,7 @@ def test__grid(
     dataset = dataset_quantity.apply_mask(mask=mask_2d_7x7)
 
     assert isinstance(dataset.grid.over_sample, ag.OverSampleIterate)
-    assert (dataset.grid.binned == grid_2d_7x7).all()
+    assert (dataset.grid == grid_2d_7x7).all()
 
 
 def test__vector_data__y_x():

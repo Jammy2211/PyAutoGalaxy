@@ -72,8 +72,8 @@ class AdaptImages:
         This is computed by summing the model-image of each individual adapt galaxy contained in the dictionary.
         """
         adapt_model_image = aa.Array2D(
-            values=np.zeros(self.mask.derive_mask.sub_1.pixels_in_mask),
-            mask=self.mask.derive_mask.sub_1,
+            values=np.zeros(self.mask.pixels_in_mask),
+            mask=self.mask,
         )
 
         try:

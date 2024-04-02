@@ -172,8 +172,8 @@ class DatasetQuantity(AbstractDataset):
         else:
             unmasked_dataset = self.unmasked
 
-        data = self.data.apply_mask(mask=mask.derive_mask.sub_1)
-        noise_map = self.noise_map.apply_mask(mask=mask.derive_mask.sub_1)
+        data = self.data.apply_mask(mask=mask)
+        noise_map = self.noise_map.apply_mask(mask=mask)
 
         dataset = DatasetQuantity(
             data=data,
