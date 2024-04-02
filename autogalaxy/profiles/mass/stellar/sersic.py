@@ -124,7 +124,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         return self.deflections_2d_via_cse_from(grid=grid)
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike):
@@ -145,7 +145,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
             grid=grid, sigmas_factor=np.sqrt(self.axis_ratio)
         )
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike):
@@ -164,7 +164,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         """
         return self._deflections_2d_via_cse_from(grid=grid)
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike):
@@ -178,7 +178,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         """
         return self.convergence_func(self.eccentric_radii_grid_from(grid))
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_via_mge_from(self, grid: aa.type.Grid2DLike):
@@ -196,7 +196,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
 
         return self._convergence_2d_via_mge_from(grid_radii=eccentric_radii)
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_via_cse_from(self, grid: aa.type.Grid2DLike):
@@ -221,7 +221,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
     def convergence_func(self, grid_radius: float) -> float:
         return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 
@@ -349,7 +349,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
 
 
 class Sersic(AbstractSersic, MassProfileMGE, MassProfileCSE):
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike):

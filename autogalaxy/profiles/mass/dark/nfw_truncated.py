@@ -28,7 +28,6 @@ class NFWTruncatedSph(AbstractgNFW):
         self.tau = self.truncation_radius / self.scale_radius
 
     @aa.grid_dec.grid_2d_to_vector_yx
-    @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
@@ -58,7 +57,7 @@ class NFWTruncatedSph(AbstractgNFW):
         grid_radius = ((1.0 / self.scale_radius) * grid_radius) + 0j
         return np.real(2.0 * self.kappa_s * self.coord_func_l(grid_radius=grid_radius))
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 

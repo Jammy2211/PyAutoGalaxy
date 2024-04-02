@@ -755,6 +755,7 @@ class OperateDeflections:
         grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and Jacobian are computed on.
         """
+
         deflections = self.deflections_yx_2d_from(grid=grid)
 
         # TODO : Can probably make this work on irregular grid? Is there any point?

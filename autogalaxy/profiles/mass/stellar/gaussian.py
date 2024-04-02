@@ -53,7 +53,7 @@ class Gaussian(MassProfile, StellarProfile):
         """
         return self.deflections_2d_via_analytic_from(grid=grid)
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike):
@@ -81,7 +81,7 @@ class Gaussian(MassProfile, StellarProfile):
             )
         )
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike):
@@ -137,7 +137,7 @@ class Gaussian(MassProfile, StellarProfile):
             (1 - (1 - axis_ratio**2) * u) ** (npow + 0.5)
         )
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike):
@@ -154,7 +154,7 @@ class Gaussian(MassProfile, StellarProfile):
     def convergence_func(self, grid_radius: float) -> float:
         return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
         return np.zeros(shape=grid.shape[0])
 

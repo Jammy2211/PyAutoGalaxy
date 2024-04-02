@@ -56,7 +56,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         self.scale_radius = scale_radius
         self.inner_slope = inner_slope
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike):
@@ -73,7 +73,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         return self.convergence_func(grid_radius=grid_eta)
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_via_mge_from(self, grid: aa.type.Grid2DLike):

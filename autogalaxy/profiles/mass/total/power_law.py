@@ -38,7 +38,7 @@ class PowerLaw(PowerLawCore):
             core_radius=0.0,
         )
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
         alpha = self.deflections_yx_2d_from(grid)
 
@@ -51,7 +51,6 @@ class PowerLaw(PowerLawCore):
         return (x * alpha_x + y * alpha_y) / (3 - self.slope)
 
     @aa.grid_dec.grid_2d_to_vector_yx
-    @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
@@ -152,7 +151,6 @@ class PowerLawSph(PowerLaw):
         )
 
     @aa.grid_dec.grid_2d_to_vector_yx
-    @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):

@@ -74,7 +74,6 @@ class Isothermal(PowerLaw):
         return min(axis_ratio, 0.99999)
 
     @aa.grid_dec.grid_2d_to_vector_yx
-    @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
@@ -109,7 +108,7 @@ class Isothermal(PowerLaw):
             grid=np.multiply(factor, np.vstack((deflection_y, deflection_x)).T)
         )
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def shear_yx_2d_from(self, grid: aa.type.Grid2DLike):
@@ -170,7 +169,7 @@ class IsothermalSph(Isothermal):
     def axis_ratio(self):
         return 1.0
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
@@ -186,7 +185,6 @@ class IsothermalSph(Isothermal):
         return 2.0 * self.einstein_radius_rescaled * eta
 
     @aa.grid_dec.grid_2d_to_vector_yx
-    @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):

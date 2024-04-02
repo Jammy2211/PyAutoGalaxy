@@ -44,7 +44,7 @@ class NFW(gNFW, MassProfileCSE):
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         return self.deflections_2d_via_cse_from(grid=grid)
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike):
@@ -87,7 +87,7 @@ class NFW(gNFW, MassProfileCSE):
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike):
@@ -117,7 +117,7 @@ class NFW(gNFW, MassProfileCSE):
             / ((1 - (1 - axis_ratio**2) * u) ** (npow + 0.5))
         )
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_via_cse_from(self, grid: aa.type.Grid2DLike):
@@ -143,7 +143,7 @@ class NFW(gNFW, MassProfileCSE):
         grid_radius = (1.0 / self.scale_radius) * grid_radius + 0j
         return np.real(2.0 * self.kappa_s * self.coord_func_g(grid_radius=grid_radius))
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
@@ -290,7 +290,7 @@ class NFWSph(NFW):
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         return self.deflections_2d_via_analytic_from(grid=grid)
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike):
@@ -316,7 +316,7 @@ class NFWSph(NFW):
         grid_radius = grid_radius + 0j
         return np.real(self.coord_func_h(grid_radius=grid_radius))
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.grid_2d_to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def potential_2d_from(self, grid: aa.type.Grid2DLike):
