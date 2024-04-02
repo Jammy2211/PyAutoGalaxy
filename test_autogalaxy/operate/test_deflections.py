@@ -163,6 +163,7 @@ def test__magnification_2d_from__compare_determinant_and_convergence_and_shear()
 
     assert mean_error < 1e-4
 
+
 def test__tangential_critical_curve_list_from():
     grid = ag.Grid2D.uniform(shape_native=(15, 15), pixel_scales=0.3)
 

@@ -94,7 +94,9 @@ def test__decorators__grid_iterate_in__iterates_grid_correctly():
 
     image = light_profile.image_2d_from(grid=grid)
 
-    grid_sub_2 = ag.Grid2D(values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=2))
+    grid_sub_2 = ag.Grid2D(
+        values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=2)
+    )
     image_sub_2 = light_profile.image_2d_from(grid=grid_sub_2)
 
     assert image[0] == pytest.approx(0.17481917, 1.0e-4)
@@ -109,13 +111,17 @@ def test__decorators__grid_iterate_in__iterates_grid_correctly():
 
     image = light_profile.image_2d_from(grid=grid)
 
-    grid_sub_4 = ag.Grid2D(values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=4))
+    grid_sub_4 = ag.Grid2D(
+        values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=4)
+    )
     image_sub_4 = light_profile.image_2d_from(grid=grid_sub_4)
 
     assert image[0] == pytest.approx(0.17754459861988386, 1.0e-4)
     assert image[0] == image_sub_4[0]
 
-    grid_sub_8 = ag.Grid2D(values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=8))
+    grid_sub_8 = ag.Grid2D(
+        values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=8)
+    )
     image_sub_8 = light_profile.image_2d_from(grid=grid_sub_8)
 
     assert image[4] == pytest.approx(4.173185729427679, 1.0e-4)

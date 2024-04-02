@@ -46,7 +46,6 @@ def test__image_1d_from(lp_0, lp_1, gal_x2_lp):
 
 
 def test__image_2d_from(grid_2d_7x7, gal_x2_lp):
-
     lp_0_image = gal_x2_lp.light_profile_0.image_2d_from(grid=grid_2d_7x7)
     lp_1_image = gal_x2_lp.light_profile_1.image_2d_from(grid=grid_2d_7x7)
 
@@ -133,19 +132,15 @@ def test__convergence_1d_from(grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
 
 
 def test__convergence_2d_from(grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
-    mp_0_convergence = gal_x2_mp.mass_profile_0.convergence_2d_from(
-        grid=grid_2d_7x7
-    )
+    mp_0_convergence = gal_x2_mp.mass_profile_0.convergence_2d_from(grid=grid_2d_7x7)
 
-    mp_1_convergence = gal_x2_mp.mass_profile_1.convergence_2d_from(
-        grid=grid_2d_7x7
-    )
+    mp_1_convergence = gal_x2_mp.mass_profile_1.convergence_2d_from(grid=grid_2d_7x7)
 
     mp_convergence = mp_0_convergence + mp_1_convergence
 
     gal_convergence = gal_x2_mp.convergence_2d_from(grid=grid_2d_7x7)
 
-    assert gal_convergence.binned[0] == mp_convergence
+    assert gal_convergence[0] == mp_convergence[0]
 
 
 def test__potential_1d_from(grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
@@ -183,24 +178,20 @@ def test__potential_2d_from(grid_2d_7x7, gal_x2_mp):
 
     gal_potential = gal_x2_mp.potential_2d_from(grid=grid_2d_7x7)
 
-    assert gal_potential.binned[0] == mp_potential
+    assert gal_potential[0] == mp_potential[0]
 
 
 def test__deflections_yx_2d_from(grid_2d_7x7, gal_x2_mp):
-    mp_0_deflections = gal_x2_mp.mass_profile_0.deflections_yx_2d_from(
-        grid=grid_2d_7x7
-    )
+    mp_0_deflections = gal_x2_mp.mass_profile_0.deflections_yx_2d_from(grid=grid_2d_7x7)
 
-    mp_1_deflections = gal_x2_mp.mass_profile_1.deflections_yx_2d_from(
-        grid=grid_2d_7x7
-    )
+    mp_1_deflections = gal_x2_mp.mass_profile_1.deflections_yx_2d_from(grid=grid_2d_7x7)
 
     mp_deflections = mp_0_deflections + mp_1_deflections
 
     gal_deflections = gal_x2_mp.deflections_yx_2d_from(grid=grid_2d_7x7)
 
-    assert gal_deflections.binned[0, 0] == mp_deflections[0, 0]
-    assert gal_deflections.binned[1, 0] == mp_deflections[1, 0]
+    assert gal_deflections[0, 0] == mp_deflections[0, 0]
+    assert gal_deflections[1, 0] == mp_deflections[1, 0]
 
 
 def test__no_mass_profile__quantities_returned_as_0s_of_shape_grid(
@@ -214,10 +205,8 @@ def test__no_mass_profile__quantities_returned_as_0s_of_shape_grid(
 
     deflections = galaxy.deflections_yx_2d_from(grid=grid_2d_7x7)
 
-    assert (
-        deflections.slim == np.zeros(shape=(grid_2d_7x7.shape_slim, 2))
-    ).all()
-    assert (deflections.binned.native == np.zeros(shape=(7, 7, 2))).all()
+    assert (deflections.slim == np.zeros(shape=(grid_2d_7x7.shape_slim, 2))).all()
+    assert (deflections.native == np.zeros(shape=(7, 7, 2))).all()
 
 
 def test__mass_angular_within_circle_from(mp_0, mp_1, gal_x2_mp):
@@ -632,10 +621,7 @@ def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
 
     over_sample = ag.OverSampleUniform(sub_size=1)
 
-    grid = ag.Grid2D.from_mask(
-        mask=mask,
-        over_sample=over_sample
-    )
+    grid = ag.Grid2D.from_mask(mask=mask, over_sample=over_sample)
 
     image = galaxy.image_2d_from(grid=grid)
 
@@ -643,24 +629,20 @@ def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
 
     over_sample = ag.OverSampleUniform(sub_size=2)
 
-    grid = ag.Grid2D.from_mask(
-        mask=mask,
-        over_sample=over_sample
-    )
+    grid = ag.Grid2D.from_mask(mask=mask, over_sample=over_sample)
 
     image = galaxy.image_2d_from(grid=grid)
 
     assert image[0] == pytest.approx(0.17481917162057087, 1.0e-6)
     assert image[1] == pytest.approx(0.391168560508937, 1.0e-6)
 
-    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(centre=(3.0, 3.0), intensity=1.0))
+    galaxy = ag.Galaxy(
+        redshift=0.5, light=ag.lp.Sersic(centre=(3.0, 3.0), intensity=1.0)
+    )
 
     over_sample = ag.OverSampleUniform(sub_size=1)
 
-    grid = ag.Grid2D.from_mask(
-        mask=mask,
-        over_sample=over_sample
-    )
+    grid = ag.Grid2D.from_mask(mask=mask, over_sample=over_sample)
 
     image = galaxy.image_2d_from(grid=grid)
 
@@ -668,10 +650,7 @@ def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
 
     over_sample = ag.OverSampleUniform(sub_size=2)
 
-    grid = ag.Grid2D.from_mask(
-        mask=mask,
-        over_sample=over_sample
-    )
+    grid = ag.Grid2D.from_mask(mask=mask, over_sample=over_sample)
 
     image = galaxy.image_2d_from(grid=grid)
 
@@ -693,17 +672,15 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
 
     over_sample = ag.OverSampleIterate(fractional_accuracy=1.0, sub_steps=[2])
 
-    grid = ag.Grid2D.from_mask(
-        mask=mask,
-        over_sample=over_sample
-    )
+    grid = ag.Grid2D.from_mask(mask=mask, over_sample=over_sample)
 
     galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
 
     image = galaxy.image_2d_from(grid=grid)
 
-
-    grid_sub_2 = ag.Grid2D(values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=2))
+    grid_sub_2 = ag.Grid2D(
+        values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=2)
+    )
     image_sub_2 = galaxy.image_2d_from(grid=grid_sub_2)
 
     assert image[0] == pytest.approx(0.17481917162057087, 1.0e-6)
@@ -711,10 +688,7 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
 
     over_sample = ag.OverSampleIterate(fractional_accuracy=0.95, sub_steps=[2, 4, 8])
 
-    grid = ag.Grid2D.from_mask(
-        mask=mask,
-        over_sample=over_sample
-    )
+    grid = ag.Grid2D.from_mask(mask=mask, over_sample=over_sample)
 
     galaxy = ag.Galaxy(
         redshift=0.5, light=ag.lp.Sersic(centre=(0.08, 0.08), intensity=1.0)
@@ -722,21 +696,22 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
 
     image = galaxy.image_2d_from(grid=grid)
 
-    grid_sub_4 = ag.Grid2D(values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=4))
+    grid_sub_4 = ag.Grid2D(
+        values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=4)
+    )
     image_sub_4 = galaxy.image_2d_from(grid=grid_sub_4)
 
     assert image[0] == pytest.approx(0.17754459861988386, 1.0e-6)
     assert image[0] == image_sub_4[0]
 
-    grid_sub_8 = ag.Grid2D(values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=8))
+    grid_sub_8 = ag.Grid2D(
+        values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=8)
+    )
     image_sub_8 = galaxy.image_2d_from(grid=grid_sub_8)
 
     over_sample = ag.OverSampleUniform(sub_size=8)
 
-    grid = ag.Grid2D.from_mask(
-        mask=mask,
-        over_sample=over_sample
-    )
+    grid = ag.Grid2D.from_mask(mask=mask, over_sample=over_sample)
 
     image = galaxy.image_2d_from(grid=grid)
 

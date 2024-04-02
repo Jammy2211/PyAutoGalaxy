@@ -62,9 +62,7 @@ def test__blurred_image_2d_from(
 
     assert (
         blurred_image_2d
-        == pytest.approx(
-            blurred_image_2d_manual_not_operated + image_2d_operated
-        ),
+        == pytest.approx(blurred_image_2d_manual_not_operated + image_2d_operated),
         1.0e-4,
     )
 
@@ -86,9 +84,7 @@ def test__x1_galaxies__padded_image__compare_to_galaxy_images_using_padded_grid_
 
     galaxies = ag.Galaxies(galaxies=[g0, g1, g2])
 
-    padded_image = galaxies.padded_image_2d_from(
-        grid=grid_2d_7x7, psf_shape_2d=(3, 3)
-    )
+    padded_image = galaxies.padded_image_2d_from(grid=grid_2d_7x7, psf_shape_2d=(3, 3))
 
     assert padded_image.shape_native == (9, 9)
     assert padded_image == pytest.approx(
@@ -158,9 +154,7 @@ def test__unmasked_blurred_image_2d_from():
     assert unmasked_blurred_image_2d == pytest.approx(image_2d_manual, 1.0e-4)
 
 
-def test__visibilities_from_grid_and_transformer(
-    grid_2d_7x7, transformer_7x7_7
-):
+def test__visibilities_from_grid_and_transformer(grid_2d_7x7, transformer_7x7_7):
     lp = ag.lp.Sersic(intensity=1.0)
     lp_visibilities = lp.visibilities_from(
         grid=grid_2d_7x7, transformer=transformer_7x7_7

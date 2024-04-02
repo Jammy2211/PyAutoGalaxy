@@ -363,7 +363,9 @@ def test__decorators__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp)
 
     convergence = mass_profile.convergence_2d_from(grid=grid)
 
-    grid_sub_2 = ag.Grid2D(values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=2))
+    grid_sub_2 = ag.Grid2D(
+        values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=2)
+    )
     convergence_sub_2 = mass_profile.convergence_2d_from(grid=grid_sub_2)
 
     assert convergence[0] == pytest.approx(0.35882721247144705, 1.0e-4)
@@ -378,13 +380,17 @@ def test__decorators__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp)
 
     convergence = mass_profile.convergence_2d_from(grid=grid)
 
-    grid_sub_4 = ag.Grid2D(values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=4))
+    grid_sub_4 = ag.Grid2D(
+        values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=4)
+    )
     convergence_sub_4 = mass_profile.convergence_2d_from(grid=grid_sub_4)
 
     assert convergence[0] == pytest.approx(0.360512586364902, 1.0e-4)
     assert convergence[0] == convergence_sub_4[0]
 
-    grid_sub_8 = ag.Grid2D(values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=8))
+    grid_sub_8 = ag.Grid2D(
+        values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=8)
+    )
     convergence_sub_8 = mass_profile.convergence_2d_from(grid=grid_sub_8)
 
     assert convergence[4] == pytest.approx(1.8257180092529044, 1.0e-4)
