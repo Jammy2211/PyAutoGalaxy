@@ -36,7 +36,9 @@ def test__decorator_changes_behaviour_correctly():
     image_2d = lp.image_2d_from(grid=grid)
     assert image_2d == pytest.approx(lp_image_2d, 1.0e-4)
 
+    print("aaa")
     image_2d = lp.image_2d_from(grid=grid, operated_only=True)
+    print(image_2d)
     assert image_2d == pytest.approx(np.zeros(shape=(9,)), 1.0e-4)
 
     image_2d = lp.image_2d_from(grid=grid, operated_only=False)
