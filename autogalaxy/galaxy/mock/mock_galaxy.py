@@ -8,7 +8,7 @@ class MockGalaxy:
         self.value = value
         self.shape = shape
 
-    @aa.grid_dec.grid_2d_to_structure_over_sample
+    @aa.grid_dec.grid_2d_to_structure
     def image_2d_from(self, grid):
         return np.full(shape=self.shape, fill_value=self.value)
 

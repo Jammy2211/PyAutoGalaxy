@@ -255,7 +255,7 @@ class OperateDeflections:
             grid=grid, buffer=buffer
         )
 
-        return grid.values_from(array_slim=0.5 * (hessian_yy + hessian_xx))
+        return aa.ArrayIrregular(values=0.5 * (hessian_yy + hessian_xx))
 
     def shear_yx_2d_via_hessian_from(
         self, grid, buffer: float = 0.01
@@ -330,7 +330,7 @@ class OperateDeflections:
 
         det_A = (1 - hessian_xx) * (1 - hessian_yy) - hessian_xy * hessian_yx
 
-        return grid.values_from(array_slim=1.0 / det_A)
+        return aa.ArrayIrregular(values=1.0 / det_A)
 
     @evaluation_grid
     def tangential_critical_curve_list_from(

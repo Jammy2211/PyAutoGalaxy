@@ -63,7 +63,7 @@ class Gaussian(LightProfile):
             ),
         )
 
-    @aa.grid_dec.grid_2d_to_structure_over_sample
+    @aa.grid_dec.grid_2d_to_structure
     @check_operated_only
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum

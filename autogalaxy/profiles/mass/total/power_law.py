@@ -128,7 +128,7 @@ class PowerLawSph(PowerLaw):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
-        einstein_radius: float = 1.0,
+        # einstein_radius: float = 1.0,
         slope: float = 2.0,
     ):
         """
@@ -165,4 +165,4 @@ class PowerLawSph(PowerLaw):
             )
         )
 
-        return self._cartesian_grid_via_radial_from(grid, deflection_r)
+        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection_r)
