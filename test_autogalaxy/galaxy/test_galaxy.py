@@ -106,7 +106,7 @@ def test__luminosity_within_circle(lp_0, lp_1, gal_x2_lp):
     assert gal_no_lp.luminosity_within_circle_from(radius=1.0) == None
 
 
-def test__convergence_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
+def test__convergence_1d_from(grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
     grid = ag.Grid2D.no_mask(values=[[[1.05, -0.55], [2.05, -0.55]]], pixel_scales=1.0)
 
     mp_convergence = mp_0.convergence_1d_from(grid=grid)
@@ -132,32 +132,23 @@ def test__convergence_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
     assert (mp_convergence == gal_convergence).all()
 
 
-def test__convergence_2d_from(sub_grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
+def test__convergence_2d_from(grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
     mp_0_convergence = gal_x2_mp.mass_profile_0.convergence_2d_from(
-        grid=sub_grid_2d_7x7
+        grid=grid_2d_7x7
     )
 
     mp_1_convergence = gal_x2_mp.mass_profile_1.convergence_2d_from(
-        grid=sub_grid_2d_7x7
+        grid=grid_2d_7x7
     )
 
     mp_convergence = mp_0_convergence + mp_1_convergence
 
-    mp_convergence_0 = (
-        mp_convergence[0] + mp_convergence[1] + mp_convergence[2] + mp_convergence[3]
-    ) / 4.0
+    gal_convergence = gal_x2_mp.convergence_2d_from(grid=grid_2d_7x7)
 
-    mp_convergence_1 = (
-        mp_convergence[4] + mp_convergence[5] + mp_convergence[6] + mp_convergence[7]
-    ) / 4.0
-
-    gal_convergence = gal_x2_mp.convergence_2d_from(grid=sub_grid_2d_7x7)
-
-    assert gal_convergence.binned[0] == mp_convergence_0
-    assert gal_convergence.binned[1] == mp_convergence_1
+    assert gal_convergence.binned[0] == mp_convergence
 
 
-def test__potential_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
+def test__potential_1d_from(grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
     grid = ag.Grid2D.no_mask(values=[[[1.05, -0.55]]], pixel_scales=1.0)
 
     mp_potential = mp_0.potential_1d_from(grid=grid)
@@ -183,90 +174,48 @@ def test__potential_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
     assert (mp_potential == gal_mp_potential).all()
 
 
-def test__potential_2d_from(sub_grid_2d_7x7, gal_x2_mp):
-    mp_0_potential = gal_x2_mp.mass_profile_0.potential_2d_from(grid=sub_grid_2d_7x7)
+def test__potential_2d_from(grid_2d_7x7, gal_x2_mp):
+    mp_0_potential = gal_x2_mp.mass_profile_0.potential_2d_from(grid=grid_2d_7x7)
 
-    mp_1_potential = gal_x2_mp.mass_profile_1.potential_2d_from(grid=sub_grid_2d_7x7)
+    mp_1_potential = gal_x2_mp.mass_profile_1.potential_2d_from(grid=grid_2d_7x7)
 
     mp_potential = mp_0_potential + mp_1_potential
 
-    mp_potential_0 = (
-        mp_potential[0] + mp_potential[1] + mp_potential[2] + mp_potential[3]
-    ) / 4.0
+    gal_potential = gal_x2_mp.potential_2d_from(grid=grid_2d_7x7)
 
-    mp_potential_1 = (
-        mp_potential[4] + mp_potential[5] + mp_potential[6] + mp_potential[7]
-    ) / 4.0
-
-    gal_potential = gal_x2_mp.potential_2d_from(grid=sub_grid_2d_7x7)
-
-    assert gal_potential.binned[0] == mp_potential_0
-    assert gal_potential.binned[1] == mp_potential_1
+    assert gal_potential.binned[0] == mp_potential
 
 
-def test__deflections_yx_2d_from(sub_grid_2d_7x7, gal_x2_mp):
+def test__deflections_yx_2d_from(grid_2d_7x7, gal_x2_mp):
     mp_0_deflections = gal_x2_mp.mass_profile_0.deflections_yx_2d_from(
-        grid=sub_grid_2d_7x7
+        grid=grid_2d_7x7
     )
 
     mp_1_deflections = gal_x2_mp.mass_profile_1.deflections_yx_2d_from(
-        grid=sub_grid_2d_7x7
+        grid=grid_2d_7x7
     )
 
     mp_deflections = mp_0_deflections + mp_1_deflections
 
-    mp_deflections_y_0 = (
-        mp_deflections[0, 0]
-        + mp_deflections[1, 0]
-        + mp_deflections[2, 0]
-        + mp_deflections[3, 0]
-    ) / 4.0
+    gal_deflections = gal_x2_mp.deflections_yx_2d_from(grid=grid_2d_7x7)
 
-    mp_deflections_y_1 = (
-        mp_deflections[4, 0]
-        + mp_deflections[5, 0]
-        + mp_deflections[6, 0]
-        + mp_deflections[7, 0]
-    ) / 4.0
-
-    gal_deflections = gal_x2_mp.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
-
-    assert gal_deflections.binned[0, 0] == mp_deflections_y_0
-    assert gal_deflections.binned[1, 0] == mp_deflections_y_1
-
-    mp_deflections_x_0 = (
-        mp_deflections[0, 1]
-        + mp_deflections[1, 1]
-        + mp_deflections[2, 1]
-        + mp_deflections[3, 1]
-    ) / 4.0
-
-    mp_deflections_x_1 = (
-        mp_deflections[4, 1]
-        + mp_deflections[5, 1]
-        + mp_deflections[6, 1]
-        + mp_deflections[7, 1]
-    ) / 4.0
-
-    gal_deflections = gal_x2_mp.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
-
-    assert gal_deflections.binned[0, 1] == mp_deflections_x_0
-    assert gal_deflections.binned[1, 1] == mp_deflections_x_1
+    assert gal_deflections.binned[0, 0] == mp_deflections[0, 0]
+    assert gal_deflections.binned[1, 0] == mp_deflections[1, 0]
 
 
 def test__no_mass_profile__quantities_returned_as_0s_of_shape_grid(
-    sub_grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp
+    grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp
 ):
     galaxy = ag.Galaxy(redshift=0.5)
 
-    potential = galaxy.potential_2d_from(grid=sub_grid_2d_7x7)
+    potential = galaxy.potential_2d_from(grid=grid_2d_7x7)
 
-    assert (potential.slim == np.zeros(shape=sub_grid_2d_7x7.sub_shape_slim)).all()
+    assert (potential.slim == np.zeros(shape=grid_2d_7x7.shape_slim)).all()
 
-    deflections = galaxy.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
+    deflections = galaxy.deflections_yx_2d_from(grid=grid_2d_7x7)
 
     assert (
-        deflections.slim == np.zeros(shape=(sub_grid_2d_7x7.sub_shape_slim, 2))
+        deflections.slim == np.zeros(shape=(grid_2d_7x7.shape_slim, 2))
     ).all()
     assert (deflections.binned.native == np.zeros(shape=(7, 7, 2))).all()
 
@@ -338,14 +287,14 @@ def test__extract_attribute():
     assert values.in_list == [1.0, 2.0, 3.0]
 
 
-def test__image_2d_from__does_not_include_linear_light_profiles(sub_grid_2d_7x7, lp_0):
+def test__image_2d_from__does_not_include_linear_light_profiles(grid_2d_7x7, lp_0):
     lp_linear = ag.lp_linear.Sersic(effective_radius=2.0, sersic_index=2.0)
 
     galaxy = ag.Galaxy(redshift=0.5, light_0=lp_0, light_linear=lp_linear)
 
-    lp_image = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
+    lp_image = lp_0.image_2d_from(grid=grid_2d_7x7)
 
-    image = galaxy.image_2d_from(grid=sub_grid_2d_7x7)
+    image = galaxy.image_2d_from(grid=grid_2d_7x7)
 
     assert (image == lp_image).all()
 
