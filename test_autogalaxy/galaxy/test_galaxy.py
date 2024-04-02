@@ -667,7 +667,6 @@ def test__cannot_pass_light_or_mass_list():
         ag.Galaxy(redshift=0.5, light=light_list, mass=mass_list)
 
 
-
 def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
     mask = ag.Mask2D(
         mask=[
@@ -754,10 +753,9 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
 
     image = galaxy.image_2d_from(grid=grid)
 
-    grid_sub_2 = over_sample.oversampled_grid_2d_via_mask_from(mask=mask, sub_size=2)
-    image_sub_2 = galaxy.image_2d_from(grid=np.array(grid_sub_2))
-    image_sub_2 = ag.Array2D(values=image_sub_2, mask=grid_sub_2.mask)
-    image_sub_2 = grid.over_sample.binned_array_2d_from(array=image_sub_2, sub_size=2)
+
+    grid_sub_2 = ag.Grid2D(values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=2))
+    image_sub_2 = galaxy.image_2d_from(grid=grid_sub_2)
 
     assert image[0] == pytest.approx(0.17481917162057087, 1.0e-6)
     assert (image == image_sub_2).all()
@@ -775,18 +773,14 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
 
     image = galaxy.image_2d_from(grid=grid)
 
-    grid_sub_4 = over_sample.oversampled_grid_2d_via_mask_from(mask=mask, sub_size=4)
-    image_sub_4 = galaxy.image_2d_from(grid=np.array(grid_sub_4))
-    image_sub_4 = ag.Array2D(values=image_sub_4, mask=grid_sub_4.mask)
-    image_sub_4 = grid.over_sample.binned_array_2d_from(array=image_sub_4, sub_size=4)
+    grid_sub_4 = ag.Grid2D(values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=4))
+    image_sub_4 = galaxy.image_2d_from(grid=grid_sub_4)
 
     assert image[0] == pytest.approx(0.17754459861988386, 1.0e-6)
     assert image[0] == image_sub_4[0]
 
-    grid_sub_8 = over_sample.oversampled_grid_2d_via_mask_from(mask=mask, sub_size=8)
-    image_sub_8 = galaxy.image_2d_from(grid=np.array(grid_sub_8))
-    image_sub_8 = ag.Array2D(values=image_sub_8, mask=grid_sub_8.mask)
-    image_sub_8 = over_sample.binned_array_2d_from(array=image_sub_8, sub_size=8)
+    grid_sub_8 = ag.Grid2D(values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=8))
+    image_sub_8 = galaxy.image_2d_from(grid=grid_sub_8)
 
     over_sample = ag.OverSampleUniform(sub_size=8)
 
