@@ -16,7 +16,7 @@ def make_plotter_setup():
 
 def test__all_individual_plotter__output_file_with_default_name(
     galaxies_7x7,
-    sub_grid_2d_7x7,
+    grid_2d_7x7,
     mask_2d_7x7,
     grid_2d_irregular_7x7_list,
     include_2d_all,
@@ -25,7 +25,7 @@ def test__all_individual_plotter__output_file_with_default_name(
 ):
     plotter = aplt.GalaxiesPlotter(
         galaxies=galaxies_7x7,
-        grid=sub_grid_2d_7x7,
+        grid=grid_2d_7x7,
         include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
@@ -38,7 +38,7 @@ def test__all_individual_plotter__output_file_with_default_name(
 
 def test__figures_of_galaxies(
     galaxies_x2_7x7,
-    sub_grid_2d_7x7,
+    grid_2d_7x7,
     mask_2d_7x7,
     include_2d_all,
     plot_path,
@@ -46,7 +46,7 @@ def test__figures_of_galaxies(
 ):
     plotter = aplt.GalaxiesPlotter(
         galaxies=galaxies_x2_7x7,
-        grid=sub_grid_2d_7x7,
+        grid=grid_2d_7x7,
         include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(path=plot_path, format="png")),
     )
@@ -65,11 +65,11 @@ def test__figures_of_galaxies(
 
 
 def test__galaxies_sub_plot_output(
-    galaxies_x2_7x7, sub_grid_2d_7x7, include_2d_all, plot_path, plot_patch
+    galaxies_x2_7x7, grid_2d_7x7, include_2d_all, plot_path, plot_patch
 ):
     plotter = aplt.GalaxiesPlotter(
         galaxies=galaxies_x2_7x7,
-        grid=sub_grid_2d_7x7,
+        grid=grid_2d_7x7,
         include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )

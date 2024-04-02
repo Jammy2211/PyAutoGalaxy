@@ -197,7 +197,7 @@ def test__regularization_list(masked_imaging_7x7):
     assert regularization_list[2] == regularization_0
 
 
-def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
+def test__inversion_imaging_from(grid_2d_7x7, masked_imaging_7x7):
     g_linear = ag.Galaxy(redshift=0.5, light_linear=ag.lp_linear.Sersic())
 
     to_inversion = ag.GalaxiesToInversion(
@@ -236,7 +236,7 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
     )
 
 
-def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
+def test__inversion_interferometer_from(grid_2d_7x7, interferometer_7):
     g_linear = ag.Galaxy(redshift=0.5, light_linear=ag.lp_linear.Sersic())
 
     to_inversion = ag.GalaxiesToInversion(

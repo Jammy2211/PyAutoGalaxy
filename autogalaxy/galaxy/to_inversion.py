@@ -258,16 +258,16 @@ class GalaxiesToInversion(AbstractToInversion):
         image_plane_mesh_grid: Optional[aa.Grid2DIrregular] = None,
     ) -> aa.AbstractMapper:
         mapper_grids = mesh.mapper_grids_from(
+            border_relocator=self.dataset.mapper_tools.border_relocator,
             source_plane_data_grid=self.grid_pixelization,
             source_plane_mesh_grid=source_plane_mesh_grid,
             image_plane_mesh_grid=image_plane_mesh_grid,
-            use_border_relocator=self.settings_inversion.use_border_relocator,
             adapt_data=adapt_galaxy_image,
             preloads=self.preloads,
             run_time_dict=self.run_time_dict,
         )
 
-        return mapper_from(mapper_grids=mapper_grids, regularization=regularization)
+        return mapper_from(mapper_grids=mapper_grids, mapper_tools=self.dataset.mapper_tools, regularization=regularization)
 
     @cached_property
     def mapper_galaxy_dict(self) -> Dict[aa.AbstractMapper, Galaxy]:
