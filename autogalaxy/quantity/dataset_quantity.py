@@ -70,7 +70,6 @@ class DatasetQuantity(AbstractDataset):
                     values=np.stack((noise_map, noise_map), axis=-1),
                     pixel_scales=data.pixel_scales,
                     shape_native=data.shape_native,
-                    sub_size=data.sub_size,
                     origin=data.origin,
                 )
 
@@ -87,10 +86,7 @@ class DatasetQuantity(AbstractDataset):
         cls,
         data: Union[aa.Array2D, aa.VectorYX2D],
         signal_to_noise_map: Union[aa.Array2D],
-        sub_size: int = 4,  # Temporary before refactor
-        sub_size_pixelization: int = 1,  # Temporary before refactor
         over_sample: Optional[aa.OverSampleIterate] = None,
-        over_sample_pixelization: Optional[aa.OverSampleIterate] = None,
     ):
         """
         Represents a derived quantity of a light profile, mass profile, galaxy or galaxies as a dataset that can be
@@ -123,10 +119,7 @@ class DatasetQuantity(AbstractDataset):
         return DatasetQuantity(
             data=data,
             noise_map=noise_map,
-            sub_size=sub_size,
-            sub_size_pixelization=sub_size_pixelization,
             over_sample=over_sample,
-            over_sample_pixelization=over_sample_pixelization,
         )
 
     @property
@@ -142,10 +135,7 @@ class DatasetQuantity(AbstractDataset):
             return DatasetQuantity(
                 data=self.data.y,
                 noise_map=self.noise_map.y,
-                sub_size=self.sub_size,
-                sub_size_pixelization=self.sub_size_pixelization,
                 over_sample=self.over_sample,
-                over_sample_pixelization=self.over_sample_pixelization,
             )
 
     @property
@@ -161,10 +151,7 @@ class DatasetQuantity(AbstractDataset):
             return DatasetQuantity(
                 data=self.data.x,
                 noise_map=self.noise_map.x,
-                sub_size=self.sub_size,
-                sub_size_pixelization=self.sub_size_pixelization,
                 over_sample=self.over_sample,
-                over_sample_pixelization=self.over_sample_pixelization,
             )
 
     def apply_mask(self, mask: aa.Mask2D) -> "DatasetQuantity":
@@ -191,10 +178,7 @@ class DatasetQuantity(AbstractDataset):
         dataset = DatasetQuantity(
             data=data,
             noise_map=noise_map,
-            sub_size=self.sub_size,
-            sub_size_pixelization=self.sub_size_pixelization,
             over_sample=self.over_sample,
-            over_sample_pixelization=self.over_sample_pixelization,
         )
 
         dataset.unmasked = unmasked_dataset

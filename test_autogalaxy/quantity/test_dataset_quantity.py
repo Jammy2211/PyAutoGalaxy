@@ -7,7 +7,7 @@ import shutil
 import autogalaxy as ag
 
 
-def test_via_signal_to_noise_map(dataset_quantity_7x7_array_2d, sub_mask_2d_7x7):
+def test_via_signal_to_noise_map(dataset_quantity_7x7_array_2d, mask_2d_7x7):
     data = ag.Array2D.no_mask(values=[[1.0, 2.0], [3.0, 4.0]], pixel_scales=1.0)
     signal_to_noise_map = ag.Array2D.no_mask(
         values=[[1.0, 5.0], [15.0, 40.0]], pixel_scales=1.0
@@ -44,25 +44,25 @@ def test_via_signal_to_noise_map(dataset_quantity_7x7_array_2d, sub_mask_2d_7x7)
 
 
 def test__apply_mask__masks_dataset(
-    dataset_quantity_7x7_array_2d, dataset_quantity_7x7_vector_yx_2d, sub_mask_2d_7x7
+    dataset_quantity_7x7_array_2d, dataset_quantity_7x7_vector_yx_2d, mask_2d_7x7
 ):
     dataset_quantity_7x7 = dataset_quantity_7x7_array_2d.apply_mask(
-        mask=sub_mask_2d_7x7
+        mask=mask_2d_7x7
     )
 
     assert (dataset_quantity_7x7.data.slim == np.ones(9)).all()
     assert (
-        dataset_quantity_7x7.data.native == np.ones((7, 7)) * np.invert(sub_mask_2d_7x7)
+        dataset_quantity_7x7.data.native == np.ones((7, 7)) * np.invert(mask_2d_7x7)
     ).all()
 
     assert (dataset_quantity_7x7.noise_map.slim == 2.0 * np.ones(9)).all()
     assert (
         dataset_quantity_7x7.noise_map.native
-        == 2.0 * np.ones((7, 7)) * np.invert(sub_mask_2d_7x7)
+        == 2.0 * np.ones((7, 7)) * np.invert(mask_2d_7x7)
     ).all()
 
     dataset_quantity_7x7 = dataset_quantity_7x7_vector_yx_2d.apply_mask(
-        mask=sub_mask_2d_7x7
+        mask=mask_2d_7x7
     )
 
     assert (dataset_quantity_7x7.data.slim == np.ones((9, 2))).all()
@@ -71,12 +71,11 @@ def test__apply_mask__masks_dataset(
 
 def test__grid(
     dataset_quantity_7x7_array_2d,
-    sub_mask_2d_7x7,
+    mask_2d_7x7,
     grid_2d_7x7,
-    sub_grid_2d_7x7,
     blurring_grid_2d_7x7,
 ):
-    dataset = dataset_quantity_7x7_array_2d.apply_mask(mask=sub_mask_2d_7x7)
+    dataset = dataset_quantity_7x7_array_2d.apply_mask(mask=mask_2d_7x7)
 
     assert isinstance(dataset.grid, ag.Grid2D)
     assert (dataset.grid.binned == grid_2d_7x7).all()
@@ -89,7 +88,7 @@ def test__grid(
         over_sample=ag.OverSampleIterate(),
     )
 
-    dataset = dataset_quantity.apply_mask(mask=sub_mask_2d_7x7)
+    dataset = dataset_quantity.apply_mask(mask=mask_2d_7x7)
 
     assert isinstance(dataset.grid.over_sample, ag.OverSampleIterate)
     assert (dataset.grid.binned == grid_2d_7x7).all()
