@@ -358,7 +358,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
     ) -> aa.Array2D:
         return plane_image_from(
             galaxies=self,
-            grid=grid.mask.derive_grid.all_false_sub_1,
+            grid=grid.mask.derive_grid.all_false,
             zoom_to_brightest=zoom_to_brightest,
         )
 
