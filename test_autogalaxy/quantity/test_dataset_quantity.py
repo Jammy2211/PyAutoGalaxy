@@ -46,9 +46,7 @@ def test_via_signal_to_noise_map(dataset_quantity_7x7_array_2d, mask_2d_7x7):
 def test__apply_mask__masks_dataset(
     dataset_quantity_7x7_array_2d, dataset_quantity_7x7_vector_yx_2d, mask_2d_7x7
 ):
-    dataset_quantity_7x7 = dataset_quantity_7x7_array_2d.apply_mask(
-        mask=mask_2d_7x7
-    )
+    dataset_quantity_7x7 = dataset_quantity_7x7_array_2d.apply_mask(mask=mask_2d_7x7)
 
     assert (dataset_quantity_7x7.data.slim == np.ones(9)).all()
     assert (

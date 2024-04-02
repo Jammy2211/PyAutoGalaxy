@@ -97,7 +97,9 @@ def test__perfect_fit__chi_squared_0():
 
 def test__simulate_interferometer_data_and_fit__known_likelihood():
     mask = ag.Mask2D.circular(
-        radius=3.0, shape_native=(31, 31), pixel_scales=0.2,
+        radius=3.0,
+        shape_native=(31, 31),
+        pixel_scales=0.2,
     )
 
     grid = ag.Grid2D.from_mask(mask=mask)
