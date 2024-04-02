@@ -444,7 +444,6 @@ def plane_image_from(
             grid = aa.Grid2D.uniform(
                 shape_native=grid.shape_native,
                 pixel_scales=pixel_scales,
-                sub_size=1,
                 origin=origin,
             )
         except ValueError:
