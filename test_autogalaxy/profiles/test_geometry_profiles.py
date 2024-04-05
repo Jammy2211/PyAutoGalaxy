@@ -146,13 +146,17 @@ def test__elliptical__transform_grid_to_and_from_reference_frame():
         elliptical_profile.transformed_from_reference_frame_grid_from(transformed_grid)
     )
 
-    assert transformed_back_grid == pytest.approx(ag.Grid2DIrregular([[1.0, 1.0]]), 1e-3)
+    assert transformed_back_grid == pytest.approx(
+        ag.Grid2DIrregular([[1.0, 1.0]]), 1e-3
+    )
 
     transformed_back_grid = (
         elliptical_profile.transformed_from_reference_frame_grid_from(transformed_grid)
     )
 
-    assert transformed_back_grid == pytest.approx(ag.Grid2DIrregular([[1.0, 1.0]]), 1e-3)
+    assert transformed_back_grid == pytest.approx(
+        ag.Grid2DIrregular([[1.0, 1.0]]), 1e-3
+    )
 
     # axis_ratio=0.1, angle=90.0
 
@@ -170,7 +174,9 @@ def test__elliptical__transform_grid_to_and_from_reference_frame():
         elliptical_profile.transformed_from_reference_frame_grid_from(transformed_grid)
     )
 
-    assert transformed_back_grid == pytest.approx(ag.Grid2DIrregular([[3.0, 4.0]]), 1e-3)
+    assert transformed_back_grid == pytest.approx(
+        ag.Grid2DIrregular([[3.0, 4.0]]), 1e-3
+    )
 
     elliptical_profile = geometry_profiles.EllProfile(ell_comps=(0.818181, 0.0))
 
