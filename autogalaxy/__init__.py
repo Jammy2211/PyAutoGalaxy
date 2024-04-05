@@ -11,12 +11,6 @@ from autoarray.inversion.inversion.factory import inversion_from as Inversion  #
 from autoarray.inversion.pixelization.image_mesh.abstract import AbstractImageMesh
 from autoarray.inversion.pixelization.mesh.abstract import AbstractMesh
 from autoarray.inversion.regularization.abstract import AbstractRegularization
-from autoarray.inversion.inversion.factory import (
-    inversion_imaging_unpacked_from as InversionImaging,
-)  # noqa
-from autoarray.inversion.inversion.factory import (
-    inversion_interferometer_unpacked_from as InversionInterferometer,
-)  # noqa
 from autoarray.inversion.pixelization.pixelization import Pixelization  # noqa
 from autoarray.inversion.pixelization.mappers.abstract import AbstractMapper
 from autoarray.inversion.pixelization.mappers.mapper_grids import MapperGrids  # noqa
