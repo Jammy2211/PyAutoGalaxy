@@ -56,7 +56,7 @@ class ShapeletExponential(AbstractShapelet):
             centre=centre, ell_comps=ell_comps, beta=beta, intensity=intensity
         )
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     @check_operated_only
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum

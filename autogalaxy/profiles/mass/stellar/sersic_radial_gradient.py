@@ -50,7 +50,7 @@ class SersicRadialGradient(AbstractSersic):
         )
         self.mass_to_light_gradient = mass_to_light_gradient
 
-    @aa.grid_dec.grid_2d_to_vector_yx
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, **kwargs):
@@ -123,7 +123,7 @@ class SersicRadialGradient(AbstractSersic):
             / ((1 - (1 - axis_ratio**2) * u) ** (npow + 0.5))
         )
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
@@ -135,7 +135,7 @@ class SersicRadialGradient(AbstractSersic):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
-        return self.convergence_func(self.eccentric_radii_grid_from(grid))
+        return self.convergence_func(self.eccentric_radii_grid_from(grid=grid, **kwargs))
 
     def convergence_func(self, grid_radius: float) -> float:
         return (

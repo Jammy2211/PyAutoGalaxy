@@ -84,9 +84,9 @@ def jit_integrand(integrand_function):
 
 class gNFW(AbstractgNFW):
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return self.deflections_2d_via_mge_from(grid=grid)
+        return self.deflections_2d_via_mge_from(grid=grid, **kwargs)
 
-    @aa.grid_dec.grid_2d_to_vector_yx
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike, **kwargs):
@@ -94,7 +94,7 @@ class gNFW(AbstractgNFW):
             grid=grid, sigmas_factor=self.axis_ratio
         )
 
-    @aa.grid_dec.grid_2d_to_vector_yx
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_integral_from(
@@ -230,7 +230,7 @@ class gNFW(AbstractgNFW):
 
         return grid_radius
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def potential_2d_from(self, grid: aa.type.Grid2DLike, tabulate_bins=1000, **kwargs):
@@ -362,7 +362,7 @@ class gNFWSph(gNFW):
             scale_radius=scale_radius,
         )
 
-    @aa.grid_dec.grid_2d_to_vector_yx
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, **kwargs):
@@ -375,7 +375,7 @@ class gNFWSph(gNFW):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
-        eta = np.multiply(1.0 / self.scale_radius, self.radial_grid_from(grid))
+        eta = np.multiply(1.0 / self.scale_radius, self.radial_grid_from(grid, **kwargs))
 
         deflection_grid = np.zeros(grid.shape[0])
 

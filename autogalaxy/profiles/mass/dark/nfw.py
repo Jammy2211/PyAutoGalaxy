@@ -42,9 +42,9 @@ class NFW(gNFW, MassProfileCSE):
         super(MassProfileCSE, self).__init__()
 
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return self.deflections_2d_via_cse_from(grid=grid)
+        return self.deflections_2d_via_cse_from(grid=grid, **kwargs)
 
-    @aa.grid_dec.grid_2d_to_vector_yx
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, **kwargs):
@@ -87,11 +87,11 @@ class NFW(gNFW, MassProfileCSE):
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 
-    @aa.grid_dec.grid_2d_to_vector_yx
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return self._deflections_2d_via_cse_from(grid=grid)
+        return self._deflections_2d_via_cse_from(grid=grid, **kwargs)
 
     @staticmethod
     def deflection_func(u, y, x, npow, axis_ratio, scale_radius):
@@ -117,7 +117,7 @@ class NFW(gNFW, MassProfileCSE):
             / ((1 - (1 - axis_ratio**2) * u) ** (npow + 0.5))
         )
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_via_cse_from(self, grid: aa.type.Grid2DLike, **kwargs):
@@ -135,7 +135,7 @@ class NFW(gNFW, MassProfileCSE):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
 
-        elliptical_radii = self.elliptical_radii_grid_from(grid)
+        elliptical_radii = self.elliptical_radii_grid_from(grid=grid, **kwargs)
 
         return self._convergence_2d_via_cse_from(grid_radii=elliptical_radii)
 
@@ -143,7 +143,7 @@ class NFW(gNFW, MassProfileCSE):
         grid_radius = (1.0 / self.scale_radius) * grid_radius + 0j
         return np.real(2.0 * self.kappa_s * self.coord_func_g(grid_radius=grid_radius))
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
@@ -288,9 +288,9 @@ class NFWSph(NFW):
         )
 
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return self.deflections_2d_via_analytic_from(grid=grid)
+        return self.deflections_2d_via_analytic_from(grid=grid, **kwargs)
 
-    @aa.grid_dec.grid_2d_to_vector_yx
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike, **kwargs):
@@ -303,7 +303,7 @@ class NFWSph(NFW):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
-        eta = np.multiply(1.0 / self.scale_radius, self.radial_grid_from(grid=grid))
+        eta = np.multiply(1.0 / self.scale_radius, self.radial_grid_from(grid=grid, **kwargs))
 
         deflection_grid = np.multiply(
             (4.0 * self.kappa_s * self.scale_radius / eta),
@@ -316,7 +316,7 @@ class NFWSph(NFW):
         grid_radius = grid_radius + 0j
         return np.real(self.coord_func_h(grid_radius=grid_radius))
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
@@ -329,7 +329,7 @@ class NFWSph(NFW):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
-        eta = (1.0 / self.scale_radius) * self.radial_grid_from(grid) + 0j
+        eta = (1.0 / self.scale_radius) * self.radial_grid_from(grid=grid, **kwargs) + 0j
         return np.real(
             2.0 * self.scale_radius * self.kappa_s * self.potential_func_sph(eta)
         )

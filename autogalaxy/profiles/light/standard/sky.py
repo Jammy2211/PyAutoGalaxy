@@ -29,7 +29,7 @@ class Sky(LightProfile):
 
         self.intensity = intensity
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
     ):

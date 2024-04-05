@@ -57,7 +57,7 @@ class ElsonFreeFall(LightProfile):
             -self.eta
         )
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     @check_operated_only
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
@@ -80,7 +80,7 @@ class ElsonFreeFall(LightProfile):
         image
             The image of the Eff evaluated at every (y,x) coordinate on the transformed grid.
         """
-        return self.image_2d_via_radii_from(self.eccentric_radii_grid_from(grid))
+        return self.image_2d_via_radii_from(self.eccentric_radii_grid_from(grid=grid, **kwargs))
 
     @property
     def half_light_radius(self) -> float:

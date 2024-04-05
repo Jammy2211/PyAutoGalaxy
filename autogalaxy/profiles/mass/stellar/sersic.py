@@ -122,9 +122,9 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         self.sersic_index = sersic_index
 
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return self.deflections_2d_via_cse_from(grid=grid)
+        return self.deflections_2d_via_cse_from(grid=grid, **kwargs)
 
-    @aa.grid_dec.grid_2d_to_vector_yx
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike, **kwargs):
@@ -145,7 +145,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
             grid=grid, sigmas_factor=np.sqrt(self.axis_ratio)
         )
 
-    @aa.grid_dec.grid_2d_to_vector_yx
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike, **kwargs):
@@ -162,9 +162,9 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
-        return self._deflections_2d_via_cse_from(grid=grid)
+        return self._deflections_2d_via_cse_from(grid=grid, **kwargs)
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
@@ -176,9 +176,9 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
-        return self.convergence_func(self.eccentric_radii_grid_from(grid))
+        return self.convergence_func(self.eccentric_radii_grid_from(grid=grid, **kwargs))
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_via_mge_from(self, grid: aa.type.Grid2DLike, **kwargs):
@@ -192,11 +192,11 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
 
         """
 
-        eccentric_radii = self.eccentric_radii_grid_from(grid=grid)
+        eccentric_radii = self.eccentric_radii_grid_from(grid=grid, **kwargs)
 
         return self._convergence_2d_via_mge_from(grid_radii=eccentric_radii)
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_via_cse_from(self, grid: aa.type.Grid2DLike, **kwargs):
@@ -214,14 +214,14 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
 
-        elliptical_radii = self.elliptical_radii_grid_from(grid=grid)
+        elliptical_radii = self.elliptical_radii_grid_from(grid=grid, **kwargs)
 
         return self._convergence_2d_via_cse_from(grid_radii=elliptical_radii)
 
     def convergence_func(self, grid_radius: float) -> float:
         return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
@@ -349,7 +349,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
 
 
 class Sersic(AbstractSersic, MassProfileMGE, MassProfileCSE):
-    @aa.grid_dec.grid_2d_to_vector_yx
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, **kwargs):

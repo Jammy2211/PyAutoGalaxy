@@ -63,7 +63,7 @@ class Gaussian(LightProfile):
             ),
         )
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     @check_operated_only
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
@@ -87,7 +87,7 @@ class Gaussian(LightProfile):
             The image of the Gaussian evaluated at every (y,x) coordinate on the transformed grid.
         """
 
-        return self.image_2d_via_radii_from(self.eccentric_radii_grid_from(grid))
+        return self.image_2d_via_radii_from(self.eccentric_radii_grid_from(grid=grid, **kwargs))
 
 
 class GaussianSph(Gaussian):

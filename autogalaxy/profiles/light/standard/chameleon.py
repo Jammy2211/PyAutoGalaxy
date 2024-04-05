@@ -90,7 +90,7 @@ class Chameleon(LightProfile):
             ),
         )
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     @check_operated_only
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
@@ -113,7 +113,7 @@ class Chameleon(LightProfile):
         image
             The image of the Chameleon evaluated at every (y,x) coordinate on the transformed grid.
         """
-        return self.image_2d_via_radii_from(self.elliptical_radii_grid_from(grid))
+        return self.image_2d_via_radii_from(self.elliptical_radii_grid_from(grid=grid, **kwargs))
 
 
 class ChameleonSph(Chameleon):

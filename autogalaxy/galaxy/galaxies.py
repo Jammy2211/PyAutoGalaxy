@@ -96,7 +96,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
             for galaxy in self
         ]
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> aa.Array2D:
@@ -155,7 +155,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
 
         return galaxy_image_2d_dict
 
-    @aa.grid_dec.grid_2d_to_vector_yx
+    @aa.grid_dec.to_vector_yx
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D deflections angles of all galaxies from a 2D grid of Cartesian (y,x) coordinates.
@@ -181,14 +181,14 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
             return sum(map(lambda g: g.deflections_yx_2d_from(grid=grid), self))
         return np.zeros(shape=(grid.shape[0], 2))
 
-    @aa.grid_dec.grid_2d_to_grid
+    @aa.grid_dec.to_grid
     def traced_grid_2d_from(self, grid: aa.type.Grid2DLike) -> aa.type.Grid2DLike:
         """
         Trace this plane's grid_stacks to the next plane, using its deflection angles.
         """
         return grid - self.deflections_yx_2d_from(grid=grid)
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D convergence of all galaxies from a 2D grid of Cartesian (y,x) coordinates.
@@ -214,7 +214,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
             return sum(map(lambda g: g.convergence_2d_from(grid=grid), self))
         return np.zeros((grid.shape[0],))
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D potential of all galaxies from a 2D grid of Cartesian (y,x) coordinates.

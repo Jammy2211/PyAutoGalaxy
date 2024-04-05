@@ -147,7 +147,7 @@ class MassProfileCSE(ABC):
             for amplitude, core_radius in zip(amplitude_list, core_radius_list)
         )
 
-    def _deflections_2d_via_cse_from(self, grid: np.ndarray) -> np.ndarray:
+    def _deflections_2d_via_cse_from(self, grid: np.ndarray, **kwargs) -> np.ndarray:
         """
         Calculate the projected 2D deflection angles from a grid of radial coordinates, by computing and summing the
         deflections of each individual cse used to decompose the mass profile.
@@ -162,7 +162,7 @@ class MassProfileCSE(ABC):
         """
 
         amplitude_list, core_radius_list = self.decompose_convergence_via_cse(
-            grid_radii=self.radial_grid_from(grid=grid)
+            grid_radii=self.radial_grid_from(grid=grid, **kwargs)
         )
         q = self.axis_ratio
         q2 = q**2.0

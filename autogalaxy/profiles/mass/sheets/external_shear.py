@@ -38,11 +38,11 @@ class ExternalShear(MassProfile):
     def average_convergence_of_1_radius(self):
         return 0.0
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         shear_angle = (
             self.angle - 90
@@ -54,7 +54,7 @@ class ExternalShear(MassProfile):
 
         return -0.5 * shear_amp * rcoord**2 * np.cos(2 * (phicoord - phig))
 
-    @aa.grid_dec.grid_2d_to_vector_yx
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):

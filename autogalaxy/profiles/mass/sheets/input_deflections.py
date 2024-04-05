@@ -68,15 +68,15 @@ class InputDeflections(MassProfile):
 
         self.normalization_scale = 1.0  # normalization_scale
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return self.convergence_2d_via_jacobian_from(grid=grid)
+        return self.convergence_2d_via_jacobian_from(grid=grid, **kwargs)
 
-    @aa.grid_dec.grid_2d_to_array
+    @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
-    @aa.grid_dec.grid_2d_to_vector_yx
+    @aa.grid_dec.to_vector_yx
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         if self.preload_grid is not None and self.preload_deflections is not None:
             try:
