@@ -200,19 +200,19 @@ class OperateDeflections:
         if deflections_func is None:
             deflections_func = self.deflections_yx_2d_from
 
-        grid_shift_y_up = np.zeros(grid.shape)
+        grid_shift_y_up = aa.Grid2DIrregular(values=np.zeros(grid.shape))
         grid_shift_y_up[:, 0] = grid[:, 0] + buffer
         grid_shift_y_up[:, 1] = grid[:, 1]
 
-        grid_shift_y_down = np.zeros(grid.shape)
+        grid_shift_y_down = aa.Grid2DIrregular(values=np.zeros(grid.shape))
         grid_shift_y_down[:, 0] = grid[:, 0] - buffer
         grid_shift_y_down[:, 1] = grid[:, 1]
 
-        grid_shift_x_left = np.zeros(grid.shape)
+        grid_shift_x_left = aa.Grid2DIrregular(values=np.zeros(grid.shape))
         grid_shift_x_left[:, 0] = grid[:, 0]
         grid_shift_x_left[:, 1] = grid[:, 1] - buffer
 
-        grid_shift_x_right = np.zeros(grid.shape)
+        grid_shift_x_right = aa.Grid2DIrregular(values=np.zeros(grid.shape))
         grid_shift_x_right[:, 0] = grid[:, 0]
         grid_shift_x_right[:, 1] = grid[:, 1] + buffer
 
