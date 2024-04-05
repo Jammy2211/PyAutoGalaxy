@@ -29,7 +29,7 @@ class MockLightProfile(ag.LightProfile):
 
     @aa.grid_dec.grid_2d_to_array
     @check_operated_only
-    def image_2d_from(self, grid, operated_only: Optional[bool] = None):
+    def image_2d_from(self, grid, operated_only: Optional[bool] = None, **kwargs):
         if self.image_2d is not None:
             return self.image_2d
 

@@ -254,7 +254,7 @@ class GalaxiesToInversion(AbstractToInversion):
         mesh: aa.AbstractMesh,
         regularization: aa.AbstractRegularization,
         source_plane_mesh_grid: aa.Grid2DIrregular,
-        source_plane_data_grid : aa.Grid2D,
+        source_plane_data_grid: aa.Grid2D,
         adapt_galaxy_image: aa.Array2D,
         image_plane_mesh_grid: Optional[aa.Grid2DIrregular] = None,
     ) -> aa.AbstractMapper:

@@ -221,6 +221,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             apply these operations to the images, which may have the `operated_only` input passed to them. This input
             therefore is used to pass the `operated_only` input to these methods.
         """
+
         if (
             len(self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear))
             > 0

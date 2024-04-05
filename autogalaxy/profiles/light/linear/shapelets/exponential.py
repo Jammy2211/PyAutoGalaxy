@@ -54,7 +54,7 @@ class ShapeletExponential(lp.ShapeletExponential, LightProfileLinear):
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
     ) -> np.ndarray:
         """
         Returns the Exponential Shapelet light profile's 2D image from a 2D grid of Exponential (y,x) coordinates.

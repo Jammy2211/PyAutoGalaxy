@@ -12,7 +12,7 @@ def test__deflections_yx_2d_from():
     )
 
     deflections = cored_isothermal.deflections_yx_2d_from(
-        grid=np.array([[0.1875, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1875, 0.1625]])
     )
 
     assert deflections[0, 0] == pytest.approx(0.98582, 1e-3)
@@ -23,7 +23,7 @@ def test__deflections_yx_2d_from():
     )
 
     deflections = cored_isothermal.deflections_yx_2d_from(
-        grid=np.array([[0.1875, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1875, 0.1625]])
     )
 
     assert deflections[0, 0] == pytest.approx(-0.00559, 1e-3)
@@ -37,7 +37,7 @@ def test__deflections_yx_2d_from():
     )
 
     deflections = cored_isothermal.deflections_yx_2d_from(
-        grid=np.array([[0.1625, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
     assert deflections[0, 0] == pytest.approx(0.95429, 1e-3)
@@ -51,7 +51,7 @@ def test__deflections_yx_2d_from():
     )
 
     deflections = cored_isothermal.deflections_yx_2d_from(
-        grid=np.array([[0.1625, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
     assert deflections[0, 0] == pytest.approx(0.02097, 1e-3)
@@ -93,7 +93,9 @@ def test__convergence_2d_from():
         centre=(0.0, 0.0), einstein_radius=1.0, core_radius=0.2
     )
 
-    convergence = cored_isothermal.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
+    convergence = cored_isothermal.convergence_2d_from(
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
+    )
 
     assert convergence == pytest.approx(0.49029, 1e-3)
 
@@ -101,7 +103,9 @@ def test__convergence_2d_from():
         centre=(0.0, 0.0), einstein_radius=2.0, core_radius=0.2
     )
 
-    convergence = cored_isothermal.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
+    convergence = cored_isothermal.convergence_2d_from(
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
+    )
 
     assert convergence == pytest.approx(2.0 * 0.49029, 1e-3)
 
@@ -109,7 +113,9 @@ def test__convergence_2d_from():
         centre=(0.0, 0.0), einstein_radius=1.0, core_radius=0.2
     )
 
-    convergence = cored_isothermal.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
+    convergence = cored_isothermal.convergence_2d_from(
+        grid=ag.Grid2DIrregular([[0.0, 1.0]])
+    )
 
     assert convergence == pytest.approx(0.49029, 1e-3)
 
@@ -121,7 +127,9 @@ def test__convergence_2d_from():
         core_radius=0.2,
     )
 
-    convergence = cored_isothermal.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
+    convergence = cored_isothermal.convergence_2d_from(
+        grid=ag.Grid2DIrregular([[0.0, 1.0]])
+    )
 
     assert convergence == pytest.approx(0.49029 * 1.33333, 1e-3)
 
@@ -132,7 +140,9 @@ def test__convergence_2d_from():
         core_radius=0.2,
     )
 
-    convergence = cored_isothermal.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
+    convergence = cored_isothermal.convergence_2d_from(
+        grid=ag.Grid2DIrregular([[0.0, 1.0]])
+    )
 
     assert convergence == pytest.approx(2.0 * 0.49029, 1e-3)
 
@@ -148,7 +158,9 @@ def test__convergence_2d_from():
         core_radius=0.2,
     )
 
-    convergence = cored_isothermal.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
+    convergence = cored_isothermal.convergence_2d_from(
+        grid=ag.Grid2DIrregular([[0.0, 1.0]])
+    )
 
     assert convergence == pytest.approx((1.0 / 0.75) * 0.49029, 1e-3)
 
@@ -172,7 +184,9 @@ def test__potential_2d_from():
         centre=(-0.7, 0.5), einstein_radius=1.3, core_radius=0.2
     )
 
-    potential = cored_isothermal.potential_2d_from(grid=np.array([[0.1875, 0.1625]]))
+    potential = cored_isothermal.potential_2d_from(
+        grid=ag.Grid2DIrregular([[0.1875, 0.1625]])
+    )
 
     assert potential == pytest.approx(0.72231, 1e-3)
 
@@ -180,7 +194,9 @@ def test__potential_2d_from():
         centre=(0.2, -0.2), einstein_radius=0.5, core_radius=0.5
     )
 
-    potential = cored_isothermal.potential_2d_from(grid=np.array([[0.1875, 0.1625]]))
+    potential = cored_isothermal.potential_2d_from(
+        grid=ag.Grid2DIrregular([[0.1875, 0.1625]])
+    )
 
     assert potential == pytest.approx(0.03103, 1e-3)
 
@@ -191,7 +207,9 @@ def test__potential_2d_from():
         core_radius=0.2,
     )
 
-    potential = cored_isothermal.potential_2d_from(grid=np.array([[0.1625, 0.1625]]))
+    potential = cored_isothermal.potential_2d_from(
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
+    )
 
     assert potential == pytest.approx(0.74354, 1e-3)
 
@@ -202,7 +220,9 @@ def test__potential_2d_from():
         core_radius=0.5,
     )
 
-    potential = cored_isothermal.potential_2d_from(grid=np.array([[0.1625, 0.1625]]))
+    potential = cored_isothermal.potential_2d_from(
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
+    )
 
     assert potential == pytest.approx(0.04024, 1e-3)
 

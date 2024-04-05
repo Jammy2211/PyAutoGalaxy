@@ -39,7 +39,7 @@ class LightProfile(EllProfile, OperateImage):
         self.intensity = intensity
 
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
     ) -> aa.Array2D:
         """
         Returns the light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates, which may have been
@@ -73,7 +73,9 @@ class LightProfile(EllProfile, OperateImage):
         raise NotImplementedError()
 
     @aa.grid_dec.grid_1d_to_structure
-    def image_1d_from(self, grid: aa.type.Grid1D2DLike) -> aa.type.Grid1D2DLike:
+    def image_1d_from(
+        self, grid: aa.type.Grid1D2DLike, **kwargs
+    ) -> aa.type.Grid1D2DLike:
         """
         Returns the light profile's 1D image from a grid of Cartesian coordinates, which may have been
         transformed using the light profile's geometry.

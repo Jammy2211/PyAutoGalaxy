@@ -6,7 +6,7 @@ import scipy.special
 
 import autogalaxy as ag
 
-grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
+grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__image_2d_from():
@@ -17,7 +17,7 @@ def test__image_2d_from():
         effective_radius=1.0,
     )
 
-    image = eff.image_2d_from(grid=np.array([[0.0, 1.0]]))
+    image = eff.image_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]))
 
     assert image == pytest.approx(0.35355, 1e-2)
 
@@ -28,7 +28,7 @@ def test__image_2d_from():
         effective_radius=1.0,
     )
 
-    image = eff.image_2d_from(grid=np.array([[0.0, 1.0]]))
+    image = eff.image_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]))
 
     assert image == pytest.approx(2.0 * 0.35355, 1e-2)
 
@@ -39,7 +39,7 @@ def test__image_2d_from():
         effective_radius=2.0,
     )
 
-    image = eff.image_2d_from(grid=np.array([[0.0, 1.0]]))
+    image = eff.image_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]))
 
     assert image == pytest.approx(0.71554, 1e-2)
 
@@ -50,7 +50,7 @@ def test__image_2d_from():
         effective_radius=2.0,
     )
 
-    image = eff.image_2d_from(grid=np.array([[0.0, 3.0]]))
+    image = eff.image_2d_from(grid=ag.Grid2DIrregular([[0.0, 3.0]]))
 
     assert image == pytest.approx(0.17067, 1e-2)
 

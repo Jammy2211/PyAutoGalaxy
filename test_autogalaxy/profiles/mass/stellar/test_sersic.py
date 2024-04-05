@@ -17,7 +17,7 @@ def test__deflections_via_integral_from():
     )
 
     deflections = sersic.deflections_2d_via_integral_from(
-        grid=np.array([[0.1625, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
     assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
@@ -33,7 +33,7 @@ def test__deflections_via_integral_from():
     )
 
     deflections = sersic.deflections_2d_via_integral_from(
-        grid=np.array([[0.1625, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
     assert deflections[0, 0] == pytest.approx(2.6134, 1e-3)
@@ -51,10 +51,10 @@ def test__deflections_2d_via_mge_from():
     )
 
     deflections_via_integral = sersic.deflections_2d_via_integral_from(
-        grid=np.array([[0.1625, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
     deflections_via_mge = sersic.deflections_2d_via_mge_from(
-        grid=np.array([[0.1625, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
     assert deflections_via_integral == pytest.approx(deflections_via_mge, 1.0e-3)
@@ -69,10 +69,10 @@ def test__deflections_2d_via_mge_from():
     )
 
     deflections_via_integral = sersic.deflections_2d_via_integral_from(
-        grid=np.array([[0.1625, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
     deflections_via_mge = sersic.deflections_2d_via_mge_from(
-        grid=np.array([[0.1625, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
     assert deflections_via_integral == pytest.approx(deflections_via_mge, 1.0e-3)
@@ -89,10 +89,10 @@ def test__deflections_2d_via_cse_from():
     )
 
     deflections_via_integral = sersic.deflections_2d_via_integral_from(
-        grid=np.array([[0.1625, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
     deflections_via_cse = sersic.deflections_2d_via_cse_from(
-        grid=np.array([[0.1625, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
     assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-4)
@@ -107,10 +107,10 @@ def test__deflections_2d_via_cse_from():
     )
 
     deflections_via_integral = sersic.deflections_2d_via_integral_from(
-        grid=np.array([[0.1625, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
     deflections_via_cse = sersic.deflections_2d_via_cse_from(
-        grid=np.array([[0.1625, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
     assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-3)
@@ -125,10 +125,10 @@ def test__deflections_2d_via_cse_from():
     )
 
     deflections_via_integral = sersic.deflections_2d_via_integral_from(
-        grid=np.array([[0.1625, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
     deflections_via_cse = sersic.deflections_2d_via_cse_from(
-        grid=np.array([[0.1625, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
     assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-3)
@@ -137,18 +137,18 @@ def test__deflections_2d_via_cse_from():
 def test__deflections_yx_2d_from():
     gaussian = ag.mp.Sersic()
 
-    deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
+    deflections = gaussian.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]))
     deflections_via_integral = gaussian.deflections_2d_via_cse_from(
-        grid=np.array([[1.0, 0.0]])
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
     )
 
     assert deflections == pytest.approx(deflections_via_integral, 1.0e-4)
 
     gaussian = ag.mp.SersicSph()
 
-    deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
+    deflections = gaussian.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]))
     deflections_via_integral = gaussian.deflections_2d_via_cse_from(
-        grid=np.array([[1.0, 0.0]])
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
     )
 
     assert deflections == pytest.approx(deflections_via_integral, 1.0e-4)
@@ -185,7 +185,9 @@ def test__convergence_2d_via_mge_from():
         mass_to_light_ratio=1.0,
     )
 
-    convergence = sersic.convergence_2d_via_mge_from(grid=np.array([[0.0, 1.5]]))
+    convergence = sersic.convergence_2d_via_mge_from(
+        grid=ag.Grid2DIrregular([[0.0, 1.5]])
+    )
 
     assert convergence == pytest.approx(4.90657319276, 1e-3)
 
@@ -197,7 +199,9 @@ def test__convergence_2d_via_mge_from():
         mass_to_light_ratio=1.0,
     )
 
-    convergence = sersic.convergence_2d_via_mge_from(grid=np.array([[0.0, 1.5]]))
+    convergence = sersic.convergence_2d_via_mge_from(
+        grid=ag.Grid2DIrregular([[0.0, 1.5]])
+    )
 
     assert convergence == pytest.approx(2.0 * 4.90657319276, 1e-3)
 
@@ -209,7 +213,9 @@ def test__convergence_2d_via_mge_from():
         mass_to_light_ratio=2.0,
     )
 
-    convergence = sersic.convergence_2d_via_mge_from(grid=np.array([[0.0, 1.5]]))
+    convergence = sersic.convergence_2d_via_mge_from(
+        grid=ag.Grid2DIrregular([[0.0, 1.5]])
+    )
 
     assert convergence == pytest.approx(2.0 * 4.90657319276, 1e-3)
 
@@ -222,7 +228,9 @@ def test__convergence_2d_via_mge_from():
         mass_to_light_ratio=1.0,
     )
 
-    convergence = sersic.convergence_2d_via_mge_from(grid=np.array([[1.0, 0.0]]))
+    convergence = sersic.convergence_2d_via_mge_from(
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
+    )
 
     assert convergence == pytest.approx(5.38066670129, 1e-3)
 
@@ -236,7 +244,9 @@ def test__convergence_2d_via_cse_from():
         mass_to_light_ratio=1.0,
     )
 
-    convergence = sersic.convergence_2d_via_cse_from(grid=np.array([[0.0, 1.5]]))
+    convergence = sersic.convergence_2d_via_cse_from(
+        grid=ag.Grid2DIrregular([[0.0, 1.5]])
+    )
 
     assert convergence == pytest.approx(4.90657319276, 1e-3)
 
@@ -248,7 +258,9 @@ def test__convergence_2d_via_cse_from():
         mass_to_light_ratio=1.0,
     )
 
-    convergence = sersic.convergence_2d_via_cse_from(grid=np.array([[0.0, 1.5]]))
+    convergence = sersic.convergence_2d_via_cse_from(
+        grid=ag.Grid2DIrregular([[0.0, 1.5]])
+    )
 
     assert convergence == pytest.approx(2.0 * 4.90657319276, 1e-3)
 
@@ -260,7 +272,9 @@ def test__convergence_2d_via_cse_from():
         mass_to_light_ratio=2.0,
     )
 
-    convergence = sersic.convergence_2d_via_cse_from(grid=np.array([[0.0, 1.5]]))
+    convergence = sersic.convergence_2d_via_cse_from(
+        grid=ag.Grid2DIrregular([[0.0, 1.5]])
+    )
 
     assert convergence == pytest.approx(2.0 * 4.90657319276, 1e-3)
 
@@ -273,7 +287,9 @@ def test__convergence_2d_via_cse_from():
         mass_to_light_ratio=1.0,
     )
 
-    convergence = sersic.convergence_2d_via_cse_from(grid=np.array([[1.0, 0.0]]))
+    convergence = sersic.convergence_2d_via_cse_from(
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
+    )
 
     assert convergence == pytest.approx(5.38066670129, 1e-3)
 
@@ -287,7 +303,7 @@ def test__convergence_2d_from():
         mass_to_light_ratio=1.0,
     )
 
-    convergence = sersic.convergence_2d_from(grid=np.array([[0.0, 1.5]]))
+    convergence = sersic.convergence_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.5]]))
 
     assert convergence == pytest.approx(4.90657319276, 1e-3)
 
@@ -299,7 +315,7 @@ def test__convergence_2d_from():
         mass_to_light_ratio=1.0,
     )
 
-    convergence = sersic.convergence_2d_from(grid=np.array([[0.0, 1.5]]))
+    convergence = sersic.convergence_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.5]]))
 
     assert convergence == pytest.approx(2.0 * 4.90657319276, 1e-3)
 
@@ -311,7 +327,7 @@ def test__convergence_2d_from():
         mass_to_light_ratio=2.0,
     )
 
-    convergence = sersic.convergence_2d_from(grid=np.array([[0.0, 1.5]]))
+    convergence = sersic.convergence_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.5]]))
 
     assert convergence == pytest.approx(2.0 * 4.90657319276, 1e-3)
 
@@ -324,7 +340,7 @@ def test__convergence_2d_from():
         mass_to_light_ratio=1.0,
     )
 
-    convergence = sersic.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
+    convergence = sersic.convergence_2d_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]))
 
     assert convergence == pytest.approx(5.38066670129, 1e-3)
 

@@ -64,7 +64,6 @@ def check_operated_only(func):
         elif operated_only:
             if isinstance(obj, LightProfileOperated):
                 return func(obj, grid, operated_only, *args, **kwargs)
-            print(grid.shape)
             return np.zeros((grid.shape[0],))
         if not isinstance(obj, LightProfileOperated):
             return func(obj, grid, operated_only, *args, **kwargs)

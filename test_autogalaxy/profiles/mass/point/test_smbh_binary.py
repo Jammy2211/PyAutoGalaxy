@@ -122,10 +122,10 @@ def test__convergence_2d_from():
     smbh_0 = ag.mp.SMBH(centre=smbh_binary.smbh_0.centre, mass=smbh_binary.smbh_0.mass)
     smbh_1 = ag.mp.SMBH(centre=smbh_binary.smbh_1.centre, mass=smbh_binary.smbh_1.mass)
 
-    convergence = smbh_binary.convergence_2d_from(grid=np.array([[1.0, 1.0]]))
+    convergence = smbh_binary.convergence_2d_from(grid=ag.Grid2DIrregular([[1.0, 1.0]]))
 
-    convergence_0 = smbh_0.convergence_2d_from(grid=np.array([[1.0, 1.0]]))
-    convergence_1 = smbh_1.convergence_2d_from(grid=np.array([[1.0, 1.0]]))
+    convergence_0 = smbh_0.convergence_2d_from(grid=ag.Grid2DIrregular([[1.0, 1.0]]))
+    convergence_1 = smbh_1.convergence_2d_from(grid=ag.Grid2DIrregular([[1.0, 1.0]]))
 
     assert convergence == pytest.approx(convergence_0 + convergence_1, 1e-2)
 
@@ -140,10 +140,10 @@ def test__potential_2d_from():
     smbh_0 = ag.mp.SMBH(centre=smbh_binary.smbh_0.centre, mass=smbh_binary.smbh_0.mass)
     smbh_1 = ag.mp.SMBH(centre=smbh_binary.smbh_1.centre, mass=smbh_binary.smbh_1.mass)
 
-    potential = smbh_binary.potential_2d_from(grid=np.array([[1.0, 1.0]]))
+    potential = smbh_binary.potential_2d_from(grid=ag.Grid2DIrregular([[1.0, 1.0]]))
 
-    potential_0 = smbh_0.potential_2d_from(grid=np.array([[1.0, 1.0]]))
-    potential_1 = smbh_1.potential_2d_from(grid=np.array([[1.0, 1.0]]))
+    potential_0 = smbh_0.potential_2d_from(grid=ag.Grid2DIrregular([[1.0, 1.0]]))
+    potential_1 = smbh_1.potential_2d_from(grid=ag.Grid2DIrregular([[1.0, 1.0]]))
 
     assert potential == pytest.approx(potential_0 + potential_1, 1e-2)
 
@@ -158,10 +158,12 @@ def test__deflections_yx_2d_from():
     smbh_0 = ag.mp.SMBH(centre=smbh_binary.smbh_0.centre, mass=smbh_binary.smbh_0.mass)
     smbh_1 = ag.mp.SMBH(centre=smbh_binary.smbh_1.centre, mass=smbh_binary.smbh_1.mass)
 
-    deflections = smbh_binary.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
+    deflections = smbh_binary.deflections_yx_2d_from(
+        grid=ag.Grid2DIrregular([[1.0, 1.0]])
+    )
 
-    deflections_0 = smbh_0.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
-    deflections_1 = smbh_1.deflections_yx_2d_from(grid=np.array([[1.0, 1.0]]))
+    deflections_0 = smbh_0.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[1.0, 1.0]]))
+    deflections_1 = smbh_1.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[1.0, 1.0]]))
 
     assert deflections[0, 0] == pytest.approx(
         deflections_0[0, 0] + deflections_1[0, 0], 1e-2

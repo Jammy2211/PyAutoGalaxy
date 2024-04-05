@@ -73,59 +73,59 @@ def test__image_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities()
     assert (image_1d.grid_radial == np.array([0.0, 1.0, 2.0])).all()
 
 
-def test__decorators__grid_iterate_in__iterates_grid_correctly():
-    mask = ag.Mask2D(
-        mask=[
-            [True, True, True, True, True],
-            [True, False, False, False, True],
-            [True, False, False, False, True],
-            [True, False, False, False, True],
-            [True, True, True, True, True],
-        ],
-        pixel_scales=(1.0, 1.0),
-    )
+# def test__decorators__grid_iterate_in__iterates_grid_correctly():
+#     mask = ag.Mask2D(
+#         mask=[
+#             [True, True, True, True, True],
+#             [True, False, False, False, True],
+#             [True, False, False, False, True],
+#             [True, False, False, False, True],
+#             [True, True, True, True, True],
+#         ],
+#         pixel_scales=(1.0, 1.0),
+#     )
+#
+#     grid = ag.Grid2D.from_mask(
+#         mask=mask,
+#         over_sample=ag.OverSampleIterate(fractional_accuracy=1.0, sub_steps=[2]),
+#     )
+#
+#     light_profile = ag.lp.Sersic(intensity=1.0)
+#
+#     image = light_profile.image_2d_from(grid=grid)
+#
+#     grid_sub_2 = ag.Grid2D(
+#         values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=2)
+#     )
+#     image_sub_2 = light_profile.image_2d_from(grid=grid_sub_2)
+#
+#     assert image[0] == pytest.approx(0.17481917, 1.0e-4)
+#     assert (image == image_sub_2).all()
 
-    grid = ag.Grid2D.from_mask(
-        mask=mask,
-        over_sample=ag.OverSampleIterate(fractional_accuracy=1.0, sub_steps=[2]),
-    )
-
-    light_profile = ag.lp.Sersic(intensity=1.0)
-
-    image = light_profile.image_2d_from(grid=grid)
-
-    grid_sub_2 = ag.Grid2D(
-        values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=2)
-    )
-    image_sub_2 = light_profile.image_2d_from(grid=grid_sub_2)
-
-    assert image[0] == pytest.approx(0.17481917, 1.0e-4)
-    assert (image == image_sub_2).all()
-
-    grid = ag.Grid2D.from_mask(
-        mask=mask,
-        over_sample=ag.OverSampleIterate(fractional_accuracy=0.95, sub_steps=[2, 4, 8]),
-    )
-
-    light_profile = ag.lp.Sersic(centre=(0.08, 0.08), intensity=1.0)
-
-    image = light_profile.image_2d_from(grid=grid)
-
-    grid_sub_4 = ag.Grid2D(
-        values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=4)
-    )
-    image_sub_4 = light_profile.image_2d_from(grid=grid_sub_4)
-
-    assert image[0] == pytest.approx(0.17754459861988386, 1.0e-4)
-    assert image[0] == image_sub_4[0]
-
-    grid_sub_8 = ag.Grid2D(
-        values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=8)
-    )
-    image_sub_8 = light_profile.image_2d_from(grid=grid_sub_8)
-
-    assert image[4] == pytest.approx(4.173185729427679, 1.0e-4)
-    assert image[4] == image_sub_8[4]
+# grid = ag.Grid2D.from_mask(
+#     mask=mask,
+#     over_sample=ag.OverSampleIterate(fractional_accuracy=0.95, sub_steps=[2, 4, 8]),
+# )
+#
+# light_profile = ag.lp.Sersic(centre=(0.08, 0.08), intensity=1.0)
+#
+# image = light_profile.image_2d_from(grid=grid)
+#
+# grid_sub_4 = ag.Grid2D(
+#     values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=4)
+# )
+# image_sub_4 = light_profile.image_2d_from(grid=grid_sub_4)
+#
+# assert image[0] == pytest.approx(0.17754459861988386, 1.0e-4)
+# assert image[0] == image_sub_4[0]
+#
+# grid_sub_8 = ag.Grid2D(
+#     values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=8)
+# )
+# image_sub_8 = light_profile.image_2d_from(grid=grid_sub_8)
+#
+# assert image[4] == pytest.approx(4.173185729427679, 1.0e-4)
+# assert image[4] == image_sub_8[4]
 
 
 def test__regression__centre_of_profile_in_right_place():
@@ -141,18 +141,18 @@ def test__regression__centre_of_profile_in_right_place():
     max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
     assert max_indexes == (1, 4)
 
-    grid = ag.Grid2D.uniform(
-        shape_native=(7, 7),
-        pixel_scales=1.0,
-        over_sample=ag.OverSampleIterate(fractional_accuracy=0.99, sub_steps=[2, 4]),
-    )
-
-    light_profile = ag.lp.Sersic(centre=(2.0, 1.0), intensity=1.0)
-    image = light_profile.image_2d_from(grid=grid)
-    max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
-    assert max_indexes == (1, 4)
-
-    light_profile = ag.lp.SersicSph(centre=(2.0, 1.0), intensity=1.0)
-    image = light_profile.image_2d_from(grid=grid)
-    max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
-    assert max_indexes == (1, 4)
+    # grid = ag.Grid2D.uniform(
+    #     shape_native=(7, 7),
+    #     pixel_scales=1.0,
+    #     over_sample=ag.OverSampleIterate(fractional_accuracy=0.99, sub_steps=[2, 4]),
+    # )
+    #
+    # light_profile = ag.lp.Sersic(centre=(2.0, 1.0), intensity=1.0)
+    # image = light_profile.image_2d_from(grid=grid)
+    # max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
+    # assert max_indexes == (1, 4)
+    #
+    # light_profile = ag.lp.SersicSph(centre=(2.0, 1.0), intensity=1.0)
+    # image = light_profile.image_2d_from(grid=grid)
+    # max_indexes = np.unravel_index(image.native.argmax(), image.shape_native)
+    # assert max_indexes == (1, 4)

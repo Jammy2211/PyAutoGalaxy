@@ -15,7 +15,9 @@ def test__deflections_2d_via_analytic_from():
         mass_to_light_ratio=1.0,
     )
 
-    deflections = gaussian.deflections_2d_via_analytic_from(grid=np.array([[1.0, 0.0]]))
+    deflections = gaussian.deflections_2d_via_analytic_from(
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
+    )
 
     assert deflections[0, 0] == pytest.approx(1.024423, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.0, 1.0e-4)
@@ -28,7 +30,9 @@ def test__deflections_2d_via_analytic_from():
         mass_to_light_ratio=1.0,
     )
 
-    deflections = gaussian.deflections_2d_via_analytic_from(grid=np.array([[0.5, 0.2]]))
+    deflections = gaussian.deflections_2d_via_analytic_from(
+        grid=ag.Grid2DIrregular([[0.5, 0.2]])
+    )
 
     assert deflections[0, 0] == pytest.approx(0.554062, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.177336, 1.0e-4)
@@ -41,7 +45,9 @@ def test__deflections_2d_via_analytic_from():
         mass_to_light_ratio=2.0,
     )
 
-    deflections = gaussian.deflections_2d_via_analytic_from(grid=np.array([[0.5, 0.2]]))
+    deflections = gaussian.deflections_2d_via_analytic_from(
+        grid=ag.Grid2DIrregular([[0.5, 0.2]])
+    )
 
     assert deflections[0, 0] == pytest.approx(1.108125, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.35467, 1.0e-4)
@@ -54,7 +60,9 @@ def test__deflections_2d_via_analytic_from():
         mass_to_light_ratio=1.0,
     )
 
-    deflections = gaussian.deflections_2d_via_analytic_from(grid=np.array([[0.5, 0.2]]))
+    deflections = gaussian.deflections_2d_via_analytic_from(
+        grid=ag.Grid2DIrregular([[0.5, 0.2]])
+    )
 
     assert deflections[0, 0] == pytest.approx(1.10812, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.35467, 1.0e-4)
@@ -69,9 +77,11 @@ def test__deflections_2d_via_integral_from():
         mass_to_light_ratio=1.0,
     )
 
-    deflections = gaussian.deflections_2d_via_integral_from(grid=np.array([[1.0, 0.0]]))
+    deflections = gaussian.deflections_2d_via_integral_from(
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
+    )
     deflections_via_analytic = gaussian.deflections_2d_via_analytic_from(
-        grid=np.array([[1.0, 0.0]])
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
     )
 
     assert deflections == pytest.approx(deflections_via_analytic, 1.0e-3)
@@ -84,9 +94,11 @@ def test__deflections_2d_via_integral_from():
         mass_to_light_ratio=1.0,
     )
 
-    deflections = gaussian.deflections_2d_via_integral_from(grid=np.array([[0.5, 0.2]]))
+    deflections = gaussian.deflections_2d_via_integral_from(
+        grid=ag.Grid2DIrregular([[0.5, 0.2]])
+    )
     deflections_via_analytic = gaussian.deflections_2d_via_analytic_from(
-        grid=np.array([[0.5, 0.2]])
+        grid=ag.Grid2DIrregular([[0.5, 0.2]])
     )
 
     assert deflections == pytest.approx(deflections_via_analytic, 1.0e-3)
@@ -99,9 +111,11 @@ def test__deflections_2d_via_integral_from():
         mass_to_light_ratio=2.0,
     )
 
-    deflections = gaussian.deflections_2d_via_integral_from(grid=np.array([[0.5, 0.2]]))
+    deflections = gaussian.deflections_2d_via_integral_from(
+        grid=ag.Grid2DIrregular([[0.5, 0.2]])
+    )
     deflections_via_analytic = gaussian.deflections_2d_via_analytic_from(
-        grid=np.array([[0.5, 0.2]])
+        grid=ag.Grid2DIrregular([[0.5, 0.2]])
     )
 
     assert deflections == pytest.approx(deflections_via_analytic, 1.0e-3)
@@ -114,9 +128,11 @@ def test__deflections_2d_via_integral_from():
         mass_to_light_ratio=1.0,
     )
 
-    deflections = gaussian.deflections_2d_via_integral_from(grid=np.array([[0.5, 0.2]]))
+    deflections = gaussian.deflections_2d_via_integral_from(
+        grid=ag.Grid2DIrregular([[0.5, 0.2]])
+    )
     deflections_via_analytic = gaussian.deflections_2d_via_analytic_from(
-        grid=np.array([[0.5, 0.2]])
+        grid=ag.Grid2DIrregular([[0.5, 0.2]])
     )
 
     assert deflections == pytest.approx(deflections_via_analytic, 1.0e-3)
@@ -125,9 +141,9 @@ def test__deflections_2d_via_integral_from():
 def test__deflections_yx_2d_from():
     gaussian = ag.mp.Gaussian()
 
-    deflections = gaussian.deflections_yx_2d_from(grid=np.array([[1.0, 0.0]]))
+    deflections = gaussian.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]))
     deflections_via_integral = gaussian.deflections_2d_via_analytic_from(
-        grid=np.array([[1.0, 0.0]])
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
     )
 
     assert deflections == pytest.approx(deflections_via_integral, 1.0e-4)
@@ -142,7 +158,7 @@ def test__convergence_2d_from():
         mass_to_light_ratio=1.0,
     )
 
-    convergence = gaussian.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
+    convergence = gaussian.convergence_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]))
 
     assert convergence == pytest.approx(0.60653, 1e-2)
 
@@ -154,7 +170,7 @@ def test__convergence_2d_from():
         mass_to_light_ratio=2.0,
     )
 
-    convergence = gaussian.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
+    convergence = gaussian.convergence_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]))
 
     assert convergence == pytest.approx(2.0 * 0.60653, 1e-2)
 
@@ -166,7 +182,7 @@ def test__convergence_2d_from():
         mass_to_light_ratio=4.0,
     )
 
-    convergence = gaussian.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
+    convergence = gaussian.convergence_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]))
 
     assert convergence == pytest.approx(7.88965, 1e-2)
 
@@ -187,8 +203,12 @@ def test__intensity_and_convergence_match_for_mass_light_ratio_1():
         mass_to_light_ratio=1.0,
     )
 
-    intensity = gaussian_light_profile.image_2d_from(grid=np.array([[1.0, 0.0]]))
-    convergence = gaussian_mass_profile.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
+    intensity = gaussian_light_profile.image_2d_from(
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
+    )
+    convergence = gaussian_mass_profile.convergence_2d_from(
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
+    )
 
     assert (intensity == convergence).all()
 

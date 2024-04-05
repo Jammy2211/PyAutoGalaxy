@@ -11,7 +11,9 @@ def test__deflections_yx_2d_from():
         centre=(-0.7, 0.5), einstein_radius=1.0, slope=1.8, core_radius=0.2
     )
 
-    deflections = power_law.deflections_yx_2d_from(grid=np.array([[0.1875, 0.1625]]))
+    deflections = power_law.deflections_yx_2d_from(
+        grid=ag.Grid2DIrregular([[0.1875, 0.1625]])
+    )
 
     assert deflections[0, 0] == pytest.approx(0.80677, 1e-3)
     assert deflections[0, 1] == pytest.approx(-0.30680, 1e-3)
@@ -20,7 +22,9 @@ def test__deflections_yx_2d_from():
         centre=(0.2, -0.2), einstein_radius=0.5, slope=2.4, core_radius=0.5
     )
 
-    deflections = power_law.deflections_yx_2d_from(grid=np.array([[0.1875, 0.1625]]))
+    deflections = power_law.deflections_yx_2d_from(
+        grid=ag.Grid2DIrregular([[0.1875, 0.1625]])
+    )
 
     assert deflections[0, 0] == pytest.approx(-0.00321, 1e-3)
     assert deflections[0, 1] == pytest.approx(0.09316, 1e-3)
@@ -34,7 +38,7 @@ def test__deflections_yx_2d_from():
     )
 
     deflections = cored_power_law.deflections_yx_2d_from(
-        grid=np.array([[0.1625, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
     assert deflections[0, 0] == pytest.approx(0.9869, 1e-3)
@@ -49,7 +53,7 @@ def test__deflections_yx_2d_from():
     )
 
     deflections = cored_power_law.deflections_yx_2d_from(
-        grid=np.array([[0.1625, 0.1625]])
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
     assert deflections[0, 0] == pytest.approx(0.01111, 1e-3)
     assert deflections[0, 1] == pytest.approx(0.11403, 1e-3)
@@ -87,7 +91,9 @@ def test__convergence_2d_from():
         core_radius=0.2,
     )
 
-    convergence = cored_power_law.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
+    convergence = cored_power_law.convergence_2d_from(
+        grid=ag.Grid2DIrregular([[0.0, 1.0]])
+    )
 
     assert convergence == pytest.approx(0.45492, 1e-3)
 
@@ -99,7 +105,9 @@ def test__convergence_2d_from():
         core_radius=0.2,
     )
 
-    convergence = cored_power_law.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
+    convergence = cored_power_law.convergence_2d_from(
+        grid=ag.Grid2DIrregular([[0.0, 1.0]])
+    )
 
     assert convergence == pytest.approx(1.3887, 1e-3)
 
@@ -124,7 +132,7 @@ def test__potential_2d_from():
         centre=(-0.7, 0.5), einstein_radius=1.0, slope=1.8, core_radius=0.2
     )
 
-    potential = power_law.potential_2d_from(grid=np.array([[0.1875, 0.1625]]))
+    potential = power_law.potential_2d_from(grid=ag.Grid2DIrregular([[0.1875, 0.1625]]))
 
     assert potential == pytest.approx(0.54913, 1e-3)
 
@@ -132,7 +140,7 @@ def test__potential_2d_from():
         centre=(0.2, -0.2), einstein_radius=0.5, slope=2.4, core_radius=0.5
     )
 
-    potential = power_law.potential_2d_from(grid=np.array([[0.1875, 0.1625]]))
+    potential = power_law.potential_2d_from(grid=ag.Grid2DIrregular([[0.1875, 0.1625]]))
 
     assert potential == pytest.approx(0.01820, 1e-3)
 
@@ -144,7 +152,9 @@ def test__potential_2d_from():
         core_radius=0.5,
     )
 
-    potential = cored_power_law.potential_2d_from(grid=np.array([[0.1625, 0.1625]]))
+    potential = cored_power_law.potential_2d_from(
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
+    )
 
     assert potential == pytest.approx(0.02319, 1e-3)
 
@@ -156,7 +166,9 @@ def test__potential_2d_from():
         core_radius=0.2,
     )
 
-    potential = cored_power_law.potential_2d_from(grid=np.array([[0.1625, 0.1625]]))
+    potential = cored_power_law.potential_2d_from(
+        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
+    )
 
     assert potential == pytest.approx(0.71185, 1e-3)
 
