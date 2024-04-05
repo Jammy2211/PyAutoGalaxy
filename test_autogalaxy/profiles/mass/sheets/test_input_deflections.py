@@ -4,7 +4,7 @@ import pytest
 from autogalaxy import exc
 
 
-grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
+grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__deflections_yx_2d_from__grid_coordinates_overlap_image_grid_of_deflections():

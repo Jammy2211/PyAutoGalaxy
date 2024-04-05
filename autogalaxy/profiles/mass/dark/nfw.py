@@ -41,7 +41,7 @@ class NFW(gNFW, MassProfileCSE):
         )
         super(MassProfileCSE, self).__init__()
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         return self.deflections_2d_via_cse_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_vector_yx
@@ -146,7 +146,7 @@ class NFW(gNFW, MassProfileCSE):
     @aa.grid_dec.grid_2d_to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 
@@ -287,7 +287,7 @@ class NFWSph(NFW):
             scale_radius=scale_radius,
         )
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         return self.deflections_2d_via_analytic_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_vector_yx
@@ -319,7 +319,7 @@ class NFWSph(NFW):
     @aa.grid_dec.grid_2d_to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 

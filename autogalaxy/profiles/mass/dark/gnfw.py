@@ -83,7 +83,7 @@ def jit_integrand(integrand_function):
 
 
 class gNFW(AbstractgNFW):
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         return self.deflections_2d_via_mge_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_vector_yx

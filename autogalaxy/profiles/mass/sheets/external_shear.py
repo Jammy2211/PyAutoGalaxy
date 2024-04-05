@@ -39,11 +39,11 @@ class ExternalShear(MassProfile):
         return 0.0
 
     @aa.grid_dec.grid_2d_to_array
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.grid_2d_to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         shear_angle = (
             self.angle - 90
         )  ##to be onsistent with autolens deflection angle calculation
@@ -57,7 +57,7 @@ class ExternalShear(MassProfile):
     @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 

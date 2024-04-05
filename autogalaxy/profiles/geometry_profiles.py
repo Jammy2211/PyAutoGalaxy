@@ -111,7 +111,7 @@ class SphProfile(GeometryProfile):
         """
         return np.cos(grid_angles), np.sin(grid_angles)
 
-    @aa.grid_dec.grid_2d_to_array
+    #    @aa.grid_dec.grid_2d_to_array
     def _cartesian_grid_via_radial_from(
         self, grid: aa.type.Grid2DLike, radius: np.ndarray, **kwargs
     ) -> aa.type.Grid2DLike:

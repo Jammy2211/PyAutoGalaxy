@@ -41,7 +41,7 @@ class Gaussian(MassProfile, StellarProfile):
         self.intensity = intensity
         self.sigma = sigma
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -140,7 +140,7 @@ class Gaussian(MassProfile, StellarProfile):
     @aa.grid_dec.grid_2d_to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -155,7 +155,7 @@ class Gaussian(MassProfile, StellarProfile):
         return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
 
     @aa.grid_dec.grid_2d_to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray):

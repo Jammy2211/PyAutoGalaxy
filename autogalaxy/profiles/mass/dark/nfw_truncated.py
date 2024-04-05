@@ -58,7 +58,7 @@ class NFWTruncatedSph(AbstractgNFW):
         return np.real(2.0 * self.kappa_s * self.coord_func_l(grid_radius=grid_radius))
 
     @aa.grid_dec.grid_2d_to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
     def coord_func_k(self, grid_radius):

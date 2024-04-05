@@ -156,7 +156,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         return galaxy_image_2d_dict
 
     @aa.grid_dec.grid_2d_to_vector_yx
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D deflections angles of all galaxies from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -189,7 +189,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         return grid - self.deflections_yx_2d_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_array
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D convergence of all galaxies from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -215,7 +215,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         return np.zeros((grid.shape[0],))
 
     @aa.grid_dec.grid_2d_to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D potential of all galaxies from a 2D grid of Cartesian (y,x) coordinates.
 

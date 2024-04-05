@@ -105,7 +105,7 @@ class OperateDeflections:
         The function which returns the mass object's 2D deflection angles.
     """
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         raise NotImplementedError
 
     def __eq__(self, other):

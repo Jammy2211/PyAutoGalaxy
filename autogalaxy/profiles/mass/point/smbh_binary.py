@@ -90,7 +90,7 @@ class SMBHBinary(MassProfile):
         """
         return self.angle_binary * np.pi / 180.0
 
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
 
@@ -105,7 +105,7 @@ class SMBHBinary(MassProfile):
             grid=grid
         ) + self.smbh_1.convergence_2d_from(grid=grid)
 
-    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Returns the two dimensional projected potential on a grid of (y,x) arc-second coordinates.
 
@@ -120,7 +120,7 @@ class SMBHBinary(MassProfile):
             grid=grid
         )
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Returns the two dimensional deflection angles on a grid of (y,x) arc-second coordinates.
 
