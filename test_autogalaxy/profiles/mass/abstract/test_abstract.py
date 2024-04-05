@@ -27,13 +27,13 @@ def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
 
 
 def test__deflections_2d_via_potential_2d_from():
-    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
+    mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05)
 
-    deflections_via_calculation = sis.deflections_yx_2d_from(grid=grid)
+    deflections_via_calculation = mp.deflections_yx_2d_from(grid=grid)
 
-    deflections_via_potential = sis.deflections_2d_via_potential_2d_from(grid=grid)
+    deflections_via_potential = mp.deflections_2d_via_potential_2d_from(grid=grid)
 
     mean_error = np.mean(
         deflections_via_potential.slim - deflections_via_calculation.slim
@@ -75,31 +75,31 @@ def test__deflections_2d_via_potential_2d_from():
 
 
 def test__mass_angular_within_circle_from():
-    sis = ag.mp.IsothermalSph(einstein_radius=2.0)
+    mp = ag.mp.IsothermalSph(einstein_radius=2.0)
 
-    mass = sis.mass_angular_within_circle_from(radius=2.0)
-    assert math.pi * sis.einstein_radius * 2.0 == pytest.approx(mass, 1e-3)
+    mass = mp.mass_angular_within_circle_from(radius=2.0)
+    assert math.pi * mp.einstein_radius * 2.0 == pytest.approx(mass, 1e-3)
 
-    sis = ag.mp.IsothermalSph(einstein_radius=4.0)
+    mp = ag.mp.IsothermalSph(einstein_radius=4.0)
 
-    mass = sis.mass_angular_within_circle_from(radius=4.0)
-    assert math.pi * sis.einstein_radius * 4.0 == pytest.approx(mass, 1e-3)
+    mass = mp.mass_angular_within_circle_from(radius=4.0)
+    assert math.pi * mp.einstein_radius * 4.0 == pytest.approx(mass, 1e-3)
 
-    sis = ag.mp.IsothermalSph(einstein_radius=2.0)
+    mp = ag.mp.IsothermalSph(einstein_radius=2.0)
 
     mass_grid = mass_within_radius_of_profile_from_grid_calculation(
-        radius=1.0, profile=sis
+        radius=1.0, profile=mp
     )
 
-    mass = sis.mass_angular_within_circle_from(radius=1.0)
+    mass = mp.mass_angular_within_circle_from(radius=1.0)
 
     assert mass_grid == pytest.approx(mass, 0.02)
 
 
 def test__average_convergence_of_1_radius():
-    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
+    mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    assert sis.average_convergence_of_1_radius == pytest.approx(2.0, 1e-4)
+    assert mp.average_convergence_of_1_radius == pytest.approx(2.0, 1e-4)
 
     sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), einstein_radius=1.0, ell_comps=(0.0, 0.111111)
@@ -123,7 +123,7 @@ def test__average_convergence_of_1_radius():
 def test__density_between_circular_annuli():
     einstein_radius = 1.0
 
-    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=einstein_radius)
+    mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=einstein_radius)
 
     inner_annuli_radius = 2.0
     outer_annuli_radius = 3.0
@@ -131,7 +131,7 @@ def test__density_between_circular_annuli():
     inner_mass = math.pi * einstein_radius * inner_annuli_radius
     outer_mass = math.pi * einstein_radius * outer_annuli_radius
 
-    density_between_annuli = sis.density_between_circular_annuli(
+    density_between_annuli = mp.density_between_circular_annuli(
         inner_annuli_radius=inner_annuli_radius, outer_annuli_radius=outer_annuli_radius
     )
 
@@ -145,22 +145,22 @@ def test__density_between_circular_annuli():
 
 
 def test__extract_attribute():
-    sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
+    mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    einstein_radii = sis.extract_attribute(
+    einstein_radii = mp.extract_attribute(
         cls=ag.mp.MassProfile, attr_name="einstein_radius"
     )
 
     assert einstein_radii.in_list[0] == 2.0
 
-    centres = sis.extract_attribute(cls=ag.mp.MassProfile, attr_name="centre")
+    centres = mp.extract_attribute(cls=ag.mp.MassProfile, attr_name="centre")
 
     assert centres.in_list[0] == (0.0, 0.0)
 
     assert (
-        sis.extract_attribute(cls=ag.mp.MassProfile, attr_name="einstein_radiu") == None
+        mp.extract_attribute(cls=ag.mp.MassProfile, attr_name="einstein_radiu") == None
     )
-    sis.extract_attribute(cls=ag.LightProfile, attr_name="einstein_radius")
+    mp.extract_attribute(cls=ag.LightProfile, attr_name="einstein_radius")
 
 
 def test__regression__centre_of_profile_in_right_place():
