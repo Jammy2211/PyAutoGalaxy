@@ -124,59 +124,59 @@ def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
     assert image[0] == pytest.approx(0.00681791, 1.0e-6)
     assert image[1] == pytest.approx(0.01332332, 1.0e-6)
 
-# def test__decorators__grid_iterate_in__iterates_grid_correctly():
-#     mask = ag.Mask2D(
-#         mask=[
-#             [True, True, True, True, True],
-#             [True, False, False, False, True],
-#             [True, False, False, False, True],
-#             [True, False, False, False, True],
-#             [True, True, True, True, True],
-#         ],
-#         pixel_scales=(1.0, 1.0),
-#     )
-#
-#     grid = ag.Grid2D.from_mask(
-#         mask=mask,
-#         over_sampling=ag.OverSamplingIterate(fractional_accuracy=1.0, sub_steps=[2]),
-#     )
-#
-#     lp = ag.lp.Sersic(intensity=1.0)
-#
-#     image = lp.image_2d_from(grid=grid)
-#
-#     grid_sub_2 = ag.Grid2D(
-#         values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=2)
-#     )
-#     image_sub_2 = lp.image_2d_from(grid=grid_sub_2)
-#
-#     assert image[0] == pytest.approx(0.17481917, 1.0e-4)
-#     assert (image == image_sub_2).all()
+def test__decorators__grid_iterate_in__iterates_grid_correctly():
+    mask = ag.Mask2D(
+        mask=[
+            [True, True, True, True, True],
+            [True, False, False, False, True],
+            [True, False, False, False, True],
+            [True, False, False, False, True],
+            [True, True, True, True, True],
+        ],
+        pixel_scales=(1.0, 1.0),
+    )
 
-# grid = ag.Grid2D.from_mask(
-#     mask=mask,
-#     over_sampling=ag.OverSamplingIterate(fractional_accuracy=0.95, sub_steps=[2, 4, 8]),
-# )
-#
-# lp = ag.lp.Sersic(centre=(0.08, 0.08), intensity=1.0)
-#
-# image = lp.image_2d_from(grid=grid)
-#
-# grid_sub_4 = ag.Grid2D(
-#     values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=4)
-# )
-# image_sub_4 = lp.image_2d_from(grid=grid_sub_4)
-#
-# assert image[0] == pytest.approx(0.17754459861988386, 1.0e-4)
-# assert image[0] == image_sub_4[0]
-#
-# grid_sub_8 = ag.Grid2D(
-#     values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=8)
-# )
-# image_sub_8 = lp.image_2d_from(grid=grid_sub_8)
-#
-# assert image[4] == pytest.approx(4.173185729427679, 1.0e-4)
-# assert image[4] == image_sub_8[4]
+    grid = ag.Grid2D.from_mask(
+        mask=mask,
+        over_sampling=ag.OverSamplingIterate(fractional_accuracy=1.0, sub_steps=[2]),
+    )
+
+    lp = ag.lp.Sersic(intensity=1.0)
+
+    image = lp.image_2d_from(grid=grid)
+
+    grid_sub_2 = ag.Grid2D(
+        values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=2)
+    )
+    image_sub_2 = lp.image_2d_from(grid=grid_sub_2)
+
+    assert image[0] == pytest.approx(0.17481917, 1.0e-4)
+    assert (image == image_sub_2).all()
+
+    grid = ag.Grid2D.from_mask(
+        mask=mask,
+        over_sampling=ag.OverSamplingIterate(fractional_accuracy=0.95, sub_steps=[2, 4, 8]),
+    )
+
+    lp = ag.lp.Sersic(centre=(0.08, 0.08), intensity=1.0)
+
+    image = lp.image_2d_from(grid=grid)
+
+    grid_sub_4 = ag.Grid2D(
+        values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=4)
+    )
+    image_sub_4 = lp.image_2d_from(grid=grid_sub_4)
+
+    assert image[0] == pytest.approx(0.17754459861988386, 1.0e-4)
+    assert image[0] == image_sub_4[0]
+
+    grid_sub_8 = ag.Grid2D(
+        values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=8)
+    )
+    image_sub_8 = lp.image_2d_from(grid=grid_sub_8)
+
+    assert image[4] == pytest.approx(4.173185729427679, 1.0e-4)
+    assert image[4] == image_sub_8[4]
 
 
 def test__regression__centre_of_profile_in_right_place():

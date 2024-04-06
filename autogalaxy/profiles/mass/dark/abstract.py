@@ -56,6 +56,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         self.scale_radius = scale_radius
         self.inner_slope = inner_slope
 
+    @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
@@ -73,6 +74,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         return self.convergence_func(grid_radius=grid_eta)
 
+    @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum

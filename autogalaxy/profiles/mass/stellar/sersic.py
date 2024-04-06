@@ -164,6 +164,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         """
         return self._deflections_2d_via_cse_from(grid=grid, **kwargs)
 
+    @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
@@ -180,6 +181,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
             self.eccentric_radii_grid_from(grid=grid, **kwargs)
         )
 
+    @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
@@ -198,6 +200,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
 
         return self._convergence_2d_via_mge_from(grid_radii=eccentric_radii)
 
+    @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum

@@ -137,6 +137,7 @@ class Gaussian(MassProfile, StellarProfile):
             (1 - (1 - axis_ratio**2) * u) ** (npow + 0.5)
         )
 
+    @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum

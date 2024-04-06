@@ -230,6 +230,7 @@ class gNFW(AbstractgNFW):
 
         return grid_radius
 
+    @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum

@@ -342,56 +342,56 @@ def test__decorators__potential_1d_from__grid_2d_in__returns_1d_image_via_projec
     assert (potential_1d.grid_radial == np.array([0.0, 1.0, 2.0])).all()
 
 
-# def test__decorators__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
-#     mask = ag.Mask2D(
-#         mask=[
-#             [True, True, True, True, True],
-#             [True, False, False, False, True],
-#             [True, False, False, False, True],
-#             [True, False, False, False, True],
-#             [True, True, True, True, True],
-#         ],
-#         pixel_scales=(1.0, 1.0),
-#     )
-#
-#     grid = ag.Grid2D.from_mask(
-#         mask=mask,
-#         over_sampling=ag.OverSamplingIterate(fractional_accuracy=1.0, sub_steps=[2]),
-#     )
-#
-#     mass_profile = ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)
-#
-#     convergence = mass_profile.convergence_2d_from(grid=grid)
-#
-#     grid_sub_2 = ag.Grid2D(
-#         values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=2)
-#     )
-#     convergence_sub_2 = mass_profile.convergence_2d_from(grid=grid_sub_2)
-#
-#     assert convergence[0] == pytest.approx(0.35882721247144705, 1.0e-4)
-#     assert convergence == pytest.approx(convergence_sub_2, 1.0e-6)
+def test__decorators__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
+    mask = ag.Mask2D(
+        mask=[
+            [True, True, True, True, True],
+            [True, False, False, False, True],
+            [True, False, False, False, True],
+            [True, False, False, False, True],
+            [True, True, True, True, True],
+        ],
+        pixel_scales=(1.0, 1.0),
+    )
 
-# grid = ag.Grid2D.from_mask(
-#     mask=mask,
-#     over_sampling=ag.OverSamplingIterate(fractional_accuracy=0.99, sub_steps=[2, 4, 8]),
-# )
-#
-# mass_profile = ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)
-#
-# convergence = mass_profile.convergence_2d_from(grid=grid)
-#
-# grid_sub_4 = ag.Grid2D(
-#     values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=4)
-# )
-# convergence_sub_4 = mass_profile.convergence_2d_from(grid=grid_sub_4)
-#
-# assert convergence[0] == pytest.approx(0.360512586364902, 1.0e-4)
-# assert convergence[0] == convergence_sub_4[0]
-#
-# grid_sub_8 = ag.Grid2D(
-#     values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=8)
-# )
-# convergence_sub_8 = mass_profile.convergence_2d_from(grid=grid_sub_8)
-#
-# assert convergence[4] == pytest.approx(1.8257180092529044, 1.0e-4)
-# assert convergence[4] == convergence_sub_8[4]
+    grid = ag.Grid2D.from_mask(
+        mask=mask,
+        over_sampling=ag.OverSamplingIterate(fractional_accuracy=1.0, sub_steps=[2]),
+    )
+
+    mass_profile = ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)
+
+    convergence = mass_profile.convergence_2d_from(grid=grid)
+
+    grid_sub_2 = ag.Grid2D(
+        values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=2)
+    )
+    convergence_sub_2 = mass_profile.convergence_2d_from(grid=grid_sub_2)
+
+    assert convergence[0] == pytest.approx(0.35882721247144705, 1.0e-4)
+    assert convergence == pytest.approx(convergence_sub_2, 1.0e-6)
+
+    grid = ag.Grid2D.from_mask(
+        mask=mask,
+        over_sampling=ag.OverSamplingIterate(fractional_accuracy=0.99, sub_steps=[2, 4, 8]),
+    )
+
+    mass_profile = ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)
+
+    convergence = mass_profile.convergence_2d_from(grid=grid)
+
+    grid_sub_4 = ag.Grid2D(
+        values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=4)
+    )
+    convergence_sub_4 = mass_profile.convergence_2d_from(grid=grid_sub_4)
+
+    assert convergence[0] == pytest.approx(0.360512586364902, 1.0e-4)
+    assert convergence[0] == convergence_sub_4[0]
+
+    grid_sub_8 = ag.Grid2D(
+        values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=8)
+    )
+    convergence_sub_8 = mass_profile.convergence_2d_from(grid=grid_sub_8)
+
+    assert convergence[4] == pytest.approx(1.8257180092529044, 1.0e-4)
+    assert convergence[4] == convergence_sub_8[4]

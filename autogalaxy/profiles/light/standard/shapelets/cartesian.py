@@ -55,6 +55,7 @@ class ShapeletCartesian(AbstractShapelet):
             centre=centre, ell_comps=ell_comps, beta=beta, intensity=intensity
         )
 
+    @aa.over_sample
     @aa.grid_dec.to_array
     @check_operated_only
     @aa.grid_dec.transform

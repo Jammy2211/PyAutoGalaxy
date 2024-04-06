@@ -49,6 +49,7 @@ class ShapeletExponential(lp.ShapeletExponential, LightProfileLinear):
 
         super().__init__(n=n, m=m, centre=centre, ell_comps=ell_comps, beta=beta)
 
+    @aa.over_sample
     @aa.grid_dec.to_array
     @check_operated_only
     @aa.grid_dec.transform

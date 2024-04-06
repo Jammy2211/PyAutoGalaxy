@@ -49,6 +49,7 @@ class PowerLawBroken(MassProfile):
         else:
             self.kB = (2 - self.inner_slope) / (2 * self.nu**2)
 
+    @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
