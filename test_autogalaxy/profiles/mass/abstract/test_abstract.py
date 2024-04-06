@@ -204,7 +204,7 @@ def test__regression__centre_of_profile_in_right_place():
     # grid = ag.Grid2D.uniform(
     #     shape_native=(7, 7),
     #     pixel_scales=1.0,
-    #     over_sample=ag.OverSampleIterate(fractional_accuracy=0.99, sub_steps=[2, 4]),
+    #     over_sampling=ag.OverSamplingIterate(fractional_accuracy=0.99, sub_steps=[2, 4]),
     # )
     #
     # mass_profile = ag.mp.Isothermal(centre=(2.0, 1.0), einstein_radius=1.0)
@@ -356,7 +356,7 @@ def test__decorators__potential_1d_from__grid_2d_in__returns_1d_image_via_projec
 #
 #     grid = ag.Grid2D.from_mask(
 #         mask=mask,
-#         over_sample=ag.OverSampleIterate(fractional_accuracy=1.0, sub_steps=[2]),
+#         over_sampling=ag.OverSamplingIterate(fractional_accuracy=1.0, sub_steps=[2]),
 #     )
 #
 #     mass_profile = ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)
@@ -364,7 +364,7 @@ def test__decorators__potential_1d_from__grid_2d_in__returns_1d_image_via_projec
 #     convergence = mass_profile.convergence_2d_from(grid=grid)
 #
 #     grid_sub_2 = ag.Grid2D(
-#         values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=2)
+#         values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=2)
 #     )
 #     convergence_sub_2 = mass_profile.convergence_2d_from(grid=grid_sub_2)
 #
@@ -373,7 +373,7 @@ def test__decorators__potential_1d_from__grid_2d_in__returns_1d_image_via_projec
 
 # grid = ag.Grid2D.from_mask(
 #     mask=mask,
-#     over_sample=ag.OverSampleIterate(fractional_accuracy=0.99, sub_steps=[2, 4, 8]),
+#     over_sampling=ag.OverSamplingIterate(fractional_accuracy=0.99, sub_steps=[2, 4, 8]),
 # )
 #
 # mass_profile = ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)
@@ -381,7 +381,7 @@ def test__decorators__potential_1d_from__grid_2d_in__returns_1d_image_via_projec
 # convergence = mass_profile.convergence_2d_from(grid=grid)
 #
 # grid_sub_4 = ag.Grid2D(
-#     values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=4)
+#     values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=4)
 # )
 # convergence_sub_4 = mass_profile.convergence_2d_from(grid=grid_sub_4)
 #
@@ -389,7 +389,7 @@ def test__decorators__potential_1d_from__grid_2d_in__returns_1d_image_via_projec
 # assert convergence[0] == convergence_sub_4[0]
 #
 # grid_sub_8 = ag.Grid2D(
-#     values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=8)
+#     values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=8)
 # )
 # convergence_sub_8 = mass_profile.convergence_2d_from(grid=grid_sub_8)
 #

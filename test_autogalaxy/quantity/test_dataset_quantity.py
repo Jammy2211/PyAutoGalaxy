@@ -83,12 +83,12 @@ def test__grid(
         noise_map=ag.Array2D.full(
             fill_value=2.0, shape_native=(7, 7), pixel_scales=1.0
         ),
-        over_sample=ag.OverSampleIterate(),
+        over_sampling=ag.OverSamplingIterate(),
     )
 
     dataset = dataset_quantity.apply_mask(mask=mask_2d_7x7)
 
-    assert isinstance(dataset.grid.over_sample, ag.OverSampleIterate)
+    assert isinstance(dataset.grid.over_sampling, ag.OverSamplingIterate)
     assert (dataset.grid == grid_2d_7x7).all()
 
 

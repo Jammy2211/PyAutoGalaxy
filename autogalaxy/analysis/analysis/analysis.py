@@ -196,7 +196,7 @@ class Analysis(af.Analysis):
             info_dict["image_pixels"] = self.dataset.grid.shape_slim
             info_dict[
                 "sub_size_light_profiles"
-            ] = self.dataset.grid.over_sample.sub_size
+            ] = self.dataset.grid.over_sampling.sub_size
         except AttributeError:
             pass
 
@@ -205,7 +205,7 @@ class Analysis(af.Analysis):
             try:
                 info_dict[
                     "sub_size_pixelization"
-                ] = self.dataset.grid_pixelization.over_sample.sub_size
+                ] = self.dataset.grid_pixelization.over_sampling.sub_size
             except AttributeError:
                 pass
             info_dict[

@@ -224,7 +224,7 @@ class GalaxiesToInversion(AbstractToInversion):
         image_plane_mesh_grid: Optional[aa.Grid2DIrregular] = None,
     ) -> aa.AbstractMapper:
         if self.settings_inversion.use_border_relocator:
-            border_relocator = self.dataset.mapper_tools.border_relocator
+            border_relocator = self.dataset.border_relocator
         else:
             border_relocator = None
 
@@ -240,7 +240,9 @@ class GalaxiesToInversion(AbstractToInversion):
 
         return mapper_from(
             mapper_grids=mapper_grids,
-            mapper_tools=self.dataset.mapper_tools,
+            over_sampler=self.dataset.grid_pixelization.over_sampling.over_sampler_from(
+                mask=self.dataset.mask
+            ),
             regularization=regularization,
         )
 
@@ -273,7 +275,7 @@ class GalaxiesToInversion(AbstractToInversion):
             mapper = self.mapper_from(
                 mesh=pixelization_list[mapper_index].mesh,
                 regularization=pixelization_list[mapper_index].regularization,
-                source_plane_data_grid=self.dataset.grid_pixelization.over_sample_func.oversampled_grid,
+                source_plane_data_grid=self.dataset.grid_pixelization.over_sampler.oversampled_grid,
                 source_plane_mesh_grid=mesh_grid_list[mapper_index],
                 adapt_galaxy_image=adapt_galaxy_image,
                 image_plane_mesh_grid=mesh_grid_list[mapper_index],

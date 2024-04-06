@@ -87,7 +87,7 @@ def test__image_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities()
 #
 #     grid = ag.Grid2D.from_mask(
 #         mask=mask,
-#         over_sample=ag.OverSampleIterate(fractional_accuracy=1.0, sub_steps=[2]),
+#         over_sampling=ag.OverSamplingIterate(fractional_accuracy=1.0, sub_steps=[2]),
 #     )
 #
 #     light_profile = ag.lp.Sersic(intensity=1.0)
@@ -95,7 +95,7 @@ def test__image_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities()
 #     image = light_profile.image_2d_from(grid=grid)
 #
 #     grid_sub_2 = ag.Grid2D(
-#         values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=2)
+#         values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=2)
 #     )
 #     image_sub_2 = light_profile.image_2d_from(grid=grid_sub_2)
 #
@@ -104,7 +104,7 @@ def test__image_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities()
 
 # grid = ag.Grid2D.from_mask(
 #     mask=mask,
-#     over_sample=ag.OverSampleIterate(fractional_accuracy=0.95, sub_steps=[2, 4, 8]),
+#     over_sampling=ag.OverSamplingIterate(fractional_accuracy=0.95, sub_steps=[2, 4, 8]),
 # )
 #
 # light_profile = ag.lp.Sersic(centre=(0.08, 0.08), intensity=1.0)
@@ -112,7 +112,7 @@ def test__image_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities()
 # image = light_profile.image_2d_from(grid=grid)
 #
 # grid_sub_4 = ag.Grid2D(
-#     values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=4)
+#     values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=4)
 # )
 # image_sub_4 = light_profile.image_2d_from(grid=grid_sub_4)
 #
@@ -120,7 +120,7 @@ def test__image_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities()
 # assert image[0] == image_sub_4[0]
 #
 # grid_sub_8 = ag.Grid2D(
-#     values=grid, mask=mask, over_sample=ag.OverSampleUniform(sub_size=8)
+#     values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=8)
 # )
 # image_sub_8 = light_profile.image_2d_from(grid=grid_sub_8)
 #
@@ -144,7 +144,7 @@ def test__regression__centre_of_profile_in_right_place():
     # grid = ag.Grid2D.uniform(
     #     shape_native=(7, 7),
     #     pixel_scales=1.0,
-    #     over_sample=ag.OverSampleIterate(fractional_accuracy=0.99, sub_steps=[2, 4]),
+    #     over_sampling=ag.OverSamplingIterate(fractional_accuracy=0.99, sub_steps=[2, 4]),
     # )
     #
     # light_profile = ag.lp.Sersic(centre=(2.0, 1.0), intensity=1.0)

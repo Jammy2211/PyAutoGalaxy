@@ -45,15 +45,17 @@ def _imaging_from(
         )
         psf = aa.Kernel2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.psf"))
 
-        over_sample = fit.value(name="dataset.over_sample")
-        over_sample_pixelization = fit.value(name="dataset.over_sample_pixelization")
+        over_sampling = fit.value(name="dataset.over_sampling")
+        over_sampling_pixelization = fit.value(
+            name="dataset.over_sampling_pixelization"
+        )
 
         dataset = aa.Imaging(
             data=data,
             noise_map=noise_map,
             psf=psf,
-            over_sample=over_sample,
-            over_sample_pixelization=over_sample_pixelization,
+            over_sampling=over_sampling,
+            over_sampling_pixelization=over_sampling_pixelization,
             check_noise_map=False,
         )
 

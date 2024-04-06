@@ -173,13 +173,13 @@ class AnalysisDataset(Analysis):
             prefix="dataset",
         )
         paths.save_json(
-            name="over_sample",
-            object_dict=to_dict(self.dataset.over_sample),
+            name="over_sampling",
+            object_dict=to_dict(self.dataset.over_sampling),
             prefix="dataset",
         )
         paths.save_json(
-            name="over_sample_pixelization",
-            object_dict=to_dict(self.dataset.over_sample_pixelization),
+            name="over_sampling_pixelization",
+            object_dict=to_dict(self.dataset.over_sampling_pixelization),
             prefix="dataset",
         )
         paths.save_json(

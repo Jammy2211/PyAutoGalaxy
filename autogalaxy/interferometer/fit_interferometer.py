@@ -111,11 +111,11 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         dataset = aa.DatasetInterface(
             data=self.profile_subtracted_visibilities,
             noise_map=self.noise_map,
-            mapper_tools=self.dataset.mapper_tools,
             transformer=self.dataset.transformer,
             w_tilde=self.w_tilde,
             grid=self.grid,
             grid_pixelization=self.dataset.grid_pixelization,
+            border_relocator=self.dataset.border_relocator,
         )
 
         return GalaxiesToInversion(
