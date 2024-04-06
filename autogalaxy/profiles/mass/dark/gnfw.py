@@ -375,7 +375,9 @@ class gNFWSph(gNFW):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
-        eta = np.multiply(1.0 / self.scale_radius, self.radial_grid_from(grid, **kwargs))
+        eta = np.multiply(
+            1.0 / self.scale_radius, self.radial_grid_from(grid, **kwargs)
+        )
 
         deflection_grid = np.zeros(grid.shape[0])
 

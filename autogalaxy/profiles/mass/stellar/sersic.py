@@ -176,7 +176,9 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
-        return self.convergence_func(self.eccentric_radii_grid_from(grid=grid, **kwargs))
+        return self.convergence_func(
+            self.eccentric_radii_grid_from(grid=grid, **kwargs)
+        )
 
     @aa.grid_dec.to_array
     @aa.grid_dec.transform

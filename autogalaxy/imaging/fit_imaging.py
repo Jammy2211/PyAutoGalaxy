@@ -151,7 +151,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
 
     @property
     def galaxies_to_inversion(self) -> GalaxiesToInversion:
-
         dataset = aa.DatasetInterface(
             data=self.profile_subtracted_image,
             noise_map=self.noise_map,

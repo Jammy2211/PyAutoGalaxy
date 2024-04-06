@@ -348,9 +348,7 @@ class EllProfile(SphProfile):
             The (y, x) coordinates in the original reference frame of the grid.
         """
         if self.__class__.__name__.endswith("Sph"):
-            return super().transformed_to_reference_frame_grid_from(
-                grid=grid
-            )
+            return super().transformed_to_reference_frame_grid_from(grid=grid)
         return aa.util.geometry.transform_grid_2d_to_reference_frame(
             grid_2d=grid, centre=self.centre, angle=self.angle
         )
@@ -371,9 +369,7 @@ class EllProfile(SphProfile):
             The (y, x) coordinates in the reference frame of the profile.
         """
         if self.__class__.__name__.startswith("Sph"):
-            return super().transformed_from_reference_frame_grid_from(
-                grid=grid
-            )
+            return super().transformed_from_reference_frame_grid_from(grid=grid)
 
         return aa.util.geometry.transform_grid_2d_from_reference_frame(
             grid_2d=grid, centre=self.centre, angle=self.angle

@@ -92,7 +92,9 @@ class Moffat(LightProfile):
             The image of the Moffat evaluated at every (y,x) coordinate on the transformed grid.
         """
 
-        return self.image_2d_via_radii_from(self.eccentric_radii_grid_from(grid=grid, **kwargs))
+        return self.image_2d_via_radii_from(
+            self.eccentric_radii_grid_from(grid=grid, **kwargs)
+        )
 
 
 class MoffatSph(Moffat):

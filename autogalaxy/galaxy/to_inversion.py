@@ -22,7 +22,7 @@ from autogalaxy.analysis.preloads import Preloads
 class AbstractToInversion:
     def __init__(
         self,
-        dataset: Optional[Union[aa.Imaging, aa.Interferometer]] = None,
+        dataset: Optional[Union[aa.Imaging, aa.Interferometer, aa.DatasetInterface]],
         sky: Optional[Basis] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
@@ -100,8 +100,8 @@ class AbstractToInversion:
 class GalaxiesToInversion(AbstractToInversion):
     def __init__(
         self,
+        dataset: Optional[Union[aa.Imaging, aa.Interferometer, aa.DatasetInterface]],
         galaxies: List[Galaxy],
-        dataset: Optional[Union[aa.Imaging, aa.Interferometer, aa.DatasetInterface]] = None,
         sky: Optional[LightProfile] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
@@ -223,7 +223,6 @@ class GalaxiesToInversion(AbstractToInversion):
         adapt_galaxy_image: aa.Array2D,
         image_plane_mesh_grid: Optional[aa.Grid2DIrregular] = None,
     ) -> aa.AbstractMapper:
-
         if self.settings_inversion.use_border_relocator:
             border_relocator = self.dataset.mapper_tools.border_relocator
         else:

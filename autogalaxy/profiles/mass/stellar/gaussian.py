@@ -149,7 +149,9 @@ class Gaussian(MassProfile, StellarProfile):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
-        return self.convergence_func(self.eccentric_radii_grid_from(grid=grid, **kwargs))
+        return self.convergence_func(
+            self.eccentric_radii_grid_from(grid=grid, **kwargs)
+        )
 
     def convergence_func(self, grid_radius: float) -> float:
         return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)

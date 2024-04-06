@@ -105,7 +105,8 @@ class Isothermal(PowerLaw):
             np.divide(np.multiply(np.sqrt(1 - self.axis_ratio**2), grid[:, 1]), psi)
         )
         return self.rotated_grid_from_reference_frame_from(
-            grid=np.multiply(factor, np.vstack((deflection_y, deflection_x)).T), **kwargs
+            grid=np.multiply(factor, np.vstack((deflection_y, deflection_x)).T),
+            **kwargs
         )
 
     @aa.grid_dec.to_vector_yx

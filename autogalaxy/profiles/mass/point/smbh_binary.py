@@ -116,9 +116,9 @@ class SMBHBinary(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the potential is computed on.
         """
-        return self.smbh_0.potential_2d_from(grid=grid, **kwargs) + self.smbh_1.potential_2d_from(
-            grid=grid
-        )
+        return self.smbh_0.potential_2d_from(
+            grid=grid, **kwargs
+        ) + self.smbh_1.potential_2d_from(grid=grid)
 
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
