@@ -3,75 +3,75 @@ import pytest
 
 import autogalaxy as ag
 
-grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
+grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__deflections_yx_2d_from():
-    power_law = ag.mp.PowerLawSph(centre=(0.2, 0.2), einstein_radius=1.0, slope=2.0)
+    mp = ag.mp.PowerLawSph(centre=(0.2, 0.2), einstein_radius=1.0, slope=2.0)
 
-    deflections = power_law.deflections_yx_2d_from(grid=np.array([[0.1875, 0.1625]]))
+    deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.1875, 0.1625]]))
 
     assert deflections[0, 0] == pytest.approx(-0.31622, 1e-3)
     assert deflections[0, 1] == pytest.approx(-0.94868, 1e-3)
 
-    power_law = ag.mp.PowerLawSph(centre=(0.2, 0.2), einstein_radius=1.0, slope=2.5)
+    mp = ag.mp.PowerLawSph(centre=(0.2, 0.2), einstein_radius=1.0, slope=2.5)
 
-    deflections = power_law.deflections_yx_2d_from(grid=np.array([[0.1875, 0.1625]]))
+    deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.1875, 0.1625]]))
 
     assert deflections[0, 0] == pytest.approx(-1.59054, 1e-3)
     assert deflections[0, 1] == pytest.approx(-4.77162, 1e-3)
 
-    power_law = ag.mp.PowerLawSph(centre=(0.2, 0.2), einstein_radius=1.0, slope=1.5)
+    mp = ag.mp.PowerLawSph(centre=(0.2, 0.2), einstein_radius=1.0, slope=1.5)
 
-    deflections = power_law.deflections_yx_2d_from(grid=np.array([[0.1875, 0.1625]]))
+    deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.1875, 0.1625]]))
 
     assert deflections[0, 0] == pytest.approx(-0.06287, 1e-3)
     assert deflections[0, 1] == pytest.approx(-0.18861, 1e-3)
 
-    power_law = ag.mp.PowerLaw(
+    mp = ag.mp.PowerLaw(
         centre=(0, 0),
         ell_comps=(0.0, 0.333333),
         einstein_radius=1.0,
         slope=2.0,
     )
 
-    deflections = power_law.deflections_yx_2d_from(grid=np.array([[0.1625, 0.1625]]))
+    deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.1625, 0.1625]]))
 
     assert deflections[0, 0] == pytest.approx(0.79421, 1e-3)
     assert deflections[0, 1] == pytest.approx(0.50734, 1e-3)
 
-    power_law = ag.mp.PowerLaw(
+    mp = ag.mp.PowerLaw(
         centre=(0, 0),
         ell_comps=(0.0, 0.333333),
         einstein_radius=1.0,
         slope=2.5,
     )
 
-    deflections = power_law.deflections_yx_2d_from(grid=np.array([[0.1625, 0.1625]]))
+    deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.1625, 0.1625]]))
 
     assert deflections[0, 0] == pytest.approx(1.29641, 1e-3)
     assert deflections[0, 1] == pytest.approx(0.99629, 1e-3)
 
-    power_law = ag.mp.PowerLaw(
+    mp = ag.mp.PowerLaw(
         centre=(0, 0),
         ell_comps=(0.0, 0.333333),
         einstein_radius=1.0,
         slope=1.5,
     )
 
-    deflections = power_law.deflections_yx_2d_from(grid=np.array([[0.1625, 0.1625]]))
+    deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.1625, 0.1625]]))
 
     assert deflections[0, 0] == pytest.approx(0.48036, 1e-3)
     assert deflections[0, 1] == pytest.approx(0.26729, 1e-3)
 
-    power_law = ag.mp.PowerLaw(
+    mp = ag.mp.PowerLaw(
         centre=(-0.7, 0.5),
         ell_comps=(0.152828, -0.088235),
         einstein_radius=1.3,
         slope=1.9,
     )
 
-    deflections = power_law.deflections_yx_2d_from(grid=np.array([[0.1625, 0.1625]]))
+    deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.1625, 0.1625]]))
 
     # assert deflections[0, 0] == pytest.approx(1.12841, 1e-3)
     # assert deflections[0, 1] == pytest.approx(-0.60205, 1e-3)
@@ -91,43 +91,43 @@ def test__deflections_yx_2d_from():
 
 
 def test__convergence_2d_from():
-    power_law = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=1.0, slope=2.0)
+    mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=1.0, slope=2.0)
 
-    convergence = power_law.convergence_2d_from(grid=np.array([[1.0, 0.0]]))
+    convergence = mp.convergence_2d_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]))
 
     assert convergence == pytest.approx(0.5, 1e-3)
 
-    power_law = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=2.2)
+    mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=2.2)
 
-    convergence = power_law.convergence_2d_from(grid=np.array([[2.0, 0.0]]))
-
-    assert convergence == pytest.approx(0.4, 1e-3)
-
-    power_law = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=2.2)
-
-    convergence = power_law.convergence_2d_from(grid=np.array([[2.0, 0.0]]))
+    convergence = mp.convergence_2d_from(grid=ag.Grid2DIrregular([[2.0, 0.0]]))
 
     assert convergence == pytest.approx(0.4, 1e-3)
 
-    power_law = ag.mp.PowerLaw(
+    mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=2.2)
+
+    convergence = mp.convergence_2d_from(grid=ag.Grid2DIrregular([[2.0, 0.0]]))
+
+    assert convergence == pytest.approx(0.4, 1e-3)
+
+    mp = ag.mp.PowerLaw(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.333333),
         einstein_radius=1.0,
         slope=2.3,
     )
 
-    convergence = power_law.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
+    convergence = mp.convergence_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]))
 
     assert convergence == pytest.approx(0.466666, 1e-3)
 
-    power_law = ag.mp.PowerLaw(
+    mp = ag.mp.PowerLaw(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.333333),
         einstein_radius=2.0,
         slope=1.7,
     )
 
-    convergence = power_law.convergence_2d_from(grid=np.array([[0.0, 1.0]]))
+    convergence = mp.convergence_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]))
 
     assert convergence == pytest.approx(1.4079, 1e-3)
 
@@ -146,37 +146,37 @@ def test__convergence_2d_from():
 
 
 def test__potential_2d_from():
-    power_law = ag.mp.PowerLawSph(centre=(-0.7, 0.5), einstein_radius=1.3, slope=2.3)
+    mp = ag.mp.PowerLawSph(centre=(-0.7, 0.5), einstein_radius=1.3, slope=2.3)
 
-    potential = power_law.potential_2d_from(grid=np.array([[0.1625, 0.1625]]))
+    potential = mp.potential_2d_from(grid=ag.Grid2DIrregular([[0.1625, 0.1625]]))
 
     assert potential == pytest.approx(1.90421, 1e-3)
 
-    power_law = ag.mp.PowerLawSph(centre=(-0.7, 0.5), einstein_radius=1.3, slope=1.8)
+    mp = ag.mp.PowerLawSph(centre=(-0.7, 0.5), einstein_radius=1.3, slope=1.8)
 
-    potential = power_law.potential_2d_from(grid=np.array([[0.1625, 0.1625]]))
+    potential = mp.potential_2d_from(grid=ag.Grid2DIrregular([[0.1625, 0.1625]]))
 
     assert potential == pytest.approx(0.93758, 1e-3)
 
-    power_law = ag.mp.PowerLaw(
+    mp = ag.mp.PowerLaw(
         centre=(-0.7, 0.5),
         ell_comps=(0.152828, -0.088235),
         einstein_radius=1.3,
         slope=2.2,
     )
 
-    potential = power_law.potential_2d_from(grid=np.array([[0.1625, 0.1625]]))
+    potential = mp.potential_2d_from(grid=ag.Grid2DIrregular([[0.1625, 0.1625]]))
 
     assert potential == pytest.approx(1.53341, 1e-3)
 
-    power_law = ag.mp.PowerLaw(
+    mp = ag.mp.PowerLaw(
         centre=(-0.7, 0.5),
         ell_comps=(0.152828, -0.088235),
         einstein_radius=1.3,
         slope=1.8,
     )
 
-    potential = power_law.potential_2d_from(grid=np.array([[0.1625, 0.1625]]))
+    potential = mp.potential_2d_from(grid=ag.Grid2DIrregular([[0.1625, 0.1625]]))
 
     assert potential == pytest.approx(0.96723, 1e-3)
 

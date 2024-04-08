@@ -29,8 +29,8 @@ class Sky(LightProfile):
 
         self.intensity = intensity
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.to_array
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
     ):
         return np.full(shape=grid.shape[0], fill_value=self.intensity)

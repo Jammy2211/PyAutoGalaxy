@@ -41,7 +41,7 @@ class Gaussian(MassProfile, StellarProfile):
         self.intensity = intensity
         self.sigma = sigma
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -51,12 +51,12 @@ class Gaussian(MassProfile, StellarProfile):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
-        return self.deflections_2d_via_analytic_from(grid=grid)
+        return self.deflections_2d_via_analytic_from(grid=grid, **kwargs)
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike):
+    def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -81,10 +81,10 @@ class Gaussian(MassProfile, StellarProfile):
             )
         )
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike):
+    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -137,10 +137,11 @@ class Gaussian(MassProfile, StellarProfile):
             (1 - (1 - axis_ratio**2) * u) ** (npow + 0.5)
         )
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.over_sample
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -149,13 +150,15 @@ class Gaussian(MassProfile, StellarProfile):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
-        return self.convergence_func(self.eccentric_radii_grid_from(grid))
+        return self.convergence_func(
+            self.eccentric_radii_grid_from(grid=grid, **kwargs)
+        )
 
     def convergence_func(self, grid_radius: float) -> float:
         return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
 
-    @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+    @aa.grid_dec.to_array
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray):

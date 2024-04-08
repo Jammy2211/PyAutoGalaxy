@@ -39,7 +39,7 @@ class OperateImage:
     ) -> aa.Array2D:
         if psf is not None:
             return psf.convolved_array_with_mask_from(
-                array=image_2d.binned.native + blurring_image_2d.binned.native,
+                array=image_2d.native + blurring_image_2d.native,
                 mask=image_2d.mask,
             )
 
@@ -89,15 +89,15 @@ class OperateImage:
         )
 
         blurred_image_2d = self._blurred_image_2d_from(
-            image_2d=image_2d_not_operated.binned,
-            blurring_image_2d=blurring_image_2d_not_operated.binned,
+            image_2d=image_2d_not_operated,
+            blurring_image_2d=blurring_image_2d_not_operated,
             psf=psf,
             convolver=convolver,
         )
 
         if self.has(cls=LightProfileOperated):
             image_2d_operated = self.image_2d_from(grid=grid, operated_only=True)
-            return blurred_image_2d + image_2d_operated.binned
+            return blurred_image_2d + image_2d_operated
 
         return blurred_image_2d
 
@@ -167,7 +167,7 @@ class OperateImage:
             padded_array=padded_image_2d_operated, image_shape=grid.mask.shape
         )
 
-        return padded_image_2d + padded_image_2d_operated.binned
+        return padded_image_2d + padded_image_2d_operated
 
     @aa.profile_func
     def visibilities_from(
@@ -203,7 +203,7 @@ class OperateImage:
                 shape_slim=(transformer.uv_wavelengths.shape[0],)
             )
 
-        return transformer.visibilities_from(image=image_2d.binned)
+        return transformer.visibilities_from(image=image_2d)
 
 
 class OperateImageList(OperateImage):
@@ -270,7 +270,7 @@ class OperateImageList(OperateImage):
                 convolver=convolver,
             )
 
-            image_2d_operated = image_2d_operated_list[i].binned
+            image_2d_operated = image_2d_operated_list[i]
 
             blurred_image_2d_list.append(image_2d_operated + blurred_image_2d)
 
@@ -351,7 +351,7 @@ class OperateImageList(OperateImage):
                     shape_slim=(transformer.uv_wavelengths.shape[0],)
                 )
             else:
-                visibilities = transformer.visibilities_from(image=image_2d.binned)
+                visibilities = transformer.visibilities_from(image=image_2d)
 
             visibilities_list.append(visibilities)
 
@@ -419,11 +419,11 @@ class OperateImageGalaxies(OperateImageList):
             ]
 
             blurred_image_2d = convolver.convolve_image(
-                image=image_2d_not_operated.binned,
-                blurring_image=blurring_image_2d_not_operated.binned,
+                image=image_2d_not_operated,
+                blurring_image=blurring_image_2d_not_operated,
             )
 
-            image_2d_operated = galaxy_image_2d_operated_dict[galaxy_key].binned
+            image_2d_operated = galaxy_image_2d_operated_dict[galaxy_key]
 
             galaxy_blurred_image_2d_dict[galaxy_key] = (
                 image_2d_operated + blurred_image_2d
@@ -471,7 +471,7 @@ class OperateImageGalaxies(OperateImageList):
                 )
 
             else:
-                visibilities = transformer.visibilities_from(image=image_2d.binned)
+                visibilities = transformer.visibilities_from(image=image_2d)
 
             galaxy_visibilities_dict[galaxy_key] = visibilities
 

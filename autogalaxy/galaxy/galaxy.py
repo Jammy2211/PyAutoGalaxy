@@ -198,7 +198,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             )
         ]
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.to_array
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> Union[np.ndarray, aa.Array2D]:
@@ -221,6 +221,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             apply these operations to the images, which may have the `operated_only` input passed to them. This input
             therefore is used to pass the `operated_only` input to these methods.
         """
+
         if (
             len(self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear))
             > 0
@@ -229,7 +230,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
         return np.zeros((grid.shape[0],))
 
-    @aa.grid_dec.grid_1d_output_structure
+    @aa.grid_dec.to_projected
     def image_1d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Returns the summed 1D image of the galaxy's light profiles using a grid of Cartesian (y,x) coordinates.
@@ -238,7 +239,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
         See `profiles.light` module for details of how this is performed.
 
-        The decorator `grid_1d_output_structure` converts the output arrays from ndarrays to an `Array1D` data
+        The decorator `to_projected` converts the output arrays from ndarrays to an `Array1D` data
         structure using the input `grid`'s attributes.
 
         Parameters
@@ -262,9 +263,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
         return np.zeros((grid.shape[0],))
 
-    @aa.grid_dec.grid_2d_to_vector_yx
-    @aa.grid_dec.grid_2d_to_structure
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+    @aa.grid_dec.to_vector_yx
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D deflection angles of the galaxy's mass profiles from a 2D grid of Cartesian (y,x)
         coordinates.
@@ -274,7 +274,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
         See the `autogalaxy.profiles.mass` package for details of how deflection angles are computed from a
         mass profile.
 
-        The decorator `grid_2d_to_vector_yx` converts the output arrays from ndarrays to a `VectorYX2D` data structure
+        The decorator `to_vector_yx` converts the output arrays from ndarrays to a `VectorYX2D` data structure
         using the input `grid`'s attributes.
 
         Parameters
@@ -291,8 +291,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             )
         return np.zeros((grid.shape[0], 2))
 
-    @aa.grid_dec.grid_2d_to_structure
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+    @aa.grid_dec.to_array
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D convergence of the galaxy's mass profiles from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -318,14 +318,14 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             )
         return np.zeros((grid.shape[0],))
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.to_grid
     def traced_grid_2d_from(self, grid: aa.type.Grid2DLike) -> aa.type.Grid2DLike:
         """
         Trace an input grid using the galaxy's its deflection angles.
         """
         return grid - self.deflections_yx_2d_from(grid=grid)
 
-    @aa.grid_dec.grid_1d_output_structure
+    @aa.grid_dec.to_projected
     def convergence_1d_from(self, grid: aa.type.Grid1D2DLike) -> np.ndarray:
         """
         Returns the summed 1D convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
@@ -334,7 +334,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
         See `profiles.mass` module for details of how this is performed.
 
-        The decorator `grid_1d_output_structure` converts the output arrays from ndarrays to an `Array1D` data
+        The decorator `to_projected` converts the output arrays from ndarrays to an `Array1D` data
         structure using the input `grid`'s attributes.
 
         Parameters
@@ -358,8 +358,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
         return np.zeros((grid.shape[0],))
 
-    @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+    @aa.grid_dec.to_array
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D potential of the galaxy's mass profiles from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -385,7 +385,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             )
         return np.zeros((grid.shape[0],))
 
-    @aa.grid_dec.grid_1d_output_structure
+    @aa.grid_dec.to_projected
     def potential_1d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Returns the summed 1D potential of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
@@ -394,7 +394,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
         See `profiles.mass` module for details of how this is performed.
 
-        The decorator `grid_1d_output_structure` converts the output arrays from ndarrays to an `Array1D` data
+        The decorator `to_projected` converts the output arrays from ndarrays to an `Array1D` data
         structure using the input `grid`'s attributes.
 
         Parameters

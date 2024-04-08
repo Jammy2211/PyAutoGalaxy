@@ -4,7 +4,7 @@ import pytest
 
 
 def test__from_plane__same_as_plane_input():
-    grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05)
 
     galaxy_0 = ag.Galaxy(
         redshift=0.5,
@@ -53,7 +53,7 @@ def test__simulate_interferometer_from_galaxy__source_galaxy__compare_to_interfe
         ),
     )
 
-    grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.05, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.05)
 
     simulator = ag.SimulatorInterferometer(
         uv_wavelengths=np.ones(shape=(7, 2)),

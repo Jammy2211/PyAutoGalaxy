@@ -393,15 +393,15 @@ plots:
     phases_vs_uv_distances: false
     uv_wavelengths: false
   fit_quantity:
-    all_at_end_fits: true
-    all_at_end_png: true
-    chi_squared_map: true
+    all_at_end_fits: false
+    all_at_end_png: false
+    chi_squared_map: false
     image: true
     model_image: true
     noise_map: false
-    normalized_residual_map: true
+    normalized_residual_map: false
     residual_map: false
-    subplot_fit: true
+    subplot_fit: false
   galaxies_1d:
     convergence: false
     image: true

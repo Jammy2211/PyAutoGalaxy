@@ -9,7 +9,7 @@ import autogalaxy as ag
 
 
 def test__perfect_fit__chi_squared_0():
-    grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.2, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.2)
 
     psf = ag.Kernel2D.from_gaussian(
         shape_native=(3, 3), pixel_scales=0.2, sigma=0.75, normalize=True
@@ -56,13 +56,11 @@ def test__perfect_fit__chi_squared_0():
         noise_map_path=path.join(file_path, "noise_map.fits"),
         psf_path=path.join(file_path, "psf.fits"),
         pixel_scales=0.2,
-        sub_size=1
     )
 
     mask = ag.Mask2D.circular(
         shape_native=dataset.data.shape_native,
         pixel_scales=0.2,
-        sub_size=1,
         radius=0.8,
     )
 
@@ -81,7 +79,7 @@ def test__perfect_fit__chi_squared_0():
 
 
 def test__simulate_imaging_data_and_fit__known_likelihood():
-    grid = ag.Grid2D.uniform(shape_native=(31, 31), pixel_scales=0.2, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(31, 31), pixel_scales=0.2)
 
     psf = ag.Kernel2D.from_gaussian(
         shape_native=(3, 3), pixel_scales=0.2, sigma=0.75, normalize=True
@@ -135,7 +133,7 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
 
 
 def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standard_light_profiles():
-    grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.2, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.2)
 
     psf = ag.Kernel2D.from_gaussian(
         shape_native=(3, 3), pixel_scales=0.2, sigma=0.75, normalize=True
@@ -159,7 +157,6 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
     mask = ag.Mask2D.circular(
         shape_native=dataset.data.shape_native,
         pixel_scales=0.2,
-        sub_size=1,
         radius=0.8,
     )
 

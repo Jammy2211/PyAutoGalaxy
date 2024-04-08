@@ -15,11 +15,11 @@ def make_galaxy_plotter_setup():
 
 
 def test__figures_1d__all_are_output(
-    gal_x1_lp_x1_mp, sub_grid_2d_7x7, mask_2d_7x7, include_1d_all, plot_path, plot_patch
+    gal_x1_lp_x1_mp, grid_2d_7x7, mask_2d_7x7, include_1d_all, plot_path, plot_patch
 ):
     galaxy_plotter = aplt.GalaxyPlotter(
         galaxy=gal_x1_lp_x1_mp,
-        grid=sub_grid_2d_7x7,
+        grid=grid_2d_7x7,
         include_1d=include_1d_all,
         mat_plot_1d=aplt.MatPlot1D(output=aplt.Output(plot_path, format="png")),
     )
@@ -33,7 +33,7 @@ def test__figures_1d__all_are_output(
 
     galaxy_plotter = aplt.GalaxyPDFPlotter(
         galaxy_pdf_list=[gal_x1_lp_x1_mp, gal_x1_lp_x1_mp, gal_x1_lp_x1_mp],
-        grid=sub_grid_2d_7x7,
+        grid=grid_2d_7x7,
         include_1d=include_1d_all,
         mat_plot_1d=aplt.MatPlot1D(output=aplt.Output(plot_path, format="png")),
     )
@@ -45,11 +45,11 @@ def test__figures_1d__all_are_output(
 
 
 def test__figures_1d_decomposed__all_are_output(
-    gal_x1_lp_x1_mp, sub_grid_2d_7x7, mask_2d_7x7, include_1d_all, plot_path, plot_patch
+    gal_x1_lp_x1_mp, grid_2d_7x7, mask_2d_7x7, include_1d_all, plot_path, plot_patch
 ):
     galaxy_plotter = aplt.GalaxyPlotter(
         galaxy=gal_x1_lp_x1_mp,
-        grid=sub_grid_2d_7x7,
+        grid=grid_2d_7x7,
         include_1d=include_1d_all,
         mat_plot_1d=aplt.MatPlot1D(output=aplt.Output(plot_path, format="png")),
     )
@@ -63,7 +63,7 @@ def test__figures_1d_decomposed__all_are_output(
 
     galaxy_plotter = aplt.GalaxyPDFPlotter(
         galaxy_pdf_list=[gal_x1_lp_x1_mp, gal_x1_lp_x1_mp, gal_x1_lp_x1_mp],
-        grid=sub_grid_2d_7x7,
+        grid=grid_2d_7x7,
         include_1d=include_1d_all,
         mat_plot_1d=aplt.MatPlot1D(output=aplt.Output(plot_path, format="png")),
     )
@@ -76,7 +76,7 @@ def test__figures_1d_decomposed__all_are_output(
 
 
 def test__figures_1d_decomposed__light_profiles_different_centres_making_offset_radial_grid(
-    sub_grid_2d_7x7, mask_2d_7x7, include_1d_all, plot_path, plot_patch
+    grid_2d_7x7, mask_2d_7x7, include_1d_all, plot_path, plot_patch
 ):
     lp_0 = ag.lp.SersicSph(centre=(0.0, 0.0))
     lp_1 = ag.lp.SersicSph(centre=(1.0, 1.0))
@@ -88,7 +88,7 @@ def test__figures_1d_decomposed__light_profiles_different_centres_making_offset_
 
     galaxy_plotter = aplt.GalaxyPlotter(
         galaxy=gal,
-        grid=sub_grid_2d_7x7,
+        grid=grid_2d_7x7,
         include_1d=include_1d_all,
         mat_plot_1d=aplt.MatPlot1D(output=aplt.Output(plot_path, format="png")),
     )
@@ -109,7 +109,7 @@ def test__figures_1d_decomposed__light_profiles_different_centres_making_offset_
 
     galaxy_plotter = aplt.GalaxyPDFPlotter(
         galaxy_pdf_list=[gal_0, gal_1],
-        grid=sub_grid_2d_7x7,
+        grid=grid_2d_7x7,
         include_1d=include_1d_all,
         mat_plot_1d=aplt.MatPlot1D(output=aplt.Output(plot_path, format="png")),
     )
@@ -122,7 +122,7 @@ def test__figures_1d_decomposed__light_profiles_different_centres_making_offset_
 
 def test__figures_2d__all_are_output(
     gal_x1_lp_x1_mp,
-    sub_grid_2d_7x7,
+    grid_2d_7x7,
     mask_2d_7x7,
     grid_2d_irregular_7x7_list,
     include_2d_all,
@@ -131,7 +131,7 @@ def test__figures_2d__all_are_output(
 ):
     galaxy_plotter = aplt.GalaxyPlotter(
         galaxy=gal_x1_lp_x1_mp,
-        grid=sub_grid_2d_7x7,
+        grid=grid_2d_7x7,
         include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
@@ -143,7 +143,7 @@ def test__figures_2d__all_are_output(
 
 def test__subplots_galaxy_quantities__all_are_output(
     gal_x1_lp_x1_mp,
-    sub_grid_2d_7x7,
+    grid_2d_7x7,
     grid_2d_irregular_7x7_list,
     include_2d_all,
     plot_path,
@@ -151,7 +151,7 @@ def test__subplots_galaxy_quantities__all_are_output(
 ):
     galaxy_plotter = aplt.GalaxyPlotter(
         galaxy=gal_x1_lp_x1_mp,
-        grid=sub_grid_2d_7x7,
+        grid=grid_2d_7x7,
         include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )

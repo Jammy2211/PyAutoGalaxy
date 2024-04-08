@@ -11,12 +11,6 @@ from autoarray.inversion.inversion.factory import inversion_from as Inversion  #
 from autoarray.inversion.pixelization.image_mesh.abstract import AbstractImageMesh
 from autoarray.inversion.pixelization.mesh.abstract import AbstractMesh
 from autoarray.inversion.regularization.abstract import AbstractRegularization
-from autoarray.inversion.inversion.factory import (
-    inversion_imaging_unpacked_from as InversionImaging,
-)  # noqa
-from autoarray.inversion.inversion.factory import (
-    inversion_interferometer_unpacked_from as InversionInterferometer,
-)  # noqa
 from autoarray.inversion.pixelization.pixelization import Pixelization  # noqa
 from autoarray.inversion.pixelization.mappers.abstract import AbstractMapper
 from autoarray.inversion.pixelization.mappers.mapper_grids import MapperGrids  # noqa
@@ -38,7 +32,10 @@ from autoarray.structures.grids.uniform_1d import Grid1D  # noqa
 from autoarray.structures.grids.uniform_2d import Grid2D  # noqa
 from autoarray.structures.grids.irregular_2d import Grid2DIrregular  # noqa
 from autoarray.structures.grids.irregular_2d import Grid2DIrregularUniform  # noqa
-from autoarray.structures.grids.over_sample.iterate import OverSampleIterate
+from autoarray.operators.over_sampling.uniform import OverSamplingUniform  # noqa
+from autoarray.operators.over_sampling.uniform import OverSamplerUniform  # noqa
+from autoarray.operators.over_sampling.iterate import OverSamplingIterate
+from autoarray.operators.over_sampling.iterate import OverSamplerIterate
 from autoarray.structures.mesh.rectangular_2d import Mesh2DRectangular  # noqa
 from autoarray.structures.mesh.voronoi_2d import Mesh2DVoronoi  # noqa
 from autoarray.structures.mesh.delaunay_2d import Mesh2DDelaunay  # noqa

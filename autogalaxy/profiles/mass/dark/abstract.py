@@ -56,10 +56,11 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         self.scale_radius = scale_radius
         self.inner_slope = inner_slope
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.over_sample
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -69,14 +70,15 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         """
 
-        grid_eta = self.elliptical_radii_grid_from(grid=grid)
+        grid_eta = self.elliptical_radii_grid_from(grid=grid, **kwargs)
 
         return self.convergence_func(grid_radius=grid_eta)
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.over_sample
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_via_mge_from(self, grid: aa.type.Grid2DLike):
+    def convergence_2d_via_mge_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -86,11 +88,11 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         """
 
-        elliptical_radii = self.elliptical_radii_grid_from(grid)
+        elliptical_radii = self.elliptical_radii_grid_from(grid=grid, **kwargs)
 
         return self._convergence_2d_via_mge_from(grid_radii=elliptical_radii)
 
-    def tabulate_integral(self, grid, tabulate_bins):
+    def tabulate_integral(self, grid, tabulate_bins, **kwargs):
         """Tabulate an integral over the convergence of deflection potential of a mass profile. This is used in \
         the GeneralizedNFW profile classes to speed up the integration procedure.
 
@@ -102,7 +104,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
             The number of bins to tabulate the inner integral of this profile.
         """
         eta_min = 1.0e-4
-        eta_max = 1.05 * np.max(self.elliptical_radii_grid_from(grid))
+        eta_max = 1.05 * np.max(self.elliptical_radii_grid_from(grid=grid, **kwargs))
 
         minimum_log_eta = np.log10(eta_min)
         maximum_log_eta = np.log10(eta_max)

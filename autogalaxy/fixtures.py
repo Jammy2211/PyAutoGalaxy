@@ -8,13 +8,19 @@ import autogalaxy.plot as aplt
 def make_masked_imaging_7x7():
     imaging_7x7 = make_imaging_7x7()
 
-    return imaging_7x7.apply_mask(mask=make_sub_mask_2d_7x7())
+    return imaging_7x7.apply_mask(mask=make_mask_2d_7x7())
+
+
+def make_masked_imaging_7x7_sub_2():
+    imaging_7x7 = make_imaging_7x7_sub_2()
+
+    return imaging_7x7.apply_mask(mask=make_mask_2d_7x7())
 
 
 def make_masked_imaging_covariance_7x7():
     imaging_7x7 = make_imaging_covariance_7x7()
 
-    return imaging_7x7.apply_mask(mask=make_sub_mask_2d_7x7())
+    return imaging_7x7.apply_mask(mask=make_mask_2d_7x7())
 
 
 # PROFILES #
@@ -150,7 +156,6 @@ def make_dataset_quantity_7x7_array_2d():
         noise_map=aa.Array2D.full(
             fill_value=2.0, shape_native=(7, 7), pixel_scales=1.0
         ),
-        sub_size=1,
     )
 
 
@@ -160,7 +165,6 @@ def make_dataset_quantity_7x7_vector_yx_2d():
         noise_map=aa.VectorYX2D.full(
             fill_value=2.0, shape_native=(7, 7), pixel_scales=1.0
         ),
-        sub_size=1,
     )
 
 

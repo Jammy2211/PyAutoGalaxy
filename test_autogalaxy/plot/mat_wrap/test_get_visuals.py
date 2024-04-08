@@ -119,9 +119,7 @@ def test__2d__via_light_obj_from(lp_0, grid_2d_7x7):
 
     assert visuals_2d_via.origin.in_list == [(0.0, 0.0)]
     assert (visuals_2d_via.mask == grid_2d_7x7.mask).all()
-    assert (
-        visuals_2d_via.border == grid_2d_7x7.mask.derive_grid.border_sub_1.binned
-    ).all()
+    assert (visuals_2d_via.border == grid_2d_7x7.mask.derive_grid.border).all()
     assert visuals_2d_via.light_profile_centres.in_list == [lp_0.centre]
     assert visuals_2d_via.vectors == 2
 
@@ -157,9 +155,7 @@ def test__2d__via_mass_obj(mp_0, grid_2d_7x7):
 
     assert visuals_2d_via.origin.in_list == [(0.0, 0.0)]
     assert (visuals_2d_via.mask == grid_2d_7x7.mask).all()
-    assert (
-        visuals_2d_via.border == grid_2d_7x7.mask.derive_grid.border_sub_1.binned
-    ).all()
+    assert (visuals_2d_via.border == grid_2d_7x7.mask.derive_grid.border).all()
     assert visuals_2d_via.mass_profile_centres.in_list == [mp_0.centre]
     assert (
         visuals_2d_via.tangential_critical_curves[0]
@@ -209,9 +205,7 @@ def test__2d__via_light_mass_obj(gal_x1_lp_x1_mp, grid_2d_7x7):
 
     assert visuals_2d_via.origin.in_list == [(0.0, 0.0)]
     assert (visuals_2d_via.mask == grid_2d_7x7.mask).all()
-    assert (
-        visuals_2d_via.border == grid_2d_7x7.mask.derive_grid.border_sub_1.binned
-    ).all()
+    assert (visuals_2d_via.border == grid_2d_7x7.mask.derive_grid.border).all()
     assert visuals_2d_via.light_profile_centres.in_list == [
         gal_x1_lp_x1_mp.light_profile_0.centre
     ]
@@ -270,8 +264,7 @@ def test__via_fit_imaging_from(fit_imaging_x2_galaxy_7x7, grid_2d_7x7):
     assert visuals_2d_via.origin == (1.0, 1.0)
     assert (visuals_2d_via.mask == fit_imaging_x2_galaxy_7x7.mask).all()
     assert (
-        visuals_2d_via.border
-        == fit_imaging_x2_galaxy_7x7.mask.derive_grid.border_sub_1.binned
+        visuals_2d_via.border == fit_imaging_x2_galaxy_7x7.mask.derive_grid.border
     ).all()
     assert visuals_2d_via.light_profile_centres.in_list == [(0.0, 0.0), (0.0, 0.0)]
     assert visuals_2d_via.mass_profile_centres.in_list == [(0.0, 0.0)]

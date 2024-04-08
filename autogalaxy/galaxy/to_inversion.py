@@ -6,7 +6,7 @@ from autoconf import cached_property
 import autoarray as aa
 
 from autoarray.inversion.pixelization.mappers.factory import mapper_from
-from autoarray.inversion.inversion.factory import inversion_unpacked_from
+from autoarray.inversion.inversion.factory import inversion_from
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.profiles.light.linear import (
     LightProfileLinearObjFuncList,
@@ -22,10 +22,7 @@ from autogalaxy.analysis.preloads import Preloads
 class AbstractToInversion:
     def __init__(
         self,
-        dataset: Optional[Union[aa.Imaging, aa.Interferometer]] = None,
-        data: Optional[Union[aa.Array2D, aa.Visibilities]] = None,
-        noise_map: Optional[Union[aa.Array2D, aa.VisibilitiesNoiseMap]] = None,
-        w_tilde: Optional[Union[aa.WTildeImaging, aa.WTildeInterferometer]] = None,
+        dataset: Optional[Union[aa.Imaging, aa.Interferometer, aa.DatasetInterface]],
         sky: Optional[Basis] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
@@ -45,9 +42,7 @@ class AbstractToInversion:
                 )
 
         self.dataset = dataset
-        self.data = data
-        self.noise_map = noise_map
-        self.w_tilde = w_tilde
+
         self.sky = sky
         self.adapt_images = adapt_images
 
@@ -55,6 +50,25 @@ class AbstractToInversion:
 
         self.preloads = preloads
         self.run_time_dict = run_time_dict
+
+    @property
+    def convolver(self):
+        try:
+            return self.dataset.convolver
+        except AttributeError:
+            return None
+
+    @property
+    def transformer(self):
+        try:
+            return self.dataset.transformer
+        except AttributeError:
+            return None
+
+    @property
+    def border_relocator(self):
+        if self.settings_inversion.use_border_relocator:
+            return self.dataset.border_relocator
 
     def cls_light_profile_func_list_galaxy_dict_from(
         self, cls: Type
@@ -105,16 +119,10 @@ class AbstractToInversion:
 class GalaxiesToInversion(AbstractToInversion):
     def __init__(
         self,
+        dataset: Optional[Union[aa.Imaging, aa.Interferometer, aa.DatasetInterface]],
         galaxies: List[Galaxy],
-        dataset: Optional[Union[aa.Imaging, aa.Interferometer]] = None,
-        data: Optional[Union[aa.Array2D, aa.Visibilities]] = None,
-        noise_map: Optional[Union[aa.Array2D, aa.VisibilitiesNoiseMap]] = None,
-        w_tilde: Optional[Union[aa.WTildeImaging, aa.WTildeInterferometer]] = None,
         sky: Optional[LightProfile] = None,
         adapt_images: Optional[AdaptImages] = None,
-        grid: Optional[aa.type.Grid2DLike] = None,
-        blurring_grid: Optional[aa.type.Grid2DLike] = None,
-        grid_pixelization: Optional[aa.type.Grid2DLike] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads=aa.Preloads(),
         run_time_dict: Optional[Dict] = None,
@@ -123,36 +131,12 @@ class GalaxiesToInversion(AbstractToInversion):
 
         super().__init__(
             dataset=dataset,
-            data=data,
-            noise_map=noise_map,
-            w_tilde=w_tilde,
             sky=sky,
             adapt_images=adapt_images,
             settings_inversion=settings_inversion,
             preloads=preloads,
             run_time_dict=run_time_dict,
         )
-
-        if grid is not None:
-            self.grid = grid
-        elif dataset is not None:
-            self.grid = dataset.grid
-        else:
-            self.grid = None
-
-        if blurring_grid is not None:
-            self.blurring_grid = blurring_grid
-        elif dataset is not None:
-            self.blurring_grid = dataset.blurring_grid
-        else:
-            self.blurring_grid = None
-
-        if grid_pixelization is not None:
-            self.grid_pixelization = grid_pixelization
-        elif dataset is not None:
-            self.grid_pixelization = dataset.grid_pixelization
-        else:
-            self.grid_pixelization = None
 
     def cls_light_profile_func_list_galaxy_dict_from(
         self, cls: Type
@@ -177,8 +161,8 @@ class GalaxiesToInversion(AbstractToInversion):
 
                     if len(light_profile_list) > 0:
                         lp_linear_func = LightProfileLinearObjFuncList(
-                            grid=self.grid,
-                            blurring_grid=self.blurring_grid,
+                            grid=self.dataset.grid,
+                            blurring_grid=self.dataset.blurring_grid,
                             convolver=self.dataset.convolver,
                             light_profile_list=light_profile_list,
                             regularization=light_profile.regularization,
@@ -236,7 +220,7 @@ class GalaxiesToInversion(AbstractToInversion):
 
                 image_plane_mesh_grid = (
                     pixelization.image_mesh.image_plane_mesh_grid_from(
-                        grid=self.grid_pixelization,
+                        mask=self.dataset.mask,
                         adapt_data=adapt_data,
                         settings=self.settings_inversion,
                     )
@@ -254,20 +238,27 @@ class GalaxiesToInversion(AbstractToInversion):
         mesh: aa.AbstractMesh,
         regularization: aa.AbstractRegularization,
         source_plane_mesh_grid: aa.Grid2DIrregular,
+        source_plane_data_grid: aa.Grid2D,
         adapt_galaxy_image: aa.Array2D,
         image_plane_mesh_grid: Optional[aa.Grid2DIrregular] = None,
     ) -> aa.AbstractMapper:
         mapper_grids = mesh.mapper_grids_from(
-            source_plane_data_grid=self.grid_pixelization,
+            border_relocator=self.border_relocator,
+            source_plane_data_grid=source_plane_data_grid,
             source_plane_mesh_grid=source_plane_mesh_grid,
             image_plane_mesh_grid=image_plane_mesh_grid,
-            relocate_pix_border=self.settings_inversion.relocate_pix_border,
             adapt_data=adapt_galaxy_image,
             preloads=self.preloads,
             run_time_dict=self.run_time_dict,
         )
 
-        return mapper_from(mapper_grids=mapper_grids, regularization=regularization)
+        return mapper_from(
+            mapper_grids=mapper_grids,
+            over_sampler=self.dataset.grid_pixelization.over_sampling.over_sampler_from(
+                mask=self.dataset.mask
+            ),
+            regularization=regularization,
+        )
 
     @cached_property
     def mapper_galaxy_dict(self) -> Dict[aa.AbstractMapper, Galaxy]:
@@ -298,6 +289,7 @@ class GalaxiesToInversion(AbstractToInversion):
             mapper = self.mapper_from(
                 mesh=pixelization_list[mapper_index].mesh,
                 regularization=pixelization_list[mapper_index].regularization,
+                source_plane_data_grid=self.dataset.grid_pixelization.over_sampler.over_sampled_grid,
                 source_plane_mesh_grid=mesh_grid_list[mapper_index],
                 adapt_galaxy_image=adapt_galaxy_image,
                 image_plane_mesh_grid=mesh_grid_list[mapper_index],
@@ -309,11 +301,8 @@ class GalaxiesToInversion(AbstractToInversion):
 
     @property
     def inversion(self) -> aa.AbstractInversion:
-        inversion = inversion_unpacked_from(
+        inversion = inversion_from(
             dataset=self.dataset,
-            data=self.data,
-            noise_map=self.noise_map,
-            w_tilde=self.w_tilde,
             linear_obj_list=self.linear_obj_list,
             settings=self.settings_inversion,
             preloads=self.preloads,

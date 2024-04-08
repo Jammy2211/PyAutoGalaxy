@@ -186,11 +186,16 @@ def test___galaxy_model_image_dict(interferometer_7):
     )
 
     mapper_grids = pixelization.mesh.mapper_grids_from(
-        source_plane_data_grid=interferometer_7.grid, source_plane_mesh_grid=None
+        source_plane_data_grid=interferometer_7.grid,
+        border_relocator=interferometer_7.border_relocator,
+        source_plane_mesh_grid=None,
     )
 
     mapper = ag.Mapper(
-        mapper_grids=mapper_grids, regularization=pixelization.regularization
+        mapper_grids=mapper_grids,
+        over_sampler=interferometer_7.grid_pixelization.over_sampler,
+        border_relocator=interferometer_7.border_relocator,
+        regularization=pixelization.regularization,
     )
 
     inversion = ag.Inversion(
@@ -307,11 +312,16 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     )
 
     mapper_grids = pixelization.mesh.mapper_grids_from(
-        source_plane_data_grid=interferometer_7.grid, source_plane_mesh_grid=None
+        source_plane_data_grid=interferometer_7.grid,
+        border_relocator=interferometer_7.border_relocator,
+        source_plane_mesh_grid=None,
     )
 
     mapper = ag.Mapper(
-        mapper_grids=mapper_grids, regularization=pixelization.regularization
+        mapper_grids=mapper_grids,
+        over_sampler=interferometer_7.grid_pixelization.over_sampler,
+        border_relocator=interferometer_7.border_relocator,
+        regularization=pixelization.regularization,
     )
 
     inversion = ag.Inversion(

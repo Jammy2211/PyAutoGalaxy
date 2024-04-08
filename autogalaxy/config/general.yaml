@@ -8,7 +8,7 @@ adapt:
   adapt_minimum_percent: 0.01
   adapt_noise_limit: 100000000.0
 inversion:
-  relocate_pix_border: true          # If True, by default a pixelization's border is used to relocate all pixels outside its border to the border.
+  use_border_relocator: true          # If True, by default a pixelization's border is used to relocate all pixels outside its border to the border.
 test:
   check_likelihood_function: true   # if True, when a search is resumed the likelihood of a previous sample is recalculated to ensure it is consistent with the previous run.
   check_preloads: false

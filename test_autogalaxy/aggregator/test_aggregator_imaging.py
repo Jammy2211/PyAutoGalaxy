@@ -12,8 +12,8 @@ def test__dataset_generator_from_aggregator__analysis_has_single_dataset(
         data=image_7x7,
         psf=psf_3x3,
         noise_map=noise_map_7x7,
-        over_sample=ag.OverSampleIterate(fractional_accuracy=0.5, sub_steps=[2]),
-        over_sample_pixelization=ag.OverSampleIterate(
+        over_sampling=ag.OverSamplingIterate(fractional_accuracy=0.5, sub_steps=[2]),
+        over_sampling_pixelization=ag.OverSamplingIterate(
             fractional_accuracy=0.5, sub_steps=[2]
         ),
     )
@@ -34,12 +34,12 @@ def test__dataset_generator_from_aggregator__analysis_has_single_dataset(
 
     for dataset_list in dataset_gen:
         assert (dataset_list[0].data == masked_imaging_7x7.data).all()
-        assert isinstance(dataset_list[0].grid.over_sample, ag.OverSampleIterate)
+        assert isinstance(dataset_list[0].grid.over_sampling, ag.OverSamplingIterate)
         assert isinstance(
-            dataset_list[0].grid_pixelization.over_sample, ag.OverSampleIterate
+            dataset_list[0].grid_pixelization.over_sampling, ag.OverSamplingIterate
         )
-        assert dataset_list[0].grid.over_sample.sub_steps == [2]
-        assert dataset_list[0].grid.over_sample.fractional_accuracy == 0.5
+        assert dataset_list[0].grid.over_sampling.sub_steps == [2]
+        assert dataset_list[0].grid.over_sampling.fractional_accuracy == 0.5
 
     clean(database_file=database_file)
 

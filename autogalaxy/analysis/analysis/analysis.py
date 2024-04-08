@@ -193,14 +193,21 @@ class Analysis(af.Analysis):
         fit.figure_of_merit
 
         try:
-            info_dict["image_pixels"] = self.dataset.grid.sub_shape_slim
-            info_dict["sub_size_light_profiles"] = self.dataset.grid.sub_size
+            info_dict["image_pixels"] = self.dataset.grid.shape_slim
+            info_dict[
+                "sub_size_light_profiles"
+            ] = self.dataset.grid.over_sampling.sub_size
         except AttributeError:
             pass
 
         if fit.model_obj.has(cls=aa.Pixelization):
             info_dict["use_w_tilde"] = fit.inversion.settings.use_w_tilde
-            info_dict["sub_size_pixelization"] = self.dataset.grid_pixelization.sub_size
+            try:
+                info_dict[
+                    "sub_size_pixelization"
+                ] = self.dataset.grid_pixelization.over_sampling.sub_size
+            except AttributeError:
+                pass
             info_dict[
                 "use_positive_only_solver"
             ] = fit.inversion.settings.use_positive_only_solver

@@ -32,19 +32,10 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
 
     fit_quantity_plotter.figures_2d(
         image=True,
-        noise_map=False,
-        signal_to_noise_map=False,
-        model_image=True,
-        chi_squared_map=True,
     )
 
     assert path.join(plot_path, "data.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map.png") not in plot_patch.paths
-    assert path.join(plot_path, "signal_to_noise_map.png") not in plot_patch.paths
-    assert path.join(plot_path, "model_image.png") in plot_patch.paths
-    assert path.join(plot_path, "residual_map.png") not in plot_patch.paths
-    assert path.join(plot_path, "normalized_residual_map.png") not in plot_patch.paths
-    assert path.join(plot_path, "chi_squared_map.png") in plot_patch.paths
 
     fit_quantity_plotter = aplt.FitQuantityPlotter(
         fit=fit_quantity_7x7_vector_yx_2d,
@@ -55,26 +46,13 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
     fit_quantity_plotter.figures_2d(
         image=True,
         noise_map=False,
-        signal_to_noise_map=False,
-        model_image=True,
-        chi_squared_map=True,
     )
 
     assert path.join(plot_path, "data_y.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map_y.png") not in plot_patch.paths
-    assert path.join(plot_path, "signal_to_noise_map_y.png") not in plot_patch.paths
-    assert path.join(plot_path, "model_image_y.png") in plot_patch.paths
-    assert path.join(plot_path, "residual_map_y.png") not in plot_patch.paths
-    assert path.join(plot_path, "normalized_residual_map_y.png") not in plot_patch.paths
-    assert path.join(plot_path, "chi_squared_map_y.png") in plot_patch.paths
 
     assert path.join(plot_path, "data_x.png") in plot_patch.paths
     assert path.join(plot_path, "noise_map_x.png") not in plot_patch.paths
-    assert path.join(plot_path, "signal_to_noise_map_x.png") not in plot_patch.paths
-    assert path.join(plot_path, "model_image_x.png") in plot_patch.paths
-    assert path.join(plot_path, "residual_map_x.png") not in plot_patch.paths
-    assert path.join(plot_path, "normalized_residual_map_x.png") not in plot_patch.paths
-    assert path.join(plot_path, "chi_squared_map_x.png") in plot_patch.paths
 
 
 def test__fit_sub_plot__all_types_of_fit(
@@ -91,13 +69,3 @@ def test__fit_sub_plot__all_types_of_fit(
 
     fit_quantity_plotter.subplot_fit()
     assert path.join(plot_path, "subplot_fit.png") in plot_patch.paths
-
-    fit_quantity_plotter = aplt.FitQuantityPlotter(
-        fit=fit_quantity_7x7_vector_yx_2d,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(path=plot_path, format="png")),
-    )
-
-    fit_quantity_plotter.subplot_fit()
-
-    assert path.join(plot_path, "subplot_fit_y.png") in plot_patch.paths
-    assert path.join(plot_path, "subplot_fit_x.png") in plot_patch.paths

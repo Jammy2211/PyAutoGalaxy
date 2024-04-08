@@ -33,4 +33,4 @@ class SimulatorInterferometer(aa.SimulatorInterferometer):
 
         image = galaxies.image_2d_from(grid=grid)
 
-        return self.via_image_from(image=image.binned)
+        return self.via_image_from(image=image)

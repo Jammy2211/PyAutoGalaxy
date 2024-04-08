@@ -1,11 +1,11 @@
 import autogalaxy as ag
 import numpy as np
 
-grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
+grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__mass_quantity_functions__output_is_autoarray_structure():
-    grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=1.0)
 
     mass_sheet = ag.mp.MassSheet()
 
