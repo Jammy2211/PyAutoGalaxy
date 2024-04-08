@@ -86,7 +86,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             self=self,
             model_obj=self.galaxies,
             sky=sky,
-            settings_inversion=settings_inversion
+            settings_inversion=settings_inversion,
         )
 
         self.sky = sky
