@@ -157,9 +157,6 @@ def test__deflections_yx_2d_from__preload_grid_deflections_used_if_preload_grid_
 
     deflections = input_deflections.deflections_yx_2d_from(grid=grid)
 
-    print(deflections)
-    print(input_deflections.preload_deflections)
-
     assert (deflections == input_deflections.preload_deflections).all()
 
 

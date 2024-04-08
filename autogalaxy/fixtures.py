@@ -10,6 +10,12 @@ def make_masked_imaging_7x7():
 
     return imaging_7x7.apply_mask(mask=make_mask_2d_7x7())
 
+def make_masked_imaging_7x7_sub_2():
+    imaging_7x7 = make_imaging_7x7_sub_2()
+
+    return imaging_7x7.apply_mask(mask=make_mask_2d_7x7())
+
+
 
 def make_masked_imaging_covariance_7x7():
     imaging_7x7 = make_imaging_covariance_7x7()

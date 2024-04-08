@@ -73,7 +73,6 @@ def test__image_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities()
     assert (image_1d.grid_radial == np.array([0.0, 1.0, 2.0])).all()
 
 
-
 def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
     mask = ag.Mask2D(
         mask=[
@@ -124,6 +123,7 @@ def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
     assert image[0] == pytest.approx(0.00681791, 1.0e-6)
     assert image[1] == pytest.approx(0.01332332, 1.0e-6)
 
+
 def test__decorators__grid_iterate_in__iterates_grid_correctly():
     mask = ag.Mask2D(
         mask=[
@@ -155,7 +155,9 @@ def test__decorators__grid_iterate_in__iterates_grid_correctly():
 
     grid = ag.Grid2D.from_mask(
         mask=mask,
-        over_sampling=ag.OverSamplingIterate(fractional_accuracy=0.95, sub_steps=[2, 4, 8]),
+        over_sampling=ag.OverSamplingIterate(
+            fractional_accuracy=0.95, sub_steps=[2, 4, 8]
+        ),
     )
 
     lp = ag.lp.Sersic(centre=(0.08, 0.08), intensity=1.0)

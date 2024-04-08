@@ -51,6 +51,25 @@ class AbstractToInversion:
         self.preloads = preloads
         self.run_time_dict = run_time_dict
 
+    @property
+    def convolver(self):
+        try:
+            return self.dataset.convolver
+        except AttributeError:
+            return None
+
+    @property
+    def transformer(self):
+        try:
+            return self.dataset.transformer
+        except AttributeError:
+            return None
+
+    @property
+    def border_relocator(self):
+        if self.settings_inversion.use_border_relocator:
+            return self.dataset.border_relocator
+
     def cls_light_profile_func_list_galaxy_dict_from(
         self, cls: Type
     ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
@@ -223,13 +242,8 @@ class GalaxiesToInversion(AbstractToInversion):
         adapt_galaxy_image: aa.Array2D,
         image_plane_mesh_grid: Optional[aa.Grid2DIrregular] = None,
     ) -> aa.AbstractMapper:
-        if self.settings_inversion.use_border_relocator:
-            border_relocator = self.dataset.border_relocator
-        else:
-            border_relocator = None
-
         mapper_grids = mesh.mapper_grids_from(
-            border_relocator=border_relocator,
+            border_relocator=self.border_relocator,
             source_plane_data_grid=source_plane_data_grid,
             source_plane_mesh_grid=source_plane_mesh_grid,
             image_plane_mesh_grid=image_plane_mesh_grid,
@@ -275,7 +289,7 @@ class GalaxiesToInversion(AbstractToInversion):
             mapper = self.mapper_from(
                 mesh=pixelization_list[mapper_index].mesh,
                 regularization=pixelization_list[mapper_index].regularization,
-                source_plane_data_grid=self.dataset.grid_pixelization.over_sampler.oversampled_grid,
+                source_plane_data_grid=self.dataset.grid_pixelization.over_sampler.over_sampled_grid,
                 source_plane_mesh_grid=mesh_grid_list[mapper_index],
                 adapt_galaxy_image=adapt_galaxy_image,
                 image_plane_mesh_grid=mesh_grid_list[mapper_index],

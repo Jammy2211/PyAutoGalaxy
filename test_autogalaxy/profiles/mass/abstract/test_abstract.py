@@ -373,7 +373,9 @@ def test__decorators__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp)
 
     grid = ag.Grid2D.from_mask(
         mask=mask,
-        over_sampling=ag.OverSamplingIterate(fractional_accuracy=0.99, sub_steps=[2, 4, 8]),
+        over_sampling=ag.OverSamplingIterate(
+            fractional_accuracy=0.99, sub_steps=[2, 4, 8]
+        ),
     )
 
     mass_profile = ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)

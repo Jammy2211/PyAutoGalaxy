@@ -732,7 +732,9 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
     assert image[0] == pytest.approx(0.17481917162057087, 1.0e-6)
     assert (image == image_sub_2).all()
 
-    over_sampling = ag.OverSamplingIterate(fractional_accuracy=0.95, sub_steps=[2, 4, 8])
+    over_sampling = ag.OverSamplingIterate(
+        fractional_accuracy=0.95, sub_steps=[2, 4, 8]
+    )
 
     grid = ag.Grid2D.from_mask(mask=mask, over_sampling=over_sampling)
 

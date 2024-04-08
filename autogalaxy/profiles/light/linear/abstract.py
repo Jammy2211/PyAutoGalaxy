@@ -133,8 +133,14 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         return len(self.light_profile_list)
 
     @property
+    def pixels_in_mask(self):
+        if isinstance(self.grid, aa.Grid2DOverSampled):
+            return self.grid.pixels_in_mask
+        return self.grid.mask.pixels_in_mask
+
+    @property
     def mapping_matrix(self) -> np.ndarray:
-        mapping_matrix = np.zeros(shape=(self.grid.mask.pixels_in_mask, self.params))
+        mapping_matrix = np.zeros(shape=(self.pixels_in_mask, self.params))
 
         for pixel, light_profile in enumerate(self.light_profile_list):
             image_2d = light_profile.image_2d_from(grid=self.grid).slim
@@ -166,9 +172,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         if isinstance(self.light_profile_list[0], LightProfileOperated):
             return self.mapping_matrix
 
-        operated_mapping_matrix = np.zeros(
-            shape=(self.grid.mask.pixels_in_mask, self.params)
-        )
+        operated_mapping_matrix = np.zeros(shape=(self.pixels_in_mask, self.params))
 
         for pixel, light_profile in enumerate(self.light_profile_list):
             image_2d = light_profile.image_2d_from(grid=self.grid)
