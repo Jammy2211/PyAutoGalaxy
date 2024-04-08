@@ -10,6 +10,7 @@ import autoarray as aa
 if TYPE_CHECKING:
     from autogalaxy.galaxy.galaxy import Galaxy
 
+
 class AdaptImages:
     def __init__(
         self,

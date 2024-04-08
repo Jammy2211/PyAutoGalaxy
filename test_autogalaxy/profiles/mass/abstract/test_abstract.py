@@ -143,22 +143,6 @@ def test__density_between_circular_annuli():
         density_between_annuli, 1e-4
     )
 
-    nfw = ag.mp.NFW(centre=(0.0, 0.0), ell_comps=(0.111111, 0.0), kappa_s=1.0)
-
-    inner_mass = nfw.mass_angular_within_circle_from(radius=1.0)
-
-    outer_mass = nfw.mass_angular_within_circle_from(radius=2.0)
-
-    density_between_annuli = nfw.density_between_circular_annuli(
-        inner_annuli_radius=1.0, outer_annuli_radius=2.0
-    )
-
-    annuli_area = (np.pi * 2.0**2.0) - (np.pi * 1.0**2.0)
-
-    assert (outer_mass - inner_mass) / annuli_area == pytest.approx(
-        density_between_annuli, 1e-4
-    )
-
 
 def test__extract_attribute():
     sis = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)

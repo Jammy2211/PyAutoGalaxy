@@ -40,6 +40,3 @@ def test__instance_with_associated_adapt_images_from(masked_imaging_7x7):
     assert adapt_images.galaxy_image_dict[galaxies.source].native == pytest.approx(
         2.0 * np.ones((3, 3)), 1.0e-4
     )
-
-
-

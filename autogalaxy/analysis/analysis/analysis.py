@@ -67,7 +67,9 @@ class Analysis(af.Analysis):
 
         return Galaxies(galaxies=instance.galaxies, run_time_dict=run_time_dict)
 
-    def sky_via_instance_from(self, instance: af.ModelInstance) -> Union[lp.Sky, lp_linear.Sky]:
+    def sky_via_instance_from(
+        self, instance: af.ModelInstance
+    ) -> Union[lp.Sky, lp_linear.Sky]:
         """
         Create a sky from a model instance, which is used to fit the dataset.
 
