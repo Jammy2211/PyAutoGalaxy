@@ -609,11 +609,10 @@ def test__centre_of_profile_in_right_place():
     assert deflections.native[1, 4, 1] > 0
     assert deflections.native[1, 3, 1] < 0
 
-    grid = ag.Grid2DIterate.uniform(
+    grid = ag.Grid2D.uniform(
         shape_native=(7, 7),
         pixel_scales=1.0,
-        fractional_accuracy=0.99,
-        sub_steps=[2, 4],
+        over_sample=ag.OverSampleIterate(fractional_accuracy=0.99, sub_steps=[2, 4]),
     )
 
     galaxy = ag.Galaxy(
@@ -703,7 +702,10 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
         pixel_scales=(1.0, 1.0),
     )
 
-    grid = ag.Grid2DIterate.from_mask(mask=mask, fractional_accuracy=1.0, sub_steps=[2])
+    grid = ag.Grid2D.from_mask(
+        mask=mask,
+        over_sample=ag.OverSampleIterate(fractional_accuracy=1.0, sub_steps=[2]),
+    )
 
     galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
 
@@ -715,8 +717,9 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
 
     assert (image == image_sub_2).all()
 
-    grid = ag.Grid2DIterate.from_mask(
-        mask=mask, fractional_accuracy=0.95, sub_steps=[2, 4, 8]
+    grid = ag.Grid2D.from_mask(
+        mask=mask,
+        over_sample=ag.OverSampleIterate(fractional_accuracy=0.95, sub_steps=[2, 4, 8]),
     )
 
     galaxy = ag.Galaxy(
@@ -749,7 +752,10 @@ def test__decorator__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
         pixel_scales=(1.0, 1.0),
     )
 
-    grid = ag.Grid2DIterate.from_mask(mask=mask, fractional_accuracy=1.0, sub_steps=[2])
+    grid = ag.Grid2D.from_mask(
+        mask=mask,
+        over_sample=ag.OverSampleIterate(fractional_accuracy=1.0, sub_steps=[2]),
+    )
 
     galaxy = ag.Galaxy(
         redshift=0.5, mass=ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)
@@ -763,8 +769,9 @@ def test__decorator__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
 
     assert (deflections == deflections_sub_2).all()
 
-    grid = ag.Grid2DIterate.from_mask(
-        mask=mask, fractional_accuracy=0.99, sub_steps=[2, 4, 8]
+    grid = ag.Grid2D.from_mask(
+        mask=mask,
+        over_sample=ag.OverSampleIterate(fractional_accuracy=0.99, sub_steps=[2, 4, 8]),
     )
 
     galaxy = ag.Galaxy(

@@ -9,7 +9,7 @@ import autogalaxy as ag
 
 
 def test__perfect_fit__chi_squared_0():
-    grid = ag.Grid2D.uniform(shape_native=(51, 51), pixel_scales=0.1, sub_size=2)
+    grid = ag.Grid2D.uniform(shape_native=(51, 51), pixel_scales=0.1)
 
     galaxy_0 = ag.Galaxy(
         redshift=0.5, light=ag.lp.Sersic(centre=(0.1, 0.1), intensity=0.1)
@@ -50,7 +50,8 @@ def test__perfect_fit__chi_squared_0():
     )
 
     real_space_mask = ag.Mask2D.all_false(
-        shape_native=(51, 51), pixel_scales=0.1, sub_size=2
+        shape_native=(51, 51),
+        pixel_scales=0.1,
     )
 
     dataset = ag.Interferometer.from_fits(
@@ -58,9 +59,7 @@ def test__perfect_fit__chi_squared_0():
         noise_map_path=path.join(file_path, "noise_map.fits"),
         uv_wavelengths_path=path.join(file_path, "uv_wavelengths.fits"),
         real_space_mask=real_space_mask,
-        settings=ag.SettingsInterferometer(
-            grid_class=ag.Grid2D, transformer_class=ag.TransformerDFT, sub_size=2
-        ),
+        transformer_class=ag.TransformerDFT,
     )
 
     fit = ag.FitInterferometer(
@@ -125,10 +124,6 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
 
     dataset = simulator.via_galaxies_from(galaxies=[galaxy_0, galaxy_1], grid=grid)
 
-    dataset = dataset.apply_settings(
-        settings=ag.SettingsInterferometer(transformer_class=ag.TransformerDFT)
-    )
-
     fit = ag.FitInterferometer(
         dataset=dataset,
         galaxies=[galaxy_0, galaxy_1],
@@ -139,7 +134,7 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
 
 
 def test__linear_light_profiles_agree_with_standard_light_profiles():
-    grid = ag.Grid2D.uniform(shape_native=(51, 51), pixel_scales=0.1, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(51, 51), pixel_scales=0.1)
 
     galaxy = ag.Galaxy(
         redshift=0.5,
@@ -162,10 +157,12 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
 
     dataset = simulator.via_galaxies_from(galaxies=[galaxy], grid=grid)
 
-    dataset = dataset.apply_settings(
-        settings=ag.SettingsInterferometer(
-            grid_class=ag.Grid2D, transformer_class=ag.TransformerDFT, sub_size=1
-        )
+    dataset = ag.Interferometer(
+        data=dataset.data,
+        noise_map=dataset.noise_map,
+        uv_wavelengths=dataset.uv_wavelengths,
+        real_space_mask=dataset.real_space_mask,
+        transformer_class=ag.TransformerDFT,
     )
 
     fit = ag.FitInterferometer(

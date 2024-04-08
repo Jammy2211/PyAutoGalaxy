@@ -20,7 +20,6 @@ from autogalaxy import exc
 
 
 class AnalysisImaging(AnalysisDataset):
-
     Result = ResultImaging
 
     def __init__(
@@ -281,7 +280,7 @@ class AnalysisImaging(AnalysisDataset):
 
          For this analysis, it uses the `AnalysisDataset` object's method to output the following:
 
-         - The imaging dataset (data / noise-map / settings / psf / etc.).
+         - The imaging dataset (data / noise-map / psf / over sampler / etc.).
          - The mask applied to the dataset.
          - The settings associated with the inversion.
          - The settings associated with the pixelization.

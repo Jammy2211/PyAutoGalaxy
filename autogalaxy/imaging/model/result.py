@@ -8,7 +8,6 @@ from autogalaxy.imaging.fit_imaging import FitImaging
 
 
 class ResultImaging(ResultDataset):
-
     @property
     def max_log_likelihood_fit(self) -> FitImaging:
         """

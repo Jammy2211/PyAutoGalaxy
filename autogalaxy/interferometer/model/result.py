@@ -9,7 +9,6 @@ from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 
 
 class ResultInterferometer(ResultDataset):
-
     @property
     def max_log_likelihood_fit(self) -> FitInterferometer:
         """

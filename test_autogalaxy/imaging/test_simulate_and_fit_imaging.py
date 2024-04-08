@@ -56,6 +56,7 @@ def test__perfect_fit__chi_squared_0():
         noise_map_path=path.join(file_path, "noise_map.fits"),
         psf_path=path.join(file_path, "psf.fits"),
         pixel_scales=0.2,
+        sub_size=1
     )
 
     mask = ag.Mask2D.circular(
@@ -66,9 +67,6 @@ def test__perfect_fit__chi_squared_0():
     )
 
     masked_dataset = dataset.apply_mask(mask=mask)
-    masked_dataset = masked_dataset.apply_settings(
-        settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
-    )
 
     fit = ag.FitImaging(dataset=masked_dataset, galaxies=[galaxy_0, galaxy_1])
 
@@ -166,9 +164,6 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
     )
 
     masked_dataset = dataset.apply_mask(mask=mask)
-    masked_dataset = masked_dataset.apply_settings(
-        settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
-    )
 
     fit = ag.FitImaging(dataset=masked_dataset, galaxies=[galaxy])
 

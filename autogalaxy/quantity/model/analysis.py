@@ -16,7 +16,6 @@ from autogalaxy import exc
 
 
 class AnalysisQuantity(Analysis):
-
     Result = ResultQuantity
 
     def __init__(
