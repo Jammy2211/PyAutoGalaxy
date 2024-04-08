@@ -37,7 +37,6 @@ Image Mesh [ag.image_mesh]
 
    Overlay
    Hilbert
-   HilbertBalanced
    KMeans
 
 Mesh [ag.mesh]
