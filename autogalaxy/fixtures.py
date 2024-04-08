@@ -250,18 +250,20 @@ def make_samples_summary_with_result():
 
 
 def make_analysis_imaging_7x7():
-    return ag.AnalysisImaging(
+    analysis = ag.AnalysisImaging(
         dataset=make_masked_imaging_7x7(),
-        adapt_images=make_adapt_images_7x7(),
         settings_inversion=aa.SettingsInversion(use_w_tilde=False),
     )
+    analysis._adapt_images = make_adapt_images_7x7()
+    return analysis
 
 
 def make_analysis_interferometer_7():
-    return ag.AnalysisInterferometer(
+    analysis = ag.AnalysisInterferometer(
         dataset=make_interferometer_7(),
-        adapt_images=make_adapt_images_7x7(),
     )
+    analysis._adapt_images = make_adapt_images_7x7()
+    return analysis
 
 
 def make_include_1d_all():

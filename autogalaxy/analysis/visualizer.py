@@ -6,7 +6,7 @@ from autoconf import conf
 import autoarray as aa
 import autoarray.plot as aplt
 
-from autogalaxy.analysis.adapt_images import AdaptImages
+from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.galaxy.plot.galaxy_plotters import GalaxyPlotter

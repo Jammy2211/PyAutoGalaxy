@@ -5,14 +5,14 @@ from typing import Dict, List, Optional, Tuple, Type, Union
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from autogalaxy.analysis.analysis import AnalysisDataset
+    from autogalaxy.analysis.analysis.dataset import AnalysisDataset
 
 from autoconf import cached_property
 
 import autofit as af
 import autoarray as aa
 
-from autogalaxy.analysis.adapt_images import AdaptImages
+from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.galaxy.galaxy import Galaxy
 
 
@@ -198,3 +198,7 @@ class ResultDataset(Result):
             result=self,
             use_model_images=use_model_images,
         )
+
+    @property
+    def adapt_image_maker(self):
+        return self.analysis.adapt_image_maker
