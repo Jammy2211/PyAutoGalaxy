@@ -650,6 +650,25 @@ def test__cannot_pass_light_or_mass_list():
     with pytest.raises(exc.GalaxyException):
         ag.Galaxy(redshift=0.5, light=light_list, mass=mass_list)
 
+def test__decorator__grid_sub_in__numericas():
+
+    mask = ag.Mask2D(
+        mask=[
+            [True, True, True, True, True],
+            [True, False, False, True, True],
+            [True, True, True, True, True],
+            [True, True, True, True, True],
+            [True, True, True, True, True],
+        ],
+        pixel_scales=(1.0, 1.0),
+        sub_size=2
+    )
+
+    grid = ag.Grid2D.from_mask(mask=mask)
+
+    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(centre=(3.0, 3.0), intensity=1.0))
+
+    image = galaxy.image_2d_from(grid=grid)
 
 def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
     mask = ag.Mask2D(
@@ -705,6 +724,7 @@ def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
 
 
 def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp):
+
     mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True],
