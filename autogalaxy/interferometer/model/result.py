@@ -2,7 +2,7 @@ import autoarray as aa
 
 from typing import Dict, List
 
-from autogalaxy.analysis.adapt_images import AdaptImages
+from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.analysis.result import ResultDataset
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
@@ -91,5 +91,5 @@ class ResultInterferometer(ResultDataset):
 
         return AdaptImages.from_result(
             result=self,
-            use_model_images=use_model_images,
+            use_model_images=True,
         )
