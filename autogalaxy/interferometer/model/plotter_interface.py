@@ -1,16 +1,72 @@
 from os import path
 
+import autoarray as aa
+import autoarray.plot as aplt
+
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.interferometer.plot.fit_interferometer_plotters import (
     FitInterferometerPlotter,
 )
-from autogalaxy.analysis.visualizer import Visualizer
+from autogalaxy.analysis.plotter_interface import PlotterInterface
 
-from autogalaxy.analysis.visualizer import plot_setting
+from autogalaxy.analysis.plotter_interface import plot_setting
 
 
-class VisualizerInterferometer(Visualizer):
-    def visualize_fit_interferometer(
+class PlotterInterfaceInterferometer(PlotterInterface):
+
+    def interferometer(self, dataset: aa.Interferometer):
+        """
+        Visualizes an `Interferometer` dataset object.
+
+        Images are output to the `image` folder of the `output_path` in a subfolder called `interferometer`. When
+        used with a non-linear search the `output_path` points to the search's results folder.
+
+        Visualization includes individual images of attributes of the dataset (e.g. the visibilities, noise map,
+        uv-wavelengths) and a subplot of all these attributes on the same figure.
+
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
+        [dataset] header.
+
+        Parameters
+        ----------
+        dataset
+            The interferometer dataset whose attributes are visualized.
+        """
+
+        def should_plot(name):
+            return plot_setting(section=["dataset", "interferometer"], name=name)
+
+        mat_plot_2d = self.mat_plot_2d_from(subfolders="dataset")
+
+        dataset_plotter = aplt.InterferometerPlotter(
+            dataset=dataset,
+            include_2d=self.include_2d,
+            mat_plot_2d=mat_plot_2d,
+        )
+
+        dataset_plotter.figures_2d(
+            data=should_plot("data"),
+            u_wavelengths=should_plot("uv_wavelengths"),
+            v_wavelengths=should_plot("uv_wavelengths"),
+            amplitudes_vs_uv_distances=should_plot("amplitudes_vs_uv_distances"),
+            phases_vs_uv_distances=should_plot("phases_vs_uv_distances"),
+            dirty_image=should_plot("dirty_image"),
+            dirty_noise_map=should_plot("dirty_noise_map"),
+            dirty_signal_to_noise_map=should_plot("dirty_signal_to_noise_map"),
+        )
+
+        mat_plot_2d = self.mat_plot_2d_from(subfolders="")
+
+        dataset_plotter = aplt.InterferometerPlotter(
+            dataset=dataset,
+            include_2d=self.include_2d,
+            mat_plot_2d=mat_plot_2d,
+        )
+
+        if should_plot("subplot_dataset"):
+            dataset_plotter.subplot_dataset()
+
+    def fit_interferometer(
         self,
         fit: FitInterferometer,
         during_analysis: bool,
@@ -19,14 +75,14 @@ class VisualizerInterferometer(Visualizer):
         """
         Visualizes a `FitInterferometer` object, which fits an interferometer dataset.
 
-        Images are output to the `image` folder of the `visualize_path` in a subfolder called `fit`. When
-        used with a non-linear search the `visualize_path` points to the search's results folder and this function
+        Images are output to the `image` folder of the `output_path` in a subfolder called `fit`. When
+        used with a non-linear search the `output_path` points to the search's results folder and this function
         visualizes the maximum log likelihood `FitInterferometer` inferred by the search so far.
 
         Visualization includes individual images of attributes of the `FitInterferometer` (e.g. the model data,
         residual map) and a subplot of all `FitInterferometer`'s images on the same figure.
 
-        The images output by the `Visualizer` are customized using the file `config/visualize/plots.ini` under the
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
         [fit] header.
 
         Parameters

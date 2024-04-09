@@ -7,7 +7,7 @@ import autofit as af
 from autogalaxy.analysis.analysis.analysis import Analysis
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
-from autogalaxy.quantity.model.visualizer import VisualizerQuantity
+from autogalaxy.quantity.model.plotter_interface import PlotterInterfaceQuantity
 from autogalaxy.quantity.dataset_quantity import DatasetQuantity
 from autogalaxy.quantity.model.result import ResultQuantity
 from autogalaxy.quantity.fit_quantity import FitQuantity
@@ -140,7 +140,7 @@ class AnalysisQuantity(Analysis):
         - Images of the best-fit `FitQuantity`, including the model-image, residuals and chi-squared of its fit to
         the imaging data.
 
-        The images output by this function are customized using the file `config/visualize/plots.ini`.
+        The images output by this function are customized using the file `config/visualize/plots.yaml`.
 
         Parameters
         ----------
@@ -160,8 +160,8 @@ class AnalysisQuantity(Analysis):
 
         fit = self.fit_quantity_for_instance(instance=instance)
 
-        visualizer = VisualizerQuantity(visualize_path=paths.image_path)
-        visualizer.visualize_fit_quantity(fit=fit)
+        PlotterInterface = PlotterInterfaceQuantity(output_path=paths.image_path)
+        PlotterInterface.visualize_fit_quantity(fit=fit)
 
     def save_attributes(self, paths: af.DirectoryPaths):
         """

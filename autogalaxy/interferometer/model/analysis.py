@@ -15,7 +15,7 @@ from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.interferometer.model.result import ResultInterferometer
-from autogalaxy.interferometer.model.visualizer import VisualizerInterferometer
+from autogalaxy.interferometer.model.plotter_interface import PlotterInterfaceInterferometer
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy import exc
 
@@ -212,12 +212,12 @@ class AnalysisInterferometer(AnalysisDataset):
             the imaging data.
         """
 
-        visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
+        PlotterInterface = PlotterInterfaceInterferometer(output_path=paths.image_path)
 
-        visualizer.visualize_interferometer(dataset=self.interferometer)
+        PlotterInterface.interferometer(dataset=self.interferometer)
 
         if self.adapt_images is not None:
-            visualizer.visualize_adapt_images(adapt_images=self.adapt_images)
+            PlotterInterface.adapt_images(adapt_images=self.adapt_images)
 
     def visualize(self, paths: af.DirectoryPaths, instance, during_analysis):
         """
@@ -238,7 +238,7 @@ class AnalysisInterferometer(AnalysisDataset):
         - If adapt features are used to scale the noise, a `FitInterferometer` with these features turned off may be
           output, to indicate how much these features are altering the dataset.
 
-        The images output by this function are customized using the file `config/visualize/plots.ini`.
+        The images output by this function are customized using the file `config/visualize/plots.yaml`.
 
         Parameters
         ----------
@@ -254,20 +254,20 @@ class AnalysisInterferometer(AnalysisDataset):
         """
         fit = self.fit_from(instance=instance)
 
-        visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
-        visualizer.visualize_interferometer(dataset=self.interferometer)
+        PlotterInterface = PlotterInterfaceInterferometer(output_path=paths.image_path)
+        PlotterInterface.interferometer(dataset=self.interferometer)
 
         galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
 
-        visualizer.visualize_plane(
+        PlotterInterface.visualize_plane(
             galaxies=galaxies, grid=fit.grid, during_analysis=during_analysis
         )
-        visualizer.visualize_galaxies_1d(
+        PlotterInterface.galaxies_1d(
             galaxies=galaxies, grid=fit.grid, during_analysis=during_analysis
         )
 
         try:
-            visualizer.visualize_fit_interferometer(
+            PlotterInterface.fit_interferometer(
                 fit=fit, during_analysis=during_analysis
             )
         except exc.InversionException:
@@ -275,7 +275,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
         if fit.inversion is not None:
             try:
-                visualizer.visualize_inversion(
+                PlotterInterface.inversion(
                     inversion=fit.inversion, during_analysis=during_analysis
                 )
             except IndexError:

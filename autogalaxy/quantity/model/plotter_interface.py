@@ -1,11 +1,11 @@
 from autogalaxy.quantity.fit_quantity import FitQuantity
 from autogalaxy.quantity.plot.fit_quantity_plotters import FitQuantityPlotter
-from autogalaxy.analysis.visualizer import Visualizer
-from autogalaxy.analysis.visualizer import plot_setting
+from autogalaxy.analysis.plotter_interface import PlotterInterface
+from autogalaxy.analysis.plotter_interface import plot_setting
 from autogalaxy.plot.visuals.two_d import Visuals2D
 
 
-class VisualizerQuantity(Visualizer):
+class PlotterInterfaceQuantity(PlotterInterface):
     def visualize_fit_quantity(
         self,
         fit: FitQuantity,
@@ -16,14 +16,14 @@ class VisualizerQuantity(Visualizer):
         Visualizes a `FitQuantity` object, which fits a quantity of a light or mass profile (e.g. an image, potential)
         to the same quantity of another light or mass profile.
 
-        Images are output to the `image` folder of the `visualize_path` in a subfolder called `fit_quantity`. When
-        used with a non-linear search the `visualize_path` points to the search's results folder and this function
+        Images are output to the `image` folder of the `output_path` in a subfolder called `fit_quantity`. When
+        used with a non-linear search the `output_path` points to the search's results folder and this function
         visualizes the maximum log likelihood `FitQuantity` inferred by the search so far.
 
         Visualization includes individual images of attributes of the `FitQuantity` (e.g. the model data, residual map)
         and a subplot of all `FitQuantity`'s images on the same figure.
 
-        The images output by the `Visualizer` are customized using the file `config/visualize/plots.ini` under the
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
         [fit_quantity] header.
 
         Parameters
