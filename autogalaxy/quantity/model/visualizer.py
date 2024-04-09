@@ -6,8 +6,9 @@ from autogalaxy.quantity.model.plotter_interface import PlotterInterfaceQuantity
 
 
 class VisualizerQuantity(af.Visualizer):
+
+    @staticmethod
     def visualize(
-        self,
         analysis,
         paths: af.DirectoryPaths,
         instance: af.ModelInstance,
