@@ -17,7 +17,7 @@ def test__imaging(imaging_7x7, include_2d_all, plot_path, plot_patch):
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    plotter_interface = PlotterInterfaceImaging(output_path=plot_path)
+    plotter_interface = PlotterInterfaceImaging(image_path=plot_path)
 
     plotter_interface.imaging(dataset=imaging_7x7)
 
@@ -41,7 +41,7 @@ def test__fit_imaging(
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    plotter_interface = PlotterInterfaceImaging(output_path=plot_path)
+    plotter_interface = PlotterInterfaceImaging(image_path=plot_path)
 
     plotter_interface.fit_imaging(
         fit=fit_imaging_x2_galaxy_inversion_7x7, during_analysis=False

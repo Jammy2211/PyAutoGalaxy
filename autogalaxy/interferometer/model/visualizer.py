@@ -7,7 +7,6 @@ from autogalaxy import exc
 
 
 class VisualizerInterferometer(af.Visualizer):
-
     @staticmethod
     def visualize_before_fit(
         analysis,
@@ -29,7 +28,7 @@ class VisualizerInterferometer(af.Visualizer):
             the imaging data.
         """
 
-        PlotterInterface = PlotterInterfaceInterferometer(output_path=paths.image_path)
+        PlotterInterface = PlotterInterfaceInterferometer(image_path=paths.image_path)
 
         PlotterInterface.interferometer(dataset=analysis.interferometer)
 
@@ -77,7 +76,7 @@ class VisualizerInterferometer(af.Visualizer):
         """
         fit = analysis.fit_from(instance=instance)
 
-        PlotterInterface = PlotterInterfaceInterferometer(output_path=paths.image_path)
+        PlotterInterface = PlotterInterfaceInterferometer(image_path=paths.image_path)
         PlotterInterface.interferometer(dataset=analysis.interferometer)
 
         galaxies = fit.galaxies_linear_light_profiles_to_light_profiles

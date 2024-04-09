@@ -15,8 +15,8 @@ class PlotterInterfaceImaging(PlotterInterface):
         """
         Visualizes an `Imaging` dataset object.
 
-        Images are output to the `image` folder of the `output_path` in a subfolder called `imaging`. When used with
-        a non-linear search the `output_path` points to the search's results folder.
+        Images are output to the `image` folder of the `image_path` in a subfolder called `imaging`. When used with
+        a non-linear search the `image_path` points to the search's results folder.
         `.
         Visualization includes individual images of attributes of the dataset (e.g. the image, noise map, PSF) and a
         subplot of all these attributes on the same figure.
@@ -61,8 +61,8 @@ class PlotterInterfaceImaging(PlotterInterface):
         """
         Visualizes a `FitImaging` object, which fits an imaging dataset.
 
-        Images are output to the `image` folder of the `output_path` in a subfolder called `fit`. When
-        used with a non-linear search the `output_path` points to the search's results folder and this function
+        Images are output to the `image` folder of the `image_path` in a subfolder called `fit`. When
+        used with a non-linear search the `image_path` points to the search's results folder and this function
         visualizes the maximum log likelihood `FitImaging` inferred by the search so far.
 
         Visualization includes individual images of attributes of the `FitImaging` (e.g. the model data, residual map)

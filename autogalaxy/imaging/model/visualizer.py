@@ -27,7 +27,7 @@ class VisualizerImaging(af.Visualizer):
             the imaging data.
         """
 
-        plotter = PlotterInterfaceImaging(output_path=paths.image_path)
+        plotter = PlotterInterfaceImaging(image_path=paths.image_path)
 
         plotter.imaging(dataset=analysis.dataset)
 
@@ -72,7 +72,7 @@ class VisualizerImaging(af.Visualizer):
         """
         fit = analysis.fit_from(instance=instance)
 
-        plotter = PlotterInterfaceImaging(output_path=paths.image_path)
+        plotter = PlotterInterfaceImaging(image_path=paths.image_path)
         plotter.imaging(dataset=analysis.dataset)
 
         try:

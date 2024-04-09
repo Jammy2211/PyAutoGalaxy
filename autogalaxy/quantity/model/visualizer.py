@@ -6,7 +6,6 @@ from autogalaxy.quantity.model.plotter_interface import PlotterInterfaceQuantity
 
 
 class VisualizerQuantity(af.Visualizer):
-
     @staticmethod
     def visualize(
         analysis,
@@ -46,5 +45,5 @@ class VisualizerQuantity(af.Visualizer):
 
         fit = analysis.fit_quantity_for_instance(instance=instance)
 
-        PlotterInterface = PlotterInterfaceQuantity(output_path=paths.image_path)
+        PlotterInterface = PlotterInterfaceQuantity(image_path=paths.image_path)
         PlotterInterface.fit_quantity(fit=fit)

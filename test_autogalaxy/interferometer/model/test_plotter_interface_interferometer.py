@@ -14,7 +14,7 @@ def make_plotter_interface_plotter_setup():
 
 
 def test__interferometer(interferometer_7, include_2d_all, plot_path, plot_patch):
-    plotter_interface = PlotterInterfaceInterferometer(output_path=plot_path)
+    plotter_interface = PlotterInterfaceInterferometer(image_path=plot_path)
 
     plotter_interface.interferometer(dataset=interferometer_7)
 
@@ -34,7 +34,7 @@ def test__fit_interferometer(
     plot_path,
     plot_patch,
 ):
-    PlotterInterface = PlotterInterfaceInterferometer(output_path=plot_path)
+    PlotterInterface = PlotterInterfaceInterferometer(image_path=plot_path)
 
     PlotterInterface.fit_interferometer(
         fit=fit_interferometer_x2_galaxy_inversion_7x7, during_analysis=True

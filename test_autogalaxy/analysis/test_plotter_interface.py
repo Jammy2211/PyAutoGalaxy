@@ -20,7 +20,7 @@ def test__galaxies(
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    plotter_interface = PlotterInterface(output_path=plot_path)
+    plotter_interface = PlotterInterface(image_path=plot_path)
 
     plotter_interface.galaxies(
         galaxies=galaxies_7x7, grid=masked_imaging_7x7.grid, during_analysis=False
@@ -51,7 +51,7 @@ def test__galaxies_1d(
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    plotter_interface = PlotterInterface(output_path=plot_path)
+    plotter_interface = PlotterInterface(image_path=plot_path)
 
     plotter_interface.galaxies_1d(
         galaxies=galaxies_7x7, grid=masked_imaging_7x7.grid, during_analysis=False
@@ -70,7 +70,7 @@ def test__inversion(
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    plotter_interface = PlotterInterface(output_path=plot_path)
+    plotter_interface = PlotterInterface(image_path=plot_path)
 
     plotter_interface.inversion(inversion=voronoi_inversion_9_3x3, during_analysis=True)
 
@@ -92,7 +92,7 @@ def test__adapt_images(
     plot_path,
     plot_patch,
 ):
-    plotter_interface = PlotterInterface(output_path=plot_path)
+    plotter_interface = PlotterInterface(image_path=plot_path)
 
     adapt_images = ag.AdaptImages(
         galaxy_image_dict=adapt_galaxy_name_image_dict_7x7,

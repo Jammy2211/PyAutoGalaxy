@@ -22,7 +22,7 @@ def test__fit_quantity(
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    PlotterInterface = PlotterInterfaceQuantity(output_path=plot_path)
+    PlotterInterface = PlotterInterfaceQuantity(image_path=plot_path)
 
     PlotterInterface.fit_quantity(fit=fit_quantity_7x7_array_2d)
 

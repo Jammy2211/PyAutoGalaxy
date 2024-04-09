@@ -36,11 +36,11 @@ def plot_setting(section: Union[List[str], str], name: str) -> bool:
 
 
 class PlotterInterface:
-    def __init__(self, output_path: str):
+    def __init__(self, image_path: str):
         """
         Provides an interface between an output path and all plotter objects.
 
-        This is used to visualize the results of a model-fit, where the `output_path` points to the
+        This is used to visualize the results of a model-fit, where the `image_path` points to the
         folder where the results of the model-fit are stored on your hard-disk, which is typically the `image` folder
         of a non-linear search.
 
@@ -54,18 +54,18 @@ class PlotterInterface:
 
         Parameters
         ----------
-        output_path
+        image_path
             The path on the hard-disk to the `image` folder of the non-linear searches results.
         """
-        self.output_path = output_path
+        self.image_path = image_path
 
         self.include_2d = Include2D()
 
-        os.makedirs(output_path, exist_ok=True)
+        os.makedirs(image_path, exist_ok=True)
 
     def mat_plot_1d_from(self, subfolders: str, format: str = "png") -> MatPlot1D:
         """
-        Returns a 1D matplotlib plotting object whose `Output` class uses the `output_path`, such that it outputs
+        Returns a 1D matplotlib plotting object whose `Output` class uses the `image_path`, such that it outputs
         images to the `image` folder of the non-linear search.
 
         Parameters
@@ -83,13 +83,13 @@ class PlotterInterface:
         """
         return MatPlot1D(
             output=aplt.Output(
-                path=path.join(self.output_path, subfolders), format=format
+                path=path.join(self.image_path, subfolders), format=format
             )
         )
 
     def mat_plot_2d_from(self, subfolders, format="png") -> MatPlot2D:
         """
-        Returns a 2D matplotlib plotting object whose `Output` class uses the `output_path`, such that it outputs
+        Returns a 2D matplotlib plotting object whose `Output` class uses the `image_path`, such that it outputs
         images to the `image` folder of the non-linear search.
 
         Parameters
@@ -107,7 +107,7 @@ class PlotterInterface:
         """
         return MatPlot2D(
             output=aplt.Output(
-                path=path.join(self.output_path, subfolders), format=format
+                path=path.join(self.image_path, subfolders), format=format
             )
         )
 
@@ -117,8 +117,8 @@ class PlotterInterface:
         """
         Visualizes a list of galaxies.
 
-        Images are output to the `image` folder of the `output_path` in a subfolder called `galaxies`. When
-        used with a non-linear search the `output_path` points to the search's results folder and this function
+        Images are output to the `image` folder of the `image_path` in a subfolder called `galaxies`. When
+        used with a non-linear search the `image_path` points to the search's results folder and this function
         visualizes the maximum log likelihood galaxies inferred by the search so far.
 
         Visualization includes individual images of attributes of the galaxies (e.g. its image, convergence, deflection
@@ -226,8 +226,8 @@ class PlotterInterface:
         """
         Visualizes a list of `Galaxy` objects.
 
-        Images are output to the `image` folder of the `output_path` in a subfolder called `galaxies`. When
-        used with a non-linear search the `output_path` points to the search's results folder and this function
+        Images are output to the `image` folder of the `image_path` in a subfolder called `galaxies`. When
+        used with a non-linear search the `image_path` points to the search's results folder and this function
         visualizes the maximum log likelihood `Galaxy`'s inferred by the search so far.
 
         Visualization includes individual images of attributes of each galaxy (e.g. 1D plots of their image,
@@ -273,8 +273,8 @@ class PlotterInterface:
         """
         Visualizes an `Inversion` object.
 
-        Images are output to the `image` folder of the `output_path` in a subfolder called `inversion`. When
-        used with a non-linear search the `output_path` points to the search's results folder and this function
+        Images are output to the `image` folder of the `image_path` in a subfolder called `inversion`. When
+        used with a non-linear search the `image_path` points to the search's results folder and this function
         visualizes the maximum log likelihood `Inversion` inferred by the search so far.
 
         Visualization includes individual images of attributes of the dataset (e.g. the reconstructed image, the
@@ -372,8 +372,8 @@ class PlotterInterface:
         """
         Visualizes the adapt images used by a model-fit for adaptive pixelization mesh's and regularization.
 
-        Images are output to the `image` folder of the `output_path` in a subfolder called `adapt`. When
-        used with a non-linear search the `output_path` points to the search's results folder.
+        Images are output to the `image` folder of the `image_path` in a subfolder called `adapt`. When
+        used with a non-linear search the `image_path` points to the search's results folder.
 
         Visualization includes an image of the overall adapt model image and a subplot of all galaxy images on the same
         figure.
