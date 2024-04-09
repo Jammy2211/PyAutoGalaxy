@@ -6,8 +6,8 @@ from autogalaxy.imaging.model.plotter_interface import PlotterInterfaceImaging
 
 
 class VisualizerImaging(af.Visualizer):
+    @staticmethod
     def visualize_before_fit(
-        self,
         analysis,
         paths: af.AbstractPaths,
         model: af.AbstractPriorModel,
@@ -34,8 +34,8 @@ class VisualizerImaging(af.Visualizer):
         if analysis.adapt_images is not None:
             plotter.adapt_images(adapt_images=analysis.adapt_images)
 
+    @staticmethod
     def visualize(
-        self,
         analysis,
         paths: af.DirectoryPaths,
         instance: af.ModelInstance,
