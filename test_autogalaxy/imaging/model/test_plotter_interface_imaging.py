@@ -13,9 +13,7 @@ def make_plotter_interface_plotter_setup():
     return path.join("{}".format(directory), "files")
 
 
-def test__imaging(
-    imaging_7x7, include_2d_all, plot_path, plot_patch
-):
+def test__imaging(imaging_7x7, include_2d_all, plot_path, plot_patch):
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 

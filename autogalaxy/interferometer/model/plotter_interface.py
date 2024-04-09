@@ -13,7 +13,6 @@ from autogalaxy.analysis.plotter_interface import plot_setting
 
 
 class PlotterInterfaceInterferometer(PlotterInterface):
-
     def interferometer(self, dataset: aa.Interferometer):
         """
         Visualizes an `Interferometer` dataset object.

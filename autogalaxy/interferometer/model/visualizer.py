@@ -1,15 +1,17 @@
 import autofit as af
 
-from autogalaxy.interferometer.model.plotter_interface import PlotterInterfaceInterferometer
+from autogalaxy.interferometer.model.plotter_interface import (
+    PlotterInterfaceInterferometer,
+)
 from autogalaxy import exc
 
-class VisualizerInterferometer(af.Visualizer):
 
+class VisualizerInterferometer(af.Visualizer):
     def visualize_before_fit(
-            self,
-            analysis,
-            paths: af.AbstractPaths,
-            model: af.AbstractPriorModel,
+        self,
+        analysis,
+        paths: af.AbstractPaths,
+        model: af.AbstractPriorModel,
     ):
         """
         PyAutoFit calls this function immediately before the non-linear search begins.
@@ -38,7 +40,7 @@ class VisualizerInterferometer(af.Visualizer):
         analysis,
         paths: af.DirectoryPaths,
         instance: af.ModelInstance,
-        during_analysis: bool
+        during_analysis: bool,
     ):
         """
         Outputs images of the maximum log likelihood model inferred by the model-fit. This function is called

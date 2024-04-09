@@ -72,9 +72,7 @@ def test__inversion(
 
     plotter_interface = PlotterInterface(output_path=plot_path)
 
-    plotter_interface.inversion(
-        inversion=voronoi_inversion_9_3x3, during_analysis=True
-    )
+    plotter_interface.inversion(inversion=voronoi_inversion_9_3x3, during_analysis=True)
 
     assert path.join(plot_path, "subplot_inversion_0.png") in plot_patch.paths
 

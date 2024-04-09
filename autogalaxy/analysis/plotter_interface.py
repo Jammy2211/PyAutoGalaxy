@@ -39,11 +39,11 @@ class PlotterInterface:
     def __init__(self, output_path: str):
         """
         Provides an interface between an output path and all plotter objects.
-        
+
         This is used to visualize the results of a model-fit, where the `output_path` points to the
-        folder where the results of the model-fit are stored on your hard-disk, which is typically the `image` folder 
+        folder where the results of the model-fit are stored on your hard-disk, which is typically the `image` folder
         of a non-linear search.
-        
+
         The `PlotterInterface` is typically used in the `Analysis` class of a non-linear search to visualize the maximum
         log likelihood model of the model-fit so far.
 

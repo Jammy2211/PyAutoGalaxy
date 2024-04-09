@@ -12,7 +12,7 @@ def make_plotter_interface_plotter_setup():
     return path.join("{}".format(directory), "files")
 
 
-def test__visualizes_fit_quantity__uses_configs(
+def test__fit_quantity(
     fit_quantity_7x7_array_2d,
     fit_quantity_7x7_vector_yx_2d,
     include_2d_all,

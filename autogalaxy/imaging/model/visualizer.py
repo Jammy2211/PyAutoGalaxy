@@ -4,13 +4,13 @@ from autoarray import exc
 
 from autogalaxy.imaging.model.plotter_interface import PlotterInterfaceImaging
 
-class VisualizerImaging(af.Visualizer):
 
+class VisualizerImaging(af.Visualizer):
     def visualize_before_fit(
-            self,
-            analysis,
-            paths: af.AbstractPaths,
-            model: af.AbstractPriorModel,
+        self,
+        analysis,
+        paths: af.AbstractPaths,
+        model: af.AbstractPriorModel,
     ):
         """
         PyAutoFit calls this function immediately before the non-linear search begins.
@@ -39,7 +39,7 @@ class VisualizerImaging(af.Visualizer):
         analysis,
         paths: af.DirectoryPaths,
         instance: af.ModelInstance,
-        during_analysis: bool
+        during_analysis: bool,
     ):
         """
         Output images of the maximum log likelihood model inferred by the model-fit. This function is called throughout
@@ -89,6 +89,4 @@ class VisualizerImaging(af.Visualizer):
             galaxies=galaxies, grid=fit.grid, during_analysis=during_analysis
         )
         if fit.inversion is not None:
-            plotter.inversion(
-                inversion=fit.inversion, during_analysis=during_analysis
-            )
+            plotter.inversion(inversion=fit.inversion, during_analysis=during_analysis)

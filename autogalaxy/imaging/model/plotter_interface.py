@@ -11,7 +11,6 @@ from autogalaxy.analysis.plotter_interface import plot_setting
 
 
 class PlotterInterfaceImaging(PlotterInterface):
-    
     def imaging(self, dataset: aa.Imaging):
         """
         Visualizes an `Imaging` dataset object.
@@ -55,7 +54,7 @@ class PlotterInterfaceImaging(PlotterInterface):
 
         if should_plot("subplot_dataset"):
             dataset_plotter.subplot_dataset()
-    
+
     def fit_imaging(
         self, fit: FitImaging, during_analysis: bool, subfolders: str = "fit_dataset"
     ):
