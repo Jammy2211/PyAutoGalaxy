@@ -24,7 +24,7 @@ def test__visualizes_fit_quantity__uses_configs(
 
     PlotterInterface = PlotterInterfaceQuantity(output_path=plot_path)
 
-    PlotterInterface.visualize_fit_quantity(fit=fit_quantity_7x7_array_2d)
+    PlotterInterface.fit_quantity(fit=fit_quantity_7x7_array_2d)
 
     plot_path = path.join(plot_path, "fit_quantity")
 

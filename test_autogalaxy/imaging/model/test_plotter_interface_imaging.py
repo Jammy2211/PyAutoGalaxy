@@ -13,7 +13,7 @@ def make_plotter_interface_plotter_setup():
     return path.join("{}".format(directory), "files")
 
 
-def test__visualizes_imaging__uses_configs(
+def test__imaging(
     imaging_7x7, include_2d_all, plot_path, plot_patch
 ):
     if path.exists(plot_path):
@@ -33,7 +33,7 @@ def test__visualizes_imaging__uses_configs(
     assert path.join(plot_path, "signal_to_noise_map.png") not in plot_patch.paths
 
 
-def test__visualizes_fit_imaging__uses_configs(
+def test__fit_imaging(
     masked_imaging_7x7,
     fit_imaging_x2_galaxy_inversion_7x7,
     include_2d_all,

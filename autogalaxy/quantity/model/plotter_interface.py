@@ -6,7 +6,7 @@ from autogalaxy.plot.visuals.two_d import Visuals2D
 
 
 class PlotterInterfaceQuantity(PlotterInterface):
-    def visualize_fit_quantity(
+    def fit_quantity(
         self,
         fit: FitQuantity,
         visuals_2d: Visuals2D = Visuals2D(),

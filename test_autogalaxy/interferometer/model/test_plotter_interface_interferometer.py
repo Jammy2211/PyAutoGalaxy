@@ -11,7 +11,7 @@ def make_plotter_interface_plotter_setup():
     return path.join("{}".format(directory), "files")
 
 
-def test__visualizes_interferometer__uses_configs(
+def test__interferometer(
     interferometer_7, include_2d_all, plot_path, plot_patch
 ):
     plotter_interface = PlotterInterfaceInterferometer(output_path=plot_path)
@@ -27,7 +27,7 @@ def test__visualizes_interferometer__uses_configs(
     assert path.join(plot_path, "v_wavelengths.png") not in plot_patch.paths
 
 
-def test__visualizes_fit_interferometer__uses_configs(
+def test__fit_interferometer(
     interferometer_7,
     fit_interferometer_x2_galaxy_inversion_7x7,
     include_2d_all,

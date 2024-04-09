@@ -161,7 +161,7 @@ class AnalysisQuantity(Analysis):
         fit = self.fit_quantity_for_instance(instance=instance)
 
         PlotterInterface = PlotterInterfaceQuantity(output_path=paths.image_path)
-        PlotterInterface.visualize_fit_quantity(fit=fit)
+        PlotterInterface.fit_quantity(fit=fit)
 
     def save_attributes(self, paths: af.DirectoryPaths):
         """
