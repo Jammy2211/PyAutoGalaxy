@@ -1,5 +1,5 @@
 from typing import Tuple
-
+import numpy as np
 from autogalaxy.profiles.mass.dark.nfw import NFWSph
 from autogalaxy.profiles.mass.dark.nfw import NFW
 
@@ -59,7 +59,18 @@ class NFWMCRScatterLudlow(NFW):
             redshift_object=redshift_object,
             redshift_source=redshift_source,
         )
-
+        
+        """
+        #Make correction that Andrew proposed
+        fac = np.sqrt(ell_comps[1] ** 2 + ell_comps[0] ** 2)
+        if fac > 0.999:
+            fac = 0.999  # avoid unphysical solution
+        # if fac > 1: print('unphysical e1,e2')
+        axis_ratio = (1 - fac) / (1 + fac)
+        scale_radius = scale_radius / np.sqrt(axis_ratio)
+        
+        print('With Correction')
+        """
         super().__init__(
             centre=centre,
             ell_comps=ell_comps,
