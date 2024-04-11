@@ -41,10 +41,10 @@ class NFW(gNFW, MassProfileCSE):
         )
         super(MassProfileCSE, self).__init__()
 
-    #def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
-    #    return self.deflections_2d_via_cse_from(grid=grid)
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
-        return self.deflections_2d_via_integral_from(grid=grid)
+        return self.deflections_2d_via_cse_from(grid=grid)
+    #def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+    #    return self.deflections_2d_via_integral_from(grid=grid)
 
     @aa.grid_dec.grid_2d_to_structure
     @aa.grid_dec.transform
@@ -287,8 +287,8 @@ class NFW(gNFW, MassProfileCSE):
         x2 = grid[:,0]/self.scale_radius
         
         #Avoid nans due to x=0
-        x1 = np.where(x1<1e-6, 1e-6, x1)
-        x2 = np.where(x2<1e-6, 1e-6, x2)
+        x1 = np.where(np.abs(x1)<1e-6, 1e-6, x1)
+        x2 = np.where(np.abs(x2)<1e-6, 1e-6, x2)
         
         #Calculate shear from nfw_HK24.py
         g1, g2 = Shear(x1,x2, e_hk24, self.kappa_s)
@@ -329,8 +329,8 @@ class NFW(gNFW, MassProfileCSE):
         x2 = grid[:,0]/self.scale_radius
         
         #Avoid nans due to x=0
-        x1 = np.where(x1<1e-6, 1e-6, x1)
-        x2 = np.where(x2<1e-6, 1e-6, x2)
+        x1 = np.where(np.abs(x1)<1e-6, 1e-6, x1)
+        x2 = np.where(np.abs(x2)<1e-6, 1e-6, x2)
         
         #Calculate convergence from nfw_HK24.py
         a = semi_major_axis(x1, x2, e_hk24)
