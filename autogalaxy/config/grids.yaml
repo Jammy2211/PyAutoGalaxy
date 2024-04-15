@@ -19,6 +19,7 @@ radial_minimum:
     GaussianSph: 1.0e-08
     gNFW: 1.0e-06
     gNFWMCRLudlow: 1.0e-06
+    gNFWVirialMassConcSph: 1.0e-06
     gNFWSph: 1.0e-06
     Isothermal: 1.0e-08
     IsothermalCore: 1.0e-08
