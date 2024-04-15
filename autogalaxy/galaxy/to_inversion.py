@@ -51,6 +51,7 @@ class AbstractToInversion:
         self.preloads = preloads
         self.run_time_dict = run_time_dict
 
+
     @property
     def convolver(self):
         try:
@@ -137,6 +138,11 @@ class GalaxiesToInversion(AbstractToInversion):
             preloads=preloads,
             run_time_dict=run_time_dict,
         )
+
+    @property
+    def has_mapper(self):
+        if self.galaxies.has(cls=aa.Pixelization):
+            return True
 
     def cls_light_profile_func_list_galaxy_dict_from(
         self, cls: Type
