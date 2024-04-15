@@ -2,17 +2,17 @@ import shutil
 from os import path
 import pytest
 
-from autogalaxy.quantity.model.visualizer import VisualizerQuantity
+from autogalaxy.quantity.model.plotter_interface import PlotterInterfaceQuantity
 
 directory = path.dirname(path.abspath(__file__))
 
 
 @pytest.fixture(name="plot_path")
-def make_visualizer_plotter_setup():
+def make_plotter_interface_plotter_setup():
     return path.join("{}".format(directory), "files")
 
 
-def test__visualizes_fit_quantity__uses_configs(
+def test__fit_quantity(
     fit_quantity_7x7_array_2d,
     fit_quantity_7x7_vector_yx_2d,
     include_2d_all,
@@ -22,9 +22,9 @@ def test__visualizes_fit_quantity__uses_configs(
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    visualizer = VisualizerQuantity(visualize_path=plot_path)
+    PlotterInterface = PlotterInterfaceQuantity(image_path=plot_path)
 
-    visualizer.visualize_fit_quantity(fit=fit_quantity_7x7_array_2d)
+    PlotterInterface.fit_quantity(fit=fit_quantity_7x7_array_2d)
 
     plot_path = path.join(plot_path, "fit_quantity")
 

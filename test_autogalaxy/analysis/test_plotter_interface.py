@@ -4,25 +4,25 @@ import pytest
 
 import autogalaxy as ag
 
-from autogalaxy.analysis import visualizer as vis
+from autogalaxy.analysis.plotter_interface import PlotterInterface
 
 directory = path.dirname(path.abspath(__file__))
 
 
 @pytest.fixture(name="plot_path")
-def make_visualizer_plotter_setup():
+def make_plotter_interface_plotter_setup():
     return path.join("{}".format(directory), "files")
 
 
-def test__visualizes_galaxies__uses_configs(
+def test__galaxies(
     masked_imaging_7x7, galaxies_7x7, include_2d_all, plot_path, plot_patch
 ):
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    visualizer = vis.Visualizer(visualize_path=plot_path)
+    plotter_interface = PlotterInterface(image_path=plot_path)
 
-    visualizer.visualize_galaxies(
+    plotter_interface.galaxies(
         galaxies=galaxies_7x7, grid=masked_imaging_7x7.grid, during_analysis=False
     )
 
@@ -45,15 +45,15 @@ def test__visualizes_galaxies__uses_configs(
     assert convergence.shape == (7, 7)
 
 
-def test__visualizes_galaxies_1d__uses_configs(
+def test__galaxies_1d(
     masked_imaging_7x7, galaxies_7x7, include_2d_all, plot_path, plot_patch
 ):
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    visualizer = vis.Visualizer(visualize_path=plot_path)
+    plotter_interface = PlotterInterface(image_path=plot_path)
 
-    visualizer.visualize_galaxies_1d(
+    plotter_interface.galaxies_1d(
         galaxies=galaxies_7x7, grid=masked_imaging_7x7.grid, during_analysis=False
     )
 
@@ -64,53 +64,15 @@ def test__visualizes_galaxies_1d__uses_configs(
     assert path.join(plot_path, "potential_1d_decomposed.png") in plot_patch.paths
 
 
-def test__visualizes_imaging__uses_configs(
-    imaging_7x7, include_2d_all, plot_path, plot_patch
-):
-    if path.exists(plot_path):
-        shutil.rmtree(plot_path)
-
-    visualizer = vis.Visualizer(visualize_path=plot_path)
-
-    visualizer.visualize_imaging(dataset=imaging_7x7)
-
-    assert path.join(plot_path, "subplot_dataset.png") in plot_patch.paths
-
-    plot_path = path.join(plot_path, "dataset")
-
-    assert path.join(plot_path, "data.png") in plot_patch.paths
-    assert path.join(plot_path, "noise_map.png") not in plot_patch.paths
-    assert path.join(plot_path, "psf.png") in plot_patch.paths
-    assert path.join(plot_path, "signal_to_noise_map.png") not in plot_patch.paths
-
-
-def test__visualizes_interferometer__uses_configs(
-    interferometer_7, include_2d_all, plot_path, plot_patch
-):
-    visualizer = vis.Visualizer(visualize_path=plot_path)
-
-    visualizer.visualize_interferometer(dataset=interferometer_7)
-
-    assert path.join(plot_path, "subplot_dataset.png") in plot_patch.paths
-
-    plot_path = path.join(plot_path, "dataset")
-
-    assert path.join(plot_path, "data.png") in plot_patch.paths
-    assert path.join(plot_path, "u_wavelengths.png") not in plot_patch.paths
-    assert path.join(plot_path, "v_wavelengths.png") not in plot_patch.paths
-
-
-def test__visualize_inversion__uses_configs(
+def test__inversion(
     masked_imaging_7x7, voronoi_inversion_9_3x3, include_2d_all, plot_path, plot_patch
 ):
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    visualizer = vis.Visualizer(visualize_path=plot_path)
+    plotter_interface = PlotterInterface(image_path=plot_path)
 
-    visualizer.visualize_inversion(
-        inversion=voronoi_inversion_9_3x3, during_analysis=True
-    )
+    plotter_interface.inversion(inversion=voronoi_inversion_9_3x3, during_analysis=True)
 
     assert path.join(plot_path, "subplot_inversion_0.png") in plot_patch.paths
 
@@ -122,7 +84,7 @@ def test__visualize_inversion__uses_configs(
     assert path.join(plot_path, "regularization_weights.png") not in plot_patch.paths
 
 
-def test__visualize_adapt_images__uses_config(
+def test__adapt_images(
     masked_imaging_7x7,
     include_2d_all,
     adapt_galaxy_name_image_dict_7x7,
@@ -130,13 +92,13 @@ def test__visualize_adapt_images__uses_config(
     plot_path,
     plot_patch,
 ):
-    visualizer = vis.Visualizer(visualize_path=plot_path)
+    plotter_interface = PlotterInterface(image_path=plot_path)
 
     adapt_images = ag.AdaptImages(
         galaxy_image_dict=adapt_galaxy_name_image_dict_7x7,
     )
 
-    visualizer.visualize_adapt_images(
+    plotter_interface.adapt_images(
         adapt_images=adapt_images,
     )
 

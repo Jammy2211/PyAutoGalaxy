@@ -35,36 +35,37 @@ def plot_setting(section: Union[List[str], str], name: str) -> bool:
     return setting(section, name)
 
 
-class Visualizer:
-    def __init__(self, visualize_path: str):
+class PlotterInterface:
+    def __init__(self, image_path: str):
         """
-        Visualizes a model-fit, including components of the model and fit objects.
+        Provides an interface between an output path and all plotter objects.
 
-        The `Visualizer` is typically used in the `Analysis` class of a non-linear search to visualize the maximum
+        This is used to visualize the results of a model-fit, where the `image_path` points to the
+        folder where the results of the model-fit are stored on your hard-disk, which is typically the `image` folder
+        of a non-linear search.
+
+        The `PlotterInterface` is typically used in the `Analysis` class of a non-linear search to visualize the maximum
         log likelihood model of the model-fit so far.
 
-        The methods of the `Visualizer` are called throughout a non-linear search using the `Analysis`
+        The methods of the `PlotterInterface` are called throughout a non-linear search using the `Analysis.Visualizer`
         classes `visualize` method.
 
-        The images output by the `Visualizer` are customized using the file `config/visualize/plots.ini`.
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml`.
 
         Parameters
         ----------
-        visualize_path
+        image_path
             The path on the hard-disk to the `image` folder of the non-linear searches results.
         """
-        self.visualize_path = visualize_path
+        self.image_path = image_path
 
         self.include_2d = Include2D()
 
-        try:
-            os.makedirs(visualize_path)
-        except FileExistsError:
-            pass
+        os.makedirs(image_path, exist_ok=True)
 
     def mat_plot_1d_from(self, subfolders: str, format: str = "png") -> MatPlot1D:
         """
-        Returns a 1D matplotlib plotting object whose `Output` class uses the `visualizer_path`, such that it outputs
+        Returns a 1D matplotlib plotting object whose `Output` class uses the `image_path`, such that it outputs
         images to the `image` folder of the non-linear search.
 
         Parameters
@@ -82,13 +83,13 @@ class Visualizer:
         """
         return MatPlot1D(
             output=aplt.Output(
-                path=path.join(self.visualize_path, subfolders), format=format
+                path=path.join(self.image_path, subfolders), format=format
             )
         )
 
     def mat_plot_2d_from(self, subfolders, format="png") -> MatPlot2D:
         """
-        Returns a 2D matplotlib plotting object whose `Output` class uses the `visualizer_path`, such that it outputs
+        Returns a 2D matplotlib plotting object whose `Output` class uses the `image_path`, such that it outputs
         images to the `image` folder of the non-linear search.
 
         Parameters
@@ -106,120 +107,24 @@ class Visualizer:
         """
         return MatPlot2D(
             output=aplt.Output(
-                path=path.join(self.visualize_path, subfolders), format=format
+                path=path.join(self.image_path, subfolders), format=format
             )
         )
 
-    def visualize_imaging(self, dataset: aa.Imaging):
-        """
-        Visualizes an `Imaging` dataset object.
-
-        Images are output to the `image` folder of the `visualize_path` in a subfolder called `imaging`. When used with
-        a non-linear search the `visualize_path` points to the search's results folder.
-        `.
-        Visualization includes individual images of attributes of the dataset (e.g. the image, noise map, PSF) and a
-        subplot of all these attributes on the same figure.
-
-        The images output by the `Visualizer` are customized using the file `config/visualize/plots.ini` under the
-        [dataset] header.
-
-        Parameters
-        ----------
-        dataset
-            The imaging dataset whose attributes are visualized.
-        """
-
-        def should_plot(name):
-            return plot_setting(section=["dataset", "imaging"], name=name)
-
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="dataset")
-
-        dataset_plotter = aplt.ImagingPlotter(
-            dataset=dataset, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
-        )
-
-        dataset_plotter.figures_2d(
-            data=should_plot("data"),
-            noise_map=should_plot("noise_map"),
-            psf=should_plot("psf"),
-            signal_to_noise_map=should_plot("signal_to_noise_map"),
-        )
-
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="")
-
-        dataset_plotter = aplt.ImagingPlotter(
-            dataset=dataset, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
-        )
-
-        if should_plot("subplot_dataset"):
-            dataset_plotter.subplot_dataset()
-
-    def visualize_interferometer(self, dataset: aa.Interferometer):
-        """
-        Visualizes an `Interferometer` dataset object.
-
-        Images are output to the `image` folder of the `visualize_path` in a subfolder called `interferometer`. When
-        used with a non-linear search the `visualize_path` points to the search's results folder.
-
-        Visualization includes individual images of attributes of the dataset (e.g. the visibilities, noise map,
-        uv-wavelengths) and a subplot of all these attributes on the same figure.
-
-        The images output by the `Visualizer` are customized using the file `config/visualize/plots.ini` under the
-        [dataset] header.
-
-        Parameters
-        ----------
-        dataset
-            The interferometer dataset whose attributes are visualized.
-        """
-
-        def should_plot(name):
-            return plot_setting(section=["dataset", "interferometer"], name=name)
-
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="dataset")
-
-        dataset_plotter = aplt.InterferometerPlotter(
-            dataset=dataset,
-            include_2d=self.include_2d,
-            mat_plot_2d=mat_plot_2d,
-        )
-
-        dataset_plotter.figures_2d(
-            data=should_plot("data"),
-            u_wavelengths=should_plot("uv_wavelengths"),
-            v_wavelengths=should_plot("uv_wavelengths"),
-            amplitudes_vs_uv_distances=should_plot("amplitudes_vs_uv_distances"),
-            phases_vs_uv_distances=should_plot("phases_vs_uv_distances"),
-            dirty_image=should_plot("dirty_image"),
-            dirty_noise_map=should_plot("dirty_noise_map"),
-            dirty_signal_to_noise_map=should_plot("dirty_signal_to_noise_map"),
-        )
-
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="")
-
-        dataset_plotter = aplt.InterferometerPlotter(
-            dataset=dataset,
-            include_2d=self.include_2d,
-            mat_plot_2d=mat_plot_2d,
-        )
-
-        if should_plot("subplot_dataset"):
-            dataset_plotter.subplot_dataset()
-
-    def visualize_galaxies(
+    def galaxies(
         self, galaxies: List[Galaxy], grid: aa.type.Grid2DLike, during_analysis: bool
     ):
         """
         Visualizes a list of galaxies.
 
-        Images are output to the `image` folder of the `visualize_path` in a subfolder called `galaxies`. When
-        used with a non-linear search the `visualize_path` points to the search's results folder and this function
+        Images are output to the `image` folder of the `image_path` in a subfolder called `galaxies`. When
+        used with a non-linear search the `image_path` points to the search's results folder and this function
         visualizes the maximum log likelihood galaxies inferred by the search so far.
 
         Visualization includes individual images of attributes of the galaxies (e.g. its image, convergence, deflection
         angles) and a subplot of all these attributes on the same figure.
 
-        The images output by the `Visualizer` are customized using the file `config/visualize/plots.ini` under the
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
         [galaxies] header.
 
         Parameters
@@ -315,20 +220,20 @@ class Visualizer:
                 magnification=True,
             )
 
-    def visualize_galaxies_1d(
+    def galaxies_1d(
         self, galaxies: [List[Galaxy]], grid: aa.type.Grid2DLike, during_analysis: bool
     ):
         """
         Visualizes a list of `Galaxy` objects.
 
-        Images are output to the `image` folder of the `visualize_path` in a subfolder called `galaxies`. When
-        used with a non-linear search the `visualize_path` points to the search's results folder and this function
+        Images are output to the `image` folder of the `image_path` in a subfolder called `galaxies`. When
+        used with a non-linear search the `image_path` points to the search's results folder and this function
         visualizes the maximum log likelihood `Galaxy`'s inferred by the search so far.
 
         Visualization includes individual images of attributes of each galaxy (e.g. 1D plots of their image,
         convergence) and a subplot of all these attributes on the same figure.
 
-        The images output by the `Visualizer` are customized using the file `config/visualize/plots.ini` under the
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
         [galaxies] header.
 
         Parameters
@@ -364,18 +269,18 @@ class Visualizer:
             except OverflowError:
                 pass
 
-    def visualize_inversion(self, inversion: aa.Inversion, during_analysis: bool):
+    def inversion(self, inversion: aa.Inversion, during_analysis: bool):
         """
         Visualizes an `Inversion` object.
 
-        Images are output to the `image` folder of the `visualize_path` in a subfolder called `inversion`. When
-        used with a non-linear search the `visualize_path` points to the search's results folder and this function
+        Images are output to the `image` folder of the `image_path` in a subfolder called `inversion`. When
+        used with a non-linear search the `image_path` points to the search's results folder and this function
         visualizes the maximum log likelihood `Inversion` inferred by the search so far.
 
         Visualization includes individual images of attributes of the dataset (e.g. the reconstructed image, the
         reconstruction) and a subplot of all these attributes on the same figure.
 
-        The images output by the `Visualizer` are customized using the file `config/visualize/plots.ini` under the
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
         [inversion] header.
 
         Parameters
@@ -460,20 +365,20 @@ class Visualizer:
                 interpolate_to_uniform=True,
             )
 
-    def visualize_adapt_images(
+    def adapt_images(
         self,
         adapt_images: AdaptImages,
     ):
         """
         Visualizes the adapt images used by a model-fit for adaptive pixelization mesh's and regularization.
 
-        Images are output to the `image` folder of the `visualize_path` in a subfolder called `adapt`. When
-        used with a non-linear search the `visualize_path` points to the search's results folder.
+        Images are output to the `image` folder of the `image_path` in a subfolder called `adapt`. When
+        used with a non-linear search the `image_path` points to the search's results folder.
 
         Visualization includes an image of the overall adapt model image and a subplot of all galaxy images on the same
         figure.
 
-        The images output by the `Visualizer` are customized using the file `config/visualize/plots.ini` under the
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
         [adapt] header.
 
         Parameters

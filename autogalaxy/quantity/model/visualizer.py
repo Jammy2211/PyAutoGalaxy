@@ -1,88 +1,49 @@
-from autogalaxy.quantity.fit_quantity import FitQuantity
-from autogalaxy.quantity.plot.fit_quantity_plotters import FitQuantityPlotter
-from autogalaxy.analysis.visualizer import Visualizer
-from autogalaxy.analysis.visualizer import plot_setting
-from autogalaxy.plot.visuals.two_d import Visuals2D
+import os
+
+import autofit as af
+
+from autogalaxy.quantity.model.plotter_interface import PlotterInterfaceQuantity
 
 
-class VisualizerQuantity(Visualizer):
-    def visualize_fit_quantity(
-        self,
-        fit: FitQuantity,
-        visuals_2d: Visuals2D = Visuals2D(),
-        fit_quanaity_plotter_cls=FitQuantityPlotter,
+class VisualizerQuantity(af.Visualizer):
+    @staticmethod
+    def visualize(
+        analysis,
+        paths: af.DirectoryPaths,
+        instance: af.ModelInstance,
+        during_analysis: bool,
     ):
         """
-        Visualizes a `FitQuantity` object, which fits a quantity of a light or mass profile (e.g. an image, potential)
-        to the same quantity of another light or mass profile.
+        Output images of the maximum log likelihood model inferred by the model-fit. This function is called throughout
+        the non-linear search at regular intervals, and therefore provides on-the-fly visualization of how well the
+        model-fit is going.
 
-        Images are output to the `image` folder of the `visualize_path` in a subfolder called `fit_quantity`. When
-        used with a non-linear search the `visualize_path` points to the search's results folder and this function
-        visualizes the maximum log likelihood `FitQuantity` inferred by the search so far.
+        The visualization performed by this function includes:
 
-        Visualization includes individual images of attributes of the `FitQuantity` (e.g. the model data, residual map)
-        and a subplot of all `FitQuantity`'s images on the same figure.
+        - Images of the best-fit galaxy.
 
-        The images output by the `Visualizer` are customized using the file `config/visualize/plots.ini` under the
-        [fit_quantity] header.
+        - Images of the best-fit `FitQuantity`, including the model-image, residuals and chi-squared of its fit to
+        the imaging data.
+
+        The images output by this function are customized using the file `config/visualize/plots.yaml`.
 
         Parameters
         ----------
-        fit
-            The maximum log likelihood `FitQuantity` of the non-linear search which is used to plot the fit.
-        visuals_2d
-            An object containing attributes which may be plotted over the figure (e.g. the centres of mass and light
-            profiles).
+        paths
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            visualization, and the pickled objects used by the aggregator output by this function.
+        instance
+            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
+            via a non-linear search).
+        during_analysis
+            If True the visualization is being performed midway through the non-linear search before it is finished,
+            which may change which images are output.
         """
 
-        def should_plot(name):
-            return plot_setting(section="fit_quantity", name=name)
+        if os.environ.get("PYAUTOFIT_TEST_MODE") == "1":
+            return
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="fit_quantity")
+        fit = analysis.fit_quantity_for_instance(instance=instance)
 
-        fit_quantity_plotter = fit_quanaity_plotter_cls(
-            fit=fit,
-            mat_plot_2d=mat_plot_2d,
-            visuals_2d=visuals_2d,
-            include_2d=self.include_2d,
-        )
-
-        if should_plot("subplot_fit"):
-            fit_quantity_plotter.subplot_fit()
-
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="fit_quantity")
-
-        fit_quantity_plotter = FitQuantityPlotter(
-            fit=fit,
-            mat_plot_2d=mat_plot_2d,
-            visuals_2d=visuals_2d,
-            include_2d=self.include_2d,
-        )
-
-        fit_quantity_plotter.figures_2d(
-            image=should_plot("image"),
-            noise_map=should_plot("noise_map"),
-            model_image=should_plot("model_image"),
-            residual_map=should_plot("residual_map"),
-            normalized_residual_map=should_plot("normalized_residual_map"),
-            chi_squared_map=should_plot("chi_squared_map"),
-        )
-
-        if should_plot("all_at_end_fits"):
-            mat_plot_2d = self.mat_plot_2d_from(
-                subfolders="fit_quantity/fits", format="fits"
-            )
-
-            fit_plotter = FitQuantityPlotter(
-                fit=fit, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
-            )
-
-            fit_plotter.figures_2d(
-                image=True,
-                noise_map=True,
-                signal_to_noise_map=True,
-                model_image=True,
-                residual_map=True,
-                normalized_residual_map=True,
-                chi_squared_map=True,
-            )
+        PlotterInterface = PlotterInterfaceQuantity(image_path=paths.image_path)
+        PlotterInterface.fit_quantity(fit=fit)
