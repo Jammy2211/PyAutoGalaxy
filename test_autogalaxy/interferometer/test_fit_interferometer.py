@@ -186,6 +186,7 @@ def test___galaxy_model_image_dict(interferometer_7):
     )
 
     mapper_grids = pixelization.mesh.mapper_grids_from(
+        mask=interferometer_7.real_space_mask,
         source_plane_data_grid=interferometer_7.grid,
         border_relocator=interferometer_7.border_relocator,
         source_plane_mesh_grid=None,
@@ -312,6 +313,7 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     )
 
     mapper_grids = pixelization.mesh.mapper_grids_from(
+        mask=interferometer_7.real_space_mask,
         source_plane_data_grid=interferometer_7.grid,
         border_relocator=interferometer_7.border_relocator,
         source_plane_mesh_grid=None,
