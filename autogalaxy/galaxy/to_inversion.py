@@ -51,7 +51,6 @@ class AbstractToInversion:
         self.preloads = preloads
         self.run_time_dict = run_time_dict
 
-
     @property
     def convolver(self):
         try:
