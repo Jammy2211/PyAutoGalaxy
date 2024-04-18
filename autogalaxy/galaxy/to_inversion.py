@@ -51,7 +51,6 @@ class AbstractToInversion:
         self.preloads = preloads
         self.run_time_dict = run_time_dict
 
-
     @property
     def convolver(self):
         try:
@@ -249,6 +248,7 @@ class GalaxiesToInversion(AbstractToInversion):
         image_plane_mesh_grid: Optional[aa.Grid2DIrregular] = None,
     ) -> aa.AbstractMapper:
         mapper_grids = mesh.mapper_grids_from(
+            mask=self.dataset.mask,
             border_relocator=self.border_relocator,
             source_plane_data_grid=source_plane_data_grid,
             source_plane_mesh_grid=source_plane_mesh_grid,
