@@ -63,6 +63,8 @@ class FitMaker:
         fit
             A fit object where an instance of the model has been fitted to the data.
         """
+        self.fit_unit_instance_from(unit_value=unit_value)
+
         try:
             try:
                 return self.fit_unit_instance_from(unit_value=unit_value)

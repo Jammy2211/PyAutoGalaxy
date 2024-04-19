@@ -264,6 +264,7 @@ class GalaxiesToInversion(AbstractToInversion):
                 mask=self.dataset.mask
             ),
             regularization=regularization,
+            run_time_dict=self.run_time_dict,
         )
 
     @cached_property
