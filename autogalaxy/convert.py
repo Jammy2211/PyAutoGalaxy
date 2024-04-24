@@ -4,8 +4,15 @@ from typing import Tuple
 
 def ell_comps_from(axis_ratio : float, angle : float) -> Tuple[float, float]:
     """
-    Convert an input axis ratio (0.0 > q > 1.0) and rotation position angle defined counter clockwise from the
-    positive x-axis(0.0 > angle > 180) to the (y,x) ellipitical components e1 and e2.
+    Returns the elliptical components e1 and e2 of a light or mass profile from an input angle in degrees and axis
+    ratio.
+
+    The elliptical components of a light or mass profile are given by:
+
+    elliptical_component_y = ell_comps[0] = (1-axis_ratio)/(1+axis_ratio) * sin(2 * angle)
+    elliptical_component_x = ell_comps[1] = (1-axis_ratio)/(1+axis_ratio) * cos(2 * angle)
+
+    Which are the values this function returns.
 
     Parameters
     ----------
@@ -28,8 +35,8 @@ def axis_ratio_and_angle_from(ell_comps : Tuple[float, float]) -> Tuple[float, f
 
     The elliptical components of a light or mass profile are given by:
 
-    elliptical_component_y = ell_comps[0] = (1-q)/(1+q) * sin(2 * angle)
-    elliptical_component_x = ell_comps[1] = (1-q)/(1+q) * cos(2 * angle)
+    elliptical_component_y = ell_comps[0] = (1-axis_ratio)/(1+axis_ratio) * sin(2 * angle)
+    elliptical_component_x = ell_comps[1] = (1-axis_ratio)/(1+axis_ratio) * cos(2 * angle)
 
     The axis-ratio and angle are therefore given by:
 
@@ -67,13 +74,25 @@ def axis_ratio_and_angle_from(ell_comps : Tuple[float, float]) -> Tuple[float, f
 
 def axis_ratio_from(ell_comps : Tuple[float, float]):
     """
-    Convert the ellipitical components e1 and e2 to an axis ratio (0.0 > q > 1.0) and rotation position angle
-    defined counter clockwise from the positive x-axis(0.0 > angle > 180) to .
+    Returns the axis-ratio from input elliptical components e1 and e2 of a light or mass profile.
+
+    The elliptical components of a light or mass profile are given by:
+
+    elliptical_component_y = ell_comps[0] = (1-axis_ratio)/(1+axis_ratio) * sin(2 * angle)
+    elliptical_component_x = ell_comps[1] = (1-axis_ratio)/(1+axis_ratio) * cos(2 * angle)
+
+    The axis-ratio is therefore given by:
+
+    axis_ratio = (1 - fac) / (1 + fac)
+
+    where `fac = sqrt(ell_comps[1] ** 2 + ell_comps[0] ** 2).
+
+    Which this function returns.
 
     Parameters
     ----------
-    ell_comps : (float, float)
-        The first and second ellipticity components of the elliptical coordinate system.
+    ell_comps
+        The elliptical components of the light or mass profile which are converted to an angle.
     """
     axis_ratio, angle = axis_ratio_and_angle_from(ell_comps=ell_comps)
     return axis_ratio
