@@ -98,7 +98,7 @@ def axis_ratio_from(ell_comps : Tuple[float, float]):
     return axis_ratio
 
 
-def angle_from(ell_comps : (float, float)) -> float:
+def angle_from(ell_comps : Tuple[float, float]) -> float:
     """
     Returns the position angle in degrees (-45 < angle < 135.0) from input elliptical components e1 and e2
     of a light or mass profile.
