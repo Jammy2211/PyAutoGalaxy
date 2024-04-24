@@ -257,6 +257,7 @@ def shear_angle_from(gamma_1: float, gamma_2: float) -> float:
     magnitude, angle = shear_magnitude_and_angle_from(gamma_1=gamma_1, gamma_2=gamma_2)
     return angle
 
+
 def multipole_k_m_and_phi_m_from(
     multipole_comps: Tuple[float, float], m: int
 ) -> Tuple[float, float]:

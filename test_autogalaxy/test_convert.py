@@ -129,8 +129,8 @@ def test__shear_magnitude_and_angle_from():
     assert magnitude == pytest.approx(0.07071067811865, 1.0e-4)
     assert angle == pytest.approx(-22.5, 1.0e-4)
 
-def test__multipole_k_m_and_phi_m_from():
 
+def test__multipole_k_m_and_phi_m_from():
     k_m, phi = ag.convert.multipole_k_m_and_phi_m_from(multipole_comps=(0.1, 0.0), m=1)
 
     assert k_m == pytest.approx(0.1, 1e-3)
@@ -146,7 +146,9 @@ def test__multipole_k_m_and_phi_m_from():
     assert k_m == pytest.approx(0.1, 1e-3)
     assert phi == pytest.approx(45.0, 1e-3)
 
-    k_m, phi = ag.convert.multipole_k_m_and_phi_m_from(multipole_comps=(-0.1, -0.1), m=2)
+    k_m, phi = ag.convert.multipole_k_m_and_phi_m_from(
+        multipole_comps=(-0.1, -0.1), m=2
+    )
 
-    assert k_m == pytest.approx(0.1, 1e-3)
-    assert phi == pytest.approx(0.141421356, 1e-3)
+    assert k_m == pytest.approx(0.14142135, 1e-3)
+    assert phi == pytest.approx(112.5, 1e-3)
