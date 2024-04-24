@@ -1,3 +1,4 @@
+from astropy import units
 import numpy as np
 from typing import Tuple
 
@@ -255,3 +256,65 @@ def shear_angle_from(gamma_1: float, gamma_2: float) -> float:
     """
     magnitude, angle = shear_magnitude_and_angle_from(gamma_1=gamma_1, gamma_2=gamma_2)
     return angle
+
+def multipole_k_m_and_phi_m_from(
+    multipole_comps: Tuple[float, float], m: int
+) -> Tuple[float, float]:
+    """
+    Converts the multipole component parameters to their normalizartion value `k_m` and angle `phi`,
+    which are given by:
+
+    .. math::
+        \phi^{\rm mass}_m = \arctan{\frac{\epsilon_{\rm 2}^{\rm mp}}{\epsilon_{\rm 2}^{\rm mp}}}, \, \,
+        k^{\rm mass}_m = \sqrt{{\epsilon_{\rm 1}^{\rm mp}}^2 + {\epsilon_{\rm 2}^{\rm mp}}^2} \, .
+
+    The conversion depends on the multipole order `m`, to ensure that all possible rotationally symmetric
+    multiple mass profiles are available in the conversion for multiple components spanning -inf to inf.
+
+    Parameters
+    ----------
+    multipole_comps
+        The first and second components of the multipole.
+
+    Returns
+    -------
+    The normalization and angle parameters of the multipole.
+    """
+    phi_m = (
+        np.arctan2(multipole_comps[0], multipole_comps[1]) * 180.0 / np.pi / float(m)
+    )
+    k_m = np.sqrt(multipole_comps[1] ** 2 + multipole_comps[0] ** 2)
+
+    if phi_m < -90.0 / m:
+        phi_m += 360.0 / m
+
+    return k_m, phi_m
+
+
+def multipole_comps_from(k_m: float, phi_m: float, m: int) -> Tuple[float, float]:
+    """
+    Converts the multipole normalizartion value `k_m` and angle `phi` to their multipole component parameters,
+    which are given by:
+
+    .. math::
+        \phi^{\rm mass}_m = \arctan{\frac{\epsilon_{\rm 2}^{\rm mp}}{\epsilon_{\rm 2}^{\rm mp}}}, \, \,
+        k^{\rm mass}_m = \sqrt{{\epsilon_{\rm 1}^{\rm mp}}^2 + {\epsilon_{\rm 2}^{\rm mp}}^2} \, .
+
+    The conversion depends on the multipole order `m`, to ensure that all possible rotationally symmetric
+    multiple mass profiles are available in the conversion for multiple components spanning -inf to inf.
+
+    Parameters
+    ----------
+    k_m
+        The magnitude of the multipole.
+    phi_m
+        The angle of the multipole.
+
+    Returns
+    -------
+    The multipole component parameters.
+    """
+    multipole_comp_0 = k_m * np.sin(phi_m * float(m) * units.deg.to(units.rad))
+    multipole_comp_1 = k_m * np.cos(phi_m * float(m) * units.deg.to(units.rad))
+
+    return (multipole_comp_0, multipole_comp_1)
