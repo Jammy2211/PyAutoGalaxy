@@ -98,3 +98,59 @@ def test__shear_gamma_1_2_from():
     assert gamma_1 == pytest.approx(0.0, 1.0e-4)
     assert gamma_2 == pytest.approx(-0.05, 1.0e-4)
 
+def test__shear_magnitude_and_angle_from():
+
+    magnitude, angle = ag.convert.shear_magnitude_and_angle_from(
+        gamma_1=0.05, gamma_2=0.0
+    )
+
+    assert magnitude == pytest.approx(0.05, 1.0e-4)
+    assert angle == pytest.approx(0.0, 1.0e-4)
+
+    magnitude, angle = ag.convert.shear_magnitude_and_angle_from(
+        gamma_1=0.0, gamma_2=0.05
+    )
+
+    assert magnitude == pytest.approx(0.05, 1.0e-4)
+    assert angle == pytest.approx(45.0, 1.0e-4)
+
+    magnitude, angle = ag.convert.shear_magnitude_and_angle_from(
+        gamma_1=-0.05, gamma_2=0.0
+    )
+
+    assert magnitude == pytest.approx(0.05, 1.0e-4)
+    assert angle == pytest.approx(90.0, 1.0e-4)
+
+    magnitude, angle = ag.convert.shear_magnitude_and_angle_from(
+        gamma_1=0.0, gamma_2=-0.05
+    )
+
+    assert magnitude == pytest.approx(0.05, 1.0e-4)
+    assert angle == pytest.approx(135.0, 1.0e-4)
+
+    magnitude, angle = ag.convert.shear_magnitude_and_angle_from(
+        gamma_1=0.05, gamma_2=0.0
+    )
+
+    assert magnitude == pytest.approx(0.05, 1.0e-4)
+    assert angle == pytest.approx(0.0, 1.0e-4)
+
+    magnitude, angle = ag.convert.shear_magnitude_and_angle_from(
+        gamma_1=0.0, gamma_2=0.05
+    )
+
+    assert magnitude == pytest.approx(0.05, 1.0e-4)
+    assert angle == pytest.approx(45.0, 1.0e-4)
+
+    magnitude, angle = ag.convert.shear_magnitude_and_angle_from(
+        gamma_1=0.05, gamma_2=0.0
+    )
+
+    assert magnitude == pytest.approx(0.05, 1.0e-4)
+
+    magnitude, angle = ag.convert.shear_magnitude_and_angle_from(
+        gamma_1=0.05, gamma_2=-0.05
+    )
+
+    assert magnitude == pytest.approx(0.07071067811865, 1.0e-4)
+    assert angle == pytest.approx(-22.5, 1.0e-4)

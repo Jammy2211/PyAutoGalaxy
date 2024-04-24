@@ -155,12 +155,9 @@ def shear_magnitude_and_angle_from(
     if angle < 0:
         angle += 180.0
 
-    print(angle)
-
     if abs(angle - 90) > 45:
         if angle > 90:
             angle -= 180
-            vvv
 
     return magnitude, angle
 
