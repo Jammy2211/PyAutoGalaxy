@@ -2,6 +2,14 @@ import pytest
 
 import autogalaxy as ag
 
+def test__ell_comps_from():
+
+    ell_comps = ag.convert.ell_comps_from(
+        axis_ratio=0.00050025012, angle=0.0
+    )
+
+    assert ell_comps == pytest.approx((0.0, 0.999), 1.0e-4)
+
 def test__axis_ratio_and_angle_from():
     axis_ratio, angle = ag.convert.axis_ratio_and_angle_from(
         ell_comps=(0.0, 1.0)
