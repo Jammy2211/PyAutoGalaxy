@@ -119,9 +119,10 @@ def angle_from(ell_comps: Tuple[float, float]) -> float:
 
     An additional check is performed which requires the angle is between -45 and 135 degrees. This ensures that
     for certain values of `ell_comps` the angle does not jump from one boundary to another (e.g. without this check
-    certain values of `ell_comps` return -1.0 degrees and others 179.0 degrees). This ensures that when error
-    estimates are computed from samples of a lens model via marginalization, the calculation is not biased by the
-    angle jumping between these two values.
+    certain values of `ell_comps` return -1.0 degrees and others 179.0 degrees).
+
+    This ensures that when error estimates are computed from samples of a lens model via marginalization, the
+    calculation is not biased by the angle jumping between these two values.
 
     Parameters
     ----------
@@ -181,9 +182,10 @@ def shear_magnitude_and_angle_from(
 
     Additional checks are performed which requires the angle is between -45 and 135 degrees. This ensures that
     for certain values of `gamma_1` and `gamma_2` the angle does not jump from one boundary to another (e.g. without
-    this check certain values of `gamma_1` and `gamma_2` return -1.0 degrees and others 179.0 degrees). This ensures
-    that when error estimates are computed from samples of a lens model via marginalization, the calculation is not
-    biased by the angle jumping between these two values.
+    this check certain values of `gamma_1` and `gamma_2` return -1.0 degrees and others 179.0 degrees).
+
+    This ensures that when error estimates are computed from samples of a lens model via marginalization, the
+    calculation is not biased by the angle jumping between these two values.
 
     Parameters
     ----------
@@ -262,8 +264,9 @@ def multipole_k_m_and_phi_m_from(
     multipole_comps: Tuple[float, float], m: int
 ) -> Tuple[float, float]:
     """
-    Converts the multipole component parameters to their normalizartion value `k_m` and angle `phi`,
-    which are given by:
+    Returns the multipole normalization value `k_m` and angle `phi` from the multipole component parameters.
+
+    The normalization and angle are given by:
 
     .. math::
         \phi^{\rm mass}_m = \arctan{\frac{\epsilon_{\rm 2}^{\rm mp}}{\epsilon_{\rm 2}^{\rm mp}}}, \, \,
@@ -271,6 +274,13 @@ def multipole_k_m_and_phi_m_from(
 
     The conversion depends on the multipole order `m`, to ensure that all possible rotationally symmetric
     multiple mass profiles are available in the conversion for multiple components spanning -inf to inf.
+
+    Additional checks are performed which requires the angle `phi_m` is between -45 and 135 degrees. This ensures that
+    for certain multipole component values the angle does not jump from one boundary to another (e.g. without
+    this check certain values of `gamma_1` and `gamma_2` return -1.0 degrees and others 179.0 degrees).
+
+    This ensures that when error estimates are computed from samples of a lens model via marginalization, the
+    calculation is not biased by the angle jumping between these two values.
 
     Parameters
     ----------
@@ -294,8 +304,7 @@ def multipole_k_m_and_phi_m_from(
 
 def multipole_comps_from(k_m: float, phi_m: float, m: int) -> Tuple[float, float]:
     """
-    Converts the multipole normalizartion value `k_m` and angle `phi` to their multipole component parameters,
-    which are given by:
+    Returns the multipole component parameters from their normalization value `k_m` and angle `phi`.
 
     .. math::
         \phi^{\rm mass}_m = \arctan{\frac{\epsilon_{\rm 2}^{\rm mp}}{\epsilon_{\rm 2}^{\rm mp}}}, \, \,
