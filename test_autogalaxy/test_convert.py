@@ -152,3 +152,22 @@ def test__multipole_k_m_and_phi_m_from():
 
     assert k_m == pytest.approx(0.14142135, 1e-3)
     assert phi == pytest.approx(112.5, 1e-3)
+
+
+def test__multipole_comps_from():
+
+    multipole_comps = ag.convert.multipole_comps_from(k_m=0.1, phi_m=90.0, m=1)
+
+    assert multipole_comps == pytest.approx((0.1, 0.0), 1e-3)
+
+    multipole_comps = ag.convert.multipole_comps_from(k_m=0.1, phi_m=0.0, m=1)
+
+    assert multipole_comps == pytest.approx((0.0, 0.1), 1e-3)
+
+    multipole_comps = ag.convert.multipole_comps_from(k_m=0.1, phi_m=45.0, m=2)
+
+    assert multipole_comps == pytest.approx((0.1, 0.0), 1e-3)
+
+    multipole_comps = ag.convert.multipole_comps_from(k_m=0.14142135, phi_m=112.5, m=2)
+
+    assert multipole_comps == pytest.approx((-0.1, -0.1), 1e-3)
