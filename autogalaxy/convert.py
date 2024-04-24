@@ -151,8 +151,17 @@ def shear_magnitude_and_angle_from(
     """
     angle = np.arctan2(gamma_2, gamma_1) / 2 * 180.0 / np.pi
     magnitude = np.sqrt(gamma_1**2 + gamma_2**2)
+
     if angle < 0:
-        return magnitude, angle + 180.0
+        angle += 180.0
+
+    print(angle)
+
+    if abs(angle - 90) > 45:
+        if angle > 90:
+            angle -= 180
+            vvv
+
     return magnitude, angle
 
 
