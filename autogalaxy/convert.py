@@ -2,7 +2,7 @@ import numpy as np
 from typing import Tuple
 
 
-def ell_comps_from(axis_ratio, angle):
+def ell_comps_from(axis_ratio : float, angle : float) -> Tuple[float, float]:
     """
     Convert an input axis ratio (0.0 > q > 1.0) and rotation position angle defined counter clockwise from the
     positive x-axis(0.0 > angle > 180) to the (y,x) ellipitical components e1 and e2.
@@ -21,18 +21,42 @@ def ell_comps_from(axis_ratio, angle):
     return (ellip_y, ellip_x)
 
 
-def axis_ratio_and_angle_from(ell_comps):
+def axis_ratio_and_angle_from(ell_comps : Tuple[float, float]) -> Tuple[float, float]:
     """
-    Convert the ellipitical components e1 and e2 to an axis ratio (0.0 > q > 1.0) and rotation position angle
-    defined counter clockwise from the positive x-axis(0.0 > angle > 180) to .
+    Returns the axis-ratio and position angle in degrees (-45 < angle < 135.0) from input elliptical components e1
+    and e2 of a light or mass profile.
+
+    The elliptical components of a light or mass profile are given by:
+
+    elliptical_component_y = ell_comps[0] = (1-q)/(1+q) * sin(2 * angle)
+    elliptical_component_x = ell_comps[1] = (1-q)/(1+q) * cos(2 * angle)
+
+    The axis-ratio and angle are therefore given by:
+
+    axis_ratio = (1 - fac) / (1 + fac)
+    angle = 0.5 * arctan(ell_comps[0] / ell_comps[1])
+
+    where `fac = sqrt(ell_comps[1] ** 2 + ell_comps[0] ** 2).
+
+    Which this function returns in degrees.
+
+    An additional check is performed which requires the angle is between -45 and 135 degrees. This ensures that
+    for certain values of `ell_comps` the angle does not jump from one boundary to another (e.g. without this check
+    certain values of `ell_comps` return -1.0 degrees and others 179.0 degrees). This ensures that when error
+    estimates are computed from samples of a lens model via marginalization, the calculation is not biased by the
+    angle jumping between these two values.
 
     Parameters
     ----------
-    ell_comps : (float, float)
-        The first and second ellipticity components of the elliptical coordinate system.
+    ell_comps
+        The elliptical components of the light or mass profile which are converted to an angle.
     """
     angle = np.arctan2(ell_comps[0], ell_comps[1]) / 2
     angle *= 180.0 / np.pi
+
+    if abs(angle) > 45 and angle < 0:
+        angle += 180
+
     fac = np.sqrt(ell_comps[1] ** 2 + ell_comps[0] ** 2)
     if fac > 0.999:
         fac = 0.999  # avoid unphysical solution
@@ -41,7 +65,7 @@ def axis_ratio_and_angle_from(ell_comps):
     return axis_ratio, angle
 
 
-def axis_ratio_from(ell_comps):
+def axis_ratio_from(ell_comps : Tuple[float, float]):
     """
     Convert the ellipitical components e1 and e2 to an axis ratio (0.0 > q > 1.0) and rotation position angle
     defined counter clockwise from the positive x-axis(0.0 > angle > 180) to .
@@ -55,16 +79,35 @@ def axis_ratio_from(ell_comps):
     return axis_ratio
 
 
-def angle_from(ell_comps):
+def angle_from(ell_comps : (float, float)) -> float:
     """
-    Convert the ellipitical components e1 and e2 to an rotation position angle in degrees (0.0 > angle > 18-.0).
+    Returns the position angle in degrees (-45 < angle < 135.0) from input elliptical components e1 and e2
+    of a light or mass profile.
+
+    The elliptical components of a light or mass profile are given by:
+
+    elliptical_component_y = ell_comps[0] = (1-q)/(1+q) * sin(2 * angle)
+    elliptical_component_x = ell_comps[1] = (1-q)/(1+q) * cos(2 * angle)
+
+    The angle is therefore given by:
+
+    angle = 0.5 * arctan(ell_comps[0] / ell_comps[1])
+
+    Which this function returns in degrees.
+
+    An additional check is performed which requires the angle is between -45 and 135 degrees. This ensures that
+    for certain values of `ell_comps` the angle does not jump from one boundary to another (e.g. without this check
+    certain values of `ell_comps` return -1.0 degrees and others 179.0 degrees). This ensures that when error
+    estimates are computed from samples of a lens model via marginalization, the calculation is not biased by the
+    angle jumping between these two values.
 
     Parameters
     ----------
-    ell_comps : (float, float)
-        The first and second ellipticity components of the elliptical coordinate system.
+    ell_comps
+        The elliptical components of the light or mass profile which are converted to an angle.
     """
     axis_ratio, angle = axis_ratio_and_angle_from(ell_comps=ell_comps)
+
     return angle
 
 
