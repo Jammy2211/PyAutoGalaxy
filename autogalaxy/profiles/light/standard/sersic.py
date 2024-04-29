@@ -127,6 +127,7 @@ class Sersic(AbstractSersic, LightProfile):
         grid_radii
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
+
         np.seterr(all="ignore")
         return np.multiply(
             self._intensity,
