@@ -92,10 +92,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         self.settings_inversion = settings_inversion
 
     @property
-    def grid(self) -> aa.type.Grid2DLike:
-        return self.dataset.grid
-
-    @property
     def blurred_image(self) -> aa.Array2D:
         """
         Returns the image of the light profiles of all galaxies in the fit, convolved with the imaging dataset's PSF.
@@ -109,15 +105,15 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         ):
             return (
                 self.galaxies.image_2d_from(
-                    grid=self.dataset.grid,
+                    grid=self.grid,
                 )
             )
 
         return (
             self.galaxies.blurred_image_2d_from(
-                grid=self.dataset.grid,
+                grid=self.grid,
                 convolver=self.dataset.convolver,
-                blurring_grid=self.dataset.blurring_grid,
+                blurring_grid=self.blurring_grid,
             )
         )
 
@@ -136,8 +132,8 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             convolver=self.dataset.convolver,
             w_tilde=self.w_tilde,
             grid=self.grid,
-            grid_pixelization=self.dataset.grid_pixelization,
-            blurring_grid=self.dataset.blurring_grid,
+            grid_pixelization=self.grid_pixelization,
+            blurring_grid=self.blurring_grid,
             border_relocator=self.dataset.border_relocator,
         )
 
@@ -198,7 +194,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         galaxy_blurred_image_2d_dict = self.galaxies.galaxy_blurred_image_2d_dict_from(
             grid=self.grid,
             convolver=self.dataset.convolver,
-            blurring_grid=self.dataset.blurring_grid,
+            blurring_grid=self.blurring_grid,
         )
 
         galaxy_linear_obj_image_dict = self.galaxy_linear_obj_data_dict_from(
