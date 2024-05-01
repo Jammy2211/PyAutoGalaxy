@@ -24,7 +24,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         self,
         dataset: aa.Imaging,
         galaxies: List[Galaxy],
-        sky: Optional[LightProfile] = None,
+        dataset_model : Optional[aa.DatasetModel] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads: aa.Preloads = Preloads(),
@@ -60,8 +60,8 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             The imaging dataset which is fitted by the galaxies.
         galaxies
             The galaxies whose light profile images are used to fit the imaging data.
-        sky
-            Model component used to represent the background sky emission in an image (e.g. a `Sky` light profile).
+        dataset_model
+            Attributes which allow for parts of a dataset to be treated as a model (e.g. the background sky level).
         adapt_images
             Contains the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
             reconstructed galaxy's morphology.
@@ -80,16 +80,16 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
 
         super().__init__(
             dataset=dataset,
+            dataset_model=dataset_model,
             run_time_dict=run_time_dict,
         )
         AbstractFitInversion.__init__(
             self=self,
             model_obj=self.galaxies,
-            sky=sky,
+            sky=None,
             settings_inversion=settings_inversion,
         )
 
-        self.sky = sky
         self.adapt_images = adapt_images
         self.settings_inversion = settings_inversion
 
@@ -106,11 +106,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         altogether.
         """
 
-        if isinstance(self.sky, Sky):
-            image = self.sky.image_2d_from(grid=self.dataset.grid)
-        else:
-            image = np.zeros(self.dataset.shape_slim)
-
         if len(self.galaxies.cls_list_from(cls=LightProfile)) == len(
             self.galaxies.cls_list_from(cls=LightProfileOperated)
         ):
@@ -118,7 +113,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
                 self.galaxies.image_2d_from(
                     grid=self.dataset.grid,
                 )
-                + image
             )
 
         return (
@@ -127,7 +121,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
                 convolver=self.dataset.convolver,
                 blurring_grid=self.dataset.blurring_grid,
             )
-            + image
         )
 
     @property

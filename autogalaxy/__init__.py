@@ -2,6 +2,7 @@ from autoconf.dictable import from_dict, from_json, output_to_json, to_dict
 from autoarray.dataset import preprocess  # noqa
 from autoarray.dataset.imaging.dataset import Imaging  # noqa
 from autoarray.dataset.interferometer.dataset import Interferometer  # noqa
+from autoarray.dataset.model import DatasetModel
 from autoarray.inversion.pixelization import mesh  # noqa
 from autoarray.inversion import regularization as reg  # noqa
 from autoarray.inversion.pixelization import image_mesh
