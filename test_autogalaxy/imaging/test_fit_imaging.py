@@ -199,11 +199,11 @@ def test__fit__model_dataset__sky___handles_special_behaviour(masked_imaging_7x7
 
     fit = ag.FitImaging(
         dataset=masked_imaging_7x7, galaxies=[g0],
-        dataset_model=ag.DatasetModel(background_sky_level=-99.0)
+        dataset_model=ag.DatasetModel(background_sky_level=5.0)
     )
 
     assert fit.perform_inversion is True
-    assert fit.figure_of_merit == pytest.approx(-14.5087714, 1.0e-4)
+    assert fit.figure_of_merit == pytest.approx(-21.6970706693, 1.0e-4)
 
 
 def test__galaxy_model_image_dict(masked_imaging_7x7):

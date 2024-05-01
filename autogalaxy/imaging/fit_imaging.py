@@ -12,14 +12,13 @@ from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.galaxy.to_inversion import GalaxiesToInversion
 from autogalaxy.profiles.light.abstract import LightProfile
-from autogalaxy.profiles.light.standard.sky import Sky
 from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.profiles.light.operated.abstract import LightProfileOperated
 
 from autogalaxy import exc
 
 
-class FitImaging(aa.FitImaging, AbstractFitInversion):
+class FitImaging(aa.FitDataset, AbstractFitInversion):
     def __init__(
         self,
         dataset: aa.Imaging,
@@ -128,19 +127,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         """
         Returns the dataset's image data with all blurred light profile images in the fit subtracted.
         """
-        return self.image - self.blurred_image
-
-    @property
-    def model_data(self) -> aa.Array2D:
-        """
-        Returns the model-image that is used to fit the data.
-
-        If the galaxies do not have any linear objects and therefore omits an inversion, the model data is the
-        sum of all light profile images blurred with the PSF.
-
-        If a inversion is included it is the sum of this image and the inversion's reconstruction of the image.
-        """
-        return self.blurred_image
+        return self.data - self.blurred_image
 
     @property
     def galaxies_to_inversion(self) -> GalaxiesToInversion:
@@ -346,7 +333,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         return FitImaging(
             dataset=self.dataset,
             galaxies=self.galaxies,
-            sky=self.sky,
             adapt_images=self.adapt_images,
             settings_inversion=settings_inversion,
             preloads=preloads,
