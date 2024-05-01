@@ -57,16 +57,17 @@ def aggregator_from(database_file, analysis, model, samples):
 
 @pytest.fixture(name="model")
 def make_model():
-
     dataset_model = af.Model(ag.DatasetModel)
-    dataset_model.background_sky_level = af.UniformPrior(lower_limit=0.5, upper_limit=1.5)
+    dataset_model.background_sky_level = af.UniformPrior(
+        lower_limit=0.5, upper_limit=1.5
+    )
 
     return af.Collection(
         dataset_model=dataset_model,
         galaxies=af.Collection(
             g0=af.Model(ag.Galaxy, redshift=0.5, light=ag.lp.Sersic),
             g1=af.Model(ag.Galaxy, redshift=1.0, light=ag.lp.Sersic),
-        )
+        ),
     )
 
 

@@ -23,7 +23,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         self,
         dataset: aa.Imaging,
         galaxies: List[Galaxy],
-        dataset_model : Optional[aa.DatasetModel] = None,
+        dataset_model: Optional[aa.DatasetModel] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads: aa.Preloads = Preloads(),
@@ -103,18 +103,14 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         if len(self.galaxies.cls_list_from(cls=LightProfile)) == len(
             self.galaxies.cls_list_from(cls=LightProfileOperated)
         ):
-            return (
-                self.galaxies.image_2d_from(
-                    grid=self.grid,
-                )
+            return self.galaxies.image_2d_from(
+                grid=self.grid,
             )
 
-        return (
-            self.galaxies.blurred_image_2d_from(
-                grid=self.grid,
-                convolver=self.dataset.convolver,
-                blurring_grid=self.blurring_grid,
-            )
+        return self.galaxies.blurred_image_2d_from(
+            grid=self.grid,
+            convolver=self.dataset.convolver,
+            blurring_grid=self.blurring_grid,
         )
 
     @property

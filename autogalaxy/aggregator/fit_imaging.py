@@ -76,7 +76,11 @@ def _fit_imaging_from(
     fit_dataset_list = []
 
     for dataset, galaxies, dataset_model, adapt_images, mesh_grids_of_planes in zip(
-        dataset_list, galaxies_list, dataset_model_list, adapt_images_list, mesh_grids_of_planes_list
+        dataset_list,
+        galaxies_list,
+        dataset_model_list,
+        adapt_images_list,
+        mesh_grids_of_planes_list,
     ):
         preloads = agg_util.preloads_from(
             preloads_cls=Preloads,

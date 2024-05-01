@@ -78,7 +78,10 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         self.galaxies = Galaxies(galaxies=galaxies, run_time_dict=run_time_dict)
 
         super().__init__(
-            dataset=dataset, dataset_model=dataset_model, use_mask_in_fit=False, run_time_dict=run_time_dict
+            dataset=dataset,
+            dataset_model=dataset_model,
+            use_mask_in_fit=False,
+            run_time_dict=run_time_dict,
         )
         AbstractFitInversion.__init__(
             self=self,
