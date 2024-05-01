@@ -52,7 +52,7 @@ def test__fit_imaging_randomly_drawn_via_pdf_gen_from__analysis_has_single_datas
             assert fit_list[0].galaxies[0].redshift == 0.5
             assert fit_list[0].galaxies[0].light.centre == (10.0, 10.0)
 
-            assert fit_list[0].dataset_model.background_sky_level == 0.0
+            assert fit_list[0].dataset_model.background_sky_level == 10.0
 
     assert i == 2
 
