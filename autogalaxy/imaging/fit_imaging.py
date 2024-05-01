@@ -18,7 +18,7 @@ from autogalaxy.profiles.light.operated.abstract import LightProfileOperated
 from autogalaxy import exc
 
 
-class FitImaging(aa.FitDataset, AbstractFitInversion):
+class FitImaging(aa.FitImaging, AbstractFitInversion):
     def __init__(
         self,
         dataset: aa.Imaging,
@@ -85,7 +85,6 @@ class FitImaging(aa.FitDataset, AbstractFitInversion):
         AbstractFitInversion.__init__(
             self=self,
             model_obj=self.galaxies,
-            sky=None,
             settings_inversion=settings_inversion,
         )
 
@@ -145,7 +144,6 @@ class FitImaging(aa.FitDataset, AbstractFitInversion):
         return GalaxiesToInversion(
             dataset=dataset,
             galaxies=self.galaxies,
-            sky=self.sky,
             adapt_images=self.adapt_images,
             settings_inversion=self.settings_inversion,
             preloads=self.preloads,

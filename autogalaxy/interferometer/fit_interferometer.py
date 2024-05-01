@@ -80,7 +80,6 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         AbstractFitInversion.__init__(
             self=self,
             model_obj=self.galaxies,
-            sky=None,
             settings_inversion=settings_inversion,
         )
 

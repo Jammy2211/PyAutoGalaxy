@@ -16,4 +16,3 @@ from .eff import (
 from .shapelets.polar import ShapeletPolarSph, ShapeletPolar
 from .shapelets.cartesian import ShapeletCartesianSph, ShapeletCartesian
 from .shapelets.exponential import ShapeletExponentialSph, ShapeletExponential
-from .sky import Sky

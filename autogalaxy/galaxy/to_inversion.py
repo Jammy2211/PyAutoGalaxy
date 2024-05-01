@@ -23,7 +23,6 @@ class AbstractToInversion:
     def __init__(
         self,
         dataset: Optional[Union[aa.Imaging, aa.Interferometer, aa.DatasetInterface]],
-        sky: Optional[Basis] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads=Preloads(),
@@ -43,7 +42,6 @@ class AbstractToInversion:
 
         self.dataset = dataset
 
-        self.sky = sky
         self.adapt_images = adapt_images
 
         self.settings_inversion = settings_inversion
@@ -97,18 +95,6 @@ class AbstractToInversion:
 
     @cached_property
     def linear_obj_list(self) -> List[aa.LinearObj]:
-        if isinstance(self.sky, Basis):
-            sky_linear_obj_list = LightProfileLinearObjFuncList(
-                grid=self.dataset.grid,
-                blurring_grid=self.dataset.blurring_grid,
-                convolver=self.dataset.convolver,
-                light_profile_list=self.sky.light_profile_list,
-                regularization=None,
-                run_time_dict=self.run_time_dict,
-            )
-
-            return list(self.linear_obj_galaxy_dict.keys()) + [sky_linear_obj_list]
-
         return list(self.linear_obj_galaxy_dict.keys())
 
     @cached_property
@@ -121,7 +107,6 @@ class GalaxiesToInversion(AbstractToInversion):
         self,
         dataset: Optional[Union[aa.Imaging, aa.Interferometer, aa.DatasetInterface]],
         galaxies: List[Galaxy],
-        sky: Optional[LightProfile] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads=aa.Preloads(),
@@ -131,7 +116,6 @@ class GalaxiesToInversion(AbstractToInversion):
 
         super().__init__(
             dataset=dataset,
-            sky=sky,
             adapt_images=adapt_images,
             settings_inversion=settings_inversion,
             preloads=preloads,

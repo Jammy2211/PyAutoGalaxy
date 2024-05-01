@@ -67,11 +67,11 @@ class Analysis(af.Analysis):
 
         return Galaxies(galaxies=instance.galaxies, run_time_dict=run_time_dict)
 
-    def sky_via_instance_from(
+    def dataset_model_via_instance_from(
         self, instance: af.ModelInstance
-    ) -> Union[lp.Sky, lp_linear.Sky]:
+    ) -> aa.DatasetModel:
         """
-        Create a sky from a model instance, which is used to fit the dataset.
+        Create a dataset model from a model instance, which is used to fit the dataset.
 
         Parameters
         ----------
@@ -81,10 +81,10 @@ class Analysis(af.Analysis):
 
         Returns
         -------
-        A sky that is used to then fit the dataset.
+        A dataset_model that is used to then fit the dataset.
         """
-        if hasattr(instance, "sky"):
-            return instance.sky
+        if hasattr(instance, "dataset_model"):
+            return instance.dataset_model
 
     def make_result(
         self,
