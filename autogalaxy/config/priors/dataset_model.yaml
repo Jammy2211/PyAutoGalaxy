@@ -1,0 +1,4 @@
+DatasetModel:
+  background_sky_level:
+    type: Constant
+    value: 0.0

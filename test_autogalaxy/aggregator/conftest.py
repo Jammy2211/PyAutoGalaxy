@@ -58,6 +58,7 @@ def aggregator_from(database_file, analysis, model, samples):
 @pytest.fixture(name="model")
 def make_model():
     return af.Collection(
+        dataset_model=af.Model(ag.DatasetModel),
         galaxies=af.Collection(
             g0=af.Model(ag.Galaxy, redshift=0.5, light=ag.lp.Sersic),
             g1=af.Model(ag.Galaxy, redshift=1.0, light=ag.lp.Sersic),
