@@ -29,7 +29,7 @@ def test__from_plane__same_as_plane_input():
         image=galaxies.image_2d_from(grid=grid)
     )
 
-    assert (dataset.data == interferometer_via_image.visibilities).all()
+    assert (dataset.data == interferometer_via_image.data).all()
     assert (dataset.uv_wavelengths == interferometer_via_image.uv_wavelengths).all()
     assert (dataset.noise_map == interferometer_via_image.noise_map).all()
 
@@ -70,6 +70,6 @@ def test__simulate_interferometer_from_galaxy__source_galaxy__compare_to_interfe
         image=galaxies.image_2d_from(grid=grid)
     )
 
-    assert dataset.data == pytest.approx(interferometer_via_image.visibilities, 1.0e-4)
+    assert dataset.data == pytest.approx(interferometer_via_image.data, 1.0e-4)
     assert (dataset.uv_wavelengths == interferometer_via_image.uv_wavelengths).all()
     assert (interferometer_via_image.noise_map == dataset.noise_map).all()

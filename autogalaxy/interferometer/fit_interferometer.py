@@ -106,7 +106,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         """
         Returns the interferometer dataset's visibilities with all transformed light profile images subtracted.
         """
-        return self.visibilities - self.profile_visibilities
+        return self.data - self.profile_visibilities
 
     @property
     def galaxies_to_inversion(self) -> GalaxiesToInversion:

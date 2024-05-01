@@ -229,7 +229,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
                 if i != galaxy_index
             ]
 
-            subtracted_image = self.image - sum(other_galaxies_model_images)
+            subtracted_image = self.data - sum(other_galaxies_model_images)
 
             subtracted_images_of_galaxies_dict[
                 self.galaxies[galaxy_index]
