@@ -18,6 +18,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         self,
         dataset: aa.Interferometer,
         galaxies: List[Galaxy],
+        dataset_model: Optional[aa.DatasetModel] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads: aa.Preloads = Preloads(),
@@ -54,6 +55,8 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             The interfometer dataset which is fitted by the galaxies.
         galaxies
             The galaxies whose light profile images are used to fit the interferometer data.
+        dataset_model
+            Attributes which allow for parts of a dataset to be treated as a model (e.g. the background sky level).
         adapt_images
             Contains the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
             reconstructed galaxy's morphology.
@@ -75,7 +78,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         self.galaxies = Galaxies(galaxies=galaxies, run_time_dict=run_time_dict)
 
         super().__init__(
-            dataset=dataset, use_mask_in_fit=False, run_time_dict=run_time_dict
+            dataset=dataset, dataset_model=dataset_model, use_mask_in_fit=False, run_time_dict=run_time_dict
         )
         AbstractFitInversion.__init__(
             self=self,
@@ -256,8 +259,9 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             settings_inversion = self.settings_inversion
 
         return FitInterferometer(
-            dataset=self.interferometer,
+            dataset=self.dataset,
             galaxies=self.galaxies,
+            dataset_model=self.dataset_model,
             adapt_images=self.adapt_images,
             settings_inversion=settings_inversion,
             preloads=preloads,
