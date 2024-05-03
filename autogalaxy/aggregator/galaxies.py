@@ -50,17 +50,18 @@ def _galaxies_from(fit: af.Fit, instance: af.ModelInstance) -> List[Galaxy]:
         if hasattr(fit.instance, "clumps"):
             galaxies = galaxies + fit.instance.clumps
 
-    if len(fit.children) > 0:
-        logger.info(
-            """
-            Using database for a fit with multiple summed Analysis objects.
+    if fit.children is not None:
+        if len(fit.children) > 0:
+            logger.info(
+                """
+                Using database for a fit with multiple summed Analysis objects.
+    
+                Galaxy objects do not fully support this yet (e.g. variables across Analysis objects may not be correct)
+                so proceed with caution!
+                """
+            )
 
-            Galaxy objects do not fully support this yet (e.g. variables across Analysis objects may not be correct)
-            so proceed with caution!
-            """
-        )
-
-        return [galaxies] * len(fit.children)
+            return [galaxies] * len(fit.children)
 
     return [galaxies]
 

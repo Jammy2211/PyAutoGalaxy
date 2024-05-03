@@ -42,7 +42,10 @@ def _dataset_model_from(
         except AttributeError:
             dataset_model = None
     else:
-        dataset_model = fit.instance.dataset_model
+        try:
+            dataset_model = fit.instance.dataset_model
+        except AttributeError:
+            dataset_model = None
 
     if len(fit.children) > 0:
         logger.info(
