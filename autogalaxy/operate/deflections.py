@@ -1,7 +1,6 @@
 from functools import wraps
 import logging
 import numpy as np
-from skimage import measure
 from typing import List, Tuple, Union
 
 from autoconf import conf
@@ -332,6 +331,16 @@ class OperateDeflections:
 
         return aa.ArrayIrregular(values=1.0 / det_A)
 
+    def contour_list_from(self, grid, contour_array):
+        grid_contour = aa.Grid2DContour(
+            grid=grid,
+            pixel_scales=grid.pixel_scales,
+            shape_native=grid.shape_native,
+            contour_array=contour_array.native,
+        )
+
+        return grid_contour.contour_list
+
     @evaluation_grid
     def tangential_critical_curve_list_from(
         self, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
@@ -356,25 +365,7 @@ class OperateDeflections:
         """
         tangential_eigen_values = self.tangential_eigen_value_from(grid=grid)
 
-        tangential_critical_curve_indices_list = measure.find_contours(
-            np.array(tangential_eigen_values.native), 0
-        )
-
-        if len(tangential_critical_curve_indices_list) == 0:
-            return []
-
-        tangential_critical_curve_list = []
-
-        for tangential_critical_curve_indices in tangential_critical_curve_indices_list:
-            curve = grid_scaled_2d_for_marching_squares_from(
-                grid_pixels_2d=tangential_critical_curve_indices,
-                shape_native=tangential_eigen_values.shape_native,
-                mask=grid.mask,
-            )
-
-            tangential_critical_curve_list.append(curve)
-
-        return tangential_critical_curve_list
+        return self.contour_list_from(grid=grid, contour_array=tangential_eigen_values)
 
     @evaluation_grid
     def radial_critical_curve_list_from(
@@ -400,25 +391,7 @@ class OperateDeflections:
         """
         radial_eigen_values = self.radial_eigen_value_from(grid=grid)
 
-        radial_critical_curve_indices_list = measure.find_contours(
-            np.array(radial_eigen_values.native), 0
-        )
-
-        if len(radial_critical_curve_indices_list) == 0:
-            return []
-
-        radial_critical_curve_list = []
-
-        for radial_critical_curve_indices in radial_critical_curve_indices_list:
-            curve = grid_scaled_2d_for_marching_squares_from(
-                grid_pixels_2d=radial_critical_curve_indices,
-                shape_native=radial_eigen_values.shape_native,
-                mask=grid.mask,
-            )
-
-            radial_critical_curve_list.append(curve)
-
-        return radial_critical_curve_list
+        return self.contour_list_from(grid=grid, contour_array=radial_eigen_values)
 
     @evaluation_grid
     def tangential_caustic_list_from(
