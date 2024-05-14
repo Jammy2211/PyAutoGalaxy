@@ -63,9 +63,9 @@ class Visuals2D(aplt.Visuals2D):
         self.tangential_caustics = tangential_caustics
         self.radial_caustics = radial_caustics
 
-    def plot_via_plotter(self, plotter, grid_indexes=None, mapper=None):
+    def plot_via_plotter(self, plotter, grid_indexes=None, mapper=None, geometry=None):
         super().plot_via_plotter(
-            plotter=plotter, grid_indexes=grid_indexes, mapper=mapper
+            plotter=plotter, grid_indexes=grid_indexes, mapper=mapper, geometry=geometry
         )
 
         if self.light_profile_centres is not None:
