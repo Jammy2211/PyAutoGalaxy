@@ -8,7 +8,9 @@ import autoarray as aa
 logger = logging.getLogger(__name__)
 
 
-def _dataset_model_from(fit: af.Fit, instance: af.ModelInstance) -> List[aa.DatasetModel]:
+def _dataset_model_from(
+    fit: af.Fit, instance: af.ModelInstance
+) -> List[aa.DatasetModel]:
     """
     Returns a `DatasetModel` object from a `PyAutoFit` sqlite database `Fit` object.
 
@@ -40,7 +42,10 @@ def _dataset_model_from(fit: af.Fit, instance: af.ModelInstance) -> List[aa.Data
         except AttributeError:
             dataset_model = None
     else:
-        dataset_model = fit.instance.dataset_model
+        try:
+            dataset_model = fit.instance.dataset_model
+        except AttributeError:
+            dataset_model = None
 
     if len(fit.children) > 0:
         logger.info(

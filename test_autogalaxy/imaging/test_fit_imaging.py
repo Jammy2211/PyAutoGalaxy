@@ -191,19 +191,61 @@ def test__fit_figure_of_merit(
 
 
 def test__fit__model_dataset__sky___handles_special_behaviour(masked_imaging_7x7):
-
     g0 = ag.Galaxy(
         redshift=0.5,
         bulge=ag.lp_linear.Sersic(sersic_index=1.0),
     )
 
     fit = ag.FitImaging(
-        dataset=masked_imaging_7x7, galaxies=[g0],
-        dataset_model=ag.DatasetModel(background_sky_level=5.0)
+        dataset=masked_imaging_7x7,
+        galaxies=[g0],
+        dataset_model=ag.DatasetModel(background_sky_level=5.0),
     )
 
     assert fit.perform_inversion is True
     assert fit.figure_of_merit == pytest.approx(-21.6970706693, 1.0e-4)
+
+
+def test__fit__model_dataset__grid_offset__handles_special_behaviour(
+    masked_imaging_7x7,
+    masked_imaging_7x7_sub_2,
+):
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(centre=(-1.0, -2.0), intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(centre=(-1.0, -2.0), intensity=1.0))
+
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7,
+        galaxies=[g0, g1],
+        dataset_model=ag.DatasetModel(grid_offset=(1.0, 2.0)),
+    )
+
+    assert fit.figure_of_merit == pytest.approx(-75938.05, 1.0e-4)
+
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(centre=(-1.0, -2.0), intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(centre=(-1.0, -2.0), intensity=1.0))
+
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7_sub_2,
+        galaxies=[g0, g1],
+        dataset_model=ag.DatasetModel(grid_offset=(1.0, 2.0)),
+    )
+
+    assert fit.figure_of_merit == pytest.approx(-14.91028771456, 1.0e-4)
+
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        regularization=ag.reg.Constant(coefficient=1.0),
+    )
+
+    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
+
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7,
+        galaxies=[ag.Galaxy(redshift=0.5), galaxy_pix],
+        dataset_model=ag.DatasetModel(grid_offset=(1.0, 2.0)),
+    )
+
+    assert fit.figure_of_merit == pytest.approx(-22.9005, 1.0e-4)
 
 
 def test__galaxy_model_image_dict(masked_imaging_7x7):

@@ -105,6 +105,11 @@ def make_masked_imaging_7x7():
     return fixtures.make_masked_imaging_7x7()
 
 
+@pytest.fixture(name="masked_imaging_7x7_sub_2")
+def make_masked_imaging_7x7_sub_2():
+    return fixtures.make_masked_imaging_7x7_sub_2()
+
+
 @pytest.fixture(name="masked_imaging_covariance_7x7")
 def make_masked_imaging_covariance_7x7():
     return fixtures.make_masked_imaging_covariance_7x7()
