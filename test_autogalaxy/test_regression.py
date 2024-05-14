@@ -12,7 +12,7 @@ class FitInversion(AbstractFitInversion):
         self, model_obj, settings_inversion: aa.SettingsInversion, light_profiles
     ):
         super().__init__(
-            model_obj=model_obj, sky=None, settings_inversion=settings_inversion
+            model_obj=model_obj, settings_inversion=settings_inversion
         )
         self.light_profiles = light_profiles
 
