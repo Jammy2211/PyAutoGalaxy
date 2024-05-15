@@ -1,9 +1,4 @@
-import math
-from typing import List, Optional
-
 import autoarray as aa
-import autoarray.plot as aplt
-
 
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.basis import Basis
@@ -17,7 +12,6 @@ from autogalaxy.plot.include.two_d import Include2D
 
 from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
 
-from autogalaxy.util import error_util
 from autogalaxy import exc
 
 
@@ -97,7 +91,7 @@ class BasisPlotter(Plotter):
         )
 
     def light_profile_plotter_from(
-        self, light_profile: LightProfile, one_d_only: bool = False
+        self, light_profile: LightProfile,
     ) -> LightProfilePlotter:
         """
         Returns a `LightProfilePlotter` given an input light profile, which is typically used for plotting the
@@ -114,20 +108,6 @@ class BasisPlotter(Plotter):
             An object that plots the light profiles, often used for plotting attributes of the galaxy.
         """
 
-        if not one_d_only:
-            return LightProfilePlotter(
-                light_profile=light_profile,
-                grid=self.grid,
-                mat_plot_2d=self.mat_plot_2d,
-                visuals_2d=self.get_2d.via_light_obj_from(
-                    light_obj=light_profile, grid=self.grid
-                ),
-                include_2d=self.include_2d,
-                mat_plot_1d=self.mat_plot_1d,
-                visuals_1d=self.get_1d.via_light_obj_from(light_obj=light_profile),
-                include_1d=self.include_1d,
-            )
-
         return LightProfilePlotter(
             light_profile=light_profile,
             grid=self.grid,
@@ -135,44 +115,6 @@ class BasisPlotter(Plotter):
             visuals_1d=self.get_1d.via_light_obj_from(light_obj=light_profile),
             include_1d=self.include_1d,
         )
-
-    # def figures_1d(self, image: bool = False):
-    #     """
-    #     Plots the individual attributes of the plotter's `LightProfile` object in 1D, which are computed via the
-    #     plotter's grid object.
-    #
-    #     If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
-    #     computed from the light profile. This is performed by aligning a 1D grid with the  major-axis of the light
-    #     profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
-    #
-    #     The API is such that every plottable attribute of the `LightProfile` object is an input parameter of type
-    #     bool of the function, which if switched to `True` means that it is plotted.
-    #
-    #     Parameters
-    #     ----------
-    #     image
-    #         Whether to make a 1D plot (via `plot`) of the image.
-    #     """
-    #     if self.mat_plot_1d.yx_plot.plot_axis_type is None:
-    #         plot_axis_type_override = "semilogy"
-    #     else:
-    #         plot_axis_type_override = None
-    #
-    #     if image:
-    #         image_1d = self.light_profile.image_1d_from(grid=self.grid)
-    #
-    #         self.mat_plot_1d.plot_yx(
-    #             y=image_1d,
-    #             x=image_1d.grid_radial,
-    #             visuals_1d=self.get_visuals_1d(),
-    #             auto_labels=aplt.AutoLabels(
-    #                 title=r"Image ($\mathrm{e^{-}}\,\mathrm{s^{-1}}$) vs Radius (arcsec)",
-    #                 yunit="",
-    #                 legend=self.light_profile.__class__.__name__,
-    #                 filename="image_1d",
-    #             ),
-    #             plot_axis_type_override=plot_axis_type_override,
-    #         )
 
     def subplot_image(self):
         """
@@ -198,12 +140,6 @@ class BasisPlotter(Plotter):
             light_profile_plotter.set_title(label=light_profile.coefficient_tag)
 
             light_profile_plotter.figures_2d(image=True)
-
-            # self.mat_plot_2d.plot_array(
-            #     array=light_profile.image_2d_from(grid=self.grid),
-            #     visuals_2d=self.get_visuals_2d(),
-            #     auto_labels=aplt.AutoLabels(title="Image", filename="subplot_image"),
-            # )
 
         self.mat_plot_2d.output.subplot_to_figure(auto_filename=f"subplot_basis_image")
 
