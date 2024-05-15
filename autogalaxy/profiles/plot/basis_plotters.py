@@ -195,6 +195,7 @@ class BasisPlotter(Plotter):
             light_profile_plotter = self.light_profile_plotter_from(
                 light_profile=light_profile,
             )
+            light_profile_plotter.set_title(label=light_profile.coefficient_tag)
 
             light_profile_plotter.figures_2d(image=True)
 
@@ -204,6 +205,6 @@ class BasisPlotter(Plotter):
             #     auto_labels=aplt.AutoLabels(title="Image", filename="subplot_image"),
             # )
 
-            self.mat_plot_2d.output.subplot_to_figure(auto_filename=f"subplot_basis_image")
+        self.mat_plot_2d.output.subplot_to_figure(auto_filename=f"subplot_basis_image")
 
-            self.close_subplot_figure()
+        self.close_subplot_figure()
