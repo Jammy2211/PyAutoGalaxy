@@ -86,12 +86,11 @@ class BasisPlotter(Plotter):
         return self.get_1d.via_light_obj_from(light_obj=self.basis)
 
     def get_visuals_2d(self) -> Visuals2D:
-        return self.get_2d.via_light_obj_from(
-            light_obj=self.basis, grid=self.grid
-        )
+        return self.get_2d.via_light_obj_from(light_obj=self.basis, grid=self.grid)
 
     def light_profile_plotter_from(
-        self, light_profile: LightProfile,
+        self,
+        light_profile: LightProfile,
     ) -> LightProfilePlotter:
         """
         Returns a `LightProfilePlotter` given an input light profile, which is typically used for plotting the
@@ -133,7 +132,6 @@ class BasisPlotter(Plotter):
         self.open_subplot_figure(number_subplots=len(self.basis.light_profile_list))
 
         for light_profile in self.basis.light_profile_list:
-
             light_profile_plotter = self.light_profile_plotter_from(
                 light_profile=light_profile,
             )

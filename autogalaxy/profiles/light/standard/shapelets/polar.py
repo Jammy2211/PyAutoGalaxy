@@ -112,18 +112,18 @@ class ShapeletPolar(AbstractShapelet):
         # )
 
         const = (
-                ((-1) ** ((self.n - np.abs(self.m)) // 2))
-                * np.sqrt(
-            factorial((self.n - np.abs(self.m)) // 2)
-            / factorial((self.n + np.abs(self.m)) // 2)
-        )
-                / self.beta
-                / np.sqrt(np.pi)
+            ((-1) ** ((self.n - np.abs(self.m)) // 2))
+            * np.sqrt(
+                factorial((self.n - np.abs(self.m)) // 2)
+                / factorial((self.n + np.abs(self.m)) // 2)
+            )
+            / self.beta
+            / np.sqrt(np.pi)
         )
 
-        rsq = (grid[:,0] ** 2 + grid[:,1] ** 2) / self.beta ** 2
+        rsq = (grid[:, 0] ** 2 + grid[:, 1] ** 2) / self.beta**2
         theta = np.arctan2(grid[:, 1], grid[:, 0])
-        radial = rsq ** (abs(self.m / 2.)) * np.exp(-rsq / 2.) * laguerre(rsq)
+        radial = rsq ** (abs(self.m / 2.0)) * np.exp(-rsq / 2.0) * laguerre(rsq)
 
         if self.m == 0:
             azimuthal = 1
@@ -132,7 +132,8 @@ class ShapeletPolar(AbstractShapelet):
         else:
             azimuthal = np.cos((-1) * self.m * theta)
 
-        return  const * radial * azimuthal
+        return const * radial * azimuthal
+
 
 class ShapeletPolarSph(ShapeletPolar):
     def __init__(
