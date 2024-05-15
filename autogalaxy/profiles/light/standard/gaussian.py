@@ -41,6 +41,12 @@ class Gaussian(LightProfile):
         super().__init__(centre=centre, ell_comps=ell_comps, intensity=intensity)
         self.sigma = sigma
 
+    @property
+    def coefficient_tag(self) -> str:
+        return (
+            f"sigma_{np.round(self.sigma, 2)}__ell_comps_{np.round(self.ell_comps, 2)}"
+        )
+
     def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
         """
         Returns the 2D image of the Gaussian light profile from a grid of coordinates which are the radial distance of

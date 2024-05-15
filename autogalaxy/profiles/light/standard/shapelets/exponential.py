@@ -56,6 +56,10 @@ class ShapeletExponential(AbstractShapelet):
             centre=centre, ell_comps=ell_comps, beta=beta, intensity=intensity
         )
 
+    @property
+    def coefficient_tag(self) -> str:
+        return f"n_{self.n}_m_{self.m}"
+
     @aa.over_sample
     @aa.grid_dec.to_array
     @check_operated_only
