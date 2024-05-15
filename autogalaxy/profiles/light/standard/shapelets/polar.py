@@ -85,31 +85,7 @@ class ShapeletPolar(AbstractShapelet):
             The image of the Polar Shapelet evaluated at every (y,x) coordinate on the transformed grid.
         """
 
-        # radial = (grid[:, 0] ** 2 + grid[:, 1] ** 2) / self.beta**2.0
-        # theta = np.arctan(grid[:, 1] / grid[:, 0])
-
         laguerre = genlaguerre(n=(self.n - np.abs(self.m)) / 2.0, alpha=np.abs(self.m))
-
-        # shapelet = laguerre(radial)
-        #
-        # const = (
-        #     ((-1) ** ((self.n - np.abs(self.m)) / 2))
-        #     * np.sqrt(
-        #         factorial((self.n - np.abs(self.m)) / 2)
-        #         / factorial((self.n + np.abs(self.m)) / 2)
-        #     )
-        #     / self.beta
-        #     / np.sqrt(np.pi)
-        # )
-        # gauss = np.exp(-radial / 2.0)
-        #
-        # return np.abs(
-        #     const
-        #     * radial ** (np.abs(self.m / 2.0))
-        #     * shapelet
-        #     * gauss
-        #     * np.exp(0.0 + 1j * -self.m * theta)
-        # )
 
         const = (
             ((-1) ** ((self.n - np.abs(self.m)) // 2))
