@@ -18,6 +18,7 @@ from autoarray.inversion.pixelization.mappers.mapper_grids import MapperGrids  #
 from autoarray.inversion.pixelization.mappers.factory import (
     mapper_from as Mapper,
 )  # noqa
+from autoarray.inversion.pixelization.border_relocator import BorderRelocator
 from autoarray.mask.mask_1d import Mask1D  # noqa
 from autoarray.mask.mask_2d import Mask2D  # noqa
 from autoarray.operators.convolver import Convolver  # noqa
