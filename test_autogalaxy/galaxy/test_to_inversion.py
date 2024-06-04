@@ -265,7 +265,7 @@ def test__inversion_interferometer_from(grid_2d_7x7, interferometer_7):
     inversion = to_inversion.inversion
 
     assert inversion.mapped_reconstructed_data.real == pytest.approx(
-        interferometer_7.visibilities.real, 1.0e-2
+        interferometer_7.data.real, 1.0e-2
     )
 
 

@@ -15,14 +15,14 @@ def test__model_image__with_and_without_psf_blurring(
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7_no_blur, galaxies=[g0])
 
-    assert fit.model_image.slim == pytest.approx(
+    assert fit.model_data.slim == pytest.approx(
         np.array([2.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0]), 1.0e-4
     )
     assert fit.log_likelihood == pytest.approx(-14.63377, 1.0e-4)
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=[g0])
 
-    assert fit.model_image.slim == pytest.approx(
+    assert fit.model_data.slim == pytest.approx(
         np.array([1.33, 1.16, 1.0, 1.16, 1.0, 1.0, 1.0, 1.0, 1.0]), 1.0e-1
     )
     assert fit.log_likelihood == pytest.approx(-14.52960, 1.0e-4)
@@ -190,70 +190,62 @@ def test__fit_figure_of_merit(
     assert fit.figure_of_merit == pytest.approx(-23.146720, 1.0e-4)
 
 
-def test__fit__sky___handles_special_behaviour(masked_imaging_7x7):
+def test__fit__model_dataset__sky___handles_special_behaviour(masked_imaging_7x7):
     g0 = ag.Galaxy(
         redshift=0.5,
-        bulge=ag.lp.Sersic(sersic_index=1.0),
+        bulge=ag.lp_linear.Sersic(sersic_index=1.0),
     )
 
     fit = ag.FitImaging(
         dataset=masked_imaging_7x7,
         galaxies=[g0],
-        sky=ag.lp_linear.Sky(),
+        dataset_model=ag.DatasetModel(background_sky_level=5.0),
     )
 
     assert fit.perform_inversion is True
+    assert fit.figure_of_merit == pytest.approx(-21.6970706693, 1.0e-4)
 
-    masked_imaging_7x7 = copy.copy(masked_imaging_7x7)
 
-    masked_imaging_7x7.data -= 100.0
-
-    g0_linear_light = ag.Galaxy(
-        redshift=0.5,
-        bulge=ag.lp_linear.Sersic(sersic_index=1.0),
-    )
+def test__fit__model_dataset__grid_offset__handles_special_behaviour(
+    masked_imaging_7x7,
+    masked_imaging_7x7_sub_2,
+):
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(centre=(-1.0, -2.0), intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(centre=(-1.0, -2.0), intensity=1.0))
 
     fit = ag.FitImaging(
         dataset=masked_imaging_7x7,
-        galaxies=[g0_linear_light],
-        sky=ag.lp_linear.Sky(),
-        settings_inversion=ag.SettingsInversion(use_positive_only_solver=False),
+        galaxies=[g0, g1],
+        dataset_model=ag.DatasetModel(grid_offset=(1.0, 2.0)),
     )
 
-    assert fit.perform_inversion is True
-    assert fit.figure_of_merit == pytest.approx(-14.5087714, 1.0e-4)
+    assert fit.figure_of_merit == pytest.approx(-75938.05, 1.0e-4)
 
-    sky = fit.sky_linear_light_profiles_to_light_profiles
+    g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(centre=(-1.0, -2.0), intensity=1.0))
+    g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(centre=(-1.0, -2.0), intensity=1.0))
 
-    assert sky.light_profile_list[0].intensity == pytest.approx(-49.5, 1.0e-4)
-    assert sky.light_profile_list[1].intensity == pytest.approx(49.5, 1.0e-4)
+    fit = ag.FitImaging(
+        dataset=masked_imaging_7x7_sub_2,
+        galaxies=[g0, g1],
+        dataset_model=ag.DatasetModel(grid_offset=(1.0, 2.0)),
+    )
+
+    assert fit.figure_of_merit == pytest.approx(-14.91028771456, 1.0e-4)
+
+    pixelization = ag.Pixelization(
+        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        regularization=ag.reg.Constant(coefficient=1.0),
+    )
+
+    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     fit = ag.FitImaging(
         dataset=masked_imaging_7x7,
-        galaxies=[g0_linear_light],
-        sky=ag.lp_linear.Sky(),
-        settings_inversion=ag.SettingsInversion(use_positive_only_solver=True),
+        galaxies=[ag.Galaxy(redshift=0.5), galaxy_pix],
+        dataset_model=ag.DatasetModel(grid_offset=(1.0, 2.0)),
     )
 
-    assert fit.perform_inversion is True
-    assert fit.figure_of_merit == pytest.approx(-14.5087714, 1.0e-4)
-
-    sky = fit.sky_linear_light_profiles_to_light_profiles
-
-    assert sky.light_profile_list[0].intensity == pytest.approx(0.0, 1.0e-4)
-    assert sky.light_profile_list[1].intensity == pytest.approx(99.0, 1.0e-4)
-
-    g0_light = ag.Galaxy(
-        redshift=0.5,
-        bulge=ag.lp_linear.Sersic(sersic_index=1.0),
-    )
-
-    fit = ag.FitImaging(
-        dataset=masked_imaging_7x7, galaxies=[g0_light], sky=ag.lp.Sky(intensity=-99.0)
-    )
-
-    assert fit.perform_inversion is True
-    assert fit.figure_of_merit == pytest.approx(-14.5087714, 1.0e-4)
+    assert fit.figure_of_merit == pytest.approx(-22.9005, 1.0e-4)
 
 
 def test__galaxy_model_image_dict(masked_imaging_7x7):
@@ -289,7 +281,7 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
     )
     assert (fit.galaxy_model_image_dict[g3].slim == np.zeros(9)).all()
 
-    assert fit.model_image == pytest.approx(
+    assert fit.model_data == pytest.approx(
         fit.galaxy_model_image_dict[g0]
         + fit.galaxy_model_image_dict[g1]
         + fit.galaxy_model_image_dict[g2],
@@ -307,7 +299,7 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
     )
     assert (fit.galaxy_model_image_dict[g3] == np.zeros(9)).all()
 
-    assert fit.model_image.native == pytest.approx(
+    assert fit.model_data.native == pytest.approx(
         fit.galaxy_model_image_dict[g0_linear].native, 1.0e-4
     )
 
@@ -330,7 +322,7 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
         fit.inversion.mapped_reconstructed_image.native, 1.0e-4
     )
 
-    assert fit.model_image.native == pytest.approx(
+    assert fit.model_data.native == pytest.approx(
         fit.galaxy_model_image_dict[g1].native, 1.0e-4
     )
 
@@ -378,7 +370,7 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
         fit.inversion.mapped_reconstructed_image, 1.0e-4
     )
 
-    assert fit.model_image == pytest.approx(
+    assert fit.model_data == pytest.approx(
         fit.galaxy_model_image_dict[g0] + fit.inversion.mapped_reconstructed_image,
         1.0e-4,
     )

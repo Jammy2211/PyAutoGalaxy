@@ -11,6 +11,7 @@ from autogalaxy.analysis.preloads import Preloads
 
 from autogalaxy.aggregator.imaging import _imaging_from
 from autogalaxy.aggregator.galaxies import _galaxies_from
+from autogalaxy.aggregator.dataset_model import _dataset_model_from
 from autogalaxy.aggregator import agg_util
 
 
@@ -62,6 +63,8 @@ def _fit_imaging_from(
 
     galaxies_list = _galaxies_from(fit=fit, instance=instance)
 
+    dataset_model_list = _dataset_model_from(fit=fit, instance=instance)
+
     adapt_images_list = agg_util.adapt_images_from(fit=fit)
 
     settings_inversion = settings_inversion or fit.value(name="settings_inversion")
@@ -72,8 +75,12 @@ def _fit_imaging_from(
 
     fit_dataset_list = []
 
-    for dataset, galaxies, adapt_images, mesh_grids_of_planes in zip(
-        dataset_list, galaxies_list, adapt_images_list, mesh_grids_of_planes_list
+    for dataset, galaxies, dataset_model, adapt_images, mesh_grids_of_planes in zip(
+        dataset_list,
+        galaxies_list,
+        dataset_model_list,
+        adapt_images_list,
+        mesh_grids_of_planes_list,
     ):
         preloads = agg_util.preloads_from(
             preloads_cls=Preloads,
@@ -86,6 +93,7 @@ def _fit_imaging_from(
             FitImaging(
                 dataset=dataset,
                 galaxies=galaxies,
+                dataset_model=dataset_model,
                 adapt_images=adapt_images,
                 settings_inversion=settings_inversion,
                 preloads=preloads,

@@ -38,6 +38,10 @@ class LightProfile(EllProfile, OperateImage):
         super().__init__(centre=centre, ell_comps=ell_comps)
         self.intensity = intensity
 
+    @property
+    def coefficient_tag(self) -> str:
+        return ""
+
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
     ) -> aa.Array2D:

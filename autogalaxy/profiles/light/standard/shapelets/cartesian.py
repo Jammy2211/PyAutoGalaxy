@@ -55,6 +55,10 @@ class ShapeletCartesian(AbstractShapelet):
             centre=centre, ell_comps=ell_comps, beta=beta, intensity=intensity
         )
 
+    @property
+    def coefficient_tag(self) -> str:
+        return f"n_y_{self.n_y}_n_x_{self.n_x}"
+
     @aa.over_sample
     @aa.grid_dec.to_array
     @check_operated_only

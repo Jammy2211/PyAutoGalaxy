@@ -155,7 +155,6 @@ def test__multipole_k_m_and_phi_m_from():
 
 
 def test__multipole_comps_from():
-
     multipole_comps = ag.convert.multipole_comps_from(k_m=0.1, phi_m=90.0, m=1)
 
     assert multipole_comps == pytest.approx((0.1, 0.0), 1e-3)
