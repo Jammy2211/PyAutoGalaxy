@@ -16,12 +16,12 @@ def make_ell_sersic_dict():
         "type": "instance",
         "class_path": "autogalaxy.profiles.mass.stellar.sersic.Sersic",
         "arguments": {
-            "centre": (0.0, 0.0),
-            "ell_comps": (0.0, 0.0),
+            "mass_to_light_ratio": 1.0,
+            "ell_comps": {"type": "tuple", "values": [0.0, 0.0]},
+            "sersic_index": 0.6,
             "intensity": 0.1,
             "effective_radius": 0.6,
-            "sersic_index": 0.6,
-            "mass_to_light_ratio": 1.0,
+            "centre": {"type": "tuple", "values": [0.0, 0.0]},
         },
     }
 
