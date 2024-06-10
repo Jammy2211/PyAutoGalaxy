@@ -136,7 +136,7 @@ class Sersic(AbstractSersic, LightProfile):
                     -self.sersic_constant,
                     np.add(
                         np.power(
-                            np.divide(grid_radii._array, self.effective_radius),
+                            np.divide(np.array(grid_radii), self.effective_radius),
                             1.0 / self.sersic_index,
                         ),
                         -1,
