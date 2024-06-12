@@ -27,8 +27,6 @@ def make_ell_sersic_dict():
 
 
 def test__to_dict(ell_sersic, ell_sersic_dict):
-    print(to_dict(ell_sersic))
-    print(ell_sersic_dict)
     assert to_dict(ell_sersic) == ell_sersic_dict
 
 
