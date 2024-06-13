@@ -160,6 +160,7 @@ over_sampling:
     SMBH: [3.01, 10.01]
     SMBHBinary: [3.01, 10.01]
     EllProfile: [3.01, 10.01]
+    PlotExample: [3.01, 10.01]
   sub_size_list:
     Chameleon: [32, 4, 2]
     ChameleonSph: [32, 4, 2]
@@ -224,3 +225,4 @@ over_sampling:
     SMBH: [32, 4, 2]
     SMBHBinary: [32, 4, 2]
     EllProfile: [32, 4, 2]
+    PlotExample: [32, 4, 2]
