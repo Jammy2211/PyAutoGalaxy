@@ -139,7 +139,7 @@ def test__sersic_radial_gradient():
         effective_radius=0.6,
         sersic_index=2.0,
     )
-    sersic_mp = ag.lmp.SersicRadialGradient(
+    sersic_mp = ag.lmp.SersicGradient(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         effective_radius=0.6,
@@ -147,7 +147,7 @@ def test__sersic_radial_gradient():
         mass_to_light_ratio=2.0,
         mass_to_light_gradient=0.5,
     )
-    sersic_lmp = ag.lmp.SersicRadialGradient(
+    sersic_lmp = ag.lmp.SersicGradient(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         effective_radius=0.6,
@@ -172,14 +172,14 @@ def test__sersic_radial_gradient():
     sersic_lp = ag.lmp.Exponential(
         ell_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
     )
-    sersic_mp = ag.lmp.ExponentialRadialGradient(
+    sersic_mp = ag.lmp.ExponentialGradient(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         effective_radius=0.6,
         mass_to_light_ratio=2.0,
         mass_to_light_gradient=0.5,
     )
-    sersic_lmp = ag.lmp.ExponentialRadialGradient(
+    sersic_lmp = ag.lmp.ExponentialGradient(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         effective_radius=0.6,

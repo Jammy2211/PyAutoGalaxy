@@ -40,8 +40,8 @@ from .stellar import (
     DevVaucouleursSph,
     SersicCore,
     SersicCoreSph,
-    SersicRadialGradient,
-    SersicRadialGradientSph,
+    SersicGradient,
+    SersicGradientSph,
     Chameleon,
     ChameleonSph,
 )

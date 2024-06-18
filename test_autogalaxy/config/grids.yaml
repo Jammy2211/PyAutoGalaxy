@@ -20,7 +20,7 @@ radial_minimum:
     ChameleonSph: 0.0001
     DevVaucouleurs: 0.0001
     DevVaucouleursSph: 0.0001
-    ExponentialRadialGradient: 0.0001
+    ExponentialGradient: 0.0001
     ElsonFreeFall: 0.0001
     ElsonFreeFallSph: 0.0001
     Exponential: 0.0001
@@ -61,8 +61,8 @@ radial_minimum:
     Sersic: 0.0001
     SersicCore: 0.0001
     SersicCoreSph: 0.0001
-    SersicRadialGradient: 0.0001
+    SersicGradient: 0.0001
     SersicSph: 0.0001
-    SphexponentialRadialGradient: 0.0001
-    SersicRadialGradientSph: 0.0001
+    SphexponentialGradient: 0.0001
+    SersicGradientSph: 0.0001
     EllProfile: 0.0001

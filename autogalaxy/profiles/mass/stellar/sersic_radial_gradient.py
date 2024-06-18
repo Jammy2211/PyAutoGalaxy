@@ -9,7 +9,7 @@ from autogalaxy.profiles.mass.stellar.sersic import AbstractSersic
 from autogalaxy.profiles.mass.stellar.sersic import cse_settings_from
 
 
-class SersicRadialGradient(AbstractSersic):
+class SersicGradient(AbstractSersic):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -237,7 +237,7 @@ class SersicRadialGradient(AbstractSersic):
         )
 
 
-class SersicRadialGradientSph(SersicRadialGradient):
+class SersicGradientSph(SersicGradient):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

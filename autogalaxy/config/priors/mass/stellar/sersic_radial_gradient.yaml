@@ -1,4 +1,4 @@
-SersicRadialGradient:
+SersicGradient:
   centre_0:
     type: Gaussian
     mean: 0.0
@@ -97,7 +97,7 @@ SersicRadialGradient:
     gaussian_limits:
       lower: 0.8
       upper: 5.0
-SersicRadialGradientSph:
+SersicGradientSph:
   centre_0:
     type: Gaussian
     mean: 0.0
