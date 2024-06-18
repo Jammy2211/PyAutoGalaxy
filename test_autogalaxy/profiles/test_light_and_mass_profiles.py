@@ -6,8 +6,8 @@ grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__gaussian():
-    lp = ag.lmp.Gaussian(ell_comps=(0.1, 0.05), intensity=1.0, sigma=5.0)
-    mp = ag.lmp.Gaussian(
+    lp = ag.lp.Gaussian(ell_comps=(0.1, 0.05), intensity=1.0, sigma=5.0)
+    mp = ag.mp.Gaussian(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         sigma=5.0,
@@ -20,65 +20,60 @@ def test__gaussian():
         mass_to_light_ratio=2.0,
     )
 
+    assert (lp.image_2d_from(grid=grid) == lmp.image_2d_from(grid=grid)).all()
     assert (
-        lp.image_2d_from(grid=grid) == lmp.image_2d_from(grid=grid)
+        mp.convergence_2d_from(grid=grid) == lmp.convergence_2d_from(grid=grid)
     ).all()
+    #    assert (mp.potential_2d_from(grid=grid) == lmp.potential_2d_from(grid=grid)).all()
     assert (
-        mp.convergence_2d_from(grid=grid)
-        == lmp.convergence_2d_from(grid=grid)
-    ).all()
-    #    assert (sersic_mp.potential_2d_from(grid=grid) == sersic_lmp.potential_2d_from(grid=grid)).all()
-    assert (
-        mp.deflections_yx_2d_from(grid=grid)
-        == lmp.deflections_yx_2d_from(grid=grid)
+        mp.deflections_yx_2d_from(grid=grid) == lmp.deflections_yx_2d_from(grid=grid)
     ).all()
 
 
 def test__gaussian_gradient():
-    lp = ag.lmp.Gaussian(ell_comps=(0.1, 0.05), intensity=1.0, sigma=5.0)
-    mp = ag.lmp.Gaussian(
+    lp = ag.lp.Gaussian(ell_comps=(0.1, 0.05), intensity=1.0, sigma=5.0)
+    mp = ag.mp.GaussianGradient(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         sigma=5.0,
-        mass_to_light_ratio=2.0,
+        mass_to_light_ratio_base=2.0,
+        mass_to_light_gradient=0.5,
+        mass_to_light_reference_radius=1.0,
     )
-    lmp = ag.lmp.Gaussian(
+    lmp = ag.lmp.GaussianGradient(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         sigma=5.0,
-        mass_to_light_ratio=2.0,
+        mass_to_light_ratio_base=2.0,
+        mass_to_light_gradient=0.5,
+        mass_to_light_reference_radius=1.0,
     )
 
+    assert (lp.image_2d_from(grid=grid) == lmp.image_2d_from(grid=grid)).all()
     assert (
-        lp.image_2d_from(grid=grid) == lmp.image_2d_from(grid=grid)
+        mp.convergence_2d_from(grid=grid) == lmp.convergence_2d_from(grid=grid)
     ).all()
+    #    assert (mp.potential_2d_from(grid=grid) == lmp.potential_2d_from(grid=grid)).all()
     assert (
-        mp.convergence_2d_from(grid=grid)
-        == lmp.convergence_2d_from(grid=grid)
+        mp.deflections_yx_2d_from(grid=grid) == lmp.deflections_yx_2d_from(grid=grid)
     ).all()
-    #    assert (sersic_mp.potential_2d_from(grid=grid) == sersic_lmp.potential_2d_from(grid=grid)).all()
-    assert (
-        mp.deflections_yx_2d_from(grid=grid)
-        == lmp.deflections_yx_2d_from(grid=grid)
-    ).all()
-
 
 
 def test__sersic():
-    sersic_lp = ag.lmp.Sersic(
+    lp = ag.lp.Sersic(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         effective_radius=0.6,
         sersic_index=2.0,
     )
-    sersic_mp = ag.lmp.Sersic(
+    mp = ag.mp.Sersic(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         effective_radius=0.6,
         sersic_index=2.0,
         mass_to_light_ratio=2.0,
     )
-    sersic_lmp = ag.lmp.Sersic(
+    lmp = ag.lmp.Sersic(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         effective_radius=0.6,
@@ -86,90 +81,76 @@ def test__sersic():
         mass_to_light_ratio=2.0,
     )
 
+    assert (lp.image_2d_from(grid=grid) == lmp.image_2d_from(grid=grid)).all()
     assert (
-        sersic_lp.image_2d_from(grid=grid) == sersic_lmp.image_2d_from(grid=grid)
+        mp.convergence_2d_from(grid=grid) == lmp.convergence_2d_from(grid=grid)
     ).all()
+    #    assert (mp.potential_2d_from(grid=grid) == lmp.potential_2d_from(grid=grid)).all()
     assert (
-        sersic_mp.convergence_2d_from(grid=grid)
-        == sersic_lmp.convergence_2d_from(grid=grid)
-    ).all()
-    #    assert (sersic_mp.potential_2d_from(grid=grid) == sersic_lmp.potential_2d_from(grid=grid)).all()
-    assert (
-        sersic_mp.deflections_yx_2d_from(grid=grid)
-        == sersic_lmp.deflections_yx_2d_from(grid=grid)
+        mp.deflections_yx_2d_from(grid=grid) == lmp.deflections_yx_2d_from(grid=grid)
     ).all()
 
 
 def test__exponential():
-    sersic_lp = ag.lmp.Exponential(
-        ell_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
-    )
-    sersic_mp = ag.lmp.Exponential(
+    lp = ag.lp.Exponential(ell_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6)
+    mp = ag.mp.Exponential(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         effective_radius=0.6,
         mass_to_light_ratio=2.0,
     )
-    sersic_lmp = ag.lmp.Exponential(
+    lmp = ag.lmp.Exponential(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         effective_radius=0.6,
         mass_to_light_ratio=2.0,
     )
 
+    assert (lp.image_2d_from(grid=grid) == lmp.image_2d_from(grid=grid)).all()
     assert (
-        sersic_lp.image_2d_from(grid=grid) == sersic_lmp.image_2d_from(grid=grid)
+        mp.convergence_2d_from(grid=grid) == lmp.convergence_2d_from(grid=grid)
     ).all()
+    #    assert (mp.potential_2d_from(grid=grid) == lmp.potential_2d_from(grid=grid)).all()
     assert (
-        sersic_mp.convergence_2d_from(grid=grid)
-        == sersic_lmp.convergence_2d_from(grid=grid)
-    ).all()
-    #    assert (sersic_mp.potential_2d_from(grid=grid) == sersic_lmp.potential_2d_from(grid=grid)).all()
-    assert (
-        sersic_mp.deflections_yx_2d_from(grid=grid)
-        == sersic_lmp.deflections_yx_2d_from(grid=grid)
+        mp.deflections_yx_2d_from(grid=grid) == lmp.deflections_yx_2d_from(grid=grid)
     ).all()
 
 
 def test__dev_vaucouleurs():
-    sersic_lp = ag.lmp.DevVaucouleurs(
+    lp = ag.lmp.DevVaucouleurs(
         ell_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
     )
-    sersic_mp = ag.lmp.DevVaucouleurs(
+    mp = ag.lmp.DevVaucouleurs(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         effective_radius=0.6,
         mass_to_light_ratio=2.0,
     )
-    sersic_lmp = ag.lmp.DevVaucouleurs(
+    lmp = ag.lmp.DevVaucouleurs(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         effective_radius=0.6,
         mass_to_light_ratio=2.0,
     )
 
+    assert (lp.image_2d_from(grid=grid) == lmp.image_2d_from(grid=grid)).all()
     assert (
-        sersic_lp.image_2d_from(grid=grid) == sersic_lmp.image_2d_from(grid=grid)
+        mp.convergence_2d_from(grid=grid) == lmp.convergence_2d_from(grid=grid)
     ).all()
+    #    assert (mp.potential_2d_from(grid=grid) == lmp.potential_2d_from(grid=grid)).all()
     assert (
-        sersic_mp.convergence_2d_from(grid=grid)
-        == sersic_lmp.convergence_2d_from(grid=grid)
-    ).all()
-    #    assert (sersic_mp.potential_2d_from(grid=grid) == sersic_lmp.potential_2d_from(grid=grid)).all()
-    assert (
-        sersic_mp.deflections_yx_2d_from(grid=grid)
-        == sersic_lmp.deflections_yx_2d_from(grid=grid)
+        mp.deflections_yx_2d_from(grid=grid) == lmp.deflections_yx_2d_from(grid=grid)
     ).all()
 
 
 def test__sersic_gradient():
-    sersic_lp = ag.lmp.Sersic(
+    lp = ag.lmp.Sersic(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         effective_radius=0.6,
         sersic_index=2.0,
     )
-    sersic_mp = ag.lmp.SersicGradient(
+    mp = ag.lmp.SersicGradient(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         effective_radius=0.6,
@@ -177,7 +158,7 @@ def test__sersic_gradient():
         mass_to_light_ratio=2.0,
         mass_to_light_gradient=0.5,
     )
-    sersic_lmp = ag.lmp.SersicGradient(
+    lmp = ag.lmp.SersicGradient(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         effective_radius=0.6,
@@ -186,30 +167,28 @@ def test__sersic_gradient():
         mass_to_light_gradient=0.5,
     )
 
-    assert sersic_lp.image_2d_from(grid=grid) == pytest.approx(
-        sersic_lmp.image_2d_from(grid=grid), 1.0e-4
+    assert lp.image_2d_from(grid=grid) == pytest.approx(
+        lmp.image_2d_from(grid=grid), 1.0e-4
     )
-    assert sersic_mp.convergence_2d_from(grid=grid) == pytest.approx(
-        sersic_lmp.convergence_2d_from(grid=grid), 1.0e-4
+    assert mp.convergence_2d_from(grid=grid) == pytest.approx(
+        lmp.convergence_2d_from(grid=grid), 1.0e-4
     )
-    #    assert (sersic_mp.potential_2d_from(grid=grid) == sersic_lmp.potential_2d_from(grid=grid)).all()
-    assert sersic_mp.deflections_yx_2d_from(grid=grid) == pytest.approx(
-        sersic_lmp.deflections_yx_2d_from(grid=grid), 1.0e-4
+    #    assert (mp.potential_2d_from(grid=grid) == lmp.potential_2d_from(grid=grid)).all()
+    assert mp.deflections_yx_2d_from(grid=grid) == pytest.approx(
+        lmp.deflections_yx_2d_from(grid=grid), 1.0e-4
     )
 
 
 def test__sersic_gradient():
-    sersic_lp = ag.lmp.Exponential(
-        ell_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
-    )
-    sersic_mp = ag.lmp.ExponentialGradient(
+    lp = ag.lmp.Exponential(ell_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6)
+    mp = ag.lmp.ExponentialGradient(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         effective_radius=0.6,
         mass_to_light_ratio=2.0,
         mass_to_light_gradient=0.5,
     )
-    sersic_lmp = ag.lmp.ExponentialGradient(
+    lmp = ag.lmp.ExponentialGradient(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         effective_radius=0.6,
@@ -217,64 +196,60 @@ def test__sersic_gradient():
         mass_to_light_gradient=0.5,
     )
 
-    assert sersic_lp.image_2d_from(grid=grid) == pytest.approx(
-        sersic_lmp.image_2d_from(grid=grid), 1.0e-4
+    assert lp.image_2d_from(grid=grid) == pytest.approx(
+        lmp.image_2d_from(grid=grid), 1.0e-4
     )
-    assert sersic_mp.convergence_2d_from(grid=grid) == pytest.approx(
-        sersic_lmp.convergence_2d_from(grid=grid), 1.0e-4
+    assert mp.convergence_2d_from(grid=grid) == pytest.approx(
+        lmp.convergence_2d_from(grid=grid), 1.0e-4
     )
-    #    assert (sersic_mp.potential_2d_from(grid=grid) == sersic_lmp.potential_2d_from(grid=grid)).all()
-    assert sersic_mp.deflections_yx_2d_from(grid=grid) == pytest.approx(
-        sersic_lmp.deflections_yx_2d_from(grid=grid), 1.0e-4
+    #    assert (mp.potential_2d_from(grid=grid) == lmp.potential_2d_from(grid=grid)).all()
+    assert mp.deflections_yx_2d_from(grid=grid) == pytest.approx(
+        lmp.deflections_yx_2d_from(grid=grid), 1.0e-4
     )
 
 
 def test__core_sersic():
-    sersic_lp = ag.lmp.SersicCore(
+    lp = ag.lmp.SersicCore(
         ell_comps=(0.1, 0.05), effective_radius=0.6, sersic_index=2.0
     )
-    sersic_mp = ag.lmp.SersicCore(
+    mp = ag.lmp.SersicCore(
         ell_comps=(0.1, 0.05),
         effective_radius=0.6,
         sersic_index=2.0,
         mass_to_light_ratio=2.0,
     )
-    sersic_lmp = ag.lmp.SersicCore(
+    lmp = ag.lmp.SersicCore(
         ell_comps=(0.1, 0.05),
         effective_radius=0.6,
         sersic_index=2.0,
         mass_to_light_ratio=2.0,
     )
 
+    assert (lp.image_2d_from(grid=grid) == lmp.image_2d_from(grid=grid)).all()
     assert (
-        sersic_lp.image_2d_from(grid=grid) == sersic_lmp.image_2d_from(grid=grid)
+        mp.convergence_2d_from(grid=grid) == lmp.convergence_2d_from(grid=grid)
     ).all()
+    #    assert (mp.potential_2d_from(grid=grid) == lmp.potential_2d_from(grid=grid)).all()
     assert (
-        sersic_mp.convergence_2d_from(grid=grid)
-        == sersic_lmp.convergence_2d_from(grid=grid)
-    ).all()
-    #    assert (sersic_mp.potential_2d_from(grid=grid) == sersic_lmp.potential_2d_from(grid=grid)).all()
-    assert (
-        sersic_mp.deflections_yx_2d_from(grid=grid)
-        == sersic_lmp.deflections_yx_2d_from(grid=grid)
+        mp.deflections_yx_2d_from(grid=grid) == lmp.deflections_yx_2d_from(grid=grid)
     ).all()
 
 
 def test__chameleon():
-    chameleon_lp = ag.lmp.Chameleon(
+    lp = ag.lmp.Chameleon(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         core_radius_0=0.1,
         core_radius_1=0.3,
     )
-    chameleon_mp = ag.lmp.Chameleon(
+    mp = ag.lmp.Chameleon(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         core_radius_0=0.1,
         core_radius_1=0.3,
         mass_to_light_ratio=2.0,
     )
-    chameleon_lmp = ag.lmp.Chameleon(
+    lmp = ag.lmp.Chameleon(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         core_radius_0=0.1,
@@ -282,15 +257,11 @@ def test__chameleon():
         mass_to_light_ratio=2.0,
     )
 
+    assert (lp.image_2d_from(grid=grid) == lmp.image_2d_from(grid=grid)).all()
     assert (
-        chameleon_lp.image_2d_from(grid=grid) == chameleon_lmp.image_2d_from(grid=grid)
+        mp.convergence_2d_from(grid=grid) == lmp.convergence_2d_from(grid=grid)
     ).all()
+    #    assert (mp.potential_2d_from(grid=grid) == lmp.potential_2d_from(grid=grid)).all()
     assert (
-        chameleon_mp.convergence_2d_from(grid=grid)
-        == chameleon_lmp.convergence_2d_from(grid=grid)
-    ).all()
-    #    assert (chameleon_mp.potential_2d_from(grid=grid) == chameleon_lmp.potential_2d_from(grid=grid)).all()
-    assert (
-        chameleon_mp.deflections_yx_2d_from(grid=grid)
-        == chameleon_lmp.deflections_yx_2d_from(grid=grid)
+        mp.deflections_yx_2d_from(grid=grid) == lmp.deflections_yx_2d_from(grid=grid)
     ).all()

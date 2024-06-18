@@ -57,6 +57,7 @@ class Gaussian(lp.Gaussian, mp.Gaussian, LightMassProfile):
             mass_to_light_ratio=mass_to_light_ratio,
         )
 
+
 class GaussianGradient(lp.Gaussian, mp.GaussianGradient, LightMassProfile):
     def __init__(
         self,
@@ -110,7 +111,6 @@ class GaussianGradient(lp.Gaussian, mp.GaussianGradient, LightMassProfile):
             mass_to_light_gradient=mass_to_light_gradient,
             mass_to_light_reference_radius=mass_to_light_reference_radius,
         )
-
 
 
 class Sersic(lp.Sersic, mp.Sersic, LightMassProfile):
