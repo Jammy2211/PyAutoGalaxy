@@ -132,7 +132,7 @@ def test__dev_vaucouleurs():
     ).all()
 
 
-def test__sersic_radial_gradient():
+def test__sersic_gradient():
     sersic_lp = ag.lmp.Sersic(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
@@ -168,7 +168,7 @@ def test__sersic_radial_gradient():
     )
 
 
-def test__sersic_radial_gradient():
+def test__sersic_gradient():
     sersic_lp = ag.lmp.Exponential(
         ell_comps=(0.1, 0.05), intensity=1.0, effective_radius=0.6
     )
