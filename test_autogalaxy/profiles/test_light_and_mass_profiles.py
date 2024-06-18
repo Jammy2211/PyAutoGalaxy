@@ -6,14 +6,14 @@ grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__gaussian():
-    gaussian_lp = ag.lmp.Gaussian(ell_comps=(0.1, 0.05), intensity=1.0, sigma=5.0)
-    gaussian_mp = ag.lmp.Gaussian(
+    lp = ag.lmp.Gaussian(ell_comps=(0.1, 0.05), intensity=1.0, sigma=5.0)
+    mp = ag.lmp.Gaussian(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         sigma=5.0,
         mass_to_light_ratio=2.0,
     )
-    gaussian_lmp = ag.lmp.Gaussian(
+    lmp = ag.lmp.Gaussian(
         ell_comps=(0.1, 0.05),
         intensity=1.0,
         sigma=5.0,
@@ -21,17 +21,47 @@ def test__gaussian():
     )
 
     assert (
-        gaussian_lp.image_2d_from(grid=grid) == gaussian_lmp.image_2d_from(grid=grid)
+        lp.image_2d_from(grid=grid) == lmp.image_2d_from(grid=grid)
     ).all()
     assert (
-        gaussian_mp.convergence_2d_from(grid=grid)
-        == gaussian_lmp.convergence_2d_from(grid=grid)
+        mp.convergence_2d_from(grid=grid)
+        == lmp.convergence_2d_from(grid=grid)
     ).all()
     #    assert (sersic_mp.potential_2d_from(grid=grid) == sersic_lmp.potential_2d_from(grid=grid)).all()
     assert (
-        gaussian_mp.deflections_yx_2d_from(grid=grid)
-        == gaussian_lmp.deflections_yx_2d_from(grid=grid)
+        mp.deflections_yx_2d_from(grid=grid)
+        == lmp.deflections_yx_2d_from(grid=grid)
     ).all()
+
+
+def test__gaussian_gradient():
+    lp = ag.lmp.Gaussian(ell_comps=(0.1, 0.05), intensity=1.0, sigma=5.0)
+    mp = ag.lmp.Gaussian(
+        ell_comps=(0.1, 0.05),
+        intensity=1.0,
+        sigma=5.0,
+        mass_to_light_ratio=2.0,
+    )
+    lmp = ag.lmp.Gaussian(
+        ell_comps=(0.1, 0.05),
+        intensity=1.0,
+        sigma=5.0,
+        mass_to_light_ratio=2.0,
+    )
+
+    assert (
+        lp.image_2d_from(grid=grid) == lmp.image_2d_from(grid=grid)
+    ).all()
+    assert (
+        mp.convergence_2d_from(grid=grid)
+        == lmp.convergence_2d_from(grid=grid)
+    ).all()
+    #    assert (sersic_mp.potential_2d_from(grid=grid) == sersic_lmp.potential_2d_from(grid=grid)).all()
+    assert (
+        mp.deflections_yx_2d_from(grid=grid)
+        == lmp.deflections_yx_2d_from(grid=grid)
+    ).all()
+
 
 
 def test__sersic():
