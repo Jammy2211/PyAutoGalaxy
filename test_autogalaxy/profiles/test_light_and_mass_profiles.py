@@ -38,7 +38,7 @@ def test__gaussian_gradient():
         sigma=5.0,
         mass_to_light_ratio_base=2.0,
         mass_to_light_gradient=0.5,
-        mass_to_light_reference_radius=1.0,
+        mass_to_light_radius=1.0,
     )
     lmp = ag.lmp.GaussianGradient(
         ell_comps=(0.1, 0.05),
@@ -46,7 +46,7 @@ def test__gaussian_gradient():
         sigma=5.0,
         mass_to_light_ratio_base=2.0,
         mass_to_light_gradient=0.5,
-        mass_to_light_reference_radius=1.0,
+        mass_to_light_radius=1.0,
     )
 
     assert (lp.image_2d_from(grid=grid) == lmp.image_2d_from(grid=grid)).all()

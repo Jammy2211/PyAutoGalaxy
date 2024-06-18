@@ -14,7 +14,7 @@ def test__init_constructor__scales_values_correct():
         sigma=3.0,
         mass_to_light_ratio_base=1.0,
         mass_to_light_gradient=0.0,
-        mass_to_light_reference_radius=1.0,
+        mass_to_light_radius=1.0,
     )
 
     assert mp.centre == (0.0, 0.0)
@@ -23,7 +23,7 @@ def test__init_constructor__scales_values_correct():
     assert mp.sigma == 3.0
     assert mp.mass_to_light_ratio_base == 1.0
     assert mp.mass_to_light_gradient == 0.0
-    assert mp.mass_to_light_reference_radius == 1.0
+    assert mp.mass_to_light_radius == 1.0
     assert mp.mass_to_light_ratio == 1.0
 
     mp = ag.mp.GaussianGradient(
@@ -33,7 +33,7 @@ def test__init_constructor__scales_values_correct():
         sigma=3.0,
         mass_to_light_ratio_base=1.0,
         mass_to_light_gradient=1.0,
-        mass_to_light_reference_radius=5.0,
+        mass_to_light_radius=5.0,
     )
 
     assert mp.centre == (0.0, 0.0)
@@ -42,5 +42,5 @@ def test__init_constructor__scales_values_correct():
     assert mp.sigma == 3.0
     assert mp.mass_to_light_ratio_base == 1.0
     assert mp.mass_to_light_gradient == 1.0
-    assert mp.mass_to_light_reference_radius == 5.0
+    assert mp.mass_to_light_radius == 5.0
     assert mp.mass_to_light_ratio == 0.602

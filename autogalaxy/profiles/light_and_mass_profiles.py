@@ -67,7 +67,7 @@ class GaussianGradient(lp.Gaussian, mp.GaussianGradient, LightMassProfile):
         sigma: float = 1.0,
         mass_to_light_ratio_base: float = 1.0,
         mass_to_light_gradient: float = 0.0,
-        mass_to_light_reference_radius: float = 1.0,
+        mass_to_light_radius: float = 1.0,
     ):
         """
         The elliptical Gaussian light profile with a gradient in its mass to light conversion.
@@ -90,7 +90,7 @@ class GaussianGradient(lp.Gaussian, mp.GaussianGradient, LightMassProfile):
         mass_to_light_gradient
             The mass-to-light radial gradient of the profile, whereby positive values means there is more mass
             per unit light within the reference radius.
-        mass_to_light_reference_radius
+        mass_to_light_radius
             The radius where the mass-to-light ratio is equal to the base mass-to-light ratio, such that there will be
             more of less mass per unit light within this radius depending on the mass-to-light gradient.
         """
@@ -109,7 +109,7 @@ class GaussianGradient(lp.Gaussian, mp.GaussianGradient, LightMassProfile):
             sigma=sigma,
             mass_to_light_ratio_base=mass_to_light_ratio_base,
             mass_to_light_gradient=mass_to_light_gradient,
-            mass_to_light_reference_radius=mass_to_light_reference_radius,
+            mass_to_light_radius=mass_to_light_radius,
         )
 
 
