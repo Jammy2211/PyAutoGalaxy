@@ -1,14 +1,4 @@
 GaussianGradient:
-  sigma:
-    type: Uniform
-    lower_limit: 0.0
-    upper_limit: 25.0
-    width_modifier:
-      type: Relative
-      value: 0.5
-    gaussian_limits:
-      lower: 0.0
-      upper: inf
   centre_0:
     type: Gaussian
     mean: 0.0
@@ -67,6 +57,16 @@ GaussianGradient:
     gaussian_limits:
       lower: 0.0
       upper: inf
+  sigma:
+    type: Uniform
+    lower_limit: 0.0
+    upper_limit: 25.0
+    width_modifier:
+      type: Relative
+      value: 0.5
+    gaussian_limits:
+      lower: 0.0
+      upper: inf
   mass_to_light_ratio_base:
     type: LogUniform
     lower_limit: 1.0e-06
@@ -77,7 +77,7 @@ GaussianGradient:
     gaussian_limits:
       lower: 0.0
       upper: inf
-  mass_to_light_ratio_gradient:
+  mass_to_light_gradient:
     type: Uniform
     lower_limit: -1.0
     upper_limit: 1.0
