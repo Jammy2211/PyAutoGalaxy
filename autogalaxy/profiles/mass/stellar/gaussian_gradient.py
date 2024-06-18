@@ -55,7 +55,7 @@ class GaussianGradient(Gaussian):
         self.mass_to_light_reference_radius = mass_to_light_reference_radius
         mass_to_light_ratio = (
             self.mass_to_light_ratio_base
-            * ((self.sigma + 0.01) / self.mass_to_light_reference_radius)
+            * ((sigma + 0.01) / self.mass_to_light_reference_radius)
             ** self.mass_to_light_gradient
         )
 

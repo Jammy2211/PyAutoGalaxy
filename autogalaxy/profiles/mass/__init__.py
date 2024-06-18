@@ -32,6 +32,7 @@ from .dark import (
 )
 from .stellar import (
     Gaussian,
+    GaussianGradient,
     Sersic,
     SersicSph,
     Exponential,
