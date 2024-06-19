@@ -12,44 +12,47 @@ from autogalaxy.profiles.light import linear as lp_linear
 class Basis(LightProfile, MassProfile):
     def __init__(
         self,
-        light_profile_list: List[Union[LightProfile, MassProfile]],
+        profile_list: List[Union[LightProfile, MassProfile]],
         regularization: Optional[aa.AbstractRegularization] = None,
     ):
         super().__init__(
-            centre=light_profile_list[0].centre,
-            ell_comps=light_profile_list[0].ell_comps,
+            centre=profile_list[0].centre,
+            ell_comps=profile_list[0].ell_comps,
         )
 
-        self.light_profile_list = light_profile_list
+        self.profile_list = profile_list
         self.regularization = regularization
 
     @property
-    def mass_list(self) -> List:
+    def light_list(self) -> List[LightProfile]:
         """
-        Returns a list of objects in the galaxy which are an instance of the input `cls`.
+        Returns a list of all light profiles in the `Basis` object.
 
-        The optional `cls_filtered` input removes classes of an input instance type.
-
-        For example:
-
-        - If the input is `cls=ag.LightProfile`, a list containing all light profiles in the galaxy is returned.
-
-        - If `cls=ag.LightProfile` and `cls_filtered=ag.LightProfileLinear`, a list of all light profiles
-          excluding those which are linear light profiles will be returned.
-
-        Parameters
-        ----------
-        cls
-            The type of class that a list of instances of this class in the galaxy are returned for.
-        cls_filtered
-            A class type which is filtered and removed from the class list.
+        This is used for computing light profile quantities of each individual light profile in the `Basis` object and
+        then summing them to get the overall quantity (e.g. the image, surface brightness, etc.).
 
         Returns
         -------
-            The list of objects in the galaxy that inherit from input `cls`.
+            The list of light profiles in the `Basis` object.
         """
         return aa.util.misc.cls_list_from(
-            values=self.light_profile_list, cls=MassProfile
+            values=self.profile_list, cls=LightProfile
+        )
+
+    @property
+    def mass_list(self) -> List[MassProfile]:
+        """
+        Returns a list of all mass profiles in the `Basis` object.
+
+        This is used for computing mass profile quantities of each individual mass profile in the `Basis` object and
+        then summing them to get the overall quantity (e.g. the convergence, potential, etc.).
+
+        Returns
+        -------
+            The list of mass profiles in the `Basis` object.
+        """
+        return aa.util.misc.cls_list_from(
+            values=self.profile_list, cls=MassProfile
         )
 
     def image_2d_from(
@@ -64,7 +67,7 @@ class Basis(LightProfile, MassProfile):
             light_profile.image_2d_from(grid=grid, operated_only=operated_only)
             if not isinstance(light_profile, lp_linear.LightProfileLinear)
             else np.zeros((grid.shape[0],))
-            for light_profile in self.light_profile_list
+            for light_profile in self.profile_list
         ]
 
     def convergence_2d_from(
@@ -79,7 +82,7 @@ class Basis(LightProfile, MassProfile):
         self, grid: aa.type.Grid2DLike, **kwargs
     ) -> aa.Array2D:
         if len(self.mass_list) > 0:
-            return sum([mass.potential_2d_from(grid=grid) for mass in self.light_profile_list])
+            return sum([mass.potential_2d_from(grid=grid) for mass in self.profile_list])
         return np.zeros((grid.shape[0],))
 
 
@@ -87,13 +90,13 @@ class Basis(LightProfile, MassProfile):
         self, grid: aa.type.Grid2DLike, **kwargs
     ) -> aa.Array2D:
         if len(self.mass_list) > 0:
-            return sum([mass.deflections_yx_2d_from(grid=grid) for mass in self.light_profile_list])
+            return sum([mass.deflections_yx_2d_from(grid=grid) for mass in self.profile_list])
         return np.zeros((grid.shape[0], 2))
 
     def lp_instance_from(self, linear_light_profile_intensity_dict: Dict):
         light_profile_list = []
 
-        for light_profile in self.light_profile_list:
+        for light_profile in self.profile_list:
             if isinstance(light_profile, lp_linear.LightProfileLinear):
                 light_profile = light_profile.lp_instance_from(
                     linear_light_profile_intensity_dict=linear_light_profile_intensity_dict
@@ -102,5 +105,5 @@ class Basis(LightProfile, MassProfile):
             light_profile_list.append(light_profile)
 
         return Basis(
-            light_profile_list=light_profile_list, regularization=self.regularization
+            profile_list=light_profile_list, regularization=self.regularization
         )

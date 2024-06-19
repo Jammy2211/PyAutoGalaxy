@@ -347,7 +347,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         elif self.has(cls=Basis):
             basis_list = self.cls_list_from(cls=Basis)
             for basis in basis_list:
-                for light_profile in basis.light_profile_list:
+                for light_profile in basis.profile_list:
                     if isinstance(light_profile, LightProfileLinear):
                         return True
 

@@ -141,7 +141,7 @@ class GalaxiesToInversion(AbstractToInversion):
                     if isinstance(light_profile, LightProfileLinear):
                         light_profile_list = [light_profile]
                     else:
-                        light_profile_list = light_profile.light_profile_list
+                        light_profile_list = light_profile.profile_list
                         light_profile_list = [
                             light_profile
                             for light_profile in light_profile_list
