@@ -46,10 +46,6 @@ class ShapeletPolar(lp.ShapeletPolar, LightProfileLinear):
             n=n, m=m, centre=centre, ell_comps=ell_comps, beta=beta, intensity=1.0
         )
 
-    @property
-    def lp_cls(self):
-        return lp.ShapeletPolar
-
 
 class ShapeletPolarSph(ShapeletPolar):
     def __init__(
@@ -83,7 +79,3 @@ class ShapeletPolarSph(ShapeletPolar):
         """
 
         super().__init__(n=n, m=m, centre=centre, ell_comps=(0.0, 0.0), beta=beta)
-
-    @property
-    def lp_cls(self):
-        return lp.ShapeletPolarSph

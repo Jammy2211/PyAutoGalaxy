@@ -4,9 +4,7 @@ import pytest
 import autogalaxy as ag
 
 
-
 def test__light_profile_list():
-
     lp_0 = ag.lp.Sersic(intensity=0.1)
     lp_1 = ag.lp.Sersic(intensity=0.2)
 
@@ -19,7 +17,6 @@ def test__light_profile_list():
 
 
 def test__mass_profile_list():
-
     lp_0 = ag.lp.Sersic(intensity=0.1)
     lp_1 = ag.lp.Sersic(intensity=0.2)
 

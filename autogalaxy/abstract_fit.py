@@ -8,7 +8,6 @@ if TYPE_CHECKING:
 
 import autoarray as aa
 
-from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.profiles.basis import Basis
 
@@ -203,7 +202,7 @@ class AbstractFitInversion:
     def append_linear_light_profiles_to_model(self, model_instance):
         """
         For a model instance, this function replaces all linear light profiles with instances of their standard
-        light profile counterparts/
+        light profile counterparts.
 
         The `intensity` parameter of each light profile is set to the value inferred via the `Inversion`.
 

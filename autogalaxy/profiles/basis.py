@@ -17,19 +17,19 @@ class Basis(LightProfile, MassProfile):
     ):
         """
         A basis is a collection of multiple light or mass profiles that are used to represent the light or mass
-        distribution of a galaxy. 
-        
+        distribution of a galaxy.
+
         A basis is typically used to decompose a galaxy's light or mass distribution into many profiles, each of
-        which fit a small part of the overall light or mass distribution. 
-        
-        For example, a common basis uses of order 10-100 Gaussian light or mass profiles, where each Gaussian 
+        which fit a small part of the overall light or mass distribution.
+
+        For example, a common basis uses of order 10-100 Gaussian light or mass profiles, where each Gaussian
         represents a small part of the overall light or mass distribution of a galaxy. By decomposing the light or mass
         distribution into many profiles, more detailed structures can be captured and fitted that ordinary profiles
         would struggle to capture.
-                
+
         This contrasts most standard light profiles (e.g. a Sersic) or mass profiles (e.g. an Isothermal) which
         represent the entire light or mass distribution of a galaxy.
-        
+
         Parameters
         ----------
         profile_list
@@ -79,11 +79,11 @@ class Basis(LightProfile, MassProfile):
     ) -> aa.Array2D:
         """
         Returns the summed image of all light profiles in the basis from a 2D grid of Cartesian (y,x) coordinates.
-        
+
         Normal steps in the calculation of an image, like shifting the input grid to the profile's centre, rotating
         it to its position angle, and checking if its already operated on are all handled internally by
         each profiles `image_2d_from` method when it is called.
-        
+
         Parameters
         ----------
         grid
@@ -134,11 +134,11 @@ class Basis(LightProfile, MassProfile):
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> aa.Array2D:
         """
         Returns the summed convergence of all mass profiles in the basis from a 2D grid of Cartesian (y,x) coordinates.
-        
-        Normal steps in the calculation of a convergence, like shifting the input grid to the profile's centre and 
+
+        Normal steps in the calculation of a convergence, like shifting the input grid to the profile's centre and
         rotating it to its position angle are all handled internally by each profile's `convergence_2d_from` method
         when it is called.
-        
+
         Parameters
         ----------
         grid
@@ -158,7 +158,7 @@ class Basis(LightProfile, MassProfile):
         """
         Returns the summed potential of all mass profiles in the basis from a 2D grid of Cartesian (y,x) coordinates.
 
-        Normal steps in the calculation of a potential, like shifting the input grid to the profile's centre and 
+        Normal steps in the calculation of a potential, like shifting the input grid to the profile's centre and
         rotating it to its position angle are all handled internally by each profile's `potential_2d_from` method
         when it is called.
 
@@ -181,7 +181,7 @@ class Basis(LightProfile, MassProfile):
         """
         Returns the summed deflections of all mass profiles in the basis from a 2D grid of Cartesian (y,x) coordinates.
 
-        Normal steps in the calculation of a deflections, like shifting the input grid to the profile's centre and 
+        Normal steps in the calculation of a deflections, like shifting the input grid to the profile's centre and
         rotating it to its position angle are all handled internally by each profile's `deflections_2d_from` method
         when it is called.
 

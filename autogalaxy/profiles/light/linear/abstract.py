@@ -25,14 +25,6 @@ class LightProfileLinear(LightProfile):
     def _intensity(self):
         return 1.0
 
-    @property
-    def lp_cls(self):
-        raise NotImplementedError
-
-    @property
-    def lmp_cls(self):
-        raise NotImplementedError
-
     def parameters_dict_from(self, intensity: float) -> Dict[str, float]:
         """
         Returns a dictionary of the parameters of the linear light profile with the `intensity` added.
@@ -48,7 +40,9 @@ class LightProfileLinear(LightProfile):
         """
         parameters_dict = vars(self)
 
-        args = inspect.getfullargspec(self.lp_cls.__init__).args
+        args = inspect.getfullargspec(
+            self.__class__.__bases__[0](**parameters_dict).__init__
+        ).args
         args.remove("self")
 
         parameters_dict = {key: parameters_dict[key] for key in args}
@@ -75,28 +69,7 @@ class LightProfileLinear(LightProfile):
         intensity = linear_light_profile_intensity_dict[self]
         parameters_dict = self.parameters_dict_from(intensity=intensity)
 
-        return self.lp_cls(**parameters_dict)
-
-    def lmp_model_from(
-        self, linear_light_profile_intensity_dict: Dict
-    ) -> af.Model(lmp.LightMassProfile):
-        """
-        Creates an instance of a linear light profile using its parent light and mass profile (e.g. the non linear
-        variant which has `mass_to_light_ratio` and `intensity` parameters).
-
-        The `intensity` value of the profile created is passed into this function and used.
-
-        Parameters
-        ----------
-        intensity
-            Overall intensity normalisation of the not linear light profile that is created (units are dimensionless
-            and derived from the data the light profile's image is compared too, which is expected to be electrons
-            per second).
-        """
-        intensity = linear_light_profile_intensity_dict[self]
-        parameters_dict = self.parameters_dict_from(intensity=intensity)
-
-        return af.Model(self.lmp_cls, **parameters_dict)
+        return self.__class__.__bases__[0](**parameters_dict)
 
 
 class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
