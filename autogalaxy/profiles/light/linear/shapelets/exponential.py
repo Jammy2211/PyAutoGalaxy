@@ -101,10 +101,6 @@ class ShapeletExponential(lp.ShapeletExponential, LightProfileLinear):
             + -1.0j * np.sin(self.m * theta)
         )
 
-    @property
-    def lp_cls(self):
-        return lp.ShapeletExponential
-
 
 class ShapeletExponentialSph(ShapeletExponential):
     def __init__(
@@ -138,7 +134,3 @@ class ShapeletExponentialSph(ShapeletExponential):
         """
 
         super().__init__(n=n, m=m, centre=centre, ell_comps=(0.0, 0.0), beta=beta)
-
-    @property
-    def lp_cls(self):
-        return lp.ShapeletExponentialSph

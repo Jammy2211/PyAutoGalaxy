@@ -11,7 +11,7 @@ from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.profiles.light.linear import (
     LightProfileLinearObjFuncList,
 )
-from autogalaxy.profiles.light.basis import Basis
+from autogalaxy.profiles.basis import Basis
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.galaxy.galaxy import Galaxy

@@ -37,14 +37,6 @@ class Sersic(lp.Sersic, LightProfileLinear):
             sersic_index=sersic_index,
         )
 
-    @property
-    def lp_cls(self):
-        return lp.Sersic
-
-    @property
-    def lmp_cls(self):
-        return lmp.Sersic
-
 
 class SersicSph(Sersic):
     def __init__(

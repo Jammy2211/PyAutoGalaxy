@@ -24,7 +24,7 @@ def test__fit_figure_of_merit(interferometer_7):
     assert fit.figure_of_merit == pytest.approx(-2398107.3849, 1.0e-4)
 
     basis = ag.lp_basis.Basis(
-        light_profile_list=[
+        profile_list=[
             ag.lp.Sersic(intensity=1.0),
             ag.lp.Sersic(intensity=1.0),
         ]
@@ -87,7 +87,7 @@ def test__fit_figure_of_merit(interferometer_7):
     assert fit.figure_of_merit == pytest.approx(-23.44419, 1.0e-4)
 
     basis = ag.lp_basis.Basis(
-        light_profile_list=[
+        profile_list=[
             ag.lp_linear.Sersic(sersic_index=1.0),
             ag.lp_linear.Sersic(sersic_index=4.0),
         ]
