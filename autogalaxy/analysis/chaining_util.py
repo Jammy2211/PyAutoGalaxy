@@ -341,20 +341,23 @@ def basis_no_linear_from(light_result: Result, name : str) -> af.Model:
 
     lp_instance = getattr(light_result.max_log_likelihood_fit.model_obj_linear_light_profiles_to_light_profiles.galaxies[0], name)
 
+    if lp_instance is None:
+        return None
+
     profile_list = lp_instance.profile_list
 
     lp_model_list = []
 
-    for i, lp in enumerate(profile_list):
+    for i, light_profile in enumerate(profile_list):
 
-        if lp.intensity > 0.0:
+        if light_profile.intensity > 0.0:
 
             lp_model = af.Model(lp.Gaussian)
 
-            lp_model.centre = lp.centre
-            lp_model.ell_comps = lp.ell_comps
-            lp_model.intensity = lp.intensity
-            lp_model.sigma = lp.sigma
+            lp_model.centre = light_profile.centre
+            lp_model.ell_comps = light_profile.ell_comps
+            lp_model.intensity = light_profile.intensity
+            lp_model.sigma = light_profile.sigma
 
             lp_model_list += [lp_model]
 
@@ -404,16 +407,16 @@ def mass_light_dark_basis_from(
 
     lmp_model_list = []
 
-    for i, lp in enumerate(profile_list):
+    for i, light_profile in enumerate(profile_list):
 
-        if lp.intensity > 0.0:
+        if light_profile.intensity > 0.0:
 
             lmp_model = af.Model(lmp.Gaussian)
 
-            lmp_model.centre = lp.centre
-            lmp_model.ell_comps = lp.ell_comps
-            lmp_model.intensity = lp.intensity
-            lmp_model.sigma = lp.sigma
+            lmp_model.centre = light_profile.centre
+            lmp_model.ell_comps = light_profile.ell_comps
+            lmp_model.intensity = light_profile.intensity
+            lmp_model.sigma = light_profile.sigma
 
             lmp_model_list += [lmp_model]
 
@@ -423,8 +426,6 @@ def mass_light_dark_basis_from(
         Basis,
         profile_list=lmp_model_list
     )
-
-
 
 def mass_light_dark_from(
     light_result: Result, name : str, light_is_model : bool = False
