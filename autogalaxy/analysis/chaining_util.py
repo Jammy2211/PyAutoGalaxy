@@ -296,7 +296,7 @@ def mass_light_dark_lmp_from(
     if is_linear:
 
         fit = light_result.max_log_likelihood_fit
-        lp_solved = getattr(fit.model_obj_linear_light_profiles_to_light_profiles.galaxies[0].bulge, name)
+        lp_solved = getattr(fit.model_obj_linear_light_profiles_to_light_profiles.galaxies[0], name)
 
         lmp_model.intensity = lp_solved.intensity
 
@@ -339,7 +339,10 @@ def basis_no_linear_from(light_result: Result, name : str) -> af.Model:
     The light and mass profile for a basis (e.g. an MGE) whose priors are initialized from a previous result.
     """
 
-    lp_instance = getattr(light_result.max_log_likelihood_fit.model_obj_linear_light_profiles_to_light_profiles.galaxies[0], name)
+    try:
+        lp_instance = getattr(light_result.max_log_likelihood_fit.model_obj_linear_light_profiles_to_light_profiles.galaxies[0], name)
+    except AttributeError:
+        return None
 
     if lp_instance is None:
         return None

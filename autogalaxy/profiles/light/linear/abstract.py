@@ -39,19 +39,7 @@ class LightProfileLinear(LightProfile):
             per second).
         """
         parameters_dict = vars(self)
-        try:
-            parameters_dict.pop("id")
-        except KeyError:
-            pass
-
-        try:
-            parameters_dict.pop("label")
-        except KeyError:
-            pass
-
-        args = inspect.getfullargspec(
-            self.__class__.__bases__[0](**parameters_dict).__init__
-        ).args
+        args = inspect.getfullargspec(self.__class__.__bases__[0]).args
         args.remove("self")
 
         parameters_dict = {key: parameters_dict[key] for key in args}
