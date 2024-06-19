@@ -24,7 +24,7 @@ class Basis(LightProfile, MassProfile):
         self.regularization = regularization
 
     @property
-    def light_list(self) -> List[LightProfile]:
+    def light_profile_list(self) -> List[LightProfile]:
         """
         Returns a list of all light profiles in the `Basis` object.
 
@@ -35,12 +35,10 @@ class Basis(LightProfile, MassProfile):
         -------
             The list of light profiles in the `Basis` object.
         """
-        return aa.util.misc.cls_list_from(
-            values=self.profile_list, cls=LightProfile
-        )
+        return aa.util.misc.cls_list_from(values=self.profile_list, cls=LightProfile)
 
     @property
-    def mass_list(self) -> List[MassProfile]:
+    def mass_profile_list(self) -> List[MassProfile]:
         """
         Returns a list of all mass profiles in the `Basis` object.
 
@@ -51,9 +49,7 @@ class Basis(LightProfile, MassProfile):
         -------
             The list of mass profiles in the `Basis` object.
         """
-        return aa.util.misc.cls_list_from(
-            values=self.profile_list, cls=MassProfile
-        )
+        return aa.util.misc.cls_list_from(values=self.profile_list, cls=MassProfile)
 
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
@@ -70,27 +66,25 @@ class Basis(LightProfile, MassProfile):
             for light_profile in self.profile_list
         ]
 
-    def convergence_2d_from(
-        self, grid: aa.type.Grid2DLike, **kwargs
-    ) -> aa.Array2D:
-
-        if len(self.mass_list) > 0:
-            return sum([mass.convergence_2d_from(grid=grid) for mass in self.mass_list])
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> aa.Array2D:
+        if len(self.mass_profile_list) > 0:
+            return sum(
+                [mass.convergence_2d_from(grid=grid) for mass in self.mass_profile_list]
+            )
         return np.zeros((grid.shape[0],))
 
-    def potential_2d_from(
-        self, grid: aa.type.Grid2DLike, **kwargs
-    ) -> aa.Array2D:
-        if len(self.mass_list) > 0:
-            return sum([mass.potential_2d_from(grid=grid) for mass in self.profile_list])
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> aa.Array2D:
+        if len(self.mass_profile_list) > 0:
+            return sum(
+                [mass.potential_2d_from(grid=grid) for mass in self.profile_list]
+            )
         return np.zeros((grid.shape[0],))
 
-
-    def deflections_yx_2d_from(
-        self, grid: aa.type.Grid2DLike, **kwargs
-    ) -> aa.Array2D:
-        if len(self.mass_list) > 0:
-            return sum([mass.deflections_yx_2d_from(grid=grid) for mass in self.profile_list])
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> aa.Array2D:
+        if len(self.mass_profile_list) > 0:
+            return sum(
+                [mass.deflections_yx_2d_from(grid=grid) for mass in self.profile_list]
+            )
         return np.zeros((grid.shape[0], 2))
 
     def lp_instance_from(self, linear_light_profile_intensity_dict: Dict):

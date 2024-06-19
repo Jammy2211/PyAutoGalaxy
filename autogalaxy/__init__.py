@@ -87,7 +87,7 @@ from .profiles import (
 )
 from .profiles.light.abstract import LightProfile
 from .profiles.light import standard as lp
-from .profiles.light import basis as lp_basis
+from .profiles import basis as lp_basis
 from .profiles.light.linear import LightProfileLinearObjFuncList
 from .profiles.light import linear as lp_linear
 from .profiles.light import operated as lp_operated

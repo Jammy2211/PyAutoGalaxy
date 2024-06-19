@@ -55,7 +55,6 @@ def test__image_2d_list_from__operated_only_input(grid_2d_7x7, lp_0, lp_operated
 
 
 def test__mass_profile_quantities(grid_2d_7x7, mp_0, mp_1):
-
     convergence_2d_0 = mp_0.convergence_2d_from(grid=grid_2d_7x7)
     convergence_2d_1 = mp_1.convergence_2d_from(grid=grid_2d_7x7)
 

@@ -558,15 +558,9 @@ def test__galaxies_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
     fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=[g0, g0_linear, g1_linear])
 
     assert fit.galaxies[0].bulge.intensity == pytest.approx(1.0, 1.0e-4)
-    assert fit.galaxies[1].bulge.profile_list[0].intensity == pytest.approx(
-        1.0, 1.0e-4
-    )
-    assert fit.galaxies[1].bulge.profile_list[1].intensity == pytest.approx(
-        0.1, 1.0e-4
-    )
-    assert fit.galaxies[1].bulge.profile_list[2].intensity == pytest.approx(
-        1.0, 1.0e-4
-    )
+    assert fit.galaxies[1].bulge.profile_list[0].intensity == pytest.approx(1.0, 1.0e-4)
+    assert fit.galaxies[1].bulge.profile_list[1].intensity == pytest.approx(0.1, 1.0e-4)
+    assert fit.galaxies[1].bulge.profile_list[2].intensity == pytest.approx(1.0, 1.0e-4)
     assert fit.galaxies[2].bulge.intensity == pytest.approx(1.0, 1.0e-4)
 
     galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
@@ -575,9 +569,7 @@ def test__galaxies_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
     assert galaxies[1].bulge.profile_list[0].intensity == pytest.approx(
         -14.74483, 1.0e-4
     )
-    assert galaxies[1].bulge.profile_list[1].intensity == pytest.approx(
-        0.1, 1.0e-4
-    )
+    assert galaxies[1].bulge.profile_list[1].intensity == pytest.approx(0.1, 1.0e-4)
     assert galaxies[1].bulge.profile_list[2].intensity == pytest.approx(
         23.0021210, 1.0e-4
     )

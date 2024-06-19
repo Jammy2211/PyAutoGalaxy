@@ -2,7 +2,7 @@ import autoarray as aa
 import autoarray.plot as aplt
 
 from autogalaxy.profiles.light.abstract import LightProfile
-from autogalaxy.profiles.light.basis import Basis
+from autogalaxy.profiles.basis import Basis
 from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_plot.one_d import MatPlot1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
@@ -65,7 +65,7 @@ class BasisPlotter(Plotter):
             LightProfileLinear,
         )
 
-        for light_profile in basis.profile_list:
+        for light_profile in basis.light_profile_list:
             if isinstance(light_profile, LightProfileLinear):
                 raise exc.raise_linear_light_profile_in_plot(
                     plotter_type=self.__class__.__name__,
@@ -130,9 +130,9 @@ class BasisPlotter(Plotter):
             Whether to make a 2D plot (via `imshow`) of the image.
         """
 
-        self.open_subplot_figure(number_subplots=len(self.basis.profile_list))
+        self.open_subplot_figure(number_subplots=len(self.basis.light_profile_list))
 
-        for light_profile in self.basis.profile_list:
+        for light_profile in self.basis.light_profile_list:
             self.mat_plot_2d.plot_array(
                 array=light_profile.image_2d_from(grid=self.grid),
                 visuals_2d=self.get_visuals_2d(),

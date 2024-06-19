@@ -10,7 +10,7 @@ import autoarray as aa
 
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
-from autogalaxy.profiles.light.basis import Basis
+from autogalaxy.profiles.basis import Basis
 
 
 class AbstractFitInversion:
@@ -110,7 +110,7 @@ class AbstractFitInversion:
         for linear_obj_func in linear_obj_func_list:
             reconstruction = self.inversion.reconstruction_dict[linear_obj_func]
 
-            for i, light_profile in enumerate(linear_obj_func.profile_list):
+            for i, light_profile in enumerate(linear_obj_func.light_profile_list):
                 linear_light_profile_intensity_dict[light_profile] = float(
                     reconstruction[i]
                 )

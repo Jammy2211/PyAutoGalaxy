@@ -5,7 +5,7 @@ from autoconf import conf
 import autoarray as aa
 
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.profiles.light.basis import Basis
+from autogalaxy.profiles.basis import Basis
 from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.operate.image import OperateImageGalaxies
 from autogalaxy.operate.deflections import OperateDeflections
