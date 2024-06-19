@@ -641,4 +641,3 @@ class SersicCoreSph(SersicCore, LightMassProfile):
             alpha=alpha,
             mass_to_light_ratio=mass_to_light_ratio,
         )
-

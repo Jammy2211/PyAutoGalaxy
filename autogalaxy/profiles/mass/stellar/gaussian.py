@@ -51,6 +51,10 @@ class Gaussian(MassProfile, StellarProfile):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
+
+        if self.intensity == 0.0:
+            return np.zeros((grid.shape[0], 2))
+
         return self.deflections_2d_via_analytic_from(grid=grid, **kwargs)
 
     @aa.grid_dec.to_vector_yx
