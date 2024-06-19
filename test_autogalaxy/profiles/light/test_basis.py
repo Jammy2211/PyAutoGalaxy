@@ -52,3 +52,15 @@ def test__image_2d_list_from__operated_only_input(grid_2d_7x7, lp_0, lp_operated
     assert (
         image_2d_list[0] + image_2d_list[1] == image_2d_not_operated + image_2d_operated
     ).all()
+
+
+def test__mass_profile_quantities(grid_2d_7x7, mp_0, mp_1):
+
+    convergence_2d_0 = mp_0.convergence_2d_from(grid=grid_2d_7x7)
+    convergence_2d_1 = mp_1.convergence_2d_from(grid=grid_2d_7x7)
+
+    basis = ag.lp_basis.Basis(light_profile_list=[mp_0, mp_1])
+
+    convergence_2d = basis.convergence_2d_from(grid=grid_2d_7x7)
+
+    assert convergence_2d == pytest.approx(convergence_2d_0 + convergence_2d_1, 1.0e-4)

@@ -1,17 +1,18 @@
 import numpy as np
-from typing import Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 import autoarray as aa
 
 from autogalaxy.profiles.light.abstract import LightProfile
+from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 from autogalaxy.profiles.light import linear as lp_linear
 
 
-class Basis(LightProfile):
+class Basis(LightProfile, MassProfile):
     def __init__(
         self,
-        light_profile_list: List[LightProfile],
+        light_profile_list: List[Union[LightProfile, MassProfile]],
         regularization: Optional[aa.AbstractRegularization] = None,
     ):
         super().__init__(
@@ -36,6 +37,21 @@ class Basis(LightProfile):
             else np.zeros((grid.shape[0],))
             for light_profile in self.light_profile_list
         ]
+
+    def convergence_2d_from(
+        self, grid: aa.type.Grid2DLike, **kwargs
+    ) -> aa.Array2D:
+        return sum([mass.convergence_2d_from(grid=grid) for mass in self.light_profile_list])
+
+    def potential_2d_from(
+        self, grid: aa.type.Grid2DLike, **kwargs
+    ) -> aa.Array2D:
+        return sum([mass.potential_2d_from(grid=grid) for mass in self.light_profile_list])
+
+    def deflections_yx_2d_from(
+        self, grid: aa.type.Grid2DLike, **kwargs
+    ) -> aa.Array2D:
+        return sum([mass.deflections_yx_2d_from(grid=grid) for mass in self.light_profile_list])
 
     def lp_instance_from(self, linear_light_profile_intensity_dict: Dict):
         light_profile_list = []
