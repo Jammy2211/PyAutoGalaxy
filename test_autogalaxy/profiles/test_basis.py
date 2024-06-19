@@ -4,6 +4,23 @@ import pytest
 import autogalaxy as ag
 
 
+
+def test__light_profile_list():
+
+    lp_0 = ag.lp.Sersic(intensity=0.1)
+    lp_1 = ag.lp.Sersic(intensity=0.2)
+
+    mp_0 = ag.mp.Isothermal()
+    mp_1 = ag.mp.NFW()
+
+    basis = ag.lp_basis.Basis(profile_list=[lp_0, mp_0, lp_1, mp_1])
+
+    assert basis.light_profile_list == [lp_0, lp_1]
+
+
+
+
+
 def test__image_2d_from__does_not_include_linear_light_profiles(grid_2d_7x7):
     lp = ag.lp.Sersic(intensity=0.1)
 
