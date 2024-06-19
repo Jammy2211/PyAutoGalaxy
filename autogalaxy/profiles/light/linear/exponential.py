@@ -32,14 +32,6 @@ class Exponential(lp.Exponential, LightProfileLinear):
             effective_radius=effective_radius,
         )
 
-    @property
-    def lp_cls(self):
-        return lp.Exponential
-
-    @property
-    def lmp_cls(self):
-        return lmp.Exponential
-
 
 class ExponentialSph(Exponential):
     def __init__(

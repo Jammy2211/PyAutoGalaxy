@@ -67,7 +67,7 @@ def make_mp_1():
 
 
 def make_lmp_0():
-    return ag.lmp.SersicRadialGradient()
+    return ag.lmp.SersicGradient()
 
 
 def make_dmp_0():

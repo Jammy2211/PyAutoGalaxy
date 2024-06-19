@@ -186,7 +186,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
         grid
             The 2D (y, x) coordinates where values of the image are evaluated.
         operated_only
-            By default, the returnd list contains all light profile images (irrespective of whether they have been
+            By default, the returned list contains all light profile images (irrespective of whether they have been
             operated on or not). If this input is included as a bool, only images which are or are not already
             operated are included in the list, with the images of other light profiles created as a numpy array of
             zeros.

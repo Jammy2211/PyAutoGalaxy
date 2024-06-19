@@ -3,7 +3,6 @@ from typing import Tuple
 from autogalaxy.profiles.light.linear.abstract import LightProfileLinear
 
 from autogalaxy.profiles.light import standard as lp
-from autogalaxy.profiles import light_and_mass_profiles as lmp
 
 
 class DevVaucouleurs(lp.DevVaucouleurs, LightProfileLinear):
@@ -31,14 +30,6 @@ class DevVaucouleurs(lp.DevVaucouleurs, LightProfileLinear):
             intensity=1.0,
             effective_radius=effective_radius,
         )
-
-    @property
-    def lp_cls(self):
-        return lp.DevVaucouleurs
-
-    @property
-    def lmp_cls(self):
-        return lmp.DevVaucouleurs
 
 
 class DevVaucouleursSph(DevVaucouleurs):

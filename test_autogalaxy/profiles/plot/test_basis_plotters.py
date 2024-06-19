@@ -21,7 +21,7 @@ def test__subplot_image(
     plot_path,
     plot_patch,
 ):
-    basis = ag.lp_basis.Basis(light_profile_list=[lp_0, lp_1])
+    basis = ag.lp_basis.Basis(profile_list=[lp_0, lp_1])
 
     plotter = aplt.BasisPlotter(
         basis=basis,

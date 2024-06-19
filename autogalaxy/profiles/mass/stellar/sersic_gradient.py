@@ -9,7 +9,7 @@ from autogalaxy.profiles.mass.stellar.sersic import AbstractSersic
 from autogalaxy.profiles.mass.stellar.sersic import cse_settings_from
 
 
-class SersicRadialGradient(AbstractSersic):
+class SersicGradient(AbstractSersic):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -154,7 +154,7 @@ class SersicRadialGradient(AbstractSersic):
         radii_min = self.effective_radius / 100.0
         radii_max = self.effective_radius * 20.0
 
-        def sersic_radial_gradient_2D(r):
+        def sersic_gradient_2D(r):
             return (
                 self.mass_to_light_ratio
                 * self.intensity
@@ -169,7 +169,7 @@ class SersicRadialGradient(AbstractSersic):
             )
 
         return self._decompose_convergence_via_mge(
-            func=sersic_radial_gradient_2D, radii_min=radii_min, radii_max=radii_max
+            func=sersic_gradient_2D, radii_min=radii_min, radii_max=radii_max
         )
 
     def decompose_convergence_via_cse(
@@ -211,7 +211,7 @@ class SersicRadialGradient(AbstractSersic):
         radii_min = scaled_effective_radius / 10.0**lower_dex
         radii_max = scaled_effective_radius * 10.0**upper_dex
 
-        def sersic_radial_gradient_2D(r):
+        def sersic_gradient_2D(r):
             return (
                 self.mass_to_light_ratio
                 * self.intensity
@@ -229,7 +229,7 @@ class SersicRadialGradient(AbstractSersic):
             )
 
         return self._decompose_convergence_via_cse_from(
-            func=sersic_radial_gradient_2D,
+            func=sersic_gradient_2D,
             radii_min=radii_min,
             radii_max=radii_max,
             total_cses=total_cses,
@@ -237,7 +237,7 @@ class SersicRadialGradient(AbstractSersic):
         )
 
 
-class SersicRadialGradientSph(SersicRadialGradient):
+class SersicGradientSph(SersicGradient):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

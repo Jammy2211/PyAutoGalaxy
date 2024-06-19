@@ -28,14 +28,6 @@ class Gaussian(lp.Gaussian, LightProfileLinear):
 
         super().__init__(centre=centre, ell_comps=ell_comps, intensity=1.0, sigma=sigma)
 
-    @property
-    def lp_cls(self):
-        return lp.Gaussian
-
-    @property
-    def lmp_cls(self):
-        return lmp.Gaussian
-
 
 class GaussianSph(Gaussian):
     def __init__(
@@ -54,7 +46,3 @@ class GaussianSph(Gaussian):
             The sigma value of the Gaussian, corresponding to ~ 1 / sqrt(2 log(2)) the full width half maximum.
         """
         super().__init__(centre=centre, ell_comps=(0.0, 0.0), sigma=sigma)
-
-    @property
-    def lp_cls(self):
-        return lp.GaussianSph

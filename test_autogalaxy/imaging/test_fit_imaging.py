@@ -41,7 +41,7 @@ def test__fit_figure_of_merit(
     assert fit.figure_of_merit == pytest.approx(-75938.05, 1.0e-4)
 
     basis = ag.lp_basis.Basis(
-        light_profile_list=[
+        profile_list=[
             ag.lp.Sersic(intensity=1.0),
             ag.lp.Sersic(intensity=1.0),
         ]
@@ -91,7 +91,7 @@ def test__fit_figure_of_merit(
     assert fit.figure_of_merit == pytest.approx(-14.52327, 1.0e-4)
 
     basis = ag.lp_basis.Basis(
-        light_profile_list=[
+        profile_list=[
             ag.lp_linear.Sersic(sersic_index=1.0),
             ag.lp_linear.Sersic(sersic_index=4.0),
         ]
@@ -105,7 +105,7 @@ def test__fit_figure_of_merit(
     assert fit.figure_of_merit == pytest.approx(-14.52327, 1.0e-4)
 
     basis = ag.lp_basis.Basis(
-        light_profile_list=[
+        profile_list=[
             ag.lp_linear.Sersic(sersic_index=1.0),
             ag.lp_linear.Sersic(sersic_index=4.0),
         ],
@@ -492,7 +492,7 @@ def test__light_profile_linear__intensity_dict(masked_imaging_7x7):
         -0.04694839915145, 1.0e-4
     )
 
-    basis = ag.lp_basis.Basis(light_profile_list=[linear_light_0, linear_light_1])
+    basis = ag.lp_basis.Basis(profile_list=[linear_light_0, linear_light_1])
 
     g_basis = ag.Galaxy(redshift=0.5, bulge=basis)
 
@@ -508,7 +508,7 @@ def test__light_profile_linear__intensity_dict(masked_imaging_7x7):
     linear_light_2 = ag.lp_linear.Sersic(sersic_index=2.0)
     linear_light_3 = ag.lp_linear.Sersic(sersic_index=3.0)
 
-    basis = ag.lp_basis.Basis(light_profile_list=[linear_light_2, linear_light_3])
+    basis = ag.lp_basis.Basis(profile_list=[linear_light_2, linear_light_3])
 
     g_basis = ag.Galaxy(redshift=0.5, bulge=basis)
 
@@ -545,7 +545,7 @@ def test__galaxies_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
     g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0))
 
     basis = ag.lp_basis.Basis(
-        light_profile_list=[
+        profile_list=[
             ag.lp_linear.Sersic(sersic_index=1.0),
             ag.lp.Sersic(intensity=0.1, sersic_index=2.0),
             ag.lp_linear.Sersic(sersic_index=3.0),
@@ -558,27 +558,19 @@ def test__galaxies_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
     fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=[g0, g0_linear, g1_linear])
 
     assert fit.galaxies[0].bulge.intensity == pytest.approx(1.0, 1.0e-4)
-    assert fit.galaxies[1].bulge.light_profile_list[0].intensity == pytest.approx(
-        1.0, 1.0e-4
-    )
-    assert fit.galaxies[1].bulge.light_profile_list[1].intensity == pytest.approx(
-        0.1, 1.0e-4
-    )
-    assert fit.galaxies[1].bulge.light_profile_list[2].intensity == pytest.approx(
-        1.0, 1.0e-4
-    )
+    assert fit.galaxies[1].bulge.profile_list[0].intensity == pytest.approx(1.0, 1.0e-4)
+    assert fit.galaxies[1].bulge.profile_list[1].intensity == pytest.approx(0.1, 1.0e-4)
+    assert fit.galaxies[1].bulge.profile_list[2].intensity == pytest.approx(1.0, 1.0e-4)
     assert fit.galaxies[2].bulge.intensity == pytest.approx(1.0, 1.0e-4)
 
     galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
 
     assert galaxies[0].bulge.intensity == pytest.approx(1.0, 1.0e-4)
-    assert galaxies[1].bulge.light_profile_list[0].intensity == pytest.approx(
+    assert galaxies[1].bulge.profile_list[0].intensity == pytest.approx(
         -14.74483, 1.0e-4
     )
-    assert galaxies[1].bulge.light_profile_list[1].intensity == pytest.approx(
-        0.1, 1.0e-4
-    )
-    assert galaxies[1].bulge.light_profile_list[2].intensity == pytest.approx(
+    assert galaxies[1].bulge.profile_list[1].intensity == pytest.approx(0.1, 1.0e-4)
+    assert galaxies[1].bulge.profile_list[2].intensity == pytest.approx(
         23.0021210, 1.0e-4
     )
     assert galaxies[2].bulge.intensity == pytest.approx(-6.58608, 1.0e-4)
