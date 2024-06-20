@@ -1,17 +1,9 @@
 from typing import Tuple
 
+from autogalaxy.profiles.light_and_mass_profiles import LightMassProfile
+
 from autogalaxy.profiles.light import linear as lp_linear
 from autogalaxy.profiles import mass as mp
-
-
-class LightMassProfile:
-    """
-    Mass and light profiles describe both mass distributions and light distributions with a single set of parameters. This
-    means that the light and mass of these profiles are tied together. Galaxy instances interpret these
-    objects as being both mass and light profiles.
-    """
-
-    pass
 
 
 class Gaussian(lp_linear.Gaussian, mp.Gaussian, LightMassProfile):
@@ -474,7 +466,7 @@ class ExponentialGradient(SersicGradient, LightMassProfile):
         )
 
 
-class SphExponentialGradient(SersicGradientSph, LightMassProfile):
+class ExponentialGradientSph(SersicGradientSph, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

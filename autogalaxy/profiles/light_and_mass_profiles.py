@@ -478,7 +478,7 @@ class ExponentialGradient(SersicGradient, LightMassProfile):
         )
 
 
-class SphExponentialGradient(SersicGradientSph, LightMassProfile):
+class ExponentialGradientSph(SersicGradientSph, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
