@@ -35,6 +35,10 @@ class LightProfileLinear(LightProfile):
         This function is used to determine the parent class of the linear light profile that is used to create the
         standard light profile.
 
+        This function also maps linear light and mass profiles to their standard light and mass profile counterparts.
+        This specific mapping is required because their inheritence structure is different to the other light profiles.
+        In the future, the ugly dictionary used to do this mapping should be removed for better code.
+
         Returns
         -------
         The parent class of the linear light profile that is not a linear light profile itself.
