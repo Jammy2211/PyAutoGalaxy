@@ -5,7 +5,6 @@ import autogalaxy as ag
 
 
 def test__adapt_over_sample__used_if_no_over_sampling_input(gal_x1_lp):
-
     # In grid.yaml this class has settings which use the autoarray over sampling adaptive decorator.
 
     class SersicAdaptTest(ag.lp.Sersic):
@@ -17,7 +16,7 @@ def test__adapt_over_sample__used_if_no_over_sampling_input(gal_x1_lp):
         pixel_scales=0.1,
     )
 
-    light=SersicAdaptTest(intensity=1.0)
+    light = SersicAdaptTest(intensity=1.0)
 
     grid = ag.Grid2D.from_mask(mask=mask, over_sampling=None)
 
