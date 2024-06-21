@@ -3,7 +3,6 @@ from typing import Tuple
 from autogalaxy.profiles.light.linear.abstract import LightProfileLinear
 
 from autogalaxy.profiles.light import standard as lp
-from autogalaxy.profiles import light_and_mass_profiles as lmp
 
 
 class Exponential(lp.Exponential, LightProfileLinear):

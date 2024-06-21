@@ -72,7 +72,7 @@ radial_minimum:
     SersicCoreSph: 0.0001
     SersicGradient: 0.0001
     SersicSph: 0.0001
-    SphexponentialGradient: 0.0001
+    ExponentialGradientSph: 0.0001
     SersicGradientSph: 0.0001
     EllProfile: 0.0001
     SersicAdaptTest: 0.0001

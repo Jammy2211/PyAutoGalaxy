@@ -15,6 +15,7 @@ from autogalaxy.profiles.basis import Basis
 from autogalaxy.profiles.light import standard as lp
 from autogalaxy.profiles.light import linear as lp_linear
 from autogalaxy.profiles import light_and_mass_profiles as lmp
+from autogalaxy.profiles import light_linear_and_mass_profiles as lmp_linear
 
 
 def mass_from(mass, mass_result, unfix_mass_centre: bool = False) -> af.Model:
@@ -234,76 +235,7 @@ def clumps_from(
     return clumps
 
 
-def mass_light_dark_lmp_from(
-    light_result: Result, name : str, light_is_model : bool = False
-):
-    """
-    Returns a light and mass profile from a standard light profile (e.g. a Sersic) in the LIGHT PIPELINE result, for
-    the LIGHT DARK MASS PIPELINE.
-
-    For example, if the light pipeline fits a Sersic profile, this function will return a Sersic profile for the LIGHT
-    DARK MASS PIPELINE.
-
-    If a linear light profile is passed in, the function will return a light and mass profile where its `intensity` is
-    fixed to the solved for value of the maximum log likelihood linear fit.
-
-    The light and mass profiles can also be switched to variants which have a radial gradient in their mass-to-light
-    conversion, by setting the `include_mass_to_light_gradient` parameter to `True`.
-
-    Parameters
-    ----------
-    light_result
-        The result of the light pipeline, which determines the light and mass profiles used in the LIGHT DARK
-        MASS PIPELINE.
-    name
-        The name of the light profile in the light pipeline's galaxy model that the model is being created for
-    light_is_model
-        If `True`, the light profile is passed as a model component, else it is a fixed instance.
-
-    Returns
-    -------
-    The light and mass profile for a standard light profile whose priors are initialized from a previous result.
-    """
-
-    lp_instance = getattr(light_result.instance.galaxies.lens, name)
-    lp_model = getattr(light_result.model.galaxies.lens, name)
-
-    lp_to_lmp_dict = {
-        lp.Sersic : lmp.Sersic
-    }
-    lp_linear_to_lmp_dict = {
-        lp_linear.Sersic : lmp.Sersic
-    }
-
-    try:
-
-        is_linear = False
-
-        lmp_model = lp_to_lmp_dict[type(lp_instance)]
-
-    except KeyError:
-
-        is_linear = True
-        lmp_model = lp_linear_to_lmp_dict[type(lp_instance)]
-
-    lmp_model = af.Model(lmp_model)
-
-    if light_is_model:
-        lmp_model.take_attributes(source=lp_model)
-    else:
-        lmp_model.take_attributes(source=lp_instance)
-
-    if is_linear:
-
-        fit = light_result.max_log_likelihood_fit
-        lp_solved = getattr(fit.model_obj_linear_light_profiles_to_light_profiles.galaxies[0].bulge, name)
-
-        lmp_model.intensity = lp_solved.intensity
-
-    return lmp_model
-
-
-def basis_no_linear_from(light_result: Result, name : str) -> af.Model:
+def basis_no_linear_from(light_result: Result, name: str) -> af.Model:
     """
     Returns a basis containing standard light profiles from a basis (e.g. an MGE) in the LIGHT PIPELINE result,
     for the TOTAL MASS PIPELINE.
@@ -339,33 +271,124 @@ def basis_no_linear_from(light_result: Result, name : str) -> af.Model:
     The light and mass profile for a basis (e.g. an MGE) whose priors are initialized from a previous result.
     """
 
-    lp_instance = getattr(light_result.max_log_likelihood_fit.model_obj_linear_light_profiles_to_light_profiles.galaxies[0], name)
+    try:
+        lp_instance = getattr(
+            light_result.max_log_likelihood_fit.model_obj_linear_light_profiles_to_light_profiles.galaxies[
+                0
+            ],
+            name,
+        )
+    except AttributeError:
+        return None
+
+    if lp_instance is None:
+        return None
 
     profile_list = lp_instance.profile_list
 
     lp_model_list = []
 
-    for i, lp in enumerate(profile_list):
+    for i, light_profile in enumerate(profile_list):
+        lp_model = af.Model(lp.Gaussian)
 
-        if lp.intensity > 0.0:
+        lp_model.centre = light_profile.centre
+        lp_model.ell_comps = light_profile.ell_comps
+        lp_model.intensity = light_profile.intensity
+        lp_model.sigma = light_profile.sigma
 
-            lp_model = af.Model(lp.Gaussian)
+        lp_model_list += [lp_model]
 
-            lp_model.centre = lp.centre
-            lp_model.ell_comps = lp.ell_comps
-            lp_model.intensity = lp.intensity
-            lp_model.sigma = lp.sigma
+    return af.Model(Basis, profile_list=lp_model_list)
 
-            lp_model_list += [lp_model]
 
-    return af.Model(
-        Basis,
-        profile_list=lp_model_list
-    )
+def mass_light_dark_lmp_from(
+    light_result: Result,
+    name: str,
+    linear_lp_to_standard: bool = False,
+    light_is_model: bool = False,
+    use_gradient: bool = False,
+):
+    """
+    Returns a light and mass profile from a standard light profile (e.g. a Sersic) in the LIGHT PIPELINE result, for
+    the LIGHT DARK MASS PIPELINE.
+
+    For example, if the light pipeline fits a Sersic profile, this function will return a Sersic profile for the LIGHT
+    DARK MASS PIPELINE.
+
+    For the light profile, it will by default use a linear light and mass profile, which therefore continues to solve
+    for the intensity of the linear light profile via linear algebra. This means that during the fit the `intensity`
+    used to compute deflection angles is not the same as the `intensity` parameter solved for in the linear light
+    profile. If the input `linear_lp_to_standard` is `True`, the function will instead use a standard light profile.
+
+    The light and mass profiles can also be switched to variants which have a radial gradient in their mass-to-light
+    conversion, by setting the `include_mass_to_light_gradient` parameter to `True`.
+
+    Parameters
+    ----------
+    light_result
+        The result of the light pipeline, which determines the light and mass profiles used in the LIGHT DARK
+        MASS PIPELINE.
+    name
+        The name of the light profile in the light pipeline's galaxy model that the model is being created for
+    light_is_model
+        If `True`, the light profile is passed as a model component, else it is a fixed instance.
+
+    Returns
+    -------
+    The light and mass profile for a standard light profile whose priors are initialized from a previous result.
+    """
+
+    lp_instance = getattr(light_result.instance.galaxies.lens, name)
+    lp_model = getattr(light_result.model.galaxies.lens, name)
+
+    try:
+        is_linear = False
+
+        if not use_gradient:
+            lp_to_lmp_dict = {lp.Sersic: lmp.Sersic}
+        else:
+            lp_to_lmp_dict = {lp.Sersic: lmp.SersicGradient}
+
+        lmp_model = lp_to_lmp_dict[type(lp_instance)]
+
+    except KeyError:
+        if not linear_lp_to_standard:
+            if not use_gradient:
+                lp_linear_to_lmp_dict = {lp_linear.Sersic: lmp_linear.Sersic}
+            else:
+                lp_linear_to_lmp_dict = {lp_linear.Sersic: lmp_linear.SersicGradient}
+        else:
+            if not use_gradient:
+                lp_linear_to_lmp_dict = {lp_linear.Sersic: lmp.Sersic}
+            else:
+                lp_linear_to_lmp_dict = {lp_linear.Sersic: lmp.SersicGradient}
+
+        is_linear = True
+        lmp_model = lp_linear_to_lmp_dict[type(lp_instance)]
+
+    lmp_model = af.Model(lmp_model)
+
+    if light_is_model:
+        lmp_model.take_attributes(source=lp_model)
+    else:
+        lmp_model.take_attributes(source=lp_instance)
+
+    if is_linear:
+        fit = light_result.max_log_likelihood_fit
+        lp_solved = getattr(
+            fit.model_obj_linear_light_profiles_to_light_profiles.galaxies[0], name
+        )
+
+        lmp_model.intensity = lp_solved.intensity
+
+    return lmp_model
 
 
 def mass_light_dark_basis_from(
-    light_result: Result, name : str,
+    light_result: Result,
+    name: str,
+    linear_lp_to_standard: bool = False,
+    use_gradient: bool = False,
 ) -> af.Model:
     """
     Returns a basis containing light and mass profiles from a basis (e.g. an MGE) in the LIGHT PIPELINE result, for the
@@ -378,8 +401,10 @@ def mass_light_dark_basis_from(
     profiles, where their light profile parameters (e.g. their `centre`, `ell_comps`) are used to set up the parameters
     of the light and mass profile.
 
-    If a linear light profile is passed in, the function will return a light and mass profile where its `intensity` is
-    fixed to the solved for value of the maximum log likelihood linear fit.
+    For the light profile, it will by default use a linear light and mass profile, which therefore continues to solve
+    for the intensity of the linear light profile via linear algebra. This means that during the fit the `intensity`
+    used to compute deflection angles is not the same as the `intensity` parameter solved for in the linear light
+    profile. If the input `linear_lp_to_standard` is `True`, the function will instead use a standard light profile.
 
     The light and mass profiles can also be switched to variants which have a radial gradient in their mass-to-light
     conversion, by setting the `include_mass_to_light_gradient` parameter to `True`.
@@ -398,36 +423,51 @@ def mass_light_dark_basis_from(
     The light and mass profile for a basis (e.g. an MGE) whose priors are initialized from a previous result.
     """
 
-    lp_instance = getattr(light_result.max_log_likelihood_fit.model_obj_linear_light_profiles_to_light_profiles.galaxies[0], name)
+    lp_instance = getattr(
+        light_result.max_log_likelihood_fit.model_obj_linear_light_profiles_to_light_profiles.galaxies[
+            0
+        ],
+        name,
+    )
 
     profile_list = lp_instance.profile_list
 
     lmp_model_list = []
 
-    for i, lp in enumerate(profile_list):
+    for i, light_profile in enumerate(profile_list):
+        if not linear_lp_to_standard:
+            if not use_gradient:
+                lmp_model = af.Model(lmp_linear.Gaussian)
+            else:
+                lmp_model = af.Model(lmp_linear.GaussianGradient)
+        else:
+            if not use_gradient:
+                lmp_model = af.Model(lmp.Gaussian)
+            else:
+                lmp_model = af.Model(lmp.GaussianGradient)
 
-        if lp.intensity > 0.0:
+        lmp_model.centre = light_profile.centre
+        lmp_model.ell_comps = light_profile.ell_comps
+        lmp_model.intensity = light_profile.intensity
+        lmp_model.sigma = light_profile.sigma
 
-            lmp_model = af.Model(lmp.Gaussian)
+        lmp_model_list += [lmp_model]
 
-            lmp_model.centre = lp.centre
-            lmp_model.ell_comps = lp.ell_comps
-            lmp_model.intensity = lp.intensity
-            lmp_model.sigma = lp.sigma
-
-            lmp_model_list += [lmp_model]
-
+        if not use_gradient:
             lmp_model.mass_to_light_ratio = lmp_model_list[0].mass_to_light_ratio
+        else:
+            lmp_model.mass_to_light_ratio_base = lmp_model_list[0].mass_to_light_ratio_base
+            lmp_model.mass_to_light_gradient = lmp_model_list[0].mass_to_light_gradient
 
-    return af.Model(
-        Basis,
-        profile_list=lmp_model_list
-    )
-
+    return af.Model(Basis, profile_list=lmp_model_list)
 
 
 def mass_light_dark_from(
-    light_result: Result, name : str, light_is_model : bool = False
+    light_result: Result,
+    name: str,
+    linear_lp_to_standard: bool = False,
+    light_is_model: bool = False,
+    use_gradient: bool = False,
 ) -> Optional[af.Model]:
     """
     Returns light and mass profiles from the LIGHT PIPELINE result, for the LIGHT DARK MASS PIPELINE.
@@ -439,8 +479,13 @@ def mass_light_dark_from(
     profiles, where their light profile parameters (e.g. their `centre`, `ell_comps`) are used to set up the parameters
     of the light and mass profile.
 
-    If a linear light profile is passed in, the function will return a light and mass profile where its `intensity` is
+    If a linear light profile is passed in, the function will return a mass profile where its `intensity` is
     fixed to the solved for value of the maximum log likelihood linear fit.
+
+    For the light profile, it will by default use a linear light and mass profile, which therefore continues to solve
+    for the intensity of the linear light profile via linear algebra. This means that during the fit the `intensity`
+    used to compute deflection angles is not the same as the `intensity` parameter solved for in the linear light
+    profile. If the input `linear_lp_to_standard` is `True`, the function will instead use a standard light profile.
 
     This function supports the input of a basis (e.g. an MGE), converting every individual standard light or
     linear light profile in the basis to a light and mass profile.
@@ -457,9 +502,15 @@ def mass_light_dark_from(
     name
         The name of the light profile in the light pipeline's galaxy model that the model is being created for
         (e.g. `bulge`).
+    linear_lp_to_standard
+        If `True`, the light profile is passed as a standard component, else it is a linear component. The
+        mass always uses the `interity` parameter of the linear light profile solved for in the previous pipeline.
     light_is_model
         If `True`, the light profile is passed as a model component, else it is a fixed instance. For a basis
         (e.g. an MGE) this feature is not used due to the large number of profiles in the basis.
+    use_gradient
+        If `True`, the light and mass profiles is switched to a variant which includes additional parameters that
+        model a radial gradient in the mass-to-light ratio.
 
     Returns
     -------
@@ -472,5 +523,64 @@ def mass_light_dark_from(
         return None
 
     if not isinstance(lp_instance, Basis):
-        return mass_light_dark_lmp_from(light_result=light_result, name=name, light_is_model=light_is_model)
-    return mass_light_dark_basis_from(light_result=light_result, name=name)
+        return mass_light_dark_lmp_from(
+            light_result=light_result,
+            name=name,
+            linear_lp_to_standard=linear_lp_to_standard,
+            light_is_model=light_is_model,
+            use_gradient=use_gradient,
+        )
+    return mass_light_dark_basis_from(light_result=light_result, name=name, use_gradient=use_gradient)
+
+
+def link_ratios(link_mass_to_light_ratios  : bool, light_result, bulge, disk):
+    """
+    Links the mass to light ratios and gradients of the bulge and disk profiles in the MASS LIGHT DARK PIPELINE.
+
+    The following use cases are supported:
+
+    1) Link the mass to light ratios of the bulge and diskwhen they are both sersic light and mass profile.
+    2) Link the mass to light ratios of the bulge and disk when for a basis (e.g. an MGE).
+    3) Does approrpiate linking with the gradient of the mass-to-light ratio for the basis profiles.
+
+    Parameters
+    ----------
+    link_mass_to_light_ratios
+        Whether the mass-to-light ratios of the bulge and disk profiles are linked.
+    light_result
+        The result of the light pipeline, which determines the light and mass profiles used in the MASS LIGHT DARK
+        PIPELINE.
+    bulge
+        The bulge model light profile.
+    disk
+        The disk model light profile.
+
+    Returns
+    -------
+    The bulge and disk profiles with the mass-to-light ratios linked.
+    """
+
+    if bulge is None or disk is None:
+        return bulge, disk
+
+    if not link_mass_to_light_ratios:
+        return bulge, disk
+
+    bulge_instance = getattr(light_result.instance.galaxies.lens, "bulge")
+
+    if not isinstance(bulge_instance, Basis):
+
+        bulge.mass_to_light_ratio = disk.mass_to_light_ratio
+
+        return bulge, disk
+
+    for bulge_lp in bulge.profile_list:
+
+        try:
+            bulge_lp.mass_to_light_ratio = disk.profile_list[0].mass_to_light_ratio
+        except AttributeError:
+            bulge_lp.mass_to_light_ratio_base = disk.profile_list[0].mass_to_light_ratio_base
+            bulge_lp.mass_to_light_gradient = disk.profile_list[0].mass_to_light_gradient
+
+    return bulge, disk
+
