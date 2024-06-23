@@ -30,15 +30,12 @@ def adapt_images_from(
 
     fit_list = [fit] if not fit.children else fit.children
 
-    if fit.value(name="adapt_images") is None:
+    if fit.value(name="adapt_images.adapt_images") is None:
         return [None] * len(fit_list)
 
     adapt_images_list = []
 
     for fit in fit_list:
-        adapt_images = fit.value(name="adapt_images")
-
-        instance = fit.model.instance_from_prior_medians(ignore_prior_limits=True)
 
         try:
             mask = aa.Mask2D.from_primary_hdu(
@@ -48,6 +45,20 @@ def adapt_images_from(
             mask = aa.Mask2D.from_primary_hdu(
                 primary_hdu=fit.value(name="dataset.real_space_mask")
             )
+
+        galaxy_name_image_dict = {}
+
+        adapt_image_name_list = fit.value(name="adapt_images.adapt_images")
+
+        for name in adapt_image_name_list:
+
+            adapt_image = aa.Array2D.from_primary_hdu(primary_hdu=fit.value(name=f"adapt_images.{name}"))
+            adapt_image = adapt_image.apply_mask(mask=mask)
+            galaxy_name_image_dict[name] = adapt_image
+
+        instance = fit.model.instance_from_prior_medians(ignore_prior_limits=True)
+
+        adapt_images = AdaptImages(galaxy_name_image_dict=galaxy_name_image_dict)
 
         adapt_images = adapt_images.updated_via_instance_from(
             instance=instance,
