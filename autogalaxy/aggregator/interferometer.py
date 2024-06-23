@@ -57,6 +57,7 @@ def _interferometer_from(
         )
 
         over_sampling = fit.value(name="dataset.over_sampling")
+        over_sampling_non_uniform = fit.value(name="dataset.over_sampling_non_uniform")
         over_sampling_pixelization = fit.value(
             name="dataset.over_sampling_pixelization"
         )
@@ -68,6 +69,7 @@ def _interferometer_from(
             uv_wavelengths=uv_wavelengths,
             real_space_mask=real_space_mask,
             over_sampling=over_sampling,
+            over_sampling_non_uniform=over_sampling_non_uniform,
             over_sampling_pixelization=over_sampling_pixelization,
             transformer_class=transformer_class,
         )
