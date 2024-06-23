@@ -10,13 +10,13 @@ def test__image_2d_from():
 
     image = shapelet.image_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0], [0.5, 0.25]]))
 
-    assert image == pytest.approx(np.array([0.0, 0.33177]), 1e-4)
+    assert image == pytest.approx(np.array([0.0, -0.33177]), 1e-4)
 
     shapelet = ag.lp_linear.ShapeletPolarSph(n=2, m=0, centre=(0.2, 0.4), beta=1.0)
 
     image = shapelet.image_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0], [0.5, 0.25]]))
 
-    assert image == pytest.approx(np.array([0.27715, 0.47333]), 1e-4)
+    assert image == pytest.approx(np.array([-0.27715, -0.47333]), 1e-4)
 
 
 def test__elliptical__image_2d_from():
@@ -26,7 +26,7 @@ def test__elliptical__image_2d_from():
 
     image = shapelet.image_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0], [0.5, 0.25]]))
 
-    assert image == pytest.approx(np.array([0.0, 0.33177]), 1e-4)
+    assert image == pytest.approx(np.array([0.0, -0.33177]), 1e-4)
 
     shapelet = ag.lp_linear.ShapeletPolar(
         n=2, m=0, centre=(0.0, 0.0), ell_comps=(0.5, 0.7), beta=1.0
@@ -34,4 +34,4 @@ def test__elliptical__image_2d_from():
 
     image = shapelet.image_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0], [0.5, 0.25]]))
 
-    assert image == pytest.approx(np.array([0.0, 0.33177]), 1e-4)
+    assert image == pytest.approx(np.array([0.0, -0.33177]), 1e-4)

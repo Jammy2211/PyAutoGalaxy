@@ -1,20 +1,12 @@
 from typing import Tuple
 
-from autogalaxy.profiles.light import standard as lp
+from autogalaxy.profiles.light_and_mass_profiles import LightMassProfile
+
+from autogalaxy.profiles.light import linear as lp_linear
 from autogalaxy.profiles import mass as mp
 
 
-class LightMassProfile:
-    """
-    Mass and light profiles describe both mass distributions and light distributions with a single set of parameters. This
-    means that the light and mass of these profiles are tied together. Galaxy instances interpret these
-    objects as being both mass and light profiles.
-    """
-
-    pass
-
-
-class Gaussian(lp.Gaussian, mp.Gaussian, LightMassProfile):
+class Gaussian(lp_linear.Gaussian, mp.Gaussian, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -41,11 +33,10 @@ class Gaussian(lp.Gaussian, mp.Gaussian, LightMassProfile):
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles.
         """
-        lp.Gaussian.__init__(
+        lp_linear.Gaussian.__init__(
             self,
             centre=centre,
             ell_comps=ell_comps,
-            intensity=intensity,
             sigma=sigma,
         )
         mp.Gaussian.__init__(
@@ -58,7 +49,7 @@ class Gaussian(lp.Gaussian, mp.Gaussian, LightMassProfile):
         )
 
 
-class GaussianGradient(lp.Gaussian, mp.GaussianGradient, LightMassProfile):
+class GaussianGradient(lp_linear.Gaussian, mp.GaussianGradient, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -94,11 +85,10 @@ class GaussianGradient(lp.Gaussian, mp.GaussianGradient, LightMassProfile):
             The radius where the mass-to-light ratio is equal to the base mass-to-light ratio, such that there will be
             more of less mass per unit light within this radius depending on the mass-to-light gradient.
         """
-        lp.Gaussian.__init__(
+        lp_linear.Gaussian.__init__(
             self,
             centre=centre,
             ell_comps=ell_comps,
-            intensity=intensity,
             sigma=sigma,
         )
         mp.GaussianGradient.__init__(
@@ -113,7 +103,7 @@ class GaussianGradient(lp.Gaussian, mp.GaussianGradient, LightMassProfile):
         )
 
 
-class Sersic(lp.Sersic, mp.Sersic, LightMassProfile):
+class Sersic(lp_linear.Sersic, mp.Sersic, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -141,11 +131,10 @@ class Sersic(lp.Sersic, mp.Sersic, LightMassProfile):
         mass_to_light_ratio
             The mass-to-light ratio of the light profiles.
         """
-        lp.Sersic.__init__(
+        lp_linear.Sersic.__init__(
             self,
             centre=centre,
             ell_comps=ell_comps,
-            intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
         )
@@ -339,7 +328,7 @@ class DevVaucouleursSph(DevVaucouleurs, LightMassProfile):
         )
 
 
-class SersicGradient(lp.Sersic, mp.SersicGradient, LightMassProfile):
+class SersicGradient(lp_linear.Sersic, mp.SersicGradient, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -372,11 +361,10 @@ class SersicGradient(lp.Sersic, mp.SersicGradient, LightMassProfile):
         mass_to_light_gradient
             The mass-to-light radial gradient.
         """
-        lp.Sersic.__init__(
+        lp_linear.Sersic.__init__(
             self,
             centre=centre,
             ell_comps=ell_comps,
-            intensity=intensity,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
         )
@@ -519,7 +507,7 @@ class ExponentialGradientSph(SersicGradientSph, LightMassProfile):
         )
 
 
-class SersicCore(lp.SersicCore, mp.SersicCore, LightMassProfile):
+class SersicCore(lp_linear.SersicCore, mp.SersicCore, LightMassProfile):
     """
     The elliptical cored-Sersic light and mass profile.
 
@@ -557,14 +545,13 @@ class SersicCore(lp.SersicCore, mp.SersicCore, LightMassProfile):
         alpha: float = 3.0,
         mass_to_light_ratio: float = 1.0,
     ):
-        lp.SersicCore.__init__(
+        lp_linear.SersicCore.__init__(
             self,
             centre=centre,
             ell_comps=ell_comps,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
             radius_break=radius_break,
-            intensity=intensity,
             gamma=gamma,
             alpha=alpha,
         )
@@ -644,115 +631,5 @@ class SersicCoreSph(SersicCore, LightMassProfile):
             intensity=intensity,
             gamma=gamma,
             alpha=alpha,
-            mass_to_light_ratio=mass_to_light_ratio,
-        )
-
-
-class Chameleon(lp.Chameleon, mp.Chameleon, LightMassProfile):
-    """
-    The elliptical Chameleon light and mass profile.
-
-    This simultaneously represents the luminous emission and stellar mass of a galaxy.
-
-    This light profile closely approximates the Elliptical Sersic light profile, by representing it as two cored
-    elliptical isothermal profiles. This is convenient for lensing calculations, because the deflection angles of
-    an isothermal profile can be evaluated analyticially efficiently.
-
-    Parameters
-    ----------
-    centre
-        The (y,x) arc-second coordinates of the profile centre.
-    ell_comps
-        The first and second ellipticity components of the elliptical coordinate system.
-    intensity
-        Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
-        the light profile's image is compared too, which is expected to be electrons per second).
-    core_radius_0
-        The core size of the first elliptical cored Isothermal profile.
-    core_radius_1
-        The core size of the second elliptical cored Isothermal profile.
-    """
-
-    def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        ell_comps: Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
-        core_radius_0: float = 0.01,
-        core_radius_1: float = 0.005,
-        mass_to_light_ratio: float = 1.0,
-    ):
-        lp.Chameleon.__init__(
-            self,
-            centre=centre,
-            ell_comps=ell_comps,
-            intensity=intensity,
-            core_radius_0=core_radius_0,
-            core_radius_1=core_radius_1,
-        )
-        mp.Chameleon.__init__(
-            self,
-            centre=centre,
-            ell_comps=ell_comps,
-            intensity=intensity,
-            core_radius_0=core_radius_0,
-            core_radius_1=core_radius_1,
-            mass_to_light_ratio=mass_to_light_ratio,
-        )
-
-
-class ChameleonSph(Chameleon, LightMassProfile):
-    """
-    The spherical Chameleon light and mass profile.
-
-    This simultaneously represents the luminous emission and stellar mass of a galaxy.
-
-    This light profile closely approximates the Elliptical Sersic light profile, by representing it as two cored
-    elliptical isothermal profiles. This is convenient for lensing calculations, because the deflection angles of
-    an isothermal profile can be evaluated analyticially efficiently.
-
-    Parameters
-    ----------
-    centre
-        The (y,x) arc-second coordinates of the profile centre.
-    intensity
-        Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
-        the light profile's image is compared too, which is expected to be electrons per second).
-    core_radius_0
-        The core size of the first elliptical cored Isothermal profile.
-    core_radius_1
-        The core size of the second elliptical cored Isothermal profile.
-    """
-
-    def __init__(
-        self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        intensity: float = 0.1,
-        core_radius_0: float = 0.01,
-        core_radius_1: float = 0.005,
-        mass_to_light_ratio: float = 1.0,
-    ):
-        """
-        The ChameleonSph mass profile, the mass profiles of the light profiles that are used to fit_normal and
-        subtract the lens model_galaxy's light.
-
-        Parameters
-        ----------
-        centre
-            The grid of The (y,x) arc-second coordinates of the profile centre.
-        intensity
-            Overall flux intensity normalisation in the light profiles (electrons per second)
-        effective_radius
-            The radius containing half the light of this light profile.
-        mass_to_light_ratio
-            The mass-to-light ratio of the light profiles
-        """
-        Chameleon.__init__(
-            self,
-            centre=centre,
-            ell_comps=(0.0, 0.0),
-            intensity=intensity,
-            core_radius_0=core_radius_0,
-            core_radius_1=core_radius_1,
             mass_to_light_ratio=mass_to_light_ratio,
         )

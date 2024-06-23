@@ -47,30 +47,3 @@ class SersicCore(lp.SersicCore, LightProfileLinear):
             alpha=alpha,
             gamma=gamma,
         )
-
-    @property
-    def lp_cls(self):
-        return lp.SersicCore
-
-    def parameters_dict_from(self, intensity: float) -> Dict[str, float]:
-        """
-        Returns a dictionary of the parameters of the linear light profile with the `intensity` added.
-
-        This `intenisty` will likely have come from the value inferred via the linear inversion.
-
-        Parameters
-        ----------
-        intensity
-            Overall intensity normalisation of the not linear light profile that is created (units are dimensionless
-            and derived from the data the light profile's image is compared too, which is expected to be electrons
-            per second).
-        """
-        parameters_dict = vars(self)
-
-        args = inspect.getfullargspec(self.lp_cls.__init__).args
-        args.remove("self")
-
-        parameters_dict = {key: parameters_dict[key] for key in args}
-        parameters_dict["intensity"] = intensity
-
-        return parameters_dict

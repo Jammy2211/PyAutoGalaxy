@@ -18,6 +18,7 @@ from autoarray.inversion.pixelization.mappers.mapper_grids import MapperGrids  #
 from autoarray.inversion.pixelization.mappers.factory import (
     mapper_from as Mapper,
 )  # noqa
+from autoarray.inversion.pixelization.border_relocator import BorderRelocator
 from autoarray.mask.mask_1d import Mask1D  # noqa
 from autoarray.mask.mask_2d import Mask2D  # noqa
 from autoarray.operators.convolver import Convolver  # noqa
@@ -82,11 +83,12 @@ from .profiles import (
     point_sources as ps,
     mass as mp,
     light_and_mass_profiles as lmp,
+    light_linear_and_mass_profiles as lmp_linear,
     scaling_relations as sr,
 )
 from .profiles.light.abstract import LightProfile
 from .profiles.light import standard as lp
-from .profiles.light import basis as lp_basis
+from .profiles import basis as lp_basis
 from .profiles.light.linear import LightProfileLinearObjFuncList
 from .profiles.light import linear as lp_linear
 from .profiles.light import operated as lp_operated
@@ -108,4 +110,4 @@ from autoconf import conf
 
 conf.instance.register(__file__)
 
-__version__ = "2024.1.27.4"
+__version__ = "2024.5.16.0"
