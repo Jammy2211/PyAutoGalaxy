@@ -456,7 +456,9 @@ def mass_light_dark_basis_from(
         if not use_gradient:
             lmp_model.mass_to_light_ratio = lmp_model_list[0].mass_to_light_ratio
         else:
-            lmp_model.mass_to_light_ratio_base = lmp_model_list[0].mass_to_light_ratio_base
+            lmp_model.mass_to_light_ratio_base = lmp_model_list[
+                0
+            ].mass_to_light_ratio_base
             lmp_model.mass_to_light_gradient = lmp_model_list[0].mass_to_light_gradient
 
     return af.Model(Basis, profile_list=lmp_model_list)
@@ -530,10 +532,12 @@ def mass_light_dark_from(
             light_is_model=light_is_model,
             use_gradient=use_gradient,
         )
-    return mass_light_dark_basis_from(light_result=light_result, name=name, use_gradient=use_gradient)
+    return mass_light_dark_basis_from(
+        light_result=light_result, name=name, use_gradient=use_gradient
+    )
 
 
-def link_ratios(link_mass_to_light_ratios  : bool, light_result, bulge, disk):
+def link_ratios(link_mass_to_light_ratios: bool, light_result, bulge, disk):
     """
     Links the mass to light ratios and gradients of the bulge and disk profiles in the MASS LIGHT DARK PIPELINE.
 
@@ -569,18 +573,19 @@ def link_ratios(link_mass_to_light_ratios  : bool, light_result, bulge, disk):
     bulge_instance = getattr(light_result.instance.galaxies.lens, "bulge")
 
     if not isinstance(bulge_instance, Basis):
-
         bulge.mass_to_light_ratio = disk.mass_to_light_ratio
 
         return bulge, disk
 
     for bulge_lp in bulge.profile_list:
-
         try:
             bulge_lp.mass_to_light_ratio = disk.profile_list[0].mass_to_light_ratio
         except AttributeError:
-            bulge_lp.mass_to_light_ratio_base = disk.profile_list[0].mass_to_light_ratio_base
-            bulge_lp.mass_to_light_gradient = disk.profile_list[0].mass_to_light_gradient
+            bulge_lp.mass_to_light_ratio_base = disk.profile_list[
+                0
+            ].mass_to_light_ratio_base
+            bulge_lp.mass_to_light_gradient = disk.profile_list[
+                0
+            ].mass_to_light_gradient
 
     return bulge, disk
-
