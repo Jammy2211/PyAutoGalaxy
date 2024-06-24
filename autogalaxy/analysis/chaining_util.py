@@ -1,5 +1,9 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Optional
+from os import path
+
+from autoconf import conf
+from autoconf.dictable import from_json, output_to_json
 
 import autoarray as aa
 import autofit as af
@@ -235,7 +239,44 @@ def clumps_from(
     return clumps
 
 
-def basis_no_linear_from(light_result: Result, name: str) -> af.Model:
+def lp_chain_tracer_from(light_result, settings_search):
+    """
+    Output the chain tracer, which is a tracer used for passing the `intensity` values of all linear light profiles
+    from the LIGHT PIPELINE to the LIGHT DARK MASS PIPELINE.
+
+    When linear light profiles are used in the LIGHT PIPELINE, their intensities are solved for via linear algebra
+    when setting up their corresponding light and mass profiles for the MASS LIGHT DARK PIPELINE.
+
+    This calculation is not numerically accuracy to a small amount (of order 1e-8) in the `intensity` values that
+    are solved for. This lack of accuracy will not impact the lens modeling in a noticeable way.
+
+    However, when a pipeline is rerun the `intensity` values that are solved for may change by a small amount,
+    changing the unique identifier of the fit, meaning the run does not resume correctly.
+
+    This function outputs the chaining tracer used to pass the `intensity` values to a .json file, or loads
+    it from this file if it is already there. This ensures that when a pipeline is rerun, the same `intensity`
+    values are always used.
+    """
+    lp_chain_tracer_path = path.join(
+        conf.instance.output_path,
+        settings_search.path_prefix,
+        "light_dark_lp_chain_tracer.json",
+    )
+
+    try:
+        lp_chain_tracer = from_json(lp_chain_tracer_path)
+
+    except FileNotFoundError:
+        lp_chain_tracer = (
+            light_result.max_log_likelihood_fit.model_obj_linear_light_profiles_to_light_profiles
+        )
+
+        output_to_json(obj=lp_chain_tracer, file_path=lp_chain_tracer_path)
+
+    return lp_chain_tracer
+
+
+def basis_no_linear_from(name: str, lp_chain_tracer) -> af.Model:
     """
     Returns a basis containing standard light profiles from a basis (e.g. an MGE) in the LIGHT PIPELINE result,
     for the TOTAL MASS PIPELINE.
@@ -273,9 +314,7 @@ def basis_no_linear_from(light_result: Result, name: str) -> af.Model:
 
     try:
         lp_instance = getattr(
-            light_result.max_log_likelihood_fit.model_obj_linear_light_profiles_to_light_profiles.galaxies[
-                0
-            ],
+            lp_chain_tracer.galaxies[0],
             name,
         )
     except AttributeError:
@@ -304,6 +343,7 @@ def basis_no_linear_from(light_result: Result, name: str) -> af.Model:
 def mass_light_dark_lmp_from(
     light_result: Result,
     name: str,
+    lp_chain_tracer,
     linear_lp_to_standard: bool = False,
     light_is_model: bool = False,
     use_gradient: bool = False,
@@ -375,9 +415,7 @@ def mass_light_dark_lmp_from(
 
     if is_linear:
         fit = light_result.max_log_likelihood_fit
-        lp_solved = getattr(
-            fit.model_obj_linear_light_profiles_to_light_profiles.galaxies[0], name
-        )
+        lp_solved = getattr(lp_chain_tracer.galaxies[0], name)
 
         lmp_model.intensity = lp_solved.intensity
 
@@ -387,6 +425,7 @@ def mass_light_dark_lmp_from(
 def mass_light_dark_basis_from(
     light_result: Result,
     name: str,
+    lp_chain_tracer,
     linear_lp_to_standard: bool = False,
     use_gradient: bool = False,
 ) -> af.Model:
@@ -424,9 +463,7 @@ def mass_light_dark_basis_from(
     """
 
     lp_instance = getattr(
-        light_result.max_log_likelihood_fit.model_obj_linear_light_profiles_to_light_profiles.galaxies[
-            0
-        ],
+        lp_chain_tracer.galaxies[0],
         name,
     )
 
@@ -467,6 +504,7 @@ def mass_light_dark_basis_from(
 def mass_light_dark_from(
     light_result: Result,
     name: str,
+    lp_chain_tracer,
     linear_lp_to_standard: bool = False,
     light_is_model: bool = False,
     use_gradient: bool = False,
@@ -528,12 +566,16 @@ def mass_light_dark_from(
         return mass_light_dark_lmp_from(
             light_result=light_result,
             name=name,
+            lp_chain_tracer=lp_chain_tracer,
             linear_lp_to_standard=linear_lp_to_standard,
             light_is_model=light_is_model,
             use_gradient=use_gradient,
         )
     return mass_light_dark_basis_from(
-        light_result=light_result, name=name, use_gradient=use_gradient
+        light_result=light_result,
+        lp_chain_tracer=lp_chain_tracer,
+        name=name,
+        use_gradient=use_gradient,
     )
 
 

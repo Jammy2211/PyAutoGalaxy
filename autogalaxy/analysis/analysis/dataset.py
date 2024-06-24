@@ -197,15 +197,15 @@ class AnalysisDataset(Analysis):
         )
 
         if self.adapt_images is not None:
-
             paths.save_json(
                 name="adapt_images",
-                object_dict=to_dict(list(self.adapt_images.galaxy_name_image_dict.keys())),
+                object_dict=to_dict(
+                    list(self.adapt_images.galaxy_name_image_dict.keys())
+                ),
                 prefix="adapt_images",
             )
 
             for name in self.adapt_images.galaxy_name_image_dict.keys():
-
                 paths.save_fits(
                     name=name,
                     hdu=self.adapt_images.galaxy_name_image_dict[name].hdu_for_output,
