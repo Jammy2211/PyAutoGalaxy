@@ -257,9 +257,16 @@ def lp_chain_tracer_from(light_result, settings_search):
     it from this file if it is already there. This ensures that when a pipeline is rerun, the same `intensity`
     values are always used.
     """
+
+    if settings_search.unique_tag is not None:
+        unique_tag = settings_search.unique_tag
+    else:
+        unique_tag = ""
+
     lp_chain_tracer_path = path.join(
         conf.instance.output_path,
         settings_search.path_prefix,
+        unique_tag,
         "light_dark_lp_chain_tracer.json",
     )
 
