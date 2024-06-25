@@ -16,19 +16,19 @@ def make_ell_sersic_dict():
         "type": "instance",
         "class_path": "autogalaxy.profiles.mass.stellar.sersic.Sersic",
         "arguments": {
-            "mass_to_light_ratio": 1.0,
+            "centre": {"type": "tuple", "values": [0.0, 0.0]},
             "ell_comps": {"type": "tuple", "values": [0.0, 0.0]},
-            "sersic_index": 0.6,
             "intensity": 0.1,
             "effective_radius": 0.6,
-            "centre": {"type": "tuple", "values": [0.0, 0.0]},
+            "sersic_index": 0.6,
+            "mass_to_light_ratio": 1.0,
         },
     }
 
 
-def test_to_dict(ell_sersic, ell_sersic_dict):
+def test__to_dict(ell_sersic, ell_sersic_dict):
     assert to_dict(ell_sersic) == ell_sersic_dict
 
 
-def test_from_dict(ell_sersic, ell_sersic_dict):
+def test__from_dict(ell_sersic, ell_sersic_dict):
     assert ell_sersic == from_dict(ell_sersic_dict)

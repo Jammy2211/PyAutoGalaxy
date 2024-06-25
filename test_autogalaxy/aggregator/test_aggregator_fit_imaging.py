@@ -129,4 +129,4 @@ def test__fit_imaging__adapt_images(agg_7x7, adapt_images_7x7):
 
     assert i == 2
 
-    clean(database_file=database_file)
+    # clean(database_file=database_file)

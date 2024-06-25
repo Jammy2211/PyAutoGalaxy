@@ -99,10 +99,6 @@ class ShapeletCartesian(lp.ShapeletCartesian, LightProfileLinear):
             )
         )
 
-    @property
-    def lp_cls(self):
-        return lp.ShapeletCartesian
-
 
 class ShapeletCartesianSph(ShapeletCartesian):
     def __init__(
@@ -138,7 +134,3 @@ class ShapeletCartesianSph(ShapeletCartesian):
         super().__init__(
             n_y=n_y, n_x=n_x, centre=centre, ell_comps=(0.0, 0.0), beta=beta
         )
-
-    @property
-    def lp_cls(self):
-        return lp.ShapeletCartesian

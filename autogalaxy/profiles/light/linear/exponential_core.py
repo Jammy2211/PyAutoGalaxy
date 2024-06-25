@@ -44,7 +44,3 @@ class ExponentialCore(lp.ExponentialCore, LightProfileLinear):
             gamma=gamma,
             alpha=alpha,
         )
-
-    @property
-    def lp_cls(self):
-        return lp.ExponentialCore

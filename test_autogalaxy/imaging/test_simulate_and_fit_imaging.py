@@ -115,7 +115,7 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
     # Check that using a Basis gives the same result.
 
     basis = ag.lp_basis.Basis(
-        light_profile_list=[
+        profile_list=[
             ag.lp.Sersic(centre=(0.1, 0.1), intensity=0.1),
             ag.lp.Sersic(centre=(0.2, 0.2), intensity=0.2),
         ]

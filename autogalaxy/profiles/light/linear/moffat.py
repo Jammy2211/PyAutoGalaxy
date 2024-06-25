@@ -41,11 +41,3 @@ class Moffat(lp.Moffat, LightProfileLinear):
             alpha=alpha,
             beta=beta,
         )
-
-    @property
-    def lp_cls(self):
-        return lp.Moffat
-
-    @property
-    def lmp_cls(self):
-        return lmp.Gaussian

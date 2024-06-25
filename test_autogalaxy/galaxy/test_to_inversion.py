@@ -37,7 +37,7 @@ def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
     assert lp_linear_func_list[1].light_profile_list[0] == lp_linear_1
     assert lp_linear_func_list[2].light_profile_list[0] == lp_linear_2
 
-    basis = ag.lp_basis.Basis(light_profile_list=[lp_linear_0, lp_linear_1])
+    basis = ag.lp_basis.Basis(profile_list=[lp_linear_0, lp_linear_1])
 
     g0 = ag.Galaxy(redshift=0.5, bulge=basis)
 
@@ -181,7 +181,7 @@ def test__regularization_list(masked_imaging_7x7):
     regularization_2 = ag.reg.Constant(coefficient=3.0)
 
     basis = ag.lp_basis.Basis(
-        light_profile_list=[ag.lp_linear.Gaussian()], regularization=regularization_2
+        profile_list=[ag.lp_linear.Gaussian()], regularization=regularization_2
     )
 
     g3 = ag.Galaxy(redshift=0.5, bulge=basis)
