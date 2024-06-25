@@ -469,10 +469,13 @@ def mass_light_dark_basis_from(
     The light and mass profile for a basis (e.g. an MGE) whose priors are initialized from a previous result.
     """
 
-    lp_instance = getattr(
-        lp_chain_tracer.galaxies[0],
-        name,
-    )
+    try:
+        lp_instance = getattr(
+            lp_chain_tracer.galaxies[0],
+            name,
+        )
+    except AttributeError:
+        return None
 
     profile_list = lp_instance.profile_list
 
