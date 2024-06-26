@@ -37,7 +37,7 @@ def test__dataset_generator_from_aggregator__analysis_has_single_dataset(
         assert (dataset_list[0].data == masked_imaging_7x7.data).all()
         assert isinstance(dataset_list[0].grid.over_sampling, ag.OverSamplingIterate)
         assert isinstance(
-            dataset_list[0].grid_pixelization.over_sampling, ag.OverSamplingIterate
+            dataset_list[0].grids.pixelization.over_sampling, ag.OverSamplingIterate
         )
         assert dataset_list[0].grid.over_sampling.sub_steps == [2]
         assert dataset_list[0].grid.over_sampling.fractional_accuracy == 0.5

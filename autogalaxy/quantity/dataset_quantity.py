@@ -38,7 +38,7 @@ class DatasetQuantity(AbstractDataset):
         - `grid`: A grids of (y,x) coordinates which align with the image pixels, whereby each coordinate corresponds to
         the centre of an image pixel. This may be used in fits to calculate the model image of the imaging data.
 
-        - `grid_pixelization`: A grid of (y,x) coordinates which align with the pixels of a pixelization. This grid
+        - `grids.pixelization`: A grid of (y,x) coordinates which align with the pixels of a pixelization. This grid
         is specifically used for pixelizations computed via the `invserion` module, which often use different
         oversampling and sub-size values to the grid above.
 
@@ -60,7 +60,7 @@ class DatasetQuantity(AbstractDataset):
         over_sampling
             The over sampling schemes which divide the grids into sub grids of smaller pixels within their host image
             pixels when using the grid to evaluate a function (e.g. images) to better approximate the 2D line integral
-            This class controls over sampling for all the different grids (e.g. `grid`, `grid_pixelization).
+            This class controls over sampling for all the different grids (e.g. `grid`, `grids.pixelization).
         """
         if data.shape != noise_map.shape:
             if data.shape[0:-1] == noise_map.shape[0:]:

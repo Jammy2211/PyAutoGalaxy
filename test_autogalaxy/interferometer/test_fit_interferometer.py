@@ -194,7 +194,7 @@ def test___galaxy_model_image_dict(interferometer_7):
 
     mapper = ag.Mapper(
         mapper_grids=mapper_grids,
-        over_sampler=interferometer_7.grid_pixelization.over_sampler,
+        over_sampler=interferometer_7.grids.pixelization.over_sampler,
         border_relocator=interferometer_7.border_relocator,
         regularization=pixelization.regularization,
     )
@@ -321,7 +321,7 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
 
     mapper = ag.Mapper(
         mapper_grids=mapper_grids,
-        over_sampler=interferometer_7.grid_pixelization.over_sampler,
+        over_sampler=interferometer_7.grids.pixelization.over_sampler,
         border_relocator=interferometer_7.border_relocator,
         regularization=pixelization.regularization,
     )
