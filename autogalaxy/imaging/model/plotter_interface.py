@@ -44,10 +44,9 @@ class PlotterInterfaceImaging(PlotterInterface):
             noise_map=should_plot("noise_map"),
             psf=should_plot("psf"),
             signal_to_noise_map=should_plot("signal_to_noise_map"),
-            over_sampling_sub_size=should_plot("over_sampling_sub_size"),
-            over_sampling_sub_size_pixelization=should_plot(
-                "over_sampling_sub_size_pixelization"
-            ),
+            over_sampling=should_plot("over_sampling"),
+            over_sampling_non_uniform=should_plot("over_sampling_non_uniform"),
+            over_sampling_pixelization=should_plot("over_sampling_pixelization"),
         )
 
         mat_plot_2d = self.mat_plot_2d_from(subfolders="")
