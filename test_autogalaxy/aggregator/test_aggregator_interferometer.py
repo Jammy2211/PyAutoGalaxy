@@ -18,10 +18,11 @@ def test__interferometer_generator_from_aggregator__analysis_has_single_dataset(
         noise_map=visibilities_noise_map_7,
         uv_wavelengths=uv_wavelengths_7x2,
         real_space_mask=mask_2d_7x7,
-        over_sampling=ag.OverSamplingIterate(fractional_accuracy=0.5, sub_steps=[2]),
-        over_sampling_pixelization=ag.OverSamplingIterate(
+        over_sampling=ag.OverSamplingDataset(
+            uniform=ag.OverSamplingIterate(fractional_accuracy=0.5, sub_steps=[2]),
+            pixelization=ag.OverSamplingIterate(
             fractional_accuracy=0.5, sub_steps=[2]
-        ),
+        )),
         transformer_class=ag.TransformerDFT,
     )
 

@@ -12,11 +12,12 @@ def test__dataset_generator_from_aggregator__analysis_has_single_dataset(
         data=image_7x7,
         psf=psf_3x3,
         noise_map=noise_map_7x7,
-        over_sampling=ag.OverSamplingIterate(fractional_accuracy=0.5, sub_steps=[2]),
-        over_sampling_pixelization=ag.OverSamplingIterate(
+        over_sampling=ag.OverSamplingDataset(
+            uniform=ag.OverSamplingIterate(fractional_accuracy=0.5, sub_steps=[2]),
+            pixelization=ag.OverSamplingIterate(
             fractional_accuracy=0.5, sub_steps=[2]
         ),
-    )
+    ))
 
     masked_imaging_7x7 = imaging.apply_mask(mask=mask_2d_7x7)
 
