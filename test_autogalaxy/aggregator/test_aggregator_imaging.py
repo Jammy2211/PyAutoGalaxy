@@ -14,7 +14,7 @@ def test__dataset_generator_from_aggregator__analysis_has_single_dataset(
         noise_map=noise_map_7x7,
         over_sampling=ag.OverSamplingDataset(
             uniform=ag.OverSamplingIterate(fractional_accuracy=0.5, sub_steps=[2]),
-            pixelization=ag.OverSamplingIterate(fractional_accuracy=0.5, sub_steps=[2]),
+            pixelization=ag.OverSamplingUniform(sub_size=3),
         ),
     )
 
@@ -38,7 +38,7 @@ def test__dataset_generator_from_aggregator__analysis_has_single_dataset(
             dataset_list[0].grids.uniform.over_sampling, ag.OverSamplingIterate
         )
         assert isinstance(
-            dataset_list[0].grids.pixelization.over_sampling, ag.OverSamplingIterate
+            dataset_list[0].grids.pixelization.over_sampling, ag.OverSamplingUniform
         )
         assert dataset_list[0].grids.uniform.over_sampling.sub_steps == [2]
         assert dataset_list[0].grids.uniform.over_sampling.fractional_accuracy == 0.5
