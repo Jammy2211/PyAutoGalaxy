@@ -104,13 +104,13 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             self.galaxies.cls_list_from(cls=LightProfileOperated)
         ):
             return self.galaxies.image_2d_from(
-                grid=self.grid,
+                grid=self.grids.uniform,
             )
 
         return self.galaxies.blurred_image_2d_from(
-            grid=self.grid,
+            grid=self.grids.uniform,
             convolver=self.dataset.convolver,
-            blurring_grid=self.blurring_grid,
+            blurring_grid=self.grids.blurring,
         )
 
     @property
@@ -125,12 +125,9 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         dataset = aa.DatasetInterface(
             data=self.profile_subtracted_image,
             noise_map=self.noise_map,
+            grids=self.grids,
             convolver=self.dataset.convolver,
             w_tilde=self.w_tilde,
-            grid=self.grid,
-            grid_pixelization=self.grid_pixelization,
-            blurring_grid=self.blurring_grid,
-            border_relocator=self.dataset.border_relocator,
         )
 
         return GalaxiesToInversion(
@@ -188,9 +185,9 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         """
 
         galaxy_blurred_image_2d_dict = self.galaxies.galaxy_blurred_image_2d_dict_from(
-            grid=self.grid,
+            grid=self.grids.uniform,
             convolver=self.dataset.convolver,
-            blurring_grid=self.blurring_grid,
+            blurring_grid=self.grids.blurring,
         )
 
         galaxy_linear_obj_image_dict = self.galaxy_linear_obj_data_dict_from(
@@ -260,7 +257,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             exc.raise_linear_light_profile_in_unmasked()
 
         return self.galaxies.unmasked_blurred_image_2d_from(
-            grid=self.grid, psf=self.dataset.psf
+            grid=self.grids.uniform, psf=self.dataset.psf
         )
 
     @property
@@ -275,7 +272,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             exc.raise_linear_light_profile_in_unmasked()
 
         return self.galaxies.unmasked_blurred_image_2d_list_from(
-            grid=self.grid, psf=self.dataset.psf
+            grid=self.grids.uniform, psf=self.dataset.psf
         )
 
     @property

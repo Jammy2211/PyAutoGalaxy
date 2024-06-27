@@ -148,8 +148,8 @@ def test___galaxy_model_image_dict(interferometer_7):
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
-    g0_image = g0.image_2d_from(grid=interferometer_7.grid)
-    g1_image = g1.image_2d_from(grid=interferometer_7.grid)
+    g0_image = g0.image_2d_from(grid=interferometer_7.grids.uniform)
+    g1_image = g1.image_2d_from(grid=interferometer_7.grids.uniform)
 
     assert fit.galaxy_model_image_dict[g0] == pytest.approx(g0_image, 1.0e-4)
     assert fit.galaxy_model_image_dict[g1] == pytest.approx(g1_image, 1.0e-4)
@@ -187,15 +187,15 @@ def test___galaxy_model_image_dict(interferometer_7):
 
     mapper_grids = pixelization.mesh.mapper_grids_from(
         mask=interferometer_7.real_space_mask,
-        source_plane_data_grid=interferometer_7.grid,
-        border_relocator=interferometer_7.border_relocator,
+        source_plane_data_grid=interferometer_7.grids.uniform,
+        border_relocator=interferometer_7.grids.border_relocator,
         source_plane_mesh_grid=None,
     )
 
     mapper = ag.Mapper(
         mapper_grids=mapper_grids,
-        over_sampler=interferometer_7.grid_pixelization.over_sampler,
-        border_relocator=interferometer_7.border_relocator,
+        over_sampler=interferometer_7.grids.pixelization.over_sampler,
+        border_relocator=interferometer_7.grids.border_relocator,
         regularization=pixelization.regularization,
     )
 
@@ -266,10 +266,10 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     )
 
     g0_visibilities = g0.visibilities_from(
-        grid=interferometer_7.grid, transformer=interferometer_7.transformer
+        grid=interferometer_7.grids.uniform, transformer=interferometer_7.transformer
     )
     g1_visibilities = g1.visibilities_from(
-        grid=interferometer_7.grid, transformer=interferometer_7.transformer
+        grid=interferometer_7.grids.uniform, transformer=interferometer_7.transformer
     )
 
     assert fit.galaxy_model_visibilities_dict[g0] == pytest.approx(
@@ -314,15 +314,15 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
 
     mapper_grids = pixelization.mesh.mapper_grids_from(
         mask=interferometer_7.real_space_mask,
-        source_plane_data_grid=interferometer_7.grid,
-        border_relocator=interferometer_7.border_relocator,
+        source_plane_data_grid=interferometer_7.grids.uniform,
+        border_relocator=interferometer_7.grids.border_relocator,
         source_plane_mesh_grid=None,
     )
 
     mapper = ag.Mapper(
         mapper_grids=mapper_grids,
-        over_sampler=interferometer_7.grid_pixelization.over_sampler,
-        border_relocator=interferometer_7.border_relocator,
+        over_sampler=interferometer_7.grids.pixelization.over_sampler,
+        border_relocator=interferometer_7.grids.border_relocator,
         regularization=pixelization.regularization,
     )
 

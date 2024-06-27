@@ -101,7 +101,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         a Fourier transform to the sum of light profile images.
         """
         return self.galaxies.visibilities_from(
-            grid=self.grid, transformer=self.dataset.transformer
+            grid=self.grids.uniform, transformer=self.dataset.transformer
         )
 
     @property
@@ -116,11 +116,9 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         dataset = aa.DatasetInterface(
             data=self.profile_subtracted_visibilities,
             noise_map=self.noise_map,
+            grids=self.grids,
             transformer=self.dataset.transformer,
             w_tilde=self.w_tilde,
-            grid=self.grid,
-            grid_pixelization=self.grid_pixelization,
-            border_relocator=self.dataset.border_relocator,
         )
 
         return GalaxiesToInversion(
@@ -175,7 +173,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         data being fitted.
         """
         galaxy_model_image_dict = self.galaxies.galaxy_image_2d_dict_from(
-            grid=self.grid
+            grid=self.grids.uniform
         )
 
         galaxy_linear_obj_image_dict = self.galaxy_linear_obj_data_dict_from(
@@ -199,7 +197,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         data being fitted.
         """
         galaxy_model_visibilities_dict = self.galaxies.galaxy_visibilities_dict_from(
-            grid=self.grid, transformer=self.dataset.transformer
+            grid=self.grids.uniform, transformer=self.dataset.transformer
         )
 
         galaxy_linear_obj_data_dict = self.galaxy_linear_obj_data_dict_from(

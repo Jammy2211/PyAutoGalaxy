@@ -23,7 +23,9 @@ def test__galaxies(
     plotter_interface = PlotterInterface(image_path=plot_path)
 
     plotter_interface.galaxies(
-        galaxies=galaxies_7x7, grid=masked_imaging_7x7.grid, during_analysis=False
+        galaxies=galaxies_7x7,
+        grid=masked_imaging_7x7.grids.uniform,
+        during_analysis=False,
     )
 
     assert path.join(plot_path, "subplot_galaxies.png") in plot_patch.paths
@@ -54,7 +56,9 @@ def test__galaxies_1d(
     plotter_interface = PlotterInterface(image_path=plot_path)
 
     plotter_interface.galaxies_1d(
-        galaxies=galaxies_7x7, grid=masked_imaging_7x7.grid, during_analysis=False
+        galaxies=galaxies_7x7,
+        grid=masked_imaging_7x7.grids.uniform,
+        during_analysis=False,
     )
 
     plot_path = path.join(plot_path, "galaxies_1d")
