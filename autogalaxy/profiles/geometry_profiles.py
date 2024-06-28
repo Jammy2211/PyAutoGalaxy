@@ -1,6 +1,11 @@
+import os
+
 from typing import Optional, Tuple, Type
 
-import numpy as np
+if os.environ.get("USE_JAX", "0") == "1":
+    import jax.numpy as np
+else:
+    import numpy as np
 
 import autoarray as aa
 
