@@ -84,3 +84,19 @@ class DatasetEllipse:
                 bounds_error=False,
                 fill_value=0.0
             )
+
+    @cached_property
+    def noise_map_interp(self) -> interpolate.RegularGridInterpolator:
+        """
+        Returns a 2D interpolation of the noise-map, which is used to evaluate the noise-map at any point in 2D space.
+        """
+
+        y = np.arange(self.noise_map.shape_native[0])
+        x = np.arange(self.noise_map.shape_native[1])
+
+        return interpolate.RegularGridInterpolator(
+                points=(x, y),
+                values=self.noise_map.native,
+                bounds_error=False,
+                fill_value=0.0
+            )
