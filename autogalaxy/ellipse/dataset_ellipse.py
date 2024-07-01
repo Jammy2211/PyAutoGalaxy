@@ -1,4 +1,8 @@
 import numpy as np
+from scipy import interpolate
+from typing import Tuple
+
+from autoconf import cached_property
 
 import autoarray as aa
 
@@ -40,6 +44,7 @@ class DatasetEllipse:
         self.radii_min = radii_min
         self.radii_max = radii_max
         self.radii_bins = radii_bins
+        self.mask = data.mask
 
     @property
     def radii_array(self) -> np.ndarray:
@@ -53,4 +58,29 @@ class DatasetEllipse:
         """
         return np.logspace(self.radii_min, self.radii_max, self.radii_bins)
 
- #  def data_interp(self):
+    @cached_property
+    def points_interp(self) -> Tuple[np.ndarray, np.ndarray]:
+        """
+        The points on which the interpolation from the 2D grid of data is performed.
+        """
+
+        y = np.arange(self.data.shape_native[0])
+        x = np.arange(self.data.shape_native[1])
+
+        return (x, y)
+
+    @cached_property
+    def data_interp(self) -> interpolate.RegularGridInterpolator:
+        """
+        Returns a 2D interpolation of the data, which is used to evaluate the data at any point in 2D space.
+        """
+
+        y = np.arange(self.data.shape_native[0])
+        x = np.arange(self.data.shape_native[1])
+
+        return interpolate.RegularGridInterpolator(
+                points=(x, y),
+                values=self.data.native,
+                bounds_error=False,
+                fill_value=0.0
+            )
