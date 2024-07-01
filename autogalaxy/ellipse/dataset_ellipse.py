@@ -56,7 +56,7 @@ class DatasetEllipse:
         -------
         The array of radii values that the isophotes are fitted to the data at.
         """
-        return np.logspace(self.radii_min, self.radii_max, self.radii_bins)
+        return np.logspace(np.log10(self.radii_min), np.log10(self.radii_max), self.radii_bins)
 
     @cached_property
     def points_interp(self) -> Tuple[np.ndarray, np.ndarray]:
