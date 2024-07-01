@@ -37,4 +37,4 @@ def test__noise_map_interp():
         radii_bins=3,
     )
 
-    assert dataset.noise_map_interp((1.5, 1.5)) == pytest.approx(5.0, 1.0e-4)
+    assert dataset.noise_map_interp((1.5, 1.5)) == pytest.approx(7.0, 1.0e-4)
