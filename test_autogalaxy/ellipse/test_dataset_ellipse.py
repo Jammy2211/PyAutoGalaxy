@@ -13,8 +13,6 @@ def test__radii_array():
         radii_bins=3,
     )
 
-    print(dataset.radii_array)
-
     assert dataset.radii_array == pytest.approx([1.0, np.sqrt(2.0), 2.0], 1.0e-4)
 
 def test__data_interp():
