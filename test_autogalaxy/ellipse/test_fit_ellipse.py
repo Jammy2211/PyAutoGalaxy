@@ -37,3 +37,17 @@ def test__noise_map():
     assert fit.noise_map[1] == pytest.approx(1.0, 1.0e-4)
 
 
+def test__log_likelihood():
+
+    dataset = ag.DatasetEllipse(
+        data=ag.Array2D.no_mask(
+            values=[[1.0, 2.0, 3.0], [4.0, 5.0, 6.0], [7.0, 8.0, 9.0]], pixel_scales=2.0
+        ),
+        noise_map=ag.Array2D.ones(shape_native=(3, 3), pixel_scales=1.0),
+    )
+
+    ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.5, 0.5), major_axis=1.0)
+
+    fit = ag.FitEllipse(dataset=dataset, ellipse=ellipse_0)
+
+    assert fit.log_likelihood == pytest.approx(-6.86901243618, 1.0e-4)
