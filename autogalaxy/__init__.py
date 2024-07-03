@@ -60,6 +60,7 @@ from . import plot
 from . import util
 from .ellipse.dataset_ellipse import DatasetEllipse
 from .ellipse.ellipse import Ellipse
+from .ellipse.fit_ellipse import FitEllipse
 from .operate.image import OperateImage
 from .operate.image import OperateImageList
 from .operate.image import OperateImageGalaxies

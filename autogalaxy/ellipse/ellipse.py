@@ -3,9 +3,14 @@ from typing import Tuple
 
 from autogalaxy.profiles.geometry_profiles import EllProfile
 
-class Ellipse(EllProfile):
 
-    def __init__(self, centre: Tuple[float, float] = (0.0, 0.0), ell_comps : Tuple[float, float] = (0.0, 0.0)):
+class Ellipse(EllProfile):
+    def __init__(
+        self,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
+        major_axis: float = 1.0,
+    ):
         """
         class representing an ellispe, which is used to perform ellipse fitting to 2D data (e.g. an image).
 
@@ -30,6 +35,7 @@ class Ellipse(EllProfile):
         """
 
         super().__init__(centre=centre, ell_comps=ell_comps)
+        self.major_axis = major_axis
 
     @property
     def eccentricity(self) -> float:
@@ -38,7 +44,8 @@ class Ellipse(EllProfile):
         """
         return (1.0 - self.axis_ratio) / (1.0 + self.axis_ratio)
 
-    def minor_axis_from(self, major_axis : float):
+    @property
+    def minor_axis(self):
         """
         The minor-axis of the ellipse for a given major-axis, computed as:
 
@@ -61,4 +68,25 @@ class Ellipse(EllProfile):
             The minor-axis of the ellipse.
         """
 
-        return major_axis * np.sqrt(1.0 - self.eccentricity ** 2.0)
+        return self.major_axis * np.sqrt(1.0 - self.eccentricity**2.0)
+
+    def ellipse_radii_from(self, angles_array: np.ndarray):
+        return np.divide(
+            self.major_axis * self.major_axis,
+            np.sqrt(
+                np.add(
+                    self.major_axis**2.0 * np.sin(angles_array - self.angle) ** 2.0,
+                    self.minor_axis**2.0 * np.cos(angles_array - self.angle) ** 2.0,
+                )
+            ),
+        )
+
+    def x_from(self, angles_array: np.ndarray):
+        ellipse_radii = self.ellipse_radii_from(angles_array=angles_array)
+
+        return ellipse_radii * np.cos(angles_array) + self.centre[1]
+
+    def y_from(self, angles_array: np.ndarray):
+        ellipse_radii = self.ellipse_radii_from(angles_array=angles_array)
+
+        return ellipse_radii * np.sin(angles_array) + self.centre[0]

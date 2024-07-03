@@ -3,8 +3,8 @@ import pytest
 
 import autogalaxy as ag
 
-def test__ellipticity():
 
+def test__ellipticity():
     ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0))
 
     assert ellipse.eccentricity == 0.0
@@ -21,8 +21,8 @@ def test__ellipticity():
 
     assert ellipse.eccentricity == pytest.approx(np.sqrt(2) / 2.0, 1.0e-4)
 
-def test__minor_axis_from():
 
+def test__minor_axis_from():
     ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0))
 
     assert ellipse.minor_axis_from(major_axis=1.0) == 1.0
