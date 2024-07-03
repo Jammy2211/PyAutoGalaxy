@@ -77,23 +77,40 @@ class Ellipse(EllProfile):
 
         return self.major_axis * np.sqrt(1.0 - self.eccentricity**2.0)
 
-    def ellipse_radii_from(self, angles_array: np.ndarray):
+    @property
+    def ellipse_radii_from_major_axis(self):
         return np.divide(
             self.major_axis * self.major_axis,
             np.sqrt(
                 np.add(
-                    self.major_axis**2.0 * np.sin(angles_array - self.angle) ** 2.0,
-                    self.minor_axis**2.0 * np.cos(angles_array - self.angle) ** 2.0,
+                    self.major_axis ** 2.0 * np.sin(self.angles_from_x0 - self.angle) ** 2.0,
+                    self.minor_axis ** 2.0 * np.cos(self.angles_from_x0 - self.angle) ** 2.0,
                 )
             ),
         )
 
-    def x_from(self, angles_array: np.ndarray):
-        ellipse_radii = self.ellipse_radii_from(angles_array=angles_array)
+    @property
+    def angles_from_x0(self) -> np.ndarray:
+        n = np.min([500, int(self.circular_radius)])
 
-        return ellipse_radii * np.cos(angles_array) + self.centre[1]
+        return np.linspace(0.0, 2.0 * np.pi, n)
 
-    def y_from(self, angles_array: np.ndarray):
-        ellipse_radii = self.ellipse_radii_from(angles_array=angles_array)
+    @property
+    def x_from_major_axis(self):
+        return self.ellipse_radii_from_major_axis * np.cos(self.angles_from_x0) + self.centre[1]
 
-        return ellipse_radii * np.sin(angles_array) + self.centre[0]
+    @property
+    def y_from_major_axis(self):
+        return self.ellipse_radii_from_major_axis * np.sin(self.angles_from_x0) + self.centre[0]
+
+    @property
+    def points_from_major_axis(self):
+
+        x = self.x_from_major_axis
+        y = self.y_from_major_axis
+
+        idx = np.logical_or(np.isnan(x), np.isnan(y))
+        if np.sum(idx) > 0.0:
+            raise NotImplementedError()
+
+        return np.stack(arrays=(y, x), axis=-1)

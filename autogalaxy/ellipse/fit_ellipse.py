@@ -22,23 +22,6 @@ class FitEllipse(aa.FitDataset):
         self.ellipse = ellipse
 
     @property
-    def angles_array(self):
-        n = np.min([500, int(self.circular_radius)])
-
-        return np.linspace(0.0, 2.0 * np.pi, n)
-
-    @property
-    def points(self):
-        x = self.ellipse.x_from(angles_array=self.angles_array)
-        y = self.ellipse.y_from(angles_array=self.angles_array)
-
-        idx = np.logical_or(np.isnan(x), np.isnan(y))
-        if np.sum(idx) > 0.0:
-            raise NotImplementedError()
-
-        return np.stack(arrays=(y, x), axis=-1)
-
-    @property
     def data(self) -> aa.Array1D:
         return aa.Array1D.no_mask(values=self.dataset.data_interp(self.points))
 
