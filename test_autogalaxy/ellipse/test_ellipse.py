@@ -68,3 +68,16 @@ def test__angles_from_x0():
 
     assert ellipse.angles_from_x0[0] == pytest.approx(0.0, 1.0e-4)
     assert ellipse.angles_from_x0[1] == pytest.approx(1.256637061, 1.0e-4)
+
+def test__x_from_major_axis():
+
+    ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
+
+    assert ellipse.x_from_major_axis[0] == pytest.approx(1.0, 1.0e-4)
+    assert ellipse.x_from_major_axis[1] == pytest.approx(0.30901699, 1.0e-4)
+
+
+    ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.5, 0.5), major_axis=1.0)
+
+    assert ellipse.x_from_major_axis[0] == pytest.approx(1.2713661551, 1.0e-4)
+    assert ellipse.x_from_major_axis[1] == pytest.approx(0.3613772984, 1.0e-4)
