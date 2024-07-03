@@ -1,3 +1,4 @@
+import numpy as np
 from typing import Tuple
 
 from autogalaxy.profiles.geometry_profiles import EllProfile
@@ -26,26 +27,38 @@ class Ellipse(EllProfile):
         :math: f = (1 - q) / (1 + q)
         :math: e_y = f * sin(2*\phi)
         :math: e_x = f * cos(2*\phi)
-
-        For an input (y,x) grid of Cartesian coordinates this is used to compute the elliptical coordinates of a
-        profile:
-
-        .. math:: \\xi = q^{0.5} * ((y-y_c^2 + x-x_c^2 / q^2)^{0.5}
-
-        Where:
-
-        y_c = profile y centre = `centre[0]`
-        x_c = profile x centre = `centre[1]`
-
-        The majority of elliptical profiles use \\xi to compute their image.
         """
 
         super().__init__(centre=centre, ell_comps=ell_comps)
 
     @property
-    def ellipticity(self) -> float:
+    def eccentricity(self) -> float:
         """
         The ellipticity of the ellipse, which is the factor by which the ellipse is offset from a circle.
         """
         return (1.0 - self.axis_ratio) / (1.0 + self.axis_ratio)
 
+    def minor_axis_from(self, major_axis : float):
+        """
+        The minor-axis of the ellipse for a given major-axis, computed as:
+
+        :math: b = a * sqrt(1 - e^2)
+
+        Where:
+
+        a = major-axis
+        b = minor-axis
+        e = eccentricity
+
+        Parameters
+        ----------
+        major_axis
+            The major-axis of the ellipse.
+
+        Returns
+        -------
+        float
+            The minor-axis of the ellipse.
+        """
+
+        return major_axis * np.sqrt(1.0 - self.eccentricity ** 2.0)
