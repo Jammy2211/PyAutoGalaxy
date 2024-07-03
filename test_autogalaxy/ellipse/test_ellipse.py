@@ -32,7 +32,7 @@ def test__ellipticity():
     assert ellipse.eccentricity == pytest.approx(np.sqrt(2) / 2.0, 1.0e-4)
 
 
-def test__minor_axis_from():
+def test__minor_axis():
     ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
 
     assert ellipse.minor_axis == 1.0
@@ -44,3 +44,15 @@ def test__minor_axis_from():
     ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.5), major_axis=1.0)
 
     assert ellipse.minor_axis == pytest.approx(0.866025403, 1.0e-4)
+
+def test__ellipse_radii_from_major_axis():
+
+    ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
+
+    assert ellipse.ellipse_radii_from_major_axis[0] == pytest.approx(1.0, 1.0e-4)
+    assert ellipse.ellipse_radii_from_major_axis[1] == pytest.approx(1.0, 1.0e-4)
+
+    ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.5), major_axis=1.0)
+
+    assert ellipse.ellipse_radii_from_major_axis[0] == pytest.approx(1.15470053, 1.0e-4)
+    assert ellipse.ellipse_radii_from_major_axis[1] == pytest.approx(1.012154498, 1.0e-4)

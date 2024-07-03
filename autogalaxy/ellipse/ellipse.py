@@ -78,7 +78,19 @@ class Ellipse(EllProfile):
         return self.major_axis * np.sqrt(1.0 - self.eccentricity**2.0)
 
     @property
-    def ellipse_radii_from_major_axis(self):
+    def ellipse_radii_from_major_axis(self) -> np.ndarray:
+        """
+        Returns the distance from the centre of the ellipse to every point on the ellipse, which are called
+        the ellipse radii.
+
+        The order of the ellipse radii is counter-clockwise from the major-axis of the ellipse, which is given
+        by the `angle` of the ellipse.
+
+        Returns
+        -------
+        np.ndarray
+            The ellipse radii from the major-axis of the ellipse.
+        """
         return np.divide(
             self.major_axis * self.major_axis,
             np.sqrt(
@@ -91,7 +103,7 @@ class Ellipse(EllProfile):
 
     @property
     def angles_from_x0(self) -> np.ndarray:
-        n = np.min([500, int(self.circular_radius)])
+        n = np.min([500, int(np.round(self.circular_radius, 1))])
 
         return np.linspace(0.0, 2.0 * np.pi, n)
 
