@@ -22,12 +22,12 @@ class FitEllipse(aa.FitDataset):
         self.ellipse = ellipse
 
     @property
-    def data(self) -> aa.Array1D:
-        return aa.Array1D.no_mask(values=self.dataset.data_interp(self.points))
+    def data(self) -> aa.ArrayIrregular:
+        return aa.ArrayIrregular(values=self.dataset.data_interp(self.ellipse.points_from_major_axis))
 
     @property
-    def noise_map(self):
-        return self.dataset.noise_map(self.points)
+    def noise_map(self) -> aa.ArrayIrregular:
+        return aa.ArrayIrregular(values=self.dataset.noise_map_interp(self.ellipse.points_from_major_axis))
 
     @property
     def signal_to_noise_map(self):
