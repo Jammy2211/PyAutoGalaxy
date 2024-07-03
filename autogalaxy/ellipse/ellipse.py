@@ -103,6 +103,23 @@ class Ellipse(EllProfile):
 
     @property
     def angles_from_x0(self) -> np.ndarray:
+        """
+        Returns the angles from the x-axis to a discrete number of points ranging from 0.0 to 2.0 * np.pi radians.
+
+        These angles are therefore not linked to the properties of the ellipse, they are just the angles from the
+        x-axis to a series of points on a circle.
+
+        They are subtracted by the `angle` of the ellipse to give the angles from the major-axis of the ellipse.
+
+        The number of angles computed is the minimum of 500 and the integer of the circular radius of the ellipse.
+        This value is chosen to ensure that the number of angles computed matches the number of pixels in the
+        data that the ellipse is being fitted to.
+
+        Returns
+        -------
+        np.ndarray
+            The angles from the x-axis to the points on the circle.
+        """
         n = np.min([500, int(np.round(self.circular_radius, 1))])
 
         return np.linspace(0.0, 2.0 * np.pi, n)
