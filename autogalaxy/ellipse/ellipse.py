@@ -71,8 +71,7 @@ class Ellipse(EllProfile):
 
         Returns
         -------
-        float
-            The minor-axis of the ellipse.
+        The minor-axis of the ellipse.
         """
 
         return self.major_axis * np.sqrt(1.0 - self.eccentricity**2.0)
@@ -88,8 +87,7 @@ class Ellipse(EllProfile):
 
         Returns
         -------
-        np.ndarray
-            The ellipse radii from the major-axis of the ellipse.
+        The ellipse radii from the major-axis of the ellipse.
         """
         return np.divide(
             self.major_axis * self.major_axis,
@@ -117,8 +115,7 @@ class Ellipse(EllProfile):
 
         Returns
         -------
-        np.ndarray
-            The angles from the x-axis to the points on the circle.
+        The angles from the x-axis to the points on the circle.
         """
         n = np.min([500, int(np.round(self.circular_radius, 1))])
 
@@ -132,8 +129,7 @@ class Ellipse(EllProfile):
 
         Returns
         -------
-        np.ndarray
-            The x-coordinates of the points on the ellipse.
+        The x-coordinates of the points on the ellipse.
         """
         return self.ellipse_radii_from_major_axis * np.cos(self.angles_from_x0) + self.centre[1]
 
@@ -145,13 +141,23 @@ class Ellipse(EllProfile):
 
         Returns
         -------
-        np.ndarray
-            The y-coordinates of the points on the ellipse.
+        The y-coordinates of the points on the ellipse.
         """
         return self.ellipse_radii_from_major_axis * np.sin(self.angles_from_x0) + self.centre[0]
 
     @property
-    def points_from_major_axis(self):
+    def points_from_major_axis(self) -> np.ndarray:
+        """
+        Returns the (y,x) coordinates of the points on the ellipse, starting from the major-axis of the ellipse
+        and moving counter-clockwise.
+
+        This is the format inputs into the inteprolation functions which match the ellipse to 2D data and enable
+        us to determine how well the ellipse represents the data.
+
+        Returns
+        -------
+        The (y,x) coordinates of the points on the ellipse.
+        """
 
         x = self.x_from_major_axis
         y = self.y_from_major_axis
