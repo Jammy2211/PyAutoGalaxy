@@ -38,6 +38,13 @@ class Ellipse(EllProfile):
         self.major_axis = major_axis
 
     @property
+    def circular_radius(self) -> float:
+        """
+        The radius of the circle that bounds the ellipse, assuming that the `major_axis` is the radius of the circle.
+        """
+        return 2.0 * np.pi * np.sqrt((2.0 * self.major_axis**2.0) / 2.0)
+
+    @property
     def eccentricity(self) -> float:
         """
         The ellipticity of the ellipse, which is the factor by which the ellipse is offset from a circle.

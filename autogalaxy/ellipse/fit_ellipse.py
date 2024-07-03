@@ -22,19 +22,8 @@ class FitEllipse(aa.FitDataset):
         self.ellipse = ellipse
 
     @property
-    def C(self):
-        return np.round(
-            2.0
-            * np.pi
-            * np.sqrt(
-                (self.ellipse.major_axis**2.0 + self.ellipse.major_axis**2.0) / 2.0
-            ),
-            1,
-        )
-
-    @property
     def angles_array(self):
-        n = np.min([500, int(self.C)])
+        n = np.min([500, int(self.circular_radius)])
 
         return np.linspace(0.0, 2.0 * np.pi, n)
 
@@ -50,16 +39,20 @@ class FitEllipse(aa.FitDataset):
         return np.stack(arrays=(y, x), axis=-1)
 
     @property
-    def data_interp(self):
-        return self.dataset.data_interp(self.points)
+    def data(self) -> aa.Array1D:
+        return aa.Array1D.no_mask(values=self.dataset.data_interp(self.points))
 
     @property
-    def noise_map_interp(self):
-        return self.dataset.noise_map_interp(self.points)
+    def noise_map(self):
+        return self.dataset.noise_map(self.points)
+
+    @property
+    def signal_to_noise_map(self):
+        return self.data / self.noise_map
 
     @property
     def model_data(self):
-        return self.data_interp - np.nanmean(self.data_interp)
+        return self.data - np.nanmean(self.data)
 
     @property
     def residual_map(self):
@@ -67,7 +60,7 @@ class FitEllipse(aa.FitDataset):
 
     @property
     def normalized_residual_map(self):
-        normalized_residual_map = (self.model_data) / self.noise_map_interp
+        normalized_residual_map = (self.model_data) / self.noise_map
 
         # NOTE:
         idx = np.logical_or(
@@ -87,7 +80,7 @@ class FitEllipse(aa.FitDataset):
 
     @property
     def noise_normalization(self):
-        return np.sum(np.log(2 * np.pi * self.noise_map_interp**2.0))
+        return np.sum(np.log(2 * np.pi * self.noise_map**2.0))
 
     @property
     def log_likelihood(self):
