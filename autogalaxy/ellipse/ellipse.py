@@ -138,7 +138,16 @@ class Ellipse(EllProfile):
         return self.ellipse_radii_from_major_axis * np.cos(self.angles_from_x0) + self.centre[1]
 
     @property
-    def y_from_major_axis(self):
+    def y_from_major_axis(self) -> np.ndarray:
+        """
+        Returns the y-coordinates of the points on the ellipse, starting from the y-coordinate of the major-axis
+        of the ellipse after rotation by its `angle` and moving counter-clockwise.
+
+        Returns
+        -------
+        np.ndarray
+            The y-coordinates of the points on the ellipse.
+        """
         return self.ellipse_radii_from_major_axis * np.sin(self.angles_from_x0) + self.centre[0]
 
     @property
