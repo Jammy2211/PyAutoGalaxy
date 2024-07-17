@@ -1,5 +1,7 @@
 import numpy as np
 
+from autoconf import cached_property
+
 import autoarray as aa
 
 from autogalaxy.ellipse.dataset_interp import DatasetInterp
@@ -7,7 +9,7 @@ from autogalaxy.ellipse.ellipse import Ellipse
 
 
 class FitEllipse(aa.FitDataset):
-    def __init__(self, dataset: DatasetInterp, ellipse: Ellipse):
+    def __init__(self, dataset: aa.Imaging, ellipse: Ellipse):
         """
         A fit to a `DatasetInterp` dataset, using a model image to represent the observed data and noise-map.
 
@@ -21,7 +23,7 @@ class FitEllipse(aa.FitDataset):
 
         self.ellipse = ellipse
 
-    @property
+    @cached_property
     def interp(self) -> DatasetInterp:
         """
         Returns a class which handles the interpolation of values from the image data and noise-map, so that they
