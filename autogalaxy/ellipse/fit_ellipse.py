@@ -2,14 +2,14 @@ import numpy as np
 
 import autoarray as aa
 
-from autogalaxy.ellipse.dataset_ellipse import DatasetEllipse
+from autogalaxy.ellipse.dataset_interp import DatasetInterp
 from autogalaxy.ellipse.ellipse import Ellipse
 
 
 class FitEllipse(aa.FitDataset):
-    def __init__(self, dataset: DatasetEllipse, ellipse: Ellipse):
+    def __init__(self, dataset: DatasetInterp, ellipse: Ellipse):
         """
-        A fit to a `DatasetEllipse` dataset, using a model image to represent the observed data and noise-map.
+        A fit to a `DatasetInterp` dataset, using a model image to represent the observed data and noise-map.
 
         Parameters
         ----------
@@ -20,6 +20,14 @@ class FitEllipse(aa.FitDataset):
         super().__init__(dataset=dataset)
 
         self.ellipse = ellipse
+
+    @property
+    def interp(self) -> DatasetInterp:
+        """
+        Returns a class which handles the interpolation of values from the image data and noise-map, so that they
+        can be mapped to each ellipse for the fit.
+        """
+        return DatasetInterp(dataset=self.dataset)
 
     @property
     def data(self) -> aa.ArrayIrregular:
@@ -36,7 +44,7 @@ class FitEllipse(aa.FitDataset):
         The data values of the ellipse fits, computed via a 2D interpolation of where the ellipse
         overlaps the data.
         """
-        return aa.ArrayIrregular(values=self.dataset.data_interp(self.ellipse.points_from_major_axis))
+        return aa.ArrayIrregular(values=self.interp.data_interp(self.ellipse.points_from_major_axis))
 
     @property
     def noise_map(self) -> aa.ArrayIrregular:
@@ -53,7 +61,7 @@ class FitEllipse(aa.FitDataset):
         The noise-map values of the ellipse fits, computed via a 2D interpolation of where the ellipse
         overlaps the noise-map.
         """
-        return aa.ArrayIrregular(values=self.dataset.noise_map_interp(self.ellipse.points_from_major_axis))
+        return aa.ArrayIrregular(values=self.interp.noise_map_interp(self.ellipse.points_from_major_axis))
 
     @property
     def signal_to_noise_map(self) -> aa.ArrayIrregular:

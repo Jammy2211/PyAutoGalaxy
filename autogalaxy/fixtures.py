@@ -147,6 +147,16 @@ def make_Planck15():
     return ag.cosmo.Planck15()
 
 
+
+# ELLIPSE FITING
+
+def make_dataset_interp_7x7():
+
+    imaging_7x7 = make_imaging_7x7()
+
+    return ag.DatasetInterp(dataset=imaging_7x7)
+
+
 # QUANTITY DATASET AND FIT #
 
 

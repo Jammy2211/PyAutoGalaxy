@@ -58,7 +58,7 @@ from . import aggregator as agg
 from . import exc
 from . import plot
 from . import util
-from .ellipse.dataset_ellipse import DatasetEllipse
+from .ellipse.dataset_interp import DatasetInterp
 from .ellipse.ellipse import Ellipse
 from .ellipse.fit_ellipse import FitEllipse
 from .operate.image import OperateImage
