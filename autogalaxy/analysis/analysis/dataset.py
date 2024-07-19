@@ -178,16 +178,6 @@ class AnalysisDataset(Analysis):
             prefix="dataset",
         )
         paths.save_json(
-            name="over_sampling_non_uniform",
-            object_dict=to_dict(self.dataset.over_sampling_non_uniform),
-            prefix="dataset",
-        )
-        paths.save_json(
-            name="over_sampling_pixelization",
-            object_dict=to_dict(self.dataset.over_sampling_pixelization),
-            prefix="dataset",
-        )
-        paths.save_json(
             name="settings_inversion",
             object_dict=to_dict(self.settings_inversion),
         )

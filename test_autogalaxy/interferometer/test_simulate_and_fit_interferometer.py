@@ -198,14 +198,14 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
     ] == pytest.approx(0.2, 1.0e-2)
     assert fit.log_likelihood == pytest.approx(fit_linear.log_likelihood, 1.0e-4)
 
-    galaxy_image = galaxy.image_2d_from(grid=dataset.grid)
+    galaxy_image = galaxy.image_2d_from(grid=dataset.grids.uniform)
 
     assert fit_linear.galaxy_model_image_dict[galaxy_linear] == pytest.approx(
         galaxy_image, 1.0e-4
     )
 
     galaxy_visibilities = galaxy.visibilities_from(
-        grid=dataset.grid, transformer=dataset.transformer
+        grid=dataset.grids.uniform, transformer=dataset.transformer
     )
 
     assert fit_linear.galaxy_model_visibilities_dict[galaxy_linear] == pytest.approx(
