@@ -52,7 +52,6 @@ Mesh [ag.mesh]
    Rectangular
    Delaunay
    Voronoi
-   VoronoiNN
 
 Regularization [ag.reg]
 -----------------------
