@@ -52,7 +52,7 @@ Mesh [ag.mesh]
    Rectangular
    Delaunay
    Voronoi
-   VoronoiNN
+   Voronoi
 
 Regularization [ag.reg]
 -----------------------
