@@ -32,7 +32,7 @@ class FitEllipse(aa.FitDataset):
         return DatasetInterp(dataset=self.dataset)
 
     @property
-    def data(self) -> aa.ArrayIrregular:
+    def data_interp(self) -> aa.ArrayIrregular:
         """
         Returns the data values of the dataset that the ellipse fits, which are computed by overlaying the ellipse over
         the 2D data and performing a 2D interpolation at discrete (y,x) coordinates on the ellipse.
@@ -49,7 +49,7 @@ class FitEllipse(aa.FitDataset):
         return aa.ArrayIrregular(values=self.interp.data_interp(self.ellipse.points_from_major_axis))
 
     @property
-    def noise_map(self) -> aa.ArrayIrregular:
+    def noise_map_interp(self) -> aa.ArrayIrregular:
         """
         Returns the noise-map values of the dataset that the ellipse fits, which are computed by overlaying the ellipse
         over the 2D noise-map and performing a 2D interpolation at discrete (y,x) coordinates on the ellipse.
@@ -66,7 +66,7 @@ class FitEllipse(aa.FitDataset):
         return aa.ArrayIrregular(values=self.interp.noise_map_interp(self.ellipse.points_from_major_axis))
 
     @property
-    def signal_to_noise_map(self) -> aa.ArrayIrregular:
+    def signal_to_noise_map_interp(self) -> aa.ArrayIrregular:
         """
         Returns the signal-to-noise-map of the dataset that the ellipse fits, which is computed by overlaying the ellipse
         over the 2D data and noise-map and performing a 2D interpolation at discrete (y,x) coordinates on the ellipse.
@@ -76,7 +76,7 @@ class FitEllipse(aa.FitDataset):
         The signal-to-noise-map values of the ellipse fits, computed via a 2D interpolation of where
         the ellipse overlaps the data and noise-map.
         """
-        return aa.ArrayIrregular(values=self.data / self.noise_map)
+        return aa.ArrayIrregular(values=self.data_interp / self.noise_map_interp)
 
     @property
     def model_data(self) -> aa.ArrayIrregular:
@@ -96,7 +96,7 @@ class FitEllipse(aa.FitDataset):
         -------
         The model data values of the ellipse fit, which are the data values minus the mean of the data values.
         """
-        return aa.ArrayIrregular(values=self.data - np.nanmean(self.data))
+        return self.data_interp
 
     @property
     def residual_map(self):
@@ -108,7 +108,7 @@ class FitEllipse(aa.FitDataset):
         -------
         The residual-map of the fit, which is the data minus the model data and therefore the same as the model data.
         """
-        return self.model_data
+        return aa.ArrayIrregular(values=self.model_data - np.nanmean(self.model_data))
 
     @property
     def normalized_residual_map(self) -> aa.ArrayIrregular:
@@ -124,7 +124,7 @@ class FitEllipse(aa.FitDataset):
         The normalized residual-map of the fit, which is the residual-map divided by the noise-map.
         """
 
-        normalized_residual_map = (self.model_data) / self.noise_map
+        normalized_residual_map = (self.residual_map) / self.noise_map_interp
 
         # NOTE:
         idx = np.logical_or(
@@ -173,7 +173,7 @@ class FitEllipse(aa.FitDataset):
         -------
         The noise normalization term of the log likelihood.
         """
-        return np.sum(np.log(2 * np.pi * self.noise_map**2.0))
+        return np.sum(np.log(2 * np.pi * self.noise_map_interp**2.0))
 
     @property
     def log_likelihood(self):
