@@ -45,66 +45,110 @@ def test__minor_axis():
 
     assert ellipse.minor_axis == pytest.approx(0.866025403, 1.0e-4)
 
-def test__ellipse_radii_from_major_axis():
 
+def test__ellipse_radii_from_major_axis():
     ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
 
-    assert ellipse.ellipse_radii_from_major_axis[0] == pytest.approx(1.0, 1.0e-4)
-    assert ellipse.ellipse_radii_from_major_axis[1] == pytest.approx(1.0, 1.0e-4)
+    assert ellipse.ellipse_radii_from_major_axis_from(pixel_scale=1.0)[
+        0
+    ] == pytest.approx(1.0, 1.0e-4)
+    assert ellipse.ellipse_radii_from_major_axis_from(pixel_scale=1.0)[
+        1
+    ] == pytest.approx(1.0, 1.0e-4)
 
     ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.5), major_axis=1.0)
 
-    assert ellipse.ellipse_radii_from_major_axis[0] == pytest.approx(1.15470053, 1.0e-4)
-    assert ellipse.ellipse_radii_from_major_axis[1] == pytest.approx(1.012154498, 1.0e-4)
+    assert ellipse.ellipse_radii_from_major_axis_from(pixel_scale=1.0)[
+        0
+    ] == pytest.approx(1.15470053, 1.0e-4)
+    assert ellipse.ellipse_radii_from_major_axis_from(pixel_scale=1.0)[
+        1
+    ] == pytest.approx(1.012154498, 1.0e-4)
+
 
 def test__angles_from_x0():
-
     ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
 
-    assert ellipse.angles_from_x0[0] == pytest.approx(0.0, 1.0e-4)
-    assert ellipse.angles_from_x0[1] == pytest.approx(1.25663706143, 1.0e-4)
+    assert ellipse.angles_from_x0_from(pixel_scale=1.0)[0] == pytest.approx(0.0, 1.0e-4)
+    assert ellipse.angles_from_x0_from(pixel_scale=1.0)[1] == pytest.approx(
+        1.25663706143, 1.0e-4
+    )
 
     ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.5, 0.5), major_axis=1.0)
 
-    assert ellipse.angles_from_x0[0] == pytest.approx(0.0, 1.0e-4)
-    assert ellipse.angles_from_x0[1] == pytest.approx(1.256637061, 1.0e-4)
+    assert ellipse.angles_from_x0_from(pixel_scale=1.0)[0] == pytest.approx(0.0, 1.0e-4)
+    assert ellipse.angles_from_x0_from(pixel_scale=1.0)[1] == pytest.approx(
+        1.256637061, 1.0e-4
+    )
+
 
 def test__x_from_major_axis():
-
     ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
 
-    assert ellipse.x_from_major_axis[0] == pytest.approx(1.0, 1.0e-4)
-    assert ellipse.x_from_major_axis[1] == pytest.approx(0.30901699, 1.0e-4)
+    assert ellipse.x_from_major_axis_from(pixel_scale=1.0)[0] == pytest.approx(
+        1.0, 1.0e-4
+    )
+    assert ellipse.x_from_major_axis_from(pixel_scale=1.0)[1] == pytest.approx(
+        0.30901699, 1.0e-4
+    )
 
     ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.5, 0.5), major_axis=1.0)
 
-    assert ellipse.x_from_major_axis[0] == pytest.approx(1.2713661551, 1.0e-4)
-    assert ellipse.x_from_major_axis[1] == pytest.approx(0.3613772984, 1.0e-4)
+    assert ellipse.x_from_major_axis_from(pixel_scale=1.0)[0] == pytest.approx(
+        1.2713661551, 1.0e-4
+    )
+    assert ellipse.x_from_major_axis_from(pixel_scale=1.0)[1] == pytest.approx(
+        0.3613772984, 1.0e-4
+    )
+
 
 def test__y_from_major_axis():
-
     ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
 
-    assert ellipse.y_from_major_axis[0] == pytest.approx(0.0, 1.0e-4)
-    assert ellipse.y_from_major_axis[1] == pytest.approx(0.951056516, 1.0e-4)
+    assert ellipse.y_from_major_axis_from(pixel_scale=1.0)[0] == pytest.approx(
+        0.0, 1.0e-4
+    )
+    assert ellipse.y_from_major_axis_from(pixel_scale=1.0)[1] == pytest.approx(
+        0.951056516, 1.0e-4
+    )
 
     ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.5, 0.5), major_axis=1.0)
 
-    assert ellipse.y_from_major_axis[0] == pytest.approx(0.0, 1.0e-4)
-    assert ellipse.y_from_major_axis[1] == pytest.approx(1.112204962, 1.0e-4)
+    assert ellipse.y_from_major_axis_from(pixel_scale=1.0)[0] == pytest.approx(
+        0.0, 1.0e-4
+    )
+    assert ellipse.y_from_major_axis_from(pixel_scale=1.0)[1] == pytest.approx(
+        1.112204962, 1.0e-4
+    )
+
 
 def test__points_from_major_axis():
-
     ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
 
-    assert ellipse.points_from_major_axis[0][1] == pytest.approx(1.0, 1.0e-4)
-    assert ellipse.points_from_major_axis[0][0] == pytest.approx(0.0, 1.0e-4)
-    assert ellipse.points_from_major_axis[1][1] == pytest.approx(0.30901699, 1.0e-4)
-    assert ellipse.points_from_major_axis[1][0] == pytest.approx(0.951056516, 1.0e-4)
+    assert ellipse.points_from_major_axis_from(pixel_scale=1.0)[0][1] == pytest.approx(
+        1.0, 1.0e-4
+    )
+    assert ellipse.points_from_major_axis_from(pixel_scale=1.0)[0][0] == pytest.approx(
+        0.0, 1.0e-4
+    )
+    assert ellipse.points_from_major_axis_from(pixel_scale=1.0)[1][1] == pytest.approx(
+        0.30901699, 1.0e-4
+    )
+    assert ellipse.points_from_major_axis_from(pixel_scale=1.0)[1][0] == pytest.approx(
+        0.951056516, 1.0e-4
+    )
 
     ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.5, 0.5), major_axis=1.0)
 
-    assert ellipse.points_from_major_axis[0][1] == pytest.approx(1.2713661551, 1.0e-4)
-    assert ellipse.points_from_major_axis[0][0] == pytest.approx(0.0, 1.0e-4)
-    assert ellipse.points_from_major_axis[1][1] == pytest.approx(0.3613772984, 1.0e-4)
-    assert ellipse.points_from_major_axis[1][0] == pytest.approx(1.112204962, 1.0e-4)
+    assert ellipse.points_from_major_axis_from(pixel_scale=1.0)[0][1] == pytest.approx(
+        1.2713661551, 1.0e-4
+    )
+    assert ellipse.points_from_major_axis_from(pixel_scale=1.0)[0][0] == pytest.approx(
+        0.0, 1.0e-4
+    )
+    assert ellipse.points_from_major_axis_from(pixel_scale=1.0)[1][1] == pytest.approx(
+        0.3613772984, 1.0e-4
+    )
+    assert ellipse.points_from_major_axis_from(pixel_scale=1.0)[1][0] == pytest.approx(
+        1.112204962, 1.0e-4
+    )

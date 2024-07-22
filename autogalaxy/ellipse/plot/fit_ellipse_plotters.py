@@ -1,3 +1,10 @@
+import matplotlib.pyplot as plt
+from typing import List
+
+from autoconf import conf
+
+from autoarray.plot.auto_labels import AutoLabels
+
 from autogalaxy.ellipse.fit_ellipse import FitEllipse
 from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_plot.one_d import MatPlot1D
@@ -11,7 +18,7 @@ from autogalaxy.plot.include.two_d import Include2D
 class FitEllipsePlotter(Plotter):
     def __init__(
         self,
-        fit: FitEllipse,
+        fit_list: List[FitEllipse],
         mat_plot_1d: MatPlot1D = MatPlot1D(),
         visuals_1d: Visuals1D = Visuals1D(),
         include_1d: Include1D = Include1D(),
@@ -28,7 +35,7 @@ class FitEllipsePlotter(Plotter):
             include_2d=include_2d,
         )
 
-        self.fit = fit
+        self.fit_list = fit_list
 
     def get_visuals_1d(self) -> Visuals1D:
         return self.visuals_1d
@@ -71,14 +78,14 @@ class FitEllipsePlotter(Plotter):
         if data:
             self.mat_plot_1d.plot_yx(
                 array=self.fit.data,
-                visuals_2d=self.get_visuals_1d(),
+                visuals_1d=self.get_visuals_1d(),
                 auto_labels=AutoLabels(title="Data", filename=f"data{suffix}"),
             )
 
         if noise_map:
             self.mat_plot_1d.plot_yx(
                 array=self.fit.noise_map,
-                visuals_2d=self.get_visuals_1d(),
+                visuals_1d=self.get_visuals_1d(),
                 auto_labels=AutoLabels(
                     title="Noise-Map", filename=f"noise_map{suffix}"
                 ),
@@ -87,7 +94,7 @@ class FitEllipsePlotter(Plotter):
         if signal_to_noise_map:
             self.mat_plot_1d.plot_yx(
                 array=self.fit.signal_to_noise_map,
-                visuals_2d=self.get_visuals_1d(),
+                visuals_1d=self.get_visuals_1d(),
                 auto_labels=AutoLabels(
                     title="Signal-To-Noise Map", filename=f"signal_to_noise_map{suffix}"
                 ),
@@ -96,7 +103,7 @@ class FitEllipsePlotter(Plotter):
         if model_data:
             self.mat_plot_1d.plot_yx(
                 array=self.fit.model_data,
-                visuals_2d=self.get_visuals_1d(),
+                visuals_1d=self.get_visuals_1d(),
                 auto_labels=AutoLabels(
                     title="Model Image", filename=f"model_image{suffix}"
                 ),
@@ -110,7 +117,7 @@ class FitEllipsePlotter(Plotter):
         if residual_map:
             self.mat_plot_1d.plot_yx(
                 array=self.fit.residual_map,
-                visuals_2d=self.get_visuals_1d(),
+                visuals_1d=self.get_visuals_1d(),
                 auto_labels=AutoLabels(
                     title="Residual Map", filename=f"residual_map{suffix}"
                 ),
@@ -119,7 +126,7 @@ class FitEllipsePlotter(Plotter):
         if normalized_residual_map:
             self.mat_plot_1d.plot_yx(
                 array=self.fit.normalized_residual_map,
-                visuals_2d=self.get_visuals_1d(),
+                visuals_1d=self.get_visuals_1d(),
                 auto_labels=AutoLabels(
                     title="Normalized Residual Map",
                     filename=f"normalized_residual_map{suffix}",
@@ -131,7 +138,7 @@ class FitEllipsePlotter(Plotter):
         if chi_squared_map:
             self.mat_plot_1d.plot_yx(
                 array=self.fit.chi_squared_map,
-                visuals_2d=self.get_visuals_1d(),
+                visuals_1d=self.get_visuals_1d(),
                 auto_labels=AutoLabels(
                     title="Chi-Squared Map", filename=f"chi_squared_map{suffix}"
                 ),
@@ -140,9 +147,60 @@ class FitEllipsePlotter(Plotter):
         if residual_flux_fraction_map:
             self.mat_plot_1d.plot_yx(
                 array=self.fit.residual_map,
-                visuals_2d=self.get_visuals_1d(),
+                visuals_1d=self.get_visuals_1d(),
                 auto_labels=AutoLabels(
                     title="Residual Flux Fraction Map",
                     filename=f"residual_flux_fraction_map{suffix}",
                 ),
             )
+
+    def figures_2d(
+        self,
+        data: bool = False,
+        suffix: str = "",
+    ):
+        """
+        Plots the individual attributes of the plotter's `FitEllipse` object in 1D.
+
+        The API is such that every plottable attribute of the `FitEllipse` object is an input parameter of type bool of
+        the function, which if switched to `True` means that it is plotted.
+
+        Parameters
+        ----------
+        data
+            Whether to make a 1D plot (via `imshow`) of the image data.
+        """
+
+        if data:
+            array, extent = self.mat_plot_2d.zoomed_array_and_extent_from(
+                array=self.fit_list[0].data
+            )
+
+            fig, ax = self.mat_plot_2d.figure.open()
+
+            aspect = self.mat_plot_2d.figure.aspect_from(
+                shape_native=array.shape_native
+            )
+
+            norm = self.mat_plot_2d.cmap.norm_from(array=array, use_log10=True)
+
+            origin = conf.instance["visualize"]["general"]["general"]["imshow_origin"]
+
+            plt.imshow(
+                X=array.native.array,
+                aspect=aspect,
+                cmap=self.mat_plot_2d.cmap.cmap,
+                norm=norm,
+                extent=extent,
+                origin=origin,
+            )
+
+            x = self.fit_list[0].ellipse.x_from_major_axis
+            y = self.fit_list[0].ellipse.y_from_major_axis
+
+            ax.plot(x, y, marker="o", markersize=2.5, color="w")
+
+            self.mat_plot_2d.output.to_figure(
+                structure=array, auto_filename="ellipse_fit"
+            )
+            self.mat_plot_2d.figure.close()

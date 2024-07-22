@@ -31,6 +31,22 @@ class FitEllipse(aa.FitDataset):
         """
         return DatasetInterp(dataset=self.dataset)
 
+    @cached_property
+    def points_from_major_axis(self) -> np.ndarray:
+        """
+        Returns the (y,x) coordinates on the ellipse that are used to interpolate the data and noise-map values.
+
+        These points are computed by overlaying the ellipse over the 2D data and noise-map and computing the (y,x)
+        coordinates on the ellipse that are closest to the data points.
+
+        Returns
+        -------
+        The (y,x) coordinates on the ellipse where the interpolation occurs.
+        """
+        return self.ellipse.points_from_major_axis_from(
+            pixel_scale=self.dataset.pixel_scales[0]
+        )
+
     @property
     def data_interp(self) -> aa.ArrayIrregular:
         """
@@ -46,7 +62,9 @@ class FitEllipse(aa.FitDataset):
         The data values of the ellipse fits, computed via a 2D interpolation of where the ellipse
         overlaps the data.
         """
-        return aa.ArrayIrregular(values=self.interp.data_interp(self.ellipse.points_from_major_axis))
+        return aa.ArrayIrregular(
+            values=self.interp.data_interp(self.points_from_major_axis)
+        )
 
     @property
     def noise_map_interp(self) -> aa.ArrayIrregular:
@@ -63,7 +81,9 @@ class FitEllipse(aa.FitDataset):
         The noise-map values of the ellipse fits, computed via a 2D interpolation of where the ellipse
         overlaps the noise-map.
         """
-        return aa.ArrayIrregular(values=self.interp.noise_map_interp(self.ellipse.points_from_major_axis))
+        return aa.ArrayIrregular(
+            values=self.interp.noise_map_interp(self.points_from_major_axis)
+        )
 
     @property
     def signal_to_noise_map_interp(self) -> aa.ArrayIrregular:
@@ -147,7 +167,7 @@ class FitEllipse(aa.FitDataset):
         -------
         The chi-squared-map of the fit, which is the normalized residual-map squared.
         """
-        return aa.ArrayIrregular(values=self.normalized_residual_map ** 2.0)
+        return aa.ArrayIrregular(values=self.normalized_residual_map**2.0)
 
     @property
     def chi_squared(self) -> float:

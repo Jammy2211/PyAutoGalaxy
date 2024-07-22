@@ -3,25 +3,25 @@ import autoarray as aa
 
 from autogalaxy.ellipse.fit_ellipse import FitEllipse
 
+
 class AnalysisEllipse(af.Analysis):
-
-    def __init__(self, dataset : aa.Imaging):
+    def __init__(self, dataset: aa.Imaging):
         """
-         Fits a model made of ellipses to an imaging dataset via a non-linear search.
+        Fits a model made of ellipses to an imaging dataset via a non-linear search.
 
-         The `Analysis` class defines the `log_likelihood_function` which fits the model to the dataset and returns the
-         log likelihood value defining how well the model fitted the data.
+        The `Analysis` class defines the `log_likelihood_function` which fits the model to the dataset and returns the
+        log likelihood value defining how well the model fitted the data.
 
-         It handles many other tasks, such as visualization, outputting results to hard-disk and storing results in
-         a format that can be loaded after the model-fit is complete.
+        It handles many other tasks, such as visualization, outputting results to hard-disk and storing results in
+        a format that can be loaded after the model-fit is complete.
 
-         This class is used for model-fits which fit ellipses to an imaging dataset.
+        This class is used for model-fits which fit ellipses to an imaging dataset.
 
-         Parameters
-         ----------
-         dataset
-             The `Imaging` dataset that the model containing ellipses is fitted to.
-         """
+        Parameters
+        ----------
+        dataset
+            The `Imaging` dataset that the model containing ellipses is fitted to.
+        """
         self.dataset = dataset
 
     def log_likelihood_function(self, instance: af.ModelInstance) -> float:
@@ -78,7 +78,4 @@ class AnalysisEllipse(af.Analysis):
 
         ellipse = instance.ellipse
 
-        return FitEllipse(
-            dataset=self.dataset,
-            ellipse=ellipse
-        )
+        return FitEllipse(dataset=self.dataset, ellipse=ellipse)

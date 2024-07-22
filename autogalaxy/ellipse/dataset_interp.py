@@ -50,7 +50,10 @@ class DatasetInterp:
         Returns a 2D interpolation of the data, which is used to evaluate the data at any point in 2D space.
         """
         return interpolate.RegularGridInterpolator(
-            points=self.points_interp, values=self.dataset.data.native, bounds_error=False, fill_value=0.0
+            points=self.points_interp,
+            values=self.dataset.data.native,
+            bounds_error=False,
+            fill_value=0.0,
         )
 
     @cached_property

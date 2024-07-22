@@ -76,31 +76,36 @@ class Ellipse(EllProfile):
 
         return self.major_axis * np.sqrt(1.0 - self.eccentricity**2.0)
 
-    @property
-    def ellipse_radii_from_major_axis(self) -> np.ndarray:
+    def total_points_from(self, pixel_scale: float) -> int:
         """
-        Returns the distance from the centre of the ellipse to every point on the ellipse, which are called
-        the ellipse radii.
+        Returns the total number of points on the ellipse based on the resolution of the data that the ellipse is
+        fitted to and interpolated over.
 
-        The order of the ellipse radii is counter-clockwise from the major-axis of the ellipse, which is given
-        by the `angle` of the ellipse.
+        This value is chosen to ensure that the number of points computed matches the number of pixels in the data
+        which the ellipse interpolates over. If the ellipse is bigger, the number of points increases in order to
+        ensure that the ellipse uses more of the data's pixels.
+
+        To determine the number of pixels the ellipse's circular radius in units of pixels is required. This is
+        why `pixel_scale` is an input parameter of this function and other functions in this class.
+
+        For computational efficiency, the maximum number of points is capped at 500, albeit few datasets will have
+        more than 500 pixels in their 2D data.
+
+        Parameters
+        ----------
+        pixel_scale
+            The pixel scale of the data that the ellipse is fitted to and interpolated over.
 
         Returns
         -------
-        The ellipse radii from the major-axis of the ellipse.
-        """
-        return np.divide(
-            self.major_axis * self.major_axis,
-            np.sqrt(
-                np.add(
-                    self.major_axis ** 2.0 * np.sin(self.angles_from_x0 - self.angle) ** 2.0,
-                    self.minor_axis ** 2.0 * np.cos(self.angles_from_x0 - self.angle) ** 2.0,
-                )
-            ),
-        )
+        The total number of points on the ellipse.
 
-    @property
-    def angles_from_x0(self) -> np.ndarray:
+        """
+        circular_radius_pixels = self.circular_radius / pixel_scale
+
+        return np.min([500, int(np.round(circular_radius_pixels, 1))])
+
+    def angles_from_x0_from(self, pixel_scale: float) -> np.ndarray:
         """
         Returns the angles from the x-axis to a discrete number of points ranging from 0.0 to 2.0 * np.pi radians.
 
@@ -113,40 +118,93 @@ class Ellipse(EllProfile):
         This value is chosen to ensure that the number of angles computed matches the number of pixels in the
         data that the ellipse is being fitted to.
 
+        Parameters
+        ----------
+        pixel_scale
+            The pixel scale of the data that the ellipse is fitted to and interpolated over.
+
         Returns
         -------
         The angles from the x-axis to the points on the circle.
         """
-        n = np.min([500, int(np.round(self.circular_radius, 1))])
+        total_points = self.total_points_from(pixel_scale)
 
-        return np.linspace(0.0, 2.0 * np.pi, n)
+        return np.linspace(0.0, 2.0 * np.pi, total_points)
 
-    @property
-    def x_from_major_axis(self)-> np.ndarray:
+    def ellipse_radii_from_major_axis_from(self, pixel_scale: float) -> np.ndarray:
+        """
+        Returns the distance from the centre of the ellipse to every point on the ellipse, which are called
+        the ellipse radii.
+
+        The order of the ellipse radii is counter-clockwise from the major-axis of the ellipse, which is given
+        by the `angle` of the ellipse.
+
+        Parameters
+        ----------
+        pixel_scale
+            The pixel scale of the data that the ellipse is fitted to and interpolated over.
+
+        Returns
+        -------
+        The ellipse radii from the major-axis of the ellipse.
+        """
+
+        angles_from_x0 = self.angles_from_x0_from(pixel_scale=pixel_scale)
+
+        return np.divide(
+            self.major_axis * self.major_axis,
+            np.sqrt(
+                np.add(
+                    self.major_axis**2.0 * np.sin(angles_from_x0 - self.angle) ** 2.0,
+                    self.minor_axis**2.0 * np.cos(angles_from_x0 - self.angle) ** 2.0,
+                )
+            ),
+        )
+
+    def x_from_major_axis_from(self, pixel_scale: float) -> np.ndarray:
         """
         Returns the x-coordinates of the points on the ellipse, starting from the x-coordinate of the major-axis
         of the ellipse after rotation by its `angle` and moving counter-clockwise.
+
+        Parameters
+        ----------
+        pixel_scale
+            The pixel scale of the data that the ellipse is fitted to and interpolated over.
 
         Returns
         -------
         The x-coordinates of the points on the ellipse.
         """
-        return self.ellipse_radii_from_major_axis * np.cos(self.angles_from_x0) + self.centre[1]
 
-    @property
-    def y_from_major_axis(self) -> np.ndarray:
+        angles_from_x0 = self.angles_from_x0_from(pixel_scale=pixel_scale)
+        ellipse_radii_from_major_axis = self.ellipse_radii_from_major_axis_from(
+            pixel_scale=pixel_scale
+        )
+
+        return ellipse_radii_from_major_axis * np.cos(angles_from_x0) + self.centre[1]
+
+    def y_from_major_axis_from(self, pixel_scale: float) -> np.ndarray:
         """
         Returns the y-coordinates of the points on the ellipse, starting from the y-coordinate of the major-axis
         of the ellipse after rotation by its `angle` and moving counter-clockwise.
+
+        Parameters
+        ----------
+        pixel_scale
+            The pixel scale of the data that the ellipse is fitted to and interpolated over.
 
         Returns
         -------
         The y-coordinates of the points on the ellipse.
         """
-        return self.ellipse_radii_from_major_axis * np.sin(self.angles_from_x0) + self.centre[0]
+        angles_from_x0 = self.angles_from_x0_from(pixel_scale=pixel_scale)
+        ellipse_radii_from_major_axis = self.ellipse_radii_from_major_axis_from(
+            pixel_scale=pixel_scale
+        )
 
-    @property
-    def points_from_major_axis(self) -> np.ndarray:
+        return ellipse_radii_from_major_axis * np.sin(angles_from_x0) + self.centre[0]
+
+    def points_from_major_axis_from(self, pixel_scale: float) -> np.ndarray:
         """
         Returns the (y,x) coordinates of the points on the ellipse, starting from the major-axis of the ellipse
         and moving counter-clockwise.
@@ -154,13 +212,18 @@ class Ellipse(EllProfile):
         This is the format inputs into the inteprolation functions which match the ellipse to 2D data and enable
         us to determine how well the ellipse represents the data.
 
+        Parameters
+        ----------
+        pixel_scale
+            The pixel scale of the data that the ellipse is fitted to and interpolated over.
+
         Returns
         -------
         The (y,x) coordinates of the points on the ellipse.
         """
 
-        x = self.x_from_major_axis
-        y = self.y_from_major_axis
+        x = self.x_from_major_axis_from(pixel_scale=pixel_scale)
+        y = self.y_from_major_axis_from(pixel_scale=pixel_scale)
 
         idx = np.logical_or(np.isnan(x), np.isnan(y))
         if np.sum(idx) > 0.0:
