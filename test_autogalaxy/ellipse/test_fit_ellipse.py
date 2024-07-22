@@ -29,4 +29,4 @@ def test__log_likelihood(imaging_7x7):
 
     fit = ag.FitEllipse(dataset=imaging_7x7, ellipse=ellipse_0)
 
-    assert fit.log_likelihood == pytest.approx(-0.111111111111111, 1.0e-4)
+    assert fit.log_likelihood == pytest.approx(0.0, 1.0e-4)

@@ -1,7 +1,6 @@
 import numpy as np
-from pathlib import Path
 from scipy import interpolate
-from typing import Tuple, Union
+from typing import Tuple
 
 from autoconf import cached_property
 
@@ -40,8 +39,8 @@ class DatasetInterp:
         The points on which the interpolation from the 2D grid of data is performed.
         """
 
-        y = np.arange(self.dataset.shape_native[0])
-        x = np.arange(self.dataset.shape_native[1])
+        x = self.dataset.mask.derive_grid.all_false.native[0, :, 1]
+        y = np.flip(self.dataset.mask.derive_grid.all_false.native[:, 0, 0])
 
         return (x, y)
 
@@ -50,12 +49,8 @@ class DatasetInterp:
         """
         Returns a 2D interpolation of the data, which is used to evaluate the data at any point in 2D space.
         """
-
-        y = np.arange(self.dataset.data.shape_native[0])
-        x = np.arange(self.dataset.data.shape_native[1])
-
         return interpolate.RegularGridInterpolator(
-            points=(x, y), values=self.dataset.data.native, bounds_error=False, fill_value=0.0
+            points=self.points_interp, values=self.dataset.data.native, bounds_error=False, fill_value=0.0
         )
 
     @cached_property
@@ -64,11 +59,8 @@ class DatasetInterp:
         Returns a 2D interpolation of the noise-map, which is used to evaluate the noise-map at any point in 2D space.
         """
 
-        y = np.arange(self.dataset.noise_map.shape_native[0])
-        x = np.arange(self.dataset.noise_map.shape_native[1])
-
         return interpolate.RegularGridInterpolator(
-            points=(x, y),
+            points=self.points_interp,
             values=self.dataset.noise_map.native,
             bounds_error=False,
             fill_value=0.0,

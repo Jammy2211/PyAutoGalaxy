@@ -19,7 +19,7 @@ def test__data_interp():
         dataset=dataset
     )
 
-    assert interp.data_interp((1.5, 1.5)) == pytest.approx(7.0, 1.0e-4)
+    assert interp.data_interp((0.5, 0.5)) == pytest.approx(7.0, 1.0e-4)
 
 
 def test__noise_map_interp():
@@ -38,4 +38,4 @@ def test__noise_map_interp():
         dataset=dataset
     )
 
-    assert interp.noise_map_interp((1.5, 1.5)) == pytest.approx(7.0, 1.0e-4)
+    assert interp.noise_map_interp((0.5, 0.5)) == pytest.approx(7.0, 1.0e-4)
