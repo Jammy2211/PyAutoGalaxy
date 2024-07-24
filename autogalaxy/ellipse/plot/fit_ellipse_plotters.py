@@ -195,10 +195,30 @@ class FitEllipsePlotter(Plotter):
                 origin=origin,
             )
 
-            x = self.fit_list[0].ellipse.x_from_major_axis
-            y = self.fit_list[0].ellipse.y_from_major_axis
+            x = self.fit_list[0].ellipse.x_from_major_axis_from(pixel_scale=self.fit_list[0].data.pixel_scale)
+            y = self.fit_list[0].ellipse.y_from_major_axis_from(pixel_scale=self.fit_list[0].data.pixel_scale)
 
             ax.plot(x, y, marker="o", markersize=2.5, color="w")
+
+            import numpy as np
+
+            levels = np.log10(np.mean(self.fit_list[0].data_interp))
+
+            print()
+            print(levels)
+
+            print(array.native.array)
+
+            ax.contour(
+                np.log10(array.native.array),
+                levels=[levels],
+                extent=extent,
+                colors="black",
+            )
+
+            # Used for 1D plot
+
+            # colors = [ax.cmap(ax.norm(level)) for level in levels][::-1]
 
             self.mat_plot_2d.output.to_figure(
                 structure=array, auto_filename="ellipse_fit"
