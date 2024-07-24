@@ -44,6 +44,9 @@ class FitEllipsePlotter(Plotter):
     def get_visuals_1d(self) -> Visuals1D:
         return self.visuals_1d
 
+    def get_visuals_2d(self):
+        return self.get_2d.via_mask_from(mask=self.fit_list[0].dataset.mask)
+
     def figures_2d(
         self,
         data: bool = False,
@@ -67,7 +70,6 @@ class FitEllipsePlotter(Plotter):
             #
             # # colors = [ax.cmap(ax.norm(level)) for level in levels][::-1]
 
-
             self.mat_plot_2d.contour = aplt.Contour(
                 manual_levels=[float(np.mean(self.fit_list[0].data_interp))]
             )
@@ -75,7 +77,7 @@ class FitEllipsePlotter(Plotter):
             x = self.fit_list[0].ellipse.x_from_major_axis_from(pixel_scale=self.fit_list[0].data.pixel_scale)
             y = self.fit_list[0].ellipse.y_from_major_axis_from(pixel_scale=self.fit_list[0].data.pixel_scale)
 
-            visuals_2d = self.visuals_2d + Visuals2D(
+            visuals_2d = self.get_visuals_2d() + Visuals2D(
                 lines=aa.Grid2DIrregular.from_yx_1d(y=y, x=x)
             )
 
@@ -86,5 +88,6 @@ class FitEllipsePlotter(Plotter):
                     title=f"Ellipse Fit",
                     filename=f"ellipse_fit",
                 ),
+            )
 
 
