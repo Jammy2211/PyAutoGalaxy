@@ -1,7 +1,11 @@
 import matplotlib.pyplot as plt
+import numpy as np
 from typing import List
 
 from autoconf import conf
+
+import autoarray as aa
+from autoarray import plot as aplt
 
 from autoarray.plot.auto_labels import AutoLabels
 
@@ -40,120 +44,6 @@ class FitEllipsePlotter(Plotter):
     def get_visuals_1d(self) -> Visuals1D:
         return self.visuals_1d
 
-    def figures_1d(
-        self,
-        data: bool = False,
-        noise_map: bool = False,
-        signal_to_noise_map: bool = False,
-        model_data: bool = False,
-        residual_map: bool = False,
-        normalized_residual_map: bool = False,
-        chi_squared_map: bool = False,
-        suffix: str = "",
-    ):
-        """
-        Plots the individual attributes of the plotter's `FitEllipse` object in 1D.
-
-        The API is such that every plottable attribute of the `FitEllipse` object is an input parameter of type bool of
-        the function, which if switched to `True` means that it is plotted.
-
-        Parameters
-        ----------
-        data
-            Whether to make a 1D plot (via `imshow`) of the image data.
-        noise_map
-            Whether to make a 1D plot (via `imshow`) of the noise map.
-        signal_to_noise_map
-            Whether to make a 1D plot (via `imshow`) of the signal-to-noise map.
-        model_image
-            Whether to make a 1D plot (via `imshow`) of the model image.
-        residual_map
-            Whether to make a 1D plot (via `imshow`) of the residual map.
-        normalized_residual_map
-            Whether to make a 1D plot (via `imshow`) of the normalized residual map.
-        chi_squared_map
-            Whether to make a 1D plot (via `imshow`) of the chi-squared map.
-        """
-
-        if data:
-            self.mat_plot_1d.plot_yx(
-                array=self.fit.data,
-                visuals_1d=self.get_visuals_1d(),
-                auto_labels=AutoLabels(title="Data", filename=f"data{suffix}"),
-            )
-
-        if noise_map:
-            self.mat_plot_1d.plot_yx(
-                array=self.fit.noise_map,
-                visuals_1d=self.get_visuals_1d(),
-                auto_labels=AutoLabels(
-                    title="Noise-Map", filename=f"noise_map{suffix}"
-                ),
-            )
-
-        if signal_to_noise_map:
-            self.mat_plot_1d.plot_yx(
-                array=self.fit.signal_to_noise_map,
-                visuals_1d=self.get_visuals_1d(),
-                auto_labels=AutoLabels(
-                    title="Signal-To-Noise Map", filename=f"signal_to_noise_map{suffix}"
-                ),
-            )
-
-        if model_data:
-            self.mat_plot_1d.plot_yx(
-                array=self.fit.model_data,
-                visuals_1d=self.get_visuals_1d(),
-                auto_labels=AutoLabels(
-                    title="Model Image", filename=f"model_image{suffix}"
-                ),
-            )
-
-        cmap_original = self.mat_plot_1d.cmap
-
-        if self.residuals_symmetric_cmap:
-            self.mat_plot_1d.cmap = self.mat_plot_1d.cmap.symmetric_cmap_from()
-
-        if residual_map:
-            self.mat_plot_1d.plot_yx(
-                array=self.fit.residual_map,
-                visuals_1d=self.get_visuals_1d(),
-                auto_labels=AutoLabels(
-                    title="Residual Map", filename=f"residual_map{suffix}"
-                ),
-            )
-
-        if normalized_residual_map:
-            self.mat_plot_1d.plot_yx(
-                array=self.fit.normalized_residual_map,
-                visuals_1d=self.get_visuals_1d(),
-                auto_labels=AutoLabels(
-                    title="Normalized Residual Map",
-                    filename=f"normalized_residual_map{suffix}",
-                ),
-            )
-
-        self.mat_plot_1d.cmap = cmap_original
-
-        if chi_squared_map:
-            self.mat_plot_1d.plot_yx(
-                array=self.fit.chi_squared_map,
-                visuals_1d=self.get_visuals_1d(),
-                auto_labels=AutoLabels(
-                    title="Chi-Squared Map", filename=f"chi_squared_map{suffix}"
-                ),
-            )
-
-        if residual_flux_fraction_map:
-            self.mat_plot_1d.plot_yx(
-                array=self.fit.residual_map,
-                visuals_1d=self.get_visuals_1d(),
-                auto_labels=AutoLabels(
-                    title="Residual Flux Fraction Map",
-                    filename=f"residual_flux_fraction_map{suffix}",
-                ),
-            )
-
     def figures_2d(
         self,
         data: bool = False,
@@ -172,55 +62,29 @@ class FitEllipsePlotter(Plotter):
         """
 
         if data:
-            array, extent = self.mat_plot_2d.zoomed_array_and_extent_from(
-                array=self.fit_list[0].data
-            )
 
-            fig, ax = self.mat_plot_2d.figure.open()
+            # # Used for 1D plot
+            #
+            # # colors = [ax.cmap(ax.norm(level)) for level in levels][::-1]
 
-            aspect = self.mat_plot_2d.figure.aspect_from(
-                shape_native=array.shape_native
-            )
 
-            norm = self.mat_plot_2d.cmap.norm_from(array=array, use_log10=True)
-
-            origin = conf.instance["visualize"]["general"]["general"]["imshow_origin"]
-
-            plt.imshow(
-                X=array.native.array,
-                aspect=aspect,
-                cmap=self.mat_plot_2d.cmap.cmap,
-                norm=norm,
-                extent=extent,
-                origin=origin,
+            self.mat_plot_2d.contour = aplt.Contour(
+                manual_levels=[float(np.mean(self.fit_list[0].data_interp))]
             )
 
             x = self.fit_list[0].ellipse.x_from_major_axis_from(pixel_scale=self.fit_list[0].data.pixel_scale)
             y = self.fit_list[0].ellipse.y_from_major_axis_from(pixel_scale=self.fit_list[0].data.pixel_scale)
 
-            ax.plot(x, y, marker="o", markersize=2.5, color="w")
-
-            import numpy as np
-
-            levels = np.log10(np.mean(self.fit_list[0].data_interp))
-
-            print()
-            print(levels)
-
-            print(array.native.array)
-
-            ax.contour(
-                np.log10(array.native.array),
-                levels=[levels],
-                extent=extent,
-                colors="black",
+            visuals_2d = self.visuals_2d + Visuals2D(
+                lines=aa.Grid2DIrregular.from_yx_1d(y=y, x=x)
             )
 
-            # Used for 1D plot
+            self.mat_plot_2d.plot_array(
+                array=self.fit_list[0].data,
+                visuals_2d=visuals_2d,
+                auto_labels = aplt.AutoLabels(
+                    title=f"Ellipse Fit",
+                    filename=f"ellipse_fit",
+                ),
 
-            # colors = [ax.cmap(ax.norm(level)) for level in levels][::-1]
 
-            self.mat_plot_2d.output.to_figure(
-                structure=array, auto_filename="ellipse_fit"
-            )
-            self.mat_plot_2d.figure.close()
