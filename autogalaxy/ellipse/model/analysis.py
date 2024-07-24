@@ -1,3 +1,5 @@
+from typing import List
+
 import autofit as af
 import autoarray as aa
 
@@ -54,11 +56,11 @@ class AnalysisEllipse(af.Analysis):
         float
             The log likelihood indicating how well this model instance fitted the imaging data.
         """
-        fit = self.fit_from(instance=instance)
+        fit_list = self.fit_list_from(instance=instance)
 
-        return fit.figure_of_merit
+        return sum(fit.log_likelihood for fit in fit_list)
 
-    def fit_from(self, instance: af.ModelInstance) -> FitEllipse:
+    def fit_list_from(self, instance: af.ModelInstance) -> List[FitEllipse]:
         """
         Given a model instance create a list of `FitEllipse` objects.
 
@@ -75,7 +77,5 @@ class AnalysisEllipse(af.Analysis):
         -------
         The fit of the ellipses to the imaging dataset, which includes the log likelihood.
         """
+        return [FitEllipse(dataset=self.dataset, ellipse=ellipse) for ellipse in instance.ellipses]
 
-        ellipse = instance.ellipse
-
-        return FitEllipse(dataset=self.dataset, ellipse=ellipse)
