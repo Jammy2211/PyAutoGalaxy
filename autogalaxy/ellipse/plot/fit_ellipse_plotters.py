@@ -71,14 +71,20 @@ class FitEllipsePlotter(Plotter):
             # # colors = [ax.cmap(ax.norm(level)) for level in levels][::-1]
 
             self.mat_plot_2d.contour = aplt.Contour(
-                manual_levels=[float(np.mean(self.fit_list[0].data_interp))]
+                manual_levels=np.sort([float(np.mean(fit.data_interp)) for fit in self.fit_list])
             )
 
-            x = self.fit_list[0].ellipse.x_from_major_axis_from(pixel_scale=self.fit_list[0].data.pixel_scale)
-            y = self.fit_list[0].ellipse.y_from_major_axis_from(pixel_scale=self.fit_list[0].data.pixel_scale)
+            ellipse_list = []
+
+            for fit in self.fit_list:
+
+                x = fit.ellipse.x_from_major_axis_from(pixel_scale=fit.dataset.pixel_scales[0])
+                y = fit.ellipse.y_from_major_axis_from(pixel_scale=fit.dataset.pixel_scales[0])
+
+                ellipse_list.append(aa.Grid2DIrregular.from_yx_1d(y=y, x=x))
 
             visuals_2d = self.get_visuals_2d() + Visuals2D(
-                lines=aa.Grid2DIrregular.from_yx_1d(y=y, x=x)
+                lines=ellipse_list
             )
 
             self.mat_plot_2d.plot_array(
