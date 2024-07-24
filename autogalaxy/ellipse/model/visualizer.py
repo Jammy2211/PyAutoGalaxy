@@ -2,7 +2,7 @@ import autofit as af
 
 from autoarray import exc
 
-from autogalaxy.imaging.model.plotter_interface import PlotterInterfaceImaging
+from autogalaxy.ellipse.model.plotter_interface import PlotterInterfaceEllipse
 
 
 class VisualizerEllipse(af.Visualizer):
@@ -27,7 +27,7 @@ class VisualizerEllipse(af.Visualizer):
             the imaging data.
         """
 
-        plotter = PlotterInterfaceImaging(image_path=paths.image_path)
+        plotter = PlotterInterfaceEllipse(image_path=paths.image_path)
 
         plotter.imaging(dataset=analysis.dataset)
 
@@ -48,13 +48,8 @@ class VisualizerEllipse(af.Visualizer):
 
         The visualization performed by this function includes:
 
-        - Images of the best-fit galaxies, including the images of each of its galaxies.
-
-        - Images of the best-fit `FitImaging`, including the model-image, residuals and chi-squared of its fit to
-          the imaging data.
-
-        - The adapt-images of the model-fit showing how the galaxies are used to represent different galaxies in
-          the dataset.
+        - Images of the best-fit ellipses over the data, superimposed with contours showing the traced path of the
+          ellipse around the data and thus how well it fits the data.
 
         The images output by this function are customized using the file `config/visualize/plots.yaml`.
 
@@ -70,23 +65,12 @@ class VisualizerEllipse(af.Visualizer):
             If True the visualization is being performed midway through the non-linear search before it is finished,
             which may change which images are output.
         """
-        fit = analysis.fit_from(instance=instance)
+        fit_list = analysis.fit_list_from(instance=instance)
 
-        plotter = PlotterInterfaceImaging(image_path=paths.image_path)
+        plotter = PlotterInterfaceEllipse(image_path=paths.image_path)
         plotter.imaging(dataset=analysis.dataset)
 
         try:
-            plotter.fit_imaging(fit=fit, during_analysis=during_analysis)
+            plotter.fit_ellipse(fit_list=fit_list, during_analysis=during_analysis)
         except exc.InversionException:
             pass
-
-        galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
-
-        plotter.galaxies(
-            galaxies=galaxies, grid=fit.grids.uniform, during_analysis=during_analysis
-        )
-        plotter.galaxies_1d(
-            galaxies=galaxies, grid=fit.grids.uniform, during_analysis=during_analysis
-        )
-        if fit.inversion is not None:
-            plotter.inversion(inversion=fit.inversion, during_analysis=during_analysis)
