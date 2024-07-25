@@ -4,9 +4,14 @@ import autofit as af
 import autoarray as aa
 
 from autogalaxy.ellipse.fit_ellipse import FitEllipse
-
+from autogalaxy.ellipse.model.result import ResultEllipse
+from autogalaxy.ellipse.model.visualizer import VisualizerEllipse
 
 class AnalysisEllipse(af.Analysis):
+
+    Result = ResultEllipse
+    Visualizer = VisualizerEllipse
+
     def __init__(self, dataset: aa.Imaging):
         """
         Fits a model made of ellipses to an imaging dataset via a non-linear search.
