@@ -65,35 +65,35 @@ class FitEllipsePlotter(Plotter):
         """
 
         if data:
-
             # # Used for 1D plot
             #
             # # colors = [ax.cmap(ax.norm(level)) for level in levels][::-1]
 
             self.mat_plot_2d.contour = aplt.Contour(
-                manual_levels=np.sort([float(np.mean(fit.data_interp)) for fit in self.fit_list])
+                manual_levels=np.sort(
+                    [float(np.mean(fit.data_interp)) for fit in self.fit_list]
+                )
             )
 
             ellipse_list = []
 
             for fit in self.fit_list:
-
-                x = fit.ellipse.x_from_major_axis_from(pixel_scale=fit.dataset.pixel_scales[0])
-                y = fit.ellipse.y_from_major_axis_from(pixel_scale=fit.dataset.pixel_scales[0])
+                x = fit.ellipse.x_from_major_axis_from(
+                    pixel_scale=fit.dataset.pixel_scales[0]
+                )
+                y = fit.ellipse.y_from_major_axis_from(
+                    pixel_scale=fit.dataset.pixel_scales[0], flip_y=True
+                )
 
                 ellipse_list.append(aa.Grid2DIrregular.from_yx_1d(y=y, x=x))
 
-            visuals_2d = self.get_visuals_2d() + Visuals2D(
-                lines=ellipse_list
-            )
+            visuals_2d = self.get_visuals_2d() + Visuals2D(lines=ellipse_list)
 
             self.mat_plot_2d.plot_array(
                 array=self.fit_list[0].data,
                 visuals_2d=visuals_2d,
-                auto_labels = aplt.AutoLabels(
+                auto_labels=aplt.AutoLabels(
                     title=f"Ellipse Fit",
                     filename=f"ellipse_fit",
                 ),
             )
-
-

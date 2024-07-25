@@ -45,11 +45,11 @@ class Ellipse(EllProfile):
         return 2.0 * np.pi * np.sqrt((2.0 * self.major_axis**2.0) / 2.0)
 
     @property
-    def eccentricity(self) -> float:
+    def ellipticity(self) -> float:
         """
         The ellipticity of the ellipse, which is the factor by which the ellipse is offset from a circle.
         """
-        return (1.0 - self.axis_ratio) / (1.0 + self.axis_ratio)
+        return np.sqrt(1 - self.axis_ratio**2.0)
 
     @property
     def minor_axis(self):
@@ -62,7 +62,7 @@ class Ellipse(EllProfile):
 
         a = major-axis
         b = minor-axis
-        e = eccentricity
+        e = ellipticity
 
         Parameters
         ----------
@@ -73,8 +73,7 @@ class Ellipse(EllProfile):
         -------
         The minor-axis of the ellipse.
         """
-
-        return self.major_axis * np.sqrt(1.0 - self.eccentricity**2.0)
+        return self.major_axis * np.sqrt(1.0 - self.ellipticity**2.0)
 
     def total_points_from(self, pixel_scale: float) -> int:
         """
@@ -101,6 +100,7 @@ class Ellipse(EllProfile):
         The total number of points on the ellipse.
 
         """
+
         circular_radius_pixels = self.circular_radius / pixel_scale
 
         return np.min([500, int(np.round(circular_radius_pixels, 1))])
@@ -152,11 +152,13 @@ class Ellipse(EllProfile):
         angles_from_x0 = self.angles_from_x0_from(pixel_scale=pixel_scale)
 
         return np.divide(
-            self.major_axis * self.major_axis,
+            self.major_axis * self.minor_axis,
             np.sqrt(
                 np.add(
-                    self.major_axis**2.0 * np.sin(angles_from_x0 - self.angle) ** 2.0,
-                    self.minor_axis**2.0 * np.cos(angles_from_x0 - self.angle) ** 2.0,
+                    self.major_axis**2.0
+                    * np.sin(angles_from_x0 - self.angle_radians) ** 2.0,
+                    self.minor_axis**2.0
+                    * np.cos(angles_from_x0 - self.angle_radians) ** 2.0,
                 )
             ),
         )
@@ -183,15 +185,26 @@ class Ellipse(EllProfile):
 
         return ellipse_radii_from_major_axis * np.cos(angles_from_x0) + self.centre[1]
 
-    def y_from_major_axis_from(self, pixel_scale: float) -> np.ndarray:
+    def y_from_major_axis_from(
+        self, pixel_scale: float, flip_y: bool = False
+    ) -> np.ndarray:
         """
         Returns the y-coordinates of the points on the ellipse, starting from the y-coordinate of the major-axis
         of the ellipse after rotation by its `angle` and moving counter-clockwise.
+
+        By default, the y-coordinates are multiplied by -1.0 and have the centre subtracted from them. This ensures
+        that the convention of the y-axis increasing upwards is followed, meaning that `ell_comps` adopt the
+        same definition as used for evaluating light profiles in PyAutoGalaxy.
+
+        When plotting the ellipses, y coordinates are flipped to match the convention of the y-axis increasing
+        downwards in 2D data.
 
         Parameters
         ----------
         pixel_scale
             The pixel scale of the data that the ellipse is fitted to and interpolated over.
+        flip_y
+            If True, the y-coordinates are flipped to match the convention of the y-axis increasing downwards in 2D data.
 
         Returns
         -------
@@ -202,7 +215,15 @@ class Ellipse(EllProfile):
             pixel_scale=pixel_scale
         )
 
-        return ellipse_radii_from_major_axis * np.sin(angles_from_x0) + self.centre[0]
+        if flip_y:
+            return (
+                ellipse_radii_from_major_axis * np.sin(angles_from_x0) + self.centre[0]
+            )
+
+        return (
+            -1.0 * (ellipse_radii_from_major_axis * np.sin(angles_from_x0))
+            - self.centre[0]
+        )
 
     def points_from_major_axis_from(self, pixel_scale: float) -> np.ndarray:
         """

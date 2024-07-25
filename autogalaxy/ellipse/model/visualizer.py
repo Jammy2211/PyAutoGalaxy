@@ -31,9 +31,6 @@ class VisualizerEllipse(af.Visualizer):
 
         plotter.imaging(dataset=analysis.dataset)
 
-        if analysis.adapt_images is not None:
-            plotter.adapt_images(adapt_images=analysis.adapt_images)
-
     @staticmethod
     def visualize(
         analysis,
@@ -70,7 +67,4 @@ class VisualizerEllipse(af.Visualizer):
         plotter = PlotterInterfaceEllipse(image_path=paths.image_path)
         plotter.imaging(dataset=analysis.dataset)
 
-        try:
-            plotter.fit_ellipse(fit_list=fit_list, during_analysis=during_analysis)
-        except exc.InversionException:
-            pass
+        plotter.fit_ellipse(fit_list=fit_list, during_analysis=during_analysis)

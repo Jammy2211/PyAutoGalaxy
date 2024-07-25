@@ -1,4 +1,6 @@
-from typing import List
+import logging
+import time
+from typing import Dict, List, Optional, Tuple
 
 import autofit as af
 import autoarray as aa
@@ -7,8 +9,12 @@ from autogalaxy.ellipse.fit_ellipse import FitEllipse
 from autogalaxy.ellipse.model.result import ResultEllipse
 from autogalaxy.ellipse.model.visualizer import VisualizerEllipse
 
-class AnalysisEllipse(af.Analysis):
+logger = logging.getLogger(__name__)
 
+logger.setLevel(level="INFO")
+
+
+class AnalysisEllipse(af.Analysis):
     Result = ResultEllipse
     Visualizer = VisualizerEllipse
 
@@ -82,5 +88,64 @@ class AnalysisEllipse(af.Analysis):
         -------
         The fit of the ellipses to the imaging dataset, which includes the log likelihood.
         """
-        return [FitEllipse(dataset=self.dataset, ellipse=ellipse) for ellipse in instance.ellipses]
+        return [
+            FitEllipse(dataset=self.dataset, ellipse=ellipse)
+            for ellipse in instance.ellipses
+        ]
 
+    def profile_log_likelihood_function(
+        self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None
+    ) -> Tuple[Dict, Dict]:
+        """
+        This function is optionally called throughout a model-fit to profile the log likelihood function.
+
+        All function calls inside the `log_likelihood_function` that are decorated with the `profile_func` are timed
+        with their times stored in a dictionary called the `run_time_dict`.
+
+        An `info_dict` is also created which stores information on aspects of the model and dataset that dictate
+        run times, so the profiled times can be interpreted with this context.
+
+        The results of this profiling are then output to hard-disk in the `preloads` folder of the model-fit results,
+        which they can be inspected to ensure run-times are as expected.
+
+        Parameters
+        ----------
+        instance
+            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
+            via a non-linear search).
+        paths
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            visualization and the pickled objects used by the aggregator output by this function.
+
+        Returns
+        -------
+        Two dictionaries, the profiling dictionary and info dictionary, which contain the profiling times of the
+        `log_likelihood_function` and information on the model and dataset used to perform the profiling.
+        """
+        repeats = 1
+
+        if isinstance(paths, af.DatabasePaths):
+            return
+
+        run_time_dict = {}
+
+        # Ensure numba functions are compiled before profiling begins.
+
+        self.log_likelihood_function(instance=instance)
+
+        start = time.time()
+
+        for _ in range(repeats):
+            try:
+                self.log_likelihood_function(instance=instance)
+            except Exception:
+                logger.info(
+                    "Profiling failed. Returning without outputting information."
+                )
+                return
+
+        fit_time = (time.time() - start) / repeats
+
+        run_time_dict["fit_time"] = fit_time
+
+        return run_time_dict, {}

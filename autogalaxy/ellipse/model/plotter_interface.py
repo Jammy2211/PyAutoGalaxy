@@ -56,7 +56,10 @@ class PlotterInterfaceEllipse(PlotterInterface):
             dataset_plotter.subplot_dataset()
 
     def fit_ellipse(
-        self, fit_list: List[FitEllipse], during_analysis: bool, subfolders: str = "fit_dataset"
+        self,
+        fit_list: List[FitEllipse],
+        during_analysis: bool,
+        subfolders: str = "fit_dataset",
     ):
         """
         Visualizes a `FitEllipse` object, which fits an imaging dataset.
@@ -91,12 +94,17 @@ class PlotterInterfaceEllipse(PlotterInterface):
             fit_list=fit_list, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
-        fit_plotter.figures_2d(
-            data=should_plot("data"),
-        )
+        # fit_plotter.figures_2d(
+        #     data=should_plot("data"),
+        # )
+
+        fit_plotter.figures_2d(data=True)
+
+        fit_plotter.mat_plot_2d.use_log10 = True
+
+        fit_plotter.figures_2d(data=True)
 
         if not during_analysis and should_plot("all_at_end_png"):
-
             mat_plot_2d = self.mat_plot_2d_from(subfolders=path.join(subfolders, "end"))
 
             fit_plotter = FitEllipsePlotter(
@@ -106,5 +114,3 @@ class PlotterInterfaceEllipse(PlotterInterface):
             fit_plotter.figures_2d(
                 data=True,
             )
-
-

@@ -62,6 +62,7 @@ class FitEllipse(aa.FitDataset):
         The data values of the ellipse fits, computed via a 2D interpolation of where the ellipse
         overlaps the data.
         """
+
         return aa.ArrayIrregular(
             values=self.interp.data_interp(self.points_from_major_axis)
         )
