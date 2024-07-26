@@ -33,6 +33,8 @@ def test__figure_of_merit(
     ellipse_list[0].major_axis = 1.0
     ellipse_list[1].major_axis = 2.0
 
+
+
     model = af.Collection(ellipses=ellipse_list)
     analysis = ag.AnalysisEllipse(dataset=masked_imaging_7x7)
 

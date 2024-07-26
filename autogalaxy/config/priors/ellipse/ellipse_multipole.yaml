@@ -1,0 +1,21 @@
+EllipseMultipole:
+  multipole_comps_0:
+    type: Uniform
+    lower_limit: -0.1
+    upper_limit: 0.1
+    width_modifier:
+      type: Absolute
+      value: 0.05
+    gaussian_limits:
+      lower: -inf
+      upper: inf
+  multipole_comps_1:
+    type: Uniform
+    lower_limit: -0.1
+    upper_limit: 0.1
+    width_modifier:
+      type: Absolute
+      value: 0.05
+    gaussian_limits:
+      lower: -inf
+      upper: inf
