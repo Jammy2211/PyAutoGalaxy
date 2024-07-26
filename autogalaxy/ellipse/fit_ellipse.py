@@ -5,7 +5,7 @@ from autoconf import cached_property
 import autoarray as aa
 
 from autogalaxy.ellipse.dataset_interp import DatasetInterp
-from autogalaxy.ellipse.ellipse import Ellipse
+from autogalaxy.ellipse.ellipse.ellipse import Ellipse
 
 
 class FitEllipse(aa.FitDataset):

@@ -17,6 +17,7 @@ class Ellipse(EllProfile):
         The elliptical components (`ell_comps`) of this profile are used to define the `axis_ratio` (q)
         and `angle` (\phi) :
 
+
         :math: \phi = (180/\pi) * arctan2(e_y / e_x) / 2
         :math: f = sqrt(e_y^2 + e_x^2)
         :math: q = (1 - f) / (1 + f)

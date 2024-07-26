@@ -1,7 +1,7 @@
 from typing import List
 
 from autogalaxy.analysis.result import ResultDataset
-from autogalaxy.ellipse.ellipse import Ellipse
+from autogalaxy.ellipse.ellipse.ellipse import Ellipse
 from autogalaxy.ellipse.fit_ellipse import FitEllipse
 
 
