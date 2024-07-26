@@ -75,6 +75,9 @@ class AnalysisEllipse(af.Analysis):
         """
         Given a model instance create a list of `FitEllipse` objects.
 
+        This function unpacks the `instance`, specifically the `ellipses` and (in input) the `multipoles` and uses
+        them to create a list of `FitEllipse` objects that are used to fit the model to the imaging data.
+
         This function is used in the `log_likelihood_function` to fit the model containing ellipses to the imaging data
         and compute the log likelihood.
 
@@ -88,10 +91,23 @@ class AnalysisEllipse(af.Analysis):
         -------
         The fit of the ellipses to the imaging dataset, which includes the log likelihood.
         """
-        return [
-            FitEllipse(dataset=self.dataset, ellipse=ellipse)
-            for ellipse in instance.ellipses
-        ]
+        fit_list = []
+
+        for i in range(len(instance.ellipses)):
+            ellipse = instance.ellipses[i]
+
+            try:
+                multipole_list = instance.multipoles[i]
+            except AttributeError:
+                multipole_list = None
+
+            fit = FitEllipse(
+                dataset=self.dataset, ellipse=ellipse, multipole_list=multipole_list
+            )
+
+            fit_list.append(fit)
+
+        return fit_list
 
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None
