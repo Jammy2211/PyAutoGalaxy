@@ -1,4 +1,5 @@
 import numpy as np
+from typing import List, Optional
 
 from autoconf import cached_property
 
@@ -6,10 +7,16 @@ import autoarray as aa
 
 from autogalaxy.ellipse.dataset_interp import DatasetInterp
 from autogalaxy.ellipse.ellipse.ellipse import Ellipse
+from autogalaxy.ellipse.ellipse.ellipse_multipole import EllipseMultipole
 
 
 class FitEllipse(aa.FitDataset):
-    def __init__(self, dataset: aa.Imaging, ellipse: Ellipse):
+    def __init__(
+        self,
+        dataset: aa.Imaging,
+        ellipse: Ellipse,
+        multipole_list: Optional[list[EllipseMultipole]] = None,
+    ):
         """
         A fit to a `DatasetInterp` dataset, using a model image to represent the observed data and noise-map.
 
@@ -22,6 +29,7 @@ class FitEllipse(aa.FitDataset):
         super().__init__(dataset=dataset)
 
         self.ellipse = ellipse
+        self.multipole_list = multipole_list
 
     @cached_property
     def interp(self) -> DatasetInterp:
@@ -39,13 +47,25 @@ class FitEllipse(aa.FitDataset):
         These points are computed by overlaying the ellipse over the 2D data and noise-map and computing the (y,x)
         coordinates on the ellipse that are closest to the data points.
 
+        If multipole components are used, the points are also perturbed by the multipole components.
+
         Returns
         -------
         The (y,x) coordinates on the ellipse where the interpolation occurs.
         """
-        return self.ellipse.points_from_major_axis_from(
+        points = self.ellipse.points_from_major_axis_from(
             pixel_scale=self.dataset.pixel_scales[0]
         )
+
+        if self.multipole_list is not None:
+            for multipole in self.multipole_list:
+                points = multipole.points_perturbed_from(
+                    pixel_scale=self.dataset.pixel_scales[0],
+                    points=points,
+                    ellipse=self.ellipse,
+                )
+
+        return points
 
     @property
     def data_interp(self) -> aa.ArrayIrregular:

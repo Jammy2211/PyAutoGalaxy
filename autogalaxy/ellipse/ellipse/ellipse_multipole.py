@@ -4,8 +4,8 @@ from typing import Tuple
 
 from autogalaxy.ellipse.ellipse.ellipse import Ellipse
 
-class EllipseMultipole:
 
+class EllipseMultipole:
     def __init__(
         self,
         m=4,
@@ -37,7 +37,9 @@ class EllipseMultipole:
         self.m = m
         self.multipole_comps = multipole_comps
 
-    def points_perturbed_from(self, pixel_scale, points, ellipse : Ellipse) -> np.ndarray:
+    def points_perturbed_from(
+        self, pixel_scale, points, ellipse: Ellipse
+    ) -> np.ndarray:
         """
         Returns the (y,x) coordinates of the input points, which are perturbed by the multipole of the ellipse.
 
@@ -62,7 +64,7 @@ class EllipseMultipole:
             self.multipole_comps[0] * np.sin(self.m * (angles - ellipse.angle_radians)),
         )
 
-        x = points[:,1] + (radial * np.cos(angles))
-        y = points[:,0] + (radial * np.sin(angles))
+        x = points[:, 1] + (radial * np.cos(angles))
+        y = points[:, 0] + (radial * np.sin(angles))
 
         return np.stack(arrays=(y, x), axis=-1)
