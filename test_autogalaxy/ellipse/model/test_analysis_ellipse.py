@@ -9,7 +9,15 @@ directory = path.dirname(path.realpath(__file__))
 
 
 def test__make_result__result_imaging_is_returned(masked_imaging_7x7):
-    model = af.Collection(galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5)))
+
+    ellipse_list = af.Collection(
+        af.Model(ag.Ellipse) for _ in range(2)
+    )
+
+    ellipse_list[0].major_axis = 1.0
+    ellipse_list[1].major_axis = 2.0
+
+    model = af.Collection(ellipses=ellipse_list)
 
     analysis = ag.AnalysisEllipse(dataset=masked_imaging_7x7)
 
