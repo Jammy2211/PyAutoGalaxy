@@ -197,8 +197,8 @@ class Ellipse(EllProfile):
         that the convention of the y-axis increasing upwards is followed, meaning that `ell_comps` adopt the
         same definition as used for evaluating light profiles in PyAutoGalaxy.
 
-        When plotting the ellipses, y coordinates are flipped to match the convention of the y-axis increasing
-        downwards in 2D data.
+        When plotting the ellipses, y coordinates must be flipped to match the convention of the y-axis increasing
+        downwards in 2D data, which is performed by setting `flip_y=True`.
 
         Parameters
         ----------
@@ -226,13 +226,16 @@ class Ellipse(EllProfile):
             - self.centre[0]
         )
 
-    def points_from_major_axis_from(self, pixel_scale: float) -> np.ndarray:
+    def points_from_major_axis_from(self, pixel_scale: float, flip_y: bool = False ) -> np.ndarray:
         """
         Returns the (y,x) coordinates of the points on the ellipse, starting from the major-axis of the ellipse
         and moving counter-clockwise.
 
         This is the format inputs into the inteprolation functions which match the ellipse to 2D data and enable
         us to determine how well the ellipse represents the data.
+
+        When plotting the ellipses, y coordinates must be flipped to match the convention of the y-axis increasing
+        downwards in 2D data, which is performed by setting `flip_y=True`.
 
         Parameters
         ----------
@@ -245,7 +248,7 @@ class Ellipse(EllProfile):
         """
 
         x = self.x_from_major_axis_from(pixel_scale=pixel_scale)
-        y = self.y_from_major_axis_from(pixel_scale=pixel_scale)
+        y = self.y_from_major_axis_from(pixel_scale=pixel_scale, flip_y=flip_y)
 
         idx = np.logical_or(np.isnan(x), np.isnan(y))
         if np.sum(idx) > 0.0:

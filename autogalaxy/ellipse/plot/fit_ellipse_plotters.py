@@ -78,12 +78,11 @@ class FitEllipsePlotter(Plotter):
             ellipse_list = []
 
             for fit in self.fit_list:
-                x = fit.ellipse.x_from_major_axis_from(
-                    pixel_scale=fit.dataset.pixel_scales[0]
-                )
-                y = fit.ellipse.y_from_major_axis_from(
-                    pixel_scale=fit.dataset.pixel_scales[0], flip_y=True
-                )
+
+                points = fit.points_from_major_axis_from(flip_y=True)
+
+                x = points[:, 1]
+                y = points[:, 0]
 
                 ellipse_list.append(aa.Grid2DIrregular.from_yx_1d(y=y, x=x))
 

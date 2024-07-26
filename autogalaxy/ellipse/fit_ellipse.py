@@ -15,7 +15,7 @@ class FitEllipse(aa.FitDataset):
         self,
         dataset: aa.Imaging,
         ellipse: Ellipse,
-        multipole_list: Optional[list[EllipseMultipole]] = None,
+        multipole_list: Optional[List[EllipseMultipole]] = None,
     ):
         """
         A fit to a `DatasetInterp` dataset, using a model image to represent the observed data and noise-map.
@@ -39,8 +39,7 @@ class FitEllipse(aa.FitDataset):
         """
         return DatasetInterp(dataset=self.dataset)
 
-    @cached_property
-    def points_from_major_axis(self) -> np.ndarray:
+    def points_from_major_axis_from(self, flip_y : bool = False) -> np.ndarray:
         """
         Returns the (y,x) coordinates on the ellipse that are used to interpolate the data and noise-map values.
 
@@ -49,12 +48,15 @@ class FitEllipse(aa.FitDataset):
 
         If multipole components are used, the points are also perturbed by the multipole components.
 
+        When plotting the ellipses, y coordinates must be flipped to match the convention of the y-axis increasing
+        downwards in 2D data, which is performed by setting `flip_y=True`.
+
         Returns
         -------
         The (y,x) coordinates on the ellipse where the interpolation occurs.
         """
         points = self.ellipse.points_from_major_axis_from(
-            pixel_scale=self.dataset.pixel_scales[0]
+            pixel_scale=self.dataset.pixel_scales[0], flip_y=flip_y
         )
 
         if self.multipole_list is not None:
@@ -66,6 +68,17 @@ class FitEllipse(aa.FitDataset):
                 )
 
         return points
+
+    @cached_property
+    def _points_from_major_axis(self) -> np.ndarray:
+        """
+        Returns cached (y,x) coordinates on the ellipse that are used to interpolate the data and noise-map values.
+
+        Returns
+        -------
+        The (y,x) coordinates on the ellipse where the interpolation occurs.
+        """
+        return self.points_from_major_axis_from()
 
     @property
     def data_interp(self) -> aa.ArrayIrregular:
@@ -84,7 +97,7 @@ class FitEllipse(aa.FitDataset):
         """
 
         return aa.ArrayIrregular(
-            values=self.interp.data_interp(self.points_from_major_axis)
+            values=self.interp.data_interp(self._points_from_major_axis)
         )
 
     @property
@@ -103,7 +116,7 @@ class FitEllipse(aa.FitDataset):
         overlaps the noise-map.
         """
         return aa.ArrayIrregular(
-            values=self.interp.noise_map_interp(self.points_from_major_axis)
+            values=self.interp.noise_map_interp(self._points_from_major_axis)
         )
 
     @property

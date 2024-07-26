@@ -35,8 +35,8 @@ def test__points_from_major_axis(imaging_7x7):
 
     fit = ag.FitEllipse(dataset=imaging_7x7, ellipse=ellipse_0)
 
-    assert fit.points_from_major_axis[1, 0] == pytest.approx(-0.21232, 1.0e-4)
-    assert fit.points_from_major_axis[1, 1] == pytest.approx(0.068987, 1.0e-4)
+    assert fit._points_from_major_axis[1, 0] == pytest.approx(-0.21232, 1.0e-4)
+    assert fit._points_from_major_axis[1, 1] == pytest.approx(0.068987, 1.0e-4)
 
 
 def test___points_from_major_axis__multipole(imaging_7x7):
@@ -48,5 +48,5 @@ def test___points_from_major_axis__multipole(imaging_7x7):
         dataset=imaging_7x7, ellipse=ellipse_0, multipole_list=[multipole]
     )
 
-    assert fit.points_from_major_axis[1, 0] == pytest.approx(-0.542453, 1.0e-4)
-    assert fit.points_from_major_axis[1, 1] == pytest.approx(-0.038278334, 1.0e-4)
+    assert fit._points_from_major_axis[1, 0] == pytest.approx(-0.542453, 1.0e-4)
+    assert fit._points_from_major_axis[1, 1] == pytest.approx(-0.038278334, 1.0e-4)
