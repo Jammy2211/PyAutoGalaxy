@@ -8,8 +8,6 @@ import autoarray as aa
 from autogalaxy.profiles.geometry_profiles import EllProfile
 from autogalaxy.operate.deflections import OperateDeflections
 
-from autogalaxy import exc
-
 
 class MassProfile(EllProfile, OperateDeflections):
     def __init__(

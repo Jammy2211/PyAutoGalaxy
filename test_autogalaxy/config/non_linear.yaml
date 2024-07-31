@@ -25,7 +25,7 @@ mcmc:
       iterations_per_update: 2500
       remove_state_files_at_end: true
 mock:
-  MockOptimizer:
+  MockMLEr:
     initialize:
       method: prior
     printing:

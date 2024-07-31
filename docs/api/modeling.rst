@@ -25,7 +25,7 @@ Non-linear Searches
 A non-linear search is an algorithm which fits a model to data.
 
 **PyAutoGalaxy** currently supports three types of non-linear search algorithms: nested samplers,
-Markov Chain Monte Carlo (MCMC) and optimizers.
+Markov Chain Monte Carlo (MCMC) and Maximum Likelihood Estimaotrs (MLE).
 
 .. currentmodule:: autofit
 
@@ -35,6 +35,8 @@ Markov Chain Monte Carlo (MCMC) and optimizers.
    :recursive:
 
    Nautilus
+   LBFGS
+   BFGS
    DynestyDynamic
    Emcee
    PySwarmsLocal
