@@ -25,7 +25,7 @@ mcmc:
       iterations_per_update: 2500
       remove_state_files_at_end: true
 mock:
-  MockOptimizer:
+  MockMLEr:
     initialize:
       method: prior
     printing:
@@ -102,19 +102,6 @@ nest:
       walks: 5
     settings:
       stagger_resampling_likelihood: false
-    updates:
-      iterations_per_update: 2500
-      remove_state_files_at_end: true
-optimize:
-  DownhillSimplex:
-    search:
-      disp: 1
-      ftol: 0.0001
-      full_output: 0
-      maxfun: null
-      maxiter: null
-      retall: 0
-      xtol: 0.0001
     updates:
       iterations_per_update: 2500
       remove_state_files_at_end: true
