@@ -76,21 +76,13 @@ class AbstractToInversion:
         self.run_time_dict = run_time_dict
 
     @property
-    def convolver(self):
-        try:
-            return self.dataset.convolver
-        except AttributeError:
-            return None
+    def border_relocator(self) -> Optional[aa.BorderRelocator]:
+        """
+        Returns the border relocator, which relocates pixels from the border of the inversion to the edge of the
+        inversion, which is used to prevent edge effects in the reconstruction.
 
-    @property
-    def transformer(self):
-        try:
-            return self.dataset.transformer
-        except AttributeError:
-            return None
-
-    @property
-    def border_relocator(self):
+        Border relocation is only used if the `use_border_relocator` attribute is True in the `SettingsInversion` object.
+        """
         if self.settings_inversion.use_border_relocator:
             return self.dataset.grids.border_relocator
 
@@ -156,6 +148,34 @@ class GalaxiesToInversion(AbstractToInversion):
     def cls_light_profile_func_list_galaxy_dict_from(
         self, cls: Type
     ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
+        """
+        Returns a dictionary associating each linear light profile with its galaxy.
+
+        The linear algebra used to perform the inversion is based on the image of each linear light profile, which are
+        passed one-by-one to the inversion to set up the mapping matrix. This function iterates over all galaxies
+        and their light profiles, extracting the linear light profiles.
+
+        The images are associated with the galaxy they belong to, which is used by other functions in this class to
+        reconstruct the overall images of the galaxies.
+
+        Special behaviour is implemented for the case where a galaxy has a `Basis` object, which contains a light
+        of light profiles grouped into one object (e.g. when performing a multi Gaussian expansion). In this case,
+        the function extracts all linear light profiles from the `Basis` object and associates them with the galaxy.
+
+        the interface between the extracted linear light profiles and inversion module comes from the
+        `LightProfileLinearObjFuncList` object, which uses the `image_2d_from` method of each light profile to compute
+        the linear algebra matrices (e.g. the `mapping_matrix`).
+
+        Parameters
+        ----------
+        cls
+            the type of light profile to extract from the galaxies, which should either be a `LightProfileLinear` or
+            `Basis` object.
+
+        Returns
+        -------
+
+        """
         if not self.galaxies.has(cls=cls):
             return {}
 
