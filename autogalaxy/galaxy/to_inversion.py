@@ -28,6 +28,32 @@ class AbstractToInversion:
         preloads=Preloads(),
         run_time_dict: Optional[Dict] = None,
     ):
+        """
+        Abstract class which interfaces a dataset object and model component with the inversion module. to setup a
+        linear algebra calculation which solves for the intensity values of the model components.
+
+        For example, the model component may consist of galaxies with linear light profiles, where this
+        object computes the image of each light profile and sets so that they become the mapping matrix used
+        in the linear algebra calculation.
+
+        The galaxies may also contain one or more pixelizations, which use mappers to define the linear algebra
+        calculation. This class extracts all pixelizations and pairs them with the data so as to setup the
+        mappers that are used in the linear algebra calculation.
+
+        Parameters
+        ----------
+        dataset
+            The dataset containing the data which the inversion is performed on.
+        adapt_images
+            Images which certain pixelization model components may use to adapt their properties to the dataset,
+            for example congregating the pixelization's pixels to the galaxies in the dataset.
+        settings_inversion
+            The settings of the inversion, which controls how the linear algebra calculation is performed.
+        preloads
+            Preloads of the inversion, which are used to speed up the linear algebra calculation.
+        run_time_dict
+            A dictionary of run-time values used to compute the inversion, for example the noise-map normalization.
+        """
         if dataset is not None:
             if dataset.noise_covariance_matrix is not None:
                 raise aa.exc.InversionException(
