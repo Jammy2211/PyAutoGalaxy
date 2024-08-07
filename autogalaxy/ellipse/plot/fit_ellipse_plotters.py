@@ -78,7 +78,6 @@ class FitEllipsePlotter(Plotter):
             ellipse_list = []
 
             for fit in self.fit_list:
-
                 points = fit.points_from_major_axis_from(flip_y=True)
 
                 x = points[:, 1]

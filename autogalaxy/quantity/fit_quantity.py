@@ -72,7 +72,7 @@ class FitQuantity(aa.FitImaging):
         """
         if isinstance(self.data, aa.VectorYX2D):
             return FitQuantity(
-                dataset=self.dataset.model_curve,
+                dataset=self.dataset.y,
                 light_mass_obj=self.light_mass_obj,
                 func_str=self.func_str,
                 model_data_manual=self.model_data.y,

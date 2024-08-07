@@ -226,7 +226,9 @@ class Ellipse(EllProfile):
             - self.centre[0]
         )
 
-    def points_from_major_axis_from(self, pixel_scale: float, flip_y: bool = False ) -> np.ndarray:
+    def points_from_major_axis_from(
+        self, pixel_scale: float, flip_y: bool = False
+    ) -> np.ndarray:
         """
         Returns the (y,x) coordinates of the points on the ellipse, starting from the major-axis of the ellipse
         and moving counter-clockwise.
