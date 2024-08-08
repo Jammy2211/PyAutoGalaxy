@@ -100,6 +100,18 @@ class AbstractToInversion:
 
     @property
     def transformer(self) -> Optional[Union[aa.TransformerNUFFT, aa.TransformerDFT]]:
+        """
+        Returns the transformer of the interferometer dataset, if the inversion is performed on an interferometer
+        dataset.
+
+        The `GalaxiesToInversion` class acts as an interface between the dataset and inversion module for
+        both imaging and interferometer datasets. Only interferometer datasets have a transformer, thus this property
+        ensures that for an imaging dataset code which references a transformer does not raise an error.
+
+        Returns
+        -------
+        The transformer of the interferometer dataset, if it is an interferometer dataset.
+        """
         try:
             return self.dataset.transformer
         except AttributeError:
