@@ -451,6 +451,48 @@ class GalaxiesToInversion(AbstractToInversion):
         adapt_galaxy_image: aa.Array2D,
         image_plane_mesh_grid: Optional[aa.Grid2DIrregular] = None,
     ) -> aa.AbstractMapper:
+        """
+        Returns a `Mapper` object from the attributes required to create one, which are extracted and computed
+        from the dataset and galaxies.
+
+        The `Mapper` object is used by a pixelization to perform an inversion. It maps pixels from the dataset's
+        `data` to the pixels of the `mesh` which reconstruct the data via the inversion. These mappings are used to
+        construct the `mapping_matrix` and other linear algebra matrices used in the inversion.
+
+        This function is quite complex due to requirements from the child project PyAutoLens. In PyAutoLens, the
+        `Mapper` object has grids corresponding to both the image-plane (e.g. the pixels of the dataset) and the
+        source-plane (e.g. after gravitational lensing). There are also separate grids for the data and mesh pixels.
+        In total, this means there are four grids: `image_plane_data_grid`, `image_plane_mesh_grid`,
+        `source_plane_data_grid` and `source_plane_mesh_grid`. Lensing calculations are performed before these
+        grids are passed  to this function.
+
+        In PyAutoGalaxy, there is no lensing and therefore the `image_plane_data_grid` and `source_plane_data_grid`
+        are identical, as are the `image_plane_mesh_grid` and `source_plane_mesh_grid`. This function therefore has
+        an overly complex API, as it is designed to support PyAutoLens's use-cases.
+
+        Parameters
+        ----------
+        mesh
+            The mesh of the pixelization, which defines the pixels used to reconstruct the data (e.g. `Voronoi`).
+        regularization
+            The regularization scheme used to regularize the mesh pixel's reconstructed fluxes.
+        source_plane_mesh_grid
+            The mesh-grid of the source-plane which reconstructs the data (e.g. the centre of the `Voronoi` cells
+            after lensing). In PyAutoGalaxy, this is identical to the `image_plane_mesh_grid`.
+        source_plane_data_grid
+            The data-grid of the source-plane, which are the ray-traced coordinates of the image-plane pixels
+            that align with the image data. In PyAutoGalaxy, this is identical to the `image_plane_data_grid`.
+        adapt_galaxy_image
+            Images which certain pixelizations use to adapt their properties to the dataset, for example congregating
+            the pixelization's pixels to the brightest regions of the image.
+        image_plane_mesh_grid
+            The mesh-grid of the image-plane, which are the centres of the pixels of the dataset. This is only required
+            if the pixelization has an `image_mesh` attribute.
+
+        Returns
+        -------
+        A `Mapper` object which maps the dataset's data to the pixelization's mesh.
+        """
         mapper_grids = mesh.mapper_grids_from(
             mask=self.dataset.mask,
             border_relocator=self.border_relocator,
@@ -473,6 +515,24 @@ class GalaxiesToInversion(AbstractToInversion):
 
     @cached_property
     def mapper_galaxy_dict(self) -> Dict[aa.AbstractMapper, Galaxy]:
+        """
+        Returns a dictionary associating each `Mapper` object with the galaxy it belongs to.
+
+        The docstring of the function `mapper_from` describes the `Mapper` object in detail, and is used
+        in this function to create the `Mapper` objects which are associated with the galaxies.
+
+        In brief, the `Mappers` are used by pixelizations to perform an inversion. They map pixels from the dataset's
+        `data` to the pixels of the `mesh` which reconstruct the data via the inversion. These mappings are used to
+        construct the `mapping_matrix` and other linear algebra matrices used in the inversion.
+
+        This function essentially finds all galaxies with pixelizations, performs all necessary calculations to
+        set up the `Mapper` objects (e.g. compute the `image_plane_mesh_grid`), and then associates each `Mapper`
+        with the galaxy it belongs to.
+
+        Returns
+        -------
+        A dictionary associating each `Mapper` object with the galaxy it belongs to.
+        """
         if not self.galaxies.galaxy_has_cls(cls=aa.Pixelization):
             return {}
 
@@ -512,6 +572,22 @@ class GalaxiesToInversion(AbstractToInversion):
 
     @property
     def inversion(self) -> aa.AbstractInversion:
+        """
+        Returns an inversion object from the dataset, galaxies and inversion settings.
+
+        The inversion uses all linear light profiles and pixelizations in the galaxies to fit the data.
+
+        It solves for the linear light profile intensities and pixelization mesh pixel values via linear algebra,
+        finding the solution which best fits the data after regularization is applied.
+
+        The `GalaiesToInversion` object acts as an interface between the dataset and galaxies and the inversion module,
+        with many of its functions required to set up the inputs to the inversion object, primarily
+        the `linear_obj_list` and `linear_obj_galaxy_dict` properties.
+
+        Returns
+        -------
+        The inversion object which fits the dataset using the galaxies.
+        """
         inversion = inversion_from(
             dataset=self.dataset,
             linear_obj_list=self.linear_obj_list,
