@@ -45,6 +45,11 @@ class AbstractToInversion:
         it acts as an interface between the dataset and galaxies and the inversion module, extracting the
         necessary information from galaxies and passing it to the inversion module.
 
+        The modeling object may also contain standard light profiles which have an input `intensity` which is not
+        solved for via linear algebra. These profiles should have already been evaluated and subtracted from the
+        dataset before the inversion is performed. This is how an inversion is set up in the fit
+        modules (e.g. `FitImaging`).
+
         Parameters
         ----------
         dataset
@@ -122,6 +127,8 @@ class AbstractToInversion:
         """
         Returns the border relocator, which relocates pixels from the border of the inversion to the edge of the
         inversion, which is used to prevent edge effects in the reconstruction.
+
+        A full description of the border relocator is given in the `BorderRelocator` class in PyAutoArray.
 
         Border relocation is only used if the `use_border_relocator` attribute is True in the `SettingsInversion` object.
         """
@@ -212,10 +219,16 @@ class GalaxiesToInversion(AbstractToInversion):
         it acts as an interface between the dataset and galaxies and the inversion module, extracting the
         necessary information from galaxies and passing it to the inversion module.
 
+        The galaxies may also contain standard light profiles which have an input `intensity` which is not solved for
+        via linear algebra. These profiles should have already been evaluated and subtracted from the dataset before
+        the inversion is performed. This is how an inversion is set up in the fit modules (e.g. `FitImaging`).
+
         Parameters
         ----------
         dataset
             The dataset containing the data which the inversion is performed on.
+        galaxies
+            The list of galaxies which are fitted to the dataset via the inversion.
         adapt_images
             Images which certain pixelizations use to adapt their properties to the dataset, for example congregating
             the pixelization's pixels to the brightest regions of the image.
@@ -245,26 +258,37 @@ class GalaxiesToInversion(AbstractToInversion):
         self, cls: Type
     ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
         """
-        Returns a dictionary associating each linear light profile with its galaxy.
+        Returns a dictionary associating each list of linear light profiles with the galaxy they belong to.
 
-        The linear algebra used to perform the inversion is based on the image of each linear light profile, which are
-        passed one-by-one to the inversion to set up the mapping matrix. This function iterates over all galaxies
-        and their light profiles, extracting the linear light profiles.
+        This function iterates over all galaxies and their light profiles, extracting their linear light profiles and
+        for each ga;axy grouping them into a `LightProfileLinearObjFuncList` object, which is associated with the
+        galaxy via the dictionary.
 
-        The images are associated with the galaxy they belong to, which is used by other functions in this class to
-        reconstruct the overall images of the galaxies.
+        This `LightProfileLinearObjFuncList` object contains the attributes (e.g. the data `grid`, `light_profiles`)
+        and functionality (e.g. a `mapping_matrix` method) that are required to perform the inversion. It is
+        in this method that the `image_2d_from` method of each light profile is used to compute the linear algebra
+        matrices.
 
-        Special behaviour is implemented for the case where a galaxy has a `Basis` object, which contains a light
-        of light profiles grouped into one object (e.g. when performing a multi Gaussian expansion). In this case,
-        the function extracts all linear light profiles from the `Basis` object and associates them with the galaxy.
+        Special behaviour is implemented for the case where a galaxy has a `Basis` object, which contains a list
+        of light profiles grouped into one object (e.g. when performing a multi Gaussian expansion where 30+ linear
+        light profile Gaussians are often used). In this case, the function extracts all linear light profiles from
+        the `Basis` object and associates them with the galaxy.
 
-        the interface between the extracted linear light profiles and inversion module comes from the
-        `LightProfileLinearObjFuncList` object, which uses the `image_2d_from` method of each light profile to compute
-        the linear algebra matrices (e.g. the `mapping_matrix`).
+        It is expected that only two inputs are passed into the `cls` parameter, either `LightProfileLinear` or `Basis`.
+        However, a specific linear light profile class (e.g. `Sersic`) could be input if extracting a specific type of
+        light profile is desired.
+
+        There is a noteable reason why a different `LightProfileLinearObjFuncList` object is created for each
+        galaxy. In the project PyAutoLens, an inversion is performed on a strong lens, consisting of a lens galaxy
+        and source galaxy whose grids are different (the source-plane grid is deflected by the lens galaxy).
+
+        In this case, because each `LightProfileLinearObjFuncList` object is associated with a different galaxy
+        it is also associated with a different grid. Users of PyAutoLens should therefore be aware that in
+        the `lens.to_inversion` module multiple `GalaxiesToInversion` objects are used to setup the inversion in this
+        way.
 
         Parameters
         ----------
-        cls
             the type of light profile to extract from the galaxies, which should either be a `LightProfileLinear` or
             `Basis` object.
 
