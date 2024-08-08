@@ -289,12 +289,13 @@ class GalaxiesToInversion(AbstractToInversion):
 
         Parameters
         ----------
-            the type of light profile to extract from the galaxies, which should either be a `LightProfileLinear` or
-            `Basis` object.
+        cls
+            The class of the light profiles which are extracted from the galaxies, which is
+            typically `LightProfileLinear` or `Basis`.
 
         Returns
         -------
-
+        A dictionary associating each list of linear light profiles with the galaxy they belong to.
         """
         if not self.galaxies.has(cls=cls):
             return {}
@@ -331,6 +332,31 @@ class GalaxiesToInversion(AbstractToInversion):
     def lp_linear_func_list_galaxy_dict(
         self,
     ) -> Dict[LightProfileLinearObjFuncList, Galaxy]:
+        """
+        Returns a dictionary associating each list of linear light profiles with the galaxy they belong to.
+
+        You should first refer to the docstring of the `cls_light_profile_func_list_galaxy_dict_from` method for a
+        description of this method.
+
+        In brief, this method iterates over all galaxies and their light profiles, extracting their linear light profiles
+        and for each galaxy grouping them into a `LightProfileLinearObjFuncList` object, which is associated with the
+        galaxy via the dictionary. It also extracts linear light profiles from `Basis` objects and makes this
+        associated.
+
+        The `LightProfileLinearObjFuncList` object contains the attributes (e.g. the data `grid`, `light_profiles`)
+        and functionality (e.g. a `mapping_matrix` method) that are required to perform the inversion.
+
+        This function first creates a dictionary of linear light profiles associated with each galaxy, and then
+        does the same for all `Basis` objects. The two dictionaries are then combined and returned.
+
+        In the project PyAutoLens, this function is overwritten in order to fully account how ray tracing
+        changes the images of each galaxy light profile. Users of PyAutoLens should therefore be aware that in
+        the `lens.to_inversion` module this function behaves differently.
+
+        Returns
+        -------
+        A dictionary associating each list of linear light profiles and basis objects with the galaxy they belong to.
+        """
         lp_linear_light_profile_func_list_galaxy_dict = (
             self.cls_light_profile_func_list_galaxy_dict_from(cls=LightProfileLinear)
         )
