@@ -374,6 +374,34 @@ class GalaxiesToInversion(AbstractToInversion):
     def image_plane_mesh_grid_list(
         self,
     ) -> Optional[List[aa.Grid2DIrregular]]:
+        """
+        Returns a list of image-plane mesh-grids, which are image-plane grids defining the centres of the pixels of
+        the pixelization's mesh (e.g. the centres of Voronoi pixels).
+
+        The `image_mesh` attribute of the pixelization object defines whether the centre of each mesh pixel are
+        determined in the image-plane. When this is the case, the pixelization therefore has an image-plane mesh-grid,
+        which needs to be computed before the inversion is performed.
+
+        This function iterates over all galaxies with pixelizations, determines which pixelizations have an
+        `image_mesh` and for these pixelizations computes the image-plane mesh-grid.
+
+        It returns a list of all image-plane mesh-grids, which in the functions `mapper_from` and `mapper_galaxy_dict`
+        are grouped into a `Mapper` object with other information required to perform the inversion using the
+        pixelization.
+
+        The order of this list is not important, because the `linear_obj_galaxy_dict` function associates each
+        mapper object (and therefore image-plane mesh-grid) with the galaxy it belongs to and is therefore used
+        elsewhere in the code (e.g. the fit module) to match inversion results to galaxies.
+
+        Certain image meshes adapt their pixels to the dataset, for example congregating the pixels to the brightest
+        regions of the image. This requires that `adapt_images` are used when setting up the image-plane mesh-grid.
+        This function uses the `adapt_images` attribute of the `GalaxiesToInversion` object pass these images and
+        raise an error if they are not present.
+
+        Returns
+        -------
+        A list of image-plane mesh-grids, one for each pixelization with an image mesh.
+        """
         if not self.galaxies.galaxy_has_cls(cls=aa.Pixelization):
             return None
 
