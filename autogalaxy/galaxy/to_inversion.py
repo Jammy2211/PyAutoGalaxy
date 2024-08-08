@@ -12,7 +12,6 @@ from autogalaxy.profiles.light.linear import (
     LightProfileLinearObjFuncList,
 )
 from autogalaxy.profiles.basis import Basis
-from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
@@ -29,24 +28,30 @@ class AbstractToInversion:
         run_time_dict: Optional[Dict] = None,
     ):
         """
-        Abstract class which interfaces a dataset object and model component with the inversion module. to setup a
-        linear algebra calculation which solves for the intensity values of the model components.
+        Abstract class which interfaces a dataset and input modeling object (e.g. galaxies, a tracer) with the
+        inversion module. to setup a linear algebra calculation.
 
-        For example, the model component may consist of galaxies with linear light profiles, where this
-        object computes the image of each light profile and sets so that they become the mapping matrix used
-        in the linear algebra calculation.
+        The galaxies may contain linear light profiles whose `intensity` values are solved for via linear algebra in
+        order to best-fit the data. In this case, this class extracts the linear light profiles, of all galaxies,
+        computes their images and passes them to the `inversion` module such that they become the  `mapping_matrix`
+        used in the linear algebra calculation.
 
-        The galaxies may also contain one or more pixelizations, which use mappers to define the linear algebra
-        calculation. This class extracts all pixelizations and pairs them with the data so as to setup the
-        mappers that are used in the linear algebra calculation.
+        The galaxies may also contain pixelizations, which use a mesh (e.g. a Voronoi mesh) and regularization scheme
+        to reconstruct the galaxy's light. This class extracts all pixelizations and uses them to set up `Mapper`
+        objects which pair the dataset and pixelization to again set up the appropriate `mapping_matrix` and
+        other linear algebra matrices (e.g. the `regularization_matrix`).
+
+        This class does not perform the inversion or compute any of the linear algebra matrices itself. Instead,
+        it acts as an interface between the dataset and galaxies and the inversion module, extracting the
+        necessary information from galaxies and passing it to the inversion module.
 
         Parameters
         ----------
         dataset
             The dataset containing the data which the inversion is performed on.
         adapt_images
-            Images which certain pixelization model components may use to adapt their properties to the dataset,
-            for example congregating the pixelization's pixels to the galaxies in the dataset.
+            Images which certain pixelizations use to adapt their properties to the dataset, for example congregating
+            the pixelization's pixels to the brightest regions of the image.
         settings_inversion
             The settings of the inversion, which controls how the linear algebra calculation is performed.
         preloads
@@ -74,6 +79,31 @@ class AbstractToInversion:
 
         self.preloads = preloads
         self.run_time_dict = run_time_dict
+
+    @property
+    def convolver(self) -> Optional[aa.Convolver]:
+        """
+        Returns the convolver of the imaging dataset, if the inversion is performed on an imaging dataset.
+
+        The `GalaxiesToInversion` class acts as an interface between the dataset and inversion module for
+        both imaging and interferometer datasets. Only imaging datasets have a convolver, thus this property
+        ensures that for an interferometer dataset code which references a convolver does not raise an error.
+
+        Returns
+        -------
+        The convolver of the imaging dataset, if it is an imaging dataset.
+        """
+        try:
+            return self.dataset.convolver
+        except AttributeError:
+            return None
+
+    @property
+    def transformer(self) -> Optional[Union[aa.TransformerNUFFT, aa.TransformerDFT]]:
+        try:
+            return self.dataset.transformer
+        except AttributeError:
+            return None
 
     @property
     def border_relocator(self) -> Optional[aa.BorderRelocator]:
@@ -105,6 +135,21 @@ class AbstractToInversion:
     def linear_obj_galaxy_dict(
         self,
     ) -> Dict[Union[LightProfileLinearObjFuncList, aa.AbstractMapper], Galaxy]:
+        """
+        Returns a dictionary associating every linear object (e.g. a linear light profile or mapper) with the galaxy
+        it belongs to.
+
+        This object is primarily used by fit objects (e.g. `FitImaging`, `FitInterferometer`) after the
+        inversion has been performed, to extract the individual reconstruct images of each galaxy.
+
+        For example, if three galaxies are fitted via an inversion, we need to be able to extract the individual
+        linear profiles from the inversion and associate them with the correct galaxy. This dictionary provides
+        this association.
+
+        Returns
+        -------
+        The dictionary associating linear objects with galaxies.
+        """
         lp_linear_func_galaxy_dict = self.lp_linear_func_list_galaxy_dict
 
         mapper_galaxy_dict = self.mapper_galaxy_dict
@@ -113,11 +158,18 @@ class AbstractToInversion:
 
     @cached_property
     def linear_obj_list(self) -> List[aa.LinearObj]:
-        return list(self.linear_obj_galaxy_dict.keys())
+        """
+        Returns a list of linear objects (e.g. linear light profiles or mappers) which are used to perform the
+        inversion.
 
-    @cached_property
-    def regularization_list(self) -> List[aa.AbstractRegularization]:
-        return [linear_obj.regularization for linear_obj in self.linear_obj_list]
+        This list is passed directly to the inversion module, and thus acts as a the final interface between the
+        galaxies and the inversion module.
+
+        Returns
+        -------
+        The list of linear objects used to perform the inversion.
+        """
+        return list(self.linear_obj_galaxy_dict.keys())
 
 
 class GalaxiesToInversion(AbstractToInversion):
@@ -130,6 +182,38 @@ class GalaxiesToInversion(AbstractToInversion):
         preloads=aa.Preloads(),
         run_time_dict: Optional[Dict] = None,
     ):
+        """
+        Interfaces a dataset and input list of galaxies with the inversion module. to setup a
+        linear algebra calculation.
+
+        The galaxies may contain linear light profiles whose `intensity` values are solved for via linear algebra in
+        order to best-fit the data. In this case, this class extracts the linear light profiles, of all galaxies,
+        computes their images and passes them to the `inversion` module such that they become the  `mapping_matrix`
+        used in the linear algebra calculation.
+
+        The galaxies may also contain pixelizations, which use a mesh (e.g. a Voronoi mesh) and regularization scheme
+        to reconstruct the galaxy's light. This class extracts all pixelizations and uses them to set up `Mapper`
+        objects which pair the dataset and pixelization to again set up the appropriate `mapping_matrix` and
+        other linear algebra matrices (e.g. the `regularization_matrix`).
+
+        This class does not perform the inversion or compute any of the linear algebra matrices itself. Instead,
+        it acts as an interface between the dataset and galaxies and the inversion module, extracting the
+        necessary information from galaxies and passing it to the inversion module.
+
+        Parameters
+        ----------
+        dataset
+            The dataset containing the data which the inversion is performed on.
+        adapt_images
+            Images which certain pixelizations use to adapt their properties to the dataset, for example congregating
+            the pixelization's pixels to the brightest regions of the image.
+        settings_inversion
+            The settings of the inversion, which controls how the linear algebra calculation is performed.
+        preloads
+            Preloads of the inversion, which are used to speed up the linear algebra calculation.
+        run_time_dict
+            A dictionary of run-time values used to compute the inversion, for example the noise-map normalization.
+        """
         self.galaxies = Galaxies(galaxies)
 
         super().__init__(
