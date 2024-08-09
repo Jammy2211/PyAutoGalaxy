@@ -1,21 +1,22 @@
-import os
-
 from autoconf.dictable import to_dict
 
 import autofit as af
 
-from autogalaxy.analysis.analysis import Analysis
+from autogalaxy.analysis.analysis.analysis import Analysis
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
-from autogalaxy.quantity.model.visualizer import VisualizerQuantity
 from autogalaxy.quantity.dataset_quantity import DatasetQuantity
 from autogalaxy.quantity.model.result import ResultQuantity
+from autogalaxy.quantity.model.visualizer import VisualizerQuantity
 from autogalaxy.quantity.fit_quantity import FitQuantity
 
 from autogalaxy import exc
 
 
 class AnalysisQuantity(Analysis):
+    Result = ResultQuantity
+    Visualizer = VisualizerQuantity
+
     def __init__(
         self,
         dataset: DatasetQuantity,
@@ -35,9 +36,9 @@ class AnalysisQuantity(Analysis):
         convergence, potential or deflection angles, to another model for that quantity. For example, one could find
         the `PowerLaw` mass profile model that best fits the deflection angles of an `NFW` mass profile.
 
-        The `func_str` input defines what quantity is fitted, it corresponds to the function of the model `Plane`
+        The `func_str` input defines what quantity is fitted, it corresponds to the function of the model galaxy
         objects that is called to create the model quantity. For example, if `func_str="convergence_2d_from"`, the
-        convergence is computed from each model `Plane`.
+        convergence is computed from each model galaxy.
 
         This class stores the settings used to perform the model-fit for certain components of the model (e.g. the
         Cosmology used for the analysis).
@@ -47,7 +48,7 @@ class AnalysisQuantity(Analysis):
         dataset
             The `DatasetQuantity` dataset that the model is fitted too.
         func_str
-            A string giving the name of the method of the input `Plane` used to compute the quantity that fits
+            A string giving the name of the method of the input galaxy used to compute the quantity that fits
             the dataset.
         cosmology
             The Cosmology assumed for this analysis.
@@ -111,88 +112,14 @@ class AnalysisQuantity(Analysis):
         Returns
         -------
         FitQuantity
-            The fit of the plane to the imaging dataset, which includes the log likelihood.
+            The fit of the galaxies to the imaging dataset, which includes the log likelihood.
         """
 
-        plane = self.plane_via_instance_from(instance=instance)
+        galaxies = self.galaxies_via_instance_from(instance=instance)
 
         return FitQuantity(
-            dataset=self.dataset, light_mass_obj=plane, func_str=self.func_str
+            dataset=self.dataset, light_mass_obj=galaxies, func_str=self.func_str
         )
-
-    def visualize(
-        self,
-        paths: af.DirectoryPaths,
-        instance: af.ModelInstance,
-        during_analysis: bool,
-    ):
-        """
-        Output images of the maximum log likelihood model inferred by the model-fit. This function is called throughout
-        the non-linear search at regular intervals, and therefore provides on-the-fly visualization of how well the
-        model-fit is going.
-
-        The visualization performed by this function includes:
-
-        - Images of the best-fit `Plane`, including the images of each of its galaxies.
-
-        - Images of the best-fit `FitQuantity`, including the model-image, residuals and chi-squared of its fit to
-        the imaging data.
-
-        The images output by this function are customized using the file `config/visualize/plots.ini`.
-
-        Parameters
-        ----------
-        paths
-            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
-            visualization, and the pickled objects used by the aggregator output by this function.
-        instance
-            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
-            via a non-linear search).
-        during_analysis
-            If True the visualization is being performed midway through the non-linear search before it is finished,
-            which may change which images are output.
-        """
-
-        if os.environ.get("PYAUTOFIT_TEST_MODE") == "1":
-            return
-
-        fit = self.fit_quantity_for_instance(instance=instance)
-
-        visualizer = VisualizerQuantity(visualize_path=paths.image_path)
-        visualizer.visualize_fit_quantity(fit=fit)
-
-    def make_result(
-        self,
-        samples: af.SamplesPDF,
-    ) -> ResultQuantity:
-        """
-        After the non-linear search is complete create its `ResultQuantity`, which includes:
-
-        - The samples of the non-linear search (E.g. MCMC chains, nested sampling samples) which are used to compute
-        the maximum likelihood model, posteriors and other properties.
-
-        - The model used to fit the data, which uses the samples to create specific instances of the model (e.g.
-        an instance of the maximum log likelihood model).
-
-        - The non-linear search used to perform the model fit.
-
-        The `ResultQuantity` object contains a number of methods which use the above objects to create the max
-        log likelihood `Plane`, `FitQuantity`,etc.
-
-        Parameters
-        ----------
-        samples
-            A PyAutoFit object which contains the samples of the non-linear search, for example the chains of an MCMC
-            run of samples of the nested sampler.
-        search
-            The non-linear search used to perform this model-fit.
-
-        Returns
-        -------
-        ResultQuantity
-            The result of fitting the model to the imaging dataset, via a non-linear search.
-        """
-        return ResultQuantity(samples=samples, analysis=self)
 
     def save_attributes(self, paths: af.DirectoryPaths):
         """

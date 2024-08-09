@@ -6,7 +6,13 @@ import autoarray as aa
 
 from autogalaxy.profiles.mass.dark.gnfw import gNFW
 from autogalaxy.profiles.mass.abstract.cse import MassProfileCSE
-from autogalaxy.profiles.mass.dark.nfw_HK24 import semi_major_axis, Kappa, Shear
+from autogalaxy.profiles.mass.dark.nfw_HK24 import (
+    semi_major_axis,
+    kappa_from,
+    gamma1,
+    gamma2,
+)
+
 
 class NFW(gNFW, MassProfileCSE):
     def __init__(
@@ -26,7 +32,7 @@ class NFW(gNFW, MassProfileCSE):
         ell_comps
             The first and second ellipticity components of the elliptical coordinate system.
         kappa_s
-            The overall normalization of the dark matter halo \
+            The overall normalization of the dark matter halo \|
             (kappa_s = (rho_s * scale_radius)/lensing_critical_density)
         scale_radius
             The NFW scale radius `r_s`, as an angle on the sky in arcseconds.
@@ -43,13 +49,11 @@ class NFW(gNFW, MassProfileCSE):
 
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
         return self.deflections_2d_via_cse_from(grid=grid)
-    #def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
-    #    return self.deflections_2d_via_integral_from(grid=grid)
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike):
+    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -89,11 +93,11 @@ class NFW(gNFW, MassProfileCSE):
             np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
         )
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike):
-        return self._deflections_2d_via_cse_from(grid=grid)
+    def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike, **kwargs):
+        return self._deflections_2d_via_cse_from(grid=grid, **kwargs)
 
     @staticmethod
     def deflection_func(u, y, x, npow, axis_ratio, scale_radius):
@@ -119,10 +123,11 @@ class NFW(gNFW, MassProfileCSE):
             / ((1 - (1 - axis_ratio**2) * u) ** (npow + 0.5))
         )
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.over_sample
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_via_cse_from(self, grid: aa.type.Grid2DLike):
+    def convergence_2d_via_cse_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the projected 2D convergence from a grid of (y,x) arc second coordinates, by computing and summing
         the convergence of each individual cse used to decompose the mass profile.
@@ -137,7 +142,7 @@ class NFW(gNFW, MassProfileCSE):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
 
-        elliptical_radii = self.elliptical_radii_grid_from(grid)
+        elliptical_radii = self.elliptical_radii_grid_from(grid=grid, **kwargs)
 
         return self._convergence_2d_via_cse_from(grid_radii=elliptical_radii)
 
@@ -145,10 +150,11 @@ class NFW(gNFW, MassProfileCSE):
         grid_radius = (1.0 / self.scale_radius) * grid_radius + 0j
         return np.real(2.0 * self.kappa_s * self.coord_func_g(grid_radius=grid_radius))
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.over_sample
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 
@@ -205,7 +211,9 @@ class NFW(gNFW, MassProfileCSE):
             / ((1 - (1 - axis_ratio**2) * u) ** 0.5)
         )
 
-    def decompose_convergence_via_cse(self, grid_radii : np.ndarray, total_cses=30, sample_points=60):
+    def decompose_convergence_via_cse(
+        self, grid_radii: np.ndarray, total_cses=30, sample_points=60
+    ):
         """
         Decompose the convergence of the elliptical NFW mass profile into cored steep elliptical (cse) profiles.
 
@@ -257,12 +265,10 @@ class NFW(gNFW, MassProfileCSE):
         elif r == 1:
             return 1
 
-
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    
-    def shear_yx_2d_from(self, grid: aa.type.Grid2DLike):
+    def shear_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Analytic calculation shear from Heyrovský & Karamazov 2024
 
@@ -271,40 +277,40 @@ class NFW(gNFW, MassProfileCSE):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
-        Returns
-        -------
-        Shear
-
         """
-        
-        #Convert e definitions:
-        #from q = (1-e)/(1+e) to q = sqrt(1-e**2)
-        e_autolens = np.sqrt(self.ell_comps[1]**2 + self.ell_comps[0]**2)
-        e_hk24 = 2*np.sqrt(e_autolens) / np.sqrt(1 + 2 * e_autolens + e_autolens**2)
-        
-        #Define dimensionless length coords
-        x1 = grid[:,1]/self.scale_radius
-        x2 = grid[:,0]/self.scale_radius
-        
-        #Avoid nans due to x=0
-        x1 = np.where(np.abs(x1)<1e-6, 1e-6, x1)
-        x2 = np.where(np.abs(x2)<1e-6, 1e-6, x2)
-        
-        #Calculate shear from nfw_HK24.py
-        g1, g2 = Shear(x1,x2, e_hk24, self.kappa_s)
 
-        #Rotation for shear
+        # Convert e definitions:
+        # from q = (1-e)/(1+e) to q = sqrt(1-e**2)
+
+        e_autolens = np.sqrt(self.ell_comps[1] ** 2 + self.ell_comps[0] ** 2)
+        e_hk24 = 2 * np.sqrt(e_autolens) / np.sqrt(1 + 2 * e_autolens + e_autolens**2)
+
+        # Define dimensionless length coords
+
+        x1 = grid[:, 1] / self.scale_radius
+        x2 = grid[:, 0] / self.scale_radius
+
+        # Avoid nans due to x=0
+        x1 = np.where(np.abs(x1) < 1e-6, 1e-6, x1)
+        x2 = np.where(np.abs(x2) < 1e-6, 1e-6, x2)
+
+        # Calculate shear from nfw_HK24.py
+
+        g1 = gamma1(x1=x1, x2=x2, e=e_hk24, k_s=self.kappa_s)  # /k_s
+        g2 = gamma2(x1=x1, x2=x2, e=e_hk24, k_s=self.kappa_s)  # /k_s
+
+        # Rotation for shear
+
         shear_field = self.rotated_grid_from_reference_frame_from(
-        grid=np.vstack((g2, g1)).T, angle=self.angle * 2
-                      )
-        return aa.VectorYX2DIrregular(values=shear_field, grid=grid)
-        
+            grid=np.vstack((g2, g1)).T, angle=self.angle * 2
+        )
 
-    @aa.grid_dec.grid_2d_to_structure
+        return aa.VectorYX2DIrregular(values=shear_field, grid=grid)
+
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    
-    def convergence_2d_from_hk24(self, grid: aa.type.Grid2DLike):
+    def convergence_2d_from_hk24(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Analytic calculation convergence from Heyrovský & Karamazov 2024
 
@@ -318,27 +324,29 @@ class NFW(gNFW, MassProfileCSE):
         Convergence
 
         """
-        
-        #Convert e definitions:
-        #from q = (1-e)/(1+e) to q = sqrt(1-e**2)
-        e_autolens = np.sqrt(self.ell_comps[1]**2 + self.ell_comps[0]**2)
-        e_hk24 = 2*np.sqrt(e_autolens) / np.sqrt(1 + 2 * e_autolens + e_autolens**2)
-        
-        #Define dimensionless length coords
-        x1 = grid[:,1]/self.scale_radius
-        x2 = grid[:,0]/self.scale_radius
-        
-        #Avoid nans due to x=0
-        x1 = np.where(np.abs(x1)<1e-6, 1e-6, x1)
-        x2 = np.where(np.abs(x2)<1e-6, 1e-6, x2)
-        
-        #Calculate convergence from nfw_HK24.py
+
+        # Convert e definitions:
+        # from q = (1-e)/(1+e) to q = sqrt(1-e**2)
+
+        e_autolens = np.sqrt(self.ell_comps[1] ** 2 + self.ell_comps[0] ** 2)
+        e_hk24 = 2 * np.sqrt(e_autolens) / np.sqrt(1 + 2 * e_autolens + e_autolens**2)
+
+        # Define dimensionless length coords
+
+        x1 = grid[:, 1] / self.scale_radius
+        x2 = grid[:, 0] / self.scale_radius
+
+        # Avoid nans due to x=0
+
+        x1 = np.where(np.abs(x1) < 1e-6, 1e-6, x1)
+        x2 = np.where(np.abs(x2) < 1e-6, 1e-6, x2)
+
+        # Calculate convergence from nfw_HK24.py
         a = semi_major_axis(x1, x2, e_hk24)
-        convergence = Kappa(self.kappa_s, a)
-        
-        return convergence
-        
-    
+
+        return kappa_from(k_s=self.kappa_s, a=a)
+
+
 class NFWSph(NFW):
     def __init__(
         self,
@@ -368,13 +376,13 @@ class NFWSph(NFW):
             scale_radius=scale_radius,
         )
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
-        return self.deflections_2d_via_analytic_from(grid=grid)
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+        return self.deflections_2d_via_analytic_from(grid=grid, **kwargs)
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike):
+    def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -384,23 +392,26 @@ class NFWSph(NFW):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
-        eta = np.multiply(1.0 / self.scale_radius, self.radial_grid_from(grid=grid))
+        eta = np.multiply(
+            1.0 / self.scale_radius, self.radial_grid_from(grid=grid, **kwargs)
+        )
 
         deflection_grid = np.multiply(
             (4.0 * self.kappa_s * self.scale_radius / eta),
             self.deflection_func_sph(grid_radius=eta),
         )
 
-        return self._cartesian_grid_via_radial_from(grid, deflection_grid)
+        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection_grid)
 
     def deflection_func_sph(self, grid_radius):
         grid_radius = grid_radius + 0j
         return np.real(self.coord_func_h(grid_radius=grid_radius))
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.over_sample
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 
@@ -410,7 +421,9 @@ class NFWSph(NFW):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
-        eta = (1.0 / self.scale_radius) * self.radial_grid_from(grid) + 0j
+        eta = (1.0 / self.scale_radius) * self.radial_grid_from(
+            grid=grid, **kwargs
+        ) + 0j
         return np.real(
             2.0 * self.scale_radius * self.kappa_s * self.potential_func_sph(eta)
         )

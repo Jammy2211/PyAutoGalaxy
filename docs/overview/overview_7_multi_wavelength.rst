@@ -166,7 +166,7 @@ different intensities.
     for result in result_list:
 
         galaxy_plotter = aplt.GalaxyPlotter(
-            tracer=result.max_log_likelihood_plane.galaxies[0], grid=result.grid
+            tracer=result.max_log_likelihood_galaxies[0], grid=result.grid
         )
         galaxy_plotter.subplot_of_light_profiles(image=True)
 

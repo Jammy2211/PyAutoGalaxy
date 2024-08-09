@@ -1,0 +1,10 @@
+DatasetModel:
+  background_sky_level:
+    type: Constant
+    value: 0.0
+  grid_offset_0:
+    type: Constant
+    value: 0.0
+  grid_offset_1:
+    type: Constant
+    value: 0.0

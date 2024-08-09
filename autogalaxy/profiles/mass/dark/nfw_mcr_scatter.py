@@ -59,7 +59,7 @@ class NFWMCRScatterLudlow(NFW):
             redshift_object=redshift_object,
             redshift_source=redshift_source,
         )
-        
+
         """
         #Make correction that Andrew proposed
         fac = np.sqrt(ell_comps[1] ** 2 + ell_comps[0] ** 2)

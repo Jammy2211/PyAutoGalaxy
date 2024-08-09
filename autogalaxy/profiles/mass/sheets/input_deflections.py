@@ -68,20 +68,19 @@ class InputDeflections(MassProfile):
 
         self.normalization_scale = 1.0  # normalization_scale
 
-    @aa.grid_dec.grid_2d_to_structure
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
-        return self.convergence_2d_via_jacobian_from(grid=grid)
+    @aa.grid_dec.to_array
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+        return self.convergence_2d_via_jacobian_from(grid=grid, **kwargs)
 
-    @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+    @aa.grid_dec.to_array
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
-    @aa.grid_dec.grid_2d_to_vector_yx
-    @aa.grid_dec.grid_2d_to_structure
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+    @aa.grid_dec.to_vector_yx
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         if self.preload_grid is not None and self.preload_deflections is not None:
             try:
-                if grid.sub_shape_slim == self.preload_grid.sub_shape_slim:
+                if grid.shape_slim == self.preload_grid.shape_slim:
                     if np.allclose(grid, self.preload_grid, 1e-8):
                         return self.normalization_scale * self.preload_deflections
             except AttributeError:
@@ -92,7 +91,7 @@ class InputDeflections(MassProfile):
             and self.preload_blurring_deflections is not None
         ):
             try:
-                if grid.sub_shape_slim == self.preload_blurring_grid.sub_shape_slim:
+                if grid.shape_slim == self.preload_blurring_grid.shape_slim:
                     if np.allclose(grid, self.preload_blurring_grid, 1e-8):
                         return (
                             self.normalization_scale * self.preload_blurring_deflections

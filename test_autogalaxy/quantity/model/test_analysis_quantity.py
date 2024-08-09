@@ -38,11 +38,11 @@ class TestAnalysisQuantity:
         instance = model.instance_from_unit_vector([])
         fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
 
-        plane = analysis.plane_via_instance_from(instance=instance)
+        galaxies = analysis.galaxies_via_instance_from(instance=instance)
 
         fit = ag.FitQuantity(
             dataset=dataset_quantity_7x7_array_2d,
-            light_mass_obj=plane,
+            light_mass_obj=galaxies,
             func_str="convergence_2d_from",
         )
 
@@ -50,7 +50,7 @@ class TestAnalysisQuantity:
 
         fit = ag.FitQuantity(
             dataset=dataset_quantity_7x7_array_2d,
-            light_mass_obj=plane,
+            light_mass_obj=galaxies,
             func_str="potential_2d_from",
         )
 

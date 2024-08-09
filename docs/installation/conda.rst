@@ -17,12 +17,11 @@ First, update conda:
 
 Next, create a conda environment (we name this ``autogalaxy`` to signify it is for the **PyAutoGalaxy** install):
 
-The command below creates this environment with some of the bigger package requirements, the rest will be installed
-via pip:
+The command below creates this environment with Python 3.11, the most recent supported version of Python:
 
 .. code-block:: bash
 
-    conda create -n autogalaxy astropy scikit-image scikit-learn scipy
+    conda create -n autogalaxy python=3.11
 
 Activate the conda environment (you will have to do this every time you want to run **PyAutoGalaxy**):
 
@@ -36,18 +35,18 @@ We upgrade pip to ensure certain libraries install:
 
     pip install --upgrade pip
 
-The latest version of **PyAutoGalaxy** is installed via pip as follows (specifying the version as shown below ensures
-the installation has clean dependencies):
+The latest version of **PyAutoGalaxy** is installed via pip as follows (the command ``--no-cache-dir`` prevents
+caching issues impacting the installation):
 
 .. code-block:: bash
 
-    pip install autogalaxy
+    pip install autogalaxy --no-cache-dir
 
 You may get warnings which state something like:
 
 .. code-block:: bash
 
-    ERROR: autoarray 2023.9.18.4 has requirement numpy<=1.22.1, but you'll have numpy 1.22.2 which is incompatible.
+    ERROR: autoarray 2024.5.16.0 has requirement numpy<=1.22.1, but you'll have numpy 1.22.2 which is incompatible.
     ERROR: numba 0.53.1 has requirement llvmlite<0.37,>=0.36.0rc1, but you'll have llvmlite 0.38.0 which is incompatible.
 
 If you see these messages, they do not mean that the installation has failed and the instructions below will
@@ -67,7 +66,7 @@ You can install numba via the following command:
 
 .. code-block:: bash
 
-    pip install numba
+    pip install numba --no-cache-dir
 
 Some users have experienced difficulties installing numba, which is why it is an optional library. If your
 installation is not successful, you can use **PyAutoGalaxy** without it installed for now, to familiarize yourself

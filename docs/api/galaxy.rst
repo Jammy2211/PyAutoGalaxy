@@ -1,9 +1,9 @@
-==============
-Galaxy / Plane
-==============
+======
+Galaxy
+======
 
-Galaxy / Plane
---------------
+Galaxy
+------
 
 .. currentmodule:: autogalaxy
 
@@ -13,7 +13,7 @@ Galaxy / Plane
    :recursive:
 
    Galaxy
-   Plane
+   Galaxies
 
 To treat the redshift of a galaxy as a free parameter in a model, the ``Redshift`` object must
 be used.

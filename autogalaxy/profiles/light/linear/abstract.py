@@ -1,6 +1,6 @@
 import inspect
 import numpy as np
-from typing import Dict, List, Optional
+from typing import ClassVar, Dict, List, Optional
 
 from autoconf import cached_property
 import autoarray as aa
@@ -11,7 +11,6 @@ from autogalaxy.profiles.light.operated.abstract import (
 )
 
 from autogalaxy.profiles.light.abstract import LightProfile
-from autogalaxy.profiles import light_and_mass_profiles as lmp
 
 from autogalaxy import exc
 
@@ -26,12 +25,51 @@ class LightProfileLinear(LightProfile):
         return 1.0
 
     @property
-    def lp_cls(self):
-        raise NotImplementedError
+    def standard_lp_parent(self):
+        """
+        Returns the first parent class of the linear light profile which is not a linear light profile itself.
 
-    @property
-    def lmp_cls(self):
-        raise NotImplementedError
+        The functions below (e.g. `lp_instance_from`) are used to convert a linear light profile to its parent
+        standard light profile, where the input `intensity` is the value solved for in the linear inversion.
+
+        This function is used to determine the parent class of the linear light profile that is used to create the
+        standard light profile.
+
+        This function also maps linear light and mass profiles to their standard light and mass profile counterparts.
+        This specific mapping is required because their inheritence structure is different to the other light profiles.
+        In the future, the ugly dictionary used to do this mapping should be removed for better code.
+
+        Returns
+        -------
+        The parent class of the linear light profile that is not a linear light profile itself.
+        """
+
+        from autogalaxy.profiles import light_linear_and_mass_profiles as lmp_linear
+        from autogalaxy.profiles import light_and_mass_profiles as lmp
+
+        if isinstance(self, lmp.LightMassProfile):
+            lmp_mapping_dict = {
+                lmp_linear.Gaussian: lmp.Gaussian,
+                lmp_linear.GaussianGradient: lmp.GaussianGradient,
+                lmp_linear.SersicSph: lmp.SersicSph,
+                lmp_linear.Sersic: lmp.Sersic,
+                lmp_linear.SersicGradient: lmp.SersicGradient,
+                lmp_linear.SersicGradientSph: lmp.SersicGradientSph,
+                lmp_linear.ExponentialSph: lmp.ExponentialSph,
+                lmp_linear.Exponential: lmp.Exponential,
+                lmp_linear.ExponentialGradient: lmp.ExponentialGradient,
+                lmp_linear.ExponentialGradientSph: lmp.ExponentialGradientSph,
+                lmp_linear.DevVaucouleursSph: lmp.DevVaucouleursSph,
+                lmp_linear.DevVaucouleurs: lmp.DevVaucouleurs,
+                lmp_linear.SersicCoreSph: lmp.SersicCoreSph,
+                lmp_linear.SersicCore: lmp.SersicCore,
+            }
+
+            return lmp_mapping_dict[self.__class__]
+
+        for cls in self.__class__.__bases__:
+            if not issubclass(cls, LightProfileLinear):
+                return cls
 
     def parameters_dict_from(self, intensity: float) -> Dict[str, float]:
         """
@@ -47,8 +85,7 @@ class LightProfileLinear(LightProfile):
             per second).
         """
         parameters_dict = vars(self)
-
-        args = inspect.getfullargspec(self.lp_cls.__init__).args
+        args = inspect.getfullargspec(self.standard_lp_parent).args
         args.remove("self")
 
         parameters_dict = {key: parameters_dict[key] for key in args}
@@ -75,28 +112,7 @@ class LightProfileLinear(LightProfile):
         intensity = linear_light_profile_intensity_dict[self]
         parameters_dict = self.parameters_dict_from(intensity=intensity)
 
-        return self.lp_cls(**parameters_dict)
-
-    def lmp_model_from(
-        self, linear_light_profile_intensity_dict: Dict
-    ) -> af.Model(lmp.LightMassProfile):
-        """
-        Creates an instance of a linear light profile using its parent light and mass profile (e.g. the non linear
-        variant which has `mass_to_light_ratio` and `intensity` parameters).
-
-        The `intensity` value of the profile created is passed into this function and used.
-
-        Parameters
-        ----------
-        intensity
-            Overall intensity normalisation of the not linear light profile that is created (units are dimensionless
-            and derived from the data the light profile's image is compared too, which is expected to be electrons
-            per second).
-        """
-        intensity = linear_light_profile_intensity_dict[self]
-        parameters_dict = self.parameters_dict_from(intensity=intensity)
-
-        return af.Model(self.lmp_cls, **parameters_dict)
+        return self.standard_lp_parent(**parameters_dict)
 
 
 class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
@@ -133,11 +149,17 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         return len(self.light_profile_list)
 
     @property
+    def pixels_in_mask(self):
+        if isinstance(self.grid, aa.Grid2DOverSampled):
+            return self.grid.pixels_in_mask
+        return self.grid.mask.pixels_in_mask
+
+    @property
     def mapping_matrix(self) -> np.ndarray:
-        mapping_matrix = np.zeros(shape=(self.grid.mask.pixels_in_mask, self.params))
+        mapping_matrix = np.zeros(shape=(self.pixels_in_mask, self.params))
 
         for pixel, light_profile in enumerate(self.light_profile_list):
-            image_2d = light_profile.image_2d_from(grid=self.grid).binned.slim
+            image_2d = light_profile.image_2d_from(grid=self.grid).slim
 
             mapping_matrix[:, pixel] = image_2d
 
@@ -166,9 +188,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         if isinstance(self.light_profile_list[0], LightProfileOperated):
             return self.mapping_matrix
 
-        operated_mapping_matrix = np.zeros(
-            shape=(self.grid.mask.pixels_in_mask, self.params)
-        )
+        operated_mapping_matrix = np.zeros(shape=(self.pixels_in_mask, self.params))
 
         for pixel, light_profile in enumerate(self.light_profile_list):
             image_2d = light_profile.image_2d_from(grid=self.grid)

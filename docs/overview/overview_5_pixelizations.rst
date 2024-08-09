@@ -42,15 +42,14 @@ Below, we use a ``Rectangular`` pixelization with resolution 50 x 50 and a ``Con
 
     galaxy = ag.Galaxy(redshift=1.0, pixelization=pixelization)
 
-Now that our galaxy has a `Pixelization`, we are able to fit the data using it in the
-same way as before, by simply passing the galaxy to a `Plane` and using this `Plane` to create a `FitImaging`
-object.
+Now that our galaxy has a `Pixelization`, we are able to fit the data using it in the same way as before, by simply
+passing the galaxy to a `FitImaging`object.
 
 .. code-block:: python
 
-    plane = ag.Plane(galaxies=[galaxy])
+    galaxies = ag.Galaxies(galaxies=[galaxy])
 
-    fit = ag.FitImaging(dataset=dataset, plane=plane)
+    fit = ag.FitImaging(dataset=dataset, galaxies=galaxies)
 
 Here is what our reconstructed galaxy looks like:
 

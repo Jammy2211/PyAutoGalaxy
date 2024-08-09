@@ -7,7 +7,7 @@ import shutil
 import autogalaxy as ag
 
 
-def test_via_signal_to_noise_map(dataset_quantity_7x7_array_2d, sub_mask_2d_7x7):
+def test_via_signal_to_noise_map(dataset_quantity_7x7_array_2d, mask_2d_7x7):
     data = ag.Array2D.no_mask(values=[[1.0, 2.0], [3.0, 4.0]], pixel_scales=1.0)
     signal_to_noise_map = ag.Array2D.no_mask(
         values=[[1.0, 5.0], [15.0, 40.0]], pixel_scales=1.0
@@ -44,25 +44,23 @@ def test_via_signal_to_noise_map(dataset_quantity_7x7_array_2d, sub_mask_2d_7x7)
 
 
 def test__apply_mask__masks_dataset(
-    dataset_quantity_7x7_array_2d, dataset_quantity_7x7_vector_yx_2d, sub_mask_2d_7x7
+    dataset_quantity_7x7_array_2d, dataset_quantity_7x7_vector_yx_2d, mask_2d_7x7
 ):
-    dataset_quantity_7x7 = dataset_quantity_7x7_array_2d.apply_mask(
-        mask=sub_mask_2d_7x7
-    )
+    dataset_quantity_7x7 = dataset_quantity_7x7_array_2d.apply_mask(mask=mask_2d_7x7)
 
     assert (dataset_quantity_7x7.data.slim == np.ones(9)).all()
     assert (
-        dataset_quantity_7x7.data.native == np.ones((7, 7)) * np.invert(sub_mask_2d_7x7)
+        dataset_quantity_7x7.data.native == np.ones((7, 7)) * np.invert(mask_2d_7x7)
     ).all()
 
     assert (dataset_quantity_7x7.noise_map.slim == 2.0 * np.ones(9)).all()
     assert (
         dataset_quantity_7x7.noise_map.native
-        == 2.0 * np.ones((7, 7)) * np.invert(sub_mask_2d_7x7)
+        == 2.0 * np.ones((7, 7)) * np.invert(mask_2d_7x7)
     ).all()
 
     dataset_quantity_7x7 = dataset_quantity_7x7_vector_yx_2d.apply_mask(
-        mask=sub_mask_2d_7x7
+        mask=mask_2d_7x7
     )
 
     assert (dataset_quantity_7x7.data.slim == np.ones((9, 2))).all()
@@ -71,41 +69,38 @@ def test__apply_mask__masks_dataset(
 
 def test__grid(
     dataset_quantity_7x7_array_2d,
-    sub_mask_2d_7x7,
+    mask_2d_7x7,
     grid_2d_7x7,
-    sub_grid_2d_7x7,
     blurring_grid_2d_7x7,
-    grid_2d_iterate_7x7,
 ):
-    masked_imaging_7x7 = dataset_quantity_7x7_array_2d.apply_mask(mask=sub_mask_2d_7x7)
-    masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
-        settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=2)
+    dataset = dataset_quantity_7x7_array_2d.apply_mask(mask=mask_2d_7x7)
+
+    assert isinstance(dataset.grids.uniform, ag.Grid2D)
+    assert (dataset.grids.uniform == grid_2d_7x7).all()
+
+    dataset_quantity = ag.DatasetQuantity(
+        data=ag.Array2D.ones(shape_native=(7, 7), pixel_scales=1.0),
+        noise_map=ag.Array2D.full(
+            fill_value=2.0, shape_native=(7, 7), pixel_scales=1.0
+        ),
+        over_sampling=ag.OverSamplingDataset(uniform=ag.OverSamplingIterate()),
     )
 
-    assert isinstance(masked_imaging_7x7.grid, ag.Grid2D)
-    assert (masked_imaging_7x7.grid.binned == grid_2d_7x7).all()
-    assert (masked_imaging_7x7.grid.slim == sub_grid_2d_7x7).all()
+    dataset = dataset_quantity.apply_mask(mask=mask_2d_7x7)
 
-    masked_imaging_7x7 = dataset_quantity_7x7_array_2d.apply_mask(mask=sub_mask_2d_7x7)
-    masked_imaging_7x7 = masked_imaging_7x7.apply_settings(
-        settings=ag.SettingsImaging(grid_class=ag.Grid2DIterate)
-    )
-
-    assert isinstance(masked_imaging_7x7.grid, ag.Grid2DIterate)
-    assert (masked_imaging_7x7.grid.binned == grid_2d_iterate_7x7).all()
+    assert isinstance(dataset.grids.uniform.over_sampling, ag.OverSamplingIterate)
+    assert (dataset.grids.uniform == grid_2d_7x7).all()
 
 
 def test__vector_data__y_x():
     data = ag.VectorYX2D.no_mask(
         values=[[[1.0, 5.0], [2.0, 6.0]], [[3.0, 7.0], [4.0, 8.0]]],
         pixel_scales=1.0,
-        sub_size=1,
     )
 
     noise_map = ag.VectorYX2D.no_mask(
         values=[[[1.1, 5.1], [2.1, 6.1]], [[3.1, 7.1], [4.1, 8.1]]],
         pixel_scales=1.0,
-        sub_size=1,
     )
 
     dataset_quantity = ag.DatasetQuantity(data=data, noise_map=noise_map)
@@ -156,13 +151,11 @@ def test__output_to_fits(dataset_quantity_7x7_array_2d, test_data_path):
     data = ag.VectorYX2D.no_mask(
         values=[[[1.0, 5.0], [2.0, 6.0]], [[3.0, 7.0], [4.0, 8.0]]],
         pixel_scales=1.0,
-        sub_size=1,
     )
 
     noise_map = ag.VectorYX2D.no_mask(
         values=[[[1.1, 5.1], [2.1, 6.1]], [[3.1, 7.1], [4.1, 8.1]]],
         pixel_scales=1.0,
-        sub_size=1,
     )
 
     dataset_quantity = ag.DatasetQuantity(data=data, noise_map=noise_map)

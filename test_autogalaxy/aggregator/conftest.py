@@ -41,7 +41,8 @@ def aggregator_from(database_file, analysis, model, samples):
     clean(database_file=database_file)
 
     search = ag.m.MockSearch(
-        samples=samples, result=ag.m.MockResult(model=model, samples=samples)
+        samples=samples,
+        result=ag.m.MockResult(model=model, samples=samples),
     )
     search.paths = af.DirectoryPaths(path_prefix=database_file)
     search.fit(model=model, analysis=analysis)
@@ -56,21 +57,22 @@ def aggregator_from(database_file, analysis, model, samples):
 
 @pytest.fixture(name="model")
 def make_model():
+    dataset_model = af.Model(ag.DatasetModel)
+    dataset_model.background_sky_level = af.UniformPrior(
+        lower_limit=0.5, upper_limit=1.5
+    )
+
     return af.Collection(
+        dataset_model=dataset_model,
         galaxies=af.Collection(
             g0=af.Model(ag.Galaxy, redshift=0.5, light=ag.lp.Sersic),
             g1=af.Model(ag.Galaxy, redshift=1.0, light=ag.lp.Sersic),
-        )
+        ),
     )
 
 
 @pytest.fixture(name="samples")
 def make_samples(model):
-    galaxy_0 = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(centre=(0.0, 1.0)))
-    galaxy_1 = ag.Galaxy(redshift=1.0, light=ag.lp.Sersic())
-
-    plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
-
     parameters = [model.prior_count * [1.0], model.prior_count * [10.0]]
 
     sample_list = Sample.from_lists(
@@ -83,7 +85,6 @@ def make_samples(model):
 
     return ag.m.MockSamples(
         model=model,
+        prior_means=[1.0] * model.prior_count,
         sample_list=sample_list,
-        max_log_likelihood_instance=plane,
-        gaussian_tuples=[(1.0, 2.0)] * model.prior_count,
     )

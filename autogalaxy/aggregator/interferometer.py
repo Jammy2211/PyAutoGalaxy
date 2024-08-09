@@ -8,7 +8,6 @@ import autoarray as aa
 def _interferometer_from(
     fit: af.Fit,
     real_space_mask: Optional[aa.Mask2D] = None,
-    settings_dataset: Optional[aa.SettingsInterferometer] = None,
 ) -> List[aa.Interferometer]:
     """
     Returns a list of `Interferometer` objects from a `PyAutoFit` sqlite database `Fit` object.
@@ -30,15 +29,10 @@ def _interferometer_from(
     method is instead used to load lists of the data, noise-map, PSF and mask and combine them into a list of
     `Interferometer` objects.
 
-    The settings can be overwritten by inputting a `settings_dataset` object, for example if you want to use a grid
-    with a different level of sub-griding.
-
     Parameters
     ----------
     fit
         A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
-    settings_dataset
-        Optionally overwrite the `SettingsInterferometer` of the `Interferometer` object that is created from the fit.
     """
 
     fit_list = [fit] if not fit.children else fit.children
@@ -61,16 +55,18 @@ def _interferometer_from(
                 primary_hdu=fit.value(name="dataset.real_space_mask")
             )
         )
-        settings_dataset = settings_dataset or fit.value(name="dataset.settings")
+
+        over_sampling = fit.value(name="dataset.over_sampling")
+        transformer_class = fit.value(name="dataset.transformer_class")
 
         dataset = aa.Interferometer(
             data=data,
             noise_map=noise_map,
             uv_wavelengths=uv_wavelengths,
             real_space_mask=real_space_mask,
+            over_sampling=over_sampling,
+            transformer_class=transformer_class,
         )
-
-        dataset = dataset.apply_settings(settings=settings_dataset)
 
         dataset_list.append(dataset)
 
@@ -117,25 +113,20 @@ class InterferometerAgg:
     def dataset_gen_from(
         self,
         real_space_mask: Optional[aa.Mask2D] = None,
-        settings_dataset: Optional[aa.SettingsInterferometer] = None,
     ) -> List[aa.Interferometer]:
         """
         Returns a generator of `Interferometer` objects from an input aggregator.
 
         See `__init__` for a description of how the `Interferometer` objects are created by this method.
 
-        The settings can be overwritten by inputting a `settings_dataset` object, for example if you want to use a grid
-        with a different level of sub-griding.
-
         Parameters
         ----------
-        settings_dataset
-            Optionally overwrite the `SettingsInterferometer` of the `Interferometer` object that is created from the fit.
+        real_space_mask
+            The real space mask.
         """
         func = partial(
             _interferometer_from,
             real_space_mask=real_space_mask,
-            settings_dataset=settings_dataset,
         )
 
         return self.aggregator.map(func=func)

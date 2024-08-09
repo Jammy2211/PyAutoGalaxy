@@ -1,9 +1,11 @@
+from typing import List
+
 import autoarray as aa
 import autoarray.plot as aplt
 
 from autoarray.fit.plot.fit_interferometer_plotters import FitInterferometerPlotterMeta
 
-from autogalaxy.plane.plane import Plane
+from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_plot.one_d import MatPlot1D
@@ -13,7 +15,7 @@ from autogalaxy.plot.visuals.two_d import Visuals2D
 from autogalaxy.plot.include.one_d import Include1D
 from autogalaxy.plot.include.two_d import Include2D
 
-from autogalaxy.plane.plot.plane_plotters import PlanePlotter
+from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
 
 
 class FitInterferometerPlotter(Plotter):
@@ -95,21 +97,21 @@ class FitInterferometerPlotter(Plotter):
         return self.get_2d.via_mask_from(mask=self.fit.dataset.real_space_mask)
 
     @property
-    def plane(self) -> Plane:
-        return self.fit.plane_linear_light_profiles_to_light_profiles
+    def galaxies(self) -> List[Galaxy]:
+        return self.fit.galaxies_linear_light_profiles_to_light_profiles
 
-    def plane_plotter_from(self, plane: Plane) -> PlanePlotter:
+    def galaxies_plotter_from(self, galaxies: List[Galaxy]) -> GalaxiesPlotter:
         """
-        Returns an `PlanePlotter` corresponding to an input `Plane` of the fit.
+        Returns a `GalaxiesPlotter` corresponding to an input galaxies list.
 
         Returns
         -------
-        plane
-            The plane used to make the `PlanePlotter`.
+        galaxies
+            The galaxies used to make the `GalaxiesPlotter`.
         """
-        return PlanePlotter(
-            plane=plane,
-            grid=self.fit.dataset.grid,
+        return GalaxiesPlotter(
+            galaxies=galaxies,
+            grid=self.fit.grids.uniform,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.get_visuals_2d_real_space(),
             include_2d=self.include_2d,
@@ -182,17 +184,15 @@ class FitInterferometerPlotter(Plotter):
         """
         Standard subplot of the real-space attributes of the plotter's `FitInterferometer` object.
 
-        Depending on whether `LightProfile`'s or an `Inversion` are used to represent galaxies in the `Plane`, different
+        Depending on whether `LightProfile`'s or an `Inversion` are used to represent galaxies, different
         methods are called to create these real-space images.
         """
-        if not self.plane.has(cls=aa.Pixelization):
-            plane_plotter = self.plane_plotter_from(plane=self.plane)
+        if not self.galaxies.has(cls=aa.Pixelization):
+            galaxies_plotter = self.galaxies_plotter_from(galaxies=self.galaxies)
 
-            plane_plotter.subplot(
-                image=True, plane_image=True, auto_filename="subplot_fit_real_space"
-            )
+            galaxies_plotter.subplot(image=True, auto_filename="subplot_fit_real_space")
 
-        elif self.plane.has(cls=aa.Pixelization):
+        elif self.galaxies.has(cls=aa.Pixelization):
             self.open_subplot_figure(number_subplots=6)
 
             mapper_index = 0

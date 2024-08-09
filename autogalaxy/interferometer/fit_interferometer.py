@@ -6,35 +6,37 @@ from autoconf import cached_property
 import autoarray as aa
 
 from autogalaxy.abstract_fit import AbstractFitInversion
+from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.plane.plane import Plane
-from autogalaxy.plane.to_inversion import PlaneToInversion
+from autogalaxy.galaxy.galaxies import Galaxies
+from autogalaxy.galaxy.to_inversion import GalaxiesToInversion
 
 
 class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
     def __init__(
         self,
         dataset: aa.Interferometer,
-        plane: Plane,
-        settings_pixelization: aa.SettingsPixelization = aa.SettingsPixelization(),
+        galaxies: List[Galaxy],
+        dataset_model: Optional[aa.DatasetModel] = None,
+        adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
         preloads: aa.Preloads = Preloads(),
         run_time_dict: Optional[Dict] = None,
     ):
         """
-        Fits an interferometer dataset using a `Plane` object.
+        Fits an interferometer dataset using a list of galaxies.
 
         The fit performs the following steps:
 
-        1) Compute the sum of all images of galaxy light profiles in the `Plane`.
+        1) Compute the sum of all images of galaxy light profiles.
 
         2) Fourier transform this image with the transformer object and `uv_wavelengths` to create
            the `profile_visibilities`.
 
         3) Subtract these visibilities from the `data` to create the `profile_subtracted_visibilities`.
 
-        4) If the `Plane` has any linear algebra objects (e.g. linear light profiles, a pixelization / regulariation)
+        4) If the galaxies have any linear algebra objects (e.g. linear light profiles, a pixelization / regulariation)
            fit the `profile_subtracted_visibilities` with these objects via an inversion.
 
         5) Compute the `model_data` as the sum of the `profile_visibilities` and `reconstructed_data` of the inversion
@@ -50,12 +52,14 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         Parameters
         ----------
         dataset
-            The interfometer dataset which is fitted by the galaxies in the plane.
-        plane
-            The plane of galaxies whose light profile images are used to fit the interferometer data.
-        settings_pixelization
-            Settings controlling how a pixelization is fitted for example if a border is used when creating the
-            pixelization.
+            The interfometer dataset which is fitted by the galaxies.
+        galaxies
+            The galaxies whose light profile images are used to fit the interferometer data.
+        dataset_model
+            Attributes which allow for parts of a dataset to be treated as a model (e.g. the background sky level).
+        adapt_images
+            Contains the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
+            reconstructed galaxy's morphology.
         settings_inversion
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
         preloads
@@ -71,16 +75,21 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         except ImportError:
             settings_inversion.use_w_tilde = False
 
+        self.galaxies = Galaxies(galaxies=galaxies, run_time_dict=run_time_dict)
+
         super().__init__(
-            dataset=dataset, use_mask_in_fit=False, run_time_dict=run_time_dict
+            dataset=dataset,
+            dataset_model=dataset_model,
+            use_mask_in_fit=False,
+            run_time_dict=run_time_dict,
         )
         AbstractFitInversion.__init__(
-            self=self, model_obj=plane, settings_inversion=settings_inversion
+            self=self,
+            model_obj=self.galaxies,
+            settings_inversion=settings_inversion,
         )
 
-        self.plane = plane
-
-        self.settings_pixelization = settings_pixelization
+        self.adapt_images = adapt_images
         self.settings_inversion = settings_inversion
 
         self.preloads = preloads
@@ -88,53 +97,57 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
     @property
     def profile_visibilities(self) -> aa.Visibilities:
         """
-        Returns the visibilities of every light profile of every galaxy in the plane, which are computed by performing
+        Returns the visibilities of every light profile of every galaxy, which are computed by performing
         a Fourier transform to the sum of light profile images.
         """
-        return self.plane.visibilities_from(
-            grid=self.dataset.grid, transformer=self.dataset.transformer
+        return self.galaxies.visibilities_from(
+            grid=self.grids.uniform, transformer=self.dataset.transformer
         )
 
     @property
     def profile_subtracted_visibilities(self) -> aa.Visibilities:
         """
-        Returns the interferometer dataset's visibilities with all transformed light profile images in the fit's
-        plane subtracted.
+        Returns the interferometer dataset's visibilities with all transformed light profile images subtracted.
         """
-        return self.visibilities - self.profile_visibilities
+        return self.data - self.profile_visibilities
 
     @property
-    def plane_to_inversion(self) -> PlaneToInversion:
-        return PlaneToInversion(
-            plane=self.plane,
-            dataset=self.dataset,
+    def galaxies_to_inversion(self) -> GalaxiesToInversion:
+        dataset = aa.DatasetInterface(
             data=self.profile_subtracted_visibilities,
             noise_map=self.noise_map,
+            grids=self.grids,
+            transformer=self.dataset.transformer,
             w_tilde=self.w_tilde,
-            settings_pixelization=self.settings_pixelization,
+        )
+
+        return GalaxiesToInversion(
+            dataset=dataset,
+            galaxies=self.galaxies,
+            adapt_images=self.adapt_images,
             settings_inversion=self.settings_inversion,
             preloads=self.preloads,
+            run_time_dict=self.run_time_dict,
         )
 
     @cached_property
     def inversion(self) -> Optional[aa.AbstractInversion]:
         """
-        If the plane has linear objects which are used to fit the data (e.g. a linear light profile / pixelization)
+        If the galaxies have linear objects which are used to fit the data (e.g. a linear light profile / pixelization)
         this function returns a linear inversion, where the flux values of these objects (e.g. the `intensity`
         of linear light profiles) are computed via linear matrix algebra.
 
-        The data passed to this function is the dataset's visibilities with all light profile visibilities of the
-        plane subtracted.
+        The data passed to this function is the dataset's visibilities with all light profile visibilities subtracted.
         """
         if self.perform_inversion:
-            return self.plane_to_inversion.inversion
+            return self.galaxies_to_inversion.inversion
 
     @property
     def model_data(self) -> aa.Visibilities:
         """
         Returns the model data that is used to fit the data.
 
-        If the plane does not have any linear objects and therefore omits an inversion, the model data is the
+        If the galaxies do not have any linear objects and therefore omits an inversion, the model data is the
         sum of all light profile images Fourier transformed to visibilities.
 
         If a inversion is included it is the sum of these visibilities and the inversion's reconstructed visibilities.
@@ -146,28 +159,22 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         return self.profile_visibilities
 
     @property
-    def grid(self) -> aa.Grid2D:
-        return self.dataset.grid
-
-    @property
-    def galaxies(self) -> List[Galaxy]:
-        return self.plane.galaxies
-
-    @property
     def galaxy_model_image_dict(self) -> Dict[Galaxy, np.ndarray]:
         """
-        A dictionary which associates every galaxy in the plane with its `image`.
+        A dictionary which associates every galaxy with its `image`.
 
-        This image is the image of the sum of:
+        This image is the sum of:
 
-        - The images of all ordinary light profiles in that plane summed.
+        - The images of all ordinary light profiles summed.
         - The images of all linear objects (e.g. linear light profiles / pixelizations), where the images are solved
           for first via the inversion.
 
         For modeling, this dictionary is used to set up the `adapt_images` that adapt certain pixelizations to the
         data being fitted.
         """
-        galaxy_model_image_dict = self.plane.galaxy_image_2d_dict_from(grid=self.grid)
+        galaxy_model_image_dict = self.galaxies.galaxy_image_2d_dict_from(
+            grid=self.grids.uniform
+        )
 
         galaxy_linear_obj_image_dict = self.galaxy_linear_obj_data_dict_from(
             use_image=True
@@ -178,20 +185,19 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
     @property
     def galaxy_model_visibilities_dict(self) -> Dict[Galaxy, np.ndarray]:
         """
-        A dictionary which associates every galaxy in the plane with its model visibilities.
+        A dictionary which associates every galaxy with its model visibilities.
 
         These visibilities are the sum of:
 
-        - The visibilities of all ordinary light profiles in that plane summed and Fourier transformed to visibilities
-          space.
+        - The visibilities of all ordinary light profiles summed and Fourier transformed to visibilities space.
         - The visibilities of all linear objects (e.g. linear light profiles / pixelizations), where the visibilities
           are solved for first via the inversion.
 
         For modeling, this dictionary is used to set up the `adapt_visibilities` that adapt certain pixelizations to the
         data being fitted.
         """
-        galaxy_model_visibilities_dict = self.plane.galaxy_visibilities_dict_from(
-            grid=self.dataset.grid, transformer=self.dataset.transformer
+        galaxy_model_visibilities_dict = self.galaxies.galaxy_visibilities_dict_from(
+            grid=self.grids.uniform, transformer=self.dataset.transformer
         )
 
         galaxy_linear_obj_data_dict = self.galaxy_linear_obj_data_dict_from(
@@ -203,14 +209,14 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
     @property
     def model_visibilities_of_galaxies_list(self) -> List:
         """
-        A list of the model visibilities of each galaxy in the plane.
+        A list of the model visibilities of each galaxy.
         """
         return list(self.galaxy_model_visibilities_dict.values())
 
     @property
-    def plane_linear_light_profiles_to_light_profiles(self) -> Plane:
+    def galaxies_linear_light_profiles_to_light_profiles(self) -> List[Galaxy]:
         """
-        The `Plane` where all linear light profiles have been converted to ordinary light profiles, where their
+        The galaxies where all linear light profiles have been converted to ordinary light profiles, where their
         `intensity` values are set to the values inferred by this fit.
 
         This is typically used for visualization, because linear light profiles cannot be used in `LightProfilePlotter`
@@ -224,7 +230,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         settings_inversion: Optional[aa.SettingsInversion] = None,
     ) -> "FitInterferometer":
         """
-        Returns a new fit which uses the dataset, plane and other objects of this fit, but uses a different set of
+        Returns a new fit which uses the dataset, galaxies and other objects of this fit, but uses a different set of
         preloads input into this function.
 
         This is used when setting up the preloads objects, to concisely test how using different preloads objects
@@ -239,7 +245,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
 
         Returns
         -------
-        A new fit which has used new preloads input into this function but the same dataset, plane and other settings.
+        A new fit which has used new preloads input into this function but the same dataset, galaxies and other settings.
         """
         if self.run_time_dict is not None:
             run_time_dict = {}
@@ -250,9 +256,10 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             settings_inversion = self.settings_inversion
 
         return FitInterferometer(
-            dataset=self.interferometer,
-            plane=self.plane,
-            settings_pixelization=self.settings_pixelization,
+            dataset=self.dataset,
+            galaxies=self.galaxies,
+            dataset_model=self.dataset_model,
+            adapt_images=self.adapt_images,
             settings_inversion=settings_inversion,
             preloads=preloads,
             run_time_dict=run_time_dict,

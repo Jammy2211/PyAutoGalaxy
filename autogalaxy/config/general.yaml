@@ -7,10 +7,10 @@ grid:
 adapt:
   adapt_minimum_percent: 0.01
   adapt_noise_limit: 100000000.0
-  stochastic_outputs: false
+inversion:
+  use_border_relocator: true          # If True, by default a pixelization's border is used to relocate all pixels outside its border to the border.
 test:
-  check_figure_of_merit_sanity: false
-  bypass_figure_of_merit_sanity: false
+  check_likelihood_function: true   # if True, when a search is resumed the likelihood of a previous sample is recalculated to ensure it is consistent with the previous run.
   check_preloads: false
   exception_override: false
   preloads_check_threshold: 1.0     # If the figure of merit of a fit with and without preloads is greater than this threshold, the check preload test fails and an exception raised for a model-fit. 

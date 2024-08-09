@@ -18,7 +18,7 @@ def make_profile_plotter_setup():
 def test__figures_1d__all_are_output(
     lp_0,
     lp_1,
-    sub_grid_2d_7x7,
+    grid_2d_7x7,
     grid_2d_irregular_7x7_list,
     include_1d_all,
     plot_path,
@@ -32,7 +32,7 @@ def test__figures_1d__all_are_output(
 
     light_profile_plotter = aplt.LightProfilePlotter(
         light_profile=lp_0,
-        grid=sub_grid_2d_7x7,
+        grid=grid_2d_7x7,
         include_1d=include_1d_all,
         mat_plot_1d=mat_plot_1d,
     )
@@ -47,7 +47,7 @@ def test__figures_1d__all_are_output(
 
     light_profile_plotter = aplt.LightProfilePDFPlotter(
         light_profile_pdf_list=[lp_0, lp_1, lp_0, lp_1, lp_0, lp_offset_centre],
-        grid=sub_grid_2d_7x7,
+        grid=grid_2d_7x7,
         include_1d=include_1d_all,
         mat_plot_1d=mat_plot_1d,
         sigma=2.0,
@@ -60,7 +60,7 @@ def test__figures_1d__all_are_output(
 
 def test__figures_2d__all_are_output(
     lp_0,
-    sub_grid_2d_7x7,
+    grid_2d_7x7,
     grid_2d_irregular_7x7_list,
     include_2d_all,
     plot_path,
@@ -68,7 +68,7 @@ def test__figures_2d__all_are_output(
 ):
     light_profile_plotter = aplt.LightProfilePlotter(
         light_profile=lp_0,
-        grid=sub_grid_2d_7x7,
+        grid=grid_2d_7x7,
         include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )

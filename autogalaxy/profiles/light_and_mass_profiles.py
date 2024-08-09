@@ -58,6 +58,61 @@ class Gaussian(lp.Gaussian, mp.Gaussian, LightMassProfile):
         )
 
 
+class GaussianGradient(lp.Gaussian, mp.GaussianGradient, LightMassProfile):
+    def __init__(
+        self,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 0.1,
+        sigma: float = 1.0,
+        mass_to_light_ratio_base: float = 1.0,
+        mass_to_light_gradient: float = 0.0,
+        mass_to_light_radius: float = 1.0,
+    ):
+        """
+        The elliptical Gaussian light profile with a gradient in its mass to light conversion.
+
+        This simultaneously represents the luminous emission and stellar mass of a galaxy.
+
+        Parameters
+        ----------
+        centre
+            The grid of The (y,x) arc-second coordinates of the profile centre.
+        ell_comps
+            The first and second ellipticity components of the elliptical coordinate system.
+        intensity
+            Overall flux intensity normalisation in the light profiles (electrons per second).
+        effective_radius
+            The radius containing half the light of this light profile.
+        mass_to_light_ratio_base
+            The base mass-to-light ratio of the profile, which is the mass-to-light ratio of the Gaussian before it
+            is scaled by values that adjust its mass-to-light ratio based on the reference radius and gradient.
+        mass_to_light_gradient
+            The mass-to-light radial gradient of the profile, whereby positive values means there is more mass
+            per unit light within the reference radius.
+        mass_to_light_radius
+            The radius where the mass-to-light ratio is equal to the base mass-to-light ratio, such that there will be
+            more of less mass per unit light within this radius depending on the mass-to-light gradient.
+        """
+        lp.Gaussian.__init__(
+            self,
+            centre=centre,
+            ell_comps=ell_comps,
+            intensity=intensity,
+            sigma=sigma,
+        )
+        mp.GaussianGradient.__init__(
+            self,
+            centre=centre,
+            ell_comps=ell_comps,
+            intensity=intensity,
+            sigma=sigma,
+            mass_to_light_ratio_base=mass_to_light_ratio_base,
+            mass_to_light_gradient=mass_to_light_gradient,
+            mass_to_light_radius=mass_to_light_radius,
+        )
+
+
 class Sersic(lp.Sersic, mp.Sersic, LightMassProfile):
     def __init__(
         self,
@@ -284,7 +339,7 @@ class DevVaucouleursSph(DevVaucouleurs, LightMassProfile):
         )
 
 
-class SersicRadialGradient(lp.Sersic, mp.SersicRadialGradient, LightMassProfile):
+class SersicGradient(lp.Sersic, mp.SersicGradient, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -325,7 +380,7 @@ class SersicRadialGradient(lp.Sersic, mp.SersicRadialGradient, LightMassProfile)
             effective_radius=effective_radius,
             sersic_index=sersic_index,
         )
-        mp.SersicRadialGradient.__init__(
+        mp.SersicGradient.__init__(
             self,
             centre=centre,
             ell_comps=ell_comps,
@@ -337,7 +392,7 @@ class SersicRadialGradient(lp.Sersic, mp.SersicRadialGradient, LightMassProfile)
         )
 
 
-class SersicRadialGradientSph(SersicRadialGradient, LightMassProfile):
+class SersicGradientSph(SersicGradient, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -368,7 +423,7 @@ class SersicRadialGradientSph(SersicRadialGradient, LightMassProfile):
             The mass-to-light radial gradient.
         """
 
-        SersicRadialGradient.__init__(
+        SersicGradient.__init__(
             self,
             centre=centre,
             ell_comps=(0.0, 0.0),
@@ -380,7 +435,7 @@ class SersicRadialGradientSph(SersicRadialGradient, LightMassProfile):
         )
 
 
-class ExponentialRadialGradient(SersicRadialGradient, LightMassProfile):
+class ExponentialGradient(SersicGradient, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -411,7 +466,7 @@ class ExponentialRadialGradient(SersicRadialGradient, LightMassProfile):
             The mass-to-light radial gradient.
         """
 
-        SersicRadialGradient.__init__(
+        SersicGradient.__init__(
             self,
             centre=centre,
             ell_comps=ell_comps,
@@ -423,7 +478,7 @@ class ExponentialRadialGradient(SersicRadialGradient, LightMassProfile):
         )
 
 
-class SphExponentialRadialGradient(SersicRadialGradientSph, LightMassProfile):
+class ExponentialGradientSph(SersicGradientSph, LightMassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -453,7 +508,7 @@ class SphExponentialRadialGradient(SersicRadialGradientSph, LightMassProfile):
             The mass-to-light radial gradient.
         """
 
-        SersicRadialGradientSph.__init__(
+        SersicGradientSph.__init__(
             self,
             centre=centre,
             intensity=intensity,

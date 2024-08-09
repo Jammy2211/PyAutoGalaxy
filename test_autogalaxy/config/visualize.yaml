@@ -15,7 +15,7 @@ include:
     radial_critical_curves: false
     grid: false
     light_profile_centres: true
-    mapper_image_plane_mesh_grid: true
+    mapper_image_plane_mesh_grid: false
     mapper_source_plane_data_grid: false
     mapper_source_plane_mesh_grid: false
     mask: true
@@ -393,21 +393,20 @@ plots:
     phases_vs_uv_distances: false
     uv_wavelengths: false
   fit_quantity:
-    all_at_end_fits: true
-    all_at_end_png: true
-    chi_squared_map: true
+    all_at_end_fits: false
+    all_at_end_png: false
+    chi_squared_map: false
     image: true
     model_image: true
     noise_map: false
-    normalized_residual_map: true
+    normalized_residual_map: false
     residual_map: false
-    subplot_fit: true
-  galaxies:
+    subplot_fit: false
+  galaxies_1d:
     convergence: false
     image: true
     potential: true
   adapt:
-    contribution_map_list: true
     images_of_galaxies: true
     model_image: true
   imaging:
@@ -433,7 +432,7 @@ plots:
     subplot_inversion: true
   other:
     stochastic_histogram: false
-  plane:
+  galaxies:
     all_at_end_fits: true
     all_at_end_png: false
     convergence: true
@@ -442,7 +441,7 @@ plots:
     magnification: true
     potential: false
     source_plane_image: true
-    subplot_plane: true
+    subplot_galaxies: true
     subplot_galaxy_images: true
   positions:
     image_with_positions: true

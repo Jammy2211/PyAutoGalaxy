@@ -1,5 +1,6 @@
 from autoarray.fixtures import *
 
+import autofit as af
 import autogalaxy as ag
 import autogalaxy.plot as aplt
 
@@ -7,17 +8,19 @@ import autogalaxy.plot as aplt
 def make_masked_imaging_7x7():
     imaging_7x7 = make_imaging_7x7()
 
-    masked_imaging_7x7 = imaging_7x7.apply_mask(mask=make_sub_mask_2d_7x7())
+    return imaging_7x7.apply_mask(mask=make_mask_2d_7x7())
 
-    return masked_imaging_7x7.apply_settings(settings=ag.SettingsImaging(sub_size=1))
+
+def make_masked_imaging_7x7_sub_2():
+    imaging_7x7 = make_imaging_7x7_sub_2()
+
+    return imaging_7x7.apply_mask(mask=make_mask_2d_7x7())
 
 
 def make_masked_imaging_covariance_7x7():
     imaging_7x7 = make_imaging_covariance_7x7()
 
-    masked_imaging_7x7 = imaging_7x7.apply_mask(mask=make_sub_mask_2d_7x7())
-
-    return masked_imaging_7x7.apply_settings(settings=ag.SettingsImaging(sub_size=1))
+    return imaging_7x7.apply_mask(mask=make_mask_2d_7x7())
 
 
 # PROFILES #
@@ -64,7 +67,7 @@ def make_mp_1():
 
 
 def make_lmp_0():
-    return ag.lmp.SersicRadialGradient()
+    return ag.lmp.SersicGradient()
 
 
 def make_dmp_0():
@@ -116,25 +119,25 @@ def make_gal_x1_lp_x1_mp():
     )
 
 
-# Plane #
+# Galaxies #
 
 
-def make_plane_7x7():
-    return ag.Plane(galaxies=[make_gal_x1_lp_x1_mp()])
+def make_galaxies_7x7():
+    return ag.Galaxies(galaxies=[make_gal_x1_lp_x1_mp()])
 
 
-def make_plane_x2_gal_7x7():
-    return ag.Plane(galaxies=[make_gal_x1_lp_x1_mp(), make_gal_x1_lp_x1_mp()])
+def make_galaxies_x2_7x7():
+    return ag.Galaxies(galaxies=[make_gal_x1_lp_x1_mp(), make_gal_x1_lp_x1_mp()])
 
 
-def make_plane_x2_galaxy_inversion_7x7():
+def make_galaxies_x2_inversion_7x7():
     source_gal_inversion = ag.Galaxy(
         redshift=1.0,
         pixelization=ag.mesh.Rectangular(),
         regularization=ag.reg.Constant(),
     )
 
-    return ag.Plane(galaxies=[make_gal_x1_lp(), source_gal_inversion])
+    return [make_gal_x1_lp(), source_gal_inversion]
 
 
 # COSMOLOGY #
@@ -142,6 +145,15 @@ def make_plane_x2_galaxy_inversion_7x7():
 
 def make_Planck15():
     return ag.cosmo.Planck15()
+
+
+# ELLIPSE FITING
+
+
+def make_dataset_interp_7x7():
+    imaging_7x7 = make_imaging_7x7()
+
+    return ag.DatasetInterp(dataset=imaging_7x7)
 
 
 # QUANTITY DATASET AND FIT #
@@ -168,7 +180,7 @@ def make_dataset_quantity_7x7_vector_yx_2d():
 def make_fit_quantity_7x7_array_2d():
     return ag.FitQuantity(
         dataset=make_dataset_quantity_7x7_array_2d(),
-        light_mass_obj=make_plane_7x7(),
+        light_mass_obj=make_galaxies_7x7(),
         func_str="convergence_2d_from",
     )
 
@@ -176,7 +188,7 @@ def make_fit_quantity_7x7_array_2d():
 def make_fit_quantity_7x7_vector_yx_2d():
     return ag.FitQuantity(
         dataset=make_dataset_quantity_7x7_vector_yx_2d(),
-        light_mass_obj=make_plane_7x7(),
+        light_mass_obj=make_galaxies_7x7(),
         func_str="deflections_yx_2d_from",
     )
 
@@ -184,56 +196,48 @@ def make_fit_quantity_7x7_vector_yx_2d():
 # galaxies #
 
 
-def make_adapt_model_image_7x7():
-    return ag.Array2D(
-        np.full(fill_value=5.0, shape=make_mask_2d_7x7().pixels_in_mask),
-        mask=make_mask_2d_7x7(),
-    )
-
-
-def make_adapt_galaxy_image_0_7x7():
-    return ag.Array2D(
+def make_adapt_galaxy_name_image_dict_7x7():
+    image_0 = ag.Array2D(
         np.full(fill_value=2.0, shape=make_mask_2d_7x7().pixels_in_mask),
         mask=make_mask_2d_7x7(),
     )
 
-
-def make_adapt_galaxy_image_path_dict_7x7():
-    adapt_galaxy_image_path_dict = {
-        "('galaxies', 'g0')": make_adapt_galaxy_image_0_7x7(),
-        "('galaxies', 'g1')": make_adapt_galaxy_image_1_7x7(),
-    }
-
-    return adapt_galaxy_image_path_dict
-
-
-def make_adapt_galaxy_image_1_7x7():
-    return ag.Array2D(
+    image_1 = ag.Array2D(
         np.full(fill_value=3.0, shape=make_mask_2d_7x7().pixels_in_mask),
         mask=make_mask_2d_7x7(),
     )
 
+    adapt_galaxy_name_image_dict = {
+        str(("galaxies", "g0")): image_0,
+        str(("galaxies", "g1")): image_1,
+    }
 
-def make_fit_imaging_7x7():
-    return ag.FitImaging(dataset=make_masked_imaging_7x7(), plane=make_plane_7x7())
+    return adapt_galaxy_name_image_dict
+
+
+def make_adapt_images_7x7():
+    return ag.AdaptImages(
+        galaxy_name_image_dict=make_adapt_galaxy_name_image_dict_7x7(),
+    )
 
 
 def make_fit_imaging_x2_galaxy_7x7():
-    plane = ag.Plane(galaxies=[make_gal_x1_lp(), make_gal_x1_lp(), make_gal_x1_mp()])
-
-    return ag.FitImaging(dataset=make_masked_imaging_7x7(), plane=plane)
+    return ag.FitImaging(
+        dataset=make_masked_imaging_7x7(),
+        galaxies=[make_gal_x1_lp(), make_gal_x1_lp(), make_gal_x1_mp()],
+    )
 
 
 def make_fit_imaging_x2_galaxy_inversion_7x7():
     return ag.FitImaging(
-        dataset=make_masked_imaging_7x7(), plane=make_plane_x2_galaxy_inversion_7x7()
+        dataset=make_masked_imaging_7x7(), galaxies=make_galaxies_x2_inversion_7x7()
     )
 
 
 def make_fit_interferometer_7x7():
     return ag.FitInterferometer(
         dataset=make_interferometer_7(),
-        plane=make_plane_7x7(),
+        galaxies=make_galaxies_7x7(),
         settings_inversion=aa.SettingsInversion(use_w_tilde=False),
     )
 
@@ -241,31 +245,36 @@ def make_fit_interferometer_7x7():
 def make_fit_interferometer_x2_galaxy_inversion_7x7():
     return ag.FitInterferometer(
         dataset=make_interferometer_7(),
-        plane=make_plane_x2_galaxy_inversion_7x7(),
+        galaxies=make_galaxies_x2_inversion_7x7(),
         settings_inversion=aa.SettingsInversion(use_w_tilde=False),
     )
 
 
-def make_samples_with_result():
-    galaxies = [
-        ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0)),
-        ag.Galaxy(redshift=1.0, light=ag.lp.Sersic(intensity=2.0)),
-    ]
+def make_samples_summary_with_result():
+    galaxy = af.Model(ag.Galaxy, redshift=0.5, bulge=af.Model(ag.lp.Sersic))
 
-    plane = ag.Plane(galaxies=galaxies)
+    model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
-    return ag.m.MockSamples(max_log_likelihood_instance=plane)
+    instance = model.instance_from_prior_medians()
+
+    return ag.m.MockSamplesSummary(max_log_likelihood_instance=instance)
 
 
 def make_analysis_imaging_7x7():
-    return ag.AnalysisImaging(
+    analysis = ag.AnalysisImaging(
         dataset=make_masked_imaging_7x7(),
         settings_inversion=aa.SettingsInversion(use_w_tilde=False),
     )
+    analysis._adapt_images = make_adapt_images_7x7()
+    return analysis
 
 
 def make_analysis_interferometer_7():
-    return ag.AnalysisInterferometer(dataset=make_interferometer_7())
+    analysis = ag.AnalysisInterferometer(
+        dataset=make_interferometer_7(),
+    )
+    analysis._adapt_images = make_adapt_images_7x7()
+    return analysis
 
 
 def make_include_1d_all():

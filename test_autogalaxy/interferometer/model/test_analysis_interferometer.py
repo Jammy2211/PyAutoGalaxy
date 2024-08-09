@@ -14,13 +14,6 @@ def test__make_result__result_interferometer_is_returned(interferometer_7):
 
     analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
 
-    def modify_after_fit(
-        paths: af.DirectoryPaths, model: af.AbstractPriorModel, result: af.Result
-    ):
-        pass
-
-    analysis.modify_after_fit = modify_after_fit
-
     search = ag.m.MockSearch(name="test_search")
 
     result = search.fit(model=model, analysis=analysis)
@@ -40,9 +33,9 @@ def test__fit_figure_of_merit__matches_correct_fit_given_galaxy_profiles(
     instance = model.instance_from_unit_vector([])
     fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)
 
-    plane = analysis.plane_via_instance_from(instance=instance)
+    galaxies = analysis.galaxies_via_instance_from(instance=instance)
 
-    fit = ag.FitInterferometer(dataset=interferometer_7, plane=plane)
+    fit = ag.FitInterferometer(dataset=interferometer_7, galaxies=galaxies)
 
     assert fit.log_likelihood == fit_figure_of_merit
 

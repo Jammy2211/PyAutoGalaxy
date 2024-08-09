@@ -36,7 +36,7 @@ Create figures and subplots showing quantities of standard **PyAutoGalaxy** obje
     GalaxyPlotter
     FitImagingPlotter
     FitInterferometerPlotter
-    PlanePlotter
+    GalaxiesPlotter
     AdaptPlotter
     FitImagingPlotter
     FitInterferometerPlotter
@@ -56,11 +56,9 @@ by **PyAutoGalaxy**.
    :template: custom-class-template.rst
    :recursive:
 
-   DynestyPlotter
-   UltraNestPlotter
-   EmceePlotter
-   ZeusPlotter
-   PySwarmsPlotter
+   NestPlotter
+   MCMCPlotter
+   MLEPlotter
 
 Plot Customization [aplt]
 -------------------------

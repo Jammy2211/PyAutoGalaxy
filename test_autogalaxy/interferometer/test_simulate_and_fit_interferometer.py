@@ -9,7 +9,7 @@ import autogalaxy as ag
 
 
 def test__perfect_fit__chi_squared_0():
-    grid = ag.Grid2D.uniform(shape_native=(51, 51), pixel_scales=0.1, sub_size=2)
+    grid = ag.Grid2D.uniform(shape_native=(51, 51), pixel_scales=0.1)
 
     galaxy_0 = ag.Galaxy(
         redshift=0.5, light=ag.lp.Sersic(centre=(0.1, 0.1), intensity=0.1)
@@ -19,8 +19,6 @@ def test__perfect_fit__chi_squared_0():
         redshift=0.5, light=ag.lp.Exponential(centre=(0.1, 0.1), intensity=0.5)
     )
 
-    plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
-
     simulator = ag.SimulatorInterferometer(
         uv_wavelengths=np.ones(shape=(7, 2)),
         transformer_class=ag.TransformerDFT,
@@ -29,7 +27,7 @@ def test__perfect_fit__chi_squared_0():
         noise_sigma=None,
     )
 
-    dataset = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset = simulator.via_galaxies_from(galaxies=[galaxy_0, galaxy_1], grid=grid)
 
     file_path = path.join(
         "{}".format(path.dirname(path.realpath(__file__))),
@@ -52,7 +50,8 @@ def test__perfect_fit__chi_squared_0():
     )
 
     real_space_mask = ag.Mask2D.all_false(
-        shape_native=(51, 51), pixel_scales=0.1, sub_size=2
+        shape_native=(51, 51),
+        pixel_scales=0.1,
     )
 
     dataset = ag.Interferometer.from_fits(
@@ -60,17 +59,12 @@ def test__perfect_fit__chi_squared_0():
         noise_map_path=path.join(file_path, "noise_map.fits"),
         uv_wavelengths_path=path.join(file_path, "uv_wavelengths.fits"),
         real_space_mask=real_space_mask,
-        settings=ag.SettingsInterferometer(
-            grid_class=ag.Grid2D, transformer_class=ag.TransformerDFT, sub_size=2
-        ),
+        transformer_class=ag.TransformerDFT,
     )
-
-    plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
 
     fit = ag.FitInterferometer(
         dataset=dataset,
-        plane=plane,
-        settings_pixelization=ag.SettingsPixelization(use_border=False),
+        galaxies=[galaxy_0, galaxy_1],
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
@@ -87,12 +81,9 @@ def test__perfect_fit__chi_squared_0():
 
     galaxy_1 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
-    plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
-
     fit = ag.FitInterferometer(
         dataset=dataset,
-        plane=plane,
-        settings_pixelization=ag.SettingsPixelization(use_border=False),
+        galaxies=[galaxy_0, galaxy_1],
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
     assert abs(fit.chi_squared) < 1.0e-4
@@ -106,7 +97,9 @@ def test__perfect_fit__chi_squared_0():
 
 def test__simulate_interferometer_data_and_fit__known_likelihood():
     mask = ag.Mask2D.circular(
-        radius=3.0, shape_native=(31, 31), pixel_scales=0.2, sub_size=1
+        radius=3.0,
+        shape_native=(31, 31),
+        pixel_scales=0.2,
     )
 
     grid = ag.Grid2D.from_mask(mask=mask)
@@ -124,8 +117,6 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
 
     galaxy_1 = ag.Galaxy(redshift=1.0, pixelization=pixelization)
 
-    plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
-
     simulator = ag.SimulatorInterferometer(
         uv_wavelengths=np.ones(shape=(7, 2)),
         transformer_class=ag.TransformerDFT,
@@ -133,15 +124,11 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
         noise_seed=1,
     )
 
-    dataset = simulator.via_plane_from(plane=plane, grid=grid)
-
-    dataset = dataset.apply_settings(
-        settings=ag.SettingsInterferometer(transformer_class=ag.TransformerDFT)
-    )
+    dataset = simulator.via_galaxies_from(galaxies=[galaxy_0, galaxy_1], grid=grid)
 
     fit = ag.FitInterferometer(
         dataset=dataset,
-        plane=plane,
+        galaxies=[galaxy_0, galaxy_1],
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
@@ -149,15 +136,13 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
 
 
 def test__linear_light_profiles_agree_with_standard_light_profiles():
-    grid = ag.Grid2D.uniform(shape_native=(51, 51), pixel_scales=0.1, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(51, 51), pixel_scales=0.1)
 
     galaxy = ag.Galaxy(
         redshift=0.5,
         bulge=ag.lp.Sersic(intensity=0.1, sersic_index=1.0),
         disk=ag.lp.Sersic(intensity=0.2, sersic_index=4.0),
     )
-
-    plane = ag.Plane(galaxies=[galaxy])
 
     simulator = ag.SimulatorInterferometer(
         uv_wavelengths=np.array(
@@ -172,18 +157,19 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
         noise_sigma=None,
     )
 
-    dataset = simulator.via_plane_from(plane=plane, grid=grid)
+    dataset = simulator.via_galaxies_from(galaxies=[galaxy], grid=grid)
 
-    dataset = dataset.apply_settings(
-        settings=ag.SettingsInterferometer(
-            grid_class=ag.Grid2D, transformer_class=ag.TransformerDFT, sub_size=1
-        )
+    dataset = ag.Interferometer(
+        data=dataset.data,
+        noise_map=dataset.noise_map,
+        uv_wavelengths=dataset.uv_wavelengths,
+        real_space_mask=dataset.real_space_mask,
+        transformer_class=ag.TransformerDFT,
     )
 
     fit = ag.FitInterferometer(
         dataset=dataset,
-        plane=plane,
-        settings_pixelization=ag.SettingsPixelization(use_border=False),
+        galaxies=[galaxy],
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
@@ -193,12 +179,9 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
         disk=ag.lp_linear.Sersic(sersic_index=4.0),
     )
 
-    plane_linear = ag.Plane(galaxies=[galaxy_linear])
-
     fit_linear = ag.FitInterferometer(
         dataset=dataset,
-        plane=plane_linear,
-        settings_pixelization=ag.SettingsPixelization(use_border=False),
+        galaxies=[galaxy_linear],
         settings_inversion=ag.SettingsInversion(
             use_w_tilde=False, no_regularization_add_to_curvature_diag_value=False
         ),
@@ -215,14 +198,14 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
     ] == pytest.approx(0.2, 1.0e-2)
     assert fit.log_likelihood == pytest.approx(fit_linear.log_likelihood, 1.0e-4)
 
-    galaxy_image = galaxy.image_2d_from(grid=dataset.grid)
+    galaxy_image = galaxy.image_2d_from(grid=dataset.grids.uniform)
 
     assert fit_linear.galaxy_model_image_dict[galaxy_linear] == pytest.approx(
         galaxy_image, 1.0e-4
     )
 
     galaxy_visibilities = galaxy.visibilities_from(
-        grid=dataset.grid, transformer=dataset.transformer
+        grid=dataset.grids.uniform, transformer=dataset.transformer
     )
 
     assert fit_linear.galaxy_model_visibilities_dict[galaxy_linear] == pytest.approx(

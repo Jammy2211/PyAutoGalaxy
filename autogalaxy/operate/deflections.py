@@ -1,7 +1,6 @@
 from functools import wraps
 import logging
 import numpy as np
-from skimage import measure
 from typing import List, Tuple, Union
 
 from autoconf import conf
@@ -20,21 +19,17 @@ def grid_scaled_2d_for_marching_squares_from(
     mask: aa.Mask2D,
 ) -> aa.Grid2DIrregular:
     pixel_scales = mask.pixel_scales
-    sub_size = mask.sub_size
     origin = mask.origin
 
     grid_scaled_1d = aa.util.geometry.grid_scaled_2d_slim_from(
         grid_pixels_2d_slim=grid_pixels_2d,
         shape_native=shape_native,
-        pixel_scales=(
-            pixel_scales[0] / sub_size,
-            pixel_scales[1] / sub_size,
-        ),
+        pixel_scales=pixel_scales,
         origin=origin,
     )
 
-    grid_scaled_1d[:, 0] -= pixel_scales[0] / (2.0 * sub_size)
-    grid_scaled_1d[:, 1] += pixel_scales[1] / (2.0 * sub_size)
+    grid_scaled_1d[:, 0] -= pixel_scales[0] / 2.0
+    grid_scaled_1d[:, 1] += pixel_scales[1] / 2.0
 
     return aa.Grid2DIrregular(values=grid_scaled_1d)
 
@@ -96,7 +91,7 @@ def evaluation_grid(func):
 class OperateDeflections:
     """
     Packages methods which manipulate the 2D deflection angle map returned from the `deflections_yx_2d_from` function
-    of a mass object (e.g. a `MassProfile`, `Galaxy`, `Plane`).
+    of a mass object (e.g. a `MassProfile`, `Galaxy`).
 
     The majority of methods are those which from the 2D deflection angle map compute lensing quantities like a 2D
     shear field, magnification map or the Einstein Radius.
@@ -109,7 +104,7 @@ class OperateDeflections:
         The function which returns the mass object's 2D deflection angles.
     """
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         raise NotImplementedError
 
     def __eq__(self, other):
@@ -204,19 +199,19 @@ class OperateDeflections:
         if deflections_func is None:
             deflections_func = self.deflections_yx_2d_from
 
-        grid_shift_y_up = np.zeros(grid.shape)
+        grid_shift_y_up = aa.Grid2DIrregular(values=np.zeros(grid.shape))
         grid_shift_y_up[:, 0] = grid[:, 0] + buffer
         grid_shift_y_up[:, 1] = grid[:, 1]
 
-        grid_shift_y_down = np.zeros(grid.shape)
+        grid_shift_y_down = aa.Grid2DIrregular(values=np.zeros(grid.shape))
         grid_shift_y_down[:, 0] = grid[:, 0] - buffer
         grid_shift_y_down[:, 1] = grid[:, 1]
 
-        grid_shift_x_left = np.zeros(grid.shape)
+        grid_shift_x_left = aa.Grid2DIrregular(values=np.zeros(grid.shape))
         grid_shift_x_left[:, 0] = grid[:, 0]
         grid_shift_x_left[:, 1] = grid[:, 1] - buffer
 
-        grid_shift_x_right = np.zeros(grid.shape)
+        grid_shift_x_right = aa.Grid2DIrregular(values=np.zeros(grid.shape))
         grid_shift_x_right[:, 0] = grid[:, 0]
         grid_shift_x_right[:, 1] = grid[:, 1] + buffer
 
@@ -259,7 +254,7 @@ class OperateDeflections:
             grid=grid, buffer=buffer
         )
 
-        return grid.values_from(array_slim=0.5 * (hessian_yy + hessian_xx))
+        return aa.ArrayIrregular(values=0.5 * (hessian_yy + hessian_xx))
 
     def shear_yx_2d_via_hessian_from(
         self, grid, buffer: float = 0.01
@@ -285,7 +280,7 @@ class OperateDeflections:
 
         Parameters
         ----------
-        grid
+        grids
             The 2D grid of (y,x) arc-second coordinates the deflection angles and Hessian are computed on.
         buffer
             The spacing in the y and x directions around each grid coordinate where deflection angles are computed and
@@ -299,7 +294,7 @@ class OperateDeflections:
         gamma_1 = 0.5 * (hessian_xx - hessian_yy)
         gamma_2 = hessian_xy
 
-        shear_yx_2d = np.zeros(shape=(grid.sub_shape_slim, 2))
+        shear_yx_2d = np.zeros(shape=(grid.shape_slim, 2))
 
         shear_yx_2d[:, 0] = gamma_2
         shear_yx_2d[:, 1] = gamma_1
@@ -334,7 +329,17 @@ class OperateDeflections:
 
         det_A = (1 - hessian_xx) * (1 - hessian_yy) - hessian_xy * hessian_yx
 
-        return grid.values_from(array_slim=1.0 / det_A)
+        return aa.ArrayIrregular(values=1.0 / det_A)
+
+    def contour_list_from(self, grid, contour_array):
+        grid_contour = aa.Grid2DContour(
+            grid=grid,
+            pixel_scales=grid.pixel_scales,
+            shape_native=grid.shape_native,
+            contour_array=contour_array.native,
+        )
+
+        return grid_contour.contour_list
 
     @evaluation_grid
     def tangential_critical_curve_list_from(
@@ -360,25 +365,7 @@ class OperateDeflections:
         """
         tangential_eigen_values = self.tangential_eigen_value_from(grid=grid)
 
-        tangential_critical_curve_indices_list = measure.find_contours(
-            tangential_eigen_values.native, 0
-        )
-
-        if len(tangential_critical_curve_indices_list) == 0:
-            return []
-
-        tangential_critical_curve_list = []
-
-        for tangential_critical_curve_indices in tangential_critical_curve_indices_list:
-            curve = grid_scaled_2d_for_marching_squares_from(
-                grid_pixels_2d=tangential_critical_curve_indices,
-                shape_native=tangential_eigen_values.sub_shape_native,
-                mask=grid.mask,
-            )
-
-            tangential_critical_curve_list.append(curve)
-
-        return tangential_critical_curve_list
+        return self.contour_list_from(grid=grid, contour_array=tangential_eigen_values)
 
     @evaluation_grid
     def radial_critical_curve_list_from(
@@ -404,25 +391,7 @@ class OperateDeflections:
         """
         radial_eigen_values = self.radial_eigen_value_from(grid=grid)
 
-        radial_critical_curve_indices_list = measure.find_contours(
-            radial_eigen_values.native, 0
-        )
-
-        if len(radial_critical_curve_indices_list) == 0:
-            return []
-
-        radial_critical_curve_list = []
-
-        for radial_critical_curve_indices in radial_critical_curve_indices_list:
-            curve = grid_scaled_2d_for_marching_squares_from(
-                grid_pixels_2d=radial_critical_curve_indices,
-                shape_native=radial_eigen_values.sub_shape_native,
-                mask=grid.mask,
-            )
-
-            radial_critical_curve_list.append(curve)
-
-        return radial_critical_curve_list
+        return self.contour_list_from(grid=grid, contour_array=radial_eigen_values)
 
     @evaluation_grid
     def tangential_caustic_list_from(
@@ -759,6 +728,7 @@ class OperateDeflections:
         grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and Jacobian are computed on.
         """
+
         deflections = self.deflections_yx_2d_from(grid=grid)
 
         # TODO : Can probably make this work on irregular grid? Is there any point?
@@ -837,7 +807,7 @@ class OperateDeflections:
             A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
         """
 
-        shear_yx_2d = np.zeros(shape=(grid.sub_shape_slim, 2))
+        shear_yx_2d = np.zeros(shape=(grid.shape_slim, 2))
         shear_yx_2d[:, 0] = -0.5 * (jacobian[0][1] + jacobian[1][0])
         shear_yx_2d[:, 1] = 0.5 * (jacobian[1][1] - jacobian[0][0])
 

@@ -1,4 +1,5 @@
 import os
+import shutil
 from os import path
 
 import pytest
@@ -28,10 +29,13 @@ directory = path.dirname(path.realpath(__file__))
 
 @pytest.fixture(autouse=True)
 def set_config_path(request):
+    output_path = path.join(directory, "output")
     conf.instance.push(
         new_path=path.join(directory, "config"),
-        output_path=path.join(directory, "output"),
+        output_path=output_path,
     )
+    yield
+    shutil.rmtree(output_path, ignore_errors=True)
 
 
 @pytest.fixture(autouse=True, scope="session")
@@ -86,11 +90,6 @@ def make_noise_map_7x7():
     return fixtures.make_noise_map_7x7()
 
 
-@pytest.fixture(name="sub_mask_2d_7x7")
-def make_sub_mask_2d_7x7():
-    return fixtures.make_sub_mask_2d_7x7()
-
-
 @pytest.fixture(name="imaging_7x7")
 def make_imaging_7x7():
     return fixtures.make_imaging_7x7()
@@ -104,6 +103,11 @@ def make_image_7x7():
 @pytest.fixture(name="masked_imaging_7x7")
 def make_masked_imaging_7x7():
     return fixtures.make_masked_imaging_7x7()
+
+
+@pytest.fixture(name="masked_imaging_7x7_sub_2")
+def make_masked_imaging_7x7_sub_2():
+    return fixtures.make_masked_imaging_7x7_sub_2()
 
 
 @pytest.fixture(name="masked_imaging_covariance_7x7")
@@ -139,11 +143,6 @@ def make_mask_2d_7x7_1_pix():
 @pytest.fixture(name="grid_1d_7")
 def make_grid_1d_7():
     return fixtures.make_grid_1d_7()
-
-
-@pytest.fixture(name="sub_grid_1d_7")
-def make_sub_grid_1d_7():
-    return fixtures.make_sub_grid_1d_7()
 
 
 @pytest.fixture(name="grid_2d_iterate_7x7")
@@ -191,14 +190,9 @@ def make_grid_2d_7x7():
     return fixtures.make_grid_2d_7x7()
 
 
-@pytest.fixture(name="sub_grid_2d_7x7")
-def make_sub_grid_2d_7x7():
-    return fixtures.make_sub_grid_2d_7x7()
-
-
-@pytest.fixture(name="sub_grid_2d_7x7_simple")
-def make_sub_grid_2d_7x7_simple():
-    return fixtures.make_sub_grid_2d_7x7_simple()
+@pytest.fixture(name="grid_2d_7x7_simple")
+def make_grid_2d_7x7_simple():
+    return fixtures.make_grid_2d_7x7_simple()
 
 
 @pytest.fixture(name="ps_0")
@@ -291,14 +285,14 @@ def make_gal_x1_lp_x1_mp():
     return fixtures.make_gal_x1_lp_x1_mp()
 
 
-@pytest.fixture(name="plane_7x7")
-def make_plane_7x7():
-    return fixtures.make_plane_7x7()
+@pytest.fixture(name="galaxies_7x7")
+def make_galaxies_7x7():
+    return fixtures.make_galaxies_7x7()
 
 
-@pytest.fixture(name="plane_x2_gal_7x7")
-def make_plane_x2_gal_7x7():
-    return fixtures.make_plane_x2_gal_7x7()
+@pytest.fixture(name="galaxies_x2_7x7")
+def make_galaxies_x2_7x7():
+    return fixtures.make_galaxies_x2_7x7()
 
 
 @pytest.fixture(name="Planck15")
@@ -306,19 +300,22 @@ def make_Planck15():
     return fixtures.make_Planck15()
 
 
-@pytest.fixture(name="adapt_model_image_7x7")
-def make_adapt_model_image_7x7():
-    return fixtures.make_adapt_model_image_7x7()
+@pytest.fixture(name="adapt_galaxy_name_image_dict_7x7")
+def make_adapt_galaxy_name_image_dict_7x7():
+    return fixtures.make_adapt_galaxy_name_image_dict_7x7()
 
 
-@pytest.fixture(name="adapt_galaxy_image_0_7x7")
-def make_adapt_galaxy_image_0_7x7():
-    return fixtures.make_adapt_galaxy_image_0_7x7()
+@pytest.fixture(name="adapt_images_7x7")
+def make_adapt_images_7x7():
+    return fixtures.make_adapt_images_7x7()
 
 
-@pytest.fixture(name="adapt_galaxy_image_path_dict_7x7")
-def make_adapt_galaxy_image_path_dict_7x7():
-    return fixtures.make_adapt_galaxy_image_path_dict_7x7()
+### ELLIPSE ###
+
+
+@pytest.fixture(name="dataset_interp_7x7")
+def make_dataset_interp_7x7():
+    return fixtures.make_dataset_interp_7x7()
 
 
 ### QUANTITY ###
@@ -387,9 +384,9 @@ def make_include_2d_all():
     return fixtures.make_include_2d_all()
 
 
-@pytest.fixture(name="samples_with_result")
-def make_samples_with_result():
-    return fixtures.make_samples_with_result()
+@pytest.fixture(name="samples_summary_with_result")
+def make_samples_summary_with_result():
+    return fixtures.make_samples_summary_with_result()
 
 
 @pytest.fixture(name="analysis_imaging_7x7")

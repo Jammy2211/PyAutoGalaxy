@@ -1,12 +1,12 @@
 from functools import partial
-from typing import List, Optional
+from typing import List
 
 import autofit as af
 import autoarray as aa
 
 
 def _imaging_from(
-    fit: af.Fit, settings_dataset: Optional[aa.SettingsImaging] = None
+    fit: af.Fit,
 ) -> List[aa.Imaging]:
     """
     Returns a list of `Imaging` objects from a `PyAutoFit` sqlite database `Fit` object.
@@ -28,15 +28,10 @@ def _imaging_from(
     is instead used to load lists of the data, noise-map, PSF and mask and combine them into a list of
     `Imaging` objects.
 
-    The settings can be overwritten by inputting a `settings_dataset` object, for example if you want to use a grid
-    with a different level of sub-griding.
-
     Parameters
     ----------
     fit
         A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
-    settings_dataset
-        Optionally overwrite the `SettingsImaging` of the `Imaging` object that is created from the fit.
     """
 
     fit_list = [fit] if not fit.children else fit.children
@@ -50,13 +45,13 @@ def _imaging_from(
         )
         psf = aa.Kernel2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.psf"))
 
-        settings_dataset = settings_dataset or fit.value(name="dataset.settings")
+        over_sampling = fit.value(name="dataset.over_sampling")
 
         dataset = aa.Imaging(
             data=data,
             noise_map=noise_map,
             psf=psf,
-            settings=settings_dataset,
+            over_sampling=over_sampling,
             check_noise_map=False,
         )
 
@@ -107,22 +102,14 @@ class ImagingAgg:
         self.aggregator = aggregator
 
     def dataset_gen_from(
-        self, settings_dataset: Optional[aa.SettingsImaging] = None
+        self,
     ) -> List[aa.Imaging]:
         """
         Returns a generator of `Imaging` objects from an input aggregator.
 
         See `__init__` for a description of how the `Imaging` objects are created by this method.
-
-        The settings can be overwritten by inputting a `settings_dataset` object, for example if you want to use a grid
-        with a different level of sub-griding.
-
-        Parameters
-        ----------
-        settings_dataset
-            Optionally overwrite the `SettingsImaging` of the `Imaging` object that is created from the fit.
         """
 
-        func = partial(_imaging_from, settings_dataset=settings_dataset)
+        func = partial(_imaging_from)
 
         return self.aggregator.map(func=func)

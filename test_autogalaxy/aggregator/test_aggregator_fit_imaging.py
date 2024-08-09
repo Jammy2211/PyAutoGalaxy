@@ -49,8 +49,10 @@ def test__fit_imaging_randomly_drawn_via_pdf_gen_from__analysis_has_single_datas
         for fit_list in fit_gen:
             i += 1
 
-            assert fit_list[0].plane.galaxies[0].redshift == 0.5
-            assert fit_list[0].plane.galaxies[0].light.centre == (10.0, 10.0)
+            assert fit_list[0].galaxies[0].redshift == 0.5
+            assert fit_list[0].galaxies[0].light.centre == (10.0, 10.0)
+
+            assert fit_list[0].dataset_model.background_sky_level == 10.0
 
     assert i == 2
 
@@ -76,11 +78,11 @@ def test__fit_imaging_randomly_drawn_via_pdf_gen_from__analysis_multi(
         for fit_list in fit_gen:
             i += 1
 
-            assert fit_list[0].plane.galaxies[0].redshift == 0.5
-            assert fit_list[0].plane.galaxies[0].light.centre == (10.0, 10.0)
+            assert fit_list[0].galaxies[0].redshift == 0.5
+            assert fit_list[0].galaxies[0].light.centre == (10.0, 10.0)
 
-            assert fit_list[1].plane.galaxies[0].redshift == 0.5
-            assert fit_list[1].plane.galaxies[0].light.centre == (10.0, 10.0)
+            assert fit_list[1].galaxies[0].redshift == 0.5
+            assert fit_list[1].galaxies[0].light.centre == (10.0, 10.0)
 
     assert i == 2
 
@@ -98,13 +100,33 @@ def test__fit_imaging_all_above_weight_gen(agg_7x7):
             i += 1
 
             if i == 1:
-                assert fit_list[0].plane.galaxies[0].redshift == 0.5
-                assert fit_list[0].plane.galaxies[0].light.centre == (1.0, 1.0)
+                assert fit_list[0].galaxies[0].redshift == 0.5
+                assert fit_list[0].galaxies[0].light.centre == (1.0, 1.0)
 
             if i == 2:
-                assert fit_list[0].plane.galaxies[0].redshift == 0.5
-                assert fit_list[0].plane.galaxies[0].light.centre == (10.0, 10.0)
+                assert fit_list[0].galaxies[0].redshift == 0.5
+                assert fit_list[0].galaxies[0].light.centre == (10.0, 10.0)
 
     assert i == 2
 
     clean(database_file=database_file)
+
+
+def test__fit_imaging__adapt_images(agg_7x7, adapt_images_7x7):
+    fit_agg = ag.agg.FitImagingAgg(aggregator=agg_7x7)
+    fit_pdf_gen = fit_agg.randomly_drawn_via_pdf_gen_from(total_samples=2)
+
+    i = 0
+
+    for fit_gen in fit_pdf_gen:
+        for fit_list in fit_gen:
+            i += 1
+
+            assert (
+                list(fit_list[0].adapt_images.galaxy_image_dict.values())[0]
+                == list(adapt_images_7x7.galaxy_name_image_dict.values())[0]
+            ).all()
+
+    assert i == 2
+
+    # clean(database_file=database_file)

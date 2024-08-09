@@ -20,7 +20,5 @@ from autoarray.inversion.inversion.interferometer import (
 from autoarray.operators import transformer_util as transformer
 from autoarray.util import misc_util as misc
 
-from autogalaxy.analysis import model_util as model
 from autogalaxy.util import error_util as error
-from autogalaxy.plane import plane_util as plane
 from autogalaxy.analysis import chaining_util as chaining

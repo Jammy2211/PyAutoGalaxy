@@ -1,4 +1,3 @@
-import copy
 import numpy as np
 from scipy.optimize import fsolve
 from typing import Tuple
@@ -56,10 +55,11 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         self.scale_radius = scale_radius
         self.inner_slope = inner_slope
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.over_sample
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -69,14 +69,15 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         """
 
-        grid_eta = self.elliptical_radii_grid_from(grid=grid)
+        grid_eta = self.elliptical_radii_grid_from(grid=grid, **kwargs)
 
         return self.convergence_func(grid_radius=grid_eta)
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.over_sample
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_via_mge_from(self, grid: aa.type.Grid2DLike):
+    def convergence_2d_via_mge_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -86,11 +87,11 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         """
 
-        elliptical_radii = self.elliptical_radii_grid_from(grid)
+        elliptical_radii = self.elliptical_radii_grid_from(grid=grid, **kwargs)
 
         return self._convergence_2d_via_mge_from(grid_radii=elliptical_radii)
 
-    def tabulate_integral(self, grid, tabulate_bins):
+    def tabulate_integral(self, grid, tabulate_bins, **kwargs):
         """Tabulate an integral over the convergence of deflection potential of a mass profile. This is used in \
         the GeneralizedNFW profile classes to speed up the integration procedure.
 
@@ -102,7 +103,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
             The number of bins to tabulate the inner integral of this profile.
         """
         eta_min = 1.0e-4
-        eta_max = 1.05 * np.max(self.elliptical_radii_grid_from(grid))
+        eta_max = 1.05 * np.max(self.elliptical_radii_grid_from(grid=grid, **kwargs))
 
         minimum_log_eta = np.log10(eta_min)
         maximum_log_eta = np.log10(eta_max)
@@ -133,13 +134,13 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         return amplitude_list, sigma_list
 
     def coord_func_f(self, grid_radius):
-        if isinstance(grid_radius, np.ndarray):
-            return self.coord_func_f_jit(
-                grid_radius=grid_radius,
-                f=np.ones(shape=grid_radius.shape[0], dtype="complex64"),
-            )
-        else:
-            return self.coord_func_f_float_jit(grid_radius=grid_radius)
+        if isinstance(grid_radius, float) or isinstance(grid_radius, complex):
+            grid_radius = np.array([grid_radius])
+
+        return self.coord_func_f_jit(
+            grid_radius=np.array(grid_radius),
+            f=np.ones(shape=grid_radius.shape[0], dtype="complex64"),
+        )
 
     @staticmethod
     @aa.util.numba.jit()
@@ -156,31 +157,17 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         return f
 
-    @staticmethod
-    @aa.util.numba.jit()
-    def coord_func_f_float_jit(grid_radius):
-        if np.real(grid_radius) > 1.0:
-            return (1.0 / np.sqrt(np.square(grid_radius) - 1.0)) * np.arccos(
-                np.divide(1.0, grid_radius)
-            )
-        elif np.real(grid_radius) < 1.0:
-            return (1.0 / np.sqrt(1.0 - np.square(grid_radius))) * np.arccosh(
-                np.divide(1.0, grid_radius)
-            )
-        else:
-            return 1.0
-
     def coord_func_g(self, grid_radius):
+        if isinstance(grid_radius, float) or isinstance(grid_radius, complex):
+            grid_radius = np.array([grid_radius])
+
         f_r = self.coord_func_f(grid_radius=grid_radius)
 
-        if isinstance(grid_radius, np.ndarray):
-            return self.coord_func_g_jit(
-                grid_radius=grid_radius,
-                f_r=f_r,
-                g=np.zeros(shape=grid_radius.shape[0], dtype="complex64"),
-            )
-        else:
-            return self.coord_func_g_float_jit(grid_radius=grid_radius, f_r=f_r)
+        return self.coord_func_g_jit(
+            grid_radius=np.array(grid_radius),
+            f_r=f_r,
+            g=np.zeros(shape=grid_radius.shape[0], dtype="complex64"),
+        )
 
     @staticmethod
     @aa.util.numba.jit()
@@ -195,16 +182,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         return g
 
-    @staticmethod
-    @aa.util.numba.jit()
-    def coord_func_g_float_jit(grid_radius, f_r):
-        if np.real(grid_radius) > 1.0:
-            return (1.0 - f_r) / (np.square(grid_radius) - 1.0)
-        elif np.real(grid_radius) < 1.0:
-            return (f_r - 1.0) / (1.0 - np.square(grid_radius))
-        else:
-            return 1.0 / 3.0
-
     def coord_func_h(self, grid_radius):
         return np.log(grid_radius / 2.0) + self.coord_func_f(grid_radius=grid_radius)
 
@@ -212,7 +189,8 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         self, redshift_object, redshift_source, cosmology: LensingCosmology = Planck15()
     ):
         """
-        The Cosmic average density is defined at the redshift of the profile."""
+        The Cosmic average density is defined at the redshift of the profile.
+        """
 
         critical_surface_density = cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
             redshift_0=redshift_object, redshift_1=redshift_source
@@ -358,8 +336,3 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
     @property
     def ellipticity_rescale(self):
         return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
-
-    def with_new_normalization(self, normalization):
-        mass_profile = copy.copy(self)
-        mass_profile.kappa_s = normalization
-        return mass_profile

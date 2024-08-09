@@ -4,6 +4,8 @@ from typing import Tuple
 
 import autoarray as aa
 
+from autogalaxy import convert
+
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
@@ -34,66 +36,6 @@ def radial_and_angle_grid_from(
     angle_grid = np.arctan2(y_shifted, x_shifted)
 
     return radial_grid, angle_grid
-
-
-def multipole_parameters_from(
-    multipole_comps: Tuple[float, float], m: int
-) -> Tuple[float, float]:
-    """
-    Converts the multipole component parameters to their normalizartion value `k_m` and angle `phi`,
-    which are given by:
-
-    .. math::
-        \phi^{\rm mass}_m = \arctan{\frac{\epsilon_{\rm 2}^{\rm mp}}{\epsilon_{\rm 2}^{\rm mp}}}, \, \,
-        k^{\rm mass}_m = \sqrt{{\epsilon_{\rm 1}^{\rm mp}}^2 + {\epsilon_{\rm 2}^{\rm mp}}^2} \, .
-
-    The conversion depends on the multipole order `m`, to ensure that all possible rotationally symmetric
-    multiple mass profiles are available in the conversion for multiple components spanning -inf to inf.
-
-    Parameters
-    ----------
-    multipole_comps
-        The first and second components of the multipole.
-
-    Returns
-    -------
-    The normalization and angle parameters of the multipole.
-    """
-    phi_m = (
-        np.arctan2(multipole_comps[0], multipole_comps[1]) * 180.0 / np.pi / float(m)
-    )
-    k_m = np.sqrt(multipole_comps[1] ** 2 + multipole_comps[0] ** 2)
-
-    return k_m, phi_m
-
-
-def multipole_comps_from(k_m: float, phi_m: float, m: int) -> Tuple[float, float]:
-    """
-    Converts the multipole normalizartion value `k_m` and angle `phi` to their multipole component parameters,
-    which are given by:
-
-    .. math::
-        \phi^{\rm mass}_m = \arctan{\frac{\epsilon_{\rm 2}^{\rm mp}}{\epsilon_{\rm 2}^{\rm mp}}}, \, \,
-        k^{\rm mass}_m = \sqrt{{\epsilon_{\rm 1}^{\rm mp}}^2 + {\epsilon_{\rm 2}^{\rm mp}}^2} \, .
-
-    The conversion depends on the multipole order `m`, to ensure that all possible rotationally symmetric
-    multiple mass profiles are available in the conversion for multiple components spanning -inf to inf.
-
-    Parameters
-    ----------
-    k_m
-        The magnitude of the multipole.
-    phi_m
-        The angle of the multipole.
-
-    Returns
-    -------
-    The multipole component parameters.
-    """
-    multipole_comp_0 = k_m * np.sin(phi_m * float(m) * units.deg.to(units.rad))
-    multipole_comp_1 = k_m * np.cos(phi_m * float(m) * units.deg.to(units.rad))
-
-    return (multipole_comp_0, multipole_comp_1)
 
 
 class PowerLawMultipole(MassProfile):
@@ -179,7 +121,7 @@ class PowerLawMultipole(MassProfile):
         self.slope = slope
 
         self.multipole_comps = multipole_comps
-        self.k_m, self.angle_m = multipole_parameters_from(
+        self.k_m, self.angle_m = convert.multipole_k_m_and_phi_m_from(
             multipole_comps=multipole_comps, m=m
         )
         self.angle_m *= units.deg.to(units.rad)
@@ -204,11 +146,12 @@ class PowerLawMultipole(MassProfile):
             a_r * np.cos(polar_angle_grid) - a_angle * np.sin(polar_angle_grid),
         )
 
-    @aa.grid_dec.grid_2d_to_vector_yx
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_yx_2d_from(self, grid: aa.type.Grid1D2DLike) -> np.ndarray:
+    def deflections_yx_2d_from(
+        self, grid: aa.type.Grid1D2DLike, **kwargs
+    ) -> np.ndarray:
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
@@ -249,10 +192,11 @@ class PowerLawMultipole(MassProfile):
             axis=-1,
         )
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.over_sample
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from(self, grid: aa.type.Grid1D2DLike) -> np.ndarray:
+    def convergence_2d_from(self, grid: aa.type.Grid1D2DLike, **kwargs) -> np.ndarray:
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
 
@@ -271,8 +215,8 @@ class PowerLawMultipole(MassProfile):
             * np.cos(self.m * (angle - self.angle_m))
         )
 
-    @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+    @aa.grid_dec.to_array
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
         """
         Calculate the potential on a grid of (y,x) arc-second coordinates.
 

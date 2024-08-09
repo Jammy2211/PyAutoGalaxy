@@ -10,13 +10,13 @@ inversion:
   use_positive_only_solver: false    # If True, inversion's use a positive-only linear algebra solver by default, which is slower but prevents unphysical negative values in the reconstructed solutuion.
   no_regularization_add_to_curvature_diag_value: 1.0e-8 # The default value added to the curvature matrix's diagonal when regularization is not applied to a linear object, which prevents inversion's failing due to the matrix being singular.
   positive_only_uses_p_initial: false  # If True, the positive-only solver of an inversion's uses an initial guess of the reconstructed data's values as which values should be positive, speeding up the solver.
+  use_border_relocator: false          # If True, by default a pixelization's border is used to relocate all pixels outside its border to the border.
 hpc:
   hpc_mode: false
   iterations_per_update: 5000
 adapt:
   adapt_minimum_percent: 0.01
   adapt_noise_limit: 100000000.0
-  stochastic_outputs: false
 model:
   ignore_prior_limits: true
 numba:
@@ -38,8 +38,7 @@ pixelization:
 structures:
   native_binned_only: false           # If True, data structures are only stored in their native and binned format. This is used to reduce memory usage in autocti.
 test:
-  check_figure_of_merit_sanity: false
-  bypass_figure_of_merit_sanity: true
+  check_likelihood_function: false  # if True, when a search is resumed the likelihood of a previous sample is recalculated to ensure it is consistent with the previous run.
   check_preloads: false
   exception_override: true
   preloads_check_threshold: 1.0     # If the figure of merit of a fit with and without preloads is greater than this threshold, the check preload test fails and an exception raised for a model-fit. 

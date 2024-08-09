@@ -9,7 +9,7 @@ Pixelization
 ------------
 
 Groups all of the individual components used to reconstruct a galaxy via a
-pixelization (a ``Mesh`` and ``Regularization``)
+pixelization (an ``ImageMesh``, ``Mesh`` and ``Regularization``)
 
 The ``Pixelization`` API documentation provides a comprehensive description of how pixelizaiton objects work and
 their associated API.
@@ -25,6 +25,20 @@ their associated API.
 
    Pixelization
 
+Image Mesh [ag.image_mesh]
+--------------------------
+
+.. currentmodule:: autoarray.inversion.pixelization.image_mesh
+
+.. autosummary::
+   :toctree: _autosummary
+   :template: custom-class-template.rst
+   :recursive:
+
+   Overlay
+   Hilbert
+   KMeans
+
 Mesh [ag.mesh]
 --------------
 
@@ -36,12 +50,8 @@ Mesh [ag.mesh]
    :recursive:
 
    Rectangular
-   DelaunayMagnification
-   DelaunayBrightnessImage
-   VoronoiMagnification
-   VoronoiBrightnessImage
-   VoronoiNNMagnification
-   VoronoiNNBrightnessImage
+   Delaunay
+   Voronoi
 
 Regularization [ag.reg]
 -----------------------
@@ -68,7 +78,6 @@ Settings
    :template: custom-class-template.rst
    :recursive:
 
-   SettingsPixelization
    SettingsInversion
 
 Mapper

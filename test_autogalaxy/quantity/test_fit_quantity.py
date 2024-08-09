@@ -7,7 +7,7 @@ import autogalaxy as ag
 def test__fit_via_mock_profile(
     dataset_quantity_7x7_array_2d, dataset_quantity_7x7_vector_yx_2d
 ):
-    model_object = ag.m.MockMassProfile(
+    mass = ag.m.MockMassProfile(
         convergence_2d=ag.Array2D.ones(shape_native=(7, 7), pixel_scales=1.0),
         potential_2d=ag.Array2D.full(
             fill_value=2.0, shape_native=(7, 7), pixel_scales=1.0
@@ -17,11 +17,11 @@ def test__fit_via_mock_profile(
         ),
     )
 
-    plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5, mass=model_object)])
+    galaxies = ag.Galaxies(galaxies=[ag.Galaxy(redshift=0.5, mass=mass)])
 
     fit_quantity = ag.FitQuantity(
         dataset=dataset_quantity_7x7_array_2d,
-        light_mass_obj=plane,
+        light_mass_obj=galaxies,
         func_str="convergence_2d_from",
     )
 
@@ -32,7 +32,7 @@ def test__fit_via_mock_profile(
 
     fit_quantity = ag.FitQuantity(
         dataset=dataset_quantity_7x7_array_2d,
-        light_mass_obj=plane,
+        light_mass_obj=galaxies,
         func_str="potential_2d_from",
     )
 
@@ -41,7 +41,7 @@ def test__fit_via_mock_profile(
 
     fit_quantity = ag.FitQuantity(
         dataset=dataset_quantity_7x7_vector_yx_2d,
-        light_mass_obj=plane,
+        light_mass_obj=galaxies,
         func_str="deflections_yx_2d_from",
     )
 
@@ -56,11 +56,11 @@ def test__y_x(dataset_quantity_7x7_vector_yx_2d):
         )
     )
 
-    plane = ag.Plane(galaxies=[ag.Galaxy(redshift=0.5, mass=model_object)])
+    galaxies = ag.Galaxies(galaxies=[ag.Galaxy(redshift=0.5, mass=model_object)])
 
     fit_quantity = ag.FitQuantity(
         dataset=dataset_quantity_7x7_vector_yx_2d,
-        light_mass_obj=plane,
+        light_mass_obj=galaxies,
         func_str="deflections_yx_2d_from",
     )
 

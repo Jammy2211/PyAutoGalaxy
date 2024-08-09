@@ -2,20 +2,21 @@ import logging
 import numpy as np
 from typing import Dict, Optional, Tuple
 
+from autoconf.dictable import to_dict
+
 import autofit as af
 import autoarray as aa
 
 from autoarray.exc import PixelizationException
 
-from autogalaxy.analysis.analysis import AnalysisDataset
+from autogalaxy.analysis.adapt_images.adapt_image_maker import AdaptImageMaker
+from autogalaxy.analysis.analysis.dataset import AnalysisDataset
 from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.interferometer.model.result import ResultInterferometer
-from autogalaxy.interferometer.model.visualizer import VisualizerInterferometer
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
-from autogalaxy.plane.plane import Plane
-
+from autogalaxy.interferometer.model.visualizer import VisualizerInterferometer
 from autogalaxy import exc
 
 logger = logging.getLogger(__name__)
@@ -24,12 +25,14 @@ logger.setLevel(level="INFO")
 
 
 class AnalysisInterferometer(AnalysisDataset):
+    Result = ResultInterferometer
+    Visualizer = VisualizerInterferometer
+
     def __init__(
         self,
         dataset: aa.Interferometer,
-        adapt_result: ResultInterferometer = None,
+        adapt_image_maker: Optional[AdaptImageMaker] = None,
         cosmology: LensingCosmology = Planck15(),
-        settings_pixelization: aa.SettingsPixelization = None,
         settings_inversion: aa.SettingsInversion = None,
     ):
         """
@@ -41,33 +44,28 @@ class AnalysisInterferometer(AnalysisDataset):
         It handles many other tasks, such as visualization, outputting results to hard-disk and storing results in
         a format that can be loaded after the model-fit is complete.
 
-        This Analysis class is used for all model-fits which fit galaxies (or objects containing galaxies like a
-        `Plane`) to an interferometer dataset.
+        This Analysis class is used for all model-fits which fit galaxies to an interferometer dataset.
 
         This class stores the settings used to perform the model-fit for certain components of the model (e.g. a
-        pixelization or inversion), the Cosmology used for the analysis and adapt datasets used for certain model
+        pixelization or inversion), the Cosmology used for the analysis and adapt images used for certain model
         classes.
 
         Parameters
         ----------
         dataset
             The interferometer dataset that the model is fitted too.
-        adapt_result
-            The adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
+        adapt_image_maker
+            Makes the adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
-        settings_pixelization
-            settings controlling how a pixelization is fitted for example if a border is used when creating the
-            pixelization.
         settings_inversion
             Settings controlling how an inversion is fitted, for example which linear algebra formalism is used.
         """
         super().__init__(
             dataset=dataset,
-            adapt_result=adapt_result,
+            adapt_image_maker=adapt_image_maker,
             cosmology=cosmology,
-            settings_pixelization=settings_pixelization,
             settings_inversion=settings_inversion,
         )
 
@@ -114,15 +112,15 @@ class AnalysisInterferometer(AnalysisDataset):
 
         For this analysis class, this function performs the following steps:
 
-        1) If the analysis has a adapt dataset, associated the model galaxy images of this dataset to the galaxies in
+        1) If the analysis has a adapt image, associated the model galaxy images of this dataset to the galaxies in
            the model instance.
 
         2) Extract attributes which model aspects of the data reductions, like scaling the background background noise.
 
-        3) Extracts all galaxies from the model instance and set up a `Plane`.
+        3) Extracts all galaxies from the model instance.
 
-        4) Use the `Plane` and other attributes to create a `FitInterferometer` object, which performs steps such as
-           creating model images of every galaxy in the plane, transforming them to the uv-plane via a Fourier transform
+        4) Use the galaxies and other attributes to create a `FitInterferometer` object, which performs steps such as
+           creating model images of every galaxy, transforming them to the uv-plane via a Fourier transform
            and computing residuals, a chi-squared statistic and the log likelihood.
 
         Certain models will fail to fit the dataset and raise an exception. For example if an `Inversion` is used, the
@@ -143,9 +141,7 @@ class AnalysisInterferometer(AnalysisDataset):
         """
 
         try:
-            return self.fit_interferometer_via_instance_from(
-                instance=instance
-            ).figure_of_merit
+            return self.fit_from(instance=instance).figure_of_merit
         except (
             PixelizationException,
             exc.PixelizationException,
@@ -157,9 +153,10 @@ class AnalysisInterferometer(AnalysisDataset):
         ) as e:
             raise exc.FitException from e
 
-    def fit_interferometer_via_instance_from(
+    def fit_from(
         self,
         instance: af.ModelInstance,
+        preload_overwrite: Optional[Preloads] = None,
         run_time_dict: Optional[Dict] = None,
     ) -> FitInterferometer:
         """
@@ -181,186 +178,24 @@ class AnalysisInterferometer(AnalysisDataset):
         Returns
         -------
         FitInterferometer
-            The fit of the plane to the interferometer dataset, which includes the log likelihood.
+            The fit of the galaxies to the interferometer dataset, which includes the log likelihood.
         """
-        instance = self.instance_with_associated_adapt_images_from(instance=instance)
-
-        plane = self.plane_via_instance_from(
+        galaxies = self.galaxies_via_instance_from(
             instance=instance, run_time_dict=run_time_dict
         )
 
-        return self.fit_interferometer_via_plane_from(
-            plane=plane, run_time_dict=run_time_dict
-        )
-
-    def fit_interferometer_via_plane_from(
-        self,
-        plane: Plane,
-        preload_overwrite: Optional[Preloads] = None,
-        run_time_dict: Optional[Dict] = None,
-    ) -> FitInterferometer:
-        """
-        Given a `Plane`, which the analysis constructs from a model instance, create a `FitInterferometer` object.
-
-        This function is used in the `log_likelihood_function` to fit the model to the interferometer data and compute
-        the log likelihood.
-
-        Parameters
-        ----------
-        plane
-            The plane of galaxies whose model images are used to fit the interferometer data.
-
-        Returns
-        -------
-        FitInterferometer
-            The fit of the plane to the interferometer dataset, which includes the log likelihood.
-        """
+        adapt_images = self.adapt_images_via_instance_from(instance=instance)
 
         preloads = self.preloads if preload_overwrite is None else preload_overwrite
 
         return FitInterferometer(
             dataset=self.dataset,
-            plane=plane,
-            settings_pixelization=self.settings_pixelization,
+            galaxies=galaxies,
+            adapt_images=adapt_images,
             settings_inversion=self.settings_inversion,
             preloads=preloads,
             run_time_dict=run_time_dict,
         )
-
-    @property
-    def fit_func(self):
-        return self.fit_interferometer_via_instance_from
-
-    def visualize_before_fit(self, paths: af.DirectoryPaths, model: af.Collection):
-        """
-        PyAutoFit calls this function immediately before the non-linear search begins.
-
-        It visualizes objects which do not change throughout the model fit like the dataset.
-
-        Parameters
-        ----------
-        paths
-            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
-            visualization and the pickled objects used by the aggregator output by this function.
-        model
-            The PyAutoFit model object, which includes model components representing the galaxies that are fitted to
-            the imaging data.
-        """
-
-        visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
-
-        visualizer.visualize_interferometer(dataset=self.interferometer)
-
-        visualizer.visualize_adapt_images(
-            adapt_galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
-            adapt_model_image=self.adapt_model_image,
-        )
-
-    def visualize(self, paths: af.DirectoryPaths, instance, during_analysis):
-        """
-        Outputs images of the maximum log likelihood model inferred by the model-fit. This function is called
-        throughout the non-linear search at input intervals, and therefore provides on-the-fly visualization of how
-        well the model-fit is going.
-
-        The visualization performed by this function includes:
-
-        - Images of the best-fit `Plane`, including the images of each of its galaxies.
-
-        - Images of the best-fit `FitInterferometer`, including the model-image, residuals and chi-squared of its fit
-          to the imaging data.
-
-        - The adapt-images of the model-fit showing how the galaxies are used to represent different galaxies in
-          the dataset.
-
-        - If adapt features are used to scale the noise, a `FitInterferometer` with these features turned off may be
-          output, to indicate how much these features are altering the dataset.
-
-        The images output by this function are customized using the file `config/visualize/plots.ini`.
-
-        Parameters
-        ----------
-        paths
-            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
-            visualization, and the pickled objects used by the aggregator output by this function.
-        instance
-            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
-            via a non-linear search).
-        during_analysis
-            If True the visualization is being performed midway through the non-linear search before it is finished,
-            which may change which images are output.
-        """
-
-        instance = self.instance_with_associated_adapt_images_from(instance=instance)
-        plane = self.plane_via_instance_from(instance=instance)
-
-        fit = self.fit_interferometer_via_plane_from(
-            plane=plane,
-        )
-
-        visualizer = VisualizerInterferometer(visualize_path=paths.image_path)
-        visualizer.visualize_interferometer(dataset=self.interferometer)
-
-        plane = fit.plane_linear_light_profiles_to_light_profiles
-
-        visualizer.visualize_plane(
-            plane=plane, grid=fit.grid, during_analysis=during_analysis
-        )
-        visualizer.visualize_galaxies(
-            galaxies=plane.galaxies, grid=fit.grid, during_analysis=during_analysis
-        )
-
-        try:
-            visualizer.visualize_fit_interferometer(
-                fit=fit, during_analysis=during_analysis
-            )
-        except exc.InversionException:
-            pass
-
-        if fit.inversion is not None:
-            try:
-                visualizer.visualize_inversion(
-                    inversion=fit.inversion, during_analysis=during_analysis
-                )
-            except IndexError:
-                pass
-
-        visualizer.visualize_adapt_images(
-            adapt_galaxy_image_path_dict=self.adapt_galaxy_image_path_dict,
-            adapt_model_image=self.adapt_model_image,
-        )
-
-    def make_result(
-        self,
-        samples: af.SamplesPDF,
-    ) -> ResultInterferometer:
-        """
-        After the non-linear search is complete create its `Result`, which includes:
-
-        - The samples of the non-linear search (E.g. MCMC chains, nested sampling samples) which are used to compute
-          the maximum likelihood model, posteriors and other properties.
-
-        - The model used to fit the data, which uses the samples to create specific instances of the model (e.g.
-          an instance of the maximum log likelihood model).
-
-        - The non-linear search used to perform the model fit.
-
-        The `ResultInterferometer` object contains a number of methods which use the above objects to create the max
-        log likelihood `Plane`, `FitInterferometer`, adapt-galaxy images,etc.
-
-        Parameters
-        ----------
-        samples
-            A PyAutoFit object which contains the samples of the non-linear search, for example the chains of an MCMC
-            run of samples of the nested sampler.
-        search
-            The non-linear search used to perform this model-fit.
-
-        Returns
-        -------
-        ResultInterferometer
-            The result of fitting the model to the interferometer dataset, via a non-linear search.
-        """
-        return ResultInterferometer(samples=samples, analysis=self)
 
     def save_attributes(self, paths: af.DirectoryPaths):
         """
@@ -374,7 +209,7 @@ class AnalysisInterferometer(AnalysisDataset):
          - The settings associated with the inversion.
          - The settings associated with the pixelization.
          - The Cosmology.
-         - The adapt dataset's model image and galaxy images, if used.
+         - The adapt image's model image and galaxy images, if used.
 
          This function also outputs attributes specific to an interferometer dataset:
 
@@ -402,6 +237,9 @@ class AnalysisInterferometer(AnalysisDataset):
             name="real_space_mask",
             hdu=self.dataset.real_space_mask.hdu_for_output,
             prefix="dataset",
+        )
+        paths.save_json(
+            "transformer_class", to_dict(self.dataset.transformer.__class__), "dataset"
         )
 
     def profile_log_likelihood_function(
@@ -437,7 +275,7 @@ class AnalysisInterferometer(AnalysisDataset):
             instance=instance,
         )
 
-        info_dict["number_of_visibilities"] = self.dataset.visibilities.shape[0]
+        info_dict["number_of_visibilities"] = self.dataset.data.shape[0]
         info_dict["transformer_cls"] = self.dataset.transformer.__class__.__name__
 
         self.output_profiling_info(

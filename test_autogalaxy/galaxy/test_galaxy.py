@@ -1,6 +1,8 @@
 import numpy as np
+from os import path
 import pytest
 
+from autoconf.dictable import from_json, output_to_json
 import autogalaxy as ag
 
 from autogalaxy import exc
@@ -32,7 +34,7 @@ def test__cls_list_from(lp_0, lp_linear_0):
     assert cls_list == [lp_linear_0, lp_linear_0]
 
 
-def test__image_1d_from(sub_grid_1d_7, lp_0, lp_1, gal_x2_lp):
+def test__image_1d_from(lp_0, lp_1, gal_x2_lp):
     grid = ag.Grid2D.no_mask(values=[[[1.05, -0.55]]], pixel_scales=1.0)
 
     lp_image = lp_0.image_1d_from(grid=grid)
@@ -43,53 +45,48 @@ def test__image_1d_from(sub_grid_1d_7, lp_0, lp_1, gal_x2_lp):
     assert lp_image == gal_image
 
 
-def test__image_2d_from(sub_grid_2d_7x7, gal_x2_lp):
-    lp_0_image = gal_x2_lp.light_profile_0.image_2d_from(grid=sub_grid_2d_7x7)
-    lp_1_image = gal_x2_lp.light_profile_1.image_2d_from(grid=sub_grid_2d_7x7)
+def test__image_2d_from(grid_2d_7x7, gal_x2_lp):
+    lp_0_image = gal_x2_lp.light_profile_0.image_2d_from(grid=grid_2d_7x7)
+    lp_1_image = gal_x2_lp.light_profile_1.image_2d_from(grid=grid_2d_7x7)
 
     lp_image = lp_0_image + lp_1_image
 
-    lp_image_0 = (lp_image[0] + lp_image[1] + lp_image[2] + lp_image[3]) / 4.0
+    gal_image = gal_x2_lp.image_2d_from(grid=grid_2d_7x7)
 
-    lp_image_1 = (lp_image[4] + lp_image[5] + lp_image[6] + lp_image[7]) / 4.0
-
-    gal_image = gal_x2_lp.image_2d_from(grid=sub_grid_2d_7x7)
-
-    assert gal_image.binned[0] == lp_image_0
-    assert gal_image.binned[1] == lp_image_1
+    assert gal_image == pytest.approx(lp_image, 1.0e-4)
 
 
-def test__image_2d_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_0):
-    image_2d_not_operated = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
-    image_2d_operated = lp_operated_0.image_2d_from(grid=sub_grid_2d_7x7)
+def test__image_2d_from__operated_only_input(grid_2d_7x7, lp_0, lp_operated_0):
+    image_2d_not_operated = lp_0.image_2d_from(grid=grid_2d_7x7)
+    image_2d_operated = lp_operated_0.image_2d_from(grid=grid_2d_7x7)
 
     galaxy = ag.Galaxy(redshift=0.5, light=lp_0, light_operated=lp_operated_0)
 
-    image_2d = galaxy.image_2d_from(grid=sub_grid_2d_7x7, operated_only=False)
+    image_2d = galaxy.image_2d_from(grid=grid_2d_7x7, operated_only=False)
     assert (image_2d == image_2d_not_operated).all()
 
-    image_2d = galaxy.image_2d_from(grid=sub_grid_2d_7x7, operated_only=True)
+    image_2d = galaxy.image_2d_from(grid=grid_2d_7x7, operated_only=True)
     assert (image_2d == image_2d_operated).all()
 
-    image_2d = galaxy.image_2d_from(grid=sub_grid_2d_7x7, operated_only=None)
+    image_2d = galaxy.image_2d_from(grid=grid_2d_7x7, operated_only=None)
     assert (image_2d == image_2d_not_operated + image_2d_operated).all()
 
 
-def test__image_2d_list_from__operated_only_input(sub_grid_2d_7x7, lp_0, lp_operated_0):
-    image_2d_not_operated = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
-    image_2d_operated = lp_operated_0.image_2d_from(grid=sub_grid_2d_7x7)
+def test__image_2d_list_from__operated_only_input(grid_2d_7x7, lp_0, lp_operated_0):
+    image_2d_not_operated = lp_0.image_2d_from(grid=grid_2d_7x7)
+    image_2d_operated = lp_operated_0.image_2d_from(grid=grid_2d_7x7)
 
     galaxy = ag.Galaxy(redshift=0.5, light=lp_0, light_operated=lp_operated_0)
 
-    image_2d_list = galaxy.image_2d_list_from(grid=sub_grid_2d_7x7, operated_only=False)
+    image_2d_list = galaxy.image_2d_list_from(grid=grid_2d_7x7, operated_only=False)
     assert (image_2d_list[0] == image_2d_not_operated).all()
-    assert (image_2d_list[1] == np.zeros((36))).all()
+    assert (image_2d_list[1] == np.zeros((9))).all()
 
-    image_2d_list = galaxy.image_2d_list_from(grid=sub_grid_2d_7x7, operated_only=True)
-    assert (image_2d_list[0] == np.zeros((36))).all()
+    image_2d_list = galaxy.image_2d_list_from(grid=grid_2d_7x7, operated_only=True)
+    assert (image_2d_list[0] == np.zeros((9))).all()
     assert (image_2d_list[1] == image_2d_operated).all()
 
-    image_2d_list = galaxy.image_2d_list_from(grid=sub_grid_2d_7x7, operated_only=None)
+    image_2d_list = galaxy.image_2d_list_from(grid=grid_2d_7x7, operated_only=None)
     assert (
         image_2d_list[0] + image_2d_list[1] == image_2d_not_operated + image_2d_operated
     ).all()
@@ -108,7 +105,7 @@ def test__luminosity_within_circle(lp_0, lp_1, gal_x2_lp):
     assert gal_no_lp.luminosity_within_circle_from(radius=1.0) == None
 
 
-def test__convergence_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
+def test__convergence_1d_from(grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
     grid = ag.Grid2D.no_mask(values=[[[1.05, -0.55], [2.05, -0.55]]], pixel_scales=1.0)
 
     mp_convergence = mp_0.convergence_1d_from(grid=grid)
@@ -134,32 +131,19 @@ def test__convergence_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
     assert (mp_convergence == gal_convergence).all()
 
 
-def test__convergence_2d_from(sub_grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
-    mp_0_convergence = gal_x2_mp.mass_profile_0.convergence_2d_from(
-        grid=sub_grid_2d_7x7
-    )
+def test__convergence_2d_from(grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
+    mp_0_convergence = gal_x2_mp.mass_profile_0.convergence_2d_from(grid=grid_2d_7x7)
 
-    mp_1_convergence = gal_x2_mp.mass_profile_1.convergence_2d_from(
-        grid=sub_grid_2d_7x7
-    )
+    mp_1_convergence = gal_x2_mp.mass_profile_1.convergence_2d_from(grid=grid_2d_7x7)
 
     mp_convergence = mp_0_convergence + mp_1_convergence
 
-    mp_convergence_0 = (
-        mp_convergence[0] + mp_convergence[1] + mp_convergence[2] + mp_convergence[3]
-    ) / 4.0
+    gal_convergence = gal_x2_mp.convergence_2d_from(grid=grid_2d_7x7)
 
-    mp_convergence_1 = (
-        mp_convergence[4] + mp_convergence[5] + mp_convergence[6] + mp_convergence[7]
-    ) / 4.0
-
-    gal_convergence = gal_x2_mp.convergence_2d_from(grid=sub_grid_2d_7x7)
-
-    assert gal_convergence.binned[0] == mp_convergence_0
-    assert gal_convergence.binned[1] == mp_convergence_1
+    assert gal_convergence[0] == mp_convergence[0]
 
 
-def test__potential_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
+def test__potential_1d_from(grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
     grid = ag.Grid2D.no_mask(values=[[[1.05, -0.55]]], pixel_scales=1.0)
 
     mp_potential = mp_0.potential_1d_from(grid=grid)
@@ -185,92 +169,44 @@ def test__potential_1d_from(sub_grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
     assert (mp_potential == gal_mp_potential).all()
 
 
-def test__potential_2d_from(sub_grid_2d_7x7, gal_x2_mp):
-    mp_0_potential = gal_x2_mp.mass_profile_0.potential_2d_from(grid=sub_grid_2d_7x7)
+def test__potential_2d_from(grid_2d_7x7, gal_x2_mp):
+    mp_0_potential = gal_x2_mp.mass_profile_0.potential_2d_from(grid=grid_2d_7x7)
 
-    mp_1_potential = gal_x2_mp.mass_profile_1.potential_2d_from(grid=sub_grid_2d_7x7)
+    mp_1_potential = gal_x2_mp.mass_profile_1.potential_2d_from(grid=grid_2d_7x7)
 
     mp_potential = mp_0_potential + mp_1_potential
 
-    mp_potential_0 = (
-        mp_potential[0] + mp_potential[1] + mp_potential[2] + mp_potential[3]
-    ) / 4.0
+    gal_potential = gal_x2_mp.potential_2d_from(grid=grid_2d_7x7)
 
-    mp_potential_1 = (
-        mp_potential[4] + mp_potential[5] + mp_potential[6] + mp_potential[7]
-    ) / 4.0
-
-    gal_potential = gal_x2_mp.potential_2d_from(grid=sub_grid_2d_7x7)
-
-    assert gal_potential.binned[0] == mp_potential_0
-    assert gal_potential.binned[1] == mp_potential_1
+    assert gal_potential[0] == mp_potential[0]
 
 
-def test__deflections_yx_2d_from(sub_grid_2d_7x7, gal_x2_mp):
-    mp_0_deflections = gal_x2_mp.mass_profile_0.deflections_yx_2d_from(
-        grid=sub_grid_2d_7x7
-    )
+def test__deflections_yx_2d_from(grid_2d_7x7, gal_x2_mp):
+    mp_0_deflections = gal_x2_mp.mass_profile_0.deflections_yx_2d_from(grid=grid_2d_7x7)
 
-    mp_1_deflections = gal_x2_mp.mass_profile_1.deflections_yx_2d_from(
-        grid=sub_grid_2d_7x7
-    )
+    mp_1_deflections = gal_x2_mp.mass_profile_1.deflections_yx_2d_from(grid=grid_2d_7x7)
 
     mp_deflections = mp_0_deflections + mp_1_deflections
 
-    mp_deflections_y_0 = (
-        mp_deflections[0, 0]
-        + mp_deflections[1, 0]
-        + mp_deflections[2, 0]
-        + mp_deflections[3, 0]
-    ) / 4.0
+    gal_deflections = gal_x2_mp.deflections_yx_2d_from(grid=grid_2d_7x7)
 
-    mp_deflections_y_1 = (
-        mp_deflections[4, 0]
-        + mp_deflections[5, 0]
-        + mp_deflections[6, 0]
-        + mp_deflections[7, 0]
-    ) / 4.0
-
-    gal_deflections = gal_x2_mp.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
-
-    assert gal_deflections.binned[0, 0] == mp_deflections_y_0
-    assert gal_deflections.binned[1, 0] == mp_deflections_y_1
-
-    mp_deflections_x_0 = (
-        mp_deflections[0, 1]
-        + mp_deflections[1, 1]
-        + mp_deflections[2, 1]
-        + mp_deflections[3, 1]
-    ) / 4.0
-
-    mp_deflections_x_1 = (
-        mp_deflections[4, 1]
-        + mp_deflections[5, 1]
-        + mp_deflections[6, 1]
-        + mp_deflections[7, 1]
-    ) / 4.0
-
-    gal_deflections = gal_x2_mp.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
-
-    assert gal_deflections.binned[0, 1] == mp_deflections_x_0
-    assert gal_deflections.binned[1, 1] == mp_deflections_x_1
+    assert gal_deflections[0, 0] == mp_deflections[0, 0]
+    assert gal_deflections[1, 0] == mp_deflections[1, 0]
 
 
 def test__no_mass_profile__quantities_returned_as_0s_of_shape_grid(
-    sub_grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp
+    grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp
 ):
     galaxy = ag.Galaxy(redshift=0.5)
 
-    potential = galaxy.potential_2d_from(grid=sub_grid_2d_7x7)
+    potential = galaxy.potential_2d_from(grid=grid_2d_7x7)
 
-    assert (potential.slim == np.zeros(shape=sub_grid_2d_7x7.sub_shape_slim)).all()
+    assert (potential.slim == np.zeros(shape=grid_2d_7x7.shape_slim)).all()
 
-    deflections = galaxy.deflections_yx_2d_from(grid=sub_grid_2d_7x7)
+    deflections = galaxy.deflections_yx_2d_from(grid=grid_2d_7x7)
 
-    assert (
-        deflections.slim == np.zeros(shape=(sub_grid_2d_7x7.sub_shape_slim, 2))
-    ).all()
-    assert (deflections.binned.native == np.zeros(shape=(7, 7, 2))).all()
+    assert (deflections.slim == np.zeros(shape=(grid_2d_7x7.shape_slim, 2))).all()
+    assert (deflections.native == np.zeros(shape=(7, 7, 2))).all()
 
 
 def test__mass_angular_within_circle_from(mp_0, mp_1, gal_x2_mp):
@@ -340,14 +276,14 @@ def test__extract_attribute():
     assert values.in_list == [1.0, 2.0, 3.0]
 
 
-def test__image_2d_from__does_not_include_linear_light_profiles(sub_grid_2d_7x7, lp_0):
+def test__image_2d_from__does_not_include_linear_light_profiles(grid_2d_7x7, lp_0):
     lp_linear = ag.lp_linear.Sersic(effective_radius=2.0, sersic_index=2.0)
 
     galaxy = ag.Galaxy(redshift=0.5, light_0=lp_0, light_linear=lp_linear)
 
-    lp_image = lp_0.image_2d_from(grid=sub_grid_2d_7x7)
+    lp_image = lp_0.image_2d_from(grid=grid_2d_7x7)
 
-    image = galaxy.image_2d_from(grid=sub_grid_2d_7x7)
+    image = galaxy.image_2d_from(grid=grid_2d_7x7)
 
     assert (image == lp_image).all()
 
@@ -359,12 +295,16 @@ def test__light_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric
 
     gal_x2_lp = ag.Galaxy(redshift=0.5, light_profile_0=lp_0, light_profile_1=lp_1)
 
-    assert gal_x2_lp.image_2d_from(grid=np.array([[0.0, 0.0]])) == pytest.approx(
-        gal_x2_lp.image_2d_from(grid=np.array([[100.0, 0.0]])), 1.0e-4
+    assert gal_x2_lp.image_2d_from(
+        grid=ag.Grid2DIrregular([[0.0, 0.0]])
+    ) == pytest.approx(
+        gal_x2_lp.image_2d_from(grid=ag.Grid2DIrregular([[100.0, 0.0]])), 1.0e-4
     )
 
-    assert gal_x2_lp.image_2d_from(grid=np.array([[49.0, 0.0]])) == pytest.approx(
-        gal_x2_lp.image_2d_from(grid=np.array([[51.0, 0.0]])), 1.0e-4
+    assert gal_x2_lp.image_2d_from(
+        grid=ag.Grid2DIrregular([[49.0, 0.0]])
+    ) == pytest.approx(
+        gal_x2_lp.image_2d_from(grid=ag.Grid2DIrregular([[51.0, 0.0]])), 1.0e-4
     )
 
     lp_0 = ag.lp.Sersic(
@@ -406,20 +346,28 @@ def test__light_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric
         light_profile_4=lp_3,
     )
 
-    assert gal_x4_lp.image_2d_from(grid=np.array([[49.0, 0.0]])) == pytest.approx(
-        gal_x4_lp.image_2d_from(grid=np.array([[51.0, 0.0]])), 1e-5
+    assert gal_x4_lp.image_2d_from(
+        grid=ag.Grid2DIrregular([[49.0, 0.0]])
+    ) == pytest.approx(
+        gal_x4_lp.image_2d_from(grid=ag.Grid2DIrregular([[51.0, 0.0]])), 1e-5
     )
 
-    assert gal_x4_lp.image_2d_from(grid=np.array([[0.0, 49.0]])) == pytest.approx(
-        gal_x4_lp.image_2d_from(grid=np.array([[0.0, 51.0]])), 1e-5
+    assert gal_x4_lp.image_2d_from(
+        grid=ag.Grid2DIrregular([[0.0, 49.0]])
+    ) == pytest.approx(
+        gal_x4_lp.image_2d_from(grid=ag.Grid2DIrregular([[0.0, 51.0]])), 1e-5
     )
 
-    assert gal_x4_lp.image_2d_from(grid=np.array([[100.0, 49.0]])) == pytest.approx(
-        gal_x4_lp.image_2d_from(grid=np.array([[100.0, 51.0]])), 1e-5
+    assert gal_x4_lp.image_2d_from(
+        grid=ag.Grid2DIrregular([[100.0, 49.0]])
+    ) == pytest.approx(
+        gal_x4_lp.image_2d_from(grid=ag.Grid2DIrregular([[100.0, 51.0]])), 1e-5
     )
 
-    assert gal_x4_lp.image_2d_from(grid=np.array([[49.0, 49.0]])) == pytest.approx(
-        gal_x4_lp.image_2d_from(grid=np.array([[51.0, 51.0]])), 1e-5
+    assert gal_x4_lp.image_2d_from(
+        grid=ag.Grid2DIrregular([[49.0, 49.0]])
+    ) == pytest.approx(
+        gal_x4_lp.image_2d_from(grid=ag.Grid2DIrregular([[51.0, 51.0]])), 1e-5
     )
 
 
@@ -432,32 +380,40 @@ def test__mass_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric_
 
     gal_x4_mp = ag.Galaxy(redshift=0.5, mass_profile_0=mp_0, mass_profile_1=mp_1)
 
-    assert gal_x4_mp.convergence_2d_from(grid=np.array([[1.0, 0.0]])) == pytest.approx(
-        gal_x4_mp.convergence_2d_from(grid=np.array([[99.0, 0.0]])), 1.0e-4
+    assert gal_x4_mp.convergence_2d_from(
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
+    ) == pytest.approx(
+        gal_x4_mp.convergence_2d_from(grid=ag.Grid2DIrregular([[99.0, 0.0]])), 1.0e-4
     )
 
-    assert gal_x4_mp.convergence_2d_from(grid=np.array([[49.0, 0.0]])) == pytest.approx(
-        gal_x4_mp.convergence_2d_from(grid=np.array([[51.0, 0.0]])), 1.0e-4
+    assert gal_x4_mp.convergence_2d_from(
+        grid=ag.Grid2DIrregular([[49.0, 0.0]])
+    ) == pytest.approx(
+        gal_x4_mp.convergence_2d_from(grid=ag.Grid2DIrregular([[51.0, 0.0]])), 1.0e-4
     )
 
-    assert gal_x4_mp.potential_2d_from(grid=np.array([[1.0, 0.0]])) == pytest.approx(
-        gal_x4_mp.potential_2d_from(grid=np.array([[99.0, 0.0]])), 1e-6
+    assert gal_x4_mp.potential_2d_from(
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
+    ) == pytest.approx(
+        gal_x4_mp.potential_2d_from(grid=ag.Grid2DIrregular([[99.0, 0.0]])), 1e-6
     )
 
-    assert gal_x4_mp.potential_2d_from(grid=np.array([[49.0, 0.0]])) == pytest.approx(
-        gal_x4_mp.potential_2d_from(grid=np.array([[51.0, 0.0]])), 1e-6
+    assert gal_x4_mp.potential_2d_from(
+        grid=ag.Grid2DIrregular([[49.0, 0.0]])
+    ) == pytest.approx(
+        gal_x4_mp.potential_2d_from(grid=ag.Grid2DIrregular([[51.0, 0.0]])), 1e-6
     )
 
     assert gal_x4_mp.deflections_yx_2d_from(
-        grid=np.array([[1.0, 0.0]])
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
     ) == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=np.array([[99.0, 0.0]])), 1e-6
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[99.0, 0.0]])), 1e-6
     )
 
     assert gal_x4_mp.deflections_yx_2d_from(
-        grid=np.array([[49.0, 0.0]])
+        grid=ag.Grid2DIrregular([[49.0, 0.0]])
     ) == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=np.array([[51.0, 0.0]])), 1e-6
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[51.0, 0.0]])), 1e-6
     )
 
     mp_0 = ag.mp.IsothermalSph(einstein_radius=1.0)
@@ -476,88 +432,112 @@ def test__mass_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric_
         mass_profile_3=mp_3,
     )
 
-    assert gal_x4_mp.convergence_2d_from(grid=np.array([[49.0, 0.0]])) == pytest.approx(
-        gal_x4_mp.convergence_2d_from(grid=np.array([[51.0, 0.0]])), 1e-5
-    )
-
-    assert gal_x4_mp.convergence_2d_from(grid=np.array([[0.0, 49.0]])) == pytest.approx(
-        gal_x4_mp.convergence_2d_from(grid=np.array([[0.0, 51.0]])), 1e-5
+    assert gal_x4_mp.convergence_2d_from(
+        grid=ag.Grid2DIrregular([[49.0, 0.0]])
+    ) == pytest.approx(
+        gal_x4_mp.convergence_2d_from(grid=ag.Grid2DIrregular([[51.0, 0.0]])), 1e-5
     )
 
     assert gal_x4_mp.convergence_2d_from(
-        grid=np.array([[100.0, 49.0]])
+        grid=ag.Grid2DIrregular([[0.0, 49.0]])
     ) == pytest.approx(
-        gal_x4_mp.convergence_2d_from(grid=np.array([[100.0, 51.0]])), 1e-5
+        gal_x4_mp.convergence_2d_from(grid=ag.Grid2DIrregular([[0.0, 51.0]])), 1e-5
     )
 
     assert gal_x4_mp.convergence_2d_from(
-        grid=np.array([[49.0, 49.0]])
+        grid=ag.Grid2DIrregular([[100.0, 49.0]])
     ) == pytest.approx(
-        gal_x4_mp.convergence_2d_from(grid=np.array([[51.0, 51.0]])), 1e-5
+        gal_x4_mp.convergence_2d_from(grid=ag.Grid2DIrregular([[100.0, 51.0]])), 1e-5
     )
 
-    assert gal_x4_mp.potential_2d_from(grid=np.array([[49.0, 0.0]])) == pytest.approx(
-        gal_x4_mp.potential_2d_from(grid=np.array([[51.0, 0.0]])), 1e-5
+    assert gal_x4_mp.convergence_2d_from(
+        grid=ag.Grid2DIrregular([[49.0, 49.0]])
+    ) == pytest.approx(
+        gal_x4_mp.convergence_2d_from(grid=ag.Grid2DIrregular([[51.0, 51.0]])), 1e-5
     )
 
-    assert gal_x4_mp.potential_2d_from(grid=np.array([[0.0, 49.0]])) == pytest.approx(
-        gal_x4_mp.potential_2d_from(grid=np.array([[0.0, 51.0]])), 1e-5
+    assert gal_x4_mp.potential_2d_from(
+        grid=ag.Grid2DIrregular([[49.0, 0.0]])
+    ) == pytest.approx(
+        gal_x4_mp.potential_2d_from(grid=ag.Grid2DIrregular([[51.0, 0.0]])), 1e-5
     )
 
-    assert gal_x4_mp.potential_2d_from(grid=np.array([[100.0, 49.0]])) == pytest.approx(
-        gal_x4_mp.potential_2d_from(grid=np.array([[100.0, 51.0]])), 1e-5
+    assert gal_x4_mp.potential_2d_from(
+        grid=ag.Grid2DIrregular([[0.0, 49.0]])
+    ) == pytest.approx(
+        gal_x4_mp.potential_2d_from(grid=ag.Grid2DIrregular([[0.0, 51.0]])), 1e-5
     )
 
-    assert gal_x4_mp.potential_2d_from(grid=np.array([[49.0, 49.0]])) == pytest.approx(
-        gal_x4_mp.potential_2d_from(grid=np.array([[51.0, 51.0]])), 1e-5
+    assert gal_x4_mp.potential_2d_from(
+        grid=ag.Grid2DIrregular([[100.0, 49.0]])
+    ) == pytest.approx(
+        gal_x4_mp.potential_2d_from(grid=ag.Grid2DIrregular([[100.0, 51.0]])), 1e-5
     )
 
-    assert -1.0 * gal_x4_mp.deflections_yx_2d_from(grid=np.array([[49.0, 0.0]]))[
-        0, 0
-    ] == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=np.array([[51.0, 0.0]]))[0, 0], 1e-5
+    assert gal_x4_mp.potential_2d_from(
+        grid=ag.Grid2DIrregular([[49.0, 49.0]])
+    ) == pytest.approx(
+        gal_x4_mp.potential_2d_from(grid=ag.Grid2DIrregular([[51.0, 51.0]])), 1e-5
     )
 
-    assert 1.0 * gal_x4_mp.deflections_yx_2d_from(grid=np.array([[0.0, 49.0]]))[
-        0, 0
-    ] == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=np.array([[0.0, 51.0]]))[0, 0], 1e-5
+    assert -1.0 * gal_x4_mp.deflections_yx_2d_from(
+        grid=ag.Grid2DIrregular([[49.0, 0.0]])
+    )[0, 0] == pytest.approx(
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[51.0, 0.0]]))[0, 0],
+        1e-5,
     )
 
-    assert 1.0 * gal_x4_mp.deflections_yx_2d_from(grid=np.array([[100.0, 49.0]]))[
-        0, 0
-    ] == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=np.array([[100.0, 51.0]]))[0, 0], 1e-5
+    assert 1.0 * gal_x4_mp.deflections_yx_2d_from(
+        grid=ag.Grid2DIrregular([[0.0, 49.0]])
+    )[0, 0] == pytest.approx(
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.0, 51.0]]))[0, 0],
+        1e-5,
     )
 
-    assert -1.0 * gal_x4_mp.deflections_yx_2d_from(grid=np.array([[49.0, 49.0]]))[
-        0, 0
-    ] == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=np.array([[51.0, 51.0]]))[0, 0], 1e-5
+    assert 1.0 * gal_x4_mp.deflections_yx_2d_from(
+        grid=ag.Grid2DIrregular([[100.0, 49.0]])
+    )[0, 0] == pytest.approx(
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[100.0, 51.0]]))[
+            0, 0
+        ],
+        1e-5,
     )
 
-    assert 1.0 * gal_x4_mp.deflections_yx_2d_from(grid=np.array([[49.0, 0.0]]))[
-        0, 1
-    ] == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=np.array([[51.0, 0.0]]))[0, 1], 1e-5
+    assert -1.0 * gal_x4_mp.deflections_yx_2d_from(
+        grid=ag.Grid2DIrregular([[49.0, 49.0]])
+    )[0, 0] == pytest.approx(
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[51.0, 51.0]]))[0, 0],
+        1e-5,
     )
 
-    assert -1.0 * gal_x4_mp.deflections_yx_2d_from(grid=np.array([[0.0, 49.0]]))[
-        0, 1
-    ] == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=np.array([[0.0, 51.0]]))[0, 1], 1e-5
+    assert 1.0 * gal_x4_mp.deflections_yx_2d_from(
+        grid=ag.Grid2DIrregular([[49.0, 0.0]])
+    )[0, 1] == pytest.approx(
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[51.0, 0.0]]))[0, 1],
+        1e-5,
     )
 
-    assert -1.0 * gal_x4_mp.deflections_yx_2d_from(grid=np.array([[100.0, 49.0]]))[
-        0, 1
-    ] == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=np.array([[100.0, 51.0]]))[0, 1], 1e-5
+    assert -1.0 * gal_x4_mp.deflections_yx_2d_from(
+        grid=ag.Grid2DIrregular([[0.0, 49.0]])
+    )[0, 1] == pytest.approx(
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.0, 51.0]]))[0, 1],
+        1e-5,
     )
 
-    assert -1.0 * gal_x4_mp.deflections_yx_2d_from(grid=np.array([[49.0, 49.0]]))[
-        0, 1
-    ] == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=np.array([[51.0, 51.0]]))[0, 1], 1e-5
+    assert -1.0 * gal_x4_mp.deflections_yx_2d_from(
+        grid=ag.Grid2DIrregular([[100.0, 49.0]])
+    )[0, 1] == pytest.approx(
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[100.0, 51.0]]))[
+            0, 1
+        ],
+        1e-5,
+    )
+
+    assert -1.0 * gal_x4_mp.deflections_yx_2d_from(
+        grid=ag.Grid2DIrregular([[49.0, 49.0]])
+    )[0, 1] == pytest.approx(
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[51.0, 51.0]]))[0, 1],
+        1e-5,
     )
 
 
@@ -607,11 +587,12 @@ def test__centre_of_profile_in_right_place():
     assert deflections.native[1, 4, 1] > 0
     assert deflections.native[1, 3, 1] < 0
 
-    grid = ag.Grid2DIterate.uniform(
+    grid = ag.Grid2D.uniform(
         shape_native=(7, 7),
         pixel_scales=1.0,
-        fractional_accuracy=0.99,
-        sub_steps=[2, 4],
+        over_sampling=ag.OverSamplingIterate(
+            fractional_accuracy=0.99, sub_steps=[2, 4]
+        ),
     )
 
     galaxy = ag.Galaxy(
@@ -670,6 +651,81 @@ def test__cannot_pass_light_or_mass_list():
         ag.Galaxy(redshift=0.5, light=light_list, mass=mass_list)
 
 
+def test__decorator__grid_sub_in__numericas():
+    mask = ag.Mask2D(
+        mask=[
+            [True, True, True, True, True],
+            [True, False, False, True, True],
+            [True, True, True, True, True],
+            [True, True, True, True, True],
+            [True, True, True, True, True],
+        ],
+        pixel_scales=(1.0, 1.0),
+        sub_size=2,
+    )
+
+    grid = ag.Grid2D.from_mask(mask=mask)
+
+    galaxy = ag.Galaxy(
+        redshift=0.5, light=ag.lp.Sersic(centre=(3.0, 3.0), intensity=1.0)
+    )
+
+    image = galaxy.image_2d_from(grid=grid)
+
+
+def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
+    mask = ag.Mask2D(
+        mask=[
+            [True, True, True, True, True],
+            [True, False, False, True, True],
+            [True, True, True, True, True],
+            [True, True, True, True, True],
+            [True, True, True, True, True],
+        ],
+        pixel_scales=(1.0, 1.0),
+    )
+
+    galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
+
+    over_sampling = ag.OverSamplingUniform(sub_size=1)
+
+    grid = ag.Grid2D.from_mask(mask=mask, over_sampling=over_sampling)
+
+    image = galaxy.image_2d_from(grid=grid)
+
+    assert image[0] == pytest.approx(0.15987224303572964, 1.0e-6)
+
+    over_sampling = ag.OverSamplingUniform(sub_size=2)
+
+    grid = ag.Grid2D.from_mask(mask=mask, over_sampling=over_sampling)
+
+    image = galaxy.image_2d_from(grid=grid)
+
+    assert image[0] == pytest.approx(0.17481917162057087, 1.0e-6)
+    assert image[1] == pytest.approx(0.391168560508937, 1.0e-6)
+
+    galaxy = ag.Galaxy(
+        redshift=0.5, light=ag.lp.Sersic(centre=(3.0, 3.0), intensity=1.0)
+    )
+
+    over_sampling = ag.OverSamplingUniform(sub_size=1)
+
+    grid = ag.Grid2D.from_mask(mask=mask, over_sampling=over_sampling)
+
+    image = galaxy.image_2d_from(grid=grid)
+
+    assert image[0] == pytest.approx(0.006719704400094508, 1.0e-6)
+
+    over_sampling = ag.OverSamplingUniform(sub_size=2)
+
+    grid = ag.Grid2D.from_mask(mask=mask, over_sampling=over_sampling)
+
+    image = galaxy.image_2d_from(grid=grid)
+
+    assert image[0] == pytest.approx(0.006817908632814734, 1.0e-6)
+    assert image[1] == pytest.approx(0.013323319136547789, 1.0e-6)
+
+
 def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp):
     mask = ag.Mask2D(
         mask=[
@@ -682,21 +738,27 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
         pixel_scales=(1.0, 1.0),
     )
 
-    grid = ag.Grid2DIterate.from_mask(mask=mask, fractional_accuracy=1.0, sub_steps=[2])
+    over_sampling = ag.OverSamplingIterate(fractional_accuracy=1.0, sub_steps=[2])
+
+    grid = ag.Grid2D.from_mask(mask=mask, over_sampling=over_sampling)
 
     galaxy = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=1.0))
 
     image = galaxy.image_2d_from(grid=grid)
 
-    mask_sub_2 = mask.mask_new_sub_size_from(mask=mask, sub_size=2)
-    grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
-    image_sub_2 = galaxy.image_2d_from(grid=grid_sub_2).binned
+    grid_sub_2 = ag.Grid2D(
+        values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=2)
+    )
+    image_sub_2 = galaxy.image_2d_from(grid=grid_sub_2)
 
+    assert image[0] == pytest.approx(0.17481917162057087, 1.0e-6)
     assert (image == image_sub_2).all()
 
-    grid = ag.Grid2DIterate.from_mask(
-        mask=mask, fractional_accuracy=0.95, sub_steps=[2, 4, 8]
+    over_sampling = ag.OverSamplingIterate(
+        fractional_accuracy=0.95, sub_steps=[2, 4, 8]
     )
+
+    grid = ag.Grid2D.from_mask(mask=mask, over_sampling=over_sampling)
 
     galaxy = ag.Galaxy(
         redshift=0.5, light=ag.lp.Sersic(centre=(0.08, 0.08), intensity=1.0)
@@ -704,63 +766,50 @@ def test__decorator__grid_iterate_in__iterates_array_result_correctly(gal_x1_lp)
 
     image = galaxy.image_2d_from(grid=grid)
 
-    mask_sub_4 = mask.mask_new_sub_size_from(mask=mask, sub_size=4)
-    grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
-    image_sub_4 = galaxy.image_2d_from(grid=grid_sub_4).binned
+    grid_sub_4 = ag.Grid2D(
+        values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=4)
+    )
+    image_sub_4 = galaxy.image_2d_from(grid=grid_sub_4)
 
+    assert image[0] == pytest.approx(0.17754459861988386, 1.0e-6)
     assert image[0] == image_sub_4[0]
 
-    mask_sub_8 = mask.mask_new_sub_size_from(mask=mask, sub_size=8)
-    grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
-    image_sub_8 = galaxy.image_2d_from(grid=grid_sub_8).binned
+    grid_sub_8 = ag.Grid2D(
+        values=grid, mask=mask, over_sampling=ag.OverSamplingUniform(sub_size=8)
+    )
+    image_sub_8 = galaxy.image_2d_from(grid=grid_sub_8)
 
+    over_sampling = ag.OverSamplingUniform(sub_size=8)
+
+    grid = ag.Grid2D.from_mask(mask=mask, over_sampling=over_sampling)
+
+    image = galaxy.image_2d_from(grid=grid)
+
+    assert image[4] == pytest.approx(4.173185729427679, 1.0e-6)
     assert image[4] == image_sub_8[4]
 
 
-def test__decorator__grid_iterate_in__iterates_grid_result_correctly(gal_x1_mp):
-    mask = ag.Mask2D(
-        mask=[
-            [True, True, True, True, True],
-            [True, False, False, False, True],
-            [True, False, False, False, True],
-            [True, False, False, False, True],
-            [True, True, True, True, True],
-        ],
-        pixel_scales=(1.0, 1.0),
+def test__output_to_and_load_from_json():
+    json_file = path.join(
+        "{}".format(path.dirname(path.realpath(__file__))), "files", "galaxy.json"
     )
 
-    grid = ag.Grid2DIterate.from_mask(mask=mask, fractional_accuracy=1.0, sub_steps=[2])
-
-    galaxy = ag.Galaxy(
-        redshift=0.5, mass=ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)
+    g0 = ag.Galaxy(
+        redshift=1.0,
+        light=ag.lp.Sersic(intensity=1.0),
+        mass=ag.mp.Isothermal(einstein_radius=1.0),
+        pixelization=ag.Pixelization(
+            image_mesh=ag.image_mesh.Overlay(shape=(3, 3)),
+            mesh=ag.mesh.Voronoi(),
+            regularization=ag.reg.Constant(),
+        ),
     )
 
-    deflections = galaxy.deflections_yx_2d_from(grid=grid)
+    output_to_json(g0, file_path=json_file)
 
-    mask_sub_2 = mask.mask_new_sub_size_from(mask=mask, sub_size=2)
-    grid_sub_2 = ag.Grid2D.from_mask(mask=mask_sub_2)
-    deflections_sub_2 = galaxy.deflections_yx_2d_from(grid=grid_sub_2).binned
+    galaxy_from_json = from_json(file_path=json_file)
 
-    assert (deflections == deflections_sub_2).all()
-
-    grid = ag.Grid2DIterate.from_mask(
-        mask=mask, fractional_accuracy=0.99, sub_steps=[2, 4, 8]
-    )
-
-    galaxy = ag.Galaxy(
-        redshift=0.5, mass=ag.mp.Isothermal(centre=(0.08, 0.08), einstein_radius=1.0)
-    )
-
-    deflections = galaxy.deflections_yx_2d_from(grid=grid)
-
-    mask_sub_4 = mask.mask_new_sub_size_from(mask=mask, sub_size=4)
-    grid_sub_4 = ag.Grid2D.from_mask(mask=mask_sub_4)
-    deflections_sub_4 = galaxy.deflections_yx_2d_from(grid=grid_sub_4).binned
-
-    assert deflections[0, 0] == deflections_sub_4[0, 0]
-
-    mask_sub_8 = mask.mask_new_sub_size_from(mask=mask, sub_size=8)
-    grid_sub_8 = ag.Grid2D.from_mask(mask=mask_sub_8)
-    deflections_sub_8 = galaxy.deflections_yx_2d_from(grid=grid_sub_8).binned
-
-    assert deflections[4, 0] == deflections_sub_8[4, 0]
+    assert galaxy_from_json.redshift == 1.0
+    assert galaxy_from_json.light.intensity == 1.0
+    assert galaxy_from_json.mass.einstein_radius == 1.0
+    assert galaxy_from_json.pixelization.image_mesh.shape == (3, 3)

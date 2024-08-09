@@ -12,6 +12,7 @@ from autogalaxy.operate.image import OperateImageList
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
+from autogalaxy.profiles.light.snr.abstract import LightProfileSNR
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
@@ -33,22 +34,9 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             The redshift of the galaxy.
         pixelization
             The pixelization of the galaxy used to reconstruct an observed image using an inversion.
-
-        Attributes
-        ----------
-        adapt_model_image
-            The best-fit model image to the observed image from a previous analysis
-            search. This provides the total light attributed to each image pixel by the
-            model.
-        adapt_galaxy_image
-            A model image of the galaxy (from light profiles or an inversion) from a
-            previous analysis search.
         """
         super().__init__()
         self.redshift = redshift
-
-        self.adapt_model_image = None
-        self.adapt_galaxy_image = None
 
         for name, val in kwargs.items():
             if isinstance(val, list):
@@ -96,7 +84,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
         return {
             key: value
             for key, value in self.__dict__.items()
-            if isinstance(value, GeometryProfile)
+            if isinstance(value, GeometryProfile) or isinstance(value, aa.Pixelization)
         }
 
     def dict(self) -> Dict:
@@ -170,56 +158,25 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             centre=centre, angle=angle + 90, shape_slim=radial_projected_shape_slim
         )
 
-    @aa.grid_dec.grid_2d_to_structure
-    def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
-    ) -> Union[np.ndarray, aa.Array2D]:
-        """
-        Returns the summed 2D image of the galaxy's light profiles from a 2D grid of Cartesian (y,x) coordinates.
-
-        If the galaxy has no light profiles, a numpy array of zeros is returned.
-
-        If the `operated_only` input is included, the function omits light profiles which are parents of
-        the `LightProfileOperated` object, which signifies that the light profile represents emission that has
-        already had the instrument operations (e.g. PSF convolution, a Fourier transform) applied to it.
-
-        See the `autogalaxy.profiles.light` package for details of how images are computed from a light
-        profile.
-
-        The decorator `grid_2d_to_structure` converts the output arrays from ndarrays to an `Array2D` data structure
-        using the input `grid`'s attributes.
-
-        Parameters
-        ----------
-        grid
-            The 2D (y, x) coordinates where values of the image are evaluated.
-        operated_only
-            By default, the image is the sum of light profile images (irrespective of whether they have been operatd on
-            or not). If this input is included as a bool, only images which are or are not already operated are summed
-            and returned.
-        """
-        if (
-            len(self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear))
-            > 0
-        ):
-            return sum(self.image_2d_list_from(grid=grid, operated_only=operated_only))
-
-        return np.zeros((grid.shape[0],))
-
     def image_2d_list_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
     ) -> List[aa.Array2D]:
         """
         Returns a list of the 2D images of the galaxy's light profiles from a 2D grid of Cartesian (y,x) coordinates.
 
-        This function is primarily used in the `autogalaxy.operate.image` package, to output images of the `Galaxy`
-        that have operations such as a 2D convolution or Fourier transform applied to them.
-
         If the galaxy has no light profiles, a numpy array of zeros is returned.
+
+        The images output by this function do not include instrument operations, such as PSF convolution (for imaging
+        data) or a Fourier transform (for interferometer data).
+
+        Inherited methods in the `autogalaxy.operate.image` package can apply these operations to the images.
+        These functions may have the `operated_only` input passed to them, which is why this function includes
+        the `operated_only` input.
 
         If the `operated_only` input is included, the function omits light profiles which are parents of
         the `LightProfileOperated` object, which signifies that the light profile represents emission that has
-        already had the instrument operations (e.g. PSF convolution, a Fourier transform) applied to it.
+        already had the instrument operations (e.g. PSF convolution, a Fourier transform) applied to it and therefore
+        that operation is not performed again.
 
         See the `autogalaxy.profiles.light` package for details of how images are computed from a light
         profile.
@@ -229,7 +186,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
         grid
             The 2D (y, x) coordinates where values of the image are evaluated.
         operated_only
-            By default, the returnd list contains all light profile images (irrespective of whether they have been
+            By default, the returned list contains all light profile images (irrespective of whether they have been
             operated on or not). If this input is included as a bool, only images which are or are not already
             operated are included in the list, with the images of other light profiles created as a numpy array of
             zeros.
@@ -241,7 +198,39 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             )
         ]
 
-    @aa.grid_dec.grid_1d_output_structure
+    @aa.grid_dec.to_array
+    def image_2d_from(
+        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+    ) -> Union[np.ndarray, aa.Array2D]:
+        """
+        Returns the 2D image of all galaxy light profiles summed from a 2D grid of Cartesian (y,x) coordinates.
+
+        This function first computes the image of each galaxy, via the function `image_2d_list_from`. The
+        images are then summed to give the overall image of the galaxies.
+
+        Refer to the function `image_2d_list_from` for a full description of the calculation and how the `operated_only`
+        input is used.
+
+        Parameters
+        ----------
+        grid
+            The 2D (y, x) coordinates where values of the image are evaluated.
+        operated_only
+            The returned list from this function contains all light profile images, and they are never operated on
+            (e.g. via the imaging PSF). However, inherited methods in the `autogalaxy.operate.image` package can
+            apply these operations to the images, which may have the `operated_only` input passed to them. This input
+            therefore is used to pass the `operated_only` input to these methods.
+        """
+
+        if (
+            len(self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear))
+            > 0
+        ):
+            return sum(self.image_2d_list_from(grid=grid, operated_only=operated_only))
+
+        return np.zeros((grid.shape[0],))
+
+    @aa.grid_dec.to_projected
     def image_1d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Returns the summed 1D image of the galaxy's light profiles using a grid of Cartesian (y,x) coordinates.
@@ -250,7 +239,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
         See `profiles.light` module for details of how this is performed.
 
-        The decorator `grid_1d_output_structure` converts the output arrays from ndarrays to an `Array1D` data
+        The decorator `to_projected` converts the output arrays from ndarrays to an `Array1D` data
         structure using the input `grid`'s attributes.
 
         Parameters
@@ -274,9 +263,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
         return np.zeros((grid.shape[0],))
 
-    @aa.grid_dec.grid_2d_to_vector_yx
-    @aa.grid_dec.grid_2d_to_structure
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+    @aa.grid_dec.to_vector_yx
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D deflection angles of the galaxy's mass profiles from a 2D grid of Cartesian (y,x)
         coordinates.
@@ -286,7 +274,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
         See the `autogalaxy.profiles.mass` package for details of how deflection angles are computed from a
         mass profile.
 
-        The decorator `grid_2d_to_vector_yx` converts the output arrays from ndarrays to a `VectorYX2D` data structure
+        The decorator `to_vector_yx` converts the output arrays from ndarrays to a `VectorYX2D` data structure
         using the input `grid`'s attributes.
 
         Parameters
@@ -303,8 +291,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             )
         return np.zeros((grid.shape[0], 2))
 
-    @aa.grid_dec.grid_2d_to_structure
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+    @aa.grid_dec.to_array
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D convergence of the galaxy's mass profiles from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -330,7 +318,14 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             )
         return np.zeros((grid.shape[0],))
 
-    @aa.grid_dec.grid_1d_output_structure
+    @aa.grid_dec.to_grid
+    def traced_grid_2d_from(self, grid: aa.type.Grid2DLike) -> aa.type.Grid2DLike:
+        """
+        Trace an input grid using the galaxy's its deflection angles.
+        """
+        return grid - self.deflections_yx_2d_from(grid=grid)
+
+    @aa.grid_dec.to_projected
     def convergence_1d_from(self, grid: aa.type.Grid1D2DLike) -> np.ndarray:
         """
         Returns the summed 1D convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
@@ -339,7 +334,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
         See `profiles.mass` module for details of how this is performed.
 
-        The decorator `grid_1d_output_structure` converts the output arrays from ndarrays to an `Array1D` data
+        The decorator `to_projected` converts the output arrays from ndarrays to an `Array1D` data
         structure using the input `grid`'s attributes.
 
         Parameters
@@ -363,8 +358,8 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
         return np.zeros((grid.shape[0],))
 
-    @aa.grid_dec.grid_2d_to_structure
-    def potential_2d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+    @aa.grid_dec.to_array
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D potential of the galaxy's mass profiles from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -390,7 +385,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             )
         return np.zeros((grid.shape[0],))
 
-    @aa.grid_dec.grid_1d_output_structure
+    @aa.grid_dec.to_projected
     def potential_1d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
         """
         Returns the summed 1D potential of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
@@ -399,7 +394,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
         See `profiles.mass` module for details of how this is performed.
 
-        The decorator `grid_1d_output_structure` converts the output arrays from ndarrays to an `Array1D` data
+        The decorator `to_projected` converts the output arrays from ndarrays to an `Array1D` data
         structure using the input `grid`'s attributes.
 
         Parameters
@@ -528,3 +523,41 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             raise exc.GalaxyException(
                 "You cannot perform a mass-based calculation on a galaxy which does not have a mass-profile"
             )
+
+    def set_snr_of_snr_light_profiles(
+        self,
+        grid: aa.type.Grid2DLike,
+        exposure_time: float,
+        background_sky_level: float = 0.0,
+        psf: Optional[aa.Kernel2D] = None,
+    ):
+        """
+        Iterate over every galaxy finding all `LightProfileSNR` light profiles and set their `intensity` values to
+        values which give their input `signal_to_noise_ratio` value, which is performed as follows:
+
+        - Evaluate the image of each light profile on the input grid.
+        - Blur this image with a PSF, if included.
+        - Take the value of the brightest pixel.
+        - Use an input `exposure_time` and `background_sky` (e.g. from the `SimulatorImaging` object) to determine
+          what value of `intensity` gives the desired signal to noise ratio for the image.
+
+        Parameters
+        ----------
+        grid
+            The (y, x) coordinates in the original reference frame of the grid.
+        exposure_time
+            The exposure time of the simulated imaging.
+        background_sky_level
+            The level of the background sky of the simulated imaging.
+        psf
+            The psf of the simulated imaging which can change the S/N of the light profile due to spreading out
+            the emission.
+        """
+        for light_profile in self.cls_list_from(cls=LightProfile):
+            if isinstance(light_profile, LightProfileSNR):
+                light_profile.set_intensity_from(
+                    grid=grid,
+                    exposure_time=exposure_time,
+                    background_sky_level=background_sky_level,
+                    psf=psf,
+                )

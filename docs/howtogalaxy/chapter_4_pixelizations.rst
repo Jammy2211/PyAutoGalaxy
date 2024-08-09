@@ -6,7 +6,7 @@ In chapter 4, we use **Pixelizations** to reconstruct complex galaxies on pixeli
 The chapter contains the following tutorials:
 
 `Tutorial 1: Pixelizations <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=notebooks/howtogalaxy/chapter_4_pixelizations/tutorial_1_pixelizations.ipynb>`_
-- Creating a pixel-grid in the source-plane.
+- Creating a pixel-grid which will reconstruct a galaxy's light.
 
 `Tutorial 2: Mappers <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=notebooks/howtogalaxy/chapter_4_pixelizations/tutorial_2_mappers.ipynb>`_
 - How a pixelization maps between the data and pixelization.

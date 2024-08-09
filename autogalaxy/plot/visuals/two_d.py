@@ -11,8 +11,9 @@ class Visuals2D(aplt.Visuals2D):
         origin: aa.Grid2D = None,
         border: aa.Grid2D = None,
         mask: aa.Mask2D = None,
+        lines: Optional[Union[List[aa.Array1D], aa.Grid2DIrregular]] = None,
         positions: Optional[Union[aa.Grid2DIrregular, List[aa.Grid2DIrregular]]] = None,
-        grid: Union[aa.Grid2D, aa.Grid2DSparse] = None,
+        grid: Union[aa.Grid2D] = None,
         mesh_grid: aa.Grid2D = None,
         vectors: aa.VectorYX2DIrregular = None,
         patches: Union[ptch.Patch] = None,
@@ -42,6 +43,7 @@ class Visuals2D(aplt.Visuals2D):
             mask=mask,
             positions=positions,
             grid=grid,
+            lines=lines,
             mesh_grid=mesh_grid,
             vectors=vectors,
             patches=patches,
@@ -63,9 +65,9 @@ class Visuals2D(aplt.Visuals2D):
         self.tangential_caustics = tangential_caustics
         self.radial_caustics = radial_caustics
 
-    def plot_via_plotter(self, plotter, grid_indexes=None, mapper=None):
+    def plot_via_plotter(self, plotter, grid_indexes=None, mapper=None, geometry=None):
         super().plot_via_plotter(
-            plotter=plotter, grid_indexes=grid_indexes, mapper=mapper
+            plotter=plotter, grid_indexes=grid_indexes, mapper=mapper, geometry=geometry
         )
 
         if self.light_profile_centres is not None:

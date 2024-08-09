@@ -1,10 +1,6 @@
-from autofit.plot.samples_plotters import SamplesPlotter
-from autofit.non_linear.search.nest.dynesty.plotter import DynestyPlotter
-from autofit.non_linear.search.nest.nautilus.plotter import NautilusPlotter
-from autofit.non_linear.search.nest.ultranest.plotter import UltraNestPlotter
-from autofit.non_linear.search.mcmc.emcee.plotter import EmceePlotter
-from autofit.non_linear.search.mcmc.zeus.plotter import ZeusPlotter
-from autofit.non_linear.search.optimize.pyswarms.plotter import PySwarmsPlotter
+from autofit.non_linear.plot.nest_plotters import NestPlotter
+from autofit.non_linear.plot.mcmc_plotters import MCMCPlotter
+from autofit.non_linear.plot.mle_plotters import MLEPlotter
 
 from autoarray.plot.wrap.base import (
     Units,
@@ -27,6 +23,7 @@ from autoarray.plot.wrap.base import (
 from autoarray.plot.wrap.one_d import YXPlot, FillBetween
 from autoarray.plot.wrap.two_d import (
     ArrayOverlay,
+    Contour,
     GridScatter,
     GridPlot,
     VectorYXQuiver,
@@ -81,14 +78,17 @@ from autogalaxy.plot.visuals.two_d import Visuals2D
 
 from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
 from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePDFPlotter
+from autogalaxy.profiles.plot.basis_plotters import BasisPlotter
 from autogalaxy.profiles.plot.mass_profile_plotters import MassProfilePlotter
 from autogalaxy.profiles.plot.mass_profile_plotters import MassProfilePDFPlotter
 from autogalaxy.galaxy.plot.galaxy_plotters import GalaxyPlotter
 from autogalaxy.galaxy.plot.galaxy_plotters import GalaxyPDFPlotter
+from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
 from autogalaxy.quantity.plot.fit_quantity_plotters import FitQuantityPlotter
 from autogalaxy.imaging.plot.fit_imaging_plotters import FitImagingPlotter
 from autogalaxy.interferometer.plot.fit_interferometer_plotters import (
     FitInterferometerPlotter,
 )
-from autogalaxy.plane.plot.plane_plotters import PlanePlotter
+from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
 from autogalaxy.galaxy.plot.adapt_plotters import AdaptPlotter
+from autogalaxy.ellipse.plot.fit_ellipse_plotters import FitEllipsePlotter

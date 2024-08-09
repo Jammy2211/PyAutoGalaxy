@@ -11,7 +11,7 @@ class SersicCore(Sersic):
         ell_comps: Tuple[float, float] = (0.0, 0.0),
         effective_radius: float = 0.6,
         sersic_index: float = 4.0,
-        radius_break: float = 0.01,
+        radius_break: float = 0.025,
         intensity: float = 0.05,
         gamma: float = 0.25,
         alpha: float = 3.0,
@@ -73,7 +73,7 @@ class SersicCore(Sersic):
             )
         )
 
-    def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray, **kwargs) -> np.ndarray:
         """
         Returns the 2D image of the Sersic light profile from a grid of coordinates which are the radial distances of
         each coordinate from the its `centre`.

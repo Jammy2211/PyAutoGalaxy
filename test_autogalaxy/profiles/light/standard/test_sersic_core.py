@@ -1,16 +1,13 @@
 from __future__ import division, print_function
-import math
-import numpy as np
 import pytest
-import scipy.special
 
 import autogalaxy as ag
 
-grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
+grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__image_2d_from():
-    core_sersic = ag.lp.SersicCore(
+    lp = ag.lp.SersicCore(
         ell_comps=(0.0, 0.333333),
         effective_radius=5.0,
         sersic_index=4.0,
@@ -20,7 +17,7 @@ def test__image_2d_from():
         alpha=1.0,
     )
 
-    image = core_sersic.image_2d_from(grid=np.array([[0.0, 0.1]]))
+    image = lp.image_2d_from(grid=ag.Grid2DIrregular([[0.0, 0.1]]))
 
     assert image == pytest.approx(0.0255173, 1.0e-4)
 

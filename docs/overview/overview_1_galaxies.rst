@@ -145,12 +145,12 @@ The galaxy, with both a bulge and disk, appears as follows
   :width: 400
   :alt: Alternative text
 
-Plane
------
+Galaxies
+--------
 
-If our observation contains multiple galaxies, we create a `Plane` object to represent all galaxies.
+If our observation contains multiple galaxies, we create a `Galaxies` object to represent all galaxies.
 
-By passing `Galaxy` objects to a `Plane`, **PyAutoGalaxy** groups them to indicate they are at the same redshift.
+By passing `Galaxy` objects to a `Galaxies`, **PyAutoGalaxy** groups them to indicate they are at the same redshift.
 
 .. code-block:: python
 
@@ -176,21 +176,21 @@ By passing `Galaxy` objects to a `Plane`, **PyAutoGalaxy** groups them to indica
         ),
     )
 
-    plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
+    galaxies = ag.Galaxies(galaxies=[galaxy_0, galaxy_1])
 
-The image of the plane consists of all galaxies.
+The image of all galaxies summed can easily be computed from this object.
 
 **PyAutoGalaxy** plot tools allow us to plot this image or a subplot containing images of each individual galaxy.
 
 .. code-block:: python
 
-    image = plane.image_2d_from(grid=grid)
+    image = galaxies.image_2d_from(grid=grid)
 
-    plane_plotter = aplt.PlanePlotter(plane=plane, grid=grid)
-    plane_plotter.figures_2d(image=True)
-    plane_plotter.subplot_galaxy_images()
+    galaxies_plotter = aplt.GalaxiesPlotter(galaxies=galaxies, grid=grid)
+    galaxies_plotter.figures_2d(image=True)
+    galaxies_plotter.subplot_galaxy_images()
 
-The plane image shows both galaxies:
+The image shows both galaxies:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/galaxies/plane.png
   :width: 400
@@ -204,13 +204,50 @@ The galaxy, with both a bulge and disk, appears as follows
   :width: 400
   :alt: Alternative text
 
+Over Sampling
+-------------
+
+Over sampling is a numerical technique where the images of light profiles and galaxies are evaluated
+on a higher resolution grid than the image data to ensure the calculation is accurate.
+
+For a new user, the details of over-sampling are not important, therefore just be aware that all calculations use an
+adaptive over sampling scheme which high accuracy across all use cases.
+
+Once you are more experienced, you should read up on over-sampling in more detail via
+the `autogalaxy_workspace/*/guides/over_sampling.ipynb` notebook.
+
+Log10
+-----
+
+The light distributions of galaxies are closer to a log10 distribution than a linear one.
+
+This means that when we plot an image of a light profile, its appearance is better highlighted when we take the
+logarithm of its values and plot it in log10 space.
+
+The `MatPlot2D` object has an input `use_log10`, which will do this automatically when we call the `figures_2d` method.
+Below, we can see that the image plotted now appears more clearly, with the outskirts of the light profile more visible.
+
+.. code-block:: python
+
+    galaxies_plotter = aplt.GalaxiesPlotter(
+        galaxies=galaxies,
+        grid=grid,
+        mat_plot_2d=aplt.MatPlot2D(use_log10=True),
+    )
+    galaxies_plotter.figures_2d(image=True)
+
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/galaxies/image_log10.png
+  :width: 400
+  :alt: Alternative text
+
+
 Extending Objects
 -----------------
 
-The PyAutoGalaxy API isn designed such that all of the objects introduced above are extensible. `Galaxy` objects
-can take many `LightProfile`'s and `Plane`'s many `Galaxy`'s.
+The PyAutoGalaxy API is designed such that all of the objects introduced above are extensible. `Galaxy` objects
+can take many `LightProfile`'s and `Galaxies`'s many `Galaxy`'s.
 
-To finish, lets create a `Plane` with 2 merging galaxies, where the second galaxy has multiple star forming clumps.
+To finish, lets create 2 merging galaxies, where the second galaxy has multiple star forming clumps.
 
 .. code-block:: python
 
@@ -246,7 +283,7 @@ To finish, lets create a `Plane` with 2 merging galaxies, where the second galax
         clump_2=ag.lp.Sersic(centre=(-1.0, -0.7), intensity=0.5, effective_radius=0.2),
     )
 
-    plane = ag.Plane(galaxies=[galaxy_0, galaxy_1])
+    galaxies = ag.Galaxies(galaxies=[galaxy_0, galaxy_1])
 
 This is what the merging galaxies look like:
 

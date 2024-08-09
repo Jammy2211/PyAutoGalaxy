@@ -49,10 +49,11 @@ class PowerLawCore(MassProfile):
             self.slope - 1
         )
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.over_sample
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
 
@@ -65,21 +66,20 @@ class PowerLawCore(MassProfile):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
 
-        print(grid)
-
         covnergence_grid = np.zeros(grid.shape[0])
 
-        grid_eta = self.elliptical_radii_grid_from(grid)
+        grid_eta = self.elliptical_radii_grid_from(grid=grid, **kwargs)
 
         for i in range(grid.shape[0]):
             covnergence_grid[i] = self.convergence_func(grid_eta[i])
 
         return covnergence_grid
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.over_sample
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the potential on a grid of (y,x) arc-second coordinates.
 
@@ -88,8 +88,6 @@ class PowerLawCore(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-
-        print(grid)
 
         potential_grid = np.zeros(grid.shape[0])
 
@@ -109,11 +107,10 @@ class PowerLawCore(MassProfile):
 
         return self.einstein_radius_rescaled * self.axis_ratio * potential_grid
 
-    @aa.grid_dec.grid_2d_to_vector_yx
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
@@ -189,11 +186,6 @@ class PowerLawCore(MassProfile):
     def unit_mass(self):
         return "angular"
 
-    def with_new_normalization(self, normalization):
-        mass_profile = copy.copy(self)
-        mass_profile.einstein_radius = normalization
-        return mass_profile
-
 
 class PowerLawCoreSph(PowerLawCore):
     def __init__(
@@ -225,11 +217,10 @@ class PowerLawCoreSph(PowerLawCore):
             core_radius=core_radius,
         )
 
-    @aa.grid_dec.grid_2d_to_vector_yx
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
@@ -239,7 +230,7 @@ class PowerLawCoreSph(PowerLawCore):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
-        eta = self.radial_grid_from(grid=grid)
+        eta = self.radial_grid_from(grid=grid, **kwargs)
         deflection = np.multiply(
             2.0 * self.einstein_radius_rescaled,
             np.divide(

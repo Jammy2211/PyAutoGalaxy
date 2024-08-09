@@ -173,7 +173,7 @@ class Scribbler:
         plt.subplot(122)
         plt.imshow(feature_mask.astype("int"), cmap="gray")
         plt.title("Feature mask")
-        plt.show()
+        # plt.show()
         return junk_mask
 
     def add_circle_to_mask(self, center, radius, mask):
