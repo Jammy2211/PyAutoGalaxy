@@ -167,128 +167,65 @@ def small_f_0(x1 : np.ndarray, x2 : np.ndarray, e : float) -> np.ndarray:
     return f0
 
 
-def gamma1(x1 : np.ndarray, x2 : np.ndarray, e : float, k_s : float) -> np.ndarray:
+def g1_g2_from(x1, x2, e, k_s):
     """
-    Equation 35 HK+24
+    Both components of the shear
+
+    Equation 35 and 36 HK+24
 
     Parameters
     ----------
-    x1
-        Horizontal coordinate, scaled by r_s, so unitless.
-    x2
-        Vertical coordinate, scaled by r_s, so unitless.
-    e
-        Eccentricity.
-    k_s
-        Halo convergence parameter.
+    x1 : numpy array
+         horizontal coordinate, scaled by r_s, so unitless
+    x2 : numpy array
+        vertical coordinate, scaled by r_s, so unitless
+    e : scalar
+        eccentricity.
+    k_s : scaler
+        halo convergence parameter
 
     Returns
     -------
-    First component of shear ('+' shape)
-
+    tuple of 2 numpy arrays
+    gamma1, gamma2 (g1 in '+' and g2 in 'x' shape)
     """
-    full_pre_factor = (
-        4
-        * k_s
-        * np.sqrt(1 - e**2)
-        / (((x1 - e) ** 2 + x2**2) ** 2 + ((x1 + e) ** 2 + x2**2) ** 2)
-    )
 
-    pre_f0 = (
-        ((x1 - e) ** 2 + x2**2)
-        * ((x1 + e) ** 2 + x2**2)
-        * (x1**2 - x2**2 - e**2)
-    )
-
-    pre_f1 = (
-        2
-        * e**2
-        * (x1**2 - 1)
-        * ((x1**2 - x2**2 - e**2) ** 2 - 4 * x1**2 * x2**2)
-        - (x1**2 - x2**2 - e**2) ** 3 * (3 + e**2) / 2
-        + 6 * x1**2 * x2**2 * (e**2 - 1) * (x1**2 - x2**2 - e**2)
-    )
-
-    pre_f2 = -(
-        (x1**2 - x2**2 - e**2) * ((x1**2 + x2**2) ** 2 - e**4)
-        - 8 * e**2 * x1**2 * x2**2
-    )
-
-    pre_f3 = (
-        2
-        * x1
-        * x2
-        * ((x1**2 + x2**2 + e**2) ** 2 - 4 * e**2 * (x2**2 + e**2))
-    )
-
+    # Factorized functions g1 and g2
     f0 = small_f_0(x1, x2, e)
     f1 = small_f_1(x1, x2, e)
     f2 = small_f_2(x1, x2, e)
     f3 = small_f_3(x1, x2, e)
 
-    g1 = full_pre_factor * (pre_f0 * f0 + pre_f1 * f1 + pre_f2 * f2 + pre_f3 * f3)
-    return g1
+    # Prefactor for both g1 and g2
+    full_pre_factor = 4 * k_s * np.sqrt(1 - e ** 2) / \
+                      (((x1 - e) ** 2 + x2 ** 2) ** 2 * ((x1 + e) ** 2 + x2 ** 2) ** 2)
 
+    # Prefactors for g1
+    pre_f0_g1 = ((x1 - e) ** 2 + x2 ** 2) * ((x1 + e) ** 2 + x2 ** 2) * (x1 ** 2 - x2 ** 2 - e ** 2)
 
-def gamma2(x1 : np.ndarray, x2 : np.ndarray, e : float, k_s : float) -> np.ndarray:
-    """
-    Equation 36 HK+24
+    pre_f1_g1 = (2 * e ** 2 * (x1 ** 2 - 1) * ((x1 ** 2 - x2 ** 2 - e ** 2) ** 2 - 4 * x1 ** 2 * x2 ** 2) - \
+                 (x1 ** 2 - x2 ** 2 - e ** 2) ** 3 * (3 + e ** 2) / 2 + \
+                 6 * x1 ** 2 * x2 ** 2 * (e ** 2 - 1) * (x1 ** 2 - x2 ** 2 - e ** 2))
 
-    Parameters
-    ----------
-    x1
-        Horizontal coordinate, scaled by r_s, so unitless.
-    x2
-        Vertical coordinate, scaled by r_s, so unitless.
-    e
-        Eccentricity.
-    k_s
-        Halo convergence parameter.
+    pre_f2_g1 = - ((x1 ** 2 - x2 ** 2 - e ** 2) * ((x1 ** 2 + x2 ** 2) ** 2 - e ** 4) - 8 * e ** 2 * x1 ** 2 * x2 ** 2)
 
-    Returns
-    -------
-    Second component of shear ('x' shape)
-    """
-    full_pre_factor = (
-        4
-        * k_s
-        * np.sqrt(1 - e**2)
-        / (((x1 - e) ** 2 + x2**2) ** 2 + ((x1 + e) ** 2 + x2**2) ** 2)
-    )
+    pre_f3_g1 = 2 * x1 * x2 * ((x1 ** 2 + x2 ** 2 + e ** 2) ** 2 - 4 * e ** 2 * (x2 ** 2 + e ** 2))
 
-    pre_f0 = 2 * x1 * x2 * ((x1 - e) ** 2 + x2**2) * ((x1 + e) ** 2 + x2**2)
+    # First component shear
+    g1 = full_pre_factor * (pre_f0_g1 * f0 + pre_f1_g1 * f1 + pre_f2_g1 * f2 + pre_f3_g1 * f3)
 
-    pre_f1 = (
-        x1
-        * x2
-        * (
-            (x1**2 + x2**2 + e**2)
-            * (
-                (5 * e**2 - 3) * x1**2
-                - 3 * (1 + e**2) * x2**2
-                + (5 - 3 * e**2) * e**2
-            )
-            - 4 * e**2 * x1**2 * (1 + e**2)
-        )
-    )
+    # Prefactors g2
+    pre_f0_g2 = 2 * x1 * x2 * ((x1 - e) ** 2 + x2 ** 2) * ((x1 + e) ** 2 + x2 ** 2)
 
-    pre_f2 = (
-        -2
-        * x1
-        * x2
-        * ((x1**2 + x2**2 + e**2) ** 2 - 4 * e**2 * (x2**2 + e**2))
-    )
+    pre_f1_g2 = x1 * x2 * ((x1 ** 2 + x2 ** 2 + e ** 2) * ((5 * e ** 2 - 3) * x1 ** 2 - 3 * (1 + e ** 2) * x2 ** 2 + \
+                                                           (5 - 3 * e ** 2) * e ** 2) - 4 * e ** 2 * x1 ** 2 * (
+                                       1 + e ** 2))
 
-    pre_f3 = -(
-        (x1**2 - x2**2 - e**2) * ((x1**2 + x2**2) ** 2 - e**4)
-        - 8 * e**2 * x1**2 * x2**2
-    )
+    pre_f2_g2 = - 2 * x1 * x2 * ((x1 ** 2 + x2 ** 2 + e ** 2) ** 2 - 4 * e ** 2 * (x2 ** 2 + e ** 2))
 
-    f0 = small_f_0(x1, x2, e)
-    f1 = small_f_1(x1, x2, e)
-    f2 = small_f_2(x1, x2, e)
-    f3 = small_f_3(x1, x2, e)
+    pre_f3_g2 = - ((x1 ** 2 - x2 ** 2 - e ** 2) * ((x1 ** 2 + x2 ** 2) ** 2 - e ** 4) - 8 * e ** 2 * x1 ** 2 * x2 ** 2)
 
-    g2 = full_pre_factor * (pre_f0 * f0 + pre_f1 * f1 + pre_f2 * f2 + pre_f3 * f3)
+    # Second component shear
+    g2 = full_pre_factor * (pre_f0_g2 * f0 + pre_f1_g2 * f1 + pre_f2_g2 * f2 + pre_f3_g2 * f3)
 
-    return g2
+    return g1, g2

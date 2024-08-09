@@ -291,8 +291,7 @@ class NFW(gNFW, MassProfileCSE):
 
         # Calculate shear from nfw_HK24.py
 
-        g1 = nfw_hk24_util.gamma1(x1=x1, x2=x2, e=e_hk24, k_s=self.kappa_s)  # /k_s
-        g2 = nfw_hk24_util.gamma2(x1=x1, x2=x2, e=e_hk24, k_s=self.kappa_s)  # /k_s
+        g1, g2 = nfw_hk24_util.g1_g2_from(x1=x1, x2=x2, e=e_hk24, k_s=self.kappa_s)
 
         # Rotation for shear
 
