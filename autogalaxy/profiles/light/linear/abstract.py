@@ -208,6 +208,20 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
 
     @property
     def params(self):
+        """
+        The `params` property is used by the autoarray inversion module to track how many parameters are solved
+        for in the linear inversion.
+
+        This is used to define the dimensions of certain matrices used in the linear algebra, for example the
+        `curvature_matrix` and `regularization_matrix`.
+
+        For this class, the number of parameters is equal to the number of light profiles in the list,
+        as each light profile contributes a single parameter to the inversion, its `intensity`.
+
+        Returns
+        -------
+        The number of parameters that are solved for in the linear inversion.
+        """
         return len(self.light_profile_list)
 
     @property
