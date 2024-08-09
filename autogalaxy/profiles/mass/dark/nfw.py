@@ -6,13 +6,8 @@ import autoarray as aa
 
 from autogalaxy.profiles.mass.dark.gnfw import gNFW
 from autogalaxy.profiles.mass.abstract.cse import MassProfileCSE
-from autogalaxy.profiles.mass.dark.nfw_HK24 import (
-    semi_major_axis,
-    kappa_from,
-    gamma1,
-    gamma2,
-)
 
+from autogalaxy.profiles.mass.dark import nfw_hk24_util
 
 class NFW(gNFW, MassProfileCSE):
     def __init__(
@@ -296,8 +291,8 @@ class NFW(gNFW, MassProfileCSE):
 
         # Calculate shear from nfw_HK24.py
 
-        g1 = gamma1(x1=x1, x2=x2, e=e_hk24, k_s=self.kappa_s)  # /k_s
-        g2 = gamma2(x1=x1, x2=x2, e=e_hk24, k_s=self.kappa_s)  # /k_s
+        g1 = nfw_hk24_util.gamma1(x1=x1, x2=x2, e=e_hk24, k_s=self.kappa_s)  # /k_s
+        g2 = nfw_hk24_util.gamma2(x1=x1, x2=x2, e=e_hk24, k_s=self.kappa_s)  # /k_s
 
         # Rotation for shear
 
@@ -342,9 +337,9 @@ class NFW(gNFW, MassProfileCSE):
         x2 = np.where(np.abs(x2) < 1e-6, 1e-6, x2)
 
         # Calculate convergence from nfw_HK24.py
-        a = semi_major_axis(x1, x2, e_hk24)
+        a = nfw_hk24_util.semi_major_axis_from(x1, x2, e_hk24)
 
-        return kappa_from(k_s=self.kappa_s, a=a)
+        return nfw_hk24_util.kappa_from(k_s=self.kappa_s, a=a)
 
 
 class NFWSph(NFW):

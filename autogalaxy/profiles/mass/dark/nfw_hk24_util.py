@@ -9,40 +9,34 @@ from astropy.cosmology import Planck15
 cosmo = Planck15
 
 
-def semi_major_axis(x1, x2, e):
+def semi_major_axis_from(x1 : np.ndarray, x2 : np.ndarray, e : np.ndarray) -> np.ndarray:
     """
-    Parameters
-    ----------
-    x1 : numpy array
-         horizontal coordinate, scaled by r_s, so unitless
-    x2 : numpy array
-        vertical coordinate, scaled by r_s, so unitless
-    e : scalar
-        eccentricity.
-
-    Returns
-    -------
-    None.
-
-    """
-    # a = np.sqrt(x1**2*(1-e**2) + x2**2/(1-e**2))
-    a = np.sqrt(x1**2 + x2**2 / (1 - e**2))
-    return a
-
-
-def capital_F(chi):
-    """
-    Equation 16 from Heyrovský & Karamazov
+    Returns the semi-major axis of the ellipse at a given point.
 
     Parameters
     ----------
-    chi : numpy array
-        dimenionless radial coordinate.
+    x1
+        Horizontal coordinate, scaled by r_s, so unitless
+    x2
+        Vertical coordinate, scaled by r_s, so unitless
+    e
+        Eccentricity.
+    """
+    return np.sqrt(x1 ** 2 + x2 ** 2 / (1 - e ** 2))
+
+
+def capital_F_from(chi : np.ndarray) -> np.ndarray:
+    """
+    Equation 16 from Heyrovský & Karamazov.
+
+    Parameters
+    ----------
+    chi
+        Dimenionless radial coordinate.
 
     Returns
     -------
     F(chi)
-
     """
     F = np.zeros(chi.shape)
 
@@ -54,65 +48,62 @@ def capital_F(chi):
     return F
 
 
-def kappa_from(k_s, a):
+def kappa_from(k_s : float, a : np.ndarray) -> np.ndarray:
     """
-    Equation 16 from Heyrovský & Karamazov
+    Equation 16 from Heyrovský & Karamazov.
 
     Parameters
     ----------
-    k_s : scalar
-        halo convergence parameter.
-    a : numpy array
-        semi major axis scaled by a_scale.
+    k_s
+        Halo convergence parameter.
+    a
+        Semi major axis scaled by a_scale.
 
     Returns
     -------
-    numpy array
     Convergence as a function of a
-
     """
-    F = capital_F(a)
-    kappa = 2 * k_s * (1 - F) / (a**2 - 1)
+    F = capital_F_from(a)
+    kappa = 2 * k_s * (1 - F) / (a ** 2 - 1)
     kappa[a == 1] = 2 / 3 * k_s
     return kappa
 
 
-def small_f_1(x1, x2, e):
+def small_f_1(x1 : np.ndarray, x2 : np.ndarray, e : float) -> np.ndarray:
     """
     Equation 32 HK+24
 
     Parameters
     ----------
-    x1 : numpy array
-         horizontal coordinate, scaled by r_s, so unitless
-    x2 : numpy array
-        vertical coordinate, scaled by r_s, so unitless
-    e : scalar
-        eccentricity.
+    x1
+        Horizontal coordinate, scaled by r_s, so unitless
+    x2
+        Vertical coordinate, scaled by r_s, so unitless
+    e
+        Eccentricity.
 
     Returns
     -------
     f_1
-
     """
-    a = semi_major_axis(x1, x2, e)
-    F = capital_F(a)
+    a = semi_major_axis_from(x1, x2, e)
+    F = capital_F_from(a)
     f1 = (1 - e**2) ** (-1 / 2) * F
     return f1
 
 
-def small_f_2(x1, x2, e):
+def small_f_2(x1 : np.ndarray, x2 : np.ndarray, e : float) -> np.ndarray:
     """
     Equation 32 HK+24
 
     Parameters
     ----------
-    x1 : numpy array
-         horizontal coordinate, scaled by r_s, so unitless
-    x2 : numpy array
-        vertical coordinate, scaled by r_s, so unitless
-    e : scalar
-        eccentricity.
+    x1
+        Horizontal coordinate, scaled by r_s, so unitless
+    x2
+        Vertical coordinate, scaled by r_s, so unitless
+    e
+        Eccentricity.
 
     Returns
     -------
@@ -124,18 +115,18 @@ def small_f_2(x1, x2, e):
     return f2
 
 
-def small_f_3(x1, x2, e):
+def small_f_3(x1 : np.ndarray, x2 : np.ndarray, e : float) -> np.ndarray:
     """
     Equation 32 HK+24
 
     Parameters
     ----------
-    x1 : numpy array
-         horizontal coordinate, scaled by r_s, so unitless
-    x2 : numpy array
-        vertical coordinate, scaled by r_s, so unitless
-    e : scalar
-        eccentricity.
+    x1
+        Horizontal coordinate, scaled by r_s, so unitless
+    x2
+        Vertical coordinate, scaled by r_s, so unitless
+    e
+        Eccentricity.
 
     Returns
     -------
@@ -147,26 +138,26 @@ def small_f_3(x1, x2, e):
     return f3
 
 
-def small_f_0(x1, x2, e):
+def small_f_0(x1 : np.ndarray, x2 : np.ndarray, e : float) -> np.ndarray:
     """
     Equation 37 HK+24
 
     Parameters
     ----------
-    x1 : numpy array
-         horizontal coordinate, scaled by r_s, so unitless
-    x2 : numpy array
-        vertical coordinate, scaled by r_s, so unitless
-    e : scalar
-        eccentricity.
+    x1
+        Horizontal coordinate, scaled by r_s, so unitless
+    x2
+        Vertical coordinate, scaled by r_s, so unitless
+    e
+        Eccentricity.
 
     Returns
     -------
     f_0
 
     """
-    a = semi_major_axis(x1, x2, e)
-    F = capital_F(a)
+    a = semi_major_axis_from(x1, x2, e)
+    F = capital_F_from(a)
     pre_factor = 1 / (2 * np.sqrt(1 - e**2))
     nominator = x1**2 + x2**2 + e**2 - 2 + (1 - e**2 * x1**2) * F
     denominator = 1 - x1**2 - x2**2 / (1 - e**2)
@@ -176,20 +167,20 @@ def small_f_0(x1, x2, e):
     return f0
 
 
-def gamma1(x1, x2, e, k_s):
+def gamma1(x1 : np.ndarray, x2 : np.ndarray, e : float, k_s : float) -> np.ndarray:
     """
     Equation 35 HK+24
 
     Parameters
     ----------
-    x1 : numpy array
-         horizontal coordinate, scaled by r_s, so unitless
-    x2 : numpy array
-        vertical coordinate, scaled by r_s, so unitless
-    e : scalar
-        eccentricity.
-    k_s : scaler
-        halo convergence parameter
+    x1
+        Horizontal coordinate, scaled by r_s, so unitless.
+    x2
+        Vertical coordinate, scaled by r_s, so unitless.
+    e
+        Eccentricity.
+    k_s
+        Halo convergence parameter.
 
     Returns
     -------
@@ -239,20 +230,20 @@ def gamma1(x1, x2, e, k_s):
     return g1
 
 
-def gamma2(x1, x2, e, k_s):
+def gamma2(x1 : np.ndarray, x2 : np.ndarray, e : float, k_s : float) -> np.ndarray:
     """
     Equation 36 HK+24
 
     Parameters
     ----------
-    x1 : numpy array
-         horizontal coordinate, scaled by r_s, so unitless
-    x2 : numpy array
-        vertical coordinate, scaled by r_s, so unitless
-    e : scalar
-        eccentricity.
-    k_s : scaler
-        halo convergence parameter
+    x1
+        Horizontal coordinate, scaled by r_s, so unitless.
+    x2
+        Vertical coordinate, scaled by r_s, so unitless.
+    e
+        Eccentricity.
+    k_s
+        Halo convergence parameter.
 
     Returns
     -------
