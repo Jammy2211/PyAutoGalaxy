@@ -155,7 +155,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         with mappers.
 
         The autoarray inversion module treats separely the `mapping_matrix` and the `operated_mapping_matrix`,
-        where the latter is the mapping matrix after all additional operations (e.g. convolution) have been applied.
+        where the latter is the mapping matrix after all additional operations (e.g. convolution, FFT) have been applied.
         The `operated_mapping_matrix` is used to perform the linear inversion. This class defines a function
         `operated_mapping_matrix_override` which overrides the `operated_mapping_matrix` calculation in autoarray
         to account for PSF convolution of the light profile images.
@@ -243,6 +243,17 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
 
     @property
     def mapping_matrix(self) -> np.ndarray:
+        """
+        Returns the `mapping_matrix` of the linear light profiles, where each column is the image of each light profile
+        evaluated on the grid before operations are applied (e.g. convolution, FFT).
+
+        This function iterates over each light profile in the list and evaluates its image on the grid, storing this
+        image in the `mapping_matrix`.
+
+        Returns
+        -------
+        The `mapping_matrix` of the linear light profiles.
+        """
         mapping_matrix = np.zeros(shape=(self.pixels_in_mask, self.params))
 
         for pixel, light_profile in enumerate(self.light_profile_list):
