@@ -207,7 +207,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         self.light_profile_list = light_profile_list
 
     @property
-    def params(self):
+    def params(self) -> int:
         """
         The `params` property is used by the autoarray inversion module to track how many parameters are solved
         for in the linear inversion.
@@ -225,7 +225,18 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         return len(self.light_profile_list)
 
     @property
-    def pixels_in_mask(self):
+    def pixels_in_mask(self) -> int:
+        """
+        The number of pixels in the mask of the grid, which is used to define the dimensions of the `mapping_matrix`
+        used in the linear inversion.
+
+        This function has two ways to return the number of pixels in the mask, depending on whether the inversion
+        is being performed on an imaging or interferometer dataset.
+
+        Returns
+        -------
+        The number of pixels in the mask of the grid.
+        """
         if isinstance(self.grid, aa.Grid2DOverSampled):
             return self.grid.pixels_in_mask
         return self.grid.mask.pixels_in_mask
