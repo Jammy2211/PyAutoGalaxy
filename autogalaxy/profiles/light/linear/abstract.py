@@ -266,7 +266,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
     @cached_property
     def operated_mapping_matrix_override(self) -> Optional[np.ndarray]:
         """
-        The `LinearEqn` object takes the `mapping_matrix` of each linear object and combines it with the `Convolver`
+        The inversion object takes the `mapping_matrix` of each linear object and combines it with the `Convolver`
         operator to perform a 2D convolution and compute the `operated_mapping_matrix`.
 
         If this property is overwritten this operation is not performed, with the `operated_mapping_matrix` output this
