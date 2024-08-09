@@ -333,43 +333,6 @@ def test__potential_2d_from():
     assert potential_spherical == pytest.approx(potential_elliptical, 1e-3)
 
 
-def test__convergence_2d_from_hk24():
-    nfw = ag.mp.NFWSph(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
-
-    convergence = nfw.convergence_2d_from_hk24(grid=np.array([[2.0, 0.0]]))
-
-    assert convergence == pytest.approx(0.263600141, 1e-3)
-
-    nfw = ag.mp.NFWSph(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
-
-    convergence = nfw.convergence_2d_from_hk24(grid=np.array([[0.5, 0.0]]))
-
-    assert convergence == pytest.approx(1.388511, 1e-3)
-
-    nfw = ag.mp.NFWSph(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=1.0)
-
-    convergence = nfw.convergence_2d_from_hk24(grid=np.array([[0.5, 0.0]]))
-
-    assert convergence == pytest.approx(2.0 * 1.388511, 1e-3)
-
-    nfw = ag.mp.NFWSph(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=2.0)
-
-    convergence = nfw.convergence_2d_from_hk24(grid=np.array([[1.0, 0.0]]))
-
-    assert convergence == pytest.approx(1.388511, 1e-3)
-
-    nfw = ag.mp.NFW(
-        centre=(0.0, 0.0),
-        ell_comps=(0.0, 0.333333),
-        kappa_s=1.0,
-        scale_radius=1.0,
-    )
-
-    convergence = nfw.convergence_2d_from_hk24(grid=np.array([[0.25, 0.0]]))
-
-    assert convergence == pytest.approx(1.388511, 1e-3)
-
-
 def test__shear_yx_2d_from():
     mp = ag.mp.NFWSph(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 

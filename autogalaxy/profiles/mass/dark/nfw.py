@@ -310,7 +310,7 @@ class NFW(gNFW, MassProfileCSE):
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from_hk24(self, grid: aa.type.Grid2DLike, **kwargs):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Analytic calculation convergence from Heyrovský & Karamazov 2024
 
