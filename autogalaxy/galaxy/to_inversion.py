@@ -580,7 +580,7 @@ class GalaxiesToInversion(AbstractToInversion):
         It solves for the linear light profile intensities and pixelization mesh pixel values via linear algebra,
         finding the solution which best fits the data after regularization is applied.
 
-        The `GalaiesToInversion` object acts as an interface between the dataset and galaxies and the inversion module,
+        The `GalaxiesToInversion` object acts as an interface between the dataset and galaxies and the inversion module,
         with many of its functions required to set up the inputs to the inversion object, primarily
         the `linear_obj_list` and `linear_obj_galaxy_dict` properties.
 

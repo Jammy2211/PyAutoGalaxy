@@ -16,6 +16,22 @@ from autogalaxy import exc
 
 
 class LightProfileLinear(LightProfile):
+    """
+    A linear light profile, which is a light profile whose `intensity` value is solved for via linear algebra
+    using an inversion.
+
+    Every standard light profile (e.g. `Serisic`, `Exponential`, etc.) has a linear light profile equivalent that
+    behaves identically, except that the `intensity` is not explicitly set by the user but instead is inferred via
+    a linear inversion.
+    
+    This means that when a linear light profile is used to perform a model-fit, it reduces the number of free parameters
+    in the model-fit by 1, as the `intensity` parameter is inferred via the inversion.
+
+    The `LightProfileLinear` class is an abstract class that should be used to make specific linear light profiles.
+    This inheritance is used throughout the `galaxy.py`, `tracer.py` and other modules to extract linear light
+    profiles when performing a fit to data.
+    """
+
     @property
     def regularization(self):
         return None
