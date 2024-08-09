@@ -39,7 +39,7 @@ class FitEllipse(aa.FitDataset):
         """
         return DatasetInterp(dataset=self.dataset)
 
-    def points_from_major_axis_from(self, flip_y : bool = False) -> np.ndarray:
+    def points_from_major_axis_from(self, flip_y: bool = False) -> np.ndarray:
         """
         Returns the (y,x) coordinates on the ellipse that are used to interpolate the data and noise-map values.
 

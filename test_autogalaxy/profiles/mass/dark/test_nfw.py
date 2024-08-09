@@ -331,3 +331,40 @@ def test__potential_2d_from():
     )
 
     assert potential_spherical == pytest.approx(potential_elliptical, 1e-3)
+
+
+def test__shear_yx_2d_from():
+    mp = ag.mp.NFWSph(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+
+    shear = mp.shear_yx_2d_from(grid=ag.Grid2DIrregular([[0.01, 1.0]]))
+
+    assert shear[0, 0] == pytest.approx(-0.01120694, 1e-3)
+    assert shear[0, 1] == pytest.approx(-0.56057913, 1e-3)
+
+    shear = mp.shear_yx_2d_from(grid=ag.Grid2DIrregular([[2.0, 1.0]]))
+
+    assert shear[0, 0] == pytest.approx(-0.24712463, 1e-3)
+    assert shear[0, 1] == pytest.approx(0.185340150, 1e-3)
+
+    shear = mp.shear_yx_2d_from(grid=ag.Grid2DIrregular([[3.0, 5.0]]))
+
+    assert shear[0, 0] == pytest.approx(-0.09588857, 1e-3)
+    assert shear[0, 1] == pytest.approx(-0.05114060, 1e-3)
+
+    mp = ag.mp.NFW(
+        centre=(0.0, 0.0), ell_comps=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0
+    )
+
+    shear = mp.shear_yx_2d_from(grid=ag.Grid2DIrregular([[0.01, 1.0]]))
+
+    assert shear[0, 0] == pytest.approx(-0.01120694, 1e-3)
+    assert shear[0, 1] == pytest.approx(-0.56057913, 1e-3)
+
+    mp = ag.mp.NFW(
+        centre=(0.0, 0.0), ell_comps=(0.3, 0.4), kappa_s=1.0, scale_radius=1.0
+    )
+
+    shear = mp.shear_yx_2d_from(grid=ag.Grid2DIrregular([[2.0, 1.0]]))
+
+    assert shear[0, 0] == pytest.approx(-0.08554797, 1e-3)
+    assert shear[0, 1] == pytest.approx(0.111356360, 1e-3)
