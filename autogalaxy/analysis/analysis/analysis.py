@@ -14,9 +14,6 @@ from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
 
-from autogalaxy.profiles.light import standard as lp
-from autogalaxy.profiles.light import linear as lp_linear
-
 logger = logging.getLogger(__name__)
 
 logger.setLevel(level="INFO")

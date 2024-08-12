@@ -310,6 +310,14 @@ def make_adapt_images_7x7():
     return fixtures.make_adapt_images_7x7()
 
 
+### ELLIPSE ###
+
+
+@pytest.fixture(name="dataset_interp_7x7")
+def make_dataset_interp_7x7():
+    return fixtures.make_dataset_interp_7x7()
+
+
 ### QUANTITY ###
 
 

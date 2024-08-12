@@ -7,6 +7,7 @@ import autoarray as aa
 from autogalaxy.profiles.mass.dark.gnfw import gNFW
 from autogalaxy.profiles.mass.abstract.cse import MassProfileCSE
 
+from autogalaxy.profiles.mass.dark import nfw_hk24_util
 
 class NFW(gNFW, MassProfileCSE):
     def __init__(
@@ -26,7 +27,7 @@ class NFW(gNFW, MassProfileCSE):
         ell_comps
             The first and second ellipticity components of the elliptical coordinate system.
         kappa_s
-            The overall normalization of the dark matter halo \
+            The overall normalization of the dark matter halo \|
             (kappa_s = (rho_s * scale_radius)/lensing_critical_density)
         scale_radius
             The NFW scale radius `r_s`, as an angle on the sky in arcseconds.
@@ -41,8 +42,8 @@ class NFW(gNFW, MassProfileCSE):
         )
         super(MassProfileCSE, self).__init__()
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return self.deflections_2d_via_cse_from(grid=grid, **kwargs)
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+        return self.deflections_2d_via_cse_from(grid=grid)
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
@@ -258,6 +259,86 @@ class NFW(gNFW, MassProfileCSE):
             return (1.0 / np.sqrt(1 - r**2)) * np.arctanh(np.sqrt(1 - r**2))
         elif r == 1:
             return 1
+
+    @aa.grid_dec.to_vector_yx
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def shear_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+        """
+        Analytic calculation shear from Heyrovský & Karamazov 2024
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
+
+        """
+
+        # Convert e definitions:
+        # from q = (1-e)/(1+e) to q = sqrt(1-e**2)
+
+        e_autolens = np.sqrt(self.ell_comps[1] ** 2 + self.ell_comps[0] ** 2)
+        e_hk24 = 2 * np.sqrt(e_autolens) / np.sqrt(1 + 2 * e_autolens + e_autolens**2)
+
+        # Define dimensionless length coords
+
+        x1 = grid[:, 1] / self.scale_radius
+        x2 = grid[:, 0] / self.scale_radius
+
+        # Avoid nans due to x=0
+        x1 = np.where(np.abs(x1) < 1e-6, 1e-6, x1)
+        x2 = np.where(np.abs(x2) < 1e-6, 1e-6, x2)
+
+        # Calculate shear from nfw_HK24.py
+
+        g1, g2 = nfw_hk24_util.g1_g2_from(x1=x1, x2=x2, e=e_hk24, k_s=self.kappa_s)
+
+        # Rotation for shear
+
+        shear_field = self.rotated_grid_from_reference_frame_from(
+            grid=np.vstack((g2, g1)).T, angle=self.angle * 2
+        )
+
+        return aa.VectorYX2DIrregular(values=shear_field, grid=grid)
+
+    @aa.grid_dec.to_array
+    @aa.grid_dec.transform
+    @aa.grid_dec.relocate_to_radial_minimum
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+        """
+        Analytic calculation convergence from Heyrovský & Karamazov 2024
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
+
+        Returns
+        -------
+        Convergence
+
+        """
+
+        # Convert e definitions:
+        # from q = (1-e)/(1+e) to q = sqrt(1-e**2)
+
+        e_autolens = np.sqrt(self.ell_comps[1] ** 2 + self.ell_comps[0] ** 2)
+        e_hk24 = 2 * np.sqrt(e_autolens) / np.sqrt(1 + 2 * e_autolens + e_autolens**2)
+
+        # Define dimensionless length coords
+
+        x1 = grid[:, 1] / self.scale_radius
+        x2 = grid[:, 0] / self.scale_radius
+
+        # Avoid nans due to x=0
+
+        x1 = np.where(np.abs(x1) < 1e-6, 1e-6, x1)
+        x2 = np.where(np.abs(x2) < 1e-6, 1e-6, x2)
+
+        # Calculate convergence from nfw_HK24.py
+        a = nfw_hk24_util.semi_major_axis_from(x1, x2, e_hk24)
+
+        return nfw_hk24_util.kappa_from(k_s=self.kappa_s, a=a)
 
 
 class NFWSph(NFW):
