@@ -9,6 +9,7 @@ from autogalaxy.profiles.mass.abstract.cse import MassProfileCSE
 
 from autogalaxy.profiles.mass.dark import nfw_hk24_util
 
+
 class NFW(gNFW, MassProfileCSE):
     def __init__(
         self,

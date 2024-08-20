@@ -51,7 +51,7 @@ class DatasetInterp:
         """
         return interpolate.RegularGridInterpolator(
             points=self.points_interp,
-            values=self.dataset.data.native,
+            values=np.float64(self.dataset.data.native),
             bounds_error=False,
             fill_value=0.0,
         )
@@ -64,7 +64,7 @@ class DatasetInterp:
 
         return interpolate.RegularGridInterpolator(
             points=self.points_interp,
-            values=self.dataset.noise_map.native,
+            values=np.float64(self.dataset.noise_map.native),
             bounds_error=False,
             fill_value=0.0,
         )
