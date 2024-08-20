@@ -261,7 +261,7 @@ class GalaxiesToInversion(AbstractToInversion):
         Returns a dictionary associating each list of linear light profiles with the galaxy they belong to.
 
         This function iterates over all galaxies and their light profiles, extracting their linear light profiles and
-        for each ga;axy grouping them into a `LightProfileLinearObjFuncList` object, which is associated with the
+        for each galaxy grouping them into a `LightProfileLinearObjFuncList` object, which is associated with the
         galaxy via the dictionary.
 
         This `LightProfileLinearObjFuncList` object contains the attributes (e.g. the data `grid`, `light_profiles`)
