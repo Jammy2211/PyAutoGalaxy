@@ -64,6 +64,9 @@ def make_psf_3x3_no_blur():
 def make_rectangular_inversion_7x7_3x3():
     return fixtures.make_rectangular_inversion_7x7_3x3()
 
+@pytest.fixture(name="delaunay_inversion_9_3x3")
+def make_delaunay_inversion_9_3x3():
+    return fixtures.make_delaunay_inversion_9_3x3()
 
 @pytest.fixture(name="voronoi_inversion_9_3x3")
 def make_voronoi_inversion_9_3x3():
