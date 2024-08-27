@@ -138,7 +138,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         blurring_grid: aa.type.Grid1D2DLike,
         convolver: Optional[aa.Convolver],
         light_profile_list: List[LightProfileLinear],
-        regularization=aa.reg.Regularization,
+        regularization = Optional[aa.reg.Regularization],
         run_time_dict: Optional[Dict] = None,
     ):
         """
