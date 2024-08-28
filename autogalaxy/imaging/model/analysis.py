@@ -29,6 +29,7 @@ class AnalysisImaging(AnalysisDataset):
         adapt_image_maker: Optional[AdaptImageMaker] = None,
         cosmology: LensingCosmology = Planck15(),
         settings_inversion: aa.SettingsInversion = None,
+        title_prefix: str = None,
     ):
         """
         Fits a galaxy model to an imaging dataset via a non-linear search.
@@ -56,12 +57,16 @@ class AnalysisImaging(AnalysisDataset):
             The Cosmology assumed for this analysis.
         settings_inversion
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
+        title_prefix
+            A string that is added before the title of all figures output by visualization, for example to
+            put the name of the dataset and galaxy in the title.
         """
         super().__init__(
             dataset=dataset,
             adapt_image_maker=adapt_image_maker,
             cosmology=cosmology,
             settings_inversion=settings_inversion,
+            title_prefix=title_prefix,
         )
 
     @property

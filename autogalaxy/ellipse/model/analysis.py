@@ -18,7 +18,7 @@ class AnalysisEllipse(af.Analysis):
     Result = ResultEllipse
     Visualizer = VisualizerEllipse
 
-    def __init__(self, dataset: aa.Imaging):
+    def __init__(self, dataset: aa.Imaging, title_prefix: str = None):
         """
         Fits a model made of ellipses to an imaging dataset via a non-linear search.
 
@@ -34,8 +34,12 @@ class AnalysisEllipse(af.Analysis):
         ----------
         dataset
             The `Imaging` dataset that the model containing ellipses is fitted to.
+        title_prefix
+            A string that is added before the title of all figures output by visualization, for example to
+            put the name of the dataset and galaxy in the title.
         """
         self.dataset = dataset
+        self.title_prefix = title_prefix
 
     def log_likelihood_function(self, instance: af.ModelInstance) -> float:
         """
