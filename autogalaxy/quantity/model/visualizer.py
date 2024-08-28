@@ -46,7 +46,6 @@ class VisualizerQuantity(af.Visualizer):
         fit = analysis.fit_quantity_for_instance(instance=instance)
 
         PlotterInterface = PlotterInterfaceQuantity(
-            image_path=paths.image_path,
-            title_prefix=analysis.title_prefix
+            image_path=paths.image_path, title_prefix=analysis.title_prefix
         )
         PlotterInterface.fit_quantity(fit=fit)

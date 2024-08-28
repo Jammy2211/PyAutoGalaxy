@@ -28,8 +28,7 @@ class VisualizerImaging(af.Visualizer):
         """
 
         plotter = PlotterInterfaceImaging(
-            image_path=paths.image_path,
-            title_prefix=analysis.title_prefix
+            image_path=paths.image_path, title_prefix=analysis.title_prefix
         )
 
         plotter.imaging(dataset=analysis.dataset)
@@ -76,8 +75,7 @@ class VisualizerImaging(af.Visualizer):
         fit = analysis.fit_from(instance=instance)
 
         plotter = PlotterInterfaceImaging(
-            image_path=paths.image_path,
-            title_prefix=analysis.title_prefix
+            image_path=paths.image_path, title_prefix=analysis.title_prefix
         )
         plotter.imaging(dataset=analysis.dataset)
 

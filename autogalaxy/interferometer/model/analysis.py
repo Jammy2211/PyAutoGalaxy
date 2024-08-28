@@ -71,7 +71,7 @@ class AnalysisInterferometer(AnalysisDataset):
             adapt_image_maker=adapt_image_maker,
             cosmology=cosmology,
             settings_inversion=settings_inversion,
-            title_prefix=title_prefix
+            title_prefix=title_prefix,
         )
 
     @property

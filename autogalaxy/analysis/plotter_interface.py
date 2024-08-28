@@ -89,7 +89,7 @@ class PlotterInterface:
             title=aplt.Title(prefix=self.title_prefix),
             output=aplt.Output(
                 path=path.join(self.image_path, subfolders), format=format
-            )
+            ),
         )
 
     def mat_plot_2d_from(self, subfolders, format="png") -> MatPlot2D:
@@ -114,7 +114,7 @@ class PlotterInterface:
             title=aplt.Title(prefix=self.title_prefix),
             output=aplt.Output(
                 path=path.join(self.image_path, subfolders), format=format
-            )
+            ),
         )
 
     def galaxies(

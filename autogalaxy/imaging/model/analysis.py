@@ -29,7 +29,7 @@ class AnalysisImaging(AnalysisDataset):
         adapt_image_maker: Optional[AdaptImageMaker] = None,
         cosmology: LensingCosmology = Planck15(),
         settings_inversion: aa.SettingsInversion = None,
-        title_prefix : str = None,
+        title_prefix: str = None,
     ):
         """
         Fits a galaxy model to an imaging dataset via a non-linear search.
