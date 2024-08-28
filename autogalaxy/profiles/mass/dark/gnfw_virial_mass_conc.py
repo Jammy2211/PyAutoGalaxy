@@ -75,15 +75,13 @@ class gNFWVirialMassConcSph(gNFWSph):
         """
         Spherical gNFW profile initialized with the virial mass and c_2 concentration of the halo.
 
-        The virial radius of the halo is defined as the radius at which the density of the halo equals overdens * the critical density of the Universe.
-        r_vir = (3*m_vir/4*pi*overdens*critical_density)^1/3
+        The virial radius of the halo is defined as the radius at which the density of the halo
+        equals overdens * the critical density of the Universe. r_vir = (3*m_vir/4*pi*overdens*critical_density)^1/3.
 
         If the overdens parameter is set to 0, the virial overdensity of Bryan & Norman (1998) will be used.
 
         Parameters
         ----------
-        cosmology
-            The cosmology to use in calculations. Currently MUST be Planck15() (default).
         centre
             The (y,x) arc-second coordinates of the profile centre.
         log10m_vir
@@ -92,16 +90,17 @@ class gNFWVirialMassConcSph(gNFWSph):
             The c_2 concentration of the dark matter halo, which equals r_vir/r_2, where r_2 is the
             radius at which the logarithmic density slope equals -2.
         overdens
-            The spherical overdensity used to define the virial radius of the dark matter halo: r_vir = (3*m_vir/4*pi*overdens*critical_density)^1/3.
-            If this parameter is set to 0, the virial overdensity of Bryan & Norman (1998) will be used.
+            The spherical overdensity used to define the virial radius of the dark matter
+            halo: r_vir = (3*m_vir/4*pi*overdens*critical_density)^1/3. If this parameter is set to 0, the virial
+            overdensity of Bryan & Norman (1998) will be used.
         redshift_object
             Lens redshift.
         redshift_source
             Source redshift.
         inner_slope
             The inner slope of the dark matter halo's gNFW density profile.
-
         """
+
         self.log10m_vir = log10m_vir
         self.c_2 = c_2
         self.redshift_object = redshift_object
