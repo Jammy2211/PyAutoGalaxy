@@ -61,6 +61,7 @@ class PlotterInterface:
             put the name of the dataset and galaxy in the title.
         """
         self.image_path = image_path
+        self.title_prefix = title_prefix
 
         self.include_2d = Include2D()
 
@@ -85,6 +86,7 @@ class PlotterInterface:
             The 1D matplotlib plotter object.
         """
         return MatPlot1D(
+            title=aplt.Title(prefix=self.title_prefix),
             output=aplt.Output(
                 path=path.join(self.image_path, subfolders), format=format
             )
@@ -109,6 +111,7 @@ class PlotterInterface:
             The 2D matplotlib plotter object.
         """
         return MatPlot2D(
+            title=aplt.Title(prefix=self.title_prefix),
             output=aplt.Output(
                 path=path.join(self.image_path, subfolders), format=format
             )

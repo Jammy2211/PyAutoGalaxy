@@ -22,6 +22,7 @@ class AnalysisQuantity(Analysis):
         dataset: DatasetQuantity,
         func_str: str,
         cosmology: LensingCosmology = Planck15(),
+        title_prefix: str = None,
     ):
         """
         Fits a galaxy model to a quantity dataset via a non-linear search.
@@ -52,11 +53,15 @@ class AnalysisQuantity(Analysis):
             the dataset.
         cosmology
             The Cosmology assumed for this analysis.
+        title_prefix
+            A string that is added before the title of all figures output by visualization, for example to
+            put the name of the dataset and galaxy in the title.
         """
         super().__init__(cosmology=cosmology)
 
         self.dataset = dataset
         self.func_str = func_str
+        self.title_prefix = title_prefix
 
     def log_likelihood_function(self, instance: af.ModelInstance) -> float:
         """
