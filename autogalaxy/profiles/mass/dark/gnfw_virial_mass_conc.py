@@ -57,7 +57,6 @@ def kappa_s_and_scale_radius(
 class gNFWVirialMassConcSph(gNFWSph):
     def __init__(
             self,
-            cosmology: cosmo.LensingCosmology = cosmo.Planck15(),
             centre: Tuple[float, float] = (0.0, 0.0),
             log10m_vir: float = 12,
             c_2: float = 10,
@@ -108,7 +107,7 @@ class gNFWVirialMassConcSph(gNFWSph):
             virial_radius,
             overdens,
         ) = kappa_s_and_scale_radius(
-            cosmology=cosmology,
+            cosmology=cosmo.Planck15(),
             virial_mass=10 ** log10m_vir,
             c_2=c_2,
             overdens=overdens,
