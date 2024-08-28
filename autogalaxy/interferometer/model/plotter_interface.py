@@ -61,6 +61,7 @@ class PlotterInterfaceInterferometer(PlotterInterface):
         dataset_plotter = aplt.InterferometerPlotter(
             dataset=dataset,
             include_2d=self.include_2d,
+            mat_plot_1d=mat_plot_1d,
             mat_plot_2d=mat_plot_2d,
         )
 
