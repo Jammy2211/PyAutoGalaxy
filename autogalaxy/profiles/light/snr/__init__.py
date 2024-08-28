@@ -11,3 +11,4 @@ from .eff import (
     ElsonFreeFall,
     ElsonFreeFallSph,
 )
+from .sersic_core import SersicCore
