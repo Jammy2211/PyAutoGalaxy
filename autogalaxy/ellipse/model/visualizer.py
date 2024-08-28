@@ -27,7 +27,7 @@ class VisualizerEllipse(af.Visualizer):
             the imaging data.
         """
 
-        plotter = PlotterInterfaceEllipse(image_path=paths.image_path)
+        plotter = PlotterInterfaceEllipse(image_path=paths.image_path, title_prefix=analysis.title_prefix)
 
         plotter.imaging(dataset=analysis.dataset)
 
@@ -64,7 +64,7 @@ class VisualizerEllipse(af.Visualizer):
         """
         fit_list = analysis.fit_list_from(instance=instance)
 
-        plotter = PlotterInterfaceEllipse(image_path=paths.image_path)
+        plotter = PlotterInterfaceEllipse(image_path=paths.image_path, title_prefix=analysis.title_prefix)
         plotter.imaging(dataset=analysis.dataset)
 
         plotter.fit_ellipse(fit_list=fit_list, during_analysis=during_analysis)

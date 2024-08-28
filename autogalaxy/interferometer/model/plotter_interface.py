@@ -35,11 +35,13 @@ class PlotterInterfaceInterferometer(PlotterInterface):
         def should_plot(name):
             return plot_setting(section=["dataset", "interferometer"], name=name)
 
+        mat_plot_1d = self.mat_plot_1d_from(subfolders="dataset")
         mat_plot_2d = self.mat_plot_2d_from(subfolders="dataset")
 
         dataset_plotter = aplt.InterferometerPlotter(
             dataset=dataset,
             include_2d=self.include_2d,
+            mat_plot_1d=mat_plot_1d,
             mat_plot_2d=mat_plot_2d,
         )
 
