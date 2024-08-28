@@ -27,7 +27,10 @@ class VisualizerImaging(af.Visualizer):
             the imaging data.
         """
 
-        plotter = PlotterInterfaceImaging(image_path=paths.image_path)
+        plotter = PlotterInterfaceImaging(
+            image_path=paths.image_path,
+            title_prefix=analysis.title_prefix
+        )
 
         plotter.imaging(dataset=analysis.dataset)
 

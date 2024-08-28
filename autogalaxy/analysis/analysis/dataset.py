@@ -29,6 +29,7 @@ class AnalysisDataset(Analysis):
         adapt_image_maker: Optional[AdaptImageMaker] = None,
         cosmology: LensingCosmology = Planck15(),
         settings_inversion: aa.SettingsInversion = None,
+        title_prefix: str = None,
     ):
         """
         Abstract Analysis class for all model-fits which fit galaxies to a dataset, like imaging or interferometer data.
@@ -49,6 +50,9 @@ class AnalysisDataset(Analysis):
         settings_inversion
             Settings controlling how an inversion is fitted during the model-fit, for example which linear algebra
             formalism is used.
+        title_prefix
+            A string that is added before the title of all figures output by visualization, for example to
+            put the name of the dataset and galaxy in the title.
         """
         super().__init__(cosmology=cosmology)
 
@@ -59,6 +63,8 @@ class AnalysisDataset(Analysis):
         self.settings_inversion = settings_inversion or aa.SettingsInversion()
 
         self.preloads = self.preloads_cls()
+
+        self.title_prefix = title_prefix
 
     @property
     def preloads_cls(self):

@@ -36,7 +36,7 @@ def plot_setting(section: Union[List[str], str], name: str) -> bool:
 
 
 class PlotterInterface:
-    def __init__(self, image_path: str):
+    def __init__(self, image_path: str, title_prefix: str = None):
         """
         Provides an interface between an output path and all plotter objects.
 
@@ -56,6 +56,9 @@ class PlotterInterface:
         ----------
         image_path
             The path on the hard-disk to the `image` folder of the non-linear searches results.
+        title_prefix
+            A string that is added before the title of all figures output by visualization, for example to
+            put the name of the dataset and galaxy in the title.
         """
         self.image_path = image_path
 
