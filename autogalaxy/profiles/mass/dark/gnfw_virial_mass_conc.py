@@ -58,9 +58,9 @@ class gNFWVirialMassConcSph(gNFWSph):
     def __init__(
             self,
             centre: Tuple[float, float] = (0.0, 0.0),
-            log10m_vir: float = 12,
-            c_2: float = 10,
-            overdens: float = 0,
+            log10m_vir: float = 12.0,
+            c_2: float = 10.0,
+            overdens: float = 0.0,
             redshift_object: float = 0.5,
             redshift_source: float = 1.0,
             inner_slope: float = 1.0,
