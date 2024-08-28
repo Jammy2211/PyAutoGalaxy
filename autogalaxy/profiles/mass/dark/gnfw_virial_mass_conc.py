@@ -11,12 +11,12 @@ from scipy.integrate import quad
 
 
 def kappa_s_and_scale_radius(
-        cosmology, virial_mass, c_2, overdens, redshift_object, redshift_source, inner_slope
+    cosmology, virial_mass, c_2, overdens, redshift_object, redshift_source, inner_slope
 ):
     concentration = (2 - inner_slope) * c_2  # gNFW concentration
 
     critical_density = (
-        cosmology.critical_density(redshift_object).to(units.solMass / units.kpc ** 3)
+        cosmology.critical_density(redshift_object).to(units.solMass / units.kpc**3)
     ).value
 
     critical_surface_density = (
@@ -29,22 +29,29 @@ def kappa_s_and_scale_radius(
 
     if overdens == 0:
         x = cosmology.Om(redshift_object) - 1
-        overdens = 18 * np.pi ** 2 + 82 * x - 39 * x ** 2  # Bryan & Norman (1998)
+        overdens = 18 * np.pi**2 + 82 * x - 39 * x**2  # Bryan & Norman (1998)
 
     virial_radius = (
-                            virial_mass / (overdens * critical_density * (4.0 * np.pi / 3.0))
-                    ) ** (
-                            1.0 / 3.0
-                    )  # r_vir
+        virial_mass / (overdens * critical_density * (4.0 * np.pi / 3.0))
+    ) ** (
+        1.0 / 3.0
+    )  # r_vir
 
-    scale_radius_kpc = virial_radius / concentration  # scale radius of gNFW profile in kpc
+    scale_radius_kpc = (
+        virial_radius / concentration
+    )  # scale radius of gNFW profile in kpc
 
     ##############################
     def integrand(r):
-        return (r ** 2 / r ** inner_slope) * (1 + r / scale_radius_kpc) ** (inner_slope - 3)
+        return (r**2 / r**inner_slope) * (1 + r / scale_radius_kpc) ** (
+            inner_slope - 3
+        )
 
-    de_c = ((overdens / 3.0) * (virial_radius ** 3 / scale_radius_kpc ** inner_slope)
-            / quad(integrand, 0, virial_radius)[0])  # rho_c
+    de_c = (
+        (overdens / 3.0)
+        * (virial_radius**3 / scale_radius_kpc**inner_slope)
+        / quad(integrand, 0, virial_radius)[0]
+    )  # rho_c
     ##############################
 
     rho_s = critical_density * de_c  # rho_s
@@ -56,14 +63,14 @@ def kappa_s_and_scale_radius(
 
 class gNFWVirialMassConcSph(gNFWSph):
     def __init__(
-            self,
-            centre: Tuple[float, float] = (0.0, 0.0),
-            log10m_vir: float = 12.0,
-            c_2: float = 10.0,
-            overdens: float = 0.0,
-            redshift_object: float = 0.5,
-            redshift_source: float = 1.0,
-            inner_slope: float = 1.0,
+        self,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        log10m_vir: float = 12.0,
+        c_2: float = 10.0,
+        overdens: float = 0.0,
+        redshift_object: float = 0.5,
+        redshift_source: float = 1.0,
+        inner_slope: float = 1.0,
     ):
         """
         Spherical gNFW profile initialized with the virial mass and c_2 concentration of the halo.
@@ -108,12 +115,12 @@ class gNFWVirialMassConcSph(gNFWSph):
             overdens,
         ) = kappa_s_and_scale_radius(
             cosmology=cosmo.Planck15(),
-            virial_mass=10 ** log10m_vir,
+            virial_mass=10**log10m_vir,
             c_2=c_2,
             overdens=overdens,
             redshift_object=redshift_object,
             redshift_source=redshift_source,
-            inner_slope=inner_slope
+            inner_slope=inner_slope,
         )
 
         self.virial_radius = virial_radius

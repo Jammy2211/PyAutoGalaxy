@@ -10,11 +10,11 @@ def test__deflections_2d_via_integral_from():
     mp = ag.mp.gNFWVirialMassConcSph(
         centre=(0.0, 0.0),
         log10m_vir=12.0,
-        c_2=10.,
+        c_2=10.0,
         overdens=0.0,
         redshift_object=0.5,
         redshift_source=1.0,
-        inner_slope=1.0
+        inner_slope=1.0,
     )
 
     deflections = mp.deflections_2d_via_integral_from(
