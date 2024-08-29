@@ -50,6 +50,7 @@ class FitEllipsePlotter(Plotter):
     def figures_2d(
         self,
         data: bool = False,
+        disable_data_contours: bool = False,
         suffix: str = "",
     ):
         """
@@ -62,12 +63,16 @@ class FitEllipsePlotter(Plotter):
         ----------
         data
             Whether to make a 1D plot (via `imshow`) of the image data.
+        disable_data_contours
+            If `True`, the data is plotted without the black data contours over the top (but the white contours
+            showing the ellipses are still plotted).
         """
 
+        if disable_data_contours:
+            contour_original = self.mat_plot_2d.contour
+            self.mat_plot_2d.contour = False
+
         if data:
-            # # Used for 1D plot
-            #
-            # # colors = [ax.cmap(ax.norm(level)) for level in levels][::-1]
 
             self.mat_plot_2d.contour = aplt.Contour(
                 manual_levels=np.sort(
@@ -95,3 +100,6 @@ class FitEllipsePlotter(Plotter):
                     filename=f"ellipse_fit",
                 ),
             )
+
+        if disable_data_contours:
+            self.mat_plot_2d.contour = contour_original
