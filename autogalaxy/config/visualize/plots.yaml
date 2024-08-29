@@ -83,7 +83,9 @@ fit_interferometer:                        # Settings for plots of fits to inter
   dirty_residual_map: false
   dirty_normalized_residual_map: false
   dirty_chi_squared_map: false
-
+fit_ellipse:                               # Settings for plots of ellipse fitting fits (e.g. FitEllipse)
+  data : true                              # Plot the data of the ellipse fit?
+  data_no_ellipse: true                    # Plot the data without the black data ellipses, which obscure noisy data?
 fit_quantity:                              # Settings for plots of fit quantities (e.g. FitQuantityPlotter).
   all_at_end_png: true                     # Plot all individual plots listed below as .png (even if False)?
   all_at_end_fits: true                    # Plot all individual plots listed below as .fits (even if False)?

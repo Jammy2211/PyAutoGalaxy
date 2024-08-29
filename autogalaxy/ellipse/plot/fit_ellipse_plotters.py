@@ -68,12 +68,14 @@ class FitEllipsePlotter(Plotter):
             showing the ellipses are still plotted).
         """
 
+        filename_tag = ""
+
         if disable_data_contours:
             contour_original = self.mat_plot_2d.contour
             self.mat_plot_2d.contour = False
+            filename_tag = "_no_data_contours"
 
         if data:
-
             self.mat_plot_2d.contour = aplt.Contour(
                 manual_levels=np.sort(
                     [float(np.mean(fit.data_interp)) for fit in self.fit_list]
@@ -97,7 +99,7 @@ class FitEllipsePlotter(Plotter):
                 visuals_2d=visuals_2d,
                 auto_labels=aplt.AutoLabels(
                     title=f"Ellipse Fit",
-                    filename=f"ellipse_fit",
+                    filename=f"ellipse_fit{filename_tag}",
                 ),
             )
 
