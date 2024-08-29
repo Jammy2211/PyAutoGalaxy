@@ -70,17 +70,17 @@ class FitEllipsePlotter(Plotter):
 
         filename_tag = ""
 
-        if disable_data_contours:
-            contour_original = self.mat_plot_2d.contour
-            self.mat_plot_2d.contour = False
-            filename_tag = "_no_data_contours"
-
         if data:
             self.mat_plot_2d.contour = aplt.Contour(
                 manual_levels=np.sort(
                     [float(np.mean(fit.data_interp)) for fit in self.fit_list]
                 )
             )
+
+            if disable_data_contours:
+                contour_original = self.mat_plot_2d.contour
+                self.mat_plot_2d.contour = False
+                filename_tag = "_no_data_contours"
 
             ellipse_list = []
 
@@ -103,5 +103,5 @@ class FitEllipsePlotter(Plotter):
                 ),
             )
 
-        if disable_data_contours:
-            self.mat_plot_2d.contour = contour_original
+            if disable_data_contours:
+                self.mat_plot_2d.contour = contour_original
