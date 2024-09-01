@@ -85,8 +85,8 @@ class LightProfileLinear(LightProfile):
 
         bases = self.__class__.__bases__
 
-        if self.__class__.__name__.endswith("Sph"):
-            bases = (bases[0].__bases__)
+        if self.__class__.__name__.endswith("Sph") or isinstance(self, LightProfileOperated):
+            bases = bases[0].__bases__
 
         for cls in bases:
             if not issubclass(cls, LightProfileLinear):
