@@ -39,6 +39,7 @@ class ExponentialCore(lp.ExponentialCore, LightProfileLinear):
         super().__init__(
             centre=centre,
             ell_comps=ell_comps,
+            intensity=1.0,
             effective_radius=effective_radius,
             radius_break=radius_break,
             gamma=gamma,

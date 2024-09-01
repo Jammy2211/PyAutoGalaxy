@@ -40,6 +40,7 @@ class SersicCore(lp.SersicCore, LightProfileLinear):
         super().__init__(
             centre=centre,
             ell_comps=ell_comps,
+            intensity=1.0,
             effective_radius=effective_radius,
             sersic_index=sersic_index,
             radius_break=radius_break,

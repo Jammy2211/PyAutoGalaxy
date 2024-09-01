@@ -1,14 +1,4 @@
 ExponentialCore:
-  alpha:
-    type: Uniform
-    lower_limit: 4.5
-    upper_limit: 5.5
-    width_modifier:
-      type: Absolute
-      value: 3.0
-    gaussian_limits:
-      lower: 4.5
-      upper: 5.5
   centre_0:
     type: Gaussian
     mean: 0.0
@@ -65,18 +55,8 @@ ExponentialCore:
       type: Absolute
       value: 0.2
     gaussian_limits:
-      lower: '-1.0'
-      upper: '1.0'
-  gamma:
-    type: Uniform
-    lower_limit: 0.0
-    upper_limit: 0.5
-    width_modifier:
-      type: Absolute
-      value: 0.1
-    gaussian_limits:
-      lower: 0.0
-      upper: inf
+      lower: -1.0
+      upper: 1.0
   intensity:
     type: LogUniform
     lower_limit: 1.0e-05
@@ -87,27 +67,16 @@ ExponentialCore:
     gaussian_limits:
       lower: 0.0
       upper: inf
-  radius_break:
-    type: Uniform
-    lower_limit: 0.0
-    upper_limit: 10.0
-    width_modifier:
-      type: Absolute
-      value: 0.1
-    gaussian_limits:
-      lower: 0.0
-      upper: inf
-ExponentialCoreSph:
   alpha:
-    type: Uniform
-    lower_limit: 4.5
-    upper_limit: 5.5
-    width_modifier:
-      type: Absolute
-      value: 3.0
-    gaussian_limits:
-      lower: 4.5
-      upper: 5.5
+    type: Constant
+    value: 3.0      
+  gamma:
+    type: Constant
+    value: 0.25
+  radius_break:
+    type: Constant
+    value: 0.025
+ExponentialCoreSph:
   centre_0:
     type: Gaussian
     mean: 0.0
@@ -142,16 +111,6 @@ ExponentialCoreSph:
     gaussian_limits:
       lower: 0.0
       upper: inf
-  gamma:
-    type: Uniform
-    lower_limit: 0.0
-    upper_limit: 0.5
-    width_modifier:
-      type: Absolute
-      value: 0.1
-    gaussian_limits:
-      lower: 0.0
-      upper: inf
   intensity:
     type: LogUniform
     lower_limit: 1.0e-05
@@ -162,13 +121,12 @@ ExponentialCoreSph:
     gaussian_limits:
       lower: 0.0
       upper: inf
+  alpha:
+    type: Constant
+    value: 3.0      
+  gamma:
+    type: Constant
+    value: 0.25      
   radius_break:
-    type: Uniform
-    lower_limit: 0.0
-    upper_limit: 10.0
-    width_modifier:
-      type: Absolute
-      value: 0.1
-    gaussian_limits:
-      lower: 0.0
-      upper: inf
+    type: Constant
+    value: 0.025
