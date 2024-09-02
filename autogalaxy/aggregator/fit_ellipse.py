@@ -8,7 +8,7 @@ import autofit as af
 import autoarray as aa
 
 from autogalaxy.aggregator.imaging import _imaging_from
-from autogalaxy.ellipse.aggregator.ellipses import _ellipses_from
+from autogalaxy.aggregator.ellipses import _ellipses_from
 from autogalaxy.aggregator import agg_util
 
 
