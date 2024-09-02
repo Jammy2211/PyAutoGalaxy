@@ -156,6 +156,54 @@ class AnalysisEllipse(af.Analysis):
             analysis=self,
         )
 
+    def save_attributes(self, paths: af.DirectoryPaths):
+        """
+         Before the non-linear search begins, this routine saves attributes of the `Analysis` object to the `files`
+         folder such that they can be loaded after the analysis using PyAutoFit's database and aggregator tools.
+
+         For this analysis, it uses the `AnalysisDataset` object's method to output the following:
+
+         - The imaging dataset (data / noise-map / etc.).
+         - The mask applied to the dataset.
+         - The Cosmology.
+
+         This function also outputs attributes specific to an imaging dataset:
+
+        - Its mask.
+
+         It is common for these attributes to be loaded by many of the template aggregator functions given in the
+         `aggregator` modules. For example, when using the database tools to perform a fit, the default behaviour is for
+         the dataset, settings and other attributes necessary to perform the fit to be loaded via the pickle files
+         output by this function.
+
+         Parameters
+         ----------
+         paths
+             The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+             visualization, and the pickled objects used by the aggregator output by this function.
+        """
+        paths.save_fits(
+            name="data",
+            hdu=self.dataset.data.hdu_for_output,
+            prefix="dataset",
+        )
+        paths.save_fits(
+            name="noise_map",
+            hdu=self.dataset.noise_map.hdu_for_output,
+            prefix="dataset",
+        )
+
+        paths.save_fits(
+            name="psf",
+            hdu=self.dataset.psf.hdu_for_output,
+            prefix="dataset",
+        )
+        paths.save_fits(
+            name="mask",
+            hdu=self.dataset.mask.hdu_for_output,
+            prefix="dataset",
+        )
+
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None
     ) -> Tuple[Dict, Dict]:
