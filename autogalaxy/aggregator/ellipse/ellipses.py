@@ -39,7 +39,6 @@ def _ellipses_from(fit: af.Fit, instance: af.ModelInstance) -> List[List[Ellipse
 
     if instance is not None:
         ellipses = instance.ellipses
-
     else:
         ellipses = fit.instance.ellipses
 
@@ -91,7 +90,7 @@ class EllipsesAgg(af.AggBase):
 
     def object_via_gen_from(
         self, fit, instance: Optional[af.ModelInstance] = None
-    ) -> List[Ellipse]:
+    ) -> List[List[Ellipse]]:
         """
         Returns a generator of `Ellipse` objects from an input aggregator.
 

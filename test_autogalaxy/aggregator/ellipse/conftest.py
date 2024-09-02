@@ -62,7 +62,19 @@ def make_model():
     for i, ellipse in enumerate(ellipse_list):
         ellipse.major_axis = i
 
-    return af.Collection(ellipses=ellipse_list)
+    multipole_list = []
+
+    for i in range(len(ellipse_list)):
+
+        multipole_1 = af.Model(ag.EllipseMultipole)
+        multipole_1.m = 1
+
+        multipole_2 = af.Model(ag.EllipseMultipole)
+        multipole_2.m = 2
+
+        multipole_list.append([multipole_1, multipole_2])
+
+    return af.Collection(ellipses=ellipse_list, multipoles=multipole_list)
 
 
 @pytest.fixture(name="samples")
