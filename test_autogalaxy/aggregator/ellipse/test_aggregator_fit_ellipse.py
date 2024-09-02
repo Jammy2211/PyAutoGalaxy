@@ -55,6 +55,11 @@ def test__fit_ellipse_randomly_drawn_via_pdf_gen_from__analysis_has_single_datas
             assert fit_list[0].ellipse.major_axis == 0
             assert fit_list[1].ellipse.major_axis == 1
 
+            assert fit_list[0].multipole_list[0].m == 1
+            assert fit_list[0].multipole_list[1].m == 2
+            assert fit_list[1].multipole_list[0].m == 1
+            assert fit_list[1].multipole_list[1].m == 2
+
     assert i == 2
 
     clean(database_file=database_file)

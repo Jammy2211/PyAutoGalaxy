@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 def _multipole_list_from(
     fit: af.Fit, instance: af.ModelInstance
-) -> List[List[EllipseMultipole]]:
+) -> List[List[List[EllipseMultipole]]]:
     """
     Returns a list of `EllipseMultipole` objects from a `PyAutoFit` sqlite database `Fit` object.
 
@@ -93,7 +93,7 @@ class MultipolesAgg(af.AggBase):
 
     def object_via_gen_from(
         self, fit, instance: Optional[af.ModelInstance] = None
-    ) -> List[List[EllipseMultipole]]:
+    ) -> List[List[List[EllipseMultipole]]]:
         """
         Returns a generator of `EllipseMultipole` objects from an input aggregator.
 

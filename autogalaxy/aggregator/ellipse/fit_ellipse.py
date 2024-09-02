@@ -5,10 +5,10 @@ if TYPE_CHECKING:
     from autogalaxy.ellipse.fit_ellipse import FitEllipse
 
 import autofit as af
-import autoarray as aa
 
 from autogalaxy.aggregator.imaging.imaging import _imaging_from
 from autogalaxy.aggregator.ellipse.ellipses import _ellipses_from
+from autogalaxy.aggregator.ellipse.multipoles import _multipole_list_from
 
 
 def _fit_ellipse_from(
@@ -49,16 +49,17 @@ def _fit_ellipse_from(
     dataset_list = _imaging_from(fit=fit)
 
     ellipse_list_list = _ellipses_from(fit=fit, instance=instance)
+    multipole_list_list = _multipole_list_from(fit=fit, instance=instance)
 
     fit_dataset_list = []
 
-    for dataset, ellipse_list in zip(dataset_list, ellipse_list_list):
-        for ellipse in ellipse_list:
+    for dataset, ellipse_list, multipole_lists in zip(dataset_list, ellipse_list_list, multipole_list_list):
+        for ellipse, multipole_list in zip(ellipse_list, multipole_lists):
             fit_dataset_list.append(
                 FitEllipse(
                     dataset=dataset,
                     ellipse=ellipse,
-                    #       multipole_list=multipole_list,
+                    multipole_list=multipole_list,
                 )
             )
 
@@ -69,8 +70,6 @@ class FitEllipseAgg(af.AggBase):
     def __init__(
         self,
         aggregator: af.Aggregator,
-        settings_inversion: Optional[aa.SettingsInversion] = None,
-        use_preloaded_grid: bool = True,
     ):
         """
         Interfaces with an `PyAutoFit` aggregator object to create instances of `FitEllipse` objects from the results
@@ -104,12 +103,9 @@ class FitEllipseAgg(af.AggBase):
         """
         super().__init__(aggregator=aggregator)
 
-        self.settings_inversion = settings_inversion
-        self.use_preloaded_grid = use_preloaded_grid
-
     def object_via_gen_from(
         self, fit, instance: Optional[af.ModelInstance] = None
-    ) -> List[FitEllipse]:
+    ) -> List[List[FitEllipse]]:
         """
         Returns a generator of `FitEllipse` objects from an input aggregator.
 
