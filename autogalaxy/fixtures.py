@@ -277,6 +277,13 @@ def make_analysis_interferometer_7():
     return analysis
 
 
+def make_analysis_ellipse_7x7():
+    analysis = ag.AnalysisEllipse(
+        dataset=make_masked_imaging_7x7(),
+    )
+    return analysis
+
+
 def make_include_1d_all():
     return aplt.Include1D(half_light_radius=True)
 

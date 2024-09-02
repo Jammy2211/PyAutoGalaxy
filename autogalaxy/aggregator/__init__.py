@@ -4,3 +4,4 @@ from autogalaxy.aggregator.fit_imaging import FitImagingAgg
 from autogalaxy.aggregator.interferometer import InterferometerAgg
 from autogalaxy.aggregator.fit_interferometer import FitInterferometerAgg
 from autogalaxy.aggregator.ellipses import EllipsesAgg
+from autogalaxy.aggregator.fit_ellipse import FitEllipseAgg
