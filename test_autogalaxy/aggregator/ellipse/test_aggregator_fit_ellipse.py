@@ -57,25 +57,23 @@ def test__fit_ellipse_randomly_drawn_via_pdf_gen_from__analysis_has_single_datas
     clean(database_file=database_file)
 
 
-# def test__fit_ellipse_all_above_weight_gen(agg_7x7):
-#     fit_agg = ag.agg.FitEllipseAgg(aggregator=agg_7x7)
-#     fit_pdf_gen = fit_agg.all_above_weight_gen_from(minimum_weight=-1.0)
-#
-#     i = 0
-#
-#     for fit_gen in fit_pdf_gen:
-#         for fit_list in fit_gen:
-#             i += 1
-#
-#             if i == 1:
-#                 assert fit_list[0].galaxies[0].redshift == 0.5
-#                 assert fit_list[0].galaxies[0].light.centre == (1.0, 1.0)
-#
-#             if i == 2:
-#                 assert fit_list[0].galaxies[0].redshift == 0.5
-#                 assert fit_list[0].galaxies[0].light.centre == (10.0, 10.0)
-#
-#     assert i == 2
-#
-#     clean(database_file=database_file)
-#
+def test__fit_ellipse_all_above_weight_gen(agg_7x7):
+    fit_agg = ag.agg.FitEllipseAgg(aggregator=agg_7x7)
+    fit_pdf_gen = fit_agg.all_above_weight_gen_from(minimum_weight=-1.0)
+
+    i = 0
+
+    for fit_gen in fit_pdf_gen:
+        for fit_list in fit_gen:
+            i += 1
+
+            if i == 1:
+                assert fit_list[0].ellipse.centre == (1.0, 1.0)
+
+            if i == 2:
+                assert fit_list[0].ellipse.centre == (10.0, 10.0)
+
+    assert i == 2
+
+    clean(database_file=database_file)
+
