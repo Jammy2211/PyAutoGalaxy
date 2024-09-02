@@ -8,7 +8,7 @@ import autofit as af
 
 from autogalaxy.aggregator.imaging.imaging import _imaging_from
 from autogalaxy.aggregator.ellipse.ellipses import _ellipses_from
-from autogalaxy.aggregator.ellipse.multipoles import _multipole_list_from
+from autogalaxy.aggregator.ellipse.multipoles import _multipoles_from
 
 
 def _fit_ellipse_from(
@@ -49,11 +49,19 @@ def _fit_ellipse_from(
     dataset_list = _imaging_from(fit=fit)
 
     ellipse_list_list = _ellipses_from(fit=fit, instance=instance)
-    multipole_list_list = _multipole_list_from(fit=fit, instance=instance)
+
+    try:
+        multipole_list_list = _multipoles_from(fit=fit, instance=instance)
+    except AttributeError:
+        multipole_list_list = [[None] * len(ellipse_list_list)] * len(
+            ellipse_list_list[0]
+        )
 
     fit_dataset_list = []
 
-    for dataset, ellipse_list, multipole_lists in zip(dataset_list, ellipse_list_list, multipole_list_list):
+    for dataset, ellipse_list, multipole_lists in zip(
+        dataset_list, ellipse_list_list, multipole_list_list
+    ):
         for ellipse, multipole_list in zip(ellipse_list, multipole_lists):
             fit_dataset_list.append(
                 FitEllipse(

@@ -11,7 +11,7 @@ import autofit as af
 logger = logging.getLogger(__name__)
 
 
-def _multipole_list_from(
+def _multipoles_from(
     fit: af.Fit, instance: af.ModelInstance
 ) -> List[List[List[EllipseMultipole]]]:
     """
@@ -107,4 +107,4 @@ class MultipolesAgg(af.AggBase):
             A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
             randomly from the PDF).
         """
-        return _multipole_list_from(fit=fit, instance=instance)
+        return _multipoles_from(fit=fit, instance=instance)
