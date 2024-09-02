@@ -403,6 +403,7 @@ def make_analysis_imaging_7x7():
 def make_analysis_interferometer_7():
     return fixtures.make_analysis_interferometer_7()
 
+
 @pytest.fixture(name="analysis_ellipse_7x7")
 def make_analysis_ellipse_7x7():
     return fixtures.make_analysis_ellipse_7x7()

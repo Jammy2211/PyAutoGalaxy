@@ -11,7 +11,7 @@ import autofit as af
 logger = logging.getLogger(__name__)
 
 
-def _ellipses_from(fit: af.Fit, instance: af.ModelInstance) -> List[Ellipse]:
+def _ellipses_from(fit: af.Fit, instance: af.ModelInstance) -> List[List[Ellipse]]:
     """
     Returns a list of `Ellipse` objects from a `PyAutoFit` sqlite database `Fit` object.
 
@@ -38,9 +38,25 @@ def _ellipses_from(fit: af.Fit, instance: af.ModelInstance) -> List[Ellipse]:
     """
 
     if instance is not None:
-        return instance.ellipses
-    return fit.instance.ellipses
+        ellipses = instance.ellipses
 
+    else:
+        ellipses = fit.instance.ellipses
+
+    if fit.children is not None:
+        if len(fit.children) > 0:
+            logger.info(
+                """
+                Using database for a fit with multiple summed Analysis objects.
+
+                Ellipse objects do not fully support this yet (e.g. variables across Analysis objects may not be correct)
+                so proceed with caution!
+                """
+            )
+
+            return [ellipses] * len(fit.children)
+
+    return [ellipses]
 
 class EllipsesAgg(af.AggBase):
     """

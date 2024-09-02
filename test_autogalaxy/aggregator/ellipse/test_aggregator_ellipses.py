@@ -27,7 +27,10 @@ def test__ellipses_randomly_drawn_via_pdf_gen_from(
     i = 0
 
     for ellipses_gen in ellipses_pdf_gen:
-        for ellipse_list in ellipses_gen:
+        for ellipses_lists_list in ellipses_gen:
+
+            ellipse_list = ellipses_lists_list[0]
+
             i += 1
 
             assert ellipse_list[0].centre == (10.0, 10.0)
@@ -37,8 +40,6 @@ def test__ellipses_randomly_drawn_via_pdf_gen_from(
     assert i == 2
 
     clean(database_file=database_file)
-
-
 
 
 def test__ellipses_all_above_weight_gen(
@@ -64,7 +65,10 @@ def test__ellipses_all_above_weight_gen(
     i = 0
 
     for ellipses_gen, weight_gen in zip(ellipses_pdf_gen, weight_pdf_gen):
-        for ellipse_list in ellipses_gen:
+        for ellipses_lists_list in ellipses_gen:
+
+            ellipse_list = ellipses_lists_list[0]
+
             i += 1
 
             if i == 1:

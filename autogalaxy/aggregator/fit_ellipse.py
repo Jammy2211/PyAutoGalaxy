@@ -14,7 +14,7 @@ from autogalaxy.aggregator.ellipses import _ellipses_from
 def _fit_ellipse_from(
     fit: af.Fit,
     instance: Optional[af.ModelInstance] = None,
-) -> List[FitEllipse]:
+) -> List[List[FitEllipse]]:
     """
     Returns a list of `FitEllipse` objects from a `PyAutoFit` sqlite database `Fit` object.
 
@@ -46,22 +46,23 @@ def _fit_ellipse_from(
 
     from autogalaxy.ellipse.fit_ellipse import FitEllipse
 
-    dataset = _imaging_from(fit=fit)[0]
-    ellipse_list = _ellipses_from(fit=fit, instance=instance)
+    dataset_list = _imaging_from(fit=fit)
+
+    ellipse_list_list = _ellipses_from(fit=fit, instance=instance)
 
     fit_dataset_list = []
 
-    for ellipse in ellipse_list:
-
-        fit_dataset_list.append(
-            FitEllipse(
-                dataset=dataset,
-                ellipse=ellipse,
-         #       multipole_list=multipole_list,
+    for dataset, ellipse_list in zip(dataset_list, ellipse_list_list):
+        for ellipse in ellipse_list:
+            fit_dataset_list.append(
+                FitEllipse(
+                    dataset=dataset,
+                    ellipse=ellipse,
+                    #       multipole_list=multipole_list,
+                )
             )
-        )
 
-    return fit_dataset_list
+    return [fit_dataset_list]
 
 
 class FitEllipseAgg(af.AggBase):

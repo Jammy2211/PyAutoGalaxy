@@ -2,6 +2,8 @@ import logging
 import time
 from typing import Dict, List, Optional, Tuple
 
+from autoconf.dictable import to_dict
+
 import autofit as af
 import autoarray as aa
 
@@ -192,15 +194,14 @@ class AnalysisEllipse(af.Analysis):
             hdu=self.dataset.noise_map.hdu_for_output,
             prefix="dataset",
         )
-
-        paths.save_fits(
-            name="psf",
-            hdu=self.dataset.psf.hdu_for_output,
-            prefix="dataset",
-        )
         paths.save_fits(
             name="mask",
             hdu=self.dataset.mask.hdu_for_output,
+            prefix="dataset",
+        )
+        paths.save_json(
+            name="over_sampling",
+            object_dict=to_dict(self.dataset.over_sampling),
             prefix="dataset",
         )
 
