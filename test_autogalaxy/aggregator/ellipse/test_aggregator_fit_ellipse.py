@@ -49,10 +49,8 @@ def test__fit_ellipse_randomly_drawn_via_pdf_gen_from__analysis_has_single_datas
         for fit_list in fit_gen:
             i += 1
 
-            assert fit_list[0].galaxies[0].redshift == 0.5
-            assert fit_list[0].galaxies[0].light.centre == (10.0, 10.0)
-
-            assert fit_list[0].dataset_model.background_sky_level == 10.0
+            assert fit_list[0].ellipse.major_axis == 0
+            assert fit_list[1].ellipse.major_axis == 1
 
     assert i == 2
 

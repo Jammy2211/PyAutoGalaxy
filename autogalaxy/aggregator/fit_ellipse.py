@@ -9,7 +9,6 @@ import autoarray as aa
 
 from autogalaxy.aggregator.imaging import _imaging_from
 from autogalaxy.aggregator.ellipses import _ellipses_from
-from autogalaxy.aggregator import agg_util
 
 
 def _fit_ellipse_from(
@@ -47,19 +46,13 @@ def _fit_ellipse_from(
 
     from autogalaxy.ellipse.fit_ellipse import FitEllipse
 
-    dataset_list = _imaging_from(fit=fit)
-    ellipses_list = _ellipses_from(fit=fit, instance=instance)
-
-    print(dataset_list)
-    print(ellipses_list)
-    aaaa
+    dataset = _imaging_from(fit=fit)[0]
+    ellipse_list = _ellipses_from(fit=fit, instance=instance)
 
     fit_dataset_list = []
 
-    for dataset, ellipse, dataset_model in zip(
-        dataset_list,
-        ellipses_list,
-    ):
+    for ellipse in ellipse_list:
+
         fit_dataset_list.append(
             FitEllipse(
                 dataset=dataset,
