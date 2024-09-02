@@ -44,7 +44,9 @@ def _imaging_from(
             primary_hdu=fit.value(name="dataset.noise_map")
         )
         try:
-            psf = aa.Kernel2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.psf"))
+            psf = aa.Kernel2D.from_primary_hdu(
+                primary_hdu=fit.value(name="dataset.psf")
+            )
         except AttributeError:
             psf = None
 

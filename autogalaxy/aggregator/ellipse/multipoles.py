@@ -11,7 +11,9 @@ import autofit as af
 logger = logging.getLogger(__name__)
 
 
-def _multipole_list_from(fit: af.Fit, instance: af.ModelInstance) -> List[List[EllipseMultipole]]:
+def _multipole_list_from(
+    fit: af.Fit, instance: af.ModelInstance
+) -> List[List[EllipseMultipole]]:
     """
     Returns a list of `EllipseMultipole` objects from a `PyAutoFit` sqlite database `Fit` object.
 
@@ -56,6 +58,7 @@ def _multipole_list_from(fit: af.Fit, instance: af.ModelInstance) -> List[List[E
             return [multipoles] * len(fit.children)
 
     return [multipoles]
+
 
 class MultipolesAgg(af.AggBase):
     """

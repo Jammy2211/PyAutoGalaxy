@@ -65,7 +65,6 @@ def make_model():
     multipole_list = []
 
     for i in range(len(ellipse_list)):
-
         multipole_1 = af.Model(ag.EllipseMultipole)
         multipole_1.m = 1
 

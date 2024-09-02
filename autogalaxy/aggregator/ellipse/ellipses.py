@@ -57,6 +57,7 @@ def _ellipses_from(fit: af.Fit, instance: af.ModelInstance) -> List[List[Ellipse
 
     return [ellipses]
 
+
 class EllipsesAgg(af.AggBase):
     """
     Interfaces with an `PyAutoFit` aggregator object to create instances of `Ellipse` objects from the results

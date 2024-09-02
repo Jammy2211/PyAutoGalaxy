@@ -6,4 +6,3 @@ from autogalaxy.aggregator.interferometer.fit_interferometer import FitInterfero
 from autogalaxy.aggregator.ellipse.ellipses import EllipsesAgg
 from autogalaxy.aggregator.ellipse.multipoles import MultipolesAgg
 from autogalaxy.aggregator.ellipse.fit_ellipse import FitEllipseAgg
-

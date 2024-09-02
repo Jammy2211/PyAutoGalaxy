@@ -47,7 +47,6 @@ def test__fit_ellipse_randomly_drawn_via_pdf_gen_from__analysis_has_single_datas
 
     for fit_gen in fit_pdf_gen:
         for fit_lists_list in fit_gen:
-
             # Only one `Analysis` so take first and only dataset.
             fit_list = fit_lists_list[0]
 
@@ -69,7 +68,6 @@ def test__fit_ellipse_all_above_weight_gen(agg_7x7):
 
     for fit_gen in fit_pdf_gen:
         for fit_lists_list in fit_gen:
-
             # Only one `Analysis` so take first and only dataset.
             fit_list = fit_lists_list[0]
 

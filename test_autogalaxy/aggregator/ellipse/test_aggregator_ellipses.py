@@ -28,7 +28,6 @@ def test__ellipses_randomly_drawn_via_pdf_gen_from(
 
     for ellipses_gen in ellipses_pdf_gen:
         for ellipses_lists_list in ellipses_gen:
-
             ellipse_list = ellipses_lists_list[0]
 
             i += 1
@@ -66,7 +65,6 @@ def test__ellipses_all_above_weight_gen(
 
     for ellipses_gen, weight_gen in zip(ellipses_pdf_gen, weight_pdf_gen):
         for ellipses_lists_list in ellipses_gen:
-
             ellipse_list = ellipses_lists_list[0]
 
             i += 1
