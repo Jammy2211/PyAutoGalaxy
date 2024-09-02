@@ -25,10 +25,7 @@ PyAutoGalaxy: Open-Source Multi Wavelength Galaxy Structure & Morphology
 `Introduction on Binder <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=introduction.ipynb>`_ |
 `HowToGalaxy <https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/howtogalaxy.html>`_
 
-The study of a galaxy's structure and morphology is at the heart of modern day Astrophysical research.
-
-**PyAutoGalaxy** makes it simple to model galaxies, for example this Hubble Space Telescope imaging of a spiral
-galaxy:
+**PyAutoGalaxy** is software for analysing the morphologies and structures of galaxies:
 
 .. image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/hstcombined.png?raw=true
         :target: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/hstcombined.png

@@ -43,7 +43,12 @@ def _imaging_from(
         noise_map = aa.Array2D.from_primary_hdu(
             primary_hdu=fit.value(name="dataset.noise_map")
         )
-        psf = aa.Kernel2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.psf"))
+        try:
+            psf = aa.Kernel2D.from_primary_hdu(
+                primary_hdu=fit.value(name="dataset.psf")
+            )
+        except AttributeError:
+            psf = None
 
         over_sampling = fit.value(name="dataset.over_sampling")
 
