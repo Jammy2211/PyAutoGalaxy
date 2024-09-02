@@ -61,7 +61,6 @@ def _fit_ellipse_from(
         galaxies_list,
         dataset_model_list,
     ):
-
         fit_dataset_list.append(
             FitEllipse(
                 dataset=dataset,

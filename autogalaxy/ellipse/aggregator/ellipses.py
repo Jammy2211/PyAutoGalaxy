@@ -38,25 +38,8 @@ def _ellipses_from(fit: af.Fit, instance: af.ModelInstance) -> List[Ellipse]:
     """
 
     if instance is not None:
-        ellipses = instance.ellipses
-
-    else:
-        ellipses = fit.instance.ellipses
-
-    if fit.children is not None:
-        if len(fit.children) > 0:
-            logger.info(
-                """
-                Using database for a fit with multiple summed Analysis objects.
-    
-                Ellipse objects do not fully support this yet (e.g. variables across Analysis objects may not be correct)
-                so proceed with caution!
-                """
-            )
-
-            return [ellipses] * len(fit.children)
-
-    return [ellipses]
+        return instance.ellipses
+    return fit.instance.ellipses
 
 
 class EllipsesAgg(af.AggBase):
