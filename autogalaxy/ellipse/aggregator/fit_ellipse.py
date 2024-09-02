@@ -7,9 +7,8 @@ if TYPE_CHECKING:
 import autofit as af
 import autoarray as aa
 
-from autogalaxy.aggregator.ellipse import _ellipse_from
-from autogalaxy.aggregator.galaxies import _galaxies_from
-from autogalaxy.aggregator.dataset_model import _dataset_model_from
+from autogalaxy.aggregator.imaging import _imaging_from
+from autogalaxy.ellipse.aggregator.ellipses import _ellipses_from
 from autogalaxy.aggregator import agg_util
 
 
@@ -48,24 +47,23 @@ def _fit_ellipse_from(
 
     from autogalaxy.ellipse.fit_ellipse import FitEllipse
 
-    dataset_list = _ellipse_from(fit=fit)
+    dataset_list = _imaging_from(fit=fit)
+    ellipses_list = _ellipses_from(fit=fit, instance=instance)
 
-    galaxies_list = _galaxies_from(fit=fit, instance=instance)
-
-    dataset_model_list = _dataset_model_from(fit=fit, instance=instance)
+    print(dataset_list)
+    print(ellipses_list)
 
     fit_dataset_list = []
 
-    for dataset, galaxies, dataset_model in zip(
+    for dataset, ellipse, dataset_model in zip(
         dataset_list,
-        galaxies_list,
-        dataset_model_list,
+        ellipses_list,
     ):
         fit_dataset_list.append(
             FitEllipse(
                 dataset=dataset,
                 ellipse=ellipse,
-                multipole_list=multipole_list,
+         #       multipole_list=multipole_list,
             )
         )
 
