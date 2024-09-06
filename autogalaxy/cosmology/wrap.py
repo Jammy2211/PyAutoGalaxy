@@ -1,15 +1,11 @@
 from astropy import cosmology as cosmo
 
-#
 from autogalaxy.cosmology.lensing import LensingCosmology
-
 
 class Planck15(cosmo.FlatLambdaCDM, LensingCosmology):
     def __init__(self):
         """
         A wrapper for the astropy `Planck15` cosmology class.
-
-        This can be inherited from when creating cosmologies as a `af.Model` object for model-fitting.
         """
         Planck15 = cosmo.Planck15
 
