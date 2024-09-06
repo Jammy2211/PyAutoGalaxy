@@ -1,35 +1,47 @@
 from astropy import cosmology as cosmo
 
-from autogalaxy.cosmology.wrap import FlatLambdaCDM
-from autogalaxy.cosmology.wrap import FlatwCDM
+from autogalaxy.cosmology import wrap
 
 
-class Planck15Om0(FlatLambdaCDM):
-    def __init__(self, Om0: float = 0.3075):
-        Planck15 = cosmo.Planck15
-
+class FlatLambdaCDM(wrap.FlatLambdaCDM):
+    def __init__(
+        self,
+        H0: float = 67.66,
+        Om0: float = 0.30966,
+        Tcmb0: float = 2.7255,
+        Neff: float = 3.046,
+        m_nu: float = 0.06,
+        Ob0: float = 0.04897,
+    ):
         super().__init__(
-            H0=Planck15.H0,
+            H0=H0,
             Om0=Om0,
-            Tcmb0=Planck15.Tcmb0,
-            Neff=Planck15.Neff,
-            m_nu=Planck15.m_nu,
-            Ob0=Planck15.Ob0,
-            name=Planck15.name,
+            Tcmb0=Tcmb0,
+            Neff=Neff,
+            m_nu=m_nu,
+            Ob0=Ob0,
+            name="FlatLambdaCDM",
         )
 
 
-class Planck15FlatwCDM(FlatwCDM):
-    def __init__(self, Om0: float = 0.3075, w0: float = -1.0):
-        Planck15 = cosmo.Planck15
-
+class FlatwCDM(wrap.FlatwCDM):
+    def __init__(
+        self,
+        H0: float = 67.66,
+        Om0: float = 0.30966,
+        Tcmb0: float = 2.7255,
+        Neff: float = 3.046,
+        m_nu: float = 0.06,
+        Ob0: float = 0.04897,
+        w0: float = -1.0,
+    ):
         super().__init__(
-            H0=Planck15.H0,
+            H0=H0,
             Om0=Om0,
             w0=w0,
-            Tcmb0=Planck15.Tcmb0,
-            Neff=Planck15.Neff,
-            m_nu=Planck15.m_nu,
-            Ob0=Planck15.Ob0,
-            name=Planck15.name,
+            Tcmb0=Tcmb0,
+            Neff=Neff,
+            m_nu=m_nu,
+            Ob0=Ob0,
+            name="FlatwCDM",
         )
