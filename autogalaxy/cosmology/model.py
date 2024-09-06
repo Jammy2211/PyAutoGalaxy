@@ -8,7 +8,7 @@ class LambdaCDMWrap(cosmo.LambdaCDM, LensingCosmology):
         self,
         H0: float = 67.66,
         Om0: float = 0.30966,
-        Ode0 : float = 0.69034,
+        Ode0: float = 0.69034,
         Tcmb0: float = 2.7255,
         Neff: float = 3.046,
         m_nu: float = 0.06,
