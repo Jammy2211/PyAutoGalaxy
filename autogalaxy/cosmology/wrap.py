@@ -7,6 +7,10 @@ class Planck15(cosmo.FlatLambdaCDM, LensingCosmology):
     def __init__(self):
         """
         A wrapper for the astropy `Planck15` cosmology class.
+
+        The only role of this class is to instantiate the `Planck15` cosmology class from astropy, but to additionally
+        inherit from `LensingCosmology`, which is a class that provides additional functionality for calculating lensing
+        specific quantities in the cosmology.
         """
         Planck15 = cosmo.Planck15
 

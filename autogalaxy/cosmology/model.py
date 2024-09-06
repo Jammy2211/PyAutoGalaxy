@@ -14,6 +14,34 @@ class LambdaCDMWrap(cosmo.LambdaCDM, LensingCosmology):
         m_nu: float = 0.06,
         Ob0: float = 0.04897,
     ):
+        """
+        A wrapper for the astropy `LambdaCDM` cosmology class, which allows it to be used for modeling such
+        that the cosmological parameters are free parameters which can be fitted for.
+
+        The interface of this class is the same as the astropy `LambdaCDM` class, it simply overwrites the
+        __init__ method and inherits from it in a way that ensures **PyAutoFit** can compose a model from it
+        without issue.
+
+        The class also inherits from `LensingCosmology`, which is a class that provides additional functionality
+        for calculating lensing specific quantities in the cosmology.
+
+        Parameters
+        ----------
+        H0
+            The Hubble constant at z=0.
+        Om0
+            The total matter density at z=0.
+        Ode0
+            The dark energy density at z=0.
+        Tcmb0
+            The CMB temperature at z=0.
+        Neff
+            The effective number of neutrinos.
+        m_nu
+            The sum of the neutrino masses.
+        Ob0
+            The baryon density at z=0.
+        """
         super().__init__(
             H0=H0,
             Om0=Om0,
@@ -36,6 +64,32 @@ class FlatLambdaCDMWrap(cosmo.FlatLambdaCDM, LensingCosmology):
         m_nu: float = 0.06,
         Ob0: float = 0.04897,
     ):
+        """
+        A wrapper for the astropy `FlatLambdaCDM` cosmology class, which allows it to be used for modeling such
+        that the cosmological parameters are free parameters which can be fitted for.
+
+        The interface of this class is the same as the astropy `FlatLambdaCDM` class, it simply overwrites the
+        __init__ method and inherits from it in a way that ensures **PyAutoFit** can compose a model from it
+        without issue.
+
+        The class also inherits from `LensingCosmology`, which is a class that provides additional functionality
+        for calculating lensing specific quantities in the cosmology.
+
+        Parameters
+        ----------
+        H0
+            The Hubble constant at z=0.
+        Om0
+            The total matter density at z=0.
+        Tcmb0
+            The CMB temperature at z=0.
+        Neff
+            The effective number of neutrinos.
+        m_nu
+            The sum of the neutrino masses.
+        Ob0
+            The baryon density at z=0.
+        """
         super().__init__(
             H0=H0,
             Om0=Om0,
@@ -58,6 +112,34 @@ class FlatwCDMWrap(cosmo.FlatwCDM, LensingCosmology):
         m_nu: float = 0.06,
         Ob0: float = 0.04897,
     ):
+        """
+        A wrapper for the astropy `FlatwCDM` cosmology class, which allows it to be used for modeling such
+        that the cosmological parameters are free parameters which can be fitted for.
+
+        The interface of this class is the same as the astropy `FlatwCDM` class, it simply overwrites the
+        __init__ method and inherits from it in a way that ensures **PyAutoFit** can compose a model from it
+        without issue.
+
+        The class also inherits from `LensingCosmology`, which is a class that provides additional functionality
+        for calculating lensing specific quantities in the cosmology.
+
+        Parameters
+        ----------
+        H0
+            The Hubble constant at z=0.
+        Om0
+            The total matter density at z=0.
+        w0
+            The dark energy equation of state at z=0.
+        Tcmb0
+            The CMB temperature at z=0.
+        Neff
+            The effective number of neutrinos.
+        m_nu
+            The sum of the neutrino masses.
+        Ob0
+            The baryon density at z=0.
+        """
         super().__init__(
             H0=H0,
             Om0=Om0,
