@@ -1,5 +1,13 @@
+import os
+
+if os.environ.get("USE_JAX", "0") == "1":
+    USING_JAX = True
+    import jax.numpy as np
+else:
+    USING_JAX = False
+    import numpy as np
+
 import copy
-import numpy as np
 from scipy.integrate import quad
 from typing import List, Tuple
 
