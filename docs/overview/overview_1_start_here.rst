@@ -5,7 +5,9 @@ Start Here
 
 **PyAutoGalaxy** is software for analysing the morphologies and structures of galaxies:
 
-![HST Image](https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/paper/hstcombined.png)
+.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/paper/hstcombined.png
+  :width: 400
+  :alt: Alternative text
 
 **PyAutoGalaxy** has three core aims:
 
@@ -25,8 +27,6 @@ Lets first import autogalaxy, its plotting module and the other libraries we'll 
 You'll see these imports in the majority of workspace examples.
 
 .. code:: python
-
-    # %matplotlib inline
 
     import autogalaxy as ag
     import autogalaxy.plot as aplt
@@ -57,7 +57,7 @@ We make and plot a uniform Cartesian grid:
 The ``Grid2D`` looks like this:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/0_grid.png
-  :width: 400
+  :width: 600
   :alt: Alternative text
 
 Light Profiles
@@ -112,7 +112,7 @@ for fits to large datasets.
 The light profile appears as follows:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/1_image_2d.png
-  :width: 400
+  :width: 600
   :alt: Alternative text
 
 Galaxy
@@ -146,7 +146,7 @@ The ``GalaxyPlotter`` object plots the image of the galaxy, which is the sum of 
 The galaxy, with both a bulge and disk, appears as follows:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/2_image_2d.png
-  :width: 400
+  :width: 600
   :alt: Alternative text
 
 One example of the plotter's customizability is the ability to plot the individual light profiles of the galaxy
@@ -159,7 +159,7 @@ on a subplot.
 The light profiles appear as follows:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/3_subplot_image.png
-  :width: 400
+  :width: 600
   :alt: Alternative text
 
 
@@ -190,7 +190,7 @@ the galaxy is used below where the ``Sersic`` is passed directly to the ``Galaxy
     galaxies_plotter.figures_2d(image=True)
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/4_image_2d.png
-  :width: 400
+  :width: 600
   :alt: Alternative text
 
 Extensibility
@@ -244,7 +244,7 @@ To further illustrate this, we create a merging galaxy system with 4 star formin
 The image of the merging galaxy system appears as follows:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/5_image_2d.png
-  :width: 400
+  :width: 600
   :alt: Alternative text
 
 Simulating Data
@@ -317,7 +317,7 @@ import dataset attributes like the noise-map and PSF.
 The observed dataset appears as follows:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/6_data.png
-  :width: 400
+  :width: 600
   :alt: Alternative text
 
 If you have come to **PyAutoGalaxy** to perform interferometry, the API above is easily adapted to use
@@ -363,7 +363,7 @@ and the plot axis automatically zooms in around the mask.
 Here is the masked dataset:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/7_data.png
-  :width: 400
+  :width: 600
   :alt: Alternative text
 
 Fitting
@@ -422,7 +422,7 @@ In this example, the galaxies used to simulate the data are used to fit it, thus
 as shown by the subplots below:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/10_subplot_fit.png
-  :width: 400
+  :width: 600
   :alt: Alternative text
 
 The overall quality of the fit is quantified with the ``log_likelihood``.
@@ -585,7 +585,7 @@ Here is an example corner plot of the model-fit, which shows the probability den
 model:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/cornerplot.png
-  :width: 400
+  :width: 600
   :alt: Alternative text
 
 Wrap Up

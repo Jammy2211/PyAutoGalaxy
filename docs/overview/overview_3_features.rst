@@ -9,12 +9,19 @@ Firstly, brief one sentence descriptions of each feature are given, with more de
 links to the relevant workspace examples.
 
 **Interferometry**: Modeling of interferometer data (e.g. ALMA, LOFAR) directly in the uv-plane.
+
 **Multi-Wavelength**: Simultaneous analysis of imaging and / or interferometer datasets observed at different wavelengths.
+
 **Ellipse Fitting**: Fitting ellipses to determine a galaxy's ellipticity, position angle and centre.
+
 **Multi Gaussian Expansion (MGE)**: Decomposing a galaxy into hundreds of Gaussians, capturing more complex structures than simple light profiles.
+
 **Shapelets**: Decomposing a galaxy into a set of shapelet orthogonal basis functions, capturing more complex structures than simple light profiles.
+
 **Sky Background**: Including the background sky in the model to ensure robust fits to the outskirts of galaxies.
+
 **Operated Light Profiles**: Assuming a light profile has already been convolved with the PSF, for when the PSF is a significant effect.
+
 **Pixelizations**: Reconstructing a galaxy's on a mesh of pixels, to capture extremely irregular structures like spiral arms.
 
 Interferometry
@@ -23,7 +30,7 @@ Interferometry
 Modeling interferometer data from submillimeter (e.g. ALMA) and radio (e.g. LOFAR) observatories:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/paper/almacombined.png
-  :width: 400
+  :width: 600
   :alt: Alternative text
 
 Visibilities data is fitted directly in the uv-plane, circumventing issues that arise when fitting a dirty image
@@ -60,7 +67,7 @@ Ellipse fitting is a technique which fits many ellipses to a galaxy's emission t
 angle and centre, without assuming a parametric form for its light (e.g. a Sersic profile):
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_3/ellipse.png
-  :width: 400
+  :width: 600
   :alt: Alternative text
 
 This provides complementary information to parametric light profile fitting, for example giving insights on whether
@@ -79,7 +86,7 @@ Multi Gaussian Expansion (MGE)
 An MGE decomposes the light of a galaxy into tens or hundreds of two dimensional Gaussians:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_3/mge.png
-  :width: 400
+  :width: 600
   :alt: Alternative text
 
 In the image above, 30 Gaussians are shown, where their sizes go from below the pixel scale (in order to resolve
@@ -97,7 +104,7 @@ Shapelets
 Shapelets are a set of orthogonal basis functions that can be combined the represent galaxy structures:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoLens/main/docs/overview/images/overview_3/shapelets.png
-  :width: 400
+  :width: 600
   :alt: Alternative text
 
 Scientific Applications include capturing symmetric structures in a galaxy which are more complex than a Sersic profile,
@@ -142,7 +149,7 @@ fitted accurately using light profiles, whereas its asymmetric and irregular spi
 captured using a rectangular mesh:
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/paper/hstcombined.png
-  :width: 400
+  :width: 600
   :alt: Alternative text
 
 Checkout ``autogalaxy_workspace/notebooks/features/pixelizations.ipynb`` to learn how to use a pixelization, however
