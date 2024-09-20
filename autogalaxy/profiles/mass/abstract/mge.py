@@ -12,7 +12,7 @@ def w_f_approx(z):
     :rtype: ``complex``
 
     # This function is copied from
-    # "https://github.com/sibirrer/lenstronomy/tree/master/lenstronomy/LensModel/Profiles"
+    # "https://github.com/sibirrer/lenstronomy/tree/main/lenstronomy/LensModel/Profiles"
     # written by Anowar J. Shajib (see 1906.08263)
     """
 

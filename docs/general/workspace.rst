@@ -13,16 +13,6 @@ examples are for beginner or advanced users.
 
 New users should begin by checking out the following parts of the workspace.
 
-HowToGalaxy
------------
-
-The **HowToGalaxy** lecture series are a collection of Jupyter notebooks describing how to build a **PyAutoGalaxy** model
-fitting project and giving illustrations of different statistical methods and techniques.
-
-Checkout the
-`tutorials section <file:///Users/Jammy/Code/PyAuto/PyAutoGalaxy/docs/_build/howtogalaxy/howtogalaxy.html>`_ for a
-full description of the lectures and online examples of every notebook.
-
 Scripts / Notebooks
 -------------------
 
@@ -56,3 +46,13 @@ Output
 ------
 
 The folder where  modeling results are stored.
+
+HowToGalaxy
+-----------
+
+The **HowToGalaxy** lecture series are a collection of Jupyter notebooks describing how to build a **PyAutoGalaxy** model
+fitting project and giving illustrations of different statistical methods and techniques.
+
+Checkout the
+`tutorials section <file:///Users/Jammy/Code/PyAuto/PyAutoGalaxy/docs/_build/howtogalaxy/howtogalaxy.html>`_ for a
+full description of the lectures and online examples of every notebook.

@@ -1,12 +1,7 @@
 What is PyAutoGalaxy?
 =====================
 
-Nearly a century ago, Edwin Hubble famously classified galaxies into three distinct groups: ellipticals, spirals and
-irregulars. Today, by analysing millions of galaxies with advanced image processing techniques Astronomers have
-expanded on this picture and revealed the rich diversity of galaxy morphology both in the nearby and distant
-Universe.
-
-``PyAutoGalaxy`` is an open-source Python 3.9 - 3.11 package for analysing the morphologies and structures of large
+``PyAutoGalaxy`` is an open-source Python 3.9 - 3.12 package for analysing the morphologies and structures of large
 multi-wavelength galaxy samples. **PyAutoGalaxy** makes it simple to model galaxies, for example this Hubble Space
 Telescope imaging of a spiral galaxy:
 
@@ -26,11 +21,22 @@ Getting Started
 
 The following links are useful for new starters:
 
-- `The PyAutoGalaxy readthedocs <https://pyautogalaxy.readthedocs.io/en/latest>`_, which includes `an installation guide <https://pyautogalaxy.readthedocs.io/en/latest/installation/overview.html>`_ and `an overview of PyAutoGalaxy's core features <https://pyautogalaxy.readthedocs.io/en/latest/overview/overview_1_galaxies.html>`_.
+- `The PyAutoGalaxy readthedocs <https://pyautogalaxy.readthedocs.io/en/latest>`_, which includes `an overview of PyAutoGalaxy's core features <https://pyautogalaxy.readthedocs.io/en/latest/overview/overview_1_introduction.html>`_, `a new user starting guide <https://pyautogalaxy.readthedocs.io/en/latest/overview/overview_2_new_user_guide.html>`_ and `an installation guide <https://pyautogalaxy.readthedocs.io/en/latest/installation/overview.html>`_.
 
-- `The introduction Jupyter Notebook on Binder <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=introduction.ipynb>`_, where you can try **PyAutoGalaxy** in a web browser (without installation).
+- `The introduction Jupyter Notebook on Binder <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=start_here.ipynb>`_, where you can try **PyAutoGalaxy** in a web browser (without installation).
 
-- `The autogalaxy_workspace GitHub repository <https://github.com/Jammy2211/autogalaxy_workspace>`_, which includes example scripts and the `HowToGalaxy Jupyter notebook lectures <https://github.com/Jammy2211/autogalaxy_workspace/tree/master/notebooks/howtogalaxy>`_ which give new users a step-by-step introduction to **PyAutoGalaxy**.
+- `The autogalaxy_workspace GitHub repository <https://github.com/Jammy2211/autogalaxy_workspace>`_, which includes example scripts and the `HowToGalaxy Jupyter notebook lectures <https://github.com/Jammy2211/autogalaxy_workspace/tree/main/notebooks/howtogalaxy>`_ which give new users a step-by-step introduction to **PyAutoGalaxy**.
+
+Core Aims
+=========
+
+**PyAutoGalaxy** has three core aims:
+
+- **Model Complexity**: Fitting complex galaxy morphology models (e.g. Multi Gaussian Expansion, Shapelets, Ellipse Fitting, Irregular Meshes) that go beyond just simple Sersic fitting (which is supported too!).
+
+- **Data Variety**: Support for many data types (e.g. CCD imaging, interferometry, multi-band imaging) which can be fitted independently or simultaneously.
+
+- **Big Data**: Scaling automated analysis to extremely large datasets, using tools like an SQL database to build a scalable scientific workflow.
 
 Features
 ========
@@ -204,13 +210,9 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
    :maxdepth: 1
    :hidden:
 
-   overview/overview_1_galaxies
-   overview/overview_2_fitting
-   overview/overview_3_modeling
-   overview/overview_4_simulate
-   overview/overview_5_pixelizations
-   overview/overview_6_interferometry
-   overview/overview_7_multi_wavelength
+   overview/overview_1_start_here
+   overview/overview_2_new_user_guide
+   overview/overview_3_features
 
 .. toctree::
    :caption: Installation:
@@ -261,12 +263,3 @@ grid or Voronoi mesh that accounts for irregular galaxy morphologies.
    api/pixelization
    api/plot
    api/source
-
-.. toctree::
-   :caption: Advanced:
-   :maxdepth: 1
-   :hidden:
-
-   advanced/database
-   advanced/chaining
-   advanced/graphical
