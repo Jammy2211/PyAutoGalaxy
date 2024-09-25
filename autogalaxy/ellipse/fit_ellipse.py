@@ -208,7 +208,7 @@ class FitEllipse(aa.FitDataset):
         return self.data_interp
 
     @property
-    def residual_map(self):
+    def residual_map(self) -> aa.ArrayIrregular:
         """
         Returns the residual-map of the fit, which is the data minus the model data and therefore the same
         as the model data.
@@ -217,6 +217,10 @@ class FitEllipse(aa.FitDataset):
         -------
         The residual-map of the fit, which is the data minus the model data and therefore the same as the model data.
         """
+
+        if not self.model_data:
+            return aa.ArrayIrregular(values=np.zeros(self.model_data.shape))
+
         return aa.ArrayIrregular(values=self.model_data - np.nanmean(self.model_data))
 
     @property
