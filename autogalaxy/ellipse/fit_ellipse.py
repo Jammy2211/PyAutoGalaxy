@@ -238,16 +238,7 @@ class FitEllipse(aa.FitDataset):
         -------
         The normalized residual-map of the fit, which is the residual-map divided by the noise-map.
         """
-
-        normalized_residual_map = (self.residual_map) / self.noise_map_interp
-
-        # # NOTE:
-        # idx = np.logical_or(
-        #     np.isnan(normalized_residual_map), np.isinf(normalized_residual_map)
-        # )
-        # normalized_residual_map[idx] = 0.0
-
-        return aa.ArrayIrregular(values=normalized_residual_map)
+        return aa.ArrayIrregular(values=self.residual_map / self.noise_map_interp)
 
     @property
     def chi_squared_map(self) -> aa.ArrayIrregular:
