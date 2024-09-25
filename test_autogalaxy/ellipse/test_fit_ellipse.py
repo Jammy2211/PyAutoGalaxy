@@ -155,12 +155,27 @@ def test__normalized_residual_map(imaging_lh, imaging_lh_masked):
     fit = ag.FitEllipse(dataset=imaging_lh, ellipse=ellipse_0)
 
     assert fit.normalized_residual_map == pytest.approx(
-        [ 0.5       , -1.27207628, -1.28618638,  0.47716938,  1.58109327], 1.0e-4
+        [0.5, -1.27207628, -1.28618638, 0.47716938, 1.58109327], 1.0e-4
     )
 
     fit = ag.FitEllipse(dataset=imaging_lh_masked, ellipse=ellipse_0)
 
     assert fit.normalized_residual_map[0] == pytest.approx(0.0, 1.0e-4)
+    assert np.isnan(fit.noise_map_interp[1:5]).all()
+
+
+def test__chi_squared_map(imaging_lh, imaging_lh_masked):
+    ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
+
+    fit = ag.FitEllipse(dataset=imaging_lh, ellipse=ellipse_0)
+
+    assert fit.chi_squared_map == pytest.approx(
+        [0.25, 1.61817806, 1.65427539, 0.22769062, 2.49985593], 1.0e-4
+    )
+
+    fit = ag.FitEllipse(dataset=imaging_lh_masked, ellipse=ellipse_0)
+
+    assert fit.chi_squared_map[0] == pytest.approx(0.0, 1.0e-4)
     assert np.isnan(fit.noise_map_interp[1:5]).all()
 
 
