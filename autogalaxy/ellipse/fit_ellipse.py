@@ -239,11 +239,11 @@ class FitEllipse(aa.FitDataset):
 
         normalized_residual_map = (self.residual_map) / self.noise_map_interp
 
-        # NOTE:
-        idx = np.logical_or(
-            np.isnan(normalized_residual_map), np.isinf(normalized_residual_map)
-        )
-        normalized_residual_map[idx] = 0.0
+        # # NOTE:
+        # idx = np.logical_or(
+        #     np.isnan(normalized_residual_map), np.isinf(normalized_residual_map)
+        # )
+        # normalized_residual_map[idx] = 0.0
 
         return aa.ArrayIrregular(values=normalized_residual_map)
 

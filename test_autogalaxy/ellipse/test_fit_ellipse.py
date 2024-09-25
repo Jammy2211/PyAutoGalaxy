@@ -3,21 +3,41 @@ import pytest
 
 import autogalaxy as ag
 
-mask = ag.Mask2D(
-    mask=[
-        [True, True, True, True, True, True, True],
-        [True, True, True, True, True, True, True],
-        [True, True, False, False, False, True, True],
-        [True, True, False, True, False, True, True],
-        [True, True, False, False, False, True, True],
-        [True, True, True, True, True, True, True],
-        [True, True, True, True, True, True, True],
-    ],
-    pixel_scales=1.0,
-)
+
+@pytest.fixture(name="imaging_lh")
+def make_imaging_lh(imaging_7x7):
+
+    data = ag.Array2D.ones(shape_native=(7, 7), pixel_scales=(1.0, 1.0))
+
+    data[16] = 3.0
+    data[17] = 3.0
+    data[18] = 3.0
+
+    mask = ag.Mask2D(
+        mask=[
+            [True, True, True, True, True, True, True],
+            [True, True, True, True, True, True, True],
+            [True, True, False, False, False, True, True],
+            [True, True, False, True, False, True, True],
+            [True, True, False, False, False, True, True],
+            [True, True, True, True, True, True, True],
+            [True, True, True, True, True, True, True],
+        ],
+        pixel_scales=1.0,
+    )
+
+    imaging_lh = ag.Imaging(
+        data=data,
+        noise_map=imaging_7x7.noise_map,
+    )
+
+    imaging_lh = imaging_lh.apply_mask(mask=mask)
+
+    return imaging_lh
 
 
-def test__mask_interp(imaging_7x7):
+
+def test__mask_interp(imaging_7x7, imaging_lh):
     ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
 
     fit = ag.FitEllipse(dataset=imaging_7x7, ellipse=ellipse_0)
@@ -25,15 +45,13 @@ def test__mask_interp(imaging_7x7):
     assert fit.mask_interp[0] == pytest.approx(False, 1.0e-4)
     assert fit.mask_interp[1] == pytest.approx(False, 1.0e-4)
 
-    imaging_7x7 = imaging_7x7.apply_mask(mask=mask)
-
-    fit = ag.FitEllipse(dataset=imaging_7x7, ellipse=ellipse_0)
+    fit = ag.FitEllipse(dataset=imaging_lh, ellipse=ellipse_0)
 
     assert fit.mask_interp[0] == pytest.approx(False, 1.0e-4)
     assert fit.mask_interp[1] == pytest.approx(True, 1.0e-4)
 
 
-def test__data_interp(imaging_7x7):
+def test__data_interp(imaging_7x7, imaging_lh):
     ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
 
     fit = ag.FitEllipse(dataset=imaging_7x7, ellipse=ellipse_0)
@@ -41,14 +59,12 @@ def test__data_interp(imaging_7x7):
     assert fit.data_interp[0] == pytest.approx(1.0, 1.0e-4)
     assert fit.data_interp[1] == pytest.approx(1.0, 1.0e-4)
 
-    imaging_7x7 = imaging_7x7.apply_mask(mask=mask)
-
-    fit = ag.FitEllipse(dataset=imaging_7x7, ellipse=ellipse_0)
+    fit = ag.FitEllipse(dataset=imaging_lh, ellipse=ellipse_0)
 
     assert fit.data_interp[0] == pytest.approx(1.0, 1.0e-4)
     assert np.isnan(fit.data_interp[1])
 
-def test__noise_map_interp(imaging_7x7):
+def test__noise_map_interp(imaging_7x7, imaging_lh):
     ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
 
     fit = ag.FitEllipse(dataset=imaging_7x7, ellipse=ellipse_0)
@@ -56,14 +72,12 @@ def test__noise_map_interp(imaging_7x7):
     assert fit.noise_map_interp[0] == pytest.approx(2.0, 1.0e-4)
     assert fit.noise_map_interp[1] == pytest.approx(2.0, 1.0e-4)
 
-    imaging_7x7 = imaging_7x7.apply_mask(mask=mask)
-
-    fit = ag.FitEllipse(dataset=imaging_7x7, ellipse=ellipse_0)
+    fit = ag.FitEllipse(dataset=imaging_lh, ellipse=ellipse_0)
 
     assert fit.noise_map_interp[0] == pytest.approx(2.0, 1.0e-4)
     assert np.isnan(fit.noise_map_interp[1])
 
-def test__signal_to_noise_map_interp(imaging_7x7):
+def test__signal_to_noise_map_interp(imaging_7x7, imaging_lh):
     ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
 
     fit = ag.FitEllipse(dataset=imaging_7x7, ellipse=ellipse_0)
@@ -71,15 +85,13 @@ def test__signal_to_noise_map_interp(imaging_7x7):
     assert fit.signal_to_noise_map_interp[0] == pytest.approx(0.5, 1.0e-4)
     assert fit.signal_to_noise_map_interp[1] == pytest.approx(0.5, 1.0e-4)
 
-    imaging_7x7 = imaging_7x7.apply_mask(mask=mask)
-
-    fit = ag.FitEllipse(dataset=imaging_7x7, ellipse=ellipse_0)
+    fit = ag.FitEllipse(dataset=imaging_lh, ellipse=ellipse_0)
 
     assert fit.signal_to_noise_map_interp[0] == pytest.approx(0.5, 1.0e-4)
     assert np.isnan(fit.signal_to_noise_map_interp[1])
 
 
-def test__total_points_interp(imaging_7x7):
+def test__total_points_interp(imaging_7x7, imaging_lh):
 
     ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
 
@@ -87,15 +99,20 @@ def test__total_points_interp(imaging_7x7):
 
     assert fit.total_points_interp == 6
 
-    imaging = imaging_7x7.apply_mask(mask=mask)
+    fit = ag.FitEllipse(dataset=imaging_lh, ellipse=ellipse_0)
 
-    fit = ag.FitEllipse(dataset=imaging, ellipse=ellipse_0)
-
-    assert fit.total_points_interp == 4
+    assert fit.total_points_interp == 2
 
 
 def test__log_likelihood(imaging_7x7):
+
     ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.5, 0.5), major_axis=1.0)
+
+    fit = ag.FitEllipse(dataset=imaging_7x7, ellipse=ellipse_0)
+
+    assert fit.log_likelihood == pytest.approx(-0.02038637385, 1.0e-4)
+
+    imaging_7x7 = imaging_7x7.apply_mask(mask=mask)
 
     fit = ag.FitEllipse(dataset=imaging_7x7, ellipse=ellipse_0)
 
