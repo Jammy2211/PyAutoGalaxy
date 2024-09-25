@@ -192,6 +192,19 @@ def test__chi_squared(imaging_lh, imaging_lh_masked):
     assert fit.chi_squared == pytest.approx(0.0, 1.0e-4)
 
 
+def test__noise_normalization(imaging_lh, imaging_lh_masked):
+    ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
+
+    fit = ag.FitEllipse(dataset=imaging_lh, ellipse=ellipse_0)
+
+    assert fit.noise_normalization == pytest.approx(
+        16.120857137, 1.0e-4
+    )
+
+    fit = ag.FitEllipse(dataset=imaging_lh_masked, ellipse=ellipse_0)
+
+    assert fit.noise_normalization == pytest.approx(3.224171427, 1.0e-4)
+
 
 def test__log_likelihood(imaging_7x7):
     ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.5, 0.5), major_axis=1.0)

@@ -279,7 +279,7 @@ class FitEllipse(aa.FitDataset):
         -------
         The noise normalization term of the log likelihood.
         """
-        return np.sum(np.log(2 * np.pi * self.noise_map_interp**2.0))
+        return np.nansum(np.log(2 * np.pi * self.noise_map_interp**2.0))
 
     @property
     def log_likelihood(self):
