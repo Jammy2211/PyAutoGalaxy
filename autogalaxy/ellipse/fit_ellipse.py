@@ -112,6 +112,27 @@ class FitEllipse(aa.FitDataset):
         return self.interp.mask_interp(self._points_from_major_axis) > 0.0
 
     @property
+    def total_points_interp(self) -> int:
+        """
+        Returns the total number of points used to interpolate the data and noise-map values of the ellipse.
+
+        For example, if the ellipse spans 10 pixels, the total number of points will be 10.
+
+        The calculation removes points if one or more interpolated value uses a masked value, meaning the interpolation
+        is not reliable.
+
+        The (y,x) coordinates on the ellipse where the interpolation occurs are computed in the
+        `points_from_major_axis` property of the `Ellipse` class, with the documentation describing how these points
+        are computed.
+
+        Returns
+        -------
+        The noise-map values of the ellipse fits, computed via a 2D interpolation of where the ellipse
+        overlaps the noise-map.
+        """
+        return self.data_interp[np.invert(self.mask_interp)].shape[0]
+
+    @property
     def data_interp(self) -> aa.ArrayIrregular:
         """
         Returns the data values of the dataset that the ellipse fits, which are computed by overlaying the ellipse over
@@ -171,27 +192,6 @@ class FitEllipse(aa.FitDataset):
         the ellipse overlaps the data and noise-map.
         """
         return aa.ArrayIrregular(values=self.data_interp / self.noise_map_interp)
-
-    @property
-    def total_points_interp(self) -> int:
-        """
-        Returns the total number of points used to interpolate the data and noise-map values of the ellipse.
-
-        For example, if the ellipse spans 10 pixels, the total number of points will be 10.
-
-        The calculation removes points if one or more interpolated value uses a masked value, meaning the interpolation
-        is not reliable.
-
-        The (y,x) coordinates on the ellipse where the interpolation occurs are computed in the
-        `points_from_major_axis` property of the `Ellipse` class, with the documentation describing how these points
-        are computed.
-
-        Returns
-        -------
-        The noise-map values of the ellipse fits, computed via a 2D interpolation of where the ellipse
-        overlaps the noise-map.
-        """
-        return self.data_interp[np.invert(self.mask_interp)].shape[0]
 
     @property
     def model_data(self) -> aa.ArrayIrregular:

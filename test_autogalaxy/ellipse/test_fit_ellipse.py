@@ -78,6 +78,17 @@ def test__mask_interp(imaging_lh, imaging_lh_masked):
 
     assert fit.mask_interp == pytest.approx([False, True, True, True, True], 1.0e-4)
 
+def test__total_points_interp(imaging_lh, imaging_lh_masked):
+    ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
+
+    fit = ag.FitEllipse(dataset=imaging_lh, ellipse=ellipse_0)
+
+    assert fit.total_points_interp == 5
+
+    fit = ag.FitEllipse(dataset=imaging_lh_masked, ellipse=ellipse_0)
+
+    assert fit.total_points_interp == 1
+
 
 def test__data_interp(imaging_lh, imaging_lh_masked):
     ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
@@ -120,18 +131,6 @@ def test__signal_to_noise_map_interp(imaging_lh, imaging_lh_masked):
 
     assert fit.signal_to_noise_map_interp[0] == pytest.approx(3.0, 1.0e-4)
     assert np.isnan(fit.signal_to_noise_map_interp[1:5]).all()
-
-
-def test__total_points_interp(imaging_lh, imaging_lh_masked):
-    ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
-
-    fit = ag.FitEllipse(dataset=imaging_lh_masked, ellipse=ellipse_0)
-
-    assert fit.total_points_interp == 6
-
-    fit = ag.FitEllipse(dataset=imaging_lh, ellipse=ellipse_0)
-
-    assert fit.total_points_interp == 2
 
 
 def test__residual_map(imaging_lh):
