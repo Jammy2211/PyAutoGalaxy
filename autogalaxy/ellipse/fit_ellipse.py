@@ -78,13 +78,7 @@ class FitEllipse(aa.FitDataset):
         -------
         The (y,x) coordinates on the ellipse where the interpolation occurs.
         """
-        points = self.points_from_major_axis_from()
-
-        if np.isclose(points[0, 0], points[-1, 0], 1.0e-8):
-            if np.isclose(points[0, 1], points[-1, 1], 1.0e-8):
-                return points[0:-1, :]
-
-        return points
+        return self.points_from_major_axis_from()
 
     @property
     def mask_interp(self) -> np.ndarray:
