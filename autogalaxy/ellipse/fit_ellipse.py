@@ -177,12 +177,8 @@ class FitEllipse(aa.FitDataset):
 
         For example, if the ellipse spans 10 pixels, the total number of points will be 10.
 
-        The calculation removes points if they meet one of the following two criteria:
-
-        1) They are removed by the mask of the dataset.
-        2) If the signal-to-noise-map of the ellipse is below 1.0e-6, which means that the noise-map has been
-        increased to a very high value to remove this data point (e.g. it contains emission from foreground
-        objectS).
+        The calculation removes points if one or more interpolated value uses a masked value, meaning the interpolation
+        is not reliable.
 
         The (y,x) coordinates on the ellipse where the interpolation occurs are computed in the
         `points_from_major_axis` property of the `Ellipse` class, with the documentation describing how these points
@@ -193,9 +189,7 @@ class FitEllipse(aa.FitDataset):
         The noise-map values of the ellipse fits, computed via a 2D interpolation of where the ellipse
         overlaps the noise-map.
         """
-        print(self.data_interp)
-        print(self.residual_map)
-        return self.noise_map_interp.shape[0]
+        return self.data_interp[np.invert(self.mask_interp)].shape[0]
 
     @property
     def model_data(self) -> aa.ArrayIrregular:
