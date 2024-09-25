@@ -56,6 +56,12 @@ def test__noise_map_interp(imaging_7x7):
     assert fit.noise_map_interp[0] == pytest.approx(2.0, 1.0e-4)
     assert fit.noise_map_interp[1] == pytest.approx(2.0, 1.0e-4)
 
+    imaging_7x7 = imaging_7x7.apply_mask(mask=mask)
+
+    fit = ag.FitEllipse(dataset=imaging_7x7, ellipse=ellipse_0)
+
+    assert fit.noise_map_interp[0] == pytest.approx(2.0, 1.0e-4)
+    assert np.isnan(fit.noise_map_interp[1])
 
 #
 # def test__total_points_interp(imaging_7x7):

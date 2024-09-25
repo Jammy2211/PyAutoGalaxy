@@ -116,7 +116,7 @@ class FitEllipse(aa.FitDataset):
         are computed.
 
         If the interpolation of an ellipse point uses one or more masked values, this point is not reliable, therefore
-        the data value is converted to `np.nan` and not used by other fitting quantities.
+        the value is converted to `np.nan` and not used by other fitting quantities.
 
         Returns
         -------
@@ -141,13 +141,20 @@ class FitEllipse(aa.FitDataset):
         `points_from_major_axis` property of the `Ellipse` class, with the documentation describing how these points
         are computed.
 
+        If the interpolation of an ellipse point uses one or more masked values, this point is not reliable, therefore
+        the value is converted to `np.nan` and not used by other fitting quantities.
+
         Returns
         -------
         The noise-map values of the ellipse fits, computed via a 2D interpolation of where the ellipse
         overlaps the noise-map.
         """
+        noise_map = self.interp.noise_map_interp(self._points_from_major_axis)
+
+        noise_map[self.mask_interp] = np.nan
+
         return aa.ArrayIrregular(
-            values=self.interp.noise_map_interp(self._points_from_major_axis)
+            values=noise_map
         )
 
     @property
