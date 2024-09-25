@@ -221,6 +221,7 @@ class FitEllipse(aa.FitDataset):
         -------
         The residual-map of the fit, which is the data minus the model data and therefore the same as the model data.
         """
+        print(self.model_data)
         return aa.ArrayIrregular(values=self.model_data - np.nanmean(self.model_data))
 
     @property
