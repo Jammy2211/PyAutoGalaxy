@@ -80,8 +80,8 @@ class FitEllipse(aa.FitDataset):
         """
         points = self.points_from_major_axis_from()
 
-        if np.isclose(points[0,0], points[-1, 0], 1.0e-8):
-            if np.isclose(points[0,1], points[-1, 1], 1.0e-8):
+        if np.isclose(points[0, 0], points[-1, 0], 1.0e-8):
+            if np.isclose(points[0, 1], points[-1, 1], 1.0e-8):
                 return points[0:-1, :]
 
         return points
@@ -133,9 +133,7 @@ class FitEllipse(aa.FitDataset):
 
         data[self.mask_interp] = np.nan
 
-        return aa.ArrayIrregular(
-            values=data
-        )
+        return aa.ArrayIrregular(values=data)
 
     @property
     def noise_map_interp(self) -> aa.ArrayIrregular:
@@ -159,9 +157,7 @@ class FitEllipse(aa.FitDataset):
 
         noise_map[self.mask_interp] = np.nan
 
-        return aa.ArrayIrregular(
-            values=noise_map
-        )
+        return aa.ArrayIrregular(values=noise_map)
 
     @property
     def signal_to_noise_map_interp(self) -> aa.ArrayIrregular:

@@ -6,7 +6,6 @@ import autogalaxy as ag
 
 @pytest.fixture(name="imaging_lh")
 def make_imaging_lh(imaging_7x7):
-
     data = ag.Array2D.ones(shape_native=(7, 7), pixel_scales=(1.0, 1.0))
 
     data[16] = 1.0
@@ -24,9 +23,9 @@ def make_imaging_lh(imaging_7x7):
         noise_map=imaging_7x7.noise_map,
     )
 
+
 @pytest.fixture(name="imaging_lh_masked")
 def make_imaging_lh_masked(imaging_lh):
-
     mask = ag.Mask2D(
         mask=[
             [True, True, True, True, True, True, True],
@@ -85,7 +84,9 @@ def test__data_interp(imaging_lh, imaging_lh_masked):
 
     fit = ag.FitEllipse(dataset=imaging_lh, ellipse=ellipse_0)
 
-    assert fit.data_interp == pytest.approx([6., 2.45584745, 2.42762725, 5.95433876, 8.16218654], 1.0e-4)
+    assert fit.data_interp == pytest.approx(
+        [6.0, 2.45584745, 2.42762725, 5.95433876, 8.16218654], 1.0e-4
+    )
 
     fit = ag.FitEllipse(dataset=imaging_lh_masked, ellipse=ellipse_0)
 
@@ -109,19 +110,19 @@ def test__noise_map_interp(imaging_lh, imaging_lh_masked):
 def test__signal_to_noise_map_interp(imaging_lh, imaging_lh_masked):
     ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
 
-    fit = ag.FitEllipse(dataset=imaging_lh_masked, ellipse=ellipse_0)
-
-    assert fit.signal_to_noise_map_interp[0] == pytest.approx(0.5, 1.0e-4)
-    assert fit.signal_to_noise_map_interp[1] == pytest.approx(0.5, 1.0e-4)
-
     fit = ag.FitEllipse(dataset=imaging_lh, ellipse=ellipse_0)
 
-    assert fit.signal_to_noise_map_interp[0] == pytest.approx(0.5, 1.0e-4)
-    assert np.isnan(fit.signal_to_noise_map_interp[1])
+    assert fit.signal_to_noise_map_interp == pytest.approx(
+        [3.0, 1.22792372, 1.21381362, 2.97716938, 4.08109327], 1.0e-4
+    )
+
+    fit = ag.FitEllipse(dataset=imaging_lh_masked, ellipse=ellipse_0)
+
+    assert fit.signal_to_noise_map_interp[0] == pytest.approx(3.0, 1.0e-4)
+    assert np.isnan(fit.signal_to_noise_map_interp[1:5]).all()
 
 
 def test__total_points_interp(imaging_lh, imaging_lh_masked):
-
     ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
 
     fit = ag.FitEllipse(dataset=imaging_lh_masked, ellipse=ellipse_0)
@@ -145,7 +146,6 @@ def test__residual_map(imaging_lh):
 
 
 def test__log_likelihood(imaging_7x7):
-
     ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.5, 0.5), major_axis=1.0)
 
     fit = ag.FitEllipse(dataset=imaging_lh_masked, ellipse=ellipse_0)
@@ -157,6 +157,3 @@ def test__log_likelihood(imaging_7x7):
     fit = ag.FitEllipse(dataset=imaging_7x7, ellipse=ellipse_0)
 
     assert fit.log_likelihood == pytest.approx(0.0, 1.0e-4)
-
-
-
