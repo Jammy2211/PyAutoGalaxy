@@ -96,15 +96,15 @@ def test__data_interp(imaging_lh, imaging_lh_masked):
 def test__noise_map_interp(imaging_lh, imaging_lh_masked):
     ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
 
+    fit = ag.FitEllipse(dataset=imaging_lh, ellipse=ellipse_0)
+
+    assert fit.noise_map_interp == pytest.approx([2.0, 2.0, 2.0, 2.0, 2.0], 1.0e-4)
+
     fit = ag.FitEllipse(dataset=imaging_lh_masked, ellipse=ellipse_0)
 
     assert fit.noise_map_interp[0] == pytest.approx(2.0, 1.0e-4)
-    assert fit.noise_map_interp[1] == pytest.approx(2.0, 1.0e-4)
+    assert np.isnan(fit.noise_map_interp[1:5]).all()
 
-    fit = ag.FitEllipse(dataset=imaging_lh, ellipse=ellipse_0)
-
-    assert fit.noise_map_interp[0] == pytest.approx(2.0, 1.0e-4)
-    assert np.isnan(fit.noise_map_interp[1])
 
 def test__signal_to_noise_map_interp(imaging_lh, imaging_lh_masked):
     ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
