@@ -268,7 +268,7 @@ class FitEllipse(aa.FitDataset):
         -------
         The chi-squared of the fit.
         """
-        return float(np.sum(self.chi_squared_map))
+        return float(np.nansum(self.chi_squared_map))
 
     @property
     def noise_normalization(self):
