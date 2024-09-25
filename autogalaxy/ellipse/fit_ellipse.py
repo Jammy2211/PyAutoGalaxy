@@ -81,10 +81,18 @@ class FitEllipse(aa.FitDataset):
         return self.points_from_major_axis_from()
 
     @property
-    def data_interp(self) -> aa.ArrayIrregular:
+    def mask_interp(self) -> np.ndarray:
         """
-        Returns the data values of the dataset that the ellipse fits, which are computed by overlaying the ellipse over
-        the 2D data and performing a 2D interpolation at discrete (y,x) coordinates on the ellipse.
+        Returns the mask values of the dataset that the ellipse fits, which are computed by overlaying the ellipse over
+        the 2D data and performing a 2D interpolation at discrete (y,x) coordinates on the ellipse on the dataset's
+        mask.
+
+        When an input (y,x) coordinate intepolates only unmasked values (`data.mask=False`) the intepolatred value
+        is 0.0, where if it interpolates one or a masked value (`data.mask=True`), the interpolated value is positive.
+        To mask all values which interpolate a masked value, all interpolated values above 1 and converted to `True`.
+
+        This mask is used to remove these pixels from a fit and evaluate how many ellipse points are used for each
+        ellipse fit.
 
         The (y,x) coordinates on the ellipse where the interpolation occurs are computed in the
         `points_from_major_axis` property of the `Ellipse` class, with the documentation describing how these points
@@ -95,9 +103,32 @@ class FitEllipse(aa.FitDataset):
         The data values of the ellipse fits, computed via a 2D interpolation of where the ellipse
         overlaps the data.
         """
+        return self.interp.mask_interp(self._points_from_major_axis) > 0.0
+
+    @property
+    def data_interp(self) -> aa.ArrayIrregular:
+        """
+        Returns the data values of the dataset that the ellipse fits, which are computed by overlaying the ellipse over
+        the 2D data and performing a 2D interpolation at discrete (y,x) coordinates on the ellipse.
+
+        The (y,x) coordinates on the ellipse where the interpolation occurs are computed in the
+        `points_from_major_axis` property of the `Ellipse` class, with the documentation describing how these points
+        are computed.
+
+        If the interpolation of an ellipse point uses one or more masked values, this point is not reliable, therefore
+        the data value is converted to `np.nan` and not used by other fitting quantities.
+
+        Returns
+        -------
+        The data values of the ellipse fits, computed via a 2D interpolation of where the ellipse
+        overlaps the data.
+        """
+        data = self.interp.data_interp(self._points_from_major_axis)
+
+        data[self.mask_interp] = np.nan
 
         return aa.ArrayIrregular(
-            values=self.interp.data_interp(self._points_from_major_axis)
+            values=data
         )
 
     @property
