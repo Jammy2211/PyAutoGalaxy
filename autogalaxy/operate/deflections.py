@@ -106,9 +106,16 @@ class OperateDeflections:
 
     @property
     def plane_redshifts(self) -> List[float]:
+        """
+        Imitating tracer API but with no planes
+        """
         return []
 
     def deflections_between_planes_from(self, grid, plane_i: int, plane_j: int):
+        """
+        Assumes a simple OperateDeflections object (e.g. mass profile) that only has
+        a single plane of deflections
+        """
         return self.deflections_yx_2d_from(grid=grid)
 
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
