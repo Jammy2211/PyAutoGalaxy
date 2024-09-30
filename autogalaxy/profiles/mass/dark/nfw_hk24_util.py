@@ -9,7 +9,7 @@ from astropy.cosmology import Planck15
 cosmo = Planck15
 
 
-def semi_major_axis_from(x1 : np.ndarray, x2 : np.ndarray, e : np.ndarray) -> np.ndarray:
+def semi_major_axis_from(x1: np.ndarray, x2: np.ndarray, e: np.ndarray) -> np.ndarray:
     """
     Returns the semi-major axis of the ellipse at a given point.
 
@@ -22,10 +22,10 @@ def semi_major_axis_from(x1 : np.ndarray, x2 : np.ndarray, e : np.ndarray) -> np
     e
         Eccentricity.
     """
-    return np.sqrt(x1 ** 2 + x2 ** 2 / (1 - e ** 2))
+    return np.sqrt(x1**2 + x2**2 / (1 - e**2))
 
 
-def capital_F_from(chi : np.ndarray) -> np.ndarray:
+def capital_F_from(chi: np.ndarray) -> np.ndarray:
     """
     Equation 16 from Heyrovský & Karamazov.
 
@@ -48,7 +48,7 @@ def capital_F_from(chi : np.ndarray) -> np.ndarray:
     return F
 
 
-def kappa_from(k_s : float, a : np.ndarray) -> np.ndarray:
+def kappa_from(k_s: float, a: np.ndarray) -> np.ndarray:
     """
     Equation 16 from Heyrovský & Karamazov.
 
@@ -64,12 +64,12 @@ def kappa_from(k_s : float, a : np.ndarray) -> np.ndarray:
     Convergence as a function of a
     """
     F = capital_F_from(a)
-    kappa = 2 * k_s * (1 - F) / (a ** 2 - 1)
+    kappa = 2 * k_s * (1 - F) / (a**2 - 1)
     kappa[a == 1] = 2 / 3 * k_s
     return kappa
 
 
-def small_f_1(x1 : np.ndarray, x2 : np.ndarray, e : float) -> np.ndarray:
+def small_f_1(x1: np.ndarray, x2: np.ndarray, e: float) -> np.ndarray:
     """
     Equation 32 HK+24
 
@@ -92,7 +92,7 @@ def small_f_1(x1 : np.ndarray, x2 : np.ndarray, e : float) -> np.ndarray:
     return f1
 
 
-def small_f_2(x1 : np.ndarray, x2 : np.ndarray, e : float) -> np.ndarray:
+def small_f_2(x1: np.ndarray, x2: np.ndarray, e: float) -> np.ndarray:
     """
     Equation 32 HK+24
 
@@ -115,7 +115,7 @@ def small_f_2(x1 : np.ndarray, x2 : np.ndarray, e : float) -> np.ndarray:
     return f2
 
 
-def small_f_3(x1 : np.ndarray, x2 : np.ndarray, e : float) -> np.ndarray:
+def small_f_3(x1: np.ndarray, x2: np.ndarray, e: float) -> np.ndarray:
     """
     Equation 32 HK+24
 
@@ -138,7 +138,7 @@ def small_f_3(x1 : np.ndarray, x2 : np.ndarray, e : float) -> np.ndarray:
     return f3
 
 
-def small_f_0(x1 : np.ndarray, x2 : np.ndarray, e : float) -> np.ndarray:
+def small_f_0(x1: np.ndarray, x2: np.ndarray, e: float) -> np.ndarray:
     """
     Equation 37 HK+24
 
@@ -197,35 +197,78 @@ def g1_g2_from(x1, x2, e, k_s):
     f3 = small_f_3(x1, x2, e)
 
     # Prefactor for both g1 and g2
-    full_pre_factor = 4 * k_s * np.sqrt(1 - e ** 2) / \
-                      (((x1 - e) ** 2 + x2 ** 2) ** 2 * ((x1 + e) ** 2 + x2 ** 2) ** 2)
+    full_pre_factor = (
+        4
+        * k_s
+        * np.sqrt(1 - e**2)
+        / (((x1 - e) ** 2 + x2**2) ** 2 * ((x1 + e) ** 2 + x2**2) ** 2)
+    )
 
     # Prefactors for g1
-    pre_f0_g1 = ((x1 - e) ** 2 + x2 ** 2) * ((x1 + e) ** 2 + x2 ** 2) * (x1 ** 2 - x2 ** 2 - e ** 2)
+    pre_f0_g1 = (
+        ((x1 - e) ** 2 + x2**2)
+        * ((x1 + e) ** 2 + x2**2)
+        * (x1**2 - x2**2 - e**2)
+    )
 
-    pre_f1_g1 = (2 * e ** 2 * (x1 ** 2 - 1) * ((x1 ** 2 - x2 ** 2 - e ** 2) ** 2 - 4 * x1 ** 2 * x2 ** 2) - \
-                 (x1 ** 2 - x2 ** 2 - e ** 2) ** 3 * (3 + e ** 2) / 2 + \
-                 6 * x1 ** 2 * x2 ** 2 * (e ** 2 - 1) * (x1 ** 2 - x2 ** 2 - e ** 2))
+    pre_f1_g1 = (
+        2
+        * e**2
+        * (x1**2 - 1)
+        * ((x1**2 - x2**2 - e**2) ** 2 - 4 * x1**2 * x2**2)
+        - (x1**2 - x2**2 - e**2) ** 3 * (3 + e**2) / 2
+        + 6 * x1**2 * x2**2 * (e**2 - 1) * (x1**2 - x2**2 - e**2)
+    )
 
-    pre_f2_g1 = - ((x1 ** 2 - x2 ** 2 - e ** 2) * ((x1 ** 2 + x2 ** 2) ** 2 - e ** 4) - 8 * e ** 2 * x1 ** 2 * x2 ** 2)
+    pre_f2_g1 = -(
+        (x1**2 - x2**2 - e**2) * ((x1**2 + x2**2) ** 2 - e**4)
+        - 8 * e**2 * x1**2 * x2**2
+    )
 
-    pre_f3_g1 = 2 * x1 * x2 * ((x1 ** 2 + x2 ** 2 + e ** 2) ** 2 - 4 * e ** 2 * (x2 ** 2 + e ** 2))
+    pre_f3_g1 = (
+        2
+        * x1
+        * x2
+        * ((x1**2 + x2**2 + e**2) ** 2 - 4 * e**2 * (x2**2 + e**2))
+    )
 
     # First component shear
-    g1 = full_pre_factor * (pre_f0_g1 * f0 + pre_f1_g1 * f1 + pre_f2_g1 * f2 + pre_f3_g1 * f3)
+    g1 = full_pre_factor * (
+        pre_f0_g1 * f0 + pre_f1_g1 * f1 + pre_f2_g1 * f2 + pre_f3_g1 * f3
+    )
 
     # Prefactors g2
-    pre_f0_g2 = 2 * x1 * x2 * ((x1 - e) ** 2 + x2 ** 2) * ((x1 + e) ** 2 + x2 ** 2)
+    pre_f0_g2 = 2 * x1 * x2 * ((x1 - e) ** 2 + x2**2) * ((x1 + e) ** 2 + x2**2)
 
-    pre_f1_g2 = x1 * x2 * ((x1 ** 2 + x2 ** 2 + e ** 2) * ((5 * e ** 2 - 3) * x1 ** 2 - 3 * (1 + e ** 2) * x2 ** 2 + \
-                                                           (5 - 3 * e ** 2) * e ** 2) - 4 * e ** 2 * x1 ** 2 * (
-                                       1 + e ** 2))
+    pre_f1_g2 = (
+        x1
+        * x2
+        * (
+            (x1**2 + x2**2 + e**2)
+            * (
+                (5 * e**2 - 3) * x1**2
+                - 3 * (1 + e**2) * x2**2
+                + (5 - 3 * e**2) * e**2
+            )
+            - 4 * e**2 * x1**2 * (1 + e**2)
+        )
+    )
 
-    pre_f2_g2 = - 2 * x1 * x2 * ((x1 ** 2 + x2 ** 2 + e ** 2) ** 2 - 4 * e ** 2 * (x2 ** 2 + e ** 2))
+    pre_f2_g2 = (
+        -2
+        * x1
+        * x2
+        * ((x1**2 + x2**2 + e**2) ** 2 - 4 * e**2 * (x2**2 + e**2))
+    )
 
-    pre_f3_g2 = - ((x1 ** 2 - x2 ** 2 - e ** 2) * ((x1 ** 2 + x2 ** 2) ** 2 - e ** 4) - 8 * e ** 2 * x1 ** 2 * x2 ** 2)
+    pre_f3_g2 = -(
+        (x1**2 - x2**2 - e**2) * ((x1**2 + x2**2) ** 2 - e**4)
+        - 8 * e**2 * x1**2 * x2**2
+    )
 
     # Second component shear
-    g2 = full_pre_factor * (pre_f0_g2 * f0 + pre_f1_g2 * f1 + pre_f2_g2 * f2 + pre_f3_g2 * f3)
+    g2 = full_pre_factor * (
+        pre_f0_g2 * f0 + pre_f1_g2 * f1 + pre_f2_g2 * f2 + pre_f3_g2 * f3
+    )
 
     return g1, g2

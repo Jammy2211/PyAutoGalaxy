@@ -65,6 +65,11 @@ def make_rectangular_inversion_7x7_3x3():
     return fixtures.make_rectangular_inversion_7x7_3x3()
 
 
+@pytest.fixture(name="delaunay_inversion_9_3x3")
+def make_delaunay_inversion_9_3x3():
+    return fixtures.make_delaunay_inversion_9_3x3()
+
+
 @pytest.fixture(name="voronoi_inversion_9_3x3")
 def make_voronoi_inversion_9_3x3():
     return fixtures.make_voronoi_inversion_9_3x3()
@@ -397,3 +402,8 @@ def make_analysis_imaging_7x7():
 @pytest.fixture(name="analysis_interferometer_7")
 def make_analysis_interferometer_7():
     return fixtures.make_analysis_interferometer_7()
+
+
+@pytest.fixture(name="analysis_ellipse_7x7")
+def make_analysis_ellipse_7x7():
+    return fixtures.make_analysis_ellipse_7x7()

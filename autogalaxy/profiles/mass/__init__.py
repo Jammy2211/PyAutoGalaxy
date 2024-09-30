@@ -16,6 +16,7 @@ from .total import (
 from .dark import (
     gNFW,
     gNFWSph,
+    gNFWVirialMassConcSph,
     NFWTruncatedSph,
     NFWTruncatedMCRDuffySph,
     NFWTruncatedMCRLudlowSph,

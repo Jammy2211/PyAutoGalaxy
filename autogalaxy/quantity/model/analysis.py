@@ -22,6 +22,7 @@ class AnalysisQuantity(Analysis):
         dataset: DatasetQuantity,
         func_str: str,
         cosmology: LensingCosmology = Planck15(),
+        title_prefix: str = None,
     ):
         """
         Fits a galaxy model to a quantity dataset via a non-linear search.
@@ -52,11 +53,15 @@ class AnalysisQuantity(Analysis):
             the dataset.
         cosmology
             The Cosmology assumed for this analysis.
+        title_prefix
+            A string that is added before the title of all figures output by visualization, for example to
+            put the name of the dataset and galaxy in the title.
         """
         super().__init__(cosmology=cosmology)
 
         self.dataset = dataset
         self.func_str = func_str
+        self.title_prefix = title_prefix
 
     def log_likelihood_function(self, instance: af.ModelInstance) -> float:
         """
@@ -123,7 +128,7 @@ class AnalysisQuantity(Analysis):
 
     def save_attributes(self, paths: af.DirectoryPaths):
         """
-        Before the non-linear search begins, this routine saves attributes of the `Analysis` object to the `pickles`
+        Before the non-linear search begins, this routine saves attributes of the `Analysis` object to the `files`
         folder such that they can be loaded after the analysis using PyAutoFit's database and aggregator tools.
 
         For this analysis, it uses the `AnalysisDataset` object's method to output the following:

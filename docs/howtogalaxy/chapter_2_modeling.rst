@@ -1,5 +1,5 @@
-Chapter 2: Lens Modeling
-========================
+Chapter 2: Modeling
+===================
 
 In chapter 2, we'll take you through how to model galaxies using a non-linear search.
 

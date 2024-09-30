@@ -94,15 +94,23 @@ class PlotterInterfaceEllipse(PlotterInterface):
             fit_list=fit_list, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
-        # fit_plotter.figures_2d(
-        #     data=should_plot("data"),
-        # )
+        fit_plotter.figures_2d(data=should_plot("data"))
 
-        fit_plotter.figures_2d(data=True)
+        if should_plot("data_no_ellipse"):
+            fit_plotter.figures_2d(
+                data=True,
+                disable_data_contours=True,
+            )
 
         fit_plotter.mat_plot_2d.use_log10 = True
 
-        fit_plotter.figures_2d(data=True)
+        fit_plotter.figures_2d(data=should_plot("data"))
+
+        if should_plot("data_no_ellipse"):
+            fit_plotter.figures_2d(
+                data=True,
+                disable_data_contours=True,
+            )
 
         if not during_analysis and should_plot("all_at_end_png"):
             mat_plot_2d = self.mat_plot_2d_from(subfolders=path.join(subfolders, "end"))
@@ -111,6 +119,8 @@ class PlotterInterfaceEllipse(PlotterInterface):
                 fit_list=fit_list, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
             )
 
+            fit_plotter.figures_2d(data=True)
             fit_plotter.figures_2d(
                 data=True,
+                disable_data_contours=True,
             )

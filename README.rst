@@ -22,13 +22,10 @@ PyAutoGalaxy: Open-Source Multi Wavelength Galaxy Structure & Morphology
 
 `Installation Guide <https://pyautogalaxy.readthedocs.io/en/latest/installation/overview.html>`_ |
 `readthedocs <https://pyautogalaxy.readthedocs.io/en/latest/index.html>`_ |
-`Introduction on Binder <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=introduction.ipynb>`_ |
+`Introduction on Binder <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=start_here.ipynb>`_ |
 `HowToGalaxy <https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/howtogalaxy.html>`_
 
-The study of a galaxy's structure and morphology is at the heart of modern day Astrophysical research.
-
-**PyAutoGalaxy** makes it simple to model galaxies, for example this Hubble Space Telescope imaging of a spiral
-galaxy:
+**PyAutoGalaxy** is software for analysing the morphologies and structures of galaxies:
 
 .. image:: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/hstcombined.png?raw=true
         :target: https://github.com/Jammy2211/PyAutoGalaxy/blob/main/paper/hstcombined.png
@@ -43,12 +40,24 @@ Getting Started
 
 The following links are useful for new starters:
 
-- `The PyAutoGalaxy readthedocs <https://pyautogalaxy.readthedocs.io/en/latest>`_, which includes `an installation guide <https://pyautogalaxy.readthedocs.io/en/latest/installation/overview.html>`_ and `an overview of PyAutoGalaxy's core features <https://pyautogalaxy.readthedocs.io/en/latest/overview/overview_1_galaxies.html>`_.
+- `The PyAutoGalaxy readthedocs <https://pyautogalaxy.readthedocs.io/en/latest>`_, which includes `an overview of PyAutoGalaxy's core features <https://pyautogalaxy.readthedocs.io/en/latest/overview/overview_1_start_here.html>`_, `a new user starting guide <https://pyautogalaxy.readthedocs.io/en/latest/overview/overview_2_new_user_guide.html>`_ and `an installation guide <https://pyautogalaxy.readthedocs.io/en/latest/installation/overview.html>`_.
 
-- `The introduction Jupyter Notebook on Binder <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=introduction.ipynb>`_, where you can try **PyAutoGalaxy** in a web browser (without installation).
+- `The introduction Jupyter Notebook on Binder <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=start_here.ipynb>`_, where you can try **PyAutoGalaxy** in a web browser (without installation).
 
-- `The autogalaxy_workspace GitHub repository <https://github.com/Jammy2211/autogalaxy_workspace>`_, which includes example scripts and the `HowToGalaxy Jupyter notebook lectures <https://github.com/Jammy2211/autogalaxy_workspace/tree/master/notebooks/howtogalaxy>`_ which give new users a step-by-step introduction to **PyAutoGalaxy**.
+- `The autogalaxy_workspace GitHub repository <https://github.com/Jammy2211/autogalaxy_workspace>`_, which includes example scripts and the `HowToGalaxy Jupyter notebook lectures <https://github.com/Jammy2211/autogalaxy_workspace/tree/main/notebooks/howtogalaxy>`_ which give new users a step-by-step introduction to **PyAutoGalaxy**.
 
+Core Aims
+---------
+
+**PyAutoGalaxy** has three core aims:
+
+- **Model Complexity**: Fitting complex galaxy morphology models (e.g. Multi Gaussian Expansion, Shapelets, Ellipse Fitting, Irregular Meshes) that go beyond just simple Sersic fitting (which is supported too!).
+
+- **Data Variety**: Support for many data types (e.g. CCD imaging, interferometry, multi-band imaging) which can be fitted independently or simultaneously.
+
+- **Big Data**: Scaling automated analysis to extremely large datasets, using tools like an SQL database to build a scalable scientific workflow.
+
+A complete overview of the software's aims is provided in our `Journal of Open Source Software paper <https://joss.theoj.org/papers/10.21105/joss.04475>`_.
 
 API Overview
 ------------

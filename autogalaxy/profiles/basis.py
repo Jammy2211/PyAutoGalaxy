@@ -33,7 +33,7 @@ class Basis(LightProfile, MassProfile):
         Parameters
         ----------
         profile_list
-            The light of light or mass profiles that make up the basis.
+            The light or mass profiles that make up the basis.
         regularization
             The regularization scheme applied to the basis, which is used to regularize the solution to the linear
             inversion that fits the basis to the data.

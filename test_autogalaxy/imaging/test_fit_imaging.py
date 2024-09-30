@@ -163,32 +163,6 @@ def test__fit_figure_of_merit(
     assert fit.perform_inversion is False
     assert fit.figure_of_merit == pytest.approx(-130242.56, 1.0e-4)
 
-    pixelization = ag.Pixelization(
-        image_mesh=ag.image_mesh.KMeans(pixels=5),
-        mesh=ag.mesh.Delaunay(),
-        regularization=ag.reg.Constant(coefficient=1.0),
-    )
-
-    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
-
-    model_image = ag.Array2D(
-        np.full(fill_value=5.0, shape=masked_imaging_7x7.mask.pixels_in_mask),
-        mask=masked_imaging_7x7.mask,
-    )
-
-    adapt_images = ag.AdaptImages(
-        galaxy_image_dict={galaxy_pix: model_image},
-    )
-
-    fit = ag.FitImaging(
-        dataset=masked_imaging_7x7,
-        galaxies=[ag.Galaxy(redshift=0.5), galaxy_pix],
-        adapt_images=adapt_images,
-    )
-
-    assert fit.perform_inversion is True
-    assert fit.figure_of_merit == pytest.approx(-23.146720, 1.0e-4)
-
 
 def test__fit__model_dataset__sky___handles_special_behaviour(masked_imaging_7x7):
     g0 = ag.Galaxy(

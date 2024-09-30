@@ -83,7 +83,14 @@ class LightProfileLinear(LightProfile):
 
             return lmp_mapping_dict[self.__class__]
 
-        for cls in self.__class__.__bases__:
+        bases = self.__class__.__bases__
+
+        if self.__class__.__name__.endswith("Sph") or isinstance(
+            self, LightProfileOperated
+        ):
+            bases = bases[0].__bases__
+
+        for cls in bases:
             if not issubclass(cls, LightProfileLinear):
                 return cls
 
@@ -138,7 +145,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         blurring_grid: aa.type.Grid1D2DLike,
         convolver: Optional[aa.Convolver],
         light_profile_list: List[LightProfileLinear],
-        regularization=aa.reg.Regularization,
+        regularization=Optional[aa.reg.Regularization],
         run_time_dict: Optional[Dict] = None,
     ):
         """
