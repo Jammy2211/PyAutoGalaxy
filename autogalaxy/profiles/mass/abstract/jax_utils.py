@@ -3,7 +3,7 @@ import jax.numpy as jnp
 import numpy as np
 
 from jax import custom_jvp
-from jax.scipy.special import gammaln
+from functools import partial
 
 
 def reg1(z, _, i_sqrt_pi):
@@ -111,9 +111,7 @@ def w_f_approx_jvp(primals, tangents):
     return primal_out, tangent_out
 
 
-def comb(x: int, y: int) -> int:
-    # use the gamma function definition as that is the only
-    # JAX friendly way to do this (internally the factorial function
-    # uses this method as well).  Round to closest int at the end of the
-    # calculation as we only use this for int inputs anyways.
-    return jnp.exp(gammaln(x + 1) - gammaln(y + 1) - gammaln(x - y + 1)).round(1)
+@partial(jax.jit, static_argnums=(0,))
+def all_comb(n):
+    i = jnp.arange(1, n, 1)
+    return jnp.cumprod((n + 1 - i) / i)

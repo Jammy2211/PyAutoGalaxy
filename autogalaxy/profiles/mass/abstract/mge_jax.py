@@ -1,7 +1,8 @@
 import jax.numpy as np
 import jax
+import numpy as base_np
 
-from .jax_utils import w_f_approx, comb
+from .jax_utils import w_f_approx, all_comb
 
 
 class MassProfileMGE:
@@ -63,12 +64,10 @@ class MassProfileMGE:
         see Eq.(6) of 1906.00263
         """
 
-        def body_kesi(carry, i):
-            carry = carry + 2**-p * comb(p, i)
-            return carry, carry
-
+        i = np.arange(1, p, 1)
         kesi_last = 1/2**p
-        _, k = jax.lax.scan(body_kesi, kesi_last, np.arange(1, p, 1))
+        k = kesi_last + np.cumsum(np.cumprod((p + 1 - i) / i) * kesi_last)
+        
         kesi_list = np.hstack([
             np.array([0.5]),
             np.ones(p),
@@ -121,7 +120,7 @@ class MassProfileMGE:
     def convergence_2d_via_mge_from(self, grid_radii):
         raise NotImplementedError()
 
-    def _convergence_2d_via_mge_from(self, grid_radii):
+    def _convergence_2d_via_mge_from(self, grid_radii, func_terms=28, func_gaussians=20):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -130,7 +129,7 @@ class MassProfileMGE:
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
-        amps, sigmas = self.decompose_convergence_via_mge()
+        amps, sigmas = self.decompose_convergence_via_mge(func_terms=func_terms, func_gaussians=func_gaussians)
 
         convergence = 0.0
 
@@ -139,10 +138,10 @@ class MassProfileMGE:
         convergence = amps_ * np.exp(-0.5 * (grid_radii.array * inv_sigma_)**2)
         return convergence.sum(axis=0)
 
-    def _deflections_2d_via_mge_from(self, grid, sigmas_factor=1.0):
+    def _deflections_2d_via_mge_from(self, grid, sigmas_factor=1.0, func_terms=28, func_gaussians=20):
         axis_ratio = np.min(np.array([self.axis_ratio, 0.9999]))
 
-        amps, sigmas = self.decompose_convergence_via_mge()
+        amps, sigmas = self.decompose_convergence_via_mge(func_terms=func_terms, func_gaussians=func_gaussians)
         sigmas *= sigmas_factor
 
         angle = self.zeta_from(
