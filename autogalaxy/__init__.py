@@ -3,6 +3,7 @@ from autoarray.dataset import preprocess  # noqa
 from autoarray.dataset.imaging.dataset import Imaging  # noqa
 from autoarray.dataset.interferometer.dataset import Interferometer  # noqa
 from autoarray.dataset.dataset_model import DatasetModel
+from autoarray.dataset.over_sampling import OverSamplingDataset
 from autoarray.inversion.pixelization import mesh  # noqa
 from autoarray.inversion import regularization as reg  # noqa
 from autoarray.inversion.pixelization import image_mesh
@@ -57,6 +58,11 @@ from . import aggregator as agg
 from . import exc
 from . import plot
 from . import util
+from .ellipse.dataset_interp import DatasetInterp
+from .ellipse.ellipse.ellipse import Ellipse
+from .ellipse.ellipse.ellipse_multipole import EllipseMultipole
+from .ellipse.fit_ellipse import FitEllipse
+from .ellipse.model.analysis import AnalysisEllipse
 from .operate.image import OperateImage
 from .operate.image import OperateImageList
 from .operate.image import OperateImageGalaxies

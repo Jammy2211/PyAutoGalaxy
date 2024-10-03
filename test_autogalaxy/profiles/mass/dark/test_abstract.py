@@ -267,7 +267,7 @@ def test__mass_at_200__unit_conversions_work():
 
 
 def test__values_of_quantities_for_real_cosmology():
-    cosmology = ag.cosmo.LambdaCDM(H0=70.0, Om0=0.3, Ode0=0.7)
+    cosmology = ag.cosmo.LambdaCDMWrap(H0=70.0, Om0=0.3, Ode0=0.7)
 
     mp = ag.mp.NFWTruncatedSph(kappa_s=0.5, scale_radius=5.0, truncation_radius=10.0)
 
@@ -310,12 +310,12 @@ def test__values_of_quantities_for_real_cosmology():
         cosmology=cosmology,
     )
 
-    assert rho == pytest.approx(29027857.01622403, 1.0e-4)
-    assert delta_concentration == pytest.approx(213451.19421263796, 1.0e-4)
-    assert concentration == pytest.approx(18.6605624462417, 1.0e-4)
-    assert radius_at_200 == pytest.approx(93.302812, 1.0e-4)
-    assert mass_at_200 == pytest.approx(27651532986258.375, 1.0e-4)
-    assert mass_at_truncation_radius == pytest.approx(14877085957074.299, 1.0e-4)
+    assert rho == pytest.approx(29086405.474155396, 1.0e-4)
+    assert delta_concentration == pytest.approx(213881.71990418772, 1.0e-4)
+    assert concentration == pytest.approx(18.67527773217461, 1.0e-4)
+    assert radius_at_200 == pytest.approx(93.37638866087305, 1.0e-4)
+    assert mass_at_200 == pytest.approx(27641476612470.0, 1.0e-4)
+    assert mass_at_truncation_radius == pytest.approx(14871675423873.854, 1.0e-4)
 
     rho = mp.rho_at_scale_radius_solar_mass_per_kpc3(
         redshift_object=0.6, redshift_source=2.5, cosmology=cosmology
@@ -356,9 +356,9 @@ def test__values_of_quantities_for_real_cosmology():
         cosmology=cosmology,
     )
 
-    assert rho == pytest.approx(29027857.01622403, 1.0e-4)
-    assert delta_concentration == pytest.approx(110665.28111397651, 1.0e-4)
-    assert concentration == pytest.approx(14.401574489517804, 1.0e-4)
-    assert radius_at_200 == pytest.approx(72.007872, 1.0e-4)
-    assert mass_at_200 == pytest.approx(24516707575366.09, 1.0e-4)
-    assert mass_at_truncation_radius == pytest.approx(13190486262169.797, 1.0e-4)
+    assert rho == pytest.approx(29086405.474155396, 1.0e-4)
+    assert delta_concentration == pytest.approx(110527.8022275522, 1.0e-4)
+    assert concentration == pytest.approx(14.394455391541, 1.0e-4)
+    assert radius_at_200 == pytest.approx(71.97227695770, 1.0e-4)
+    assert mass_at_200 == pytest.approx(24493332582335.38, 1.0e-4)
+    assert mass_at_truncation_radius == pytest.approx(13177910041504.6, 1.0e-4)

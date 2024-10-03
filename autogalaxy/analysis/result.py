@@ -54,11 +54,11 @@ class ResultDataset(Result):
         return self.analysis.dataset.mask
 
     @property
-    def grid(self) -> aa.Grid2D:
+    def grids(self) -> aa.Grid2D:
         """
         The masked 2D grid used by the dataset in the model-fit.
         """
-        return self.analysis.dataset.grid
+        return self.analysis.dataset.grids
 
     @property
     def dataset(self) -> Union[aa.Imaging, aa.Interferometer]:

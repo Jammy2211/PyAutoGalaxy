@@ -8,6 +8,7 @@ label:
     centre_0: y
     centre_1: x
     coefficient: \lambda
+    c_2: c_{\rm 2}
     concentration: conc
     core_radius: C_{\rm r}
     core_radius_0: C_{rm r0}
@@ -27,6 +28,7 @@ label:
     intensity: I_{\rm b}
     kappa: \kappa
     kappa_s: \kappa_{\rm s}
+    log10m_vir: log_{\rm 10}(m_{vir})
     m: m
     mass: M
     mass_at_200: M_{\rm 200}
@@ -41,6 +43,7 @@ label:
     normalization_scale: n
     outer_coefficient: \lambda_{\rm 2}
     outer_slope: t_{\rm 2}
+    overdens: \Delta_{\rm vir}
     pixels: N_{\rm pix}
     radius_break: R_{\rm b}
     redshift: z
@@ -77,6 +80,7 @@ label_format:
     angle_binary: '{:.4f}'
     angular_diameter_distance_to_earth: '{:.4f}'
     beta: '{:.4f}'
+    c_2: '{:.4f}'
     centre_0: '{:.4f}'
     centre_1: '{:.4f}'
     coefficient: '{:.4f}'
@@ -99,6 +103,7 @@ label_format:
     kappa: '{:.4f}'
     kappa_s: '{:.4f}'
     kpc_per_arcsec: '{:.4f}'
+    log10m_vir: '{:.4f}'
     luminosity: '{:.4e}'
     m: '{:.1f}'
     mass: '{:.4e}'
@@ -115,6 +120,7 @@ label_format:
     normalization_scale: '{:.4f}'
     outer_coefficient: '{:.4f}'
     outer_slope: '{:.4f}'
+    overdens: '{:.4f}'
     pixels: '{:.4f}'
     radius: '{:.4f}'
     radius_break: '{:.4f}'

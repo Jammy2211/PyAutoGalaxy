@@ -23,7 +23,9 @@ def test__galaxies(
     plotter_interface = PlotterInterface(image_path=plot_path)
 
     plotter_interface.galaxies(
-        galaxies=galaxies_7x7, grid=masked_imaging_7x7.grid, during_analysis=False
+        galaxies=galaxies_7x7,
+        grid=masked_imaging_7x7.grids.uniform,
+        during_analysis=False,
     )
 
     assert path.join(plot_path, "subplot_galaxies.png") in plot_patch.paths
@@ -54,7 +56,9 @@ def test__galaxies_1d(
     plotter_interface = PlotterInterface(image_path=plot_path)
 
     plotter_interface.galaxies_1d(
-        galaxies=galaxies_7x7, grid=masked_imaging_7x7.grid, during_analysis=False
+        galaxies=galaxies_7x7,
+        grid=masked_imaging_7x7.grids.uniform,
+        during_analysis=False,
     )
 
     plot_path = path.join(plot_path, "galaxies_1d")
@@ -65,14 +69,20 @@ def test__galaxies_1d(
 
 
 def test__inversion(
-    masked_imaging_7x7, voronoi_inversion_9_3x3, include_2d_all, plot_path, plot_patch
+    masked_imaging_7x7,
+    rectangular_inversion_7x7_3x3,
+    include_2d_all,
+    plot_path,
+    plot_patch,
 ):
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
     plotter_interface = PlotterInterface(image_path=plot_path)
 
-    plotter_interface.inversion(inversion=voronoi_inversion_9_3x3, during_analysis=True)
+    plotter_interface.inversion(
+        inversion=rectangular_inversion_7x7_3x3, during_analysis=True
+    )
 
     assert path.join(plot_path, "subplot_inversion_0.png") in plot_patch.paths
 

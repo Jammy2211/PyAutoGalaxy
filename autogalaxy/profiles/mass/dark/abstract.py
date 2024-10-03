@@ -1,4 +1,3 @@
-import copy
 import numpy as np
 from scipy.optimize import fsolve
 from typing import Tuple

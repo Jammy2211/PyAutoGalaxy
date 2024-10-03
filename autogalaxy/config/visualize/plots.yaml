@@ -8,8 +8,9 @@ dataset:                                   # Settings for plots of all datasets 
   data: false                              # Plot the individual data of every dataset?
   noise_map: false                         # Plot the individual noise-map of every dataset?
   signal_to_noise_map: false               # Plot the individual signal-to-noise-map of every dataset?
-  over_sampling_sub_size: false            # Plot the over-sampling sub-size, used to evaluate light profiles, of every dataset?
-  over_sampling_sub_size_pixelization: false  # Plot the over-sampling sub-size, used to evaluate pixelizations, of every dataset?
+  over_sampling: false            # Plot the over-sampling sub-size, used to evaluate light profiles, of every dataset?
+  over_sampling_non_uniform: false  # Plot the over-sampling sub-size, used to evaluate non uniform grids, of every dataset?
+  over_sampling_pixelization: false  # Plot the over-sampling sub-size, used to evaluate pixelizations, of every dataset?
 imaging:                                   # Settings for plots of imaging datasets (e.g. ImagingPlotter).
   psf: false
 fit:                                       # Settings for plots of all fits (e.g. FitImagingPlotter, FitInterferometerPlotter).
@@ -82,7 +83,9 @@ fit_interferometer:                        # Settings for plots of fits to inter
   dirty_residual_map: false
   dirty_normalized_residual_map: false
   dirty_chi_squared_map: false
-
+fit_ellipse:                               # Settings for plots of ellipse fitting fits (e.g. FitEllipse)
+  data : true                              # Plot the data of the ellipse fit?
+  data_no_ellipse: true                    # Plot the data without the black data ellipses, which obscure noisy data?
 fit_quantity:                              # Settings for plots of fit quantities (e.g. FitQuantityPlotter).
   all_at_end_png: true                     # Plot all individual plots listed below as .png (even if False)?
   all_at_end_fits: true                    # Plot all individual plots listed below as .fits (even if False)?

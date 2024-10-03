@@ -1,6 +1,6 @@
 from autofit.non_linear.plot.nest_plotters import NestPlotter
 from autofit.non_linear.plot.mcmc_plotters import MCMCPlotter
-from autofit.non_linear.plot.optimize_plotters import OptimizePlotter
+from autofit.non_linear.plot.mle_plotters import MLEPlotter
 
 from autoarray.plot.wrap.base import (
     Units,
@@ -91,3 +91,4 @@ from autogalaxy.interferometer.plot.fit_interferometer_plotters import (
 )
 from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
 from autogalaxy.galaxy.plot.adapt_plotters import AdaptPlotter
+from autogalaxy.ellipse.plot.fit_ellipse_plotters import FitEllipsePlotter

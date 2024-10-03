@@ -55,8 +55,8 @@ Gaussian:
       type: Absolute
       value: 0.2
     gaussian_limits:
-      lower: '-1.0'
-      upper: '1.0'
+      lower: -1.0
+      upper: 1.0
 GaussianSph:
   sigma:
     type: Uniform

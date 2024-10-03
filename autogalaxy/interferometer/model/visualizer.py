@@ -28,7 +28,9 @@ class VisualizerInterferometer(af.Visualizer):
             the imaging data.
         """
 
-        PlotterInterface = PlotterInterfaceInterferometer(image_path=paths.image_path)
+        PlotterInterface = PlotterInterfaceInterferometer(
+            image_path=paths.image_path, title_prefix=analysis.title_prefix
+        )
 
         PlotterInterface.interferometer(dataset=analysis.interferometer)
 
@@ -76,16 +78,18 @@ class VisualizerInterferometer(af.Visualizer):
         """
         fit = analysis.fit_from(instance=instance)
 
-        PlotterInterface = PlotterInterfaceInterferometer(image_path=paths.image_path)
+        PlotterInterface = PlotterInterfaceInterferometer(
+            image_path=paths.image_path, title_prefix=analysis.title_prefix
+        )
         PlotterInterface.interferometer(dataset=analysis.interferometer)
 
         galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
 
         PlotterInterface.galaxies(
-            galaxies=galaxies, grid=fit.grid, during_analysis=during_analysis
+            galaxies=galaxies, grid=fit.grids.uniform, during_analysis=during_analysis
         )
         PlotterInterface.galaxies_1d(
-            galaxies=galaxies, grid=fit.grid, during_analysis=during_analysis
+            galaxies=galaxies, grid=fit.grids.uniform, during_analysis=during_analysis
         )
 
         try:

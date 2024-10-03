@@ -34,6 +34,7 @@ class AnalysisInterferometer(AnalysisDataset):
         adapt_image_maker: Optional[AdaptImageMaker] = None,
         cosmology: LensingCosmology = Planck15(),
         settings_inversion: aa.SettingsInversion = None,
+        title_prefix: str = None,
     ):
         """
         Fits a galaxy model to an interferometer dataset via a non-linear search.
@@ -61,12 +62,16 @@ class AnalysisInterferometer(AnalysisDataset):
             The Cosmology assumed for this analysis.
         settings_inversion
             Settings controlling how an inversion is fitted, for example which linear algebra formalism is used.
+        title_prefix
+            A string that is added before the title of all figures output by visualization, for example to
+            put the name of the dataset and galaxy in the title.
         """
         super().__init__(
             dataset=dataset,
             adapt_image_maker=adapt_image_maker,
             cosmology=cosmology,
             settings_inversion=settings_inversion,
+            title_prefix=title_prefix,
         )
 
     @property
@@ -199,7 +204,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
     def save_attributes(self, paths: af.DirectoryPaths):
         """
-         Before the model-fit begins, this routine saves attributes of the `Analysis` object to the `pickles` folder
+         Before the model-fit begins, this routine saves attributes of the `Analysis` object to the `files` folder
          such that they can be loaded after the analysis using PyAutoFit's database and aggregator tools.
 
          For this analysis, it uses the `AnalysisDataset` object's method to output the following:

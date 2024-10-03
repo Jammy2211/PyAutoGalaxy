@@ -1,14 +1,4 @@
 SersicCore:
-  alpha:
-    type: Uniform
-    lower_limit: 4.5
-    upper_limit: 5.5
-    width_modifier:
-      type: Absolute
-      value: 3.0
-    gaussian_limits:
-      lower: 4.5
-      upper: 5.5
   centre_0:
     type: Gaussian
     mean: 0.0
@@ -65,28 +55,8 @@ SersicCore:
       type: Absolute
       value: 0.2
     gaussian_limits:
-      lower: '-1.0'
-      upper: '1.0'
-  gamma:
-    type: Uniform
-    lower_limit: 0.0
-    upper_limit: 0.5
-    width_modifier:
-      type: Absolute
-      value: 0.1
-    gaussian_limits:
-      lower: 0.0
-      upper: inf
-  radius_break:
-    type: Uniform
-    lower_limit: 0.0
-    upper_limit: 10.0
-    width_modifier:
-      type: Absolute
-      value: 0.1
-    gaussian_limits:
-      lower: 0.0
-      upper: inf
+      lower: -1.0
+      upper: 1.0
   sersic_index:
     type: Uniform
     lower_limit: 0.8
@@ -97,17 +67,16 @@ SersicCore:
     gaussian_limits:
       lower: 0.8
       upper: 5.0
-SersicSphCore:
   alpha:
-    type: Uniform
-    lower_limit: 4.5
-    upper_limit: 5.5
-    width_modifier:
-      type: Absolute
-      value: 3.0
-    gaussian_limits:
-      lower: 4.5
-      upper: 5.5
+    type: Constant
+    value: 3.0
+  gamma:
+    type: Constant
+    value: 0.25
+  radius_break:
+    type: Constant
+    value: 0.025
+SersicCoreSph:
   centre_0:
     type: Gaussian
     mean: 0.0
@@ -142,26 +111,6 @@ SersicSphCore:
     gaussian_limits:
       lower: 0.0
       upper: inf
-  gamma:
-    type: Uniform
-    lower_limit: 0.0
-    upper_limit: 0.5
-    width_modifier:
-      type: Absolute
-      value: 0.1
-    gaussian_limits:
-      lower: 0.0
-      upper: inf
-  radius_break:
-    type: Uniform
-    lower_limit: 0.0
-    upper_limit: 10.0
-    width_modifier:
-      type: Absolute
-      value: 0.1
-    gaussian_limits:
-      lower: 0.0
-      upper: inf
   sersic_index:
     type: Uniform
     lower_limit: 0.8
@@ -172,3 +121,12 @@ SersicSphCore:
     gaussian_limits:
       lower: 0.8
       upper: 5.0
+  alpha:
+    type: Constant
+    value: 3.0
+  gamma:
+    type: Constant
+    value: 0.25
+  radius_break:
+    type: Constant
+    value: 0.025

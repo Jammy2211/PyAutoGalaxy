@@ -27,7 +27,9 @@ class VisualizerImaging(af.Visualizer):
             the imaging data.
         """
 
-        plotter = PlotterInterfaceImaging(image_path=paths.image_path)
+        plotter = PlotterInterfaceImaging(
+            image_path=paths.image_path, title_prefix=analysis.title_prefix
+        )
 
         plotter.imaging(dataset=analysis.dataset)
 
@@ -72,7 +74,9 @@ class VisualizerImaging(af.Visualizer):
         """
         fit = analysis.fit_from(instance=instance)
 
-        plotter = PlotterInterfaceImaging(image_path=paths.image_path)
+        plotter = PlotterInterfaceImaging(
+            image_path=paths.image_path, title_prefix=analysis.title_prefix
+        )
         plotter.imaging(dataset=analysis.dataset)
 
         try:
@@ -83,10 +87,10 @@ class VisualizerImaging(af.Visualizer):
         galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
 
         plotter.galaxies(
-            galaxies=galaxies, grid=fit.grid, during_analysis=during_analysis
+            galaxies=galaxies, grid=fit.grids.uniform, during_analysis=during_analysis
         )
         plotter.galaxies_1d(
-            galaxies=galaxies, grid=fit.grid, during_analysis=during_analysis
+            galaxies=galaxies, grid=fit.grids.uniform, during_analysis=during_analysis
         )
         if fit.inversion is not None:
             plotter.inversion(inversion=fit.inversion, during_analysis=during_analysis)

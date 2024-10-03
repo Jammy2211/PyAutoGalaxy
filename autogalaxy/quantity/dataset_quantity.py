@@ -14,7 +14,7 @@ class DatasetQuantity(AbstractDataset):
         self,
         data: Union[aa.Array2D, aa.VectorYX2D],
         noise_map: Union[aa.Array2D, aa.VectorYX2D],
-        over_sampling: Optional[aa.OverSamplingIterate] = None,
+        over_sampling: Optional[aa.OverSamplingDataset] = aa.OverSamplingDataset(),
     ):
         """
         A quantity dataset, which represents a derived quantity of a light profile, mass profile, galaxy or galaxies
@@ -38,7 +38,7 @@ class DatasetQuantity(AbstractDataset):
         - `grid`: A grids of (y,x) coordinates which align with the image pixels, whereby each coordinate corresponds to
         the centre of an image pixel. This may be used in fits to calculate the model image of the imaging data.
 
-        - `grid_pixelization`: A grid of (y,x) coordinates which align with the pixels of a pixelization. This grid
+        - `grids.pixelization`: A grid of (y,x) coordinates which align with the pixels of a pixelization. This grid
         is specifically used for pixelizations computed via the `invserion` module, which often use different
         oversampling and sub-size values to the grid above.
 
@@ -58,11 +58,9 @@ class DatasetQuantity(AbstractDataset):
             chi-squared in a fit, which is often chosen in an arbitrary way for a quantity dataset given the quantities
             are not observed using real astronomical instruments.
         over_sampling
-            How over sampling is performed for the grid which performs calculations not associated with a pixelization.
-            In PyAutoGalaxy and PyAutoLens this is light profile calculations.
-        over_sampling_pixelization
-            How over sampling is performed for the grid which is associated with a pixelization, which is therefore
-            passed into the calculations performed in the `inversion` module.
+            The over sampling schemes which divide the grids into sub grids of smaller pixels within their host image
+            pixels when using the grid to evaluate a function (e.g. images) to better approximate the 2D line integral
+            This class controls over sampling for all the different grids (e.g. `grid`, `grids.pixelization).
         """
         if data.shape != noise_map.shape:
             if data.shape[0:-1] == noise_map.shape[0:]:

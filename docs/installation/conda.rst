@@ -17,12 +17,11 @@ First, update conda:
 
 Next, create a conda environment (we name this ``autogalaxy`` to signify it is for the **PyAutoGalaxy** install):
 
-The command below creates this environment with some of the bigger package requirements, the rest will be installed
-via pip:
+The command below creates this environment with Python 3.11, the most recent supported version of Python:
 
 .. code-block:: bash
 
-    conda create -n autogalaxy astropy scikit-image scikit-learn scipy
+    conda create -n autogalaxy python=3.11
 
 Activate the conda environment (you will have to do this every time you want to run **PyAutoGalaxy**):
 
@@ -36,12 +35,12 @@ We upgrade pip to ensure certain libraries install:
 
     pip install --upgrade pip
 
-The latest version of **PyAutoGalaxy** is installed via pip as follows (specifying the version as shown below ensures
-the installation has clean dependencies):
+The latest version of **PyAutoGalaxy** is installed via pip as follows (the command ``--no-cache-dir`` prevents
+caching issues impacting the installation):
 
 .. code-block:: bash
 
-    pip install autogalaxy
+    pip install autogalaxy --no-cache-dir
 
 You may get warnings which state something like:
 
@@ -67,7 +66,7 @@ You can install numba via the following command:
 
 .. code-block:: bash
 
-    pip install numba
+    pip install numba --no-cache-dir
 
 Some users have experienced difficulties installing numba, which is why it is an optional library. If your
 installation is not successful, you can use **PyAutoGalaxy** without it installed for now, to familiarize yourself
