@@ -68,4 +68,3 @@ def adapt_images_from(
         adapt_images_list.append(adapt_images)
 
     return adapt_images_list
-
