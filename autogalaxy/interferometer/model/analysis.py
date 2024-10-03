@@ -150,6 +150,46 @@ class AnalysisInterferometer(AnalysisDataset):
         ) as e:
             raise exc.FitException from e
 
+    def fit_from(
+        self,
+        instance: af.ModelInstance,
+        run_time_dict: Optional[Dict] = None,
+    ) -> FitInterferometer:
+        """
+        Given a model instance create a `FitInterferometer` object.
+
+        This function is used in the `log_likelihood_function` to fit the model to the interferometer data and compute
+        the log likelihood.
+
+        Parameters
+        ----------
+        instance
+            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
+            via a non-linear search).
+        preload_overwrite
+            If a `Preload` object is input this is used instead of the preloads stored as an attribute in the analysis.
+        run_time_dict
+            A dictionary which times functions called to fit the model to data, for profiling.
+
+        Returns
+        -------
+        FitInterferometer
+            The fit of the galaxies to the interferometer dataset, which includes the log likelihood.
+        """
+        galaxies = self.galaxies_via_instance_from(
+            instance=instance, run_time_dict=run_time_dict
+        )
+
+        adapt_images = self.adapt_images_via_instance_from(instance=instance)
+
+        return FitInterferometer(
+            dataset=self.dataset,
+            galaxies=galaxies,
+            adapt_images=adapt_images,
+            settings_inversion=self.settings_inversion,
+            run_time_dict=run_time_dict,
+        )
+
     def save_attributes(self, paths: af.DirectoryPaths):
         """
          Before the model-fit begins, this routine saves attributes of the `Analysis` object to the `files` folder

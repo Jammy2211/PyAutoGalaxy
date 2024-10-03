@@ -146,6 +146,50 @@ class AnalysisImaging(AnalysisDataset):
         ) as e:
             raise exc.FitException from e
 
+    def fit_from(
+        self,
+        instance: af.ModelInstance,
+        run_time_dict: Optional[Dict] = None,
+    ) -> FitImaging:
+        """
+        Given a model instance create a `FitImaging` object.
+
+        This function is used in the `log_likelihood_function` to fit the model to the imaging data and compute the
+        log likelihood.
+
+        Parameters
+        ----------
+        instance
+            An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
+            via a non-linear search).
+        preload_overwrite
+            If a `Preload` object is input this is used instead of the preloads stored as an attribute in the analysis.
+        run_time_dict
+            A dictionary which times functions called to fit the model to data, for profiling.
+
+        Returns
+        -------
+        FitImaging
+            The fit of the galaxies to the imaging dataset, which includes the log likelihood.
+        """
+
+        galaxies = self.galaxies_via_instance_from(
+            instance=instance, run_time_dict=run_time_dict
+        )
+
+        dataset_model = self.dataset_model_via_instance_from(instance=instance)
+
+        adapt_images = self.adapt_images_via_instance_from(instance=instance)
+
+        return FitImaging(
+            dataset=self.dataset,
+            galaxies=galaxies,
+            dataset_model=dataset_model,
+            adapt_images=adapt_images,
+            settings_inversion=self.settings_inversion,
+            run_time_dict=run_time_dict,
+        )
+
     def save_attributes(self, paths: af.DirectoryPaths):
         """
          Before the non-linear search begins, this routine saves attributes of the `Analysis` object to the `files`
