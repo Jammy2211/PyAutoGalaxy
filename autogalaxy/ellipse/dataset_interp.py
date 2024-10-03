@@ -45,6 +45,19 @@ class DatasetInterp:
         return (x, y)
 
     @cached_property
+    def mask_interp(self) -> interpolate.RegularGridInterpolator:
+        """
+        Returns a 2D interpolation of the mask, which is used to determine whether inteprolated values use a masked
+        pixel for the interpolation and thus should not be included in a fit.
+        """
+        return interpolate.RegularGridInterpolator(
+            points=self.points_interp,
+            values=np.float64(self.dataset.data.mask),
+            bounds_error=False,
+            fill_value=0.0,
+        )
+
+    @cached_property
     def data_interp(self) -> interpolate.RegularGridInterpolator:
         """
         Returns a 2D interpolation of the data, which is used to evaluate the data at any point in 2D space.

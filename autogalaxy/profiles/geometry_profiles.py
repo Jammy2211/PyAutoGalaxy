@@ -311,7 +311,8 @@ class EllProfile(SphProfile):
         """
         return np.sqrt(
             np.add(
-                np.square(grid.array[:, 1]), np.square(np.divide(grid.array[:, 0], self.axis_ratio))
+                np.square(grid.array[:, 1]),
+                np.square(np.divide(grid.array[:, 0], self.axis_ratio)),
             )
         )
 
@@ -336,7 +337,7 @@ class EllProfile(SphProfile):
 
         grid_radii = self.elliptical_radii_grid_from(grid=grid, **kwargs).array
 
-        return np.multiply(np.sqrt(self.axis_ratio), grid_radii)#.view(np.ndarray)
+        return np.multiply(np.sqrt(self.axis_ratio), grid_radii)  # .view(np.ndarray)
 
     @aa.grid_dec.to_grid
     def transformed_to_reference_frame_grid_from(

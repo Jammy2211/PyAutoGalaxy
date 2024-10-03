@@ -65,16 +65,13 @@ class MassProfileMGE:
         """
 
         i = np.arange(1, p, 1)
-        kesi_last = 1/2**p
+        kesi_last = 1 / 2**p
         k = kesi_last + np.cumsum(np.cumprod((p + 1 - i) / i) * kesi_last)
-        
-        kesi_list = np.hstack([
-            np.array([0.5]),
-            np.ones(p),
-            k[::-1],
-            np.array([kesi_last])
-        ])
-        coef = (-1)**np.arange(0, 2 * p + 1, 1)
+
+        kesi_list = np.hstack(
+            [np.array([0.5]), np.ones(p), k[::-1], np.array([kesi_last])]
+        )
+        coef = (-1) ** np.arange(0, 2 * p + 1, 1)
         eta_list = coef * 2.0 * np.sqrt(2.0 * np.pi) * 10 ** (p / 3.0) * kesi_list
         return eta_list
 
@@ -111,7 +108,9 @@ class MassProfileMGE:
         sigma_list = np.exp(log_sigmas)
 
         amplitude_list = np.zeros(func_gaussians)
-        f_sigma = np.sum(etas * np.real(func(sigma_list.reshape(-1, 1) * kesis)), axis=1)
+        f_sigma = np.sum(
+            etas * np.real(func(sigma_list.reshape(-1, 1) * kesis)), axis=1
+        )
         amplitude_list = f_sigma * d_log_sigma / np.sqrt(2.0 * np.pi)
         amplitude_list = amplitude_list.at[0].multiply(0.5)
         amplitude_list = amplitude_list.at[-1].multiply(0.5)
@@ -120,7 +119,9 @@ class MassProfileMGE:
     def convergence_2d_via_mge_from(self, grid_radii):
         raise NotImplementedError()
 
-    def _convergence_2d_via_mge_from(self, grid_radii, func_terms=28, func_gaussians=20):
+    def _convergence_2d_via_mge_from(
+        self, grid_radii, func_terms=28, func_gaussians=20
+    ):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -129,19 +130,25 @@ class MassProfileMGE:
             The grid of (y,x) arc-second coordinates the convergence is computed on.
 
         """
-        amps, sigmas = self.decompose_convergence_via_mge(func_terms=func_terms, func_gaussians=func_gaussians)
+        amps, sigmas = self.decompose_convergence_via_mge(
+            func_terms=func_terms, func_gaussians=func_gaussians
+        )
 
         convergence = 0.0
 
         inv_sigma_ = 1 / sigmas.reshape((-1,) + (1,) * grid_radii.array.ndim)
         amps_ = amps.reshape((-1,) + (1,) * grid_radii.array.ndim)
-        convergence = amps_ * np.exp(-0.5 * (grid_radii.array * inv_sigma_)**2)
+        convergence = amps_ * np.exp(-0.5 * (grid_radii.array * inv_sigma_) ** 2)
         return convergence.sum(axis=0)
 
-    def _deflections_2d_via_mge_from(self, grid, sigmas_factor=1.0, func_terms=28, func_gaussians=20):
+    def _deflections_2d_via_mge_from(
+        self, grid, sigmas_factor=1.0, func_terms=28, func_gaussians=20
+    ):
         axis_ratio = np.min(np.array([self.axis_ratio, 0.9999]))
 
-        amps, sigmas = self.decompose_convergence_via_mge(func_terms=func_terms, func_gaussians=func_gaussians)
+        amps, sigmas = self.decompose_convergence_via_mge(
+            func_terms=func_terms, func_gaussians=func_gaussians
+        )
         sigmas *= sigmas_factor
 
         angle = self.zeta_from(

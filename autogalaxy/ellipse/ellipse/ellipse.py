@@ -115,6 +115,9 @@ class Ellipse(EllProfile):
 
         They are subtracted by the `angle` of the ellipse to give the angles from the major-axis of the ellipse.
 
+        The final angle, which is 2.0 * np.pi radians, is a repeat of the first angle of zero radians, therefore
+        the final angle is removed.
+
         The number of angles computed is the minimum of 500 and the integer of the circular radius of the ellipse.
         This value is chosen to ensure that the number of angles computed matches the number of pixels in the
         data that the ellipse is being fitted to.
@@ -130,7 +133,7 @@ class Ellipse(EllProfile):
         """
         total_points = self.total_points_from(pixel_scale)
 
-        return np.linspace(0.0, 2.0 * np.pi, total_points)
+        return np.linspace(0.0, 2.0 * np.pi, total_points)[:-1]
 
     def ellipse_radii_from_major_axis_from(self, pixel_scale: float) -> np.ndarray:
         """
