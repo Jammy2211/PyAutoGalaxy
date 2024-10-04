@@ -182,7 +182,7 @@ class PlotterInterfaceImaging(PlotterInterface):
         def should_plot(name):
             return plot_setting(section=["dataset", "imaging"], name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="dataset")
+        mat_plot_2d = self.mat_plot_2d_from(subfolders="dataset_combined")
 
         dataset_plotter_list = [
             aplt.ImagingPlotter(
