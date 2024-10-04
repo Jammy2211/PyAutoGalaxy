@@ -144,7 +144,7 @@ class VisualizerImaging(af.Visualizer):
         Performs visualization during the non-linear search of information which is shared across all analyses on a
         single matplotlib figure.
 
-        This function outputs visuals of all information which varies during the fit, for example the modle-fit to
+        This function outputs visuals of all information which varies during the fit, for example the model-fit to
         the dataset being fitted.
 
         Parameters

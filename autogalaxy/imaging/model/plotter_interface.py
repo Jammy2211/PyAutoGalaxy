@@ -218,7 +218,7 @@ class PlotterInterfaceImaging(PlotterInterface):
         Output visualization of all `FitImaging` objects in a summed combined analysis, typically during or after a
         model-fit is performed.
 
-        Images are output to the `image` folder of the `image_path` in a subfolder called `fit_combined`. When used
+        Images are output to the `image` folder of the `image_path` in a subfolder called `combined`. When used
         with a non-linear search the `image_path` is the output folder of the non-linear search.
         `.
         Visualization includes individual images of attributes of each fit (e.g. data, normalized residual-map) on
@@ -254,7 +254,6 @@ class PlotterInterfaceImaging(PlotterInterface):
         if should_plot("subplot_fit"):
 
             def make_subplot_fit(filename_suffix):
-
                 multi_plotter.subplot_of_figures_multi(
                     func_name_list=["figures_2d"] * 4,
                     figure_name_list=[
