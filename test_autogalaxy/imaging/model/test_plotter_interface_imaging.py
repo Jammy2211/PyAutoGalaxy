@@ -39,7 +39,7 @@ def test__imaging_combined(imaging_7x7, plot_path, plot_patch):
 
     visualizer.imaging_combined(dataset_list=[imaging_7x7, imaging_7x7])
 
-    plot_path = path.join(plot_path, "dataset_combined")
+    plot_path = path.join(plot_path, "combined")
 
     assert path.join(plot_path, "subplot_dataset.png") in plot_patch.paths
 

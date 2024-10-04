@@ -90,10 +90,10 @@ class AnalysisInterferometer(AnalysisDataset):
         Parameters
         ----------
         paths
-            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            The paths object which manages all paths, e.g. where the non-linear search outputs are stored,
             visualization and the pickled objects used by the aggregator output by this function.
         model
-            The PyAutoFit model object, which includes model components representing the galaxies that are fitted to
+            The model object, which includes model components representing the galaxies that are fitted to
             the imaging data.
         """
 
@@ -229,7 +229,7 @@ class AnalysisInterferometer(AnalysisDataset):
          Parameters
          ----------
          paths
-             The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
+             The paths object which manages all paths, e.g. where the non-linear search outputs are stored, visualization,
              and the pickled objects used by the aggregator output by this function.
         """
         super().save_attributes(paths=paths)
@@ -268,7 +268,7 @@ class AnalysisInterferometer(AnalysisDataset):
             An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
             via a non-linear search).
         paths
-            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            The paths object which manages all paths, e.g. where the non-linear search outputs are stored,
             visualization and the pickled objects used by the aggregator output by this function.
 
         Returns
