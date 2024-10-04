@@ -1,4 +1,5 @@
 from os import path
+from typing import List
 
 import autoarray as aa
 import autoarray.plot as aplt
@@ -13,21 +14,21 @@ from autogalaxy.analysis.plotter_interface import plot_setting
 class PlotterInterfaceImaging(PlotterInterface):
     def imaging(self, dataset: aa.Imaging):
         """
-        Visualizes an `Imaging` dataset object.
+        Output visualization of an `Imaging` dataset, typically before a model-fit is performed.
 
-        Images are output to the `image` folder of the `image_path` in a subfolder called `imaging`. When used with
-        a non-linear search the `image_path` points to the search's results folder.
+        Images are output to the `image` folder of the `image_path` in a subfolder called `dataset`. When used with
+        a non-linear search the `image_path` is the output folder of the non-linear search.
         `.
         Visualization includes individual images of attributes of the dataset (e.g. the image, noise map, PSF) and a
         subplot of all these attributes on the same figure.
 
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
-        [dataset] header.
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
+        the `dataset` header.
 
         Parameters
         ----------
         dataset
-            The imaging dataset whose attributes are visualized.
+            The imaging dataset which is visualized.
         """
 
         def should_plot(name):
@@ -156,4 +157,58 @@ class PlotterInterfaceImaging(PlotterInterface):
             fit_plotter.figures_2d_of_galaxies(
                 subtracted_image=True,
                 model_image=True,
+            )
+
+    def imaging_combined(self, dataset_list: List[aa.Imaging]):
+        """
+        Output visualization of all `Imaging` datasets in a summed combined analysis, typically before a model-fit
+        is performed.
+
+        Images are output to the `image` folder of the `image_path` in a subfolder called `dataset`. When used with
+        a non-linear search the `image_path` is the output folder of the non-linear search.
+        `.
+        Visualization includes individual images of attributes of each dataset (e.g. the image, noise map, PSF) on
+        a single subplot, such that the full suite of multiple datasets can be viewed on the same figure.
+
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
+        the `dataset` header.
+
+        Parameters
+        ----------
+        dataset
+            The imaging dataset which is visualized.
+        """
+
+        def should_plot(name):
+            return plot_setting(section=["dataset", "imaging"], name=name)
+
+        mat_plot_2d = self.mat_plot_2d_from(subfolders="dataset")
+
+        dataset_plotter_list = [
+            aplt.ImagingPlotter(
+                dataset=dataset, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+            )
+            for dataset in dataset_list
+        ]
+
+        subplot_shape = (len(dataset_list), 4)
+
+        multi_plotter = aplt.MultiFigurePlotter(
+            plotter_list=dataset_plotter_list, subplot_shape=subplot_shape
+        )
+
+        if should_plot("subplot_dataset"):
+            multi_plotter.subplot_of_figures_multi(
+                func_name_list=["figures_2d"] * 4,
+                figure_name_list=["data", "noise_map", "signal_to_noise_map", "psf"],
+                filename_suffix="dataset",
+            )
+
+            for plotter in multi_plotter.plotter_list:
+                plotter.mat_plot_2d.use_log10 = True
+
+            multi_plotter.subplot_of_figures_multi(
+                func_name_list=["figures_2d"] * 4,
+                figure_name_list=["data", "noise_map", "signal_to_noise_map", "psf"],
+                filename_suffix="dataset_log10",
             )
