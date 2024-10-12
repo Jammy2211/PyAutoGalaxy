@@ -165,7 +165,10 @@ class VisualizerImaging(af.Visualizer):
             image_path=paths.image_path, title_prefix=analyses[0].title_prefix
         )
 
-        fit_list = [analysis.fit_from(instance=instance) for analysis in analyses]
+        fit_list = [
+            analysis.fit_from(instance=single_instance)
+            for analysis, single_instance in zip(analyses, instance)
+        ]
 
         plotter.fit_imaging_combined(
             fit_list=fit_list,
