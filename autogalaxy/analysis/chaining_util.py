@@ -230,18 +230,18 @@ def extra_galaxies_from(
         extra_galaxies = result.instance.extra_galaxies.as_model((LightProfile,))
 
         for extra_galaxy_index in range(len(result.instance.extra_galaxies)):
-            if extra_galaxies[extra_galaxy_index].light is not None:
+            if extra_galaxies[extra_galaxy_index].bulge is not None:
                 extra_galaxies[
                     extra_galaxy_index
-                ].light.centre = result.instance.extra_galaxies[
+                ].bulge.centre = result.instance.extra_galaxies[
                     extra_galaxy_index
-                ].light.centre
+                ].bulge.centre
                 if free_centre:
                     extra_galaxies[
                         extra_galaxy_index
-                    ].light.centre = result.model.extra_galaxies[
+                    ].bulge.centre = result.model.extra_galaxies[
                         extra_galaxy_index
-                    ].light.centre
+                    ].bulge.centre
 
     else:
         extra_galaxies = result.instance.extra_galaxies.as_model(())
