@@ -14,7 +14,7 @@ def test__galaxies_via_instance(masked_imaging_7x7):
     clump = ag.Galaxy(redshift=0.5, light=ag.lp.Sersic(intensity=0.2))
 
     model = af.Collection(
-        galaxies=af.Collection(galaxy=galaxy), clumps=af.Collection(clump_0=clump)
+        galaxies=af.Collection(galaxy=galaxy), clumps=af.Collection(extra_galaxy_0=clump)
     )
 
     analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)

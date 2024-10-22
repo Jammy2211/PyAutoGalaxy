@@ -14,7 +14,7 @@ The chapter contains the following tutorials:
 - Using grids of (y,x) coordinates with galaxies made up of light profiles.
 
 `Tutorial 2: Data <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=notebooks/howtogalaxy/chapter_1_introduction/tutorial_2_data.ipynb>`_
-- Loading and inspecting telescope imaging data of a galaxy.
+- Simulating and inspecting telescope imaging data of a galaxy.
 
 `Tutorial 3: Fitting <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=notebooks/howtogalaxy/chapter_1_introduction/tutorial_3_fitting.ipynb>`_
 - Fitting data with a galaxy model.

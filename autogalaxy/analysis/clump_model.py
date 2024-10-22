@@ -19,7 +19,7 @@ class ClumpModel:
         unfix_centres: bool = False,
     ):
         """
-        The clump API allows creates model components which model the light and mass of galaxies that are nearby the
+        The extra galaxies API allows creates model components which model the light and mass of galaxies that are nearby the
         main galaxy(s) of interest.
 
         The `ClumpModel` object handles the creation of these model components to streamline model composition with
@@ -172,7 +172,7 @@ class ClumpModel:
         dictionary of model `Galaxy` objects with fixed light and mass profile centres. Their redshifts use the
         input redshift.
 
-        The keys of this dictionary are numerically ordered as `clump_0`, `clump_2` etc.
+        The keys of this dictionary are numerically ordered as `extra_galaxy_0`, `extra_galaxy_2` etc.
         """
         clumps = {}
 

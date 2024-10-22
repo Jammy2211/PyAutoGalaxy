@@ -173,7 +173,7 @@ def clumps_from(
     free_centre: bool = False,
 ) -> af.Collection:
     """
-    The clump API models the light and / or mass of additional galaxies surrouding the main galaxy or strong lens
+    The extra galaxies API models the light and / or mass of additional galaxies surrouding the main galaxy or strong lens
     system.
 
     This function performs model composition of clumps for fits using the search chaining API. It makes it possible to

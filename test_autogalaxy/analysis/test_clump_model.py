@@ -11,10 +11,10 @@ def test__clumps():
 
     clumps = clump_model.clumps
 
-    assert clumps["clump_0"].redshift == 0.5
-    assert clumps["clump_0"].light.centre == (1.0, 1.0)
-    assert isinstance(clumps["clump_0"].light.intensity, af.LogUniformPrior)
-    assert clumps["clump_0"].mass == None
+    assert clumps["extra_galaxy_0"].redshift == 0.5
+    assert clumps["extra_galaxy_0"].light.centre == (1.0, 1.0)
+    assert isinstance(clumps["extra_galaxy_0"].light.intensity, af.LogUniformPrior)
+    assert clumps["extra_galaxy_0"].mass == None
 
     clump_model = ag.ClumpModel(
         redshift=0.5, centres=centres, mass_cls=ag.mp.IsothermalSph
@@ -22,10 +22,10 @@ def test__clumps():
 
     clumps = clump_model.clumps
 
-    assert clumps["clump_0"].redshift == 0.5
-    assert clumps["clump_0"].mass.centre == (1.0, 1.0)
-    assert isinstance(clumps["clump_0"].mass.einstein_radius, af.UniformPrior)
-    assert clumps["clump_0"].light == None
+    assert clumps["extra_galaxy_0"].redshift == 0.5
+    assert clumps["extra_galaxy_0"].mass.centre == (1.0, 1.0)
+    assert isinstance(clumps["extra_galaxy_0"].mass.einstein_radius, af.UniformPrior)
+    assert clumps["extra_galaxy_0"].light == None
 
     clump_model = ag.ClumpModel(
         redshift=0.5,
@@ -36,11 +36,11 @@ def test__clumps():
 
     clumps = clump_model.clumps
 
-    assert clumps["clump_0"].redshift == 0.5
-    assert clumps["clump_0"].light.centre == (1.0, 1.0)
-    assert clumps["clump_0"].mass.centre == (1.0, 1.0)
-    assert isinstance(clumps["clump_0"].light.intensity, af.LogUniformPrior)
-    assert isinstance(clumps["clump_0"].mass.einstein_radius, af.UniformPrior)
+    assert clumps["extra_galaxy_0"].redshift == 0.5
+    assert clumps["extra_galaxy_0"].light.centre == (1.0, 1.0)
+    assert clumps["extra_galaxy_0"].mass.centre == (1.0, 1.0)
+    assert isinstance(clumps["extra_galaxy_0"].light.intensity, af.LogUniformPrior)
+    assert isinstance(clumps["extra_galaxy_0"].mass.einstein_radius, af.UniformPrior)
 
 
 def test__clumps_light_only():
@@ -55,10 +55,10 @@ def test__clumps_light_only():
 
     clumps_light_only = clump_model.clumps_light_only
 
-    assert clumps_light_only["clump_0"].redshift == 0.5
-    assert clumps_light_only["clump_0"].light.centre == (1.0, 1.0)
-    assert isinstance(clumps_light_only["clump_0"].light.intensity, af.LogUniformPrior)
-    assert not hasattr(clumps_light_only["clump_0"], "mass")
+    assert clumps_light_only["extra_galaxy_0"].redshift == 0.5
+    assert clumps_light_only["extra_galaxy_0"].light.centre == (1.0, 1.0)
+    assert isinstance(clumps_light_only["extra_galaxy_0"].light.intensity, af.LogUniformPrior)
+    assert not hasattr(clumps_light_only["extra_galaxy_0"], "mass")
 
 
 def test__clumps_mass_only():
@@ -73,10 +73,10 @@ def test__clumps_mass_only():
 
     clumps_mass_only = clump_model.clumps_mass_only
 
-    assert clumps_mass_only["clump_0"].redshift == 0.5
-    assert clumps_mass_only["clump_0"].mass.centre == (1.0, 1.0)
-    assert isinstance(clumps_mass_only["clump_0"].mass.einstein_radius, af.UniformPrior)
-    assert not hasattr(clumps_mass_only["clump_0"], "light")
+    assert clumps_mass_only["extra_galaxy_0"].redshift == 0.5
+    assert clumps_mass_only["extra_galaxy_0"].mass.centre == (1.0, 1.0)
+    assert isinstance(clumps_mass_only["extra_galaxy_0"].mass.einstein_radius, af.UniformPrior)
+    assert not hasattr(clumps_mass_only["extra_galaxy_0"], "light")
 
 
 def test__einstein_radius_max():
@@ -91,9 +91,9 @@ def test__einstein_radius_max():
 
     clumps = clump_model.clumps
 
-    assert isinstance(clumps["clump_0"].mass.einstein_radius, af.UniformPrior)
-    assert clumps["clump_0"].mass.einstein_radius.upper_limit == 1.0
+    assert isinstance(clumps["extra_galaxy_0"].mass.einstein_radius, af.UniformPrior)
+    assert clumps["extra_galaxy_0"].mass.einstein_radius.upper_limit == 1.0
 
-    assert clumps["clump_0"].redshift == 0.5
-    assert clumps["clump_0"].mass.centre == (1.0, 1.0)
-    assert clumps["clump_0"].light == None
+    assert clumps["extra_galaxy_0"].redshift == 0.5
+    assert clumps["extra_galaxy_0"].mass.centre == (1.0, 1.0)
+    assert clumps["extra_galaxy_0"].light == None

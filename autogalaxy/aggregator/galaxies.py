@@ -41,14 +41,14 @@ def _galaxies_from(fit: af.Fit, instance: af.ModelInstance) -> List[Galaxy]:
     if instance is not None:
         galaxies = instance.galaxies
 
-        if hasattr(instance, "clumps"):
-            galaxies = galaxies + fit.instance.clumps
+        if hasattr(instance, "extra_galaxies"):
+            galaxies = galaxies + fit.instance.extra_galaxies
 
     else:
         galaxies = fit.instance.galaxies
 
-        if hasattr(fit.instance, "clumps"):
-            galaxies = galaxies + fit.instance.clumps
+        if hasattr(fit.instance, "extra_galaxies"):
+            galaxies = galaxies + fit.instance.extra_galaxies
 
     if fit.children is not None:
         if len(fit.children) > 0:
