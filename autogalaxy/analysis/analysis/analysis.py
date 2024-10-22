@@ -57,10 +57,11 @@ class Analysis(af.Analysis):
         A list of galaxies that is used to then fit the dataset.
         """
         if hasattr(instance, "extra_galaxies"):
-            return Galaxies(
-                galaxies=instance.galaxies + instance.extra_galaxies,
-                run_time_dict=run_time_dict,
-            )
+            if getattr(instance, "extra_galaxies", None) is not None:
+                return Galaxies(
+                    galaxies=instance.galaxies + instance.extra_galaxies,
+                    run_time_dict=run_time_dict
+                )
 
         return Galaxies(galaxies=instance.galaxies, run_time_dict=run_time_dict)
 
