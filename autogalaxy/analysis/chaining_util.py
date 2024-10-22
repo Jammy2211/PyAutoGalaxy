@@ -204,6 +204,9 @@ def extra_galaxies_from(
 
     # extra_galaxies = result.instance.extra_galaxies.as_model((LightProfile, mp.MassProfile,), fixed="centre", prior_pass=True)
 
+    if result.instance.extra_galaxies is None:
+        return None
+
     if mass_as_model:
         extra_galaxies = result.instance.extra_galaxies.as_model((MassProfile,))
 
