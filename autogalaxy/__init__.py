@@ -111,8 +111,6 @@ from . import cosmology as cosmo
 from .gui.clicker import Clicker
 from .gui.scribbler import Scribbler
 
-from .analysis.clump_model import ClumpModel
-
 from autoconf import conf
 
 conf.instance.register(__file__)
