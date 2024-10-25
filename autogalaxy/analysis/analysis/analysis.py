@@ -42,8 +42,8 @@ class Analysis(af.Analysis):
         """
         Create a list of galaxies from a model instance, which is used to fit the dataset.
 
-        The instance may only contain galaxies, in which case this function is redundant. However, if extra galaxies
-        are included, the instance will contain both galaxies and extra galaxies, and they should be added to create
+        The instance may only contain galaxies, in which case this function is redundant. However, if the clumns
+        API is being used, the instance will contain both galaxies and clumps, and they should be added to create
         the single list of galaxies used to fit the dataset.
 
         Parameters
@@ -56,12 +56,11 @@ class Analysis(af.Analysis):
         -------
         A list of galaxies that is used to then fit the dataset.
         """
-        if hasattr(instance, "extra_galaxies"):
-            if getattr(instance, "extra_galaxies", None) is not None:
-                return Galaxies(
-                    galaxies=instance.galaxies + instance.extra_galaxies,
-                    run_time_dict=run_time_dict
-                )
+        if hasattr(instance, "clumps"):
+            return Galaxies(
+                galaxies=instance.galaxies + instance.clumps,
+                run_time_dict=run_time_dict,
+            )
 
         return Galaxies(galaxies=instance.galaxies, run_time_dict=run_time_dict)
 
@@ -148,7 +147,7 @@ class Analysis(af.Analysis):
             An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
             via a non-linear search).
         paths
-            The paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
             visualization and the pickled objects used by the aggregator output by this function.
 
         Returns
@@ -239,7 +238,7 @@ class Analysis(af.Analysis):
         Parameters
         ----------
         paths
-            The paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
             visualization and the pickled objects used by the aggregator output by this function.
         run_time_dict
             A dictionary containing the profiling times of the functions called by the `log_likelihood_function`.

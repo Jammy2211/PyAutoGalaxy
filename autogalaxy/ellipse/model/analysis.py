@@ -181,7 +181,7 @@ class AnalysisEllipse(af.Analysis):
          Parameters
          ----------
          paths
-             The paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+             The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
              visualization, and the pickled objects used by the aggregator output by this function.
         """
         paths.save_fits(
@@ -226,7 +226,7 @@ class AnalysisEllipse(af.Analysis):
             An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
             via a non-linear search).
         paths
-            The paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            The PyAutoFit paths object which manages all paths, e.g. where the non-linear search outputs are stored,
             visualization and the pickled objects used by the aggregator output by this function.
 
         Returns
