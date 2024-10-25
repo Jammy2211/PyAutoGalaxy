@@ -9,7 +9,6 @@ from autoarray.exc import PixelizationException
 
 from autogalaxy.analysis.adapt_images.adapt_image_maker import AdaptImageMaker
 from autogalaxy.analysis.analysis.dataset import AnalysisDataset
-from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.imaging.model.result import ResultImaging
@@ -94,9 +93,6 @@ class AnalysisImaging(AnalysisDataset):
 
         super().modify_before_fit(paths=paths, model=model)
 
-        if not paths.is_complete:
-            self.set_preloads(paths=paths, model=model)
-
         return self
 
     def log_likelihood_function(self, instance: af.ModelInstance) -> float:
@@ -153,7 +149,6 @@ class AnalysisImaging(AnalysisDataset):
     def fit_from(
         self,
         instance: af.ModelInstance,
-        preload_overwrite: Optional[Preloads] = None,
         run_time_dict: Optional[Dict] = None,
     ) -> FitImaging:
         """
@@ -186,15 +181,12 @@ class AnalysisImaging(AnalysisDataset):
 
         adapt_images = self.adapt_images_via_instance_from(instance=instance)
 
-        preloads = self.preloads if preload_overwrite is None else preload_overwrite
-
         return FitImaging(
             dataset=self.dataset,
             galaxies=galaxies,
             dataset_model=dataset_model,
             adapt_images=adapt_images,
             settings_inversion=self.settings_inversion,
-            preloads=preloads,
             run_time_dict=run_time_dict,
         )
 
@@ -253,7 +245,7 @@ class AnalysisImaging(AnalysisDataset):
         An `info_dict` is also created which stores information on aspects of the model and dataset that dictate
         run times, so the profiled times can be interpreted with this context.
 
-        The results of this profiling are then output to hard-disk in the `preloads` folder of the model-fit results,
+        The results of this profiling are then output to hard-disk in the `profiling` folder of the model-fit results,
         which they can be inspected to ensure run-times are as expected.
 
         Parameters
