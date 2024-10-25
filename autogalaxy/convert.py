@@ -1,6 +1,9 @@
 from astropy import units
-from autofit.jax_wrapper import numpy as np
+from autofit.jax_wrapper import numpy as np, use_jax
 from typing import Tuple
+
+if use_jax:
+    import jax
 
 
 def ell_comps_from(axis_ratio: float, angle: float) -> Tuple[float, float]:
@@ -62,12 +65,23 @@ def axis_ratio_and_angle_from(ell_comps: Tuple[float, float]) -> Tuple[float, fl
     angle = np.arctan2(ell_comps[0], ell_comps[1]) / 2
     angle *= 180.0 / np.pi
 
-    if abs(angle) > 45 and angle < 0:
-        angle += 180
+    if use_jax:
+        angle = jax.lax.select(
+            angle < -45,
+            angle + 180,
+            angle
+        )
+    else:
+        if abs(angle) > 45 and angle < 0:
+            angle += 180
 
     fac = np.sqrt(ell_comps[1] ** 2 + ell_comps[0] ** 2)
-    if fac > 0.999:
-        fac = 0.999  # avoid unphysical solution
+    if use_jax:
+        fac = jax.lax.min(fac, 0.999)
+    else:
+        fac = min(fac, 0.999)
+    # if fac > 0.999:
+    #     fac = 0.999  # avoid unphysical solution
     # if fac > 1: print('unphysical e1,e2')
     axis_ratio = (1 - fac) / (1 + fac)
     return axis_ratio, angle
