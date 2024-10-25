@@ -1,8 +1,6 @@
 import jax.numpy as np
-import jax
-import numpy as base_np
 
-from .jax_utils import w_f_approx, all_comb
+from .jax_utils import w_f_approx
 
 
 class MassProfileMGE:
@@ -67,13 +65,17 @@ class MassProfileMGE:
         i = np.arange(1, p, 1)
         kesi_last = 1 / 2**p
         k = kesi_last + np.cumsum(np.cumprod((p + 1 - i) / i) * kesi_last)
-
-        kesi_list = np.hstack(
-            [np.array([0.5]), np.ones(p), k[::-1], np.array([kesi_last])]
-        )
-        coef = (-1) ** np.arange(0, 2 * p + 1, 1)
-        eta_list = coef * 2.0 * np.sqrt(2.0 * np.pi) * 10 ** (p / 3.0) * kesi_list
-        return eta_list
+        
+        kesi_list = np.hstack([
+            np.array([0.5]),
+            np.ones(p),
+            k[::-1],
+            np.array([kesi_last])
+        ])
+        coef = (-1)**np.arange(0, 2 * p + 1, 1)
+        eta_const = 2.0 * np.sqrt(2.0 * np.pi) * 10 ** (p / 3.0)
+        eta_list = coef * kesi_list
+        return eta_const, eta_list
 
     def decompose_convergence_via_mge(self):
         raise NotImplementedError()
@@ -99,7 +101,7 @@ class MassProfileMGE:
         """
 
         kesis = self.kesi(func_terms)  # kesi in Eq.(6) of 1906.08263
-        etas = self.eta(func_terms)  # eta in Eqr.(6) of 1906.08263
+        eta_constant, eta_n = self.eta(func_terms)  # eta in Eqr.(6) of 1906.08263
 
         # sigma is sampled from logspace between these radii.
 
@@ -108,8 +110,11 @@ class MassProfileMGE:
         sigma_list = np.exp(log_sigmas)
 
         amplitude_list = np.zeros(func_gaussians)
-        f_sigma = np.sum(
-            etas * np.real(func(sigma_list.reshape(-1, 1) * kesis)), axis=1
+        f_sigma = eta_constant * np.sum(
+            eta_n * np.real(func(
+                sigma_list.reshape(-1, 1) * kesis
+            )),
+            axis=1
         )
         amplitude_list = f_sigma * d_log_sigma / np.sqrt(2.0 * np.pi)
         amplitude_list = amplitude_list.at[0].multiply(0.5)
