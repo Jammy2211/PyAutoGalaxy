@@ -1,7 +1,10 @@
 from functools import wraps
 import logging
-import numpy as np
+from autofit.jax_wrapper import numpy as np, use_jax
 from typing import List, Tuple, Union
+
+if use_jax:
+    import jax
 
 from autoconf import conf
 
@@ -106,6 +109,20 @@ class OperateDeflections:
 
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         raise NotImplementedError
+    
+    def deflections_yx_scalar(self, y, x, pixel_scales):
+        if not use_jax:
+            return
+        else:
+            # A version of the deflection function that takes in two scalars
+            # and outputs a 2D vector.  Needed for JAX auto differentiation.
+            g = aa.Grid2D.from_yx_1d(
+                y=y.reshape(1),
+                x=x.reshape(1),
+                shape_native=(1, 1),
+                pixel_scales=pixel_scales
+            )
+            return self.deflections_yx_2d_from(g).squeeze()
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ and self.__class__ is other.__class__
@@ -709,6 +726,29 @@ class OperateDeflections:
 
         return einstein_mass_angular_list[0]
 
+    def jacobian_stack(self, y, x, pixel_scales):
+        if not use_jax:
+            return
+        else:
+            return np.stack(
+                jax.jacfwd(
+                    self.deflections_yx_scalar,
+                    argnums=(0, 1)
+                )(y, x, pixel_scales)
+            )
+    
+    def jacobian_stack_vector(self, y, x, pixel_scales):
+        if not use_jax:
+            return
+        else:
+            return np.vectorize(
+                jax.tree_util.Partial(
+                    self.jacobian_stack,
+                    pixel_scales=pixel_scales
+                ),
+                signature='(),()->(i,i)'
+            )(y, x)
+
     def jacobian_from(self, grid):
         """
         Returns the Jacobian of the lensing object, which is computed by taking the gradient of the 2D deflection
@@ -727,35 +767,45 @@ class OperateDeflections:
             The 2D grid of (y,x) arc-second coordinates the deflection angles and Jacobian are computed on.
         """
 
-        deflections = self.deflections_yx_2d_from(grid=grid)
+        if not use_jax:
+            deflections = self.deflections_yx_2d_from(grid=grid)
 
-        # TODO : Can probably make this work on irregular grid? Is there any point?
+            # TODO : Can probably make this work on irregular grid? Is there any point?
 
-        a11 = aa.Array2D(
-            values=1.0
-            - np.gradient(deflections.native[:, :, 1], grid.native[0, :, 1], axis=1),
-            mask=grid.mask,
-        )
+            a11 = aa.Array2D(
+                values=1.0
+                - np.gradient(deflections.native[:, :, 1], grid.native[0, :, 1], axis=1),
+                mask=grid.mask,
+            )
 
-        a12 = aa.Array2D(
-            values=-1.0
-            * np.gradient(deflections.native[:, :, 1], grid.native[:, 0, 0], axis=0),
-            mask=grid.mask,
-        )
+            a12 = aa.Array2D(
+                values=-1.0
+                * np.gradient(deflections.native[:, :, 1], grid.native[:, 0, 0], axis=0),
+                mask=grid.mask,
+            )
 
-        a21 = aa.Array2D(
-            values=-1.0
-            * np.gradient(deflections.native[:, :, 0], grid.native[0, :, 1], axis=1),
-            mask=grid.mask,
-        )
+            a21 = aa.Array2D(
+                values=-1.0
+                * np.gradient(deflections.native[:, :, 0], grid.native[0, :, 1], axis=1),
+                mask=grid.mask,
+            )
 
-        a22 = aa.Array2D(
-            values=1
-            - np.gradient(deflections.native[:, :, 0], grid.native[:, 0, 0], axis=0),
-            mask=grid.mask,
-        )
+            a22 = aa.Array2D(
+                values=1
+                - np.gradient(deflections.native[:, :, 0], grid.native[:, 0, 0], axis=0),
+                mask=grid.mask,
+            )
 
-        return [[a11, a12], [a21, a22]]
+            return [[a11, a12], [a21, a22]]
+        else:
+            a = self.jacobian_stack_vector(
+                grid.array[:, 0],
+                grid.array[:, 1],
+                grid.pixel_scales
+            )
+            # transpose the result
+            # use `moveaxis` as grid might not be nx2
+            return np.moveaxis(np.moveaxis(a, -1, 0), -1, 0)
 
     @precompute_jacobian
     def convergence_2d_via_jacobian_from(self, grid, jacobian=None) -> aa.Array2D:
