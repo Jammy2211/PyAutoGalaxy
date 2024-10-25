@@ -13,7 +13,7 @@ from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
-
+ 
 logger = logging.getLogger(__name__)
 
 logger.setLevel(level="INFO")
