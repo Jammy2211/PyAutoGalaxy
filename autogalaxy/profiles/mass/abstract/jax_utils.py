@@ -26,7 +26,7 @@ def reg4(z, _, i_sqrt_pi):
 
 
 def reg5(z, sqrt_pi, _):
-    mz2 = -z**2
+    mz2 = -(z**2)
     f1 = sqrt_pi
     f2 = 1.0
     s1 = [1.320522, 35.7668, 219.031, 1540.787, 3321.99, 36183.31]
@@ -80,7 +80,7 @@ def w_f_approx(z):
     r2 = (abs_z2 >= 256.0) & (abs_z2 < 38000.0)
     r3 = (abs_z2 >= 62.0) & (abs_z2 < 256.0)
     r4 = (abs_z2 >= 30.0) & (abs_z2 < 62.0) & (z_imag2 >= 1e-13)
-    # region bounds for 5 taken directly from Zaghloul (2017) 
+    # region bounds for 5 taken directly from Zaghloul (2017)
     # https://dl.acm.org/doi/pdf/10.1145/3119904
     r5_1 = (abs_z2 >= 30.0) & (abs_z2 < 62.0) & (z_imag2 < 1e-13)
     r5_2 = (abs_z2 >= 2.5) & (abs_z2 < 30.0) & (z_imag2 < 0.072)
@@ -103,8 +103,8 @@ def w_f_approx_jvp(primals, tangents):
     # define a custom jvp to avoid the issue using `jnp.where` with `jax.grad`
     # also the derivative is defined analytically for this function so bypass
     # auto diffing over the complex functions above.
-    z, = primals
-    z_dot, = tangents
+    (z,) = primals
+    (z_dot,) = tangents
     primal_out = w_f_approx(z)
     i_sqrt_pi = 1j / jnp.sqrt(jnp.pi)
     tangent_out = z_dot * 2 * (i_sqrt_pi - z * primal_out)

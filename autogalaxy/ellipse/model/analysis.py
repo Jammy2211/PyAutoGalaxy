@@ -217,7 +217,7 @@ class AnalysisEllipse(af.Analysis):
         An `info_dict` is also created which stores information on aspects of the model and dataset that dictate
         run times, so the profiled times can be interpreted with this context.
 
-        The results of this profiling are then output to hard-disk in the `preloads` folder of the model-fit results,
+        The results of this profiling are then output to hard-disk in the `profiling` folder of the model-fit results,
         which they can be inspected to ensure run-times are as expected.
 
         Parameters

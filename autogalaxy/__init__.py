@@ -52,8 +52,6 @@ from autoarray.structures.visibilities import VisibilitiesNoiseMap  # noqa
 
 from .analysis.adapt_images.adapt_images import AdaptImages
 from .analysis.adapt_images.adapt_image_maker import AdaptImageMaker
-from .analysis.maker import FitMaker
-from .analysis.preloads import Preloads
 from . import aggregator as agg
 from . import exc
 from . import plot
@@ -116,4 +114,4 @@ from autoconf import conf
 
 conf.instance.register(__file__)
 
-__version__ = "2024.5.16.0"
+__version__ = "2024.9.21.2"

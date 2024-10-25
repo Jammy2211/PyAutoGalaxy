@@ -138,7 +138,7 @@ class Analysis(af.Analysis):
         An `info_dict` is also created which stores information on aspects of the model and dataset that dictate
         run times, so the profiled times can be interpreted with this context.
 
-        The results of this profiling are then output to hard-disk in the `preloads` folder of the model-fit results,
+        The results of this profiling are then output to hard-disk in the `prefiling` folder of the model-fit results,
         which they can be inspected to ensure run-times are as expected.
 
         Parameters
@@ -191,33 +191,33 @@ class Analysis(af.Analysis):
 
         try:
             info_dict["image_pixels"] = self.dataset.grids.uniform.shape_slim
-            info_dict[
-                "sub_total_light_profiles"
-            ] = self.dataset.grids.uniform.over_sampler.sub_total
+            info_dict["sub_total_light_profiles"] = (
+                self.dataset.grids.uniform.over_sampler.sub_total
+            )
         except AttributeError:
             pass
 
         if fit.model_obj.has(cls=aa.Pixelization):
             info_dict["use_w_tilde"] = fit.inversion.settings.use_w_tilde
             try:
-                info_dict[
-                    "sub_total_pixelization"
-                ] = self.dataset.grids.pixelization.over_sampler.sub_total
+                info_dict["sub_total_pixelization"] = (
+                    self.dataset.grids.pixelization.over_sampler.sub_total
+                )
             except AttributeError:
                 pass
-            info_dict[
-                "use_positive_only_solver"
-            ] = fit.inversion.settings.use_positive_only_solver
-            info_dict[
-                "force_edge_pixels_to_zeros"
-            ] = fit.inversion.settings.force_edge_pixels_to_zeros
+            info_dict["use_positive_only_solver"] = (
+                fit.inversion.settings.use_positive_only_solver
+            )
+            info_dict["force_edge_pixels_to_zeros"] = (
+                fit.inversion.settings.force_edge_pixels_to_zeros
+            )
             info_dict["use_w_tilde_numpy"] = fit.inversion.settings.use_w_tilde_numpy
             info_dict["source_pixels"] = len(fit.inversion.reconstruction)
 
             if hasattr(fit.inversion, "w_tilde"):
-                info_dict[
-                    "w_tilde_curvature_preload_size"
-                ] = fit.inversion.w_tilde.curvature_preload.shape[0]
+                info_dict["w_tilde_curvature_preload_size"] = (
+                    fit.inversion.w_tilde.curvature_preload.shape[0]
+                )
 
         self.output_profiling_info(
             paths=paths, run_time_dict=run_time_dict, info_dict=info_dict

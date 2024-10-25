@@ -40,10 +40,12 @@ def psi_from(grid, axis_ratio, core_radius):
     """
     if USING_JAX:
         return np.sqrt(
-            (axis_ratio**2.0 * (grid[:, 1]**2.0 + core_radius**2.0)) + grid[:, 0]**2.0 + 1e-16
+            (axis_ratio**2.0 * (grid[:, 1] ** 2.0 + core_radius**2.0))
+            + grid[:, 0] ** 2.0
+            + 1e-16
         )
     else:
-     return np.sqrt(
+        return np.sqrt(
             np.add(
                 np.multiply(
                     axis_ratio**2.0, np.add(np.square(grid[:, 1]), core_radius**2.0)
