@@ -53,9 +53,7 @@ def _fit_ellipse_from(
     try:
         multipole_list_list = _multipoles_from(fit=fit, instance=instance)
     except AttributeError:
-        multipole_list_list = [[None] * len(ellipse_list_list)] * len(
-            ellipse_list_list[0]
-        )
+        multipole_list_list = [[None for i in ellipse_list_list[0]]]
 
     fit_dataset_list = []
 
