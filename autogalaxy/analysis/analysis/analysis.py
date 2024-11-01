@@ -13,7 +13,7 @@ from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
- 
+
 logger = logging.getLogger(__name__)
 
 logger.setLevel(level="INFO")
@@ -60,7 +60,7 @@ class Analysis(af.Analysis):
             if getattr(instance, "extra_galaxies", None) is not None:
                 return Galaxies(
                     galaxies=instance.galaxies + instance.extra_galaxies,
-                    run_time_dict=run_time_dict
+                    run_time_dict=run_time_dict,
                 )
 
         return Galaxies(galaxies=instance.galaxies, run_time_dict=run_time_dict)
