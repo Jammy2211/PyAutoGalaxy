@@ -1,5 +1,8 @@
 import copy
 import numpy as np
+from autofit.jax_wrapper import use_jax
+if use_jax:
+    import jax
 from scipy.special import wofz
 from scipy.integrate import quad
 from typing import Tuple
@@ -188,7 +191,14 @@ class Gaussian(MassProfile, StellarProfile):
     @property
     def axis_ratio(self):
         axis_ratio = super().axis_ratio
-        return axis_ratio if axis_ratio < 0.9999 else 0.9999
+        if use_jax:
+            return jax.lax.select(
+                axis_ratio < 0.9999,
+                axis_ratio,
+                0.9999
+            )
+        else:
+            return axis_ratio if axis_ratio < 0.9999 else 0.9999
 
     def zeta_from(self, grid: aa.type.Grid2DLike):
         q2 = self.axis_ratio**2.0

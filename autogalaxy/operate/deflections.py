@@ -1,6 +1,6 @@
-from functools import wraps
+from functools import wraps, partial
 import logging
-from autofit.jax_wrapper import numpy as np, use_jax
+from autofit.jax_wrapper import numpy as np, use_jax, jit
 from typing import List, Tuple, Union
 
 if use_jax:
@@ -91,6 +91,26 @@ def evaluation_grid(func):
     return wrapper
 
 
+def one_step(r, _, theta, fun, fun_dr):
+    r = np.abs(r - fun(r, theta) / fun_dr(r, theta))
+    return r, None
+
+
+@partial(jit, static_argnums=(4,))
+def step_r(r, theta, fun, fun_dr, N=20):
+    one_step_partial = jax.tree_util.Partial(
+        one_step,
+        theta=theta,
+        fun=fun,
+        fun_dr=fun_dr
+    )
+    new_r = jax.lax.scan(one_step_partial, r, xs=np.arange(N))[0]
+    return np.stack([
+        new_r * np.sin(theta),
+        new_r * np.cos(theta)
+    ]).T
+
+
 class OperateDeflections:
     """
     Packages methods which manipulate the 2D deflection angle map returned from the `deflections_yx_2d_from` function
@@ -126,6 +146,9 @@ class OperateDeflections:
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ and self.__class__ is other.__class__
+    
+    def __hash__(self):
+        return hash(repr(self))
 
     @precompute_jacobian
     def tangential_eigen_value_from(self, grid, jacobian=None) -> aa.Array2D:
@@ -748,6 +771,162 @@ class OperateDeflections:
                 ),
                 signature='(),()->(i,i)'
             )(y, x)
+        
+    def convergence_mag_shear_yx(self, y, x):
+        J = self.jacobian_stack_vector(y, x, 0.05)
+        K = 0.5 * (J[..., 0, 0] + J[..., 1, 1])
+        mag_shear = 0.5 * np.sqrt(
+            (J[..., 0, 1] + J[..., 1, 0])**2 + (J[..., 0, 0] - J[..., 1, 1])**2
+        )
+        return K, mag_shear
+    
+    @partial(jit, static_argnums=(0,))
+    def tangential_eigen_value_yx(self, y, x):
+        K, mag_shear = self.convergence_mag_shear_yx(y, x)
+        return 1 - K - mag_shear
+    
+    @partial(jit, static_argnums=(0, 3))
+    def tangential_eigen_value_rt(self, r, theta, centre=(0.0, 0.0)):
+        y = r * np.sin(theta) + centre[0]
+        x = r * np.cos(theta) + centre[1]
+        return self.tangential_eigen_value_yx(y, x)
+    
+    @partial(jit, static_argnums=(0, 3))
+    def grad_r_tangential_eigen_value(self, r, theta, centre=(0.0, 0.0)):
+        # ignore `self` with the `argnums` below
+        tangential_eigen_part = partial(
+            self.tangential_eigen_value_rt,
+            centre=centre
+        )
+        return np.vectorize(
+            jax.jacfwd(tangential_eigen_part, argnums=(0,)),
+            signature='(),()->()'
+        )(r, theta)[0]
+
+    @partial(jit, static_argnums=(0,))
+    def radial_eigen_value_yx(self, y, x):
+        K, mag_shear = self.convergence_mag_shear_yx(y, x)
+        return 1 - K + mag_shear
+    
+    @partial(jit, static_argnums=(0, 3))
+    def radial_eigen_value_rt(self, r, theta, centre=(0.0, 0.0)):
+        y = r * np.sin(theta) + centre[0]
+        x = r * np.cos(theta) + centre[1]
+        return self.radial_eigen_value_yx(y, x)
+    
+    @partial(jit, static_argnums=(0, 3))
+    def grad_r_radial_eigen_value(self, r, theta, centre=(0.0, 0.0)):
+        # ignore `self` with the `argnums` below
+        radial_eigen_part = partial(
+            self.radial_eigen_value_rt,
+            centre=centre
+        )
+        return np.vectorize(
+            jax.jacfwd(radial_eigen_part, argnums=(0,)),
+            signature='(),()->()'
+        )(r, theta)[0]
+    
+    def tangential_critical_curve_jax(
+        self,
+        init_r=0.1,
+        init_centre=(0.0, 0.0),
+        n_points=300,
+        n_steps=20,
+        threshold=1e-5
+    ):
+        """
+        Returns all tangential critical curves of the lensing system, which are computed as follows:
+
+        1) Create a set of `n_points` initial points in a circle of radius `init_r` and centred on `init_centre`
+        2) Apply `n_steps` of Newton's method to these points in the "radial" direction only (i.e. keeping angle fixed).
+        Jax's auto differentiation is used to find the radial derivatives of the tangential eigen value function for
+        this step.
+        3) Filter the results and only keep point that have their tangential eigen value `threshold` of 0
+
+        No underlying grid is needed for the method, but the quality of the results are dependent on the initial
+        circle of points.
+
+        Parameters
+        ----------
+        init_r : float
+            Radius of the circle of initial guess points
+        init_centre : tuple
+            centre of the circle of initial guess points as `(y, x)`
+        n_points : Int
+            Number of initial guess points to create (evenly spaced in angle around `init_centre`)
+        n_steps : Int
+            Number of iterations of Newton's method to apply
+        threshold : float
+            Only keep points whose tangential eigen value is within this value of zero (inclusive)
+        """
+        r = np.ones(n_points) * init_r
+        theta = np.linspace(0, 2 * np.pi, n_points + 1)[:-1]
+        new_yx = step_r(
+            r,
+            theta,
+            jax.tree_util.Partial(self.tangential_eigen_value_rt, centre=init_centre),
+            jax.tree_util.Partial(self.grad_r_tangential_eigen_value, centre=init_centre),
+            n_steps
+        )
+        new_yx = new_yx + np.array(init_centre)
+        # filter out nan values
+        fdx = np.isfinite(new_yx).all(axis=1)
+        new_yx = new_yx[fdx]
+        # filter out failed points
+        value = np.abs(self.tangential_eigen_value_yx(new_yx[:, 0], new_yx[:, 1]))
+        gdx = value <= threshold
+        return aa.structures.grids.irregular_2d.Grid2DIrregular(values=new_yx[gdx])
+    
+    def radial_critical_curve_jax(
+        self,
+        init_r=0.01,
+        init_centre=(0.0, 0.0),
+        n_points=300,
+        n_steps=20,
+        threshold=1e-5
+    ):
+        """
+        Returns all radial critical curves of the lensing system, which are computed as follows:
+
+        1) Create a set of `n_points` initial points in a circle of radius `init_r` and centred on `init_centre`
+        2) Apply `n_steps` of Newton's method to these points in the "radial" direction only (i.e. keeping angle fixed).
+        Jax's auto differentiation is used to find the radial derivatives of the radial eigen value function for
+        this step.
+        3) Filter the results and only keep point that have their radial eigen value `threshold` of 0
+
+        No underlying grid is needed for the method, but the quality of the results are dependent on the initial
+        circle of points.
+
+        Parameters
+        ----------
+        init_r : float
+            Radius of the circle of initial guess points
+        init_centre : tuple
+            centre of the circle of initial guess points as `(y, x)`
+        n_points : Int
+            Number of initial guess points to create (evenly spaced in angle around `init_centre`)
+        n_steps : Int
+            Number of iterations of Newton's method to apply
+        threshold : float
+            Only keep points whose radial eigen value is within this value of zero (inclusive)
+        """
+        r = np.ones(n_points) * init_r
+        theta = np.linspace(0, 2 * np.pi, n_points + 1)[:-1]
+        new_yx = step_r(
+            r,
+            theta,
+            jax.tree_util.Partial(self.radial_eigen_value_rt, centre=init_centre),
+            jax.tree_util.Partial(self.grad_r_radial_eigen_value, centre=init_centre),
+            n_steps
+        )
+        new_yx = new_yx + np.array(init_centre)
+        # filter out nan values
+        fdx = np.isfinite(new_yx).all(axis=1)
+        new_yx = new_yx[fdx]
+        # filter out failed points
+        value = np.abs(self.radial_eigen_value_yx(new_yx[:, 0], new_yx[:, 1]))
+        gdx = value <= threshold
+        return aa.structures.grids.irregular_2d.Grid2DIrregular(values=new_yx[gdx])
 
     def jacobian_from(self, grid):
         """
@@ -798,14 +977,26 @@ class OperateDeflections:
 
             return [[a11, a12], [a21, a22]]
         else:
-            a = self.jacobian_stack_vector(
+            A = self.jacobian_stack_vector(
                 grid.array[:, 0],
                 grid.array[:, 1],
                 grid.pixel_scales
             )
+            a = np.eye(2).reshape(1, 2, 2) - A
+            return [
+                [
+                    aa.Array2D(values=a[..., 1, 1], mask=grid.mask),
+                    aa.Array2D(values=a[..., 1, 0], mask=grid.mask)
+                ],
+                [
+                    aa.Array2D(values=a[..., 0, 1], mask=grid.mask),
+                    aa.Array2D(values=a[..., 0, 0], mask=grid.mask)
+                ]
+            ]
+
             # transpose the result
             # use `moveaxis` as grid might not be nx2
-            return np.moveaxis(np.moveaxis(a, -1, 0), -1, 0)
+            # return np.moveaxis(np.moveaxis(a, -1, 0), -1, 0)
 
     @precompute_jacobian
     def convergence_2d_via_jacobian_from(self, grid, jacobian=None) -> aa.Array2D:
@@ -855,9 +1046,15 @@ class OperateDeflections:
             A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
         """
 
-        shear_yx_2d = np.zeros(shape=(grid.shape_slim, 2))
-        shear_yx_2d[:, 0] = -0.5 * (jacobian[0][1] + jacobian[1][0])
-        shear_yx_2d[:, 1] = 0.5 * (jacobian[1][1] - jacobian[0][0])
+        if not use_jax:
+            shear_yx_2d = np.zeros(shape=(grid.shape_slim, 2))
+            shear_yx_2d[:, 0] = -0.5 * (jacobian[0][1] + jacobian[1][0])
+            shear_yx_2d[:, 1] = 0.5 * (jacobian[1][1] - jacobian[0][0])
+
+        else:
+            shear_y = -0.5 * (jacobian[0][1] + jacobian[1][0]).array
+            shear_x = 0.5 * (jacobian[1][1] - jacobian[0][0]).array
+            shear_yx_2d = np.stack([shear_y, shear_x]).T
 
         if isinstance(grid, aa.Grid2DIrregular):
             return ShearYX2DIrregular(values=shear_yx_2d, grid=grid)

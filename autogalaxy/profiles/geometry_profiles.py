@@ -4,8 +4,10 @@ from typing import Optional, Tuple, Type
 
 if os.environ.get("USE_JAX", "0") == "1":
     import jax.numpy as np
+    use_jax = True
 else:
     import numpy as np
+    use_jax = False
 
 import autoarray as aa
 
@@ -129,7 +131,10 @@ class SphProfile(GeometryProfile):
         radius
             The circular radius of each coordinate from the profile center.
         """
-        grid_angles = np.arctan2(grid[:, 0], grid[:, 1])
+        if use_jax:
+            grid_angles = np.arctan2(grid.array[:, 0], grid.array[:, 1])
+        else:
+            grid_angles = np.arctan2(grid[:, 0], grid[:, 1])
         cos_theta, sin_theta = self.angle_to_profile_grid_from(grid_angles=grid_angles)
         return np.multiply(radius[:, None], np.vstack((sin_theta, cos_theta)).T)
 
@@ -145,7 +150,10 @@ class SphProfile(GeometryProfile):
         grid
             The (y, x) coordinates in the original reference frame of the grid.
         """
-        return np.subtract(grid, self.centre)
+        if use_jax:
+            return np.subtract(grid.array, np.array(self.centre))
+        else:
+            return np.subtract(grid, self.centre)
 
     @aa.grid_dec.to_grid
     def transformed_from_reference_frame_grid_from(self, grid, **kwargs):
