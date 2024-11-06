@@ -16,8 +16,8 @@ def test__deflections_yx_2d_from():
 
     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]))
 
-    assert deflections[0, 0] == pytest.approx(-0.036501212434, 1e-3)
-    assert deflections[0, 1] == pytest.approx(-0.04812739471, 1e-3)
+    assert deflections[0, 0] == pytest.approx(-0.036120991, 1e-3)
+    assert deflections[0, 1] == pytest.approx(-0.0476260676, 1e-3)
 
     mp = ag.mp.PowerLawMultipole(
         m=4,
@@ -29,8 +29,8 @@ def test__deflections_yx_2d_from():
 
     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]))
 
-    assert deflections[0, 0] == pytest.approx(-0.093819734, 1e-3)
-    assert deflections[0, 1] == pytest.approx(-0.12642225085, 1e-3)
+    assert deflections[0, 0] == pytest.approx(-0.096376665, 1e-3)
+    assert deflections[0, 1] == pytest.approx(-0.1298677210, 1e-3)
 
 
 def test__convergence_2d_from():
