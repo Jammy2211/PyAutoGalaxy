@@ -178,7 +178,7 @@ class PowerLawMultipole(MassProfile):
 
         a_angle = (
             (
-                self.m**2.0
+                self.m
                 * self.einstein_radius ** (self.slope - 1.0)
                 * radial_grid ** (2.0 - self.slope)
             )
