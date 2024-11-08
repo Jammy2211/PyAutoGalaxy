@@ -37,7 +37,14 @@ class Scribbler:
             plt.imshow(image, interpolation="none")
         else:
             norm = cmap.norm_from(array=image)
-            plt.imshow(image, cmap=cmap.config_dict["cmap"], norm=norm)
+
+            if cmap.config_dict["cmap"] == "default":
+                from matplotlib.colors import LinearSegmentedColormap
+                from autoarray.plot.wrap.segmentdata import segmentdata
+
+                cmap = LinearSegmentedColormap(name="default", segmentdata=segmentdata)
+
+            plt.imshow(image, cmap=cmap, norm=norm)
         plt.axis([0, image.shape[1], image.shape[0], 0])
         plt.axis("off")
         # if title:
