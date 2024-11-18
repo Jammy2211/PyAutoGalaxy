@@ -85,7 +85,7 @@ def test__simulator__via_galaxies_from():
         psf=psf,
         exposure_time=10000.0,
         background_sky_level=100.0,
-        add_poisson_noise=False,
+        add_poisson_noise_to_data=False,
     )
 
     dataset = simulator.via_galaxies_from(galaxies=[galaxy_0, galaxy_1], grid=grid)
@@ -130,7 +130,7 @@ def test__simulator__simulate_imaging_from_galaxy__source_galaxy__compare_to_ima
         psf=psf,
         exposure_time=10000.0,
         background_sky_level=100.0,
-        add_poisson_noise=True,
+        add_poisson_noise_to_data=True,
         noise_seed=1,
     )
 
