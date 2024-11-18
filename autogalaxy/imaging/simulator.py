@@ -30,7 +30,8 @@ class SimulatorImaging(aa.SimulatorImaging):
         Parameters
         ----------
         galaxies
-            The galaxies whose light is simulated.
+            The galaxies whose light profiles are evaluated using the input 2D grid of (y,x) coordinates in order to
+            generate the image of the galaxies which is then simulated.
         grid
             The 2D grid of (y,x) coordinates which the light profiles of the galaxies are evaluated using in order
             to generate the image of the galaxies.
