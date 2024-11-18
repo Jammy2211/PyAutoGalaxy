@@ -86,6 +86,7 @@ def test__simulator__via_galaxies_from():
         exposure_time=10000.0,
         background_sky_level=100.0,
         add_poisson_noise_to_data=False,
+        include_poisson_noise_in_noise_map=False,
     )
 
     dataset = simulator.via_galaxies_from(galaxies=[galaxy_0, galaxy_1], grid=grid)
