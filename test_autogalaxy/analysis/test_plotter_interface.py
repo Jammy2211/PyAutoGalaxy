@@ -90,7 +90,10 @@ def test__inversion(
 
     assert path.join(plot_path, "reconstructed_image.png") in plot_patch.paths
     assert path.join(plot_path, "reconstruction.png") in plot_patch.paths
-    assert path.join(plot_path, "inversion", "errors.png") not in plot_patch.paths
+    assert (
+        path.join(plot_path, "inversion", "reconstruction_noise_map.png")
+        not in plot_patch.paths
+    )
     assert path.join(plot_path, "regularization_weights.png") not in plot_patch.paths
 
 

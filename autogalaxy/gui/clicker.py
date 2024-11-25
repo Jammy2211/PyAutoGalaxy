@@ -6,7 +6,7 @@ from autogalaxy import exc
 
 
 class Clicker:
-    def __init__(self, image, pixel_scales, search_box_size, in_pixels : bool = False):
+    def __init__(self, image, pixel_scales, search_box_size, in_pixels: bool = False):
         self.image = image
 
         pixel_scales = aa.util.geometry.convert_pixel_scales_2d(
