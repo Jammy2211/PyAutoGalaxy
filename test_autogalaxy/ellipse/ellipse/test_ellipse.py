@@ -82,25 +82,6 @@ def test__angles_from_x0():
     )
 
 
-def test__angles_from_x0__with_n_i():
-    ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
-
-    angles = ellipse.angles_from_x0_from(pixel_scale=1.0, n_i=0)
-
-    print(angles)
-
-    angles = ellipse.angles_from_x0_from(pixel_scale=1.0, n_i=1)
-
-    print(angles)
-
-    jghjhjhg
-
-    assert ellipse.angles_from_x0_from(pixel_scale=1.0)[0] == pytest.approx(0.0, 1.0e-4)
-    assert ellipse.angles_from_x0_from(pixel_scale=1.0)[1] == pytest.approx(
-        1.25663706143, 1.0e-4
-    )
-
-
 def test__x_from_major_axis():
     ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
 
@@ -171,3 +152,4 @@ def test__points_from_major_axis():
     assert ellipse.points_from_major_axis_from(pixel_scale=1.0)[1][0] == pytest.approx(
         -0.2123224755, 1.0e-4
     )
+

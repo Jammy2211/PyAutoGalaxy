@@ -94,7 +94,11 @@ class PlotterInterfaceEllipse(PlotterInterface):
             fit_list=fit_list, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
-        fit_plotter.figures_2d(data=should_plot("data"))
+        try:
+            fit_plotter.figures_2d(data=should_plot("data"))
+        except ValueError:
+            print(fit_plotter.fit_list[0].ellipse.major_axis)
+            print(fit_plotter.fit_list[0].ellipse.ell_comps)
 
         if should_plot("data_no_ellipse"):
             fit_plotter.figures_2d(

@@ -56,8 +56,39 @@ class FitEllipse(aa.FitDataset):
         The (y,x) coordinates on the ellipse where the interpolation occurs.
         """
         points = self.ellipse.points_from_major_axis_from(
-            pixel_scale=self.dataset.pixel_scales[0], flip_y=flip_y
+            pixel_scale=self.dataset.pixel_scales[0], flip_y=flip_y,
         )
+
+        if self.interp.mask_interp is not None:
+
+            i_total = 300
+
+            total_points_required = points.shape[0]
+
+            for i in range(1, i_total + 1):
+
+                total_points = points.shape[0]
+                total_points_masked = np.sum(self.interp.mask_interp(points) > 0)
+
+                if total_points_required == total_points - total_points_masked:
+                    continue
+
+                points = self.ellipse.points_from_major_axis_from(pixel_scale=self.dataset.pixel_scales[0],
+                                                                  flip_y=flip_y, n_i=i)
+
+                if i == i_total:
+
+                    raise ValueError(
+                        """
+                        The code has attempted to add over 1000 points to the ellipse and still not found a set of points that
+                        do not hit the mask with the expected number of points. 
+        
+                        This is likely due to the mask being too large or a strange geometry, and the code is unable to find a
+                        set of points that do not hit the mask.
+                        """
+                    )
+
+            points = points[self.interp.mask_interp(points) == 0]
 
         if self.multipole_list is not None:
             for multipole in self.multipole_list:
@@ -80,51 +111,51 @@ class FitEllipse(aa.FitDataset):
         """
         return self.points_from_major_axis_from()
 
-    @property
-    def mask_interp(self) -> np.ndarray:
-        """
-        Returns the mask values of the dataset that the ellipse fits, which are computed by overlaying the ellipse over
-        the 2D data and performing a 2D interpolation at discrete (y,x) coordinates on the ellipse on the dataset's
-        mask.
+    # @property
+    # def mask_interp(self) -> np.ndarray:
+    #     """
+    #     Returns the mask values of the dataset that the ellipse fits, which are computed by overlaying the ellipse over
+    #     the 2D data and performing a 2D interpolation at discrete (y,x) coordinates on the ellipse on the dataset's
+    #     mask.
+    #
+    #     When an input (y,x) coordinate intepolates only unmasked values (`data.mask=False`) the intepolatred value
+    #     is 0.0, where if it interpolates one or a masked value (`data.mask=True`), the interpolated value is positive.
+    #     To mask all values which interpolate a masked value, all interpolated values above 1 and converted to `True`.
+    #
+    #     This mask is used to remove these pixels from a fit and evaluate how many ellipse points are used for each
+    #     ellipse fit.
+    #
+    #     The (y,x) coordinates on the ellipse where the interpolation occurs are computed in the
+    #     `points_from_major_axis` property of the `Ellipse` class, with the documentation describing how these points
+    #     are computed.
+    #
+    #     Returns
+    #     -------
+    #     The data values of the ellipse fits, computed via a 2D interpolation of where the ellipse
+    #     overlaps the data.
+    #     """
+    #     return self.interp.mask_interp(self._points_from_major_axis) > 0.0
 
-        When an input (y,x) coordinate intepolates only unmasked values (`data.mask=False`) the intepolatred value
-        is 0.0, where if it interpolates one or a masked value (`data.mask=True`), the interpolated value is positive.
-        To mask all values which interpolate a masked value, all interpolated values above 1 and converted to `True`.
-
-        This mask is used to remove these pixels from a fit and evaluate how many ellipse points are used for each
-        ellipse fit.
-
-        The (y,x) coordinates on the ellipse where the interpolation occurs are computed in the
-        `points_from_major_axis` property of the `Ellipse` class, with the documentation describing how these points
-        are computed.
-
-        Returns
-        -------
-        The data values of the ellipse fits, computed via a 2D interpolation of where the ellipse
-        overlaps the data.
-        """
-        return self.interp.mask_interp(self._points_from_major_axis) > 0.0
-
-    @property
-    def total_points_interp(self) -> int:
-        """
-        Returns the total number of points used to interpolate the data and noise-map values of the ellipse.
-
-        For example, if the ellipse spans 10 pixels, the total number of points will be 10.
-
-        The calculation removes points if one or more interpolated value uses a masked value, meaning the interpolation
-        is not reliable.
-
-        The (y,x) coordinates on the ellipse where the interpolation occurs are computed in the
-        `points_from_major_axis` property of the `Ellipse` class, with the documentation describing how these points
-        are computed.
-
-        Returns
-        -------
-        The noise-map values of the ellipse fits, computed via a 2D interpolation of where the ellipse
-        overlaps the noise-map.
-        """
-        return self.data_interp[np.invert(self.mask_interp)].shape[0]
+    # @property
+    # def total_points_interp(self) -> int:
+    #     """
+    #     Returns the total number of points used to interpolate the data and noise-map values of the ellipse.
+    #
+    #     For example, if the ellipse spans 10 pixels, the total number of points will be 10.
+    #
+    #     The calculation removes points if one or more interpolated value uses a masked value, meaning the interpolation
+    #     is not reliable.
+    #
+    #     The (y,x) coordinates on the ellipse where the interpolation occurs are computed in the
+    #     `points_from_major_axis` property of the `Ellipse` class, with the documentation describing how these points
+    #     are computed.
+    #
+    #     Returns
+    #     -------
+    #     The noise-map values of the ellipse fits, computed via a 2D interpolation of where the ellipse
+    #     overlaps the noise-map.
+    #     """
+    #     return self.data_interp[np.invert(self.mask_interp)].shape[0]
 
     @property
     def data_interp(self) -> aa.ArrayIrregular:
@@ -146,7 +177,7 @@ class FitEllipse(aa.FitDataset):
         """
         data = self.interp.data_interp(self._points_from_major_axis)
 
-        data[self.mask_interp] = np.nan
+      #  data[self.mask_interp] = np.nan
 
         return aa.ArrayIrregular(values=data)
 
@@ -170,7 +201,7 @@ class FitEllipse(aa.FitDataset):
         """
         noise_map = self.interp.noise_map_interp(self._points_from_major_axis)
 
-        noise_map[self.mask_interp] = np.nan
+   #     noise_map[self.mask_interp] = np.nan
 
         return aa.ArrayIrregular(values=noise_map)
 
