@@ -85,10 +85,10 @@ class FitEllipsePlotter(Plotter):
             ellipse_list = []
 
             for fit in self.fit_list:
-                points = fit.points_from_major_axis_from(flip_y=True)
+                points = fit.points_from_major_axis_from()
 
                 x = points[:, 1]
-                y = points[:, 0]
+                y = points[:, 0] * -1.0 # flip for plot
 
                 ellipse_list.append(aa.Grid2DIrregular.from_yx_1d(y=y, x=x))
 

@@ -39,7 +39,7 @@ class FitEllipse(aa.FitDataset):
         """
         return DatasetInterp(dataset=self.dataset)
 
-    def points_from_major_axis_from(self, flip_y: bool = False) -> np.ndarray:
+    def points_from_major_axis_from(self) -> np.ndarray:
         """
         Returns the (y,x) coordinates on the ellipse that are used to interpolate the data and noise-map values.
 
@@ -48,15 +48,12 @@ class FitEllipse(aa.FitDataset):
 
         If multipole components are used, the points are also perturbed by the multipole components.
 
-        When plotting the ellipses, y coordinates must be flipped to match the convention of the y-axis increasing
-        downwards in 2D data, which is performed by setting `flip_y=True`.
-
         Returns
         -------
         The (y,x) coordinates on the ellipse where the interpolation occurs.
         """
         points = self.ellipse.points_from_major_axis_from(
-            pixel_scale=self.dataset.pixel_scales[0], flip_y=flip_y,
+            pixel_scale=self.dataset.pixel_scales[0],
         )
 
         if self.interp.mask_interp is not None:
@@ -74,7 +71,7 @@ class FitEllipse(aa.FitDataset):
                     continue
 
                 points = self.ellipse.points_from_major_axis_from(pixel_scale=self.dataset.pixel_scales[0],
-                                                                  flip_y=flip_y, n_i=i)
+                                                                  n_i=i)
 
                 if i == i_total:
 
