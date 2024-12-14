@@ -269,7 +269,7 @@ def multipole_k_m_and_phi_m_from(
     The normalization and angle are given by:
 
     .. math::
-        \phi^{\rm mass}_m = \arctan{\frac{\epsilon_{\rm 2}^{\rm mp}}{\epsilon_{\rm 2}^{\rm mp}}}, \, \,
+        \phi^{\rm mass}_m = \frac{1}{m} \arctan{\frac{\epsilon_{\rm 2}^{\rm mp}}{\epsilon_{\rm 1}^{\rm mp}}}, \, \,
         k^{\rm mass}_m = \sqrt{{\epsilon_{\rm 1}^{\rm mp}}^2 + {\epsilon_{\rm 2}^{\rm mp}}^2} \, .
 
     The conversion depends on the multipole order `m`, to ensure that all possible rotationally symmetric
@@ -307,7 +307,7 @@ def multipole_comps_from(k_m: float, phi_m: float, m: int) -> Tuple[float, float
     Returns the multipole component parameters from their normalization value `k_m` and angle `phi`.
 
     .. math::
-        \phi^{\rm mass}_m = \arctan{\frac{\epsilon_{\rm 2}^{\rm mp}}{\epsilon_{\rm 2}^{\rm mp}}}, \, \,
+        \phi^{\rm mass}_m = \frac{1}{m} \arctan{\frac{\epsilon_{\rm 2}^{\rm mp}}{\epsilon_{\rm 1}^{\rm mp}}}, \, \,
         k^{\rm mass}_m = \sqrt{{\epsilon_{\rm 1}^{\rm mp}}^2 + {\epsilon_{\rm 2}^{\rm mp}}^2} \, .
 
     The conversion depends on the multipole order `m`, to ensure that all possible rotationally symmetric
