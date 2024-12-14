@@ -84,7 +84,7 @@ class DatasetQuantity(AbstractDataset):
         cls,
         data: Union[aa.Array2D, aa.VectorYX2D],
         signal_to_noise_map: Union[aa.Array2D],
-        over_sampling: Optional[aa.OverSamplingIterate] = None,
+        over_sampling=None,
     ):
         """
         Represents a derived quantity of a light profile, mass profile, galaxy or galaxies as a dataset that can be

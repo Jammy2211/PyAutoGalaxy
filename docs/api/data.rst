@@ -68,7 +68,6 @@ applied to datasets to apply over sampling to their fit.
    :recursive:
 
    OverSamplingUniform
-   OverSamplingIterate
 
 
 1D Data Structures
