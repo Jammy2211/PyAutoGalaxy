@@ -323,6 +323,16 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
         """
         Trace an input grid using the galaxy's its deflection angles.
         """
+        if isinstance(grid, aa.Grid2D):
+            return aa.Grid2D(
+                values=grid - self.deflections_yx_2d_from(grid=grid),
+                mask=grid.mask,
+                over_sampling_size=grid.over_sampling_size,
+                grid_over_sampled=grid.grid_over_sampled - self.deflections_yx_2d_from(
+                    grid=grid.grid_over_sampled
+                )
+            )
+
         return grid - self.deflections_yx_2d_from(grid=grid)
 
     @aa.grid_dec.to_projected

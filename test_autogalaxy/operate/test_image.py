@@ -154,6 +154,7 @@ def test__unmasked_blurred_image_2d_from():
     assert unmasked_blurred_image_2d == pytest.approx(image_2d_manual, 1.0e-4)
 
 
+
 def test__visibilities_from_grid_and_transformer(grid_2d_7x7, transformer_7x7_7):
     lp = ag.lp.Sersic(intensity=1.0)
     lp_visibilities = lp.visibilities_from(
@@ -274,6 +275,7 @@ def test__unmasked_blurred_image_2d_list_from():
     assert unmasked_blurred_image_2d_list[1].native == pytest.approx(
         manual_blurred_image_1.native[1:4, 1:4], 1.0e-4
     )
+
 
 
 def test__visibilities_list_from(grid_2d_7x7, transformer_7x7_7):

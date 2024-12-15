@@ -506,7 +506,6 @@ class GalaxiesToInversion(AbstractToInversion):
 
         return mapper_from(
             mapper_grids=mapper_grids,
-            over_sampler=self.dataset.grids.pixelization.over_sampler,
             regularization=regularization,
             run_time_dict=self.run_time_dict,
         )
@@ -558,7 +557,7 @@ class GalaxiesToInversion(AbstractToInversion):
             mapper = self.mapper_from(
                 mesh=pixelization_list[mapper_index].mesh,
                 regularization=pixelization_list[mapper_index].regularization,
-                source_plane_data_grid=self.dataset.grids.pixelization.grid_over_sampled,
+                source_plane_data_grid=self.dataset.grids.pixelization,
                 source_plane_mesh_grid=mesh_grid_list[mapper_index],
                 adapt_galaxy_image=adapt_galaxy_image,
                 image_plane_mesh_grid=mesh_grid_list[mapper_index],
