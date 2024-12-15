@@ -317,7 +317,7 @@ class GalaxiesToInversion(AbstractToInversion):
 
                     if len(light_profile_list) > 0:
                         lp_linear_func = LightProfileLinearObjFuncList(
-                            grid=self.dataset.grids.uniform,
+                            grid=self.dataset.grids.lp,
                             blurring_grid=self.dataset.grids.blurring,
                             convolver=self.dataset.convolver,
                             light_profile_list=light_profile_list,

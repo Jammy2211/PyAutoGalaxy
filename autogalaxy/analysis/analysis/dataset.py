@@ -179,8 +179,8 @@ class AnalysisDataset(Analysis):
             prefix="dataset",
         )
         paths.save_fits(
-            name="over_sampling_size_uniform",
-            hdu=self.dataset.grids.uniform.over_sampling_size.native.hdu_for_output,
+            name="over_sampling_size_lp",
+            hdu=self.dataset.grids.lp.over_sampling_size.native.hdu_for_output,
             prefix="dataset",
         )
         paths.save_fits(

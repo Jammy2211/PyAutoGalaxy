@@ -60,7 +60,7 @@ def test__perfect_fit__chi_squared_0():
         noise_map_path=path.join(file_path, "noise_map.fits"),
         psf_path=path.join(file_path, "psf.fits"),
         pixel_scales=0.2,
-        over_sampling=ag.OverSamplingDataset(uniform=1),
+        over_sampling=ag.OverSamplingDataset(lp=1),
     )
 
     mask = ag.Mask2D.circular(
@@ -171,7 +171,7 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
 
     masked_dataset = dataset.apply_mask(mask=mask)
     masked_dataset = masked_dataset.apply_over_sampling(
-        over_sampling=ag.OverSamplingDataset(uniform=1)
+        over_sampling=ag.OverSamplingDataset(lp=1)
     )
 
     fit = ag.FitImaging(dataset=masked_dataset, galaxies=[galaxy])
@@ -203,7 +203,7 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
     assert fit_linear.figure_of_merit == pytest.approx(-45.02798, 1.0e-4)
 
     galaxy_image = galaxy.blurred_image_2d_from(
-        grid=masked_dataset.grids.uniform,
+        grid=masked_dataset.grids.lp,
         convolver=masked_dataset.convolver,
         blurring_grid=masked_dataset.grids.blurring,
     )
