@@ -50,13 +50,20 @@ def _imaging_from(
         except AttributeError:
             psf = None
 
-        over_sampling = fit.value(name="dataset.over_sampling")
+        try:
+            over_sampling_uniform = aa.Array2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.over_sampling_size_uniform")).native
+        except AttributeError:
+            over_sampling_uniform = 1
+        try:
+            over_sampling_pixelization = aa.Array2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.over_sampling_size_pixelization")).native
+        except AttributeError:
+            over_sampling_pixelization = 1
 
         dataset = aa.Imaging(
             data=data,
             noise_map=noise_map,
             psf=psf,
-            over_sampling=over_sampling,
+            over_sampling=aa.OverSamplingDataset(uniform=over_sampling_uniform, pixelization=over_sampling_pixelization),
             check_noise_map=False,
         )
 
