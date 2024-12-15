@@ -206,7 +206,7 @@ def test__decorators__convergence_1d_from__grid_2d_in__returns_1d_image_via_proj
     grid_2d = ag.Grid2D.uniform(
         shape_native=(5, 5),
         pixel_scales=1.0,
-        over_sampling=ag.OverSamplingUniform(sub_size=1),
+        over_sampling_size=1,
     )
 
     sie = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=1.0)

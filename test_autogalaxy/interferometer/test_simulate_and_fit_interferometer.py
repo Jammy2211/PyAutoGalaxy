@@ -9,7 +9,11 @@ import autogalaxy as ag
 
 
 def test__perfect_fit__chi_squared_0():
-    grid = ag.Grid2D.uniform(shape_native=(51, 51), pixel_scales=0.1)
+    grid = ag.Grid2D.uniform(
+        shape_native=(51, 51),
+        pixel_scales=0.1,
+        over_sampling_size=1,
+    )
 
     galaxy_0 = ag.Galaxy(
         redshift=0.5, light=ag.lp.Sersic(centre=(0.1, 0.1), intensity=0.1)
@@ -136,7 +140,11 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
 
 
 def test__linear_light_profiles_agree_with_standard_light_profiles():
-    grid = ag.Grid2D.uniform(shape_native=(51, 51), pixel_scales=0.1)
+    grid = ag.Grid2D.uniform(
+        shape_native=(51, 51),
+        pixel_scales=0.1,
+        over_sampling_size=1,
+    )
 
     galaxy = ag.Galaxy(
         redshift=0.5,
