@@ -13,8 +13,8 @@ def test__dataset_generator_from_aggregator__analysis_has_single_dataset(
         psf=psf_3x3,
         noise_map=noise_map_7x7,
         over_sampling=ag.OverSamplingDataset(
-            uniform=ag.OverSampling(sub_size=5),
-            pixelization=ag.OverSampling(sub_size=3),
+            uniform=5,
+            pixelization=3,
         ),
     )
 
@@ -34,10 +34,8 @@ def test__dataset_generator_from_aggregator__analysis_has_single_dataset(
 
     for dataset_list in dataset_gen:
         assert (dataset_list[0].data == masked_imaging_7x7.data).all()
-        assert isinstance(dataset_list[0].grids.uniform.over_sampling, ag.OverSampling)
-        assert isinstance(
-            dataset_list[0].grids.pixelization.over_sampling, ag.OverSampling
-        )
+        assert dataset_list[0].grids.uniform.over_sampling_size[0] == 5
+        assert dataset_list[0].grids.pixelization.over_sampling_size[0] == 3
 
     clean(database_file=database_file)
 

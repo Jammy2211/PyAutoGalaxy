@@ -36,9 +36,6 @@ def test__interferometer_generator_from_aggregator__analysis_has_single_dataset(
     for dataset_list in dataset_gen:
         assert (dataset_list[0].data == interferometer_7.data).all()
         assert (dataset_list[0].real_space_mask == mask_2d_7x7).all()
-        assert isinstance(
-            dataset_list[0].grids.pixelization.over_sampling, ag.OverSampling
-        )
         assert isinstance(dataset_list[0].transformer, ag.TransformerDFT)
 
     clean(database_file=database_file)
