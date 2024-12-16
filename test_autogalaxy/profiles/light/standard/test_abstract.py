@@ -47,7 +47,7 @@ def test__image_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities()
     grid_2d = ag.Grid2D.uniform(
         shape_native=(5, 5),
         pixel_scales=1.0,
-        over_sampling_size=1,
+        over_sample_size=1,
     )
 
     lp = ag.lp.Gaussian(
@@ -91,13 +91,13 @@ def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
 
     lp = ag.lp.Sersic(intensity=1.0)
 
-    grid = ag.Grid2D.from_mask(mask=mask, over_sampling_size=1)
+    grid = ag.Grid2D.from_mask(mask=mask, over_sample_size=1)
 
     image = lp.image_2d_from(grid=grid)
 
     assert image[0] == pytest.approx(0.15987224303572964, 1.0e-6)
 
-    grid = ag.Grid2D.from_mask(mask=mask, over_sampling_size=2)
+    grid = ag.Grid2D.from_mask(mask=mask, over_sample_size=2)
 
     image = lp.image_2d_from(grid=grid)
 
@@ -106,13 +106,13 @@ def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
 
     lp = ag.lp.Sersic(centre=(3.0, 3.0), intensity=1.0)
 
-    grid = ag.Grid2D.from_mask(mask=mask, over_sampling_size=1)
+    grid = ag.Grid2D.from_mask(mask=mask, over_sample_size=1)
 
     image = lp.image_2d_from(grid=grid)
 
     assert image[0] == pytest.approx(0.006719704400094508, 1.0e-6)
 
-    grid = ag.Grid2D.from_mask(mask=mask, over_sampling_size=2)
+    grid = ag.Grid2D.from_mask(mask=mask, over_sample_size=2)
 
     image = lp.image_2d_from(grid=grid)
 

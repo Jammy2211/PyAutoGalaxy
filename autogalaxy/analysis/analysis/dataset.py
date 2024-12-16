@@ -180,12 +180,12 @@ class AnalysisDataset(Analysis):
         )
         paths.save_fits(
             name="over_sampling_size_lp",
-            hdu=self.dataset.grids.lp.over_sampling_size.native.hdu_for_output,
+            hdu=self.dataset.grids.lp.over_sample_size.native.hdu_for_output,
             prefix="dataset",
         )
         paths.save_fits(
             name="over_sampling_size_pixelization",
-            hdu=self.dataset.grids.pixelization.over_sampling_size.native.hdu_for_output,
+            hdu=self.dataset.grids.pixelization.over_sample_size.native.hdu_for_output,
             prefix="dataset",
         )
         paths.save_json(

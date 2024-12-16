@@ -327,7 +327,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             return aa.Grid2D(
                 values=grid - self.deflections_yx_2d_from(grid=grid),
                 mask=grid.mask,
-                over_sampling_size=grid.over_sampling_size,
+                over_sample_size=grid.over_sample_size,
                 over_sampled=grid.over_sampled - self.deflections_yx_2d_from(
                     grid=grid.over_sampled
                 )

@@ -12,7 +12,7 @@ def test__perfect_fit__chi_squared_0():
     grid = ag.Grid2D.uniform(
         shape_native=(11, 11),
         pixel_scales=0.2,
-        over_sampling_size=1,
+        over_sample_size=1,
     )
 
     psf = ag.Kernel2D.from_gaussian(
@@ -141,7 +141,7 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
     grid = ag.Grid2D.uniform(
         shape_native=(11, 11),
         pixel_scales=0.2,
-        over_sampling_size=1,
+        over_sample_size=1,
     )
 
     psf = ag.Kernel2D.from_gaussian(

@@ -12,7 +12,7 @@ def test__perfect_fit__chi_squared_0():
     grid = ag.Grid2D.uniform(
         shape_native=(51, 51),
         pixel_scales=0.1,
-        over_sampling_size=1,
+        over_sample_size=1,
     )
 
     galaxy_0 = ag.Galaxy(
@@ -143,7 +143,7 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
     grid = ag.Grid2D.uniform(
         shape_native=(51, 51),
         pixel_scales=0.1,
-        over_sampling_size=1,
+        over_sample_size=1,
     )
 
     galaxy = ag.Galaxy(

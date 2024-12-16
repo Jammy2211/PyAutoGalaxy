@@ -34,8 +34,8 @@ def test__dataset_generator_from_aggregator__analysis_has_single_dataset(
 
     for dataset_list in dataset_gen:
         assert (dataset_list[0].data == masked_imaging_7x7.data).all()
-        assert dataset_list[0].grids.lp.over_sampling_size[0] == 5
-        assert dataset_list[0].grids.pixelization.over_sampling_size[0] == 3
+        assert dataset_list[0].grids.lp.over_sample_size[0] == 5
+        assert dataset_list[0].grids.pixelization.over_sample_size[0] == 3
 
     clean(database_file=database_file)
 
