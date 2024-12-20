@@ -83,7 +83,7 @@ def test__grid(
         noise_map=ag.Array2D.full(
             fill_value=2.0, shape_native=(7, 7), pixel_scales=1.0
         ),
-        over_sampling=ag.OverSamplingDataset(lp=4),
+        over_sample_size_lp=4,
     )
 
     dataset = dataset_quantity.apply_mask(mask=mask_2d_7x7)

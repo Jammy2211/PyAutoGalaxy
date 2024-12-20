@@ -3,7 +3,6 @@ from autoarray.dataset import preprocess  # noqa
 from autoarray.dataset.imaging.dataset import Imaging  # noqa
 from autoarray.dataset.interferometer.dataset import Interferometer  # noqa
 from autoarray.dataset.dataset_model import DatasetModel
-from autoarray.dataset.over_sampling import OverSamplingDataset
 from autoarray.inversion.inversion.mapper_valued import MapperValued
 from autoarray.inversion.pixelization import mesh  # noqa
 from autoarray.inversion import regularization as reg  # noqa
