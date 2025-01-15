@@ -317,7 +317,7 @@ class GalaxiesToInversion(AbstractToInversion):
 
                     if len(light_profile_list) > 0:
                         lp_linear_func = LightProfileLinearObjFuncList(
-                            grid=self.dataset.grids.uniform,
+                            grid=self.dataset.grids.lp,
                             blurring_grid=self.dataset.grids.blurring,
                             convolver=self.dataset.convolver,
                             light_profile_list=light_profile_list,
@@ -506,9 +506,6 @@ class GalaxiesToInversion(AbstractToInversion):
 
         return mapper_from(
             mapper_grids=mapper_grids,
-            over_sampler=self.dataset.grids.pixelization.over_sampling.over_sampler_from(
-                mask=self.dataset.mask
-            ),
             regularization=regularization,
             run_time_dict=self.run_time_dict,
         )
@@ -560,7 +557,7 @@ class GalaxiesToInversion(AbstractToInversion):
             mapper = self.mapper_from(
                 mesh=pixelization_list[mapper_index].mesh,
                 regularization=pixelization_list[mapper_index].regularization,
-                source_plane_data_grid=self.dataset.grids.pixelization.over_sampler.over_sampled_grid,
+                source_plane_data_grid=self.dataset.grids.pixelization,
                 source_plane_mesh_grid=mesh_grid_list[mapper_index],
                 adapt_galaxy_image=adapt_galaxy_image,
                 image_plane_mesh_grid=mesh_grid_list[mapper_index],
