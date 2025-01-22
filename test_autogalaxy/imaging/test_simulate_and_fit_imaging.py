@@ -23,7 +23,7 @@ def test__perfect_fit__chi_squared_0():
     )
 
     simulator = ag.SimulatorImaging(
-        exposure_time=300.0, psf=psf, add_poisson_noise=False
+        exposure_time=300.0, psf=psf, add_poisson_noise_to_data=False
     )
 
     dataset = simulator.via_galaxies_from(galaxies=[galaxy_0, galaxy_1], grid=grid)
@@ -146,7 +146,7 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
     )
 
     simulator = ag.SimulatorImaging(
-        exposure_time=300.0, psf=psf, add_poisson_noise=False
+        exposure_time=300.0, psf=psf, add_poisson_noise_to_data=False
     )
 
     dataset = simulator.via_galaxies_from(galaxies=[galaxy], grid=grid)
