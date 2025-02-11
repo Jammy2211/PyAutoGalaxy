@@ -13,7 +13,7 @@ class Scribbler:
         cmap=None,
         brush_width=0.05,
         backend="TkAgg",
-        mask_overlay=None
+        mask_overlay=None,
     ):
         """
 

@@ -191,10 +191,10 @@ class Analysis(af.Analysis):
         fit.figure_of_merit
 
         try:
-            info_dict["image_pixels"] = self.dataset.grids.uniform.shape_slim
+            info_dict["image_pixels"] = self.dataset.grids.lp.shape_slim
             info_dict[
                 "sub_total_light_profiles"
-            ] = self.dataset.grids.uniform.over_sampler.sub_total
+            ] = self.dataset.grids.lp.over_sampler.sub_total
         except AttributeError:
             pass
 

@@ -8,9 +8,8 @@ dataset:                                   # Settings for plots of all datasets 
   data: false                              # Plot the individual data of every dataset?
   noise_map: false                         # Plot the individual noise-map of every dataset?
   signal_to_noise_map: false               # Plot the individual signal-to-noise-map of every dataset?
-  over_sampling: false            # Plot the over-sampling sub-size, used to evaluate light profiles, of every dataset?
-  over_sampling_non_uniform: false  # Plot the over-sampling sub-size, used to evaluate non uniform grids, of every dataset?
-  over_sampling_pixelization: false  # Plot the over-sampling sub-size, used to evaluate pixelizations, of every dataset?
+  over_sample_size_lp: false               # Plot the over-sampling size, used to evaluate light profiles, of every dataset?
+  over_sample_size_pixelization: false     # Plot the over-sampling size, used to evaluate pixelizations, of every dataset?
 imaging:                                   # Settings for plots of imaging datasets (e.g. ImagingPlotter).
   psf: false
 fit:                                       # Settings for plots of all fits (e.g. FitImagingPlotter, FitInterferometerPlotter).
