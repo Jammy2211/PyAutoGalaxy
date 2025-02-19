@@ -45,33 +45,12 @@ class PlotterInterfaceInterferometer(PlotterInterface):
             mat_plot_2d=mat_plot_2d,
         )
 
-        dataset_plotter.figures_2d(
-            data=should_plot("data"),
-            u_wavelengths=should_plot("uv_wavelengths"),
-            v_wavelengths=should_plot("uv_wavelengths"),
-            amplitudes_vs_uv_distances=should_plot("amplitudes_vs_uv_distances"),
-            phases_vs_uv_distances=should_plot("phases_vs_uv_distances"),
-            dirty_image=should_plot("dirty_image"),
-            dirty_noise_map=should_plot("dirty_noise_map"),
-            dirty_signal_to_noise_map=should_plot("dirty_signal_to_noise_map"),
-        )
-
-        mat_plot_2d = self.mat_plot_2d_from()
-
-        dataset_plotter = aplt.InterferometerPlotter(
-            dataset=dataset,
-            include_2d=self.include_2d,
-            mat_plot_1d=mat_plot_1d,
-            mat_plot_2d=mat_plot_2d,
-        )
-
         if should_plot("subplot_dataset"):
             dataset_plotter.subplot_dataset()
 
     def fit_interferometer(
         self,
         fit: FitInterferometer,
-        during_analysis: bool,
     ):
         """
         Visualizes a `FitInterferometer` object, which fits an interferometer dataset.
@@ -90,11 +69,6 @@ class PlotterInterfaceInterferometer(PlotterInterface):
         ----------
         fit
             The maximum log likelihood `FitInterferometer` of the non-linear search which is used to plot the fit.
-        during_analysis
-            Whether visualization is performed during a non-linear search or once it is completed.
-        visuals_2d
-            An object containing attributes which may be plotted over the figure (e.g. the centres of mass and light
-            profiles).
         """
 
         def should_plot(name):
