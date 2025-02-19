@@ -44,7 +44,8 @@ class PlotterInterfaceImaging(PlotterInterface):
             dataset_plotter.subplot_dataset()
 
     def fit_imaging(
-        self, fit: FitImaging,
+        self,
+        fit: FitImaging,
     ):
         """
         Visualizes a `FitImaging` object, which fits an imaging dataset.

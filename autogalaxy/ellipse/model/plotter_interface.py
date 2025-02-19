@@ -92,4 +92,3 @@ class PlotterInterfaceEllipse(PlotterInterface):
                 data=True,
                 disable_data_contours=True,
             )
-

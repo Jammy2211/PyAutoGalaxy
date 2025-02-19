@@ -84,9 +84,7 @@ class PlotterInterface:
         """
         return MatPlot1D(
             title=aplt.Title(prefix=self.title_prefix),
-            output=aplt.Output(
-                path=path.join(self.image_path), format=format
-            ),
+            output=aplt.Output(path=path.join(self.image_path), format=format),
         )
 
     def mat_plot_2d_from(self, format="png") -> MatPlot2D:
@@ -106,13 +104,13 @@ class PlotterInterface:
         """
         return MatPlot2D(
             title=aplt.Title(prefix=self.title_prefix),
-            output=aplt.Output(
-                path=path.join(self.image_path), format=format
-            ),
+            output=aplt.Output(path=path.join(self.image_path), format=format),
         )
 
     def galaxies(
-        self, galaxies: List[Galaxy], grid: aa.type.Grid2DLike,
+        self,
+        galaxies: List[Galaxy],
+        grid: aa.type.Grid2DLike,
     ):
         """
         Visualizes a list of galaxies.
@@ -166,7 +164,9 @@ class PlotterInterface:
             plotter.subplot()
 
     def galaxies_1d(
-        self, galaxies: [List[Galaxy]], grid: aa.type.Grid2DLike,
+        self,
+        galaxies: [List[Galaxy]],
+        grid: aa.type.Grid2DLike,
     ):
         """
         Visualizes a list of `Galaxy` objects.

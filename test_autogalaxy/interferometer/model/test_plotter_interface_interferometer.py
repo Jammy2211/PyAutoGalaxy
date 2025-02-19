@@ -20,6 +20,7 @@ def test__interferometer(interferometer_7, include_2d_all, plot_path, plot_patch
 
     assert path.join(plot_path, "subplot_dataset.png") in plot_patch.paths
 
+
 def test__fit_interferometer(
     interferometer_7,
     fit_interferometer_x2_galaxy_inversion_7x7,

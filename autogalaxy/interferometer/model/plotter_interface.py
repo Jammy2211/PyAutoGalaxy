@@ -89,4 +89,3 @@ class PlotterInterfaceInterferometer(PlotterInterface):
 
         if should_plot("subplot_fit_real_space"):
             fit_plotter.subplot_fit_real_space()
-
