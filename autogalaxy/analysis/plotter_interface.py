@@ -163,48 +163,25 @@ class PlotterInterface:
         if should_plot("subplot_galaxies"):
             plotter.subplot()
 
-    def galaxies_1d(
-        self,
-        galaxies: [List[Galaxy]],
-        grid: aa.type.Grid2DLike,
-    ):
-        """
-        Visualizes a list of `Galaxy` objects.
-
-        Images are output to the `image` folder of the `image_path` in a subfolder called `galaxies`. When
-        used with a non-linear search the `image_path` points to the search's results folder and this function
-        visualizes the maximum log likelihood `Galaxy`'s inferred by the search so far.
-
-        Visualization includes individual images of attributes of each galaxy (e.g. 1D plots of their image,
-        convergence) and a subplot of all these attributes on the same figure.
-
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
-        [galaxies] header.
-
-        Parameters
-        ----------
-        galaxies
-            A list of the maximum log likelihood `Galaxy`'s of the non-linear search.
-        grid
-            A 2D grid of (y,x) arc-second coordinates used to perform ray-tracing, which is the masked grid tied to
-            the dataset.
-        """
-
-        def should_plot(name):
-            return plot_setting(section="galaxies_1d", name=name)
-
         mat_plot_1d = self.mat_plot_1d_from()
 
         galaxies_plotter = GalaxiesPlotter(
-            galaxy=galaxies,
+            galaxies=galaxies,
             grid=grid,
             mat_plot_1d=mat_plot_1d,
-            include_2d=self.include_2d,
         )
+
+        galaxies_plotter.subplot_galaxies_1d()
 
         try:
             if should_plot("subplot_galaxies_1d"):
                 galaxies_plotter.subplot_galaxies_1d()
+        except OverflowError:
+            pass
+
+        try:
+            if should_plot("subplot_galaxies_1d_decomposed"):
+                galaxies_plotter.subplot_galaxies_1d_decomposed()
         except OverflowError:
             pass
 
@@ -274,7 +251,7 @@ class PlotterInterface:
             mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
-        if should_plot("images_of_galaxies"):
-            adapt_plotter.subplot_images_of_galaxies(
+        if should_plot("adapt_images"):
+            adapt_plotter.subplot_adapt_images(
                 adapt_galaxy_name_image_dict=adapt_images.galaxy_image_dict
             )

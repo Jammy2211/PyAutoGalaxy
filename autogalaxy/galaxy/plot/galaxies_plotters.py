@@ -366,7 +366,7 @@ class GalaxiesPlotter(Plotter):
             galaxy_plotter.figures_1d(convergence=True)
             galaxy_plotter.figures_1d(potential=True)
 
-        self.mat_plot_2d.output.subplot_to_figure(auto_filename="subplot_galaxies_1d")
+        self.mat_plot_1d.output.subplot_to_figure(auto_filename="subplot_galaxies_1d")
         self.close_subplot_figure()
 
     def subplot_galaxies_1d_decomposed(self):
@@ -392,5 +392,5 @@ class GalaxiesPlotter(Plotter):
             galaxy_plotter.figures_1d_decomposed(convergence=True)
             galaxy_plotter.figures_1d_decomposed(potential=True)
 
-        self.mat_plot_2d.output.subplot_to_figure(auto_filename="subplot_galaxies_1d_decomposed")
+        self.mat_plot_1d.output.subplot_to_figure(auto_filename="subplot_galaxies_1d_decomposed")
         self.close_subplot_figure()

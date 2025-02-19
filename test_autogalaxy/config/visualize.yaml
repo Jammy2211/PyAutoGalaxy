@@ -370,8 +370,6 @@ plots:
   fit_imaging: {}
   fit_quantity:
     subplot_fit: false
-  galaxies_1d:
-    subplot_galaxies_1d: true
   adapt:
     images_of_galaxies: true
   inversion:
@@ -379,5 +377,7 @@ plots:
   galaxies:
     subplot_galaxies: true
     subplot_galaxy_images: true
+    subplot_galaxies_1d: true
+    subplot_galaxies_1d_decomposed: true
   positions:
     image_with_positions: true

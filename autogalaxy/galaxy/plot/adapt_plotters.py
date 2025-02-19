@@ -59,7 +59,7 @@ class AdaptPlotter(Plotter):
             ),
         )
 
-    def subplot_images_of_galaxies(
+    def subplot_adapt_images(
         self, adapt_galaxy_name_image_dict: Dict[Galaxy, aa.Array2D]
     ):
         """
@@ -82,7 +82,7 @@ class AdaptPlotter(Plotter):
             self.figure_galaxy_image(galaxy_image=galaxy_image)
 
         self.mat_plot_2d.output.subplot_to_figure(
-            auto_filename="subplot_adapt_images_of_galaxies"
+            auto_filename="subplot_adapt_images"
         )
 
         self.close_subplot_figure()

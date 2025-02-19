@@ -27,25 +27,13 @@ def test__galaxies(
         grid=masked_imaging_7x7.grids.lp,
     )
 
+    print(plot_patch.paths)
+
     assert path.join(plot_path, "subplot_galaxies.png") in plot_patch.paths
+    assert path.join(plot_path, "subplot_galaxy_images.png") in plot_patch.paths
+    assert path.join(plot_path, "subplot_galaxies_1d.png") in plot_patch.paths
+    assert path.join(plot_path, "subplot_galaxies_1d_decomposed.png") in plot_patch.paths
 
-
-def test__galaxies_1d(
-    masked_imaging_7x7, galaxies_7x7, include_2d_all, plot_path, plot_patch
-):
-    if path.exists(plot_path):
-        shutil.rmtree(plot_path)
-
-    plotter_interface = PlotterInterface(image_path=plot_path)
-
-    plotter_interface.galaxies_1d(
-        galaxies=galaxies_7x7,
-        grid=masked_imaging_7x7.grids.lp,
-    )
-
-    plot_path = path.join(plot_path, "galaxies_1d")
-
-    # subplot
 
 
 def test__inversion(
