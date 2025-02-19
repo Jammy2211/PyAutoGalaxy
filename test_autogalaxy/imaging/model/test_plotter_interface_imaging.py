@@ -51,8 +51,6 @@ def test__fit_imaging(
         fit=fit_imaging_x2_galaxy_inversion_7x7,
     )
 
-    plot_path = path.join(plot_path, "fit_dataset")
-
     assert path.join(plot_path, "subplot_fit.png") in plot_patch.paths
 
 def test__fit_imaging_combined(
