@@ -251,7 +251,7 @@ class PlotterInterface:
             mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
-        if should_plot("adapt_images"):
+        if should_plot("subplot_adapt_images"):
             adapt_plotter.subplot_adapt_images(
                 adapt_galaxy_name_image_dict=adapt_images.galaxy_image_dict
             )

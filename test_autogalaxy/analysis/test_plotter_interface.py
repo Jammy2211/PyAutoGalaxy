@@ -32,8 +32,9 @@ def test__galaxies(
     assert path.join(plot_path, "subplot_galaxies.png") in plot_patch.paths
     assert path.join(plot_path, "subplot_galaxy_images.png") in plot_patch.paths
     assert path.join(plot_path, "subplot_galaxies_1d.png") in plot_patch.paths
-    assert path.join(plot_path, "subplot_galaxies_1d_decomposed.png") in plot_patch.paths
-
+    assert (
+        path.join(plot_path, "subplot_galaxies_1d_decomposed.png") in plot_patch.paths
+    )
 
 
 def test__inversion(
@@ -75,6 +76,4 @@ def test__adapt_images(
 
     plot_path = path.join(plot_path)
 
-    assert (
-        path.join(plot_path, "subplot_adapt_images_of_galaxies.png") in plot_patch.paths
-    )
+    assert path.join(plot_path, "subplot_adapt_images.png") in plot_patch.paths

@@ -371,7 +371,7 @@ plots:
   fit_quantity:
     subplot_fit: false
   adapt:
-    images_of_galaxies: true
+    subplot_adapt_images: true
   inversion:
     subplot_inversion: true
   galaxies:

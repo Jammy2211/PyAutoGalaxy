@@ -81,8 +81,6 @@ class AdaptPlotter(Plotter):
         for path, galaxy_image in adapt_galaxy_name_image_dict.items():
             self.figure_galaxy_image(galaxy_image=galaxy_image)
 
-        self.mat_plot_2d.output.subplot_to_figure(
-            auto_filename="subplot_adapt_images"
-        )
+        self.mat_plot_2d.output.subplot_to_figure(auto_filename="subplot_adapt_images")
 
         self.close_subplot_figure()

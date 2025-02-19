@@ -359,7 +359,6 @@ class GalaxiesPlotter(Plotter):
         self.open_subplot_figure(number_subplots=number_subplots)
 
         for galaxy_index in range(0, len(self.galaxies)):
-
             galaxy_plotter = self.galaxy_plotter_from(galaxy_index=galaxy_index)
 
             galaxy_plotter.figures_1d(image=True)
@@ -385,12 +384,13 @@ class GalaxiesPlotter(Plotter):
         self.open_subplot_figure(number_subplots=number_subplots)
 
         for galaxy_index in range(0, len(self.galaxies)):
-
             galaxy_plotter = self.galaxy_plotter_from(galaxy_index=galaxy_index)
 
             galaxy_plotter.figures_1d_decomposed(image=True)
             galaxy_plotter.figures_1d_decomposed(convergence=True)
             galaxy_plotter.figures_1d_decomposed(potential=True)
 
-        self.mat_plot_1d.output.subplot_to_figure(auto_filename="subplot_galaxies_1d_decomposed")
+        self.mat_plot_1d.output.subplot_to_figure(
+            auto_filename="subplot_galaxies_1d_decomposed"
+        )
         self.close_subplot_figure()
