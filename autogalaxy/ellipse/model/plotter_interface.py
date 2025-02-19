@@ -40,25 +40,12 @@ class PlotterInterfaceEllipse(PlotterInterface):
             dataset=dataset, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
-        dataset_plotter.figures_2d(
-            data=should_plot("data"),
-            noise_map=should_plot("noise_map"),
-            signal_to_noise_map=should_plot("signal_to_noise_map"),
-        )
-
-        mat_plot_2d = self.mat_plot_2d_from()
-
-        dataset_plotter = aplt.ImagingPlotter(
-            dataset=dataset, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
-        )
-
         if should_plot("subplot_dataset"):
             dataset_plotter.subplot_dataset()
 
     def fit_ellipse(
         self,
         fit_list: List[FitEllipse],
-        during_analysis: bool,
     ):
         """
         Visualizes a `FitEllipse` object, which fits an imaging dataset.
@@ -77,11 +64,6 @@ class PlotterInterfaceEllipse(PlotterInterface):
         ----------
         fit
             The maximum log likelihood `FitEllipse` of the non-linear search which is used to plot the fit.
-        during_analysis
-            Whether visualization is performed during a non-linear search or once it is completed.
-        visuals_2d
-            An object containing attributes which may be plotted over the figure (e.g. the centres of mass and light
-            profiles).
         """
 
         def should_plot(name):
