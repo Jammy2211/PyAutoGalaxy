@@ -49,21 +49,3 @@ class PlotterInterfaceQuantity(PlotterInterface):
 
         if should_plot("subplot_fit"):
             fit_quantity_plotter.subplot_fit()
-
-        mat_plot_2d = self.mat_plot_2d_from()
-
-        fit_quantity_plotter = FitQuantityPlotter(
-            fit=fit,
-            mat_plot_2d=mat_plot_2d,
-            visuals_2d=visuals_2d,
-            include_2d=self.include_2d,
-        )
-
-        fit_quantity_plotter.figures_2d(
-            image=should_plot("image"),
-            noise_map=should_plot("noise_map"),
-            model_image=should_plot("model_image"),
-            residual_map=should_plot("residual_map"),
-            normalized_residual_map=should_plot("normalized_residual_map"),
-            chi_squared_map=should_plot("chi_squared_map"),
-        )
