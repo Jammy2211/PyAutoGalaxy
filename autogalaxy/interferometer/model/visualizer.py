@@ -83,12 +83,12 @@ class VisualizerInterferometer(af.Visualizer):
         galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
 
         PlotterInterface.galaxies(
-            galaxies=galaxies, grid=fit.grids.lp, during_analysis=during_analysis
+            galaxies=galaxies, grid=fit.grids.lp,
         )
 
         try:
             PlotterInterface.fit_interferometer(
-                fit=fit, during_analysis=during_analysis
+                fit=fit,
             )
         except exc.InversionException:
             pass
@@ -96,7 +96,7 @@ class VisualizerInterferometer(af.Visualizer):
         if fit.inversion is not None:
             try:
                 PlotterInterface.inversion(
-                    inversion=fit.inversion, during_analysis=during_analysis
+                    inversion=fit.inversion,
                 )
             except IndexError:
                 pass

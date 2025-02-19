@@ -77,18 +77,18 @@ class VisualizerImaging(af.Visualizer):
         plotter.imaging(dataset=analysis.dataset)
 
         try:
-            plotter.fit_imaging(fit=fit, during_analysis=during_analysis)
+            plotter.fit_imaging(fit=fit)
         except exc.InversionException:
             pass
 
         galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
 
         plotter.galaxies(
-            galaxies=galaxies, grid=fit.grids.lp, during_analysis=during_analysis
+            galaxies=galaxies, grid=fit.grids.lp
         )
 
         if fit.inversion is not None:
-            plotter.inversion(inversion=fit.inversion, during_analysis=during_analysis)
+            plotter.inversion(inversion=fit.inversion)
 
     @staticmethod
     def visualize_before_fit_combined(

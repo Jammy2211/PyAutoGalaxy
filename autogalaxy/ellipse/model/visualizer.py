@@ -68,4 +68,4 @@ class VisualizerEllipse(af.Visualizer):
         )
         plotter.imaging(dataset=analysis.dataset)
 
-        plotter.fit_ellipse(fit_list=fit_list, during_analysis=during_analysis)
+        plotter.fit_ellipse(fit_list=fit_list)
