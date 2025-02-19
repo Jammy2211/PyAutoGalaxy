@@ -1,6 +1,6 @@
 import os
 from os import path
-from typing import Dict, List, Union
+from typing import List, Union
 
 from autoconf import conf
 import autoarray as aa
@@ -195,19 +195,18 @@ class PlotterInterface:
 
         mat_plot_1d = self.mat_plot_1d_from()
 
-        for galaxy in galaxies:
-            galaxy_plotter = GalaxyPlotter(
-                galaxy=galaxy,
-                grid=grid,
-                mat_plot_1d=mat_plot_1d,
-                include_2d=self.include_2d,
-            )
+        galaxies_plotter = GalaxiesPlotter(
+            galaxy=galaxies,
+            grid=grid,
+            mat_plot_1d=mat_plot_1d,
+            include_2d=self.include_2d,
+        )
 
-            try:
-                pass
-                # Insert 1D subplot here.
-            except OverflowError:
-                pass
+        try:
+            if should_plot("subplot_galaxies_1d"):
+                galaxies_plotter.subplot_galaxies_1d()
+        except OverflowError:
+            pass
 
     def inversion(self, inversion: aa.Inversion):
         """
