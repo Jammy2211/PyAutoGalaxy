@@ -163,36 +163,6 @@ class PlotterInterface:
         if should_plot("subplot_galaxy_images"):
             plotter.subplot_galaxy_images()
 
-        plotter.figures_2d(
-            image=should_plot("image"),
-            convergence=should_plot("convergence"),
-            potential=should_plot("potential"),
-            deflections_y=should_plot("deflections"),
-            deflections_x=should_plot("deflections"),
-            magnification=should_plot("magnification"),
-        )
-
-        if not during_analysis and should_plot("all_at_end_png"):
-            mat_plot_2d = self.mat_plot_2d_from(
-                subfolders=path.join(subfolders, "end"),
-            )
-
-            plotter = GalaxiesPlotter(
-                galaxies=galaxies,
-                grid=grid,
-                mat_plot_2d=mat_plot_2d,
-                include_2d=self.include_2d,
-            )
-
-            plotter.figures_2d(
-                image=True,
-                convergence=True,
-                potential=True,
-                deflections_y=True,
-                deflections_x=True,
-                magnification=True,
-            )
-
         mat_plot_2d = self.mat_plot_2d_from(subfolders="")
 
         plotter = GalaxiesPlotter(
@@ -204,27 +174,6 @@ class PlotterInterface:
 
         if should_plot("subplot_galaxies"):
             plotter.subplot()
-
-        if not during_analysis and should_plot("all_at_end_fits"):
-            mat_plot_2d = self.mat_plot_2d_from(
-                subfolders=path.join(subfolders, "fits"), format="fits"
-            )
-
-            plotter = GalaxiesPlotter(
-                galaxies=galaxies,
-                grid=grid,
-                mat_plot_2d=mat_plot_2d,
-                include_2d=self.include_2d,
-            )
-
-            plotter.figures_2d(
-                image=True,
-                convergence=True,
-                potential=True,
-                deflections_y=True,
-                deflections_x=True,
-                magnification=True,
-            )
 
     def galaxies_1d(
         self, galaxies: [List[Galaxy]], grid: aa.type.Grid2DLike, during_analysis: bool
@@ -267,11 +216,8 @@ class PlotterInterface:
             )
 
             try:
-                galaxy_plotter.figures_1d_decomposed(
-                    image=should_plot("image"),
-                    convergence=should_plot("convergence"),
-                    potential=should_plot("potential"),
-                )
+                pass
+                # Insert 1D subplot here.
             except OverflowError:
                 pass
 
@@ -302,26 +248,6 @@ class PlotterInterface:
 
         subfolders = "inversion"
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders=subfolders)
-
-        inversion_plotter = aplt.InversionPlotter(
-            inversion=inversion, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
-        )
-
-        inversion_plotter.figures_2d(
-            reconstructed_image=should_plot("reconstructed_image")
-        )
-
-        inversion_plotter.figures_2d_of_pixelization(
-            pixelization_index=0,
-            data_subtracted=should_plot("data_subtracted"),
-            reconstructed_image=should_plot("reconstructed_image"),
-            reconstruction=should_plot("reconstruction"),
-            mesh_pixels_per_image_pixels=should_plot("mesh_pixels_per_image_pixels"),
-            reconstruction_noise_map=should_plot("reconstruction_noise_map"),
-            regularization_weights=should_plot("regularization_weights"),
-        )
-
         mat_plot_2d = self.mat_plot_2d_from(subfolders="")
 
         inversion_plotter = aplt.InversionPlotter(
@@ -333,43 +259,6 @@ class PlotterInterface:
 
             for mapper_index in range(len(mapper_list)):
                 inversion_plotter.subplot_of_mapper(mapper_index=mapper_index)
-
-        if not during_analysis and should_plot("all_at_end_png"):
-            mat_plot_2d = self.mat_plot_2d_from(subfolders=path.join(subfolders, "end"))
-
-            inversion_plotter = aplt.InversionPlotter(
-                inversion=inversion, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
-            )
-
-            inversion_plotter.figures_2d(reconstructed_image=True)
-
-            inversion_plotter.figures_2d_of_pixelization(
-                pixelization_index=0,
-                reconstructed_image=True,
-                reconstruction=True,
-                reconstruction_noise_map=True,
-                regularization_weights=True,
-            )
-
-        if not during_analysis and should_plot("all_at_end_fits"):
-            mat_plot_2d = self.mat_plot_2d_from(
-                subfolders=path.join(subfolders, "fits"), format="fits"
-            )
-
-            inversion_plotter = aplt.InversionPlotter(
-                inversion=inversion, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
-            )
-
-            inversion_plotter.figures_2d(reconstructed_image=True)
-
-            inversion_plotter.figures_2d_of_pixelization(
-                pixelization_index=0,
-                reconstructed_image=True,
-                reconstruction=True,
-                reconstruction_noise_map=True,
-                regularization_weights=True,
-                interpolate_to_uniform=True,
-            )
 
     def adapt_images(
         self,
@@ -396,14 +285,11 @@ class PlotterInterface:
         def should_plot(name):
             return plot_setting(section="adapt", name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="adapt")
+        mat_plot_2d = self.mat_plot_2d_from(subfolders="")
 
         adapt_plotter = AdaptPlotter(
             mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
-
-        if should_plot("model_image"):
-            adapt_plotter.figure_model_image(model_image=adapt_images.model_image)
 
         if should_plot("images_of_galaxies"):
             adapt_plotter.subplot_images_of_galaxies(
