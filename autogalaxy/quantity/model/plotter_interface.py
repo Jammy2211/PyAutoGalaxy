@@ -38,7 +38,7 @@ class PlotterInterfaceQuantity(PlotterInterface):
         def should_plot(name):
             return plot_setting(section="fit_quantity", name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="fit_quantity")
+        mat_plot_2d = self.mat_plot_2d_from()
 
         fit_quantity_plotter = fit_quanaity_plotter_cls(
             fit=fit,
@@ -50,7 +50,7 @@ class PlotterInterfaceQuantity(PlotterInterface):
         if should_plot("subplot_fit"):
             fit_quantity_plotter.subplot_fit()
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="fit_quantity")
+        mat_plot_2d = self.mat_plot_2d_from()
 
         fit_quantity_plotter = FitQuantityPlotter(
             fit=fit,
@@ -67,22 +67,3 @@ class PlotterInterfaceQuantity(PlotterInterface):
             normalized_residual_map=should_plot("normalized_residual_map"),
             chi_squared_map=should_plot("chi_squared_map"),
         )
-
-        if should_plot("all_at_end_fits"):
-            mat_plot_2d = self.mat_plot_2d_from(
-                subfolders="fit_quantity/fits", format="fits"
-            )
-
-            fit_plotter = FitQuantityPlotter(
-                fit=fit, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
-            )
-
-            fit_plotter.figures_2d(
-                image=True,
-                noise_map=True,
-                signal_to_noise_map=True,
-                model_image=True,
-                residual_map=True,
-                normalized_residual_map=True,
-                chi_squared_map=True,
-            )

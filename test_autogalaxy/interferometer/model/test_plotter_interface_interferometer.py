@@ -37,7 +37,7 @@ def test__fit_interferometer(
     PlotterInterface = PlotterInterfaceInterferometer(image_path=plot_path)
 
     PlotterInterface.fit_interferometer(
-        fit=fit_interferometer_x2_galaxy_inversion_7x7, during_analysis=True
+        fit=fit_interferometer_x2_galaxy_inversion_7x7,
     )
 
     plot_path = path.join(plot_path, "fit_dataset")

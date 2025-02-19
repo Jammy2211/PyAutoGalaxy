@@ -34,7 +34,7 @@ class PlotterInterfaceEllipse(PlotterInterface):
         def should_plot(name):
             return plot_setting(section=["dataset", "imaging"], name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="dataset")
+        mat_plot_2d = self.mat_plot_2d_from()
 
         dataset_plotter = aplt.ImagingPlotter(
             dataset=dataset, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
@@ -46,7 +46,7 @@ class PlotterInterfaceEllipse(PlotterInterface):
             signal_to_noise_map=should_plot("signal_to_noise_map"),
         )
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="")
+        mat_plot_2d = self.mat_plot_2d_from()
 
         dataset_plotter = aplt.ImagingPlotter(
             dataset=dataset, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
@@ -59,7 +59,6 @@ class PlotterInterfaceEllipse(PlotterInterface):
         self,
         fit_list: List[FitEllipse],
         during_analysis: bool,
-        subfolders: str = "fit_dataset",
     ):
         """
         Visualizes a `FitEllipse` object, which fits an imaging dataset.
@@ -88,7 +87,7 @@ class PlotterInterfaceEllipse(PlotterInterface):
         def should_plot(name):
             return plot_setting(section=["fit", "fit_ellipse"], name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders=subfolders)
+        mat_plot_2d = self.mat_plot_2d_from()
 
         fit_plotter = FitEllipsePlotter(
             fit_list=fit_list, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
@@ -112,15 +111,3 @@ class PlotterInterfaceEllipse(PlotterInterface):
                 disable_data_contours=True,
             )
 
-        if not during_analysis and should_plot("all_at_end_png"):
-            mat_plot_2d = self.mat_plot_2d_from(subfolders=path.join(subfolders, "end"))
-
-            fit_plotter = FitEllipsePlotter(
-                fit_list=fit_list, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
-            )
-
-            fit_plotter.figures_2d(data=True)
-            fit_plotter.figures_2d(
-                data=True,
-                disable_data_contours=True,
-            )

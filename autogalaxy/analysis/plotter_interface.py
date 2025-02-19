@@ -67,16 +67,13 @@ class PlotterInterface:
 
         os.makedirs(image_path, exist_ok=True)
 
-    def mat_plot_1d_from(self, subfolders: str, format: str = "png") -> MatPlot1D:
+    def mat_plot_1d_from(self, format: str = "png") -> MatPlot1D:
         """
         Returns a 1D matplotlib plotting object whose `Output` class uses the `image_path`, such that it outputs
         images to the `image` folder of the non-linear search.
 
         Parameters
         ----------
-        subfolders
-            Subfolders between the `image` folder of the non-linear search and where the images are output. For example,
-            images associsted with a fit are output to the subfolder `fit`.
         format
             The format images are output as, e.g. `.png` files.
 
@@ -88,20 +85,17 @@ class PlotterInterface:
         return MatPlot1D(
             title=aplt.Title(prefix=self.title_prefix),
             output=aplt.Output(
-                path=path.join(self.image_path, subfolders), format=format
+                path=path.join(self.image_path), format=format
             ),
         )
 
-    def mat_plot_2d_from(self, subfolders, format="png") -> MatPlot2D:
+    def mat_plot_2d_from(self, format="png") -> MatPlot2D:
         """
         Returns a 2D matplotlib plotting object whose `Output` class uses the `image_path`, such that it outputs
         images to the `image` folder of the non-linear search.
 
         Parameters
         ----------
-        subfolders
-            Subfolders between the `image` folder of the non-linear search and where the images are output. For example,
-            images associsted with a fit are output to the subfolder `fit`.
         format
             The format images are output as, e.g. `.png` files.
 
@@ -113,12 +107,12 @@ class PlotterInterface:
         return MatPlot2D(
             title=aplt.Title(prefix=self.title_prefix),
             output=aplt.Output(
-                path=path.join(self.image_path, subfolders), format=format
+                path=path.join(self.image_path), format=format
             ),
         )
 
     def galaxies(
-        self, galaxies: List[Galaxy], grid: aa.type.Grid2DLike, during_analysis: bool
+        self, galaxies: List[Galaxy], grid: aa.type.Grid2DLike,
     ):
         """
         Visualizes a list of galaxies.
@@ -140,8 +134,6 @@ class PlotterInterface:
         grid
             A 2D grid of (y,x) arc-second coordinates used to perform ray-tracing, which is the masked grid tied to
             the dataset.
-        during_analysis
-            Whether visualization is performed during a non-linear search or once it is completed.
         """
 
         galaxies = Galaxies(galaxies=galaxies)
@@ -149,9 +141,7 @@ class PlotterInterface:
         def should_plot(name):
             return plot_setting(section="galaxies", name=name)
 
-        subfolders = "galaxies"
-
-        mat_plot_2d = self.mat_plot_2d_from(subfolders=subfolders)
+        mat_plot_2d = self.mat_plot_2d_from()
 
         plotter = GalaxiesPlotter(
             galaxies=galaxies,
@@ -163,7 +153,7 @@ class PlotterInterface:
         if should_plot("subplot_galaxy_images"):
             plotter.subplot_galaxy_images()
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="")
+        mat_plot_2d = self.mat_plot_2d_from()
 
         plotter = GalaxiesPlotter(
             galaxies=galaxies,
@@ -176,7 +166,7 @@ class PlotterInterface:
             plotter.subplot()
 
     def galaxies_1d(
-        self, galaxies: [List[Galaxy]], grid: aa.type.Grid2DLike, during_analysis: bool
+        self, galaxies: [List[Galaxy]], grid: aa.type.Grid2DLike,
     ):
         """
         Visualizes a list of `Galaxy` objects.
@@ -198,14 +188,12 @@ class PlotterInterface:
         grid
             A 2D grid of (y,x) arc-second coordinates used to perform ray-tracing, which is the masked grid tied to
             the dataset.
-        during_analysis
-            Whether visualization is performed during a non-linear search or once it is completed.
         """
 
         def should_plot(name):
             return plot_setting(section="galaxies_1d", name=name)
 
-        mat_plot_1d = self.mat_plot_1d_from(subfolders="galaxies_1d")
+        mat_plot_1d = self.mat_plot_1d_from()
 
         for galaxy in galaxies:
             galaxy_plotter = GalaxyPlotter(
@@ -221,7 +209,7 @@ class PlotterInterface:
             except OverflowError:
                 pass
 
-    def inversion(self, inversion: aa.Inversion, during_analysis: bool):
+    def inversion(self, inversion: aa.Inversion):
         """
         Visualizes an `Inversion` object.
 
@@ -239,16 +227,12 @@ class PlotterInterface:
         ----------
         inversion
             The inversion used to fit the dataset whose attributes are visualized.
-        during_analysis
-            Whether visualization is performed during a non-linear search or once it is completed.
         """
 
         def should_plot(name):
             return plot_setting(section="inversion", name=name)
 
-        subfolders = "inversion"
-
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="")
+        mat_plot_2d = self.mat_plot_2d_from()
 
         inversion_plotter = aplt.InversionPlotter(
             inversion=inversion, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
@@ -285,7 +269,7 @@ class PlotterInterface:
         def should_plot(name):
             return plot_setting(section="adapt", name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="")
+        mat_plot_2d = self.mat_plot_2d_from()
 
         adapt_plotter = AdaptPlotter(
             mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
