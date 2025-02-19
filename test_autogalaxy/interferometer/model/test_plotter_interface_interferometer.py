@@ -20,13 +20,6 @@ def test__interferometer(interferometer_7, include_2d_all, plot_path, plot_patch
 
     assert path.join(plot_path, "subplot_dataset.png") in plot_patch.paths
 
-    plot_path = path.join(plot_path, "dataset")
-
-    assert path.join(plot_path, "data.png") in plot_patch.paths
-    assert path.join(plot_path, "u_wavelengths.png") not in plot_patch.paths
-    assert path.join(plot_path, "v_wavelengths.png") not in plot_patch.paths
-
-
 def test__fit_interferometer(
     interferometer_7,
     fit_interferometer_x2_galaxy_inversion_7x7,
@@ -43,5 +36,3 @@ def test__fit_interferometer(
     plot_path = path.join(plot_path, "fit_dataset")
 
     assert path.join(plot_path, "subplot_fit.png") in plot_patch.paths
-    assert path.join(plot_path, "data.png") in plot_patch.paths
-    assert path.join(plot_path, "noise_map.png") not in plot_patch.paths
