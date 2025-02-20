@@ -1,5 +1,5 @@
 from os import path
-from typing import List
+from typing import ClassVar, List
 
 import autoarray as aa
 import autoarray.plot as aplt
@@ -10,7 +10,21 @@ from autogalaxy.analysis.plotter_interface import PlotterInterface
 
 from autogalaxy.analysis.plotter_interface import plot_setting
 
-def fits_to_fits(should_plot, fit, mat_plot_2d, fit_plotter_cls):
+def fits_to_fits(should_plot : bool, fit : FitImaging, mat_plot_2d : aplt.MatPlot2D, fit_plotter_cls : ClassVar):
+    """
+    Output attributes of a `FitImaging`
+
+    Parameters
+    ----------
+    should_plot
+    fit
+    mat_plot_2d
+    fit_plotter_cls
+
+    Returns
+    -------
+
+    """
 
     if should_plot("fits_fit"):
         multi_plotter = aplt.MultiFigurePlotter(

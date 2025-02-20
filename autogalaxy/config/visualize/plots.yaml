@@ -3,6 +3,8 @@
 # For example, if `plots: fit: subplot_fit=True``, the ``fit_dataset.png`` subplot file will
 # be plotted every time visualization is performed.
 
+subplot_format: [png]                      # Output format of all subplots, can be png, pdf or both (e.g. [png, pdf])
+
 dataset:                                   # Settings for plots of all datasets (e.g. ImagingPlotter, InterferometerPlotter).
   subplot_dataset: true                    # Plot subplot containing all dataset quantities (e.g. the data, noise-map, etc.)?
 

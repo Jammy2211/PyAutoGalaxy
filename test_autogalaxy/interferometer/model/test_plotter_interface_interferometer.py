@@ -44,6 +44,12 @@ def test__fit_interferometer(
     #
     # assert visibilities.shape == (5, 5)
 
+    # visibilities = ag.util.array_2d.numpy_array_2d_via_fits_from(
+    #     file_path=path.join(plot_path, "model_galaxy_visibilities.fits"), hdu=0
+    # )
+    #
+    # assert visibilities.shape == (5, 5)
+
     image = ag.util.array_2d.numpy_array_2d_via_fits_from(
         file_path=path.join(plot_path, "model_galaxy_images.fits"), hdu=0
     )

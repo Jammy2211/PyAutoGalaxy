@@ -67,15 +67,14 @@ class PlotterInterface:
 
         os.makedirs(image_path, exist_ok=True)
 
-    def mat_plot_1d_from(self, format: str = "png") -> MatPlot1D:
+    @property
+    def fmt(self) -> List[str]:
+        return conf.instance["visualize"]["plots"]["subplot_format"]
+
+    def mat_plot_1d_from(self) -> MatPlot1D:
         """
         Returns a 1D matplotlib plotting object whose `Output` class uses the `image_path`, such that it outputs
         images to the `image` folder of the non-linear search.
-
-        Parameters
-        ----------
-        format
-            The format images are output as, e.g. `.png` files.
 
         Returns
         -------
@@ -84,18 +83,13 @@ class PlotterInterface:
         """
         return MatPlot1D(
             title=aplt.Title(prefix=self.title_prefix),
-            output=aplt.Output(path=path.join(self.image_path), format=format),
+            output=aplt.Output(path=path.join(self.image_path), format=self.fmt),
         )
 
-    def mat_plot_2d_from(self, format="png") -> MatPlot2D:
+    def mat_plot_2d_from(self) -> MatPlot2D:
         """
         Returns a 2D matplotlib plotting object whose `Output` class uses the `image_path`, such that it outputs
         images to the `image` folder of the non-linear search.
-
-        Parameters
-        ----------
-        format
-            The format images are output as, e.g. `.png` files.
 
         Returns
         -------
@@ -104,7 +98,7 @@ class PlotterInterface:
         """
         return MatPlot2D(
             title=aplt.Title(prefix=self.title_prefix),
-            output=aplt.Output(path=path.join(self.image_path), format=format),
+            output=aplt.Output(path=path.join(self.image_path), format=self.fmt),
         )
 
     def galaxies(
@@ -170,8 +164,6 @@ class PlotterInterface:
             grid=grid,
             mat_plot_1d=mat_plot_1d,
         )
-
-        galaxies_plotter.subplot_galaxies_1d()
 
         try:
             if should_plot("subplot_galaxies_1d"):
