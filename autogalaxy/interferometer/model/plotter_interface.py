@@ -13,7 +13,12 @@ from autogalaxy.analysis.plotter_interface import PlotterInterface
 from autogalaxy.analysis.plotter_interface import plot_setting
 
 
-def fits_to_fits(should_plot: bool, fit: FitInterferometer, mat_plot_2d: aplt.MatPlot2D, fit_plotter_cls: ClassVar):
+def fits_to_fits(
+    should_plot: bool,
+    fit: FitInterferometer,
+    mat_plot_2d: aplt.MatPlot2D,
+    fit_plotter_cls: ClassVar,
+):
     """
     Output attributes of a `FitImaging`
 
@@ -66,9 +71,7 @@ def fits_to_fits(should_plot: bool, fit: FitInterferometer, mat_plot_2d: aplt.Ma
             func_name_list=["figure_2d"] * len(multi_plotter.plotter_list),
             figure_name_list=[None] * len(multi_plotter.plotter_list),
             #                tag_list=[name for name, galaxy in galaxies.items()],
-            tag_list=[
-                f"galaxy_{i}" for i in range(len(multi_plotter.plotter_list))
-            ],
+            tag_list=[f"galaxy_{i}" for i in range(len(multi_plotter.plotter_list))],
             filename="model_galaxy_images",
             remove_fits_first=True,
         )
@@ -77,7 +80,8 @@ def fits_to_fits(should_plot: bool, fit: FitInterferometer, mat_plot_2d: aplt.Ma
         number_plots = 6
 
         multi_plotter = aplt.MultiFigurePlotter(
-            plotter_list=[FitInterferometerPlotter(fit=fit, mat_plot_2d=mat_plot_2d)] * number_plots,
+            plotter_list=[FitInterferometerPlotter(fit=fit, mat_plot_2d=mat_plot_2d)]
+            * number_plots,
         )
 
         multi_plotter.output_to_fits(
@@ -102,6 +106,7 @@ def fits_to_fits(should_plot: bool, fit: FitInterferometer, mat_plot_2d: aplt.Ma
             filename="dirty_images",
             remove_fits_first=True,
         )
+
 
 class PlotterInterfaceInterferometer(PlotterInterface):
     def interferometer(self, dataset: aa.Interferometer):
@@ -184,6 +189,9 @@ class PlotterInterfaceInterferometer(PlotterInterface):
         if should_plot("subplot_fit_real_space"):
             fit_plotter.subplot_fit_real_space()
 
-        fits_to_fits(should_plot=should_plot, fit=fit, mat_plot_2d=mat_plot_2d, fit_plotter_cls=FitInterferometerPlotter)
-
-
+        fits_to_fits(
+            should_plot=should_plot,
+            fit=fit,
+            mat_plot_2d=mat_plot_2d,
+            fit_plotter_cls=FitInterferometerPlotter,
+        )
