@@ -7,14 +7,14 @@ class SubplotDataset(Enum):
     The values correspond to the position of the subplot in the 4x3 grid.
     """
 
-    Data = (0, 0)
-    DataLog10 = (1, 0)
-    NoiseMap = (2, 0)
-    PSF = (0, 1)
-    PSFLog10 = (1, 1)
-    SignalToNoiseMap = (2, 1)
-    OverSampleSizeLp = (0, 2)
-    OverSampleSizePixelization = (1, 2)
+    data = (0, 0)
+    data_log_10 = (1, 0)
+    noise_map = (2, 0)
+    psf = (0, 1)
+    psf_log_10 = (1, 1)
+    signal_to_noise_map = (2, 1)
+    over_sample_size_lp = (0, 2)
+    over_sample_Size_pixelization = (1, 2)
 
 class SubplotFit(Enum):
     """
@@ -23,9 +23,9 @@ class SubplotFit(Enum):
     The values correspond to the position of the subplot in the 4x3 grid.
     """
 
-    Data = (0, 0)
-    SignalToNoiseMap = (1, 0)
-    ModelImage = (2, 0)
-    NormalizedResidualMap = (0, 1)
-    NormalizedResidualMapOneSigma = (1, 1)
-    ChiSquaredMap = (2, 1)
+    data = (0, 0)
+    signal_to_noise_map = (1, 0)
+    model_image = (2, 0)
+    normalized_residual_map = (0, 1)
+    normalized_residual_map_one_sigma = (1, 1)
+    chi_squared_map = (2, 1)
