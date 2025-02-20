@@ -34,6 +34,7 @@ adapt:                                     # Settings for plots of adapt images 
 fit_interferometer:                        # Settings for plots of fits to interferometer datasets (e.g. FitInterferometerPlotter).
   subplot_fit_dirty_images: false          # Plot subplot of the dirty-images of all interferometer datasets?
   subplot_fit_real_space: false            # Plot subplot of the real-space images of all interferometer datasets?
+  fits_dirty_images: false                 # output dirty_images.fits showing the dirty image, noise-map, model-data, resiual-map, normalized residual map and chi-squared map?
 
 fit_ellipse:                               # Settings for plots of ellipse fitting fits (e.g. FitEllipse)
   data : true                              # Plot the data of the ellipse fit?

@@ -137,3 +137,34 @@ class PlotterInterfaceInterferometer(PlotterInterface):
                 filename="model_galaxy_images",
                 remove_fits_first=True,
             )
+
+        if should_plot("fits_dirty_images"):
+
+            number_plots = 6
+
+            multi_plotter = aplt.MultiFigurePlotter(
+                plotter_list=[FitInterferometerPlotter(fit=fit, mat_plot_2d=mat_plot_2d)] * number_plots,
+            )
+
+            multi_plotter.output_to_fits(
+                func_name_list=["figures_2d"] * len(multi_plotter.plotter_list),
+                figure_name_list=[
+                    "dirty_image",
+                    "dirty_noise_map",
+                    "dirty_model_image",
+                    "dirty_residual_map",
+                    "dirty_normalized_residual_map",
+                    "dirty_chi_squared_map",
+                ],
+                #                tag_list=[name for name, galaxy in galaxies.items()],
+                tag_list=[
+                    "dirty_image",
+                    "dirty_noise_map",
+                    "dirty_model_image",
+                    "dirty_residual_map",
+                    "dirty_normalized_residual_map",
+                    "dirty_chi_squared_map",
+                ],
+                filename="dirty_images",
+                remove_fits_first=True,
+            )
