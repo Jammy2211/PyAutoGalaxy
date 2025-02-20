@@ -11,6 +11,8 @@ fit:                                       # Settings for plots of all fits (e.g
   subplot_fit_log10: true                  # Plot subplot of all fit quantities for any dataset using log10 color maps (e.g. the model data, residual-map, etc.)?
   subplot_of_galaxies: false               # Plot subplot of the model-image, subtracted image and other quantities of each galaxy?
   subplot_galaxy_images: false             # Plot subplot of the image of each galaxy in the model?
+  fits_fit: false                          # Output a .fits file containing the fit model data, residual map, normalized residual map and chi-squared?
+  fits_model_galaxy_images : false         # Output a .fits file containing the model images of every galaxy?
 
 fit_imaging: {}                            # Settings for plots of fits to imaging datasets (e.g. FitImagingPlotter).
 

@@ -83,7 +83,8 @@ class VisualizerInterferometer(af.Visualizer):
         galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
 
         PlotterInterface.galaxies(
-            galaxies=galaxies, grid=fit.grids.lp,
+            galaxies=galaxies,
+            grid=fit.grids.lp,
         )
 
         try:

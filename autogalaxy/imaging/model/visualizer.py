@@ -83,9 +83,7 @@ class VisualizerImaging(af.Visualizer):
 
         galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
 
-        plotter.galaxies(
-            galaxies=galaxies, grid=fit.grids.lp
-        )
+        plotter.galaxies(galaxies=galaxies, grid=fit.grids.lp)
 
         if fit.inversion is not None:
             plotter.inversion(inversion=fit.inversion)

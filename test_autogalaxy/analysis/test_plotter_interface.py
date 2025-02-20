@@ -40,6 +40,7 @@ def test__galaxies(
 
     assert image.shape == (5, 5)
 
+
 def test__inversion(
     masked_imaging_7x7,
     rectangular_inversion_7x7_3x3,
