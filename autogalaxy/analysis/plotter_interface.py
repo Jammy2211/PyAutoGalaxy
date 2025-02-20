@@ -185,6 +185,25 @@ class PlotterInterface:
         except OverflowError:
             pass
 
+        if should_plot("fits_galaxy_images"):
+
+            multi_plotter = aplt.MultiFigurePlotter(
+                plotter_list=[GalaxyPlotter(galaxy=galaxy, grid=grid, mat_plot_2d=mat_plot_2d) for galaxy in galaxies],
+            )
+
+            multi_plotter.output_to_fits(
+                func_name_list=["figures_2d"] * len(galaxies),
+                figure_name_list=[
+                    "image",
+                ] * len(galaxies),
+#                tag_list=[name for name, galaxy in galaxies.items()],
+                tag_list=[f"galaxy_{i}" for i in range(len(galaxies))],
+                filename="galaxy_images",
+                remove_fits_first=True
+            )
+
+
+
     def inversion(self, inversion: aa.Inversion):
         """
         Visualizes an `Inversion` object.

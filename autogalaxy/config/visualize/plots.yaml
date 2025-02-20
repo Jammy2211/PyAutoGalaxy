@@ -19,6 +19,7 @@ galaxies:                                  # Settings for plots of galaxies (e.g
   subplot_galaxy_images: false             # Plot subplot of the image of each galaxy in the model?
   subplot_galaxies_1d: false               # Plot subplot of all quantities in 1D of each galaxies group (e.g. images, convergence)?
   subplot_galaxies_1d_decomposed: false    # Plot subplot of all quantities in 1D decomposed of each galaxies group (e.g. images, convergence)?
+  fits_galaxy_images: false                # Output a .fits file containing images of every galaxy?
 
 inversion:                                 # Settings for plots of inversions (e.g. InversionPlotter).
   subplot_inversion: true                  # Plot subplot of all quantities in each inversion (e.g. reconstrucuted image, reconstruction)?
