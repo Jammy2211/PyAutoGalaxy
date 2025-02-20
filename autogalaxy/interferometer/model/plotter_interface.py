@@ -87,5 +87,53 @@ class PlotterInterfaceInterferometer(PlotterInterface):
         if should_plot("subplot_fit"):
             fit_plotter.subplot_fit()
 
+        if should_plot("subplot_fit_dirty_images"):
+            fit_plotter.subplot_fit_dirty_images()
+
         if should_plot("subplot_fit_real_space"):
             fit_plotter.subplot_fit_real_space()
+
+        # if should_plot("fits_fit"):
+        #
+        #     multi_plotter = aplt.MultiFigurePlotter(
+        #         plotter_list=[FitInterferometerPlotter(fit=fit, mat_plot_2d=mat_plot_2d)] * 4,
+        #     )
+        #
+        #     multi_plotter.output_to_fits(
+        #         func_name_list=["figures_2d"] * len(multi_plotter.plotter_list),
+        #         figure_name_list=[
+        #             "model_data",
+        #             "residual_map_real",
+        #             "residual_map_real",
+        #             "normalized_residual_map_real",
+        #             "chi_squared_map_real",
+        #         ],
+        #         #                tag_list=[name for name, galaxy in galaxies.items()],
+        #         tag_list=[
+        #             "model_data",
+        #             "residual_map",
+        #             "normalized_residual_map",
+        #             "chi_squared_map",
+        #         ],
+        #         filename="fit",
+        #         remove_fits_first=True,
+        #     )
+
+        if should_plot("fits_model_galaxy_images"):
+            multi_plotter = aplt.MultiFigurePlotter(
+                plotter_list=[
+                    aplt.Array2DPlotter(array=image, mat_plot_2d=mat_plot_2d)
+                    for (galaxy, image) in fit.galaxy_model_image_dict.items()
+                ],
+            )
+
+            multi_plotter.output_to_fits(
+                func_name_list=["figure_2d"] * len(multi_plotter.plotter_list),
+                figure_name_list=[None] * len(multi_plotter.plotter_list),
+                #                tag_list=[name for name, galaxy in galaxies.items()],
+                tag_list=[
+                    f"galaxy_{i}" for i in range(len(multi_plotter.plotter_list))
+                ],
+                filename="model_galaxy_images",
+                remove_fits_first=True,
+            )
