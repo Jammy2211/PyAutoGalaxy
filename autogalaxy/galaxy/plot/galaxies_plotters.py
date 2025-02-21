@@ -343,3 +343,54 @@ class GalaxiesPlotter(Plotter):
             auto_filename=f"subplot_galaxy_images"
         )
         self.close_subplot_figure()
+
+    def subplot_galaxies_1d(self):
+        """
+        Output a subplot of attributes of every individual 1D attribute of the `Galaxy` object.
+
+        For example, a 1D plot showing how the image, convergence of each component varies radially outwards.
+
+        If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
+        computed from the light profile. This is performed by aligning a 1D grid with the  major-axis of the light
+        profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
+        """
+        number_subplots = len(self.galaxies) * 3
+
+        self.open_subplot_figure(number_subplots=number_subplots)
+
+        for galaxy_index in range(0, len(self.galaxies)):
+            galaxy_plotter = self.galaxy_plotter_from(galaxy_index=galaxy_index)
+
+            galaxy_plotter.figures_1d(image=True)
+            galaxy_plotter.figures_1d(convergence=True)
+            galaxy_plotter.figures_1d(potential=True)
+
+        self.mat_plot_1d.output.subplot_to_figure(auto_filename="subplot_galaxies_1d")
+        self.close_subplot_figure()
+
+    def subplot_galaxies_1d_decomposed(self):
+        """
+        Output a subplot of attributes of every individual 1D attribute of the `Galaxy` object decompoed into
+        their different light and mass profiles.
+
+        For example, a 1D plot showing how the image, convergence of each component varies radially outwards.
+
+        If the plotter has a 1D grid object this is used to evaluate each quantity. If it has a 2D grid, a 1D grid is
+        computed from the light profile. This is performed by aligning a 1D grid with the  major-axis of the light
+        profile in projection, uniformly computing 1D values based on the 2D grid's size and pixel-scale.
+        """
+        number_subplots = len(self.galaxies) * 3
+
+        self.open_subplot_figure(number_subplots=number_subplots)
+
+        for galaxy_index in range(0, len(self.galaxies)):
+            galaxy_plotter = self.galaxy_plotter_from(galaxy_index=galaxy_index)
+
+            galaxy_plotter.figures_1d_decomposed(image=True)
+            galaxy_plotter.figures_1d_decomposed(convergence=True)
+            galaxy_plotter.figures_1d_decomposed(potential=True)
+
+        self.mat_plot_1d.output.subplot_to_figure(
+            auto_filename="subplot_galaxies_1d_decomposed"
+        )
+        self.close_subplot_figure()

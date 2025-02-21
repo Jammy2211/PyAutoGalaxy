@@ -1,3 +1,21 @@
+mock:
+  MockMLE:
+    initialize:
+      method: prior
+    printing:
+      silence: false
+    updates:
+      iterations_per_update: 2500
+      remove_state_files_at_end: true
+  MockSearch:
+    initialize:
+      method: prior
+    printing:
+      silence: false
+    search: {}
+    updates:
+      iterations_per_update: 2500
+      remove_state_files_at_end: true
 GridSearch:
   general:
     number_of_cores: 2
@@ -21,24 +39,6 @@ mcmc:
       nsteps: 2000
     search:
       nwalkers: 50
-    updates:
-      iterations_per_update: 2500
-      remove_state_files_at_end: true
-mock:
-  MockMLEr:
-    initialize:
-      method: prior
-    printing:
-      silence: false
-    updates:
-      iterations_per_update: 2500
-      remove_state_files_at_end: true
-  MockSearch:
-    initialize:
-      method: prior
-    printing:
-      silence: false
-    search: {}
     updates:
       iterations_per_update: 2500
       remove_state_files_at_end: true

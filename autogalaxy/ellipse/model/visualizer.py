@@ -60,9 +60,6 @@ class VisualizerEllipse(af.Visualizer):
         instance
             An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
             via a non-linear search).
-        during_analysis
-            If True the visualization is being performed midway through the non-linear search before it is finished,
-            which may change which images are output.
         """
         fit_list = analysis.fit_list_from(instance=instance)
 
@@ -71,4 +68,4 @@ class VisualizerEllipse(af.Visualizer):
         )
         plotter.imaging(dataset=analysis.dataset)
 
-        plotter.fit_ellipse(fit_list=fit_list, during_analysis=during_analysis)
+        plotter.fit_ellipse(fit_list=fit_list)

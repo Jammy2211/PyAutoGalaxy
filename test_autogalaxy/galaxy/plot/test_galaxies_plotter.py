@@ -65,13 +65,15 @@ def test__figures_of_galaxies(
 
 
 def test__galaxies_sub_plot_output(
-    galaxies_x2_7x7, grid_2d_7x7, include_2d_all, plot_path, plot_patch
+    galaxies_x2_7x7, grid_2d_7x7, include_2d_all, include_1d_all, plot_path, plot_patch
 ):
     plotter = aplt.GalaxiesPlotter(
         galaxies=galaxies_x2_7x7,
         grid=grid_2d_7x7,
         include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
+        include_1d=include_1d_all,
+        mat_plot_1d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
 
     plotter.subplot_galaxies()
@@ -79,3 +81,11 @@ def test__galaxies_sub_plot_output(
 
     plotter.subplot_galaxy_images()
     assert path.join(plot_path, "subplot_galaxy_images.png") in plot_patch.paths
+
+    plotter.subplot_galaxies_1d()
+    assert path.join(plot_path, "subplot_galaxies_1d.png") in plot_patch.paths
+
+    plotter.subplot_galaxies_1d_decomposed()
+    assert (
+        path.join(plot_path, "subplot_galaxies_1d_decomposed.png") in plot_patch.paths
+    )
