@@ -16,9 +16,9 @@ class PlotterInterfaceEllipse(PlotterInterface):
         """
         Visualizes an `Imaging` dataset object.
 
-        Images are output to the `image` folder of the `image_path` in a subfolder called `imaging`. When used with
-        a non-linear search the `image_path` is the output folder of the non-linear search.
-        `.
+        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the `image_path`
+        is the output folder of the non-linear search.
+
         Visualization includes individual images of attributes of the dataset (e.g. the image, noise map, PSF) and a
         subplot of all these attributes on the same figure.
 
@@ -50,15 +50,15 @@ class PlotterInterfaceEllipse(PlotterInterface):
         """
         Visualizes a `FitEllipse` object, which fits an imaging dataset.
 
-        Images are output to the `image` folder of the `image_path` in a subfolder called `fit`. When
-        used with a non-linear search the `image_path` points to the search's results folder and this function
-        visualizes the maximum log likelihood `FitEllipse` inferred by the search so far.
+        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the `image_path`
+        points to the search's results folder and this function visualizes the maximum log likelihood `FitEllipse`
+        inferred by the search so far.
 
-        Visualization includes individual images of attributes of the `FitEllipse` (e.g. the model data, residual map)
-        and a subplot of all `FitEllipse`'s images on the same figure.
+        Visualization includes a subplot of individual images of attributes of the `FitEllipse` (e.g. the model data,
+        residual map).
 
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
-        [fit] header.
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
+        the `fit` and `fit_ellipse` headers.
 
         Parameters
         ----------

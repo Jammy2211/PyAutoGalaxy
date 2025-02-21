@@ -109,15 +109,15 @@ class PlotterInterface:
         """
         Visualizes a list of galaxies.
 
-        Images are output to the `image` folder of the `image_path` in a subfolder called `galaxies`. When
-        used with a non-linear search the `image_path` points to the search's results folder and this function
-        visualizes the maximum log likelihood galaxies inferred by the search so far.
+        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the
+        `image_path` points to the search's results folder and this function visualizes the maximum log likelihood
+        galaxies inferred by the search so far.
 
-        Visualization includes individual images of attributes of the galaxies (e.g. its image, convergence, deflection
-        angles) and a subplot of all these attributes on the same figure.
+        Visualization includes subplots of the individual images of attributes of the galaxies (e.g. its image,
+        convergence, deflection angles) and .fits files containing these attributes.
 
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
-        [galaxies] header.
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
+        the `galaxies` header.
 
         Parameters
         ----------
@@ -201,15 +201,15 @@ class PlotterInterface:
         """
         Visualizes an `Inversion` object.
 
-        Images are output to the `image` folder of the `image_path` in a subfolder called `inversion`. When
-        used with a non-linear search the `image_path` points to the search's results folder and this function
-        visualizes the maximum log likelihood `Inversion` inferred by the search so far.
+        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the `image_path`
+        points to the search's results folder and this function visualizes the maximum log likelihood `Inversion`
+        inferred by the search so far.
 
-        Visualization includes individual images of attributes of the dataset (e.g. the reconstructed image, the
-        reconstruction) and a subplot of all these attributes on the same figure.
+        Visualization includes subplots of individual images of attributes of the dataset (e.g. the reconstructed image,
+        the reconstruction) and .fits file of attributes.
 
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
-        [inversion] header.
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
+        the `inversion` header.
 
         Parameters
         ----------
@@ -239,14 +239,13 @@ class PlotterInterface:
         """
         Visualizes the adapt images used by a model-fit for adaptive pixelization mesh's and regularization.
 
-        Images are output to the `image` folder of the `image_path` in a subfolder called `adapt`. When
-        used with a non-linear search the `image_path` is the output folder of the non-linear search.
+        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the `image_path`
+        is the output folder of the non-linear search.
 
-        Visualization includes an image of the overall adapt model image and a subplot of all galaxy images on the same
-        figure.
+        Visualization includes a subplot image of all galaxy images on the same figure.
 
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
-        [adapt] header.
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
+        the `adapt` header.
 
         Parameters
         ----------

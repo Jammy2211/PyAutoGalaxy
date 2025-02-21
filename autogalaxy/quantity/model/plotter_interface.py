@@ -16,15 +16,15 @@ class PlotterInterfaceQuantity(PlotterInterface):
         Visualizes a `FitQuantity` object, which fits a quantity of a light or mass profile (e.g. an image, potential)
         to the same quantity of another light or mass profile.
 
-        Images are output to the `image` folder of the `image_path` in a subfolder called `fit_quantity`. When
-        used with a non-linear search the `image_path` points to the search's results folder and this function
-        visualizes the maximum log likelihood `FitQuantity` inferred by the search so far.
+        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the `image_path`
+        points to the search's results folder and this function visualizes the maximum log likelihood `FitQuantity`
+        inferred by the search so far.
 
-        Visualization includes individual images of attributes of the `FitQuantity` (e.g. the model data, residual map)
-        and a subplot of all `FitQuantity`'s images on the same figure.
+        Visualization includes a subplot of individual images of attributes of the `FitQuantity` (e.g. the model data,
+        residual map).
 
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
-        [fit_quantity] header.
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
+        the `fit_quantity` header.
 
         Parameters
         ----------

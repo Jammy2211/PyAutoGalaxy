@@ -20,18 +20,21 @@ def fits_to_fits(
     fit_plotter_cls: ClassVar,
 ):
     """
-    Output attributes of a `FitImaging`
+    Output attributes of a `FitInterferometer` to .fits format.
+
+    This function is separated on its own so that it can be called by `PyAutoLens` and therefore avoid repeating
+    large amounts of code for visualization.
 
     Parameters
     ----------
     should_plot
+        The function which inspects the configuration files to determine if a .fits file should be output.
     fit
+        The fit to output to a .fits file.
     mat_plot_2d
+        The 2D matplotlib plot used to create the .fits files.
     fit_plotter_cls
-
-    Returns
-    -------
-
+        The plotter class used to create the .fits files.
     """
     # if should_plot("fits_fit"):
     #
@@ -113,14 +116,14 @@ class PlotterInterfaceInterferometer(PlotterInterface):
         """
         Visualizes an `Interferometer` dataset object.
 
-        Images are output to the `image` folder of the `image_path` in a subfolder called `interferometer`. When
-        used with a non-linear search the `image_path` is the output folder of the non-linear search.
+        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the `image_path`
+        is the output folder of the non-linear search.
 
-        Visualization includes individual images of attributes of the dataset (e.g. the visibilities, noise map,
-        uv-wavelengths) and a subplot of all these attributes on the same figure.
+        Visualization includes a subplot of individual images of attributes of the dataset (e.g. the visibilities,
+        noise map, uv-wavelengths).
 
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
-        [dataset] header.
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
+        the `dataset` and `interferometer` headers.
 
         Parameters
         ----------
@@ -151,15 +154,15 @@ class PlotterInterfaceInterferometer(PlotterInterface):
         """
         Visualizes a `FitInterferometer` object, which fits an interferometer dataset.
 
-        Images are output to the `image` folder of the `image_path` in a subfolder called `fit`. When
-        used with a non-linear search the `image_path` points to the search's results folder and this function
-        visualizes the maximum log likelihood `FitInterferometer` inferred by the search so far.
+        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the `image_path`
+        points to the search's results folder and this function visualizes the maximum log likelihood `FitInterferometer`
+        inferred by the search so far.
 
-        Visualization includes individual images of attributes of the `FitInterferometer` (e.g. the model data,
-        residual map) and a subplot of all `FitInterferometer`'s images on the same figure.
+        Visualization includes a subplot of individual images of attributes of the `FitInterferometer` (e.g. the model
+        data, residual map) and .fits files containing its attributes grouped together.
 
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
-        [fit] header.
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
+        the `fit` and `fit_interferometer` headers.
 
         Parameters
         ----------
