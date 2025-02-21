@@ -60,6 +60,7 @@ def fits_to_fits(
         )
 
     if should_plot("fits_model_galaxy_images"):
+
         multi_plotter = aplt.MultiFigurePlotter(
             plotter_list=[
                 aplt.Array2DPlotter(array=image, mat_plot_2d=mat_plot_2d)
@@ -67,11 +68,13 @@ def fits_to_fits(
             ],
         )
 
+        number_plots = len(multi_plotter.plotter_list)
+
         multi_plotter.output_to_fits(
-            func_name_list=["figure_2d"] * len(multi_plotter.plotter_list),
-            figure_name_list=[None] * len(multi_plotter.plotter_list),
+            func_name_list=["figure_2d"] * number_plots,
+            figure_name_list=[None] * number_plots,
             #                tag_list=[name for name, galaxy in galaxies.items()],
-            tag_list=[f"galaxy_{i}" for i in range(len(multi_plotter.plotter_list))],
+            tag_list=[f"galaxy_{i}" for i in range(number_plots)],
             filename="model_galaxy_images",
             remove_fits_first=True,
         )
