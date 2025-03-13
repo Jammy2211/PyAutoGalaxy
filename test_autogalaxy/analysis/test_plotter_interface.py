@@ -24,48 +24,21 @@ def test__galaxies(
 
     plotter_interface.galaxies(
         galaxies=galaxies_7x7,
-        grid=masked_imaging_7x7.grids.uniform,
-        during_analysis=False,
+        grid=masked_imaging_7x7.grids.lp,
     )
 
     assert path.join(plot_path, "subplot_galaxies.png") in plot_patch.paths
-
-    plot_path = path.join(plot_path, "galaxies")
-
     assert path.join(plot_path, "subplot_galaxy_images.png") in plot_patch.paths
-    assert path.join(plot_path, "image_2d.png") in plot_patch.paths
-    assert path.join(plot_path, "convergence_2d.png") in plot_patch.paths
-    assert path.join(plot_path, "potential_2d.png") not in plot_patch.paths
-    assert path.join(plot_path, "deflections_y_2d.png") not in plot_patch.paths
-    assert path.join(plot_path, "deflections_x_2d.png") not in plot_patch.paths
-    assert path.join(plot_path, "magnification_2d.png") in plot_patch.paths
-
-    convergence = ag.util.array_2d.numpy_array_2d_via_fits_from(
-        file_path=path.join(plot_path, "fits", "convergence_2d.fits"), hdu=0
+    assert path.join(plot_path, "subplot_galaxies_1d.png") in plot_patch.paths
+    assert (
+        path.join(plot_path, "subplot_galaxies_1d_decomposed.png") in plot_patch.paths
     )
 
-    assert convergence.shape == (7, 7)
-
-
-def test__galaxies_1d(
-    masked_imaging_7x7, galaxies_7x7, include_2d_all, plot_path, plot_patch
-):
-    if path.exists(plot_path):
-        shutil.rmtree(plot_path)
-
-    plotter_interface = PlotterInterface(image_path=plot_path)
-
-    plotter_interface.galaxies_1d(
-        galaxies=galaxies_7x7,
-        grid=masked_imaging_7x7.grids.uniform,
-        during_analysis=False,
+    image = ag.util.array_2d.numpy_array_2d_via_fits_from(
+        file_path=path.join(plot_path, "galaxy_images.fits"), hdu=0
     )
 
-    plot_path = path.join(plot_path, "galaxies_1d")
-
-    assert path.join(plot_path, "image_1d_decomposed.png") in plot_patch.paths
-    assert path.join(plot_path, "convergence_1d_decomposed.png") not in plot_patch.paths
-    assert path.join(plot_path, "potential_1d_decomposed.png") in plot_patch.paths
+    assert image.shape == (5, 5)
 
 
 def test__inversion(
@@ -81,17 +54,10 @@ def test__inversion(
     plotter_interface = PlotterInterface(image_path=plot_path)
 
     plotter_interface.inversion(
-        inversion=rectangular_inversion_7x7_3x3, during_analysis=True
+        inversion=rectangular_inversion_7x7_3x3,
     )
 
     assert path.join(plot_path, "subplot_inversion_0.png") in plot_patch.paths
-
-    plot_path = path.join(plot_path, "inversion")
-
-    assert path.join(plot_path, "reconstructed_image.png") in plot_patch.paths
-    assert path.join(plot_path, "reconstruction.png") in plot_patch.paths
-    assert path.join(plot_path, "inversion", "errors.png") not in plot_patch.paths
-    assert path.join(plot_path, "regularization_weights.png") not in plot_patch.paths
 
 
 def test__adapt_images(
@@ -112,9 +78,6 @@ def test__adapt_images(
         adapt_images=adapt_images,
     )
 
-    plot_path = path.join(plot_path, "adapt")
+    plot_path = path.join(plot_path)
 
-    assert path.join(plot_path, "adapt_model_image.png") in plot_patch.paths
-    assert (
-        path.join(plot_path, "subplot_adapt_images_of_galaxies.png") in plot_patch.paths
-    )
+    assert path.join(plot_path, "subplot_adapt_images.png") in plot_patch.paths

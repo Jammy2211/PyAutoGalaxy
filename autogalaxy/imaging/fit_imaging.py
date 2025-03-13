@@ -48,7 +48,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
            noise-map (if an inversion is performed the `log_evidence`, including additional terms describing the linear
            algebra solution, is computed).
 
-        When performing a `model-fit`via an `AnalysisImaging` object the `figure_of_merit` of this `FitImaging` object
+        When performing a `model-fit`via an `AnalysisImaging` object the `figure_of_merit` of this object
         is called and returned in the `log_likelihood_function`.
 
         Parameters
@@ -98,11 +98,11 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             self.galaxies.cls_list_from(cls=LightProfileOperated)
         ):
             return self.galaxies.image_2d_from(
-                grid=self.grids.uniform,
+                grid=self.grids.lp,
             )
 
         return self.galaxies.blurred_image_2d_from(
-            grid=self.grids.uniform,
+            grid=self.grids.lp,
             convolver=self.dataset.convolver,
             blurring_grid=self.grids.blurring,
         )
@@ -178,7 +178,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         """
 
         galaxy_blurred_image_2d_dict = self.galaxies.galaxy_blurred_image_2d_dict_from(
-            grid=self.grids.uniform,
+            grid=self.grids.lp,
             convolver=self.dataset.convolver,
             blurring_grid=self.grids.blurring,
         )
@@ -250,7 +250,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             exc.raise_linear_light_profile_in_unmasked()
 
         return self.galaxies.unmasked_blurred_image_2d_from(
-            grid=self.grids.uniform, psf=self.dataset.psf
+            grid=self.grids.lp, psf=self.dataset.psf
         )
 
     @property
@@ -265,7 +265,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             exc.raise_linear_light_profile_in_unmasked()
 
         return self.galaxies.unmasked_blurred_image_2d_list_from(
-            grid=self.grids.uniform, psf=self.dataset.psf
+            grid=self.grids.lp, psf=self.dataset.psf
         )
 
     @property

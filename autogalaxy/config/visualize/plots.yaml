@@ -3,96 +3,43 @@
 # For example, if `plots: fit: subplot_fit=True``, the ``fit_dataset.png`` subplot file will
 # be plotted every time visualization is performed.
 
+subplot_format: [png]                      # Output format of all subplots, can be png, pdf or both (e.g. [png, pdf])
+
 dataset:                                   # Settings for plots of all datasets (e.g. ImagingPlotter, InterferometerPlotter).
   subplot_dataset: true                    # Plot subplot containing all dataset quantities (e.g. the data, noise-map, etc.)?
-  data: false                              # Plot the individual data of every dataset?
-  noise_map: false                         # Plot the individual noise-map of every dataset?
-  signal_to_noise_map: false               # Plot the individual signal-to-noise-map of every dataset?
-  over_sampling: false            # Plot the over-sampling sub-size, used to evaluate light profiles, of every dataset?
-  over_sampling_non_uniform: false  # Plot the over-sampling sub-size, used to evaluate non uniform grids, of every dataset?
-  over_sampling_pixelization: false  # Plot the over-sampling sub-size, used to evaluate pixelizations, of every dataset?
-imaging:                                   # Settings for plots of imaging datasets (e.g. ImagingPlotter).
-  psf: false
+
 fit:                                       # Settings for plots of all fits (e.g. FitImagingPlotter, FitInterferometerPlotter).
   subplot_fit: true                        # Plot subplot of all fit quantities for any dataset (e.g. the model data, residual-map, etc.)?
   subplot_fit_log10: true                  # Plot subplot of all fit quantities for any dataset using log10 color maps (e.g. the model data, residual-map, etc.)?
-  all_at_end_png: true                     # Plot all individual plots listed below as .png (even if False)?
-  all_at_end_fits: true                    # Plot all individual plots listed below as .fits (even if False)?
-  all_at_end_pdf: false                    # Plot all individual plots listed below as publication-quality .pdf (even if False)?
   subplot_of_galaxies: false               # Plot subplot of the model-image, subtracted image and other quantities of each galaxy?
   subplot_galaxy_images: false             # Plot subplot of the image of each galaxy in the model?
-  subtracted_images_of_galaxies: false
-  data: false                              # Plot individual plots of the data?
-  noise_map: false                         # Plot individual plots of the noise-map?
-  signal_to_noise_map: false               # Plot individual plots of the signal-to-noise-map?
-  model_data: false                        # Plot individual plots of the model-data?
-  residual_map: false                      # Plot individual plots of the residual-map?
-  normalized_residual_map: false           # Plot individual plots of the normalized-residual-map?
-  chi_squared_map: false                   # Plot individual plots of the chi-squared-map?
-  residual_flux_fraction: false            # Plot individual plots of the residual_flux_fraction?
-  model_images_of_galaxies: false          # Plot individual plots of each galaxy's model image?
+  fits_fit: false                          # Output a .fits file containing the fit model data, residual map, normalized residual map and chi-squared?
+  fits_model_galaxy_images : false         # Output a .fits file containing the model images of every galaxy?
+
 fit_imaging: {}                            # Settings for plots of fits to imaging datasets (e.g. FitImagingPlotter).
+
 galaxies:                                  # Settings for plots of galaxies (e.g. GalaxiesPlotter).
   subplot_galaxies: true                   # Plot subplot of all quantities in each galaxies group (e.g. images, convergence)?
-  all_at_end_png: true                     # Plot all individual plots listed below as .png (even if False)?
-  all_at_end_fits: true                    # Plot all individual plots listed below as .fits (even if False)?
-  all_at_end_pdf: false                    # Plot all individual plots listed below as publication-quality .pdf (even if False)?
   subplot_galaxy_images: false             # Plot subplot of the image of each galaxy in the model?
-  image: false
-  source_plane_image: false
-  convergence: false
-  deflections: false
-  potential: false
-  magnification: false
-galaxies_1d:                                  # Settings for 1D plots of galaxies (e.g. GalaxiesPlotter).
-  image: false
-  convergence: false
-  potential: false
+  subplot_galaxies_1d: false               # Plot subplot of all quantities in 1D of each galaxies group (e.g. images, convergence)?
+  subplot_galaxies_1d_decomposed: false    # Plot subplot of all quantities in 1D decomposed of each galaxies group (e.g. images, convergence)?
+  fits_galaxy_images: false                # Output a .fits file containing images of every galaxy?
+
 inversion:                                 # Settings for plots of inversions (e.g. InversionPlotter).
   subplot_inversion: true                  # Plot subplot of all quantities in each inversion (e.g. reconstrucuted image, reconstruction)?
   subplot_mappings: true                   # Plot subplot of the image-to-source pixels mappings of each pixelization?
-  all_at_end_png: true                     # Plot all individual plots listed below as .png (even if False)?
-  all_at_end_fits: true                    # Plot all individual plots listed below as .fits (even if False)?
-  all_at_end_pdf: false                    # Plot all individual plots listed below as publication-quality .pdf (even if False)?
-  data_subtracted: false                   # Plot individual plots of the data with the other inversion linear objects subtracted?
-  errors: false                            # Plot image of the errors of every mesh-pixel reconstructed value?
-  sub_pixels_per_image_pixels: false      # Plot the number of sub pixels per masked data pixels?
-  mesh_pixels_per_image_pixels: false     # Plot the number of image-plane mesh pixels per masked data pixels?
-  reconstructed_image: false               # Plot image of the reconstructed data (e.g. in the image-plane)?
-  reconstruction: false                    # Plot the reconstructed inversion (e.g. the pixelization's mesh in the source-plane)?
-  regularization_weights: false            # Plot the effective regularization weight of every inversion mesh pixel?
+  fits_reconstruction: false               # output reconstruction.fits containing the reconstructed pixelization and noise map on the adaptive mesh?
+
 adapt:                                     # Settings for plots of adapt images used by adaptive pixelizations.
-  images_of_galaxies: true
-  model_image: true
-interferometer:                            # Settings for plots of interferometer datasets (e.g. InterferometerPlotter).
-  amplitudes_vs_uv_distances: false
-  phases_vs_uv_distances: false
-  uv_wavelengths: false
-  dirty_image: false
-  dirty_noise_map: false
-  dirty_signal_to_noise_map: false
+  subplot_adapt_images: true               # Plot subplot showing each adapt image used for adaptive pixelization?
+
 fit_interferometer:                        # Settings for plots of fits to interferometer datasets (e.g. FitInterferometerPlotter).
   subplot_fit_dirty_images: false          # Plot subplot of the dirty-images of all interferometer datasets?
   subplot_fit_real_space: false            # Plot subplot of the real-space images of all interferometer datasets?
-  amplitudes_vs_uv_distances: false
-  phases_vs_uv_distances: false
-  uv_wavelengths: false
-  dirty_image: false
-  dirty_noise_map: false
-  dirty_signal_to_noise_map: false
-  dirty_residual_map: false
-  dirty_normalized_residual_map: false
-  dirty_chi_squared_map: false
+  fits_dirty_images: false                 # output dirty_images.fits showing the dirty image, noise-map, model-data, resiual-map, normalized residual map and chi-squared map?
+
 fit_ellipse:                               # Settings for plots of ellipse fitting fits (e.g. FitEllipse)
   data : true                              # Plot the data of the ellipse fit?
   data_no_ellipse: true                    # Plot the data without the black data ellipses, which obscure noisy data?
-fit_quantity:                              # Settings for plots of fit quantities (e.g. FitQuantityPlotter).
-  all_at_end_png: true                     # Plot all individual plots listed below as .png (even if False)?
-  all_at_end_fits: true                    # Plot all individual plots listed below as .fits (even if False)?
-  all_at_end_pdf: false                    # Plot all individual plots listed below as publication-quality .pdf (even if False)?
-  chi_squared_map: false
-  image: true
-  model_image: false
-  noise_map: false
-  residual_map: false
-  normalized_residual_map: false
+
+fit_quantity: {}                           # Settings for plots of fit quantities (e.g. FitQuantityPlotter).

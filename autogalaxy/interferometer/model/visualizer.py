@@ -72,9 +72,6 @@ class VisualizerInterferometer(af.Visualizer):
         instance
             An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
             via a non-linear search).
-        during_analysis
-            If True the visualization is being performed midway through the non-linear search before it is finished,
-            which may change which images are output.
         """
         fit = analysis.fit_from(instance=instance)
 
@@ -86,15 +83,13 @@ class VisualizerInterferometer(af.Visualizer):
         galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
 
         PlotterInterface.galaxies(
-            galaxies=galaxies, grid=fit.grids.uniform, during_analysis=during_analysis
-        )
-        PlotterInterface.galaxies_1d(
-            galaxies=galaxies, grid=fit.grids.uniform, during_analysis=during_analysis
+            galaxies=galaxies,
+            grid=fit.grids.lp,
         )
 
         try:
             PlotterInterface.fit_interferometer(
-                fit=fit, during_analysis=during_analysis
+                fit=fit,
             )
         except exc.InversionException:
             pass
@@ -102,7 +97,7 @@ class VisualizerInterferometer(af.Visualizer):
         if fit.inversion is not None:
             try:
                 PlotterInterface.inversion(
-                    inversion=fit.inversion, during_analysis=during_analysis
+                    inversion=fit.inversion,
                 )
             except IndexError:
                 pass

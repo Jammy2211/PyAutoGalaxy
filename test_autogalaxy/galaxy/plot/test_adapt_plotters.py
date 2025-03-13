@@ -14,7 +14,7 @@ def make_adapt_plotter_setup():
     )
 
 
-def test__plot_adapt_images_of_galaxies(
+def test__plot_adapt_adapt_images(
     adapt_galaxy_name_image_dict_7x7, mask_2d_7x7, include_2d_all, plot_path, plot_patch
 ):
     adapt_plotter = aplt.AdaptPlotter(
@@ -22,9 +22,7 @@ def test__plot_adapt_images_of_galaxies(
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
 
-    adapt_plotter.subplot_images_of_galaxies(
+    adapt_plotter.subplot_adapt_images(
         adapt_galaxy_name_image_dict=adapt_galaxy_name_image_dict_7x7
     )
-    assert (
-        path.join(plot_path, "subplot_adapt_images_of_galaxies.png") in plot_patch.paths
-    )
+    assert path.join(plot_path, "subplot_adapt_images.png") in plot_patch.paths
