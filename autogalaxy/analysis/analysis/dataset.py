@@ -170,22 +170,22 @@ class AnalysisDataset(Analysis):
         """
         paths.save_fits(
             name="data",
-            hdu=self.dataset.data.hdu_for_output,
+            fits=self.dataset.data.hdu_for_output,
             prefix="dataset",
         )
         paths.save_fits(
             name="noise_map",
-            hdu=self.dataset.noise_map.hdu_for_output,
+            fits=self.dataset.noise_map.hdu_for_output,
             prefix="dataset",
         )
         paths.save_fits(
             name="over_sample_size_lp",
-            hdu=self.dataset.grids.lp.over_sample_size.native.hdu_for_output,
+            fits=self.dataset.grids.lp.over_sample_size.native.hdu_for_output,
             prefix="dataset",
         )
         paths.save_fits(
             name="over_sample_size_pixelization",
-            hdu=self.dataset.grids.pixelization.over_sample_size.native.hdu_for_output,
+            fits=self.dataset.grids.pixelization.over_sample_size.native.hdu_for_output,
             prefix="dataset",
         )
         paths.save_json(
@@ -209,7 +209,7 @@ class AnalysisDataset(Analysis):
             for name in self.adapt_images.galaxy_name_image_dict.keys():
                 paths.save_fits(
                     name=name,
-                    hdu=self.adapt_images.galaxy_name_image_dict[name].hdu_for_output,
+                    fits=self.adapt_images.galaxy_name_image_dict[name].hdu_for_output,
                     prefix="adapt_images",
                 )
 
