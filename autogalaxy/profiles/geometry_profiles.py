@@ -132,7 +132,7 @@ class SphProfile(GeometryProfile):
             The circular radius of each coordinate from the profile center.
         """
         if use_jax:
-            grid_angles = np.arctan2(grid.array[:, 0], grid.array[:, 1])
+            grid_angles = np.arctan2(np.array(grid)[:, 0], np.array(grid)[:, 1])
         else:
             grid_angles = np.arctan2(grid[:, 0], grid[:, 1])
         cos_theta, sin_theta = self.angle_to_profile_grid_from(grid_angles=grid_angles)
@@ -151,7 +151,7 @@ class SphProfile(GeometryProfile):
             The (y, x) coordinates in the original reference frame of the grid.
         """
         if use_jax:
-            return np.subtract(grid.array, np.array(self.centre))
+            return np.subtract(np.array(grid), np.array(self.centre))
         else:
             return np.subtract(grid, self.centre)
 
@@ -319,8 +319,8 @@ class EllProfile(SphProfile):
         """
         return np.sqrt(
             np.add(
-                np.square(grid.array[:, 1]),
-                np.square(np.divide(grid.array[:, 0], self.axis_ratio)),
+                np.square(np.array(grid)[:, 1]),
+                np.square(np.divide(np.array(grid)[:, 0], self.axis_ratio)),
             )
         )
 
@@ -343,7 +343,7 @@ class EllProfile(SphProfile):
             The (y, x) coordinates in the reference frame of the elliptical profile.
         """
 
-        grid_radii = self.elliptical_radii_grid_from(grid=grid, **kwargs).array
+        grid_radii = np.array(self.elliptical_radii_grid_from(grid=grid, **kwargs))
 
         return np.multiply(np.sqrt(self.axis_ratio), grid_radii)  # .view(np.ndarray)
 
