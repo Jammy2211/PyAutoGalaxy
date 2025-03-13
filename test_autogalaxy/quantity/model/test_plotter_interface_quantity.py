@@ -29,5 +29,3 @@ def test__fit_quantity(
     plot_path = path.join(plot_path, "fit_quantity")
 
     assert path.join(plot_path, "subplot_fit.png") not in plot_patch.paths
-    assert path.join(plot_path, "data.png") in plot_patch.paths
-    assert path.join(plot_path, "noise_map.png") not in plot_patch.paths

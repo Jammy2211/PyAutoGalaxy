@@ -17,6 +17,7 @@ from .dark import (
     gNFW,
     gNFWSph,
     gNFWVirialMassConcSph,
+    gNFWVirialMassgNFWConcSph,
     NFWTruncatedSph,
     NFWTruncatedMCRDuffySph,
     NFWTruncatedMCRLudlowSph,
