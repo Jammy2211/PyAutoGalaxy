@@ -38,11 +38,11 @@ def adapt_images_from(
     for fit in fit_list:
         try:
             mask = aa.Mask2D.from_primary_hdu(
-                primary_hdu=fit.value(name="dataset.mask")
+                primary_hdu=fit.value(name="dataset.mask")[0]
             )
-        except AttributeError:
+        except TypeError:
             mask = aa.Mask2D.from_primary_hdu(
-                primary_hdu=fit.value(name="dataset.real_space_mask")
+                primary_hdu=fit.value(name="dataset.real_space_mask")[0]
             )
 
         galaxy_name_image_dict = {}
@@ -51,7 +51,7 @@ def adapt_images_from(
 
         for name in adapt_image_name_list:
             adapt_image = aa.Array2D.from_primary_hdu(
-                primary_hdu=fit.value(name=f"adapt_images.{name}")
+                primary_hdu=fit.value(name=f"adapt_images.{name}")[0]
             )
             adapt_image = adapt_image.apply_mask(mask=mask)
             galaxy_name_image_dict[name] = adapt_image

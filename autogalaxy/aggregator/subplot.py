@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class SubplotDataset(Enum):
     """
     The subplots that can be extracted from the subplot_fit image.
@@ -15,6 +16,7 @@ class SubplotDataset(Enum):
     signal_to_noise_map = (2, 1)
     over_sample_size_lp = (0, 2)
     over_sample_Size_pixelization = (1, 2)
+
 
 class SubplotFit(Enum):
     """

@@ -237,10 +237,10 @@ class AnalysisInterferometer(AnalysisDataset):
         hdu = aa.util.array_2d.hdu_for_output_from(
             array_2d=self.dataset.uv_wavelengths,
         )
-        paths.save_fits(name="uv_wavelengths", hdu=hdu, prefix="dataset")
+        paths.save_fits(name="uv_wavelengths", fits=hdu, prefix="dataset")
         paths.save_fits(
             name="real_space_mask",
-            hdu=self.dataset.real_space_mask.hdu_for_output,
+            fits=self.dataset.real_space_mask.hdu_for_output,
             prefix="dataset",
         )
         paths.save_json(

@@ -11,7 +11,13 @@ from scipy.integrate import quad
 
 
 def kappa_s_and_scale_radius(
-    cosmology, virial_mass, concentration, overdens, redshift_object, redshift_source, inner_slope
+    cosmology,
+    virial_mass,
+    concentration,
+    overdens,
+    redshift_object,
+    redshift_source,
+    inner_slope,
 ):
     # gNFW concentration imported
 

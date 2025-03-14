@@ -152,17 +152,17 @@ class AnalysisQuantity(Analysis):
         """
         paths.save_fits(
             name="data",
-            hdu=self.dataset.data.hdu_for_output,
+            fits=self.dataset.data.hdu_for_output,
             prefix="dataset",
         )
         paths.save_fits(
             name="noise_map",
-            hdu=self.dataset.noise_map.hdu_for_output,
+            fits=self.dataset.noise_map.hdu_for_output,
             prefix="dataset",
         )
         paths.save_fits(
             name="mask",
-            hdu=self.dataset.mask.hdu_for_output,
+            fits=self.dataset.mask.hdu_for_output,
             prefix="dataset",
         )
         paths.save_json(

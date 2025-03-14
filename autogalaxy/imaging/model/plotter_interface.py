@@ -60,7 +60,6 @@ def fits_to_fits(
         )
 
     if should_plot("fits_model_galaxy_images"):
-
         multi_plotter = aplt.MultiFigurePlotter(
             plotter_list=[
                 aplt.Array2DPlotter(array=image, mat_plot_2d=mat_plot_2d)
