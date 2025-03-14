@@ -41,18 +41,18 @@ def _interferometer_from(
 
     for fit in fit_list:
         data = aa.Visibilities(
-            visibilities=fit.value(name="dataset.data").data.astype("float")
+            visibilities=fit.value(name="dataset.data")[0].data.astype("float")
         )
         noise_map = aa.VisibilitiesNoiseMap(
-            fit.value(name="dataset.noise_map").data.astype("float")
+            fit.value(name="dataset.noise_map")[0].data.astype("float")
         )
-        uv_wavelengths = fit.value(name="dataset.uv_wavelengths").data
+        uv_wavelengths = fit.value(name="dataset.uv_wavelengths")[0].data
 
         real_space_mask = (
             real_space_mask
             if real_space_mask is not None
             else aa.Mask2D.from_primary_hdu(
-                primary_hdu=fit.value(name="dataset.real_space_mask")
+                primary_hdu=fit.value(name="dataset.real_space_mask")[0]
             )
         )
 

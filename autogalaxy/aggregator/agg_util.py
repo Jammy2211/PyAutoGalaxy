@@ -40,7 +40,7 @@ def adapt_images_from(
             mask = aa.Mask2D.from_primary_hdu(
                 primary_hdu=fit.value(name="dataset.mask")[0]
             )
-        except AttributeError:
+        except TypeError:
             mask = aa.Mask2D.from_primary_hdu(
                 primary_hdu=fit.value(name="dataset.real_space_mask")[0]
             )
