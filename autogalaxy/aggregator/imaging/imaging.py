@@ -39,15 +39,17 @@ def _imaging_from(
     dataset_list = []
 
     for fit in fit_list:
-        data = aa.Array2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.data"))
+        data = aa.Array2D.from_primary_hdu(
+            primary_hdu=fit.value(name="dataset.data")[0]
+        )
         noise_map = aa.Array2D.from_primary_hdu(
-            primary_hdu=fit.value(name="dataset.noise_map")
+            primary_hdu=fit.value(name="dataset.noise_map")[0]
         )
         try:
             psf = aa.Kernel2D.from_primary_hdu(
-                primary_hdu=fit.value(name="dataset.psf")
+                primary_hdu=fit.value(name="dataset.psf")[0]
             )
-        except AttributeError:
+        except TypeError:
             psf = None
 
         dataset = aa.Imaging(
@@ -57,26 +59,26 @@ def _imaging_from(
             check_noise_map=False,
         )
 
-        mask = aa.Mask2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.mask"))
+        mask = aa.Mask2D.from_primary_hdu(primary_hdu=fit.value(name="dataset.mask")[0])
 
         dataset = dataset.apply_mask(mask=mask)
 
         try:
             over_sample_size_lp = aa.Array2D.from_primary_hdu(
-                primary_hdu=fit.value(name="dataset.over_sample_size_lp")
+                primary_hdu=fit.value(name="dataset.over_sample_size_lp")[0]
             ).native
             over_sample_size_lp = over_sample_size_lp.apply_mask(mask=mask)
-        except AttributeError:
+        except TypeError:
             over_sample_size_lp = 1
 
         try:
             over_sample_size_pixelization = aa.Array2D.from_primary_hdu(
-                primary_hdu=fit.value(name="dataset.over_sample_size_pixelization")
+                primary_hdu=fit.value(name="dataset.over_sample_size_pixelization")[0]
             ).native
             over_sample_size_pixelization = over_sample_size_pixelization.apply_mask(
                 mask=mask
             )
-        except AttributeError:
+        except TypeError:
             over_sample_size_pixelization = 1
 
         dataset = dataset.apply_over_sampling(
