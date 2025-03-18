@@ -1,6 +1,17 @@
 from enum import Enum
 
 
+class FitFITS(Enum):
+    """
+    The HDUs that can be extracted from the fit.fits file.
+    """
+
+    model_image = "MODEL_IMAGE"
+    residual_map = "RESIDUAL_MAP"
+    normalized_residual_map = "NORMALIZED_RESIDUAL_MAP"
+    chi_squared_map = "CHI_SQUARED_MAP"
+
+
 class SubplotDataset(Enum):
     """
     The subplots that can be extracted from the subplot_fit image.
@@ -15,7 +26,7 @@ class SubplotDataset(Enum):
     psf_log_10 = (1, 1)
     signal_to_noise_map = (2, 1)
     over_sample_size_lp = (0, 2)
-    over_sample_Size_pixelization = (1, 2)
+    over_sample_size_pixelization = (1, 2)
 
 
 class SubplotFit(Enum):
