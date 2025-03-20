@@ -231,14 +231,15 @@ class AnalysisImaging(AnalysisDataset):
         super().save_attributes(paths=paths)
 
         paths.save_fits(
-            name="psf",
-            fits=self.dataset.psf.hdu_for_output,
-            prefix="dataset",
-        )
-        paths.save_fits(
-            name="mask",
-            fits=self.dataset.mask.hdu_for_output,
-            prefix="dataset",
+            name="dataset",
+            fits=[
+                self.dataset.data.hdu_for_output,
+                self.dataset.noise_map.hdu_for_output,
+                self.dataset.psf.hdu_for_output,
+                self.dataset.mask.hdu_for_output,
+                self.dataset.grids.lp.over_sample_size.native.hdu_for_output,
+                self.dataset.grids.pixelization.over_sample_size.native.hdu_for_output,
+            ],
         )
 
     def profile_log_likelihood_function(

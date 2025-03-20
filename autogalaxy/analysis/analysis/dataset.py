@@ -168,26 +168,6 @@ class AnalysisDataset(Analysis):
             The paths object which manages all paths, e.g. where the non-linear search outputs are stored,
             visualization, and the pickled objects used by the aggregator output by this function.
         """
-        paths.save_fits(
-            name="data",
-            fits=self.dataset.data.hdu_for_output,
-            prefix="dataset",
-        )
-        paths.save_fits(
-            name="noise_map",
-            fits=self.dataset.noise_map.hdu_for_output,
-            prefix="dataset",
-        )
-        paths.save_fits(
-            name="over_sample_size_lp",
-            fits=self.dataset.grids.lp.over_sample_size.native.hdu_for_output,
-            prefix="dataset",
-        )
-        paths.save_fits(
-            name="over_sample_size_pixelization",
-            fits=self.dataset.grids.pixelization.over_sample_size.native.hdu_for_output,
-            prefix="dataset",
-        )
         paths.save_json(
             name="settings_inversion",
             object_dict=to_dict(self.settings_inversion),
