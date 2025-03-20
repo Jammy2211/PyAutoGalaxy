@@ -1,6 +1,8 @@
+from astropy.io import fits
 import numpy as np
-
 from typing import Dict, Optional, Tuple
+
+from autoconf.fitsable import hdu_for_output_from
 
 import autofit as af
 import autoarray as aa
@@ -232,14 +234,14 @@ class AnalysisImaging(AnalysisDataset):
 
         paths.save_fits(
             name="dataset",
-            fits=[
-                self.dataset.data.hdu_for_output,
-                self.dataset.noise_map.hdu_for_output,
-                self.dataset.psf.hdu_for_output,
-                self.dataset.mask.hdu_for_output,
-                self.dataset.grids.lp.over_sample_size.native.hdu_for_output,
-                self.dataset.grids.pixelization.over_sample_size.native.hdu_for_output,
-            ],
+            fits=fits.HDUList(hdus=[
+                hdu_for_output_from(arr=self.dataset.mask.astype("float"), ext_name="mask", return_as_primary=True),
+                hdu_for_output_from(arr=self.dataset.data, ext_name="data"),
+                hdu_for_output_from(arr=self.dataset.noise_map, ext_name="noise_map"),
+                hdu_for_output_from(arr=self.dataset.psf, ext_name="psf"),
+                hdu_for_output_from(arr=self.dataset.grids.lp.over_sample_size.native, ext_name="over_sample_size_lp"),
+                hdu_for_output_from(arr=self.dataset.grids.pixelization.over_sample_size.native, ext_name="over_sample_size_pixelization"),
+            ]),
         )
 
     def profile_log_likelihood_function(
