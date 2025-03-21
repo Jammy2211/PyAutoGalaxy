@@ -1,5 +1,7 @@
 from functools import partial
-from typing import List, Optional
+from typing import List
+
+from autoconf.fitsable import ndarray_via_hdu_from
 
 import autofit as af
 import autoarray as aa
@@ -7,7 +9,6 @@ import autoarray as aa
 
 def _interferometer_from(
     fit: af.Fit,
-    real_space_mask: Optional[aa.Mask2D] = None,
 ) -> List[aa.Interferometer]:
     """
     Returns a list of `Interferometer` objects from a `PyAutoFit` sqlite database `Fit` object.
@@ -41,20 +42,24 @@ def _interferometer_from(
     dataset_list = []
 
     for fit in fit_list:
+
         data = aa.Visibilities(
-            visibilities=fit.value(name="dataset.data")[0].data.astype("float")
+            visibilities=fit.value(name="dataset")[1].data.astype("float")
         )
         noise_map = aa.VisibilitiesNoiseMap(
-            fit.value(name="dataset.noise_map")[0].data.astype("float")
+            fit.value(name="dataset")[2].data.astype("float")
         )
-        uv_wavelengths = fit.value(name="dataset.uv_wavelengths")[0].data
+        uv_wavelengths = fit.value(name="dataset")[3].data
 
-        real_space_mask = (
-            real_space_mask
-            if real_space_mask is not None
-            else aa.Mask2D.from_primary_hdu(
-                primary_hdu=fit.value(name="dataset.real_space_mask")[0]
-            )
+        header = aa.Header(header_sci_obj=fit.value(name="dataset")[0].header)
+        pixel_scales = (
+            header.header_sci_obj["PIXSCAY"],
+            header.header_sci_obj["PIXSCAX"],
+        )
+
+        real_space_mask = aa.Mask2D(
+            mask=ndarray_via_hdu_from(fit.value(name="dataset")[0]),
+            pixel_scales=pixel_scales,
         )
 
         transformer_class = fit.value(name="dataset.transformer_class")
@@ -112,21 +117,14 @@ class InterferometerAgg:
 
     def dataset_gen_from(
         self,
-        real_space_mask: Optional[aa.Mask2D] = None,
     ) -> List[aa.Interferometer]:
         """
         Returns a generator of `Interferometer` objects from an input aggregator.
 
         See `__init__` for a description of how the `Interferometer` objects are created by this method.
-
-        Parameters
-        ----------
-        real_space_mask
-            The real space mask.
         """
         func = partial(
             _interferometer_from,
-            real_space_mask=real_space_mask,
         )
 
         return self.aggregator.map(func=func)
