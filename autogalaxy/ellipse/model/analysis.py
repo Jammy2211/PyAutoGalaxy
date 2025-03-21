@@ -184,22 +184,7 @@ class AnalysisEllipse(af.Analysis):
              The paths object which manages all paths, e.g. where the non-linear search outputs are stored,
              visualization, and the pickled objects used by the aggregator output by this function.
         """
-        paths.save_fits(
-            name="dataset",
-            fits=hdu_list_for_output_from(
-                values_list=[
-                    self.dataset.mask.astype("float"),
-                    self.dataset.data.native,
-                    self.dataset.noise_map.native,
-                ],
-                ext_name_list=[
-                    "mask",
-                    "data",
-                    "noise_map",
-                ],
-                header_dict=self.dataset.mask.header_dict,
-            ),
-        )
+        pass
 
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None
