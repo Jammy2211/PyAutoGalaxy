@@ -2,7 +2,7 @@ import logging
 import time
 from typing import Dict, List, Optional, Tuple
 
-from autoconf.dictable import to_dict
+from autoconf.fitsable import hdu_list_for_output_from
 
 import autofit as af
 import autoarray as aa
@@ -185,19 +185,20 @@ class AnalysisEllipse(af.Analysis):
              visualization, and the pickled objects used by the aggregator output by this function.
         """
         paths.save_fits(
-            name="data",
-            fits=self.dataset.data.hdu_for_output,
-            prefix="dataset",
-        )
-        paths.save_fits(
-            name="noise_map",
-            fits=self.dataset.noise_map.hdu_for_output,
-            prefix="dataset",
-        )
-        paths.save_fits(
-            name="mask",
-            fits=self.dataset.mask.hdu_for_output,
-            prefix="dataset",
+            name="dataset",
+            fits=hdu_list_for_output_from(
+                values_list=[
+                    self.dataset.mask.astype("float"),
+                    self.dataset.data.native,
+                    self.dataset.noise_map.native,
+                ],
+                ext_name_list=[
+                    "mask",
+                    "data",
+                    "noise_map",
+                ],
+                header_dict=self.dataset.mask.pixel_scale_header
+            ),
         )
 
     def profile_log_likelihood_function(
