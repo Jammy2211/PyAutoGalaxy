@@ -16,7 +16,7 @@ def _fit_ellipse_from(
     instance: Optional[af.ModelInstance] = None,
 ) -> List[List[FitEllipse]]:
     """
-    Returns a list of `FitEllipse` objects from a `PyAutoFit` sqlite database `Fit` object.
+    Returns a list of `FitEllipse` objects from a `PyAutoFit` loaded directory `Fit` or sqlite database `Fit` object.
 
     The results of a model-fit can be loaded from hard-disk or stored in a sqlite database, including the following
     attributes of the fit:
@@ -39,7 +39,8 @@ def _fit_ellipse_from(
     Parameters
     ----------
     fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from 
+        an output directory or from an sqlite database..
     instance
         A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
         randomly from the PDF).
@@ -122,7 +123,8 @@ class FitEllipseAgg(af.AggBase):
         Parameters
         ----------
         fit
-            A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
+            A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from 
+        an output directory or from an sqlite database..
         instance
             A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
             randomly from the PDF).

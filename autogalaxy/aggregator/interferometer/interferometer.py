@@ -1,17 +1,17 @@
 from functools import partial
 from typing import List
 
-from autoconf.fitsable import ndarray_via_hdu_from
-
 import autofit as af
 import autoarray as aa
+
+from autogalaxy.aggregator import agg_util
 
 
 def _interferometer_from(
     fit: af.Fit,
 ) -> List[aa.Interferometer]:
     """
-    Returns a list of `Interferometer` objects from a `PyAutoFit` sqlite database `Fit` object.
+    Returns a list of `Interferometer` objects from a `PyAutoFit` loaded directory `Fit` or sqlite database `Fit` object.
 
     The results of a model-fit can be loaded from hard-disk or stored in a sqlite database, including the following
     attributes of the fit:
@@ -34,7 +34,8 @@ def _interferometer_from(
     Parameters
     ----------
     fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from 
+        an output directory or from an sqlite database..
     """
 
     fit_list = [fit] if not fit.children else fit.children
@@ -43,6 +44,8 @@ def _interferometer_from(
 
     for fit in fit_list:
 
+        real_space_mask, header, pixel_scales = agg_util.mask_header_pixel_scales_from(fit=fit)
+
         data = aa.Visibilities(
             visibilities=fit.value(name="dataset")[1].data.astype("float")
         )
@@ -50,17 +53,6 @@ def _interferometer_from(
             fit.value(name="dataset")[2].data.astype("float")
         )
         uv_wavelengths = fit.value(name="dataset")[3].data
-
-        header = aa.Header(header_sci_obj=fit.value(name="dataset")[0].header)
-        pixel_scales = (
-            header.header_sci_obj["PIXSCAY"],
-            header.header_sci_obj["PIXSCAX"],
-        )
-
-        real_space_mask = aa.Mask2D(
-            mask=ndarray_via_hdu_from(fit.value(name="dataset")[0]),
-            pixel_scales=pixel_scales,
-        )
 
         transformer_class = fit.value(name="dataset.transformer_class")
 

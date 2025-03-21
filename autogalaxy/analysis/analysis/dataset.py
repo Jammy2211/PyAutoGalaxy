@@ -181,7 +181,7 @@ class AnalysisDataset(Analysis):
 
         if self.adapt_images is not None:
             values_list = [
-                self.adapt_images.galaxy_name_image_dict[name]
+                self.adapt_images.galaxy_name_image_dict[name].native
                 for name in self.adapt_images.galaxy_name_image_dict.keys()
             ]
 

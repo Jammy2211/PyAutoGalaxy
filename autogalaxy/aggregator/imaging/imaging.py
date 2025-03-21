@@ -6,12 +6,13 @@ from autoconf.fitsable import ndarray_via_hdu_from
 import autofit as af
 import autoarray as aa
 
+from autogalaxy.aggregator import agg_util
 
 def _imaging_from(
     fit: af.Fit,
 ) -> List[aa.Imaging]:
     """
-    Returns a list of `Imaging` objects from a `PyAutoFit` sqlite database `Fit` object.
+    Returns a list of `Imaging` objects from a `PyAutoFit` loaded directory `Fit` or sqlite database `Fit` object.
 
     The results of a model-fit can be loaded from hard-disk or stored in a sqlite database, including the following
     attributes of the fit:
@@ -34,7 +35,8 @@ def _imaging_from(
     Parameters
     ----------
     fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from 
+        an output directory or from an sqlite database..
     """
 
     fit_list = [fit] if not fit.children else fit.children
@@ -42,11 +44,8 @@ def _imaging_from(
     dataset_list = []
 
     for fit in fit_list:
-        header = aa.Header(header_sci_obj=fit.value(name="dataset")[0].header)
-        pixel_scales = (
-            header.header_sci_obj["PIXSCAY"],
-            header.header_sci_obj["PIXSCAX"],
-        )
+
+        mask, header, pixel_scales = agg_util.mask_header_pixel_scales_from(fit=fit)
 
         def values_from(hdu: int, cls):
             return cls.no_mask(
@@ -68,11 +67,6 @@ def _imaging_from(
             noise_map=noise_map,
             psf=psf,
             check_noise_map=False,
-        )
-
-        mask = aa.Mask2D(
-            mask=ndarray_via_hdu_from(fit.value(name="dataset")[0]),
-            pixel_scales=pixel_scales,
         )
 
         dataset = dataset.apply_mask(mask=mask)
