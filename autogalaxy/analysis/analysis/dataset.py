@@ -5,6 +5,8 @@ import os
 
 from autoconf import conf
 from autoconf.dictable import to_dict, output_to_json
+from autoconf.fitsable import hdu_list_for_output_from
+
 import autofit as af
 import autoarray as aa
 
@@ -178,20 +180,18 @@ class AnalysisDataset(Analysis):
         )
 
         if self.adapt_images is not None:
-            paths.save_json(
-                name="adapt_images",
-                object_dict=to_dict(
-                    list(self.adapt_images.galaxy_name_image_dict.keys())
-                ),
-                prefix="adapt_images",
-            )
 
-            for name in self.adapt_images.galaxy_name_image_dict.keys():
-                paths.save_fits(
-                    name=name,
-                    fits=self.adapt_images.galaxy_name_image_dict[name].hdu_for_output,
-                    prefix="adapt_images",
-                )
+            values_list = [self.adapt_images.galaxy_name_image_dict[name] for name in self.adapt_images.galaxy_name_image_dict.keys()]
+
+            paths.save_fits(
+                name="adapt_images",
+                fits=hdu_list_for_output_from(
+                    values_list=[
+                        self.dataset.mask.astype("float"),
+                    ] + values_list,
+                    ext_name_list=["mask"] + list(self.adapt_images.galaxy_name_image_dict.keys()),
+                ),
+            )
 
     def save_results(self, paths: af.DirectoryPaths, result: ResultDataset):
         """
