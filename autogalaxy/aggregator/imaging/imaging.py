@@ -59,7 +59,7 @@ def _imaging_from(
 
         try:
             psf = values_from(hdu=3, cls=aa.Kernel2D)
-        except TypeError:
+        except (TypeError, IndexError):
             psf = None
 
         dataset = aa.Imaging(
@@ -74,7 +74,7 @@ def _imaging_from(
         try:
             over_sample_size_lp = values_from(hdu=4, cls=aa.Array2D).native
             over_sample_size_lp = over_sample_size_lp.apply_mask(mask=mask)
-        except TypeError:
+        except (TypeError, IndexError):
             over_sample_size_lp = 1
 
         try:
@@ -82,7 +82,7 @@ def _imaging_from(
             over_sample_size_pixelization = over_sample_size_pixelization.apply_mask(
                 mask=mask
             )
-        except TypeError:
+        except (TypeError, IndexError):
             over_sample_size_pixelization = 1
 
         dataset = dataset.apply_over_sampling(
