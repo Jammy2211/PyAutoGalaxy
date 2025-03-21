@@ -153,10 +153,14 @@ class AnalysisDataset(Analysis):
 
         For this analysis the following are output:
 
-        - The dataset (data / noise-map / over sampler / etc.).
         - The settings associated with the inversion.
         - The settings associated with the pixelization.
         - The Cosmology.
+
+        The following .fits files are also output via the plotter interface:
+
+        - The mask applied to the dataset, in the `PrimaryHDU` of `dataset.fits`.
+        - The dataset (data / noise-map / over sampler / etc.).
         - The adapt image's model image and galaxy images, if used.
 
         It is common for these attributes to be loaded by many of the template aggregator functions given in the
@@ -178,25 +182,6 @@ class AnalysisDataset(Analysis):
             name="cosmology",
             object_dict=to_dict(self.cosmology),
         )
-
-        if self.adapt_images is not None:
-            values_list = [
-                self.adapt_images.galaxy_name_image_dict[name].native
-                for name in self.adapt_images.galaxy_name_image_dict.keys()
-            ]
-
-            paths.save_fits(
-                name="adapt_images",
-                fits=hdu_list_for_output_from(
-                    values_list=[
-                        self.dataset.mask.astype("float"),
-                    ]
-                    + values_list,
-                    ext_name_list=["mask"]
-                    + list(self.adapt_images.galaxy_name_image_dict.keys()),
-                    header_dict=self.dataset.mask.pixel_scale_header,
-                ),
-            )
 
     def save_results(self, paths: af.DirectoryPaths, result: ResultDataset):
         """

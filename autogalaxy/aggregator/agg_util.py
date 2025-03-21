@@ -9,7 +9,7 @@ import autoarray as aa
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 
 
-def mask_header_pixel_scales_from(fit):
+def mask_header_from(fit):
     """
     Returns the mask, header and pixel scales of the `PyAutoFit` `Fit` object.
 
@@ -33,12 +33,17 @@ def mask_header_pixel_scales_from(fit):
         header.header_sci_obj["PIXSCAY"],
         header.header_sci_obj["PIXSCAX"],
     )
+    origin = (
+        header.header_sci_obj["ORIGINY"],
+        header.header_sci_obj["ORIGINX"],
+    )
     mask = aa.Mask2D(
         mask=ndarray_via_hdu_from(fit.value(name="dataset")[0]),
         pixel_scales=pixel_scales,
+        origin=origin,
     )
 
-    return mask, header, pixel_scales
+    return mask, header
 
 
 def adapt_images_from(
@@ -72,15 +77,16 @@ def adapt_images_from(
     adapt_images_list = []
 
     for fit in fit_list:
-        mask, header, pixel_scales = mask_header_pixel_scales_from(fit=fit)
+        mask, header = mask_header_from(fit=fit)
 
         galaxy_name_image_dict = {}
 
         for i, value in enumerate(fit.value(name="adapt_images")[1:]):
             adapt_image = aa.Array2D.no_mask(
                 values=ndarray_via_hdu_from(value),
-                pixel_scales=pixel_scales,
+                pixel_scales=mask.pixel_scales,
                 header=header,
+                origin=mask.origin,
             )
             adapt_image = adapt_image.apply_mask(mask=mask)
 

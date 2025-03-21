@@ -45,13 +45,14 @@ def _imaging_from(
     dataset_list = []
 
     for fit in fit_list:
-        mask, header, pixel_scales = agg_util.mask_header_pixel_scales_from(fit=fit)
+        mask, header = agg_util.mask_header_from(fit=fit)
 
         def values_from(hdu: int, cls):
             return cls.no_mask(
                 values=ndarray_via_hdu_from(fit.value(name="dataset")[hdu]),
-                pixel_scales=pixel_scales,
+                pixel_scales=mask.pixel_scales,
                 header=header,
+                origin=mask.origin,
             )
 
         data = values_from(hdu=1, cls=aa.Array2D)

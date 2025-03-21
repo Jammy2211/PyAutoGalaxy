@@ -164,7 +164,7 @@ class AnalysisQuantity(Analysis):
                     "data",
                     "noise_map",
                 ],
-                header_dict=self.dataset.mask.pixel_scale_header,
+                header_dict=self.dataset.mask.header_dict,
             ),
         )
         paths.save_json(

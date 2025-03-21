@@ -50,7 +50,7 @@ def fits_to_fits(
                 "normalized_residual_map",
                 "chi_squared_map",
             ],
-            header_dict=fit.mask.pixel_scale_header,
+            header_dict=fit.mask.header_dict,
         )
 
         hdu_list.writeto(image_path / "fit.fits", overwrite=True)
@@ -65,7 +65,7 @@ def fits_to_fits(
                 "mask",
             ]
             + [f"galaxy_{i}" for i in range(number_plots)],
-            header_dict=fit.mask.pixel_scale_header,
+            header_dict=fit.mask.header_dict,
         )
 
         hdu_list.writeto(image_path / "model_galaxy_images.fits", overwrite=True)
@@ -102,6 +102,28 @@ class PlotterInterfaceImaging(PlotterInterface):
 
         if should_plot("subplot_dataset"):
             dataset_plotter.subplot_dataset()
+
+        hdu_list = hdu_list_for_output_from(
+            values_list=[
+                dataset.mask.astype("float"),
+                dataset.data.native,
+                dataset.noise_map.native,
+                dataset.psf.native,
+                dataset.grids.lp.over_sample_size.native,
+                dataset.grids.pixelization.over_sample_size.native,
+            ],
+            ext_name_list=[
+                "mask",
+                "data",
+                "noise_map",
+                "psf",
+                "over_sample_size_lp",
+                "over_sample_size_pixelization",
+            ],
+            header_dict=dataset.mask.header_dict,
+        )
+
+        hdu_list.writeto(self.image_path / "dataset.fits", overwrite=True)
 
     def fit_imaging(
         self,

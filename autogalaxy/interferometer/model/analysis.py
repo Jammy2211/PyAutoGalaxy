@@ -210,8 +210,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
         It outputs the following attributes of the dataset:
 
-        - The real space mask applied to the dataset, in the `PrimaryHDU` of `dataset.fits`.
-        - The interferometer dataset as `dataset.fits` (data / noise-map / uv_wavelengths).
+
 
         For this analysis, it uses the `AnalysisDataset` object's method to output the following:
 
@@ -219,6 +218,11 @@ class AnalysisInterferometer(AnalysisDataset):
         - The settings associated with the pixelization.
         - The Cosmology.
         - The adapt image's model image and galaxy images, as `adapt_images.fits`, if used.
+
+        The following .fits files are also output via the plotter interface:
+
+        - The real space mask applied to the dataset, in the `PrimaryHDU` of `dataset.fits`.
+        - The interferometer dataset as `dataset.fits` (data / noise-map / uv_wavelengths).
 
         It is common for these attributes to be loaded by many of the template aggregator functions given in the
         `aggregator` modules. For example, when using the database tools to perform a fit, the default behaviour is for
@@ -232,20 +236,6 @@ class AnalysisInterferometer(AnalysisDataset):
             and the pickled objects used by the aggregator output by this function.
         """
         super().save_attributes(paths=paths)
-
-        paths.save_fits(
-            name="dataset",
-            fits=hdu_list_for_output_from(
-                values_list=[
-                    self.dataset.real_space_mask.astype("float"),
-                    self.dataset.data.in_array,
-                    self.dataset.noise_map.in_array,
-                    self.dataset.uv_wavelengths,
-                ],
-                ext_name_list=["mask", "data", "noise_map", "uv_wavelengths"],
-                header_dict=self.dataset.real_space_mask.pixel_scale_header,
-            ),
-        )
 
         paths.save_json(
             "transformer_class", to_dict(self.dataset.transformer.__class__), "dataset"

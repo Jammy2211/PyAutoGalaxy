@@ -204,17 +204,17 @@ class AnalysisImaging(AnalysisDataset):
         Before the non-linear search begins, this routine saves attributes of the `Analysis` object to the `files`
         folder such that they can be loaded after the analysis using PyAutoFit's database and aggregator tools.
 
-        It outputs the following attributes of the dataset:
-
-        - The mask applied to the dataset, in the `PrimaryHDU` of `dataset.fits`.
-        - The imaging dataset as `dataset.fits` (data / noise-map / psf / over sampler / etc.).
-
         For this analysis, it uses the `AnalysisDataset` object's method to output the following:
 
         - The settings associated with the inversion.
         - The settings associated with the pixelization.
         - The Cosmology.
         - The adapt image's model image and galaxy images, as `adapt_images.fits`, if used.
+
+        The following .fits files are also output via the plotter interface:
+
+        - The mask applied to the dataset, in the `PrimaryHDU` of `dataset.fits`.
+        - The imaging dataset as `dataset.fits` (data / noise-map / psf / over sampler / etc.).
 
         It is common for these attributes to be loaded by many of the template aggregator functions given in the
         `aggregator` modules. For example, when using the database tools to perform a fit, the default behaviour is for
@@ -228,29 +228,6 @@ class AnalysisImaging(AnalysisDataset):
             visualization, and the pickled objects used by the aggregator output by this function.
         """
         super().save_attributes(paths=paths)
-
-        paths.save_fits(
-            name="dataset",
-            fits=hdu_list_for_output_from(
-                values_list=[
-                    self.dataset.mask.astype("float"),
-                    self.dataset.data.native,
-                    self.dataset.noise_map.native,
-                    self.dataset.psf.native,
-                    self.dataset.grids.lp.over_sample_size.native,
-                    self.dataset.grids.pixelization.over_sample_size.native,
-                ],
-                ext_name_list=[
-                    "mask",
-                    "data",
-                    "noise_map",
-                    "psf",
-                    "over_sample_size_lp",
-                    "over_sample_size_pixelization",
-                ],
-                header_dict=self.dataset.mask.pixel_scale_header,
-            ),
-        )
 
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None

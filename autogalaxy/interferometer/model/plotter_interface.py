@@ -41,7 +41,7 @@ def fits_to_fits(
             + [image.native for image in fit.galaxy_model_image_dict.values()],
             ext_name_list=["mask"]
             + [f"galaxy_{i}" for i in range(len(fit.galaxy_model_image_dict.values()))],
-            header_dict=fit.dataset.real_space_mask.pixel_scale_header,
+            header_dict=fit.dataset.real_space_mask.header_dict,
         )
 
         hdu_list.writeto(image_path / "model_galaxy_images.fits", overwrite=True)
@@ -66,7 +66,7 @@ def fits_to_fits(
                 "dirty_normalized_residual_map",
                 "dirty_chi_squared_map",
             ],
-            header_dict=fit.dataset.real_space_mask.pixel_scale_header,
+            header_dict=fit.dataset.real_space_mask.header_dict,
         )
 
         hdu_list.writeto(image_path / "fit_dirty_images.fits", overwrite=True)
@@ -107,6 +107,19 @@ class PlotterInterfaceInterferometer(PlotterInterface):
 
         if should_plot("subplot_dataset"):
             dataset_plotter.subplot_dataset()
+
+        hdu_list = hdu_list_for_output_from(
+                values_list=[
+                    self.dataset.real_space_mask.astype("float"),
+                    self.dataset.data.in_array,
+                    self.dataset.noise_map.in_array,
+                    self.dataset.uv_wavelengths,
+                ],
+                ext_name_list=["mask", "data", "noise_map", "uv_wavelengths"],
+                header_dict=self.dataset.real_space_mask.header_dict,
+        )
+
+        hdu_list.writeto(self.image_path / "dataset.fits", overwrite=True)
 
     def fit_interferometer(
         self,

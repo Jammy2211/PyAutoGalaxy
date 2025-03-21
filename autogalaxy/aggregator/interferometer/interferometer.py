@@ -43,7 +43,7 @@ def _interferometer_from(
     dataset_list = []
 
     for fit in fit_list:
-        real_space_mask, header, pixel_scales = agg_util.mask_header_pixel_scales_from(
+        real_space_mask, header = agg_util.mask_header_pixel_scales_origin_from(
             fit=fit
         )
 
