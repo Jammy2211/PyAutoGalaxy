@@ -134,11 +134,13 @@ class AnalysisQuantity(Analysis):
 
         For this analysis, it uses the `AnalysisDataset` object's method to output the following:
 
-        - The dataset's data.
-        - The dataset's noise-map.
         - The settings associated with the dataset.
         - The Cosmology.
-        - Its mask.
+
+        The following .fits files are also output via the plotter interface:
+
+        - The mask applied to the dataset, in the `PrimaryHDU` of `dataset.fits`.
+        - The imaging dataset as `dataset.fits` (data / noise-map / psf / over sampler / etc.).
 
         It is common for these attributes to be loaded by many of the template aggregator functions given in the
         `aggregator` modules. For example, when using the database tools to perform a fit, the default behaviour is for
@@ -151,22 +153,7 @@ class AnalysisQuantity(Analysis):
             The paths object which manages all paths, e.g. where the non-linear search outputs are stored,
             visualization, and the pickled objects used by the aggregator output by this function.
         """
-        paths.save_fits(
-            name="dataset",
-            fits=hdu_list_for_output_from(
-                values_list=[
-                    self.dataset.mask.astype("float"),
-                    self.dataset.data.native,
-                    self.dataset.noise_map.native,
-                ],
-                ext_name_list=[
-                    "mask",
-                    "data",
-                    "noise_map",
-                ],
-                header_dict=self.dataset.mask.header_dict,
-            ),
-        )
+
         paths.save_json(
             name="cosmology",
             object_dict=to_dict(self.cosmology),
