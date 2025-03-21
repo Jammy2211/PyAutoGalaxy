@@ -194,6 +194,10 @@ class AnalysisDataset(Analysis):
                     + values_list,
                     ext_name_list=["mask"]
                     + list(self.adapt_images.galaxy_name_image_dict.keys()),
+                    header_dict={
+                        "PIXSCAY": self.dataset.pixel_scales[0],
+                        "PIXSCAX": self.dataset.pixel_scales[1],
+                    },
                 ),
             )
 

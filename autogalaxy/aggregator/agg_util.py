@@ -30,6 +30,8 @@ def adapt_images_from(
 
     fit_list = [fit] if not fit.children else fit.children
 
+    aaa
+
     if fit.value(name="adapt_images.adapt_images") is None:
         return [None] * len(fit_list)
 
