@@ -242,10 +242,20 @@ class AnalysisImaging(AnalysisDataset):
                     self.dataset.grids.lp.over_sample_size.native,
                     self.dataset.grids.pixelization.over_sample_size.native,
                 ],
-                ext_name_list=["mask", "data", "noise_map", "psf", "over_sample_size_lp", "over_sample_size_pixelization"],
+                ext_name_list=[
+                    "mask",
+                    "data",
+                    "noise_map",
+                    "psf",
+                    "over_sample_size_lp",
+                    "over_sample_size_pixelization",
+                ],
+                header_dict={
+                    "PIXSCAY": self.dataset.pixel_scales[0],
+                    "PIXSCAX": self.dataset.pixel_scales[1],
+                },
             ),
         )
-
 
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None

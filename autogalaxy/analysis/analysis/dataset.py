@@ -180,16 +180,20 @@ class AnalysisDataset(Analysis):
         )
 
         if self.adapt_images is not None:
-
-            values_list = [self.adapt_images.galaxy_name_image_dict[name] for name in self.adapt_images.galaxy_name_image_dict.keys()]
+            values_list = [
+                self.adapt_images.galaxy_name_image_dict[name]
+                for name in self.adapt_images.galaxy_name_image_dict.keys()
+            ]
 
             paths.save_fits(
                 name="adapt_images",
                 fits=hdu_list_for_output_from(
                     values_list=[
                         self.dataset.mask.astype("float"),
-                    ] + values_list,
-                    ext_name_list=["mask"] + list(self.adapt_images.galaxy_name_image_dict.keys()),
+                    ]
+                    + values_list,
+                    ext_name_list=["mask"]
+                    + list(self.adapt_images.galaxy_name_image_dict.keys()),
                 ),
             )
 

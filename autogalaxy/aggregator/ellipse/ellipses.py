@@ -15,7 +15,8 @@ def _ellipses_from(fit: af.Fit, instance: af.ModelInstance) -> List[List[Ellipse
     """
     Returns a list of `Ellipse` objects from a `PyAutoFit` sqlite database `Fit` object.
 
-    The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
+    The results of a model-fit can be loaded from hard-disk or stored in a sqlite database, including the following
+    attributes of the fit:
 
     - The model and its best fit parameters (e.g. `model.json`).
 
@@ -63,7 +64,8 @@ class EllipsesAgg(af.AggBase):
     Interfaces with an `PyAutoFit` aggregator object to create instances of `Ellipse` objects from the results
     of a model-fit.
 
-    The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
+    The results of a model-fit can be loaded from hard-disk or stored in a sqlite database, including the following
+    attributes of the fit:
 
     - The model and its best fit parameters (e.g. `model.json`).
 

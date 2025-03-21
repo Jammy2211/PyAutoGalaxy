@@ -243,7 +243,6 @@ class AnalysisInterferometer(AnalysisDataset):
                     self.dataset.data.in_array,
                     self.dataset.noise_map.in_array,
                     self.dataset.uv_wavelengths,
-
                 ],
                 ext_name_list=["mask", "data", "noise_map", "uv_wavelengths"],
             ),
