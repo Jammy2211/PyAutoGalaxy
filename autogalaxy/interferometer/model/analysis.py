@@ -208,19 +208,17 @@ class AnalysisInterferometer(AnalysisDataset):
          Before the model-fit begins, this routine saves attributes of the `Analysis` object to the `files` folder
          such that they can be loaded after the analysis using PyAutoFit's database and aggregator tools.
 
+         It outputs the following attributes of the dataset:
+
+         - The real space mask applied to the dataset, in the `PrimaryHDU` of `dataset.fits`.
+         - The interferometer dataset as `dataset.fits` (data / noise-map / uv_wavelengths).
+
          For this analysis, it uses the `AnalysisDataset` object's method to output the following:
 
-         - The interferometer dataset (data / noise-map / uv-wavelengths / settings / etc.).
-         - The real space mask defining how the images appear in real-space and used for the FFT.
          - The settings associated with the inversion.
          - The settings associated with the pixelization.
          - The Cosmology.
-         - The adapt image's model image and galaxy images, if used.
-
-         This function also outputs attributes specific to an interferometer dataset:
-
-        - Its uv-wavelengths
-        - Its real space mask.
+         - The adapt image's model image and galaxy images, as `adapt_images.fits`, if used.
 
          It is common for these attributes to be loaded by many of the template aggregator functions given in the
          `aggregator` modules. For example, when using the database tools to perform a fit, the default behaviour is for
