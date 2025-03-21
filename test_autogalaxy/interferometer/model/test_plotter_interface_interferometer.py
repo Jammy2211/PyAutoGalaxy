@@ -38,26 +38,14 @@ def test__fit_interferometer(
 
     assert path.join(plot_path, "subplot_fit.png") in plot_patch.paths
 
-    # visibilities = ag.ndarray_via_fits_from(
-    #     file_path=path.join(plot_path, "fit.fits"), hdu=0
-    # )
-    #
-    # assert visibilities.shape == (5, 5)
-
-    # visibilities = ag.ndarray_via_fits_from(
-    #     file_path=path.join(plot_path, "model_galaxy_visibilities.fits"), hdu=0
-    # )
-    #
-    # assert visibilities.shape == (5, 5)
-
     image = ag.ndarray_via_fits_from(
         file_path=path.join(plot_path, "model_galaxy_images.fits"), hdu=0
     )
 
-    assert image.shape == (5, 5)
+    assert image.shape == (7, 7)
 
     image = ag.ndarray_via_fits_from(
-        file_path=path.join(plot_path, "dirty_images.fits"), hdu=0
+        file_path=path.join(plot_path, "fit_dirty_images.fits"), hdu=0
     )
 
-    assert image.shape == (5, 5)
+    assert image.shape == (7, 7)

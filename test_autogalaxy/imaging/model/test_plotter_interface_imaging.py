@@ -53,9 +53,7 @@ def test__fit_imaging(
 
     assert path.join(plot_path, "subplot_fit.png") in plot_patch.paths
 
-    image = ag.ndarray_via_fits_from(
-        file_path=path.join(plot_path, "fit.fits"), hdu=0
-    )
+    image = ag.ndarray_via_fits_from(file_path=path.join(plot_path, "fit.fits"), hdu=0)
 
     assert image.shape == (7, 7)
 
