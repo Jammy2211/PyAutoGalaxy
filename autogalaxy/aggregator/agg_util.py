@@ -84,7 +84,8 @@ def adapt_images_from(
                 header=header,
             )
             adapt_image = adapt_image.apply_mask(mask=mask)
-            galaxy_name_image_dict[value.header["EXTNAME"]] = adapt_image
+
+            galaxy_name_image_dict[value.header["EXTNAME"].lower()] = adapt_image
 
         instance = fit.model.instance_from_prior_medians(ignore_prior_limits=True)
 
