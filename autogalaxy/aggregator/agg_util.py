@@ -27,7 +27,7 @@ def mask_header_pixel_scales_from(fit):
     The mask, header and pixel scales of the `PyAutoFit` `Fit` object.
     """
     
-    header = aa.Header(header_sci_obj=fit.value(name="adapt_images")[0].header)
+    header = aa.Header(header_sci_obj=fit.value(name="dataset")[0].header)
     pixel_scales = (
         header.header_sci_obj["PIXSCAY"],
         header.header_sci_obj["PIXSCAX"],

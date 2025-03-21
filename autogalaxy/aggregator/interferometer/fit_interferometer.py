@@ -18,7 +18,6 @@ from autogalaxy.aggregator.galaxies import _galaxies_from
 def _fit_interferometer_from(
     fit: af.Fit,
     instance: Optional[af.ModelInstance] = None,
-    real_space_mask: Optional[aa.Mask2D] = None,
     settings_inversion: aa.SettingsInversion = None,
     use_preloaded_grid: bool = True,
 ) -> List[FitInterferometer]:
@@ -64,7 +63,6 @@ def _fit_interferometer_from(
 
     dataset_list = _interferometer_from(
         fit=fit,
-        real_space_mask=real_space_mask,
     )
 
     galaxies_list = _galaxies_from(fit=fit, instance=instance)
@@ -115,7 +113,6 @@ class FitInterferometerAgg(af.AggBase):
         aggregator: af.Aggregator,
         settings_inversion: Optional[aa.SettingsInversion] = None,
         use_preloaded_grid: bool = True,
-        real_space_mask: Optional[aa.Mask2D] = None,
     ):
         """
             Interfaces with an `PyAutoFit` aggregator object to create instances of `FitInterferometer` objects from the
@@ -159,7 +156,6 @@ class FitInterferometerAgg(af.AggBase):
 
         self.settings_inversion = settings_inversion
         self.use_preloaded_grid = use_preloaded_grid
-        self.real_space_mask = real_space_mask
 
     def object_via_gen_from(
         self, fit, instance: Optional[af.ModelInstance] = None
