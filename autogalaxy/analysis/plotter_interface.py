@@ -3,6 +3,8 @@ from pathlib import Path
 from typing import List, Union
 
 from autoconf import conf
+from autoconf.fitsable import hdu_list_for_output_from
+
 import autoarray as aa
 import autoarray.plot as aplt
 
@@ -178,24 +180,14 @@ class PlotterInterface:
             pass
 
         if should_plot("fits_galaxy_images"):
-            multi_plotter = aplt.MultiFigurePlotter(
-                plotter_list=[
-                    GalaxyPlotter(galaxy=galaxy, grid=grid, mat_plot_2d=mat_plot_2d)
-                    for galaxy in galaxies
-                ],
+
+            hdu_list = hdu_list_for_output_from(
+                values_list=[grid.mask.astype("float")] + [galaxy.image_2d_from(grid=grid) for galaxy in galaxies],
+                ext_name_list=["mask"] + [f"galaxy_{i}" for i in range(len(galaxies))],
+                header_dict=grid.mask.pixel_scale_header,
             )
 
-            multi_plotter.output_to_fits(
-                func_name_list=["figures_2d"] * len(galaxies),
-                figure_name_list=[
-                    "image",
-                ]
-                * len(galaxies),
-                #                tag_list=[name for name, galaxy in galaxies.items()],
-                tag_list=[f"galaxy_{i}" for i in range(len(galaxies))],
-                filename="galaxy_images",
-                remove_fits_first=True,
-            )
+            hdu_list.writeto(self.image_path / "galaxy_images.fits", overwrite=True)
 
     def inversion(self, inversion: aa.Inversion):
         """

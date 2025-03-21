@@ -38,7 +38,7 @@ def test__galaxies(
         file_path=path.join(plot_path, "galaxy_images.fits"), hdu=0
     )
 
-    assert image.shape == (5, 5)
+    assert image.shape == (7, 7)
 
 
 def test__inversion(
