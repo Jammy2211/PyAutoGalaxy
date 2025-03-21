@@ -245,10 +245,7 @@ class AnalysisInterferometer(AnalysisDataset):
                     self.dataset.uv_wavelengths,
                 ],
                 ext_name_list=["mask", "data", "noise_map", "uv_wavelengths"],
-                header_dict={
-                    "PIXSCAY": self.dataset.pixel_scales[0],
-                    "PIXSCAX": self.dataset.pixel_scales[1],
-                },
+                header_dict=self.dataset.real_space_mask.pixel_scale_header
             ),
         )
 

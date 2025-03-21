@@ -250,10 +250,7 @@ class AnalysisImaging(AnalysisDataset):
                     "over_sample_size_lp",
                     "over_sample_size_pixelization",
                 ],
-                header_dict={
-                    "PIXSCAY": self.dataset.pixel_scales[0],
-                    "PIXSCAX": self.dataset.pixel_scales[1],
-                },
+                header_dict=self.dataset.mask.pixel_scale_header
             ),
         )
 
