@@ -3,6 +3,7 @@ import numpy as np
 from typing import Dict, Optional, Tuple
 
 from autoconf.dictable import to_dict
+from autoconf.fitsable import hdu_list_for_output_from
 
 import autofit as af
 import autoarray as aa
@@ -234,18 +235,25 @@ class AnalysisInterferometer(AnalysisDataset):
         """
         super().save_attributes(paths=paths)
 
-        hdu = aa.util.array_2d.hdu_for_output_from(
-            array_2d=self.dataset.uv_wavelengths,
-        )
-        paths.save_fits(name="uv_wavelengths", fits=hdu, prefix="dataset")
         paths.save_fits(
-            name="real_space_mask",
-            fits=self.dataset.real_space_mask.hdu_for_output,
-            prefix="dataset",
+            name="dataset",
+            fits=hdu_list_for_output_from(
+                values_list=[
+                    self.dataset.real_space_mask.astype("float"),
+                    self.dataset.data.in_array,
+                    self.dataset.noise_map.in_array,
+                    self.dataset.uv_wavelengths,
+
+                ],
+                ext_name_list=["mask", "data", "noise_map", "uv_wavelengths"],
+            ),
         )
+
         paths.save_json(
             "transformer_class", to_dict(self.dataset.transformer.__class__), "dataset"
         )
+
+        ggg
 
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None
