@@ -31,7 +31,7 @@ def _dataset_model_from(
     Parameters
     ----------
     fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from 
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
         an output directory or from an sqlite database..
     instance
         A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance

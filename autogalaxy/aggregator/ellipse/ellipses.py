@@ -32,7 +32,7 @@ def _ellipses_from(fit: af.Fit, instance: af.ModelInstance) -> List[List[Ellipse
     Parameters
     ----------
     fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from 
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
         an output directory or from an sqlite database..
     instance
         A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
@@ -103,7 +103,7 @@ class EllipsesAgg(af.AggBase):
         Parameters
         ----------
         fit
-            A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from 
+            A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
         an output directory or from an sqlite database..
         instance
             A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance

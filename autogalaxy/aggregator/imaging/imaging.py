@@ -8,6 +8,7 @@ import autoarray as aa
 
 from autogalaxy.aggregator import agg_util
 
+
 def _imaging_from(
     fit: af.Fit,
 ) -> List[aa.Imaging]:
@@ -35,7 +36,7 @@ def _imaging_from(
     Parameters
     ----------
     fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from 
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
         an output directory or from an sqlite database..
     """
 
@@ -44,7 +45,6 @@ def _imaging_from(
     dataset_list = []
 
     for fit in fit_list:
-
         mask, header, pixel_scales = agg_util.mask_header_pixel_scales_from(fit=fit)
 
         def values_from(hdu: int, cls):

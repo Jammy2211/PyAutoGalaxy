@@ -8,25 +8,26 @@ import autoarray as aa
 
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 
+
 def mask_header_pixel_scales_from(fit):
     """
     Returns the mask, header and pixel scales of the `PyAutoFit` `Fit` object.
-    
+
     These quantities are commonly loaded during the aggregator interface therefore this method is used to
     avoid code duplication.
-    
+
     Parameters
     ----------
     fit
         A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
         an output directory or from an sqlite database.
-        
+
 
     Returns
     -------
     The mask, header and pixel scales of the `PyAutoFit` `Fit` object.
     """
-    
+
     header = aa.Header(header_sci_obj=fit.value(name="dataset")[0].header)
     pixel_scales = (
         header.header_sci_obj["PIXSCAY"],
@@ -36,7 +37,7 @@ def mask_header_pixel_scales_from(fit):
         mask=ndarray_via_hdu_from(fit.value(name="dataset")[0]),
         pixel_scales=pixel_scales,
     )
-    
+
     return mask, header, pixel_scales
 
 
@@ -44,7 +45,7 @@ def adapt_images_from(
     fit: af.Fit,
 ) -> List[AdaptImages]:
     """
-    Updates adaptive images when loading the galaxies from a `PyAutoFit` loaded directory `Fit` or sqlite 
+    Updates adaptive images when loading the galaxies from a `PyAutoFit` loaded directory `Fit` or sqlite
     database `Fit` object.
 
     This function ensures that if adaptive features (e.g. an `Hilbert` image-mesh) are used in a model-fit,
@@ -71,13 +72,11 @@ def adapt_images_from(
     adapt_images_list = []
 
     for fit in fit_list:
-        
         mask, header, pixel_scales = mask_header_pixel_scales_from(fit=fit)
 
         galaxy_name_image_dict = {}
 
         for i, value in enumerate(fit.value(name="adapt_images")[1:]):
-
             adapt_image = aa.Array2D.no_mask(
                 values=ndarray_via_hdu_from(value),
                 pixel_scales=pixel_scales,
@@ -122,7 +121,7 @@ def mesh_grids_of_planes_list_from(
     Parameters
     ----------
     fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from 
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
         an output directory or from an sqlite database..
     total_fits
         The total number of `Analysis` objects summed to create the fit.

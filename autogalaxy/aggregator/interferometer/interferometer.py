@@ -34,7 +34,7 @@ def _interferometer_from(
     Parameters
     ----------
     fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from 
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
         an output directory or from an sqlite database..
     """
 
@@ -43,8 +43,9 @@ def _interferometer_from(
     dataset_list = []
 
     for fit in fit_list:
-
-        real_space_mask, header, pixel_scales = agg_util.mask_header_pixel_scales_from(fit=fit)
+        real_space_mask, header, pixel_scales = agg_util.mask_header_pixel_scales_from(
+            fit=fit
+        )
 
         data = aa.Visibilities(
             visibilities=fit.value(name="dataset")[1].data.astype("float")

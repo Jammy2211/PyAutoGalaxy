@@ -1,5 +1,7 @@
-from os import path
-from typing import ClassVar, List
+from pathlib import Path
+from typing import List
+
+from autoconf.fitsable import hdu_list_for_output_from
 
 import autoarray as aa
 import autoarray.plot as aplt
@@ -13,9 +15,8 @@ from autogalaxy.analysis.plotter_interface import plot_setting
 
 def fits_to_fits(
     should_plot: bool,
+    image_path: Path,
     fit: FitImaging,
-    mat_plot_2d: aplt.MatPlot2D,
-    fit_plotter_cls: ClassVar,
 ):
     """
     Output attributes of a `FitImaging` to .fits format.
@@ -27,56 +28,47 @@ def fits_to_fits(
     ----------
     should_plot
         The function which inspects the configuration files to determine if a .fits file should be output.
+    image_path
+        The path the .fits files are output and the name of the .fits files.
     fit
         The fit to output to a .fits file.
-    mat_plot_2d
-        The 2D matplotlib plot used to create the .fits files.
-    fit_plotter_cls
-        The plotter class used to create the .fits files.
     """
 
     if should_plot("fits_fit"):
-        multi_plotter = aplt.MultiFigurePlotter(
-            plotter_list=[fit_plotter_cls(fit=fit, mat_plot_2d=mat_plot_2d)] * 4,
+        hdu_list = hdu_list_for_output_from(
+            values_list=[
+                fit.mask.astype("float"),
+                fit.model_data,
+                fit.residual_map,
+                fit.normalized_residual_map,
+                fit.chi_squared_map,
+            ],
+            ext_name_list=[
+                "mask",
+                "model_data",
+                "residual_map",
+                "normalized_residual_map",
+                "chi_squared_map",
+            ],
+            header_dict=fit.mask.pixel_scale_header,
         )
 
-        multi_plotter.output_to_fits(
-            func_name_list=["figures_2d"] * len(multi_plotter.plotter_list),
-            figure_name_list=[
-                "model_image",
-                "residual_map",
-                "normalized_residual_map",
-                "chi_squared_map",
-            ],
-            #                tag_list=[name for name, galaxy in galaxies.items()],
-            tag_list=[
-                "model_image",
-                "residual_map",
-                "normalized_residual_map",
-                "chi_squared_map",
-            ],
-            filename="fit",
-            remove_fits_first=True,
-        )
+        hdu_list.writeto(image_path / "fit.fits", overwrite=True)
 
     if should_plot("fits_model_galaxy_images"):
-        multi_plotter = aplt.MultiFigurePlotter(
-            plotter_list=[
-                aplt.Array2DPlotter(array=image, mat_plot_2d=mat_plot_2d)
-                for (galaxy, image) in fit.galaxy_model_image_dict.items()
-            ],
+        number_plots = len(fit.galaxy_model_image_dict.keys()) + 1
+
+        hdu_list = hdu_list_for_output_from(
+            values_list=[fit.mask.astype("float")]
+            + [image.native for image in fit.galaxy_model_image_dict.values()],
+            ext_name_list=[
+                "mask",
+            ]
+            + [f"galaxy_{i}" for i in range(number_plots)],
+            header_dict=fit.mask.pixel_scale_header,
         )
 
-        number_plots = len(multi_plotter.plotter_list)
-
-        multi_plotter.output_to_fits(
-            func_name_list=["figure_2d"] * number_plots,
-            figure_name_list=[None] * number_plots,
-            #                tag_list=[name for name, galaxy in galaxies.items()],
-            tag_list=[f"galaxy_{i}" for i in range(number_plots)],
-            filename="model_galaxy_images",
-            remove_fits_first=True,
-        )
+        hdu_list.writeto(image_path / "model_galaxy_images.fits", overwrite=True)
 
 
 class PlotterInterfaceImaging(PlotterInterface):
@@ -151,9 +143,8 @@ class PlotterInterfaceImaging(PlotterInterface):
 
         fits_to_fits(
             should_plot=should_plot,
+            image_path=self.image_path,
             fit=fit,
-            mat_plot_2d=mat_plot_2d,
-            fit_plotter_cls=FitImagingPlotter,
         )
 
     def imaging_combined(self, dataset_list: List[aa.Imaging]):

@@ -1,5 +1,5 @@
 import os
-from os import path
+from pathlib import Path
 from typing import List, Union
 
 from autoconf import conf
@@ -36,7 +36,7 @@ def plot_setting(section: Union[List[str], str], name: str) -> bool:
 
 
 class PlotterInterface:
-    def __init__(self, image_path: str, title_prefix: str = None):
+    def __init__(self, image_path: Union[Path, str], title_prefix: str = None):
         """
         Provides an interface between an output path and all plotter objects.
 
@@ -60,7 +60,7 @@ class PlotterInterface:
             A string that is added before the title of all figures output by visualization, for example to
             put the name of the dataset and galaxy in the title.
         """
-        self.image_path = image_path
+        self.image_path = Path(image_path)
         self.title_prefix = title_prefix
 
         self.include_2d = Include2D()
@@ -83,7 +83,7 @@ class PlotterInterface:
         """
         return MatPlot1D(
             title=aplt.Title(prefix=self.title_prefix),
-            output=aplt.Output(path=path.join(self.image_path), format=self.fmt),
+            output=aplt.Output(path=self.image_path, format=self.fmt),
         )
 
     def mat_plot_2d_from(self) -> MatPlot2D:
@@ -98,7 +98,7 @@ class PlotterInterface:
         """
         return MatPlot2D(
             title=aplt.Title(prefix=self.title_prefix),
-            output=aplt.Output(path=path.join(self.image_path), format=self.fmt),
+            output=aplt.Output(path=self.image_path, format=self.fmt),
         )
 
     def galaxies(

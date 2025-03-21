@@ -201,31 +201,31 @@ class AnalysisImaging(AnalysisDataset):
 
     def save_attributes(self, paths: af.DirectoryPaths):
         """
-         Before the non-linear search begins, this routine saves attributes of the `Analysis` object to the `files`
-         folder such that they can be loaded after the analysis using PyAutoFit's database and aggregator tools.
+        Before the non-linear search begins, this routine saves attributes of the `Analysis` object to the `files`
+        folder such that they can be loaded after the analysis using PyAutoFit's database and aggregator tools.
 
-         It outputs the following attributes of the dataset:
+        It outputs the following attributes of the dataset:
 
-         - The mask applied to the dataset, in the `PrimaryHDU` of `dataset.fits`.
-         - The imaging dataset as `dataset.fits` (data / noise-map / psf / over sampler / etc.).
+        - The mask applied to the dataset, in the `PrimaryHDU` of `dataset.fits`.
+        - The imaging dataset as `dataset.fits` (data / noise-map / psf / over sampler / etc.).
 
-         For this analysis, it uses the `AnalysisDataset` object's method to output the following:
+        For this analysis, it uses the `AnalysisDataset` object's method to output the following:
 
-         - The settings associated with the inversion.
-         - The settings associated with the pixelization.
-         - The Cosmology.
-         - The adapt image's model image and galaxy images, as `adapt_images.fits`, if used.
+        - The settings associated with the inversion.
+        - The settings associated with the pixelization.
+        - The Cosmology.
+        - The adapt image's model image and galaxy images, as `adapt_images.fits`, if used.
 
-         It is common for these attributes to be loaded by many of the template aggregator functions given in the
-         `aggregator` modules. For example, when using the database tools to perform a fit, the default behaviour is for
-         the dataset, settings and other attributes necessary to perform the fit to be loaded via the pickle files
-         output by this function.
+        It is common for these attributes to be loaded by many of the template aggregator functions given in the
+        `aggregator` modules. For example, when using the database tools to perform a fit, the default behaviour is for
+        the dataset, settings and other attributes necessary to perform the fit to be loaded via the pickle files
+        output by this function.
 
-         Parameters
-         ----------
-         paths
-             The paths object which manages all paths, e.g. where the non-linear search outputs are stored,
-             visualization, and the pickled objects used by the aggregator output by this function.
+        Parameters
+        ----------
+        paths
+            The paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            visualization, and the pickled objects used by the aggregator output by this function.
         """
         super().save_attributes(paths=paths)
 
@@ -248,7 +248,7 @@ class AnalysisImaging(AnalysisDataset):
                     "over_sample_size_lp",
                     "over_sample_size_pixelization",
                 ],
-                header_dict=self.dataset.mask.pixel_scale_header
+                header_dict=self.dataset.mask.pixel_scale_header,
             ),
         )
 
