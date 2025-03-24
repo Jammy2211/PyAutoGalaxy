@@ -7,6 +7,34 @@ from autogalaxy.quantity.model.plotter_interface import PlotterInterfaceQuantity
 
 class VisualizerQuantity(af.Visualizer):
     @staticmethod
+    def visualize_before_fit(
+        analysis,
+        paths: af.AbstractPaths,
+        model: af.AbstractPriorModel,
+    ):
+        """
+        PyAutoFit calls this function immediately before the non-linear search begins.
+
+        It visualizes objects which do not change throughout the model fit like the dataset.
+
+        Parameters
+        ----------
+        paths
+            The paths object which manages all paths, e.g. where the non-linear search outputs are stored,
+            visualization and the pickled objects used by the aggregator output by this function.
+        model
+            The model object, which includes model components representing the galaxies that are fitted to
+            the imaging data.
+        """
+        dataset = analysis.dataset
+
+        plotter = PlotterInterfaceQuantity(
+            image_path=paths.image_path, title_prefix=analysis.title_prefix
+        )
+
+        plotter.dataset_quantity(dataset=dataset)
+
+    @staticmethod
     def visualize(
         analysis,
         paths: af.DirectoryPaths,

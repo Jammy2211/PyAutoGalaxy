@@ -1,3 +1,5 @@
+from autoconf.fitsable import hdu_list_for_output_from
+
 import autofit as af
 
 from autoarray import exc
@@ -27,11 +29,13 @@ class VisualizerImaging(af.Visualizer):
             the imaging data.
         """
 
+        dataset = analysis.dataset
+
         plotter = PlotterInterfaceImaging(
             image_path=paths.image_path, title_prefix=analysis.title_prefix
         )
 
-        plotter.imaging(dataset=analysis.dataset)
+        plotter.imaging(dataset=dataset)
 
         if analysis.adapt_images is not None:
             plotter.adapt_images(adapt_images=analysis.adapt_images)

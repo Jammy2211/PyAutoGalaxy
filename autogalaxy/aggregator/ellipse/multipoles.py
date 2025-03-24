@@ -15,9 +15,10 @@ def _multipoles_from(
     fit: af.Fit, instance: af.ModelInstance
 ) -> List[List[List[EllipseMultipole]]]:
     """
-    Returns a list of `EllipseMultipole` objects from a `PyAutoFit` sqlite database `Fit` object.
+    Returns a list of `EllipseMultipole` objects from a `PyAutoFit` loaded directory `Fit` or sqlite database `Fit` object.
 
-    The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
+    The results of a model-fit can be loaded from hard-disk or stored in a sqlite database, including the following
+    attributes of the fit:
 
     - The model and its best fit parameters (e.g. `model.json`).
 
@@ -33,7 +34,8 @@ def _multipoles_from(
     Parameters
     ----------
     fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
+        an output directory or from an sqlite database..
     instance
         A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
         randomly from the PDF).
@@ -65,7 +67,8 @@ class MultipolesAgg(af.AggBase):
     Interfaces with an `PyAutoFit` aggregator object to create instances of `EllipseMultipole` objects from the results
     of a model-fit.
 
-    The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
+    The results of a model-fit can be loaded from hard-disk or stored in a sqlite database, including the following
+    attributes of the fit:
 
     - The model and its best fit parameters (e.g. `model.json`).
 
@@ -102,7 +105,8 @@ class MultipolesAgg(af.AggBase):
         Parameters
         ----------
         fit
-            A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
+            A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
+        an output directory or from an sqlite database..
         instance
             A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
             randomly from the PDF).

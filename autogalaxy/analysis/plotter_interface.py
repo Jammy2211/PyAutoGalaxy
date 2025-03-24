@@ -1,8 +1,10 @@
 import os
-from os import path
+from pathlib import Path
 from typing import List, Union
 
 from autoconf import conf
+from autoconf.fitsable import hdu_list_for_output_from
+
 import autoarray as aa
 import autoarray.plot as aplt
 
@@ -36,7 +38,7 @@ def plot_setting(section: Union[List[str], str], name: str) -> bool:
 
 
 class PlotterInterface:
-    def __init__(self, image_path: str, title_prefix: str = None):
+    def __init__(self, image_path: Union[Path, str], title_prefix: str = None):
         """
         Provides an interface between an output path and all plotter objects.
 
@@ -60,7 +62,7 @@ class PlotterInterface:
             A string that is added before the title of all figures output by visualization, for example to
             put the name of the dataset and galaxy in the title.
         """
-        self.image_path = image_path
+        self.image_path = Path(image_path)
         self.title_prefix = title_prefix
 
         self.include_2d = Include2D()
@@ -83,7 +85,7 @@ class PlotterInterface:
         """
         return MatPlot1D(
             title=aplt.Title(prefix=self.title_prefix),
-            output=aplt.Output(path=path.join(self.image_path), format=self.fmt),
+            output=aplt.Output(path=self.image_path, format=self.fmt),
         )
 
     def mat_plot_2d_from(self) -> MatPlot2D:
@@ -98,7 +100,7 @@ class PlotterInterface:
         """
         return MatPlot2D(
             title=aplt.Title(prefix=self.title_prefix),
-            output=aplt.Output(path=path.join(self.image_path), format=self.fmt),
+            output=aplt.Output(path=self.image_path, format=self.fmt),
         )
 
     def galaxies(
@@ -178,24 +180,14 @@ class PlotterInterface:
             pass
 
         if should_plot("fits_galaxy_images"):
-            multi_plotter = aplt.MultiFigurePlotter(
-                plotter_list=[
-                    GalaxyPlotter(galaxy=galaxy, grid=grid, mat_plot_2d=mat_plot_2d)
-                    for galaxy in galaxies
-                ],
+            hdu_list = hdu_list_for_output_from(
+                values_list=[grid.mask.astype("float")]
+                + [galaxy.image_2d_from(grid=grid) for galaxy in galaxies],
+                ext_name_list=["mask"] + [f"galaxy_{i}" for i in range(len(galaxies))],
+                header_dict=grid.mask.header_dict,
             )
 
-            multi_plotter.output_to_fits(
-                func_name_list=["figures_2d"] * len(galaxies),
-                figure_name_list=[
-                    "image",
-                ]
-                * len(galaxies),
-                #                tag_list=[name for name, galaxy in galaxies.items()],
-                tag_list=[f"galaxy_{i}" for i in range(len(galaxies))],
-                filename="galaxy_images",
-                remove_fits_first=True,
-            )
+            hdu_list.writeto(self.image_path / "galaxy_images.fits", overwrite=True)
 
     def inversion(self, inversion: aa.Inversion):
         """
@@ -264,5 +256,21 @@ class PlotterInterface:
 
         if should_plot("subplot_adapt_images"):
             adapt_plotter.subplot_adapt_images(
-                adapt_galaxy_name_image_dict=adapt_images.galaxy_image_dict
+                adapt_galaxy_name_image_dict=adapt_images.galaxy_name_image_dict
             )
+
+        values_list = [
+            adapt_images.galaxy_name_image_dict[name].native
+            for name in adapt_images.galaxy_name_image_dict.keys()
+        ]
+
+        hdu_list = hdu_list_for_output_from(
+            values_list=[
+                adapt_images.mask.astype("float"),
+            ]
+            + values_list,
+            ext_name_list=["mask"] + list(adapt_images.galaxy_name_image_dict.keys()),
+            header_dict=adapt_images.mask.header_dict,
+        )
+
+        hdu_list.writeto(self.image_path / "adapt_images.fits", overwrite=True)

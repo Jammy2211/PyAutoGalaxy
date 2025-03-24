@@ -12,9 +12,10 @@ def _dataset_model_from(
     fit: af.Fit, instance: af.ModelInstance
 ) -> List[aa.DatasetModel]:
     """
-    Returns a `DatasetModel` object from a `PyAutoFit` sqlite database `Fit` object.
+    Returns a `DatasetModel` object from a `PyAutoFit` loaded directory `Fit` or sqlite database `Fit` object.
 
-    The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
+    The results of a model-fit can be loaded from hard-disk or stored in a sqlite database, including the following
+    attributes of the fit:
 
     - The model and its best fit parameters (e.g. `model.json`).
 
@@ -30,7 +31,8 @@ def _dataset_model_from(
     Parameters
     ----------
     fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
+        an output directory or from an sqlite database..
     instance
         A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
         randomly from the PDF).

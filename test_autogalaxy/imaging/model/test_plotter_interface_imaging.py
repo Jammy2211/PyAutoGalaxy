@@ -23,6 +23,12 @@ def test__imaging(imaging_7x7, include_2d_all, plot_path, plot_patch):
 
     assert path.join(plot_path, "subplot_dataset.png") in plot_patch.paths
 
+    image = ag.ndarray_via_fits_from(
+        file_path=path.join(plot_path, "dataset.fits"), hdu=0
+    )
+
+    assert image.shape == (7, 7)
+
 
 def test__imaging_combined(imaging_7x7, plot_path, plot_patch):
     if path.exists(plot_path):
@@ -53,17 +59,15 @@ def test__fit_imaging(
 
     assert path.join(plot_path, "subplot_fit.png") in plot_patch.paths
 
-    image = ag.util.array_2d.numpy_array_2d_via_fits_from(
-        file_path=path.join(plot_path, "fit.fits"), hdu=0
-    )
+    image = ag.ndarray_via_fits_from(file_path=path.join(plot_path, "fit.fits"), hdu=0)
 
-    assert image.shape == (5, 5)
+    assert image.shape == (7, 7)
 
-    image = ag.util.array_2d.numpy_array_2d_via_fits_from(
+    image = ag.ndarray_via_fits_from(
         file_path=path.join(plot_path, "model_galaxy_images.fits"), hdu=0
     )
 
-    assert image.shape == (5, 5)
+    assert image.shape == (7, 7)
 
 
 def test__fit_imaging_combined(

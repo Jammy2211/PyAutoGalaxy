@@ -47,6 +47,8 @@ def aggregator_from(database_file, analysis, model, samples):
     search.paths = af.DirectoryPaths(path_prefix=database_file)
     search.fit(model=model, analysis=analysis)
 
+    analysis.visualize_before_fit(paths=search.paths, model=model)
+
     database_file = path.join(conf.instance.output_path, f"{database_file}.sqlite")
 
     agg = af.Aggregator.from_database(filename=database_file)
