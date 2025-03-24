@@ -71,7 +71,7 @@ def test__adapt_images(
     plotter_interface = PlotterInterface(image_path=plot_path)
 
     adapt_images = ag.AdaptImages(
-        galaxy_image_dict=adapt_galaxy_name_image_dict_7x7,
+        galaxy_name_image_dict=adapt_galaxy_name_image_dict_7x7,
     )
 
     plotter_interface.adapt_images(

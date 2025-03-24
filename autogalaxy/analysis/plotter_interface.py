@@ -256,7 +256,7 @@ class PlotterInterface:
 
         if should_plot("subplot_adapt_images"):
             adapt_plotter.subplot_adapt_images(
-                adapt_galaxy_name_image_dict=adapt_images.galaxy_image_dict
+                adapt_galaxy_name_image_dict=adapt_images.galaxy_name_image_dict
             )
 
         values_list = [
