@@ -28,7 +28,7 @@ class VisualizerImaging(af.Visualizer):
             The model object, which includes model components representing the galaxies that are fitted to
             the imaging data.
         """
-        
+
         dataset = analysis.dataset
 
         plotter = PlotterInterfaceImaging(

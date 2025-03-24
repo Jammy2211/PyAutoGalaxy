@@ -30,10 +30,7 @@ def make_agg_7x7(samples, model, analysis_imaging_7x7):
     search.paths = af.DirectoryPaths(path_prefix=file_prefix)
     search.fit(model=model, analysis=analysis_imaging_7x7)
 
-    analysis_imaging_7x7.visualize_before_fit(
-        paths=search.paths,
-        model=model
-    )
+    analysis_imaging_7x7.visualize_before_fit(paths=search.paths, model=model)
 
     database_file = output_path / f"{file_prefix}.sqlite"
 

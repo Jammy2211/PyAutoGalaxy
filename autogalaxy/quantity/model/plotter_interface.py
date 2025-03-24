@@ -9,8 +9,7 @@ from autogalaxy.plot.visuals.two_d import Visuals2D
 
 
 class PlotterInterfaceQuantity(PlotterInterface):
-
-    def dataset_quantity(self, dataset : DatasetQuantity):
+    def dataset_quantity(self, dataset: DatasetQuantity):
         """
         Output visualization of an `Imaging` dataset, typically before a model-fit is performed.
 
@@ -29,21 +28,20 @@ class PlotterInterfaceQuantity(PlotterInterface):
             The imaging dataset which is visualized.
         """
         hdu_list = hdu_list_for_output_from(
-                values_list=[
-                    dataset.mask.astype("float"),
-                    dataset.data.native,
-                    dataset.noise_map.native,
-                ],
-                ext_name_list=[
-                    "mask",
-                    "data",
-                    "noise_map",
-                ],
-                header_dict=dataset.mask.header_dict,
-            )
+            values_list=[
+                dataset.mask.astype("float"),
+                dataset.data.native,
+                dataset.noise_map.native,
+            ],
+            ext_name_list=[
+                "mask",
+                "data",
+                "noise_map",
+            ],
+            header_dict=dataset.mask.header_dict,
+        )
 
         hdu_list.writeto(self.image_path / "dataset.fits", overwrite=True)
-
 
     def fit_quantity(
         self,
@@ -88,4 +86,3 @@ class PlotterInterfaceQuantity(PlotterInterface):
 
         if should_plot("subplot_fit"):
             fit_quantity_plotter.subplot_fit()
-

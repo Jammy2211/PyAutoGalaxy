@@ -45,18 +45,18 @@ class PlotterInterfaceEllipse(PlotterInterface):
             dataset_plotter.subplot_dataset()
 
         hdu_list = hdu_list_for_output_from(
-                values_list=[
-                    dataset.mask.astype("float"),
-                    dataset.data.native,
-                    dataset.noise_map.native,
-                ],
-                ext_name_list=[
-                    "mask",
-                    "data",
-                    "noise_map",
-                ],
-                header_dict=dataset.mask.header_dict,
-            )
+            values_list=[
+                dataset.mask.astype("float"),
+                dataset.data.native,
+                dataset.noise_map.native,
+            ],
+            ext_name_list=[
+                "mask",
+                "data",
+                "noise_map",
+            ],
+            header_dict=dataset.mask.header_dict,
+        )
 
         hdu_list.writeto(self.image_path / "dataset.fits", overwrite=True)
 

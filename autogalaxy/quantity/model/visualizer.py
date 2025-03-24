@@ -6,12 +6,11 @@ from autogalaxy.quantity.model.plotter_interface import PlotterInterfaceQuantity
 
 
 class VisualizerQuantity(af.Visualizer):
-
     @staticmethod
     def visualize_before_fit(
-            analysis,
-            paths: af.AbstractPaths,
-            model: af.AbstractPriorModel,
+        analysis,
+        paths: af.AbstractPaths,
+        model: af.AbstractPriorModel,
     ):
         """
         PyAutoFit calls this function immediately before the non-linear search begins.

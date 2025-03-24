@@ -109,14 +109,14 @@ class PlotterInterfaceInterferometer(PlotterInterface):
             dataset_plotter.subplot_dataset()
 
         hdu_list = hdu_list_for_output_from(
-                values_list=[
-                    self.dataset.real_space_mask.astype("float"),
-                    self.dataset.data.in_array,
-                    self.dataset.noise_map.in_array,
-                    self.dataset.uv_wavelengths,
-                ],
-                ext_name_list=["mask", "data", "noise_map", "uv_wavelengths"],
-                header_dict=self.dataset.real_space_mask.header_dict,
+            values_list=[
+                dataset.real_space_mask.astype("float"),
+                dataset.data.in_array,
+                dataset.noise_map.in_array,
+                dataset.uv_wavelengths,
+            ],
+            ext_name_list=["mask", "data", "noise_map", "uv_wavelengths"],
+            header_dict=dataset.real_space_mask.header_dict,
         )
 
         hdu_list.writeto(self.image_path / "dataset.fits", overwrite=True)

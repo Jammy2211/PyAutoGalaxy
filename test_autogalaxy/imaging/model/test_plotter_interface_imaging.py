@@ -29,6 +29,7 @@ def test__imaging(imaging_7x7, include_2d_all, plot_path, plot_patch):
 
     assert image.shape == (7, 7)
 
+
 def test__imaging_combined(imaging_7x7, plot_path, plot_patch):
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
