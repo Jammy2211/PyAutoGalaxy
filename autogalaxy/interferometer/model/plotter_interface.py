@@ -1,5 +1,6 @@
-from os import path
-from typing import ClassVar
+from pathlib import Path
+
+from autoconf.fitsable import hdu_list_for_output_from
 
 import autoarray as aa
 import autoarray.plot as aplt
@@ -15,9 +16,8 @@ from autogalaxy.analysis.plotter_interface import plot_setting
 
 def fits_to_fits(
     should_plot: bool,
+    image_path: Path,
     fit: FitInterferometer,
-    mat_plot_2d: aplt.MatPlot2D,
-    fit_plotter_cls: ClassVar,
 ):
     """
     Output attributes of a `FitInterferometer` to .fits format.
@@ -29,67 +29,36 @@ def fits_to_fits(
     ----------
     should_plot
         The function which inspects the configuration files to determine if a .fits file should be output.
+    image_path
+        The path the .fits files are output and the name of the .fits files.
     fit
         The fit to output to a .fits file.
-    mat_plot_2d
-        The 2D matplotlib plot used to create the .fits files.
-    fit_plotter_cls
-        The plotter class used to create the .fits files.
     """
-    # if should_plot("fits_fit"):
-    #
-    #     multi_plotter = aplt.MultiFigurePlotter(
-    #         plotter_list=[FitInterferometerPlotter(fit=fit, mat_plot_2d=mat_plot_2d)] * 4,
-    #     )
-    #
-    #     multi_plotter.output_to_fits(
-    #         func_name_list=["figures_2d"] * len(multi_plotter.plotter_list),
-    #         figure_name_list=[
-    #             "model_data",
-    #             "residual_map_real",
-    #             "residual_map_real",
-    #             "normalized_residual_map_real",
-    #             "chi_squared_map_real",
-    #         ],
-    #         #                tag_list=[name for name, galaxy in galaxies.items()],
-    #         tag_list=[
-    #             "model_data",
-    #             "residual_map",
-    #             "normalized_residual_map",
-    #             "chi_squared_map",
-    #         ],
-    #         filename="fit",
-    #         remove_fits_first=True,
-    #     )
 
     if should_plot("fits_model_galaxy_images"):
-        multi_plotter = aplt.MultiFigurePlotter(
-            plotter_list=[
-                aplt.Array2DPlotter(array=image, mat_plot_2d=mat_plot_2d)
-                for (galaxy, image) in fit.galaxy_model_image_dict.items()
-            ],
+        hdu_list = hdu_list_for_output_from(
+            values_list=[fit.dataset.real_space_mask.astype("float")]
+            + [image.native for image in fit.galaxy_model_image_dict.values()],
+            ext_name_list=["mask"]
+            + [f"galaxy_{i}" for i in range(len(fit.galaxy_model_image_dict.values()))],
+            header_dict=fit.dataset.real_space_mask.header_dict,
         )
 
-        multi_plotter.output_to_fits(
-            func_name_list=["figure_2d"] * len(multi_plotter.plotter_list),
-            figure_name_list=[None] * len(multi_plotter.plotter_list),
-            #                tag_list=[name for name, galaxy in galaxies.items()],
-            tag_list=[f"galaxy_{i}" for i in range(len(multi_plotter.plotter_list))],
-            filename="model_galaxy_images",
-            remove_fits_first=True,
-        )
+        hdu_list.writeto(image_path / "model_galaxy_images.fits", overwrite=True)
 
     if should_plot("fits_dirty_images"):
-        number_plots = 6
-
-        multi_plotter = aplt.MultiFigurePlotter(
-            plotter_list=[FitInterferometerPlotter(fit=fit, mat_plot_2d=mat_plot_2d)]
-            * number_plots,
-        )
-
-        multi_plotter.output_to_fits(
-            func_name_list=["figures_2d"] * len(multi_plotter.plotter_list),
-            figure_name_list=[
+        hdu_list = hdu_list_for_output_from(
+            values_list=[
+                fit.dataset.real_space_mask.astype("float"),
+                fit.dirty_image.native,
+                fit.dirty_noise_map.native,
+                fit.dirty_model_image.native,
+                fit.dirty_residual_map.native,
+                fit.dirty_normalized_residual_map.native,
+                fit.dirty_chi_squared_map.native,
+            ],
+            ext_name_list=["mask"]
+            + [
                 "dirty_image",
                 "dirty_noise_map",
                 "dirty_model_image",
@@ -97,18 +66,10 @@ def fits_to_fits(
                 "dirty_normalized_residual_map",
                 "dirty_chi_squared_map",
             ],
-            #                tag_list=[name for name, galaxy in galaxies.items()],
-            tag_list=[
-                "dirty_image",
-                "dirty_noise_map",
-                "dirty_model_image",
-                "dirty_residual_map",
-                "dirty_normalized_residual_map",
-                "dirty_chi_squared_map",
-            ],
-            filename="dirty_images",
-            remove_fits_first=True,
+            header_dict=fit.dataset.real_space_mask.header_dict,
         )
+
+        hdu_list.writeto(image_path / "fit_dirty_images.fits", overwrite=True)
 
 
 class PlotterInterfaceInterferometer(PlotterInterface):
@@ -146,6 +107,19 @@ class PlotterInterfaceInterferometer(PlotterInterface):
 
         if should_plot("subplot_dataset"):
             dataset_plotter.subplot_dataset()
+
+        hdu_list = hdu_list_for_output_from(
+            values_list=[
+                dataset.real_space_mask.astype("float"),
+                dataset.data.in_array,
+                dataset.noise_map.in_array,
+                dataset.uv_wavelengths,
+            ],
+            ext_name_list=["mask", "data", "noise_map", "uv_wavelengths"],
+            header_dict=dataset.real_space_mask.header_dict,
+        )
+
+        hdu_list.writeto(self.image_path / "dataset.fits", overwrite=True)
 
     def fit_interferometer(
         self,
@@ -194,7 +168,6 @@ class PlotterInterfaceInterferometer(PlotterInterface):
 
         fits_to_fits(
             should_plot=should_plot,
+            image_path=self.image_path,
             fit=fit,
-            mat_plot_2d=mat_plot_2d,
-            fit_plotter_cls=FitInterferometerPlotter,
         )

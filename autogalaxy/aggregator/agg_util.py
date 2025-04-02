@@ -1,17 +1,59 @@
 from __future__ import annotations
 from typing import List, Optional
 
+from autoconf.fitsable import ndarray_via_hdu_from
+
 import autofit as af
 import autoarray as aa
 
+from autoarray.mask.mask_2d import Mask2DKeys
+
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
+
+
+def mask_header_from(fit):
+    """
+    Returns the mask, header and pixel scales of the `PyAutoFit` `Fit` object.
+
+    These quantities are commonly loaded during the aggregator interface therefore this method is used to
+    avoid code duplication.
+
+    Parameters
+    ----------
+    fit
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
+        an output directory or from an sqlite database.
+
+
+    Returns
+    -------
+    The mask, header and pixel scales of the `PyAutoFit` `Fit` object.
+    """
+
+    header = aa.Header(header_sci_obj=fit.value(name="dataset")[0].header)
+    pixel_scales = (
+        header.header_sci_obj[Mask2DKeys.PIXSCAY.value],
+        header.header_sci_obj[Mask2DKeys.PIXSCAY.value],
+    )
+    origin = (
+        header.header_sci_obj[Mask2DKeys.ORIGINY.value],
+        header.header_sci_obj[Mask2DKeys.ORIGINX.value],
+    )
+    mask = aa.Mask2D(
+        mask=ndarray_via_hdu_from(fit.value(name="dataset")[0]),
+        pixel_scales=pixel_scales,
+        origin=origin,
+    )
+
+    return mask, header
 
 
 def adapt_images_from(
     fit: af.Fit,
 ) -> List[AdaptImages]:
     """
-    Updates adaptive images when loading the galaxies from a `PyAutoFit` sqlite database `Fit` object.
+    Updates adaptive images when loading the galaxies from a `PyAutoFit` loaded directory `Fit` or sqlite
+    database `Fit` object.
 
     This function ensures that if adaptive features (e.g. an `Hilbert` image-mesh) are used in a model-fit,
     they work when using the database to load and inspect the results of the model-fit.
@@ -19,7 +61,8 @@ def adapt_images_from(
     Parameters
     ----------
     fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
+        an output directory or from an sqlite database.
     galaxies
         A list of galaxies corresponding to a sample of a non-linear search and model-fit.
 
@@ -30,31 +73,26 @@ def adapt_images_from(
 
     fit_list = [fit] if not fit.children else fit.children
 
-    if fit.value(name="adapt_images.adapt_images") is None:
+    if fit.value(name="adapt_images") is None:
         return [None] * len(fit_list)
 
     adapt_images_list = []
 
     for fit in fit_list:
-        try:
-            mask = aa.Mask2D.from_primary_hdu(
-                primary_hdu=fit.value(name="dataset.mask")[0]
-            )
-        except TypeError:
-            mask = aa.Mask2D.from_primary_hdu(
-                primary_hdu=fit.value(name="dataset.real_space_mask")[0]
-            )
+        mask, header = mask_header_from(fit=fit)
 
         galaxy_name_image_dict = {}
 
-        adapt_image_name_list = fit.value(name="adapt_images.adapt_images")
-
-        for name in adapt_image_name_list:
-            adapt_image = aa.Array2D.from_primary_hdu(
-                primary_hdu=fit.value(name=f"adapt_images.{name}")[0]
+        for i, value in enumerate(fit.value(name="adapt_images")[1:]):
+            adapt_image = aa.Array2D.no_mask(
+                values=ndarray_via_hdu_from(value),
+                pixel_scales=mask.pixel_scales,
+                header=header,
+                origin=mask.origin,
             )
             adapt_image = adapt_image.apply_mask(mask=mask)
-            galaxy_name_image_dict[name] = adapt_image
+
+            galaxy_name_image_dict[value.header["EXTNAME"].lower()] = adapt_image
 
         instance = fit.model.instance_from_prior_medians(ignore_prior_limits=True)
 
@@ -91,7 +129,8 @@ def mesh_grids_of_planes_list_from(
     Parameters
     ----------
     fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
+        an output directory or from an sqlite database..
     total_fits
         The total number of `Analysis` objects summed to create the fit.
     use_preloaded_grid

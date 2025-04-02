@@ -1,21 +1,23 @@
 from functools import partial
-from typing import List, Optional
+from typing import List
 
 import autofit as af
 import autoarray as aa
 
+from autogalaxy.aggregator import agg_util
+
 
 def _interferometer_from(
     fit: af.Fit,
-    real_space_mask: Optional[aa.Mask2D] = None,
 ) -> List[aa.Interferometer]:
     """
-    Returns a list of `Interferometer` objects from a `PyAutoFit` sqlite database `Fit` object.
+    Returns a list of `Interferometer` objects from a `PyAutoFit` loaded directory `Fit` or sqlite database `Fit` object.
 
-    The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
+    The results of a model-fit can be loaded from hard-disk or stored in a sqlite database, including the following
+    attributes of the fit:
 
-    - The interferometer visibilities data as a .fits file (`dataset/data.fits`).
-    - The visibilities noise-map as a .fits file (`dataset/noise_map.fits`).
+    - The interferometer visibilities data as a .fits file (`dataset.fits[hdu=1]`).
+    - The visibilities noise-map as a .fits file (`dataset.fits[hdu=2]`).
     - The uv wavelengths as a .fits file (`dataset/uv_wavelengths.fits`).
     - The real space mask defining the grid of the interferometer for the FFT (`dataset/real_space_mask.fits`).
     - The settings of the `Interferometer` data structure used in the fit (`dataset/settings.json`).
@@ -32,7 +34,8 @@ def _interferometer_from(
     Parameters
     ----------
     fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
+        an output directory or from an sqlite database..
     """
 
     fit_list = [fit] if not fit.children else fit.children
@@ -40,21 +43,15 @@ def _interferometer_from(
     dataset_list = []
 
     for fit in fit_list:
+        real_space_mask, header = agg_util.mask_header_from(fit=fit)
+
         data = aa.Visibilities(
-            visibilities=fit.value(name="dataset.data")[0].data.astype("float")
+            visibilities=fit.value(name="dataset")[1].data.astype("float")
         )
         noise_map = aa.VisibilitiesNoiseMap(
-            fit.value(name="dataset.noise_map")[0].data.astype("float")
+            fit.value(name="dataset")[2].data.astype("float")
         )
-        uv_wavelengths = fit.value(name="dataset.uv_wavelengths")[0].data
-
-        real_space_mask = (
-            real_space_mask
-            if real_space_mask is not None
-            else aa.Mask2D.from_primary_hdu(
-                primary_hdu=fit.value(name="dataset.real_space_mask")[0]
-            )
-        )
+        uv_wavelengths = fit.value(name="dataset")[3].data
 
         transformer_class = fit.value(name="dataset.transformer_class")
 
@@ -77,10 +74,11 @@ class InterferometerAgg:
         Interfaces with an `PyAutoFit` aggregator object to create instances of `Interferometer` objects from the results
         of a model-fit.
 
-        The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
+        The results of a model-fit can be loaded from hard-disk or stored in a sqlite database, including the following
+        attributes of the fit:
 
-        - The interferometer visibilities data as a .fits file (`dataset/data.fits`).
-        - The visibilities noise-map as a .fits file (`dataset/noise_map.fits`).
+        - The interferometer visibilities data as a .fits file (`dataset.fits[hdu=1]`).
+        - The visibilities noise-map as a .fits file (`dataset.fits[hdu=2]`).
         - The uv wavelengths as a .fits file (`dataset/uv_wavelengths.fits`).
         - The real space mask defining the grid of the interferometer for the FFT (`dataset/real_space_mask.fits`).
         - The settings of the `Interferometer` data structure used in the fit (`dataset/settings.json`).
@@ -110,21 +108,14 @@ class InterferometerAgg:
 
     def dataset_gen_from(
         self,
-        real_space_mask: Optional[aa.Mask2D] = None,
     ) -> List[aa.Interferometer]:
         """
         Returns a generator of `Interferometer` objects from an input aggregator.
 
         See `__init__` for a description of how the `Interferometer` objects are created by this method.
-
-        Parameters
-        ----------
-        real_space_mask
-            The real space mask.
         """
         func = partial(
             _interferometer_from,
-            real_space_mask=real_space_mask,
         )
 
         return self.aggregator.map(func=func)

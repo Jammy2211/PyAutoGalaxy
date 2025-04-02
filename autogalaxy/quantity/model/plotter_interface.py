@@ -1,3 +1,6 @@
+from autoconf.fitsable import hdu_list_for_output_from
+
+from autogalaxy.quantity.dataset_quantity import DatasetQuantity
 from autogalaxy.quantity.fit_quantity import FitQuantity
 from autogalaxy.quantity.plot.fit_quantity_plotters import FitQuantityPlotter
 from autogalaxy.analysis.plotter_interface import PlotterInterface
@@ -6,6 +9,40 @@ from autogalaxy.plot.visuals.two_d import Visuals2D
 
 
 class PlotterInterfaceQuantity(PlotterInterface):
+    def dataset_quantity(self, dataset: DatasetQuantity):
+        """
+        Output visualization of an `Imaging` dataset, typically before a model-fit is performed.
+
+        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the `image_path`
+        is the output folder of the non-linear search.
+
+        Visualization includes a subplot of the individual images of attributes of the dataset (e.g. the image,
+        noise map, PSF).
+
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
+        the `dataset` and `imaging` headers.
+
+        Parameters
+        ----------
+        dataset
+            The imaging dataset which is visualized.
+        """
+        hdu_list = hdu_list_for_output_from(
+            values_list=[
+                dataset.mask.astype("float"),
+                dataset.data.native,
+                dataset.noise_map.native,
+            ],
+            ext_name_list=[
+                "mask",
+                "data",
+                "noise_map",
+            ],
+            header_dict=dataset.mask.header_dict,
+        )
+
+        hdu_list.writeto(self.image_path / "dataset.fits", overwrite=True)
+
     def fit_quantity(
         self,
         fit: FitQuantity,
