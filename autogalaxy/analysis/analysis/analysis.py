@@ -192,18 +192,18 @@ class Analysis(af.Analysis):
 
         try:
             info_dict["image_pixels"] = self.dataset.grids.lp.shape_slim
-            info_dict[
-                "sub_total_light_profiles"
-            ] = self.dataset.grids.lp.over_sampler.sub_total
+            info_dict["sub_total_light_profiles"] = (
+                self.dataset.grids.lp.over_sampler.sub_total
+            )
         except AttributeError:
             pass
 
         if fit.model_obj.has(cls=aa.Pixelization):
             info_dict["use_w_tilde"] = fit.inversion.settings.use_w_tilde
             try:
-                info_dict[
-                    "sub_total_pixelization"
-                ] = self.dataset.grids.pixelization.over_sampler.sub_total
+                info_dict["sub_total_pixelization"] = (
+                    self.dataset.grids.pixelization.over_sampler.sub_total
+                )
             except AttributeError:
                 pass
             info_dict["use_positive_only_solver"] = (

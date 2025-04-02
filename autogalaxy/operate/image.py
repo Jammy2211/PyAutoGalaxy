@@ -40,7 +40,8 @@ class OperateImage:
     ) -> aa.Array2D:
 
         values = psf.convolve_image(
-            image=image_2d, blurring_image=blurring_image_2d,
+            image=image_2d,
+            blurring_image=blurring_image_2d,
         )
         return Array2D(values=values, mask=image_2d.mask)
 

@@ -4,9 +4,11 @@ from typing import Optional, Tuple, Type
 
 if os.environ.get("USE_JAX", "0") == "1":
     import jax.numpy as np
+
     use_jax = True
 else:
     import numpy as np
+
     use_jax = False
 
 import autoarray as aa

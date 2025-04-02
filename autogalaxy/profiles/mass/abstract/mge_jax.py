@@ -65,14 +65,11 @@ class MassProfileMGE:
         i = np.arange(1, p, 1)
         kesi_last = 1 / 2**p
         k = kesi_last + np.cumsum(np.cumprod((p + 1 - i) / i) * kesi_last)
-        
-        kesi_list = np.hstack([
-            np.array([0.5]),
-            np.ones(p),
-            k[::-1],
-            np.array([kesi_last])
-        ])
-        coef = (-1)**np.arange(0, 2 * p + 1, 1)
+
+        kesi_list = np.hstack(
+            [np.array([0.5]), np.ones(p), k[::-1], np.array([kesi_last])]
+        )
+        coef = (-1) ** np.arange(0, 2 * p + 1, 1)
         eta_const = 2.0 * np.sqrt(2.0 * np.pi) * 10 ** (p / 3.0)
         eta_list = coef * kesi_list
         return eta_const, eta_list
@@ -111,10 +108,7 @@ class MassProfileMGE:
 
         amplitude_list = np.zeros(func_gaussians)
         f_sigma = eta_constant * np.sum(
-            eta_n * np.real(func(
-                sigma_list.reshape(-1, 1) * kesis
-            )),
-            axis=1
+            eta_n * np.real(func(sigma_list.reshape(-1, 1) * kesis)), axis=1
         )
         amplitude_list = f_sigma * d_log_sigma / np.sqrt(2.0 * np.pi)
         amplitude_list = amplitude_list.at[0].multiply(0.5)

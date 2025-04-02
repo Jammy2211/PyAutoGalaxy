@@ -9,7 +9,9 @@ grid = np.array([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__blurred_image_2d_from(
-    grid_2d_7x7, blurring_grid_2d_7x7, psf_3x3,
+    grid_2d_7x7,
+    blurring_grid_2d_7x7,
+    psf_3x3,
 ):
     lp = ag.lp.Sersic(intensity=1.0)
 
@@ -29,9 +31,7 @@ def test__blurred_image_2d_from(
     )
 
     lp_blurred_image_2d = lp.blurred_image_2d_from(
-        grid=grid_2d_7x7,
-        blurring_grid=blurring_grid_2d_7x7,
-        psf=psf_3x3
+        grid=grid_2d_7x7, blurring_grid=blurring_grid_2d_7x7, psf=psf_3x3
     )
 
     assert blurred_image_2d_manual.native == pytest.approx(
@@ -167,7 +167,9 @@ def test__visibilities_from_grid_and_transformer(grid_2d_7x7, transformer_7x7_7)
 
 
 def test__blurred_image_2d_list_from(
-    grid_2d_7x7, blurring_grid_2d_7x7, psf_3x3,
+    grid_2d_7x7,
+    blurring_grid_2d_7x7,
+    psf_3x3,
 ):
     lp_0 = ag.lp.Gaussian(intensity=1.0)
     lp_1 = ag.lp.Gaussian(intensity=2.0)
@@ -194,9 +196,7 @@ def test__blurred_image_2d_list_from(
     )
 
     blurred_image_2d_list = gal.blurred_image_2d_list_from(
-        grid=grid_2d_7x7,
-        blurring_grid=blurring_grid_2d_7x7,
-        psf=psf_3x3
+        grid=grid_2d_7x7, blurring_grid=blurring_grid_2d_7x7, psf=psf_3x3
     )
 
     assert blurred_image_2d_list[0].native == pytest.approx(
@@ -224,9 +224,7 @@ def test__blurred_image_2d_list_from(
     )
 
     blurred_image_2d_list = gal.blurred_image_2d_list_from(
-        grid=grid_2d_7x7,
-        blurring_grid=blurring_grid_2d_7x7,
-        psf=psf_3x3
+        grid=grid_2d_7x7, blurring_grid=blurring_grid_2d_7x7, psf=psf_3x3
     )
 
     assert blurred_image_2d_list[0].native == pytest.approx(
@@ -296,9 +294,7 @@ def test__visibilities_list_from(grid_2d_7x7, transformer_7x7_7):
     assert (lp_1_visibilities == visibilities_list[1]).all()
 
 
-def test__galaxy_blurred_image_2d_dict_from(
-    grid_2d_7x7, blurring_grid_2d_7x7, psf_3x3
-):
+def test__galaxy_blurred_image_2d_dict_from(grid_2d_7x7, blurring_grid_2d_7x7, psf_3x3):
     lp_0 = ag.lp.Sersic(intensity=1.0)
 
     g0 = ag.Galaxy(redshift=0.5, light_profile=lp_0)

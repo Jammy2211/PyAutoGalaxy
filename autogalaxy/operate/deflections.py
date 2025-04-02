@@ -99,16 +99,10 @@ def one_step(r, _, theta, fun, fun_dr):
 @partial(jit, static_argnums=(4,))
 def step_r(r, theta, fun, fun_dr, N=20):
     one_step_partial = jax.tree_util.Partial(
-        one_step,
-        theta=theta,
-        fun=fun,
-        fun_dr=fun_dr
+        one_step, theta=theta, fun=fun, fun_dr=fun_dr
     )
     new_r = jax.lax.scan(one_step_partial, r, xs=np.arange(N))[0]
-    return np.stack([
-        new_r * np.sin(theta),
-        new_r * np.cos(theta)
-    ]).T
+    return np.stack([new_r * np.sin(theta), new_r * np.cos(theta)]).T
 
 
 class OperateDeflections:
@@ -129,7 +123,7 @@ class OperateDeflections:
 
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         raise NotImplementedError
-    
+
     def deflections_yx_scalar(self, y, x, pixel_scales):
         if not use_jax:
             return
@@ -140,13 +134,13 @@ class OperateDeflections:
                 y=y.reshape(1),
                 x=x.reshape(1),
                 shape_native=(1, 1),
-                pixel_scales=pixel_scales
+                pixel_scales=pixel_scales,
             )
             return self.deflections_yx_2d_from(g).squeeze()
 
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ and self.__class__ is other.__class__
-    
+
     def __hash__(self):
         return hash(repr(self))
 
@@ -754,85 +748,73 @@ class OperateDeflections:
             return
         else:
             return np.stack(
-                jax.jacfwd(
-                    self.deflections_yx_scalar,
-                    argnums=(0, 1)
-                )(y, x, pixel_scales)
+                jax.jacfwd(self.deflections_yx_scalar, argnums=(0, 1))(
+                    y, x, pixel_scales
+                )
             )
-    
+
     def jacobian_stack_vector(self, y, x, pixel_scales):
         if not use_jax:
             return
         else:
             return np.vectorize(
-                jax.tree_util.Partial(
-                    self.jacobian_stack,
-                    pixel_scales=pixel_scales
-                ),
-                signature='(),()->(i,i)'
+                jax.tree_util.Partial(self.jacobian_stack, pixel_scales=pixel_scales),
+                signature="(),()->(i,i)",
             )(y, x)
-        
+
     def convergence_mag_shear_yx(self, y, x):
         J = self.jacobian_stack_vector(y, x, 0.05)
         K = 0.5 * (J[..., 0, 0] + J[..., 1, 1])
         mag_shear = 0.5 * np.sqrt(
-            (J[..., 0, 1] + J[..., 1, 0])**2 + (J[..., 0, 0] - J[..., 1, 1])**2
+            (J[..., 0, 1] + J[..., 1, 0]) ** 2 + (J[..., 0, 0] - J[..., 1, 1]) ** 2
         )
         return K, mag_shear
-    
+
     @partial(jit, static_argnums=(0,))
     def tangential_eigen_value_yx(self, y, x):
         K, mag_shear = self.convergence_mag_shear_yx(y, x)
         return 1 - K - mag_shear
-    
+
     @partial(jit, static_argnums=(0, 3))
     def tangential_eigen_value_rt(self, r, theta, centre=(0.0, 0.0)):
         y = r * np.sin(theta) + centre[0]
         x = r * np.cos(theta) + centre[1]
         return self.tangential_eigen_value_yx(y, x)
-    
+
     @partial(jit, static_argnums=(0, 3))
     def grad_r_tangential_eigen_value(self, r, theta, centre=(0.0, 0.0)):
         # ignore `self` with the `argnums` below
-        tangential_eigen_part = partial(
-            self.tangential_eigen_value_rt,
-            centre=centre
-        )
+        tangential_eigen_part = partial(self.tangential_eigen_value_rt, centre=centre)
         return np.vectorize(
-            jax.jacfwd(tangential_eigen_part, argnums=(0,)),
-            signature='(),()->()'
+            jax.jacfwd(tangential_eigen_part, argnums=(0,)), signature="(),()->()"
         )(r, theta)[0]
 
     @partial(jit, static_argnums=(0,))
     def radial_eigen_value_yx(self, y, x):
         K, mag_shear = self.convergence_mag_shear_yx(y, x)
         return 1 - K + mag_shear
-    
+
     @partial(jit, static_argnums=(0, 3))
     def radial_eigen_value_rt(self, r, theta, centre=(0.0, 0.0)):
         y = r * np.sin(theta) + centre[0]
         x = r * np.cos(theta) + centre[1]
         return self.radial_eigen_value_yx(y, x)
-    
+
     @partial(jit, static_argnums=(0, 3))
     def grad_r_radial_eigen_value(self, r, theta, centre=(0.0, 0.0)):
         # ignore `self` with the `argnums` below
-        radial_eigen_part = partial(
-            self.radial_eigen_value_rt,
-            centre=centre
-        )
+        radial_eigen_part = partial(self.radial_eigen_value_rt, centre=centre)
         return np.vectorize(
-            jax.jacfwd(radial_eigen_part, argnums=(0,)),
-            signature='(),()->()'
+            jax.jacfwd(radial_eigen_part, argnums=(0,)), signature="(),()->()"
         )(r, theta)[0]
-    
+
     def tangential_critical_curve_jax(
         self,
         init_r=0.1,
         init_centre=(0.0, 0.0),
         n_points=300,
         n_steps=20,
-        threshold=1e-5
+        threshold=1e-5,
     ):
         """
         Returns all tangential critical curves of the lensing system, which are computed as follows:
@@ -865,8 +847,10 @@ class OperateDeflections:
             r,
             theta,
             jax.tree_util.Partial(self.tangential_eigen_value_rt, centre=init_centre),
-            jax.tree_util.Partial(self.grad_r_tangential_eigen_value, centre=init_centre),
-            n_steps
+            jax.tree_util.Partial(
+                self.grad_r_tangential_eigen_value, centre=init_centre
+            ),
+            n_steps,
         )
         new_yx = new_yx + np.array(init_centre)
         # filter out nan values
@@ -876,14 +860,14 @@ class OperateDeflections:
         value = np.abs(self.tangential_eigen_value_yx(new_yx[:, 0], new_yx[:, 1]))
         gdx = value <= threshold
         return aa.structures.grids.irregular_2d.Grid2DIrregular(values=new_yx[gdx])
-    
+
     def radial_critical_curve_jax(
         self,
         init_r=0.01,
         init_centre=(0.0, 0.0),
         n_points=300,
         n_steps=20,
-        threshold=1e-5
+        threshold=1e-5,
     ):
         """
         Returns all radial critical curves of the lensing system, which are computed as follows:
@@ -917,7 +901,7 @@ class OperateDeflections:
             theta,
             jax.tree_util.Partial(self.radial_eigen_value_rt, centre=init_centre),
             jax.tree_util.Partial(self.grad_r_radial_eigen_value, centre=init_centre),
-            n_steps
+            n_steps,
         )
         new_yx = new_yx + np.array(init_centre)
         # filter out nan values
@@ -953,45 +937,51 @@ class OperateDeflections:
 
             a11 = aa.Array2D(
                 values=1.0
-                - np.gradient(deflections.native[:, :, 1], grid.native[0, :, 1], axis=1),
+                - np.gradient(
+                    deflections.native[:, :, 1], grid.native[0, :, 1], axis=1
+                ),
                 mask=grid.mask,
             )
 
             a12 = aa.Array2D(
                 values=-1.0
-                * np.gradient(deflections.native[:, :, 1], grid.native[:, 0, 0], axis=0),
+                * np.gradient(
+                    deflections.native[:, :, 1], grid.native[:, 0, 0], axis=0
+                ),
                 mask=grid.mask,
             )
 
             a21 = aa.Array2D(
                 values=-1.0
-                * np.gradient(deflections.native[:, :, 0], grid.native[0, :, 1], axis=1),
+                * np.gradient(
+                    deflections.native[:, :, 0], grid.native[0, :, 1], axis=1
+                ),
                 mask=grid.mask,
             )
 
             a22 = aa.Array2D(
                 values=1
-                - np.gradient(deflections.native[:, :, 0], grid.native[:, 0, 0], axis=0),
+                - np.gradient(
+                    deflections.native[:, :, 0], grid.native[:, 0, 0], axis=0
+                ),
                 mask=grid.mask,
             )
 
             return [[a11, a12], [a21, a22]]
         else:
             A = self.jacobian_stack_vector(
-                grid.array[:, 0],
-                grid.array[:, 1],
-                grid.pixel_scales
+                grid.array[:, 0], grid.array[:, 1], grid.pixel_scales
             )
             a = np.eye(2).reshape(1, 2, 2) - A
             return [
                 [
                     aa.Array2D(values=a[..., 1, 1], mask=grid.mask),
-                    aa.Array2D(values=a[..., 1, 0], mask=grid.mask)
+                    aa.Array2D(values=a[..., 1, 0], mask=grid.mask),
                 ],
                 [
                     aa.Array2D(values=a[..., 0, 1], mask=grid.mask),
-                    aa.Array2D(values=a[..., 0, 0], mask=grid.mask)
-                ]
+                    aa.Array2D(values=a[..., 0, 0], mask=grid.mask),
+                ],
             ]
 
             # transpose the result
