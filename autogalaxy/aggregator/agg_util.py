@@ -6,6 +6,8 @@ from autoconf.fitsable import ndarray_via_hdu_from
 import autofit as af
 import autoarray as aa
 
+from autoarray.mask.mask_2d import Mask2DKeys
+
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 
 
@@ -30,12 +32,12 @@ def mask_header_from(fit):
 
     header = aa.Header(header_sci_obj=fit.value(name="dataset")[0].header)
     pixel_scales = (
-        header.header_sci_obj["PIXSCAY"],
-        header.header_sci_obj["PIXSCAX"],
+        header.header_sci_obj[Mask2DKeys.PIXSCAY.value],
+        header.header_sci_obj[Mask2DKeys.PIXSCAY.value],
     )
     origin = (
-        header.header_sci_obj["ORIGINY"],
-        header.header_sci_obj["ORIGINX"],
+        header.header_sci_obj[Mask2DKeys.ORIGINY.value],
+        header.header_sci_obj[Mask2DKeys.ORIGINX.value],
     )
     mask = aa.Mask2D(
         mask=ndarray_via_hdu_from(fit.value(name="dataset")[0]),
