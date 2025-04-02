@@ -135,11 +135,6 @@ def make_mask_2d_7x7():
     return fixtures.make_mask_2d_7x7()
 
 
-@pytest.fixture(name="convolver_7x7")
-def make_convolver_7x7():
-    return fixtures.make_convolver_7x7()
-
-
 @pytest.fixture(name="mask_2d_7x7_1_pix")
 def make_mask_2d_7x7_1_pix():
     return fixtures.make_mask_2d_7x7_1_pix()

@@ -9,14 +9,14 @@ from autogalaxy.profiles.light.linear import (
 )
 
 
-def test__mapping_matrix_from(grid_2d_7x7, blurring_grid_2d_7x7, convolver_7x7):
+def test__mapping_matrix_from(grid_2d_7x7, blurring_grid_2d_7x7, psf_3x3):
     lp_0 = ag.lp_linear.Sersic(effective_radius=1.0)
     lp_1 = ag.lp_linear.Sersic(effective_radius=2.0)
 
     lp_linear_obj_func_list = LightProfileLinearObjFuncList(
         grid=grid_2d_7x7,
         blurring_grid=blurring_grid_2d_7x7,
-        convolver=convolver_7x7,
+        psf=psf_3x3,
         light_profile_list=[lp_0, lp_1],
     )
 
@@ -35,13 +35,13 @@ def test__mapping_matrix_from(grid_2d_7x7, blurring_grid_2d_7x7, convolver_7x7):
     lp_0_blurred_image = lp_0.blurred_image_2d_from(
         grid=grid_2d_7x7,
         blurring_grid=blurring_grid_2d_7x7,
-        convolver=convolver_7x7,
+        psf=psf_3x3
     )
 
     lp_1_blurred_image = lp_1.blurred_image_2d_from(
         grid=grid_2d_7x7,
         blurring_grid=blurring_grid_2d_7x7,
-        convolver=convolver_7x7,
+        psf=psf_3x3
     )
 
     assert lp_linear_obj_func_list.operated_mapping_matrix_override[

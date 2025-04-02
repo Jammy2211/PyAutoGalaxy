@@ -2,6 +2,8 @@ from __future__ import annotations
 import numpy as np
 from typing import TYPE_CHECKING, Dict, List, Optional
 
+from autoarray import Array2D
+
 if TYPE_CHECKING:
     from autogalaxy.galaxy.galaxy import Galaxy
 
@@ -34,31 +36,19 @@ class OperateImage:
         self,
         image_2d: aa.Array2D,
         blurring_image_2d: aa.Array2D,
-        psf: Optional[aa.Kernel2D],
-        convolver: aa.Convolver,
+        psf: aa.Kernel2D,
     ) -> aa.Array2D:
-        if psf is not None:
-            return psf.convolved_array_with_mask_from(
-                array=image_2d.native + blurring_image_2d.native,
-                mask=image_2d.mask,
-            )
 
-        elif convolver is not None:
-            return convolver.convolve_image(
-                image=image_2d, blurring_image=blurring_image_2d
-            )
-
-        else:
-            raise exc.OperateException(
-                "A PSF or Convolver was not passed to the `blurred_image_2d_list_from()` function."
-            )
+        values = psf.convolve_image(
+            image=image_2d, blurring_image=blurring_image_2d,
+        )
+        return Array2D(values=values, mask=image_2d.mask)
 
     def blurred_image_2d_from(
         self,
         grid: aa.Grid2D,
         blurring_grid: aa.Grid2D,
-        psf: Optional[aa.Kernel2D] = None,
-        convolver: aa.Convolver = None,
+        psf: aa.Kernel2D = None,
     ) -> aa.Array2D:
         """
         Evaluate the light object's 2D image from a input 2D grid of coordinates and convolve it with a PSF.
@@ -92,7 +82,6 @@ class OperateImage:
             image_2d=image_2d_not_operated,
             blurring_image_2d=blurring_image_2d_not_operated,
             psf=psf,
-            convolver=convolver,
         )
 
         if self.has(cls=LightProfileOperated):
@@ -224,8 +213,7 @@ class OperateImageList(OperateImage):
         self,
         grid: aa.Grid2D,
         blurring_grid: aa.Grid2D,
-        psf: Optional[aa.Kernel2D] = None,
-        convolver: aa.Convolver = None,
+        psf: aa.Kernel2D = None,
     ) -> List[aa.Array2D]:
         """
         Evaluate the light object's list of 2D images from a input 2D grid of coordinates and convolve each image with
@@ -267,7 +255,6 @@ class OperateImageList(OperateImage):
                 image_2d=image_2d_not_operated,
                 blurring_image_2d=blurring_image_2d_not_operated,
                 psf=psf,
-                convolver=convolver,
             )
 
             image_2d_operated = image_2d_operated_list[i]
@@ -375,7 +362,7 @@ class OperateImageGalaxies(OperateImageList):
         raise NotImplementedError
 
     def galaxy_blurred_image_2d_dict_from(
-        self, grid, convolver, blurring_grid
+        self, grid, psf, blurring_grid
     ) -> Dict[Galaxy, aa.Array2D]:
         """
         Evaluate the light object's dictionary mapping galaixes to their corresponding 2D images and convolve each
@@ -418,7 +405,7 @@ class OperateImageGalaxies(OperateImageList):
                 galaxy_key
             ]
 
-            blurred_image_2d = convolver.convolve_image(
+            blurred_image_2d = psf.convolve_image(
                 image=image_2d_not_operated,
                 blurring_image=blurring_image_2d_not_operated,
             )
