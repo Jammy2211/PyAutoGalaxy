@@ -8,3 +8,4 @@ from autogalaxy.aggregator.ellipse.multipoles import MultipolesAgg
 from autogalaxy.aggregator.ellipse.fit_ellipse import FitEllipseAgg
 from autogalaxy.aggregator.subplot import SubplotDataset as subplot_dataset
 from autogalaxy.aggregator.subplot import SubplotFit as subplot_fit
+from autogalaxy.aggregator.subplot import FITSFit as fits_fit

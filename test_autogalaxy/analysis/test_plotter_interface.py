@@ -34,11 +34,11 @@ def test__galaxies(
         path.join(plot_path, "subplot_galaxies_1d_decomposed.png") in plot_patch.paths
     )
 
-    image = ag.util.array_2d.numpy_array_2d_via_fits_from(
+    image = ag.ndarray_via_fits_from(
         file_path=path.join(plot_path, "galaxy_images.fits"), hdu=0
     )
 
-    assert image.shape == (5, 5)
+    assert image.shape == (7, 7)
 
 
 def test__inversion(
@@ -71,7 +71,7 @@ def test__adapt_images(
     plotter_interface = PlotterInterface(image_path=plot_path)
 
     adapt_images = ag.AdaptImages(
-        galaxy_image_dict=adapt_galaxy_name_image_dict_7x7,
+        galaxy_name_image_dict=adapt_galaxy_name_image_dict_7x7,
     )
 
     plotter_interface.adapt_images(
@@ -81,3 +81,9 @@ def test__adapt_images(
     plot_path = path.join(plot_path)
 
     assert path.join(plot_path, "subplot_adapt_images.png") in plot_patch.paths
+
+    image = ag.ndarray_via_fits_from(
+        file_path=path.join(plot_path, "adapt_images.fits"), hdu=0
+    )
+
+    assert image.shape == (7, 7)

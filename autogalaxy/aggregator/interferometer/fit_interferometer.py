@@ -16,13 +16,13 @@ from autogalaxy.aggregator.galaxies import _galaxies_from
 def _fit_interferometer_from(
     fit: af.Fit,
     instance: Optional[af.ModelInstance] = None,
-    real_space_mask: Optional[aa.Mask2D] = None,
     settings_inversion: aa.SettingsInversion = None,
 ) -> List[FitInterferometer]:
     """
-    Returns a list of `FitInterferometer` objects from a `PyAutoFit` sqlite database `Fit` object.
+    Returns a list of `FitInterferometer` objects from a `PyAutoFit` loaded directory `Fit` or sqlite database `Fit` object.
 
-    The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
+    The results of a model-fit can be loaded from hard-disk or stored in a sqlite database, including the following
+    attributes of the fit:
 
     - The interferometer data, noise-map, uv-wavelengths and settings as .fits files (e.g. `dataset/data.fits`).
     - The real space mask defining the grid of the interferometer for the FFT (`dataset/real_space_mask.fits`).
@@ -44,7 +44,8 @@ def _fit_interferometer_from(
     Parameters
     ----------
     fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
+        an output directory or from an sqlite database..
     instance
         A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
         randomly from the PDF).
@@ -55,7 +56,6 @@ def _fit_interferometer_from(
 
     dataset_list = _interferometer_from(
         fit=fit,
-        real_space_mask=real_space_mask,
     )
 
     galaxies_list = _galaxies_from(fit=fit, instance=instance)
@@ -93,13 +93,13 @@ class FitInterferometerAgg(af.AggBase):
         self,
         aggregator: af.Aggregator,
         settings_inversion: Optional[aa.SettingsInversion] = None,
-        real_space_mask: Optional[aa.Mask2D] = None,
     ):
         """
         Interfaces with an `PyAutoFit` aggregator object to create instances of `FitInterferometer` objects from the
         results of a model-fit.
 
-        The results of a model-fit can be stored in a sqlite database, including the following attributes of the fit:
+        The results of a model-fit can be loaded from hard-disk or stored in a sqlite database, including the following
+        attributes of the fit:
 
         - The interferometer data, noise-map, uv-wavelengths and settings as .fits files (e.g. `dataset/data.fits`).
         - The real space mask defining the grid of the interferometer for the FFT (`dataset/real_space_mask.fits`).
@@ -127,11 +127,17 @@ class FitInterferometerAgg(af.AggBase):
             A `PyAutoFit` aggregator object which can load the results of model-fits.
         settings_inversion
             Optionally overwrite the `SettingsInversion` of the `Inversion` object that is created from the fit.
+
+        Parameters
+        ----------
+        aggregator
+            A `PyAutoFit` aggregator object which can load the results of model-fits.
+        settings_inversion
+            Optionally overwrite the `SettingsInversion` of the `Inversion` object that is created from the fit.
         """
         super().__init__(aggregator=aggregator)
 
         self.settings_inversion = settings_inversion
-        self.real_space_mask = real_space_mask
 
     def object_via_gen_from(
         self, fit, instance: Optional[af.ModelInstance] = None
@@ -144,7 +150,8 @@ class FitInterferometerAgg(af.AggBase):
         Parameters
         ----------
         fit
-            A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
+            A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
+            an output directory or from an sqlite database..
         instance
             A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
             randomly from the PDF).
