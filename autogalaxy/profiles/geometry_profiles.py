@@ -307,7 +307,6 @@ class EllProfile(SphProfile):
         )
 
     @aa.grid_dec.to_array
-    @aa.grid_dec.relocate_to_radial_minimum
     def elliptical_radii_grid_from(
         self, grid: aa.type.Grid2DLike, **kwargs
     ) -> np.ndarray:
@@ -327,7 +326,6 @@ class EllProfile(SphProfile):
         )
 
     @aa.grid_dec.to_array
-    @aa.grid_dec.relocate_to_radial_minimum
     def eccentric_radii_grid_from(
         self, grid: aa.type.Grid2DLike, **kwargs
     ) -> np.ndarray:

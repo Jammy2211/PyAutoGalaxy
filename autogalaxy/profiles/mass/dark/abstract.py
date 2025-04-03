@@ -58,7 +58,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -76,7 +75,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_via_mge_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 

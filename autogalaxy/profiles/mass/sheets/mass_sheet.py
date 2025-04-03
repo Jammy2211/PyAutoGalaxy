@@ -34,7 +34,6 @@ class MassSheet(MassProfile):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         grid_radii = self.radial_grid_from(grid=grid, **kwargs)
         return self._cartesian_grid_via_radial_from(
