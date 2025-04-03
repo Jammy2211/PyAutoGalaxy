@@ -143,7 +143,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         self,
         grid: aa.type.Grid1D2DLike,
         blurring_grid: aa.type.Grid1D2DLike,
-        convolver: Optional[aa.Convolver],
+        psf: Optional[aa.Kernel2D],
         light_profile_list: List[LightProfileLinear],
         regularization=Optional[aa.reg.Regularization],
         run_time_dict: Optional[Dict] = None,
@@ -184,8 +184,8 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         blurring_grid
             The blurring grid is all points whose light is outside the data's mask but close enough to the mask that
             it may be blurred into the mask. This is also used when evaluating the image of each light profile.
-        convolver
-            The convolver used to blur the light profile images of each light profile, the output of which
+        psf
+            The psf used to blur the light profile images of each light profile, the output of which
             makes up the columns of the `operated_mapping matrix`.
         light_profile_list
             A list of the linear light profiles that are used to fit the data via linear algebra.
@@ -210,7 +210,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         )
 
         self.blurring_grid = blurring_grid
-        self.convolver = convolver
+        self.psf = psf
         self.light_profile_list = light_profile_list
 
     @property
@@ -271,7 +271,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
     @cached_property
     def operated_mapping_matrix_override(self) -> Optional[np.ndarray]:
         """
-        The inversion object takes the `mapping_matrix` of each linear object and combines it with the `Convolver`
+        The inversion object takes the `mapping_matrix` of each linear object and combines it with the PSF
         operator to perform a 2D convolution and compute the `operated_mapping_matrix`.
 
         If this property is overwritten this operation is not performed, with the `operated_mapping_matrix` output this
@@ -298,7 +298,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
 
             blurring_image_2d = light_profile.image_2d_from(grid=self.blurring_grid)
 
-            blurred_image_2d = self.convolver.convolve_image(
+            blurred_image_2d = self.psf.convolve_image(
                 image=image_2d, blurring_image=blurring_image_2d
             )
 

@@ -239,13 +239,13 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
     g0_blurred_image_2d = g0.blurred_image_2d_from(
         grid=masked_imaging_7x7.grids.lp,
         blurring_grid=masked_imaging_7x7.grids.blurring,
-        convolver=masked_imaging_7x7.convolver,
+        psf=masked_imaging_7x7.psf,
     )
 
     g1_blurred_image_2d = g1.blurred_image_2d_from(
         grid=masked_imaging_7x7.grids.lp,
         blurring_grid=masked_imaging_7x7.grids.blurring,
-        convolver=masked_imaging_7x7.convolver,
+        psf=masked_imaging_7x7.psf,
     )
 
     assert fit.galaxy_model_image_dict[g0] == pytest.approx(g0_blurred_image_2d, 1.0e-4)

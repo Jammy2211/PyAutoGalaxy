@@ -81,20 +81,20 @@ class AbstractToInversion:
         self.run_time_dict = run_time_dict
 
     @property
-    def convolver(self) -> Optional[aa.Convolver]:
+    def psf(self) -> Optional[aa.Kernel2D]:
         """
-        Returns the convolver of the imaging dataset, if the inversion is performed on an imaging dataset.
+        Returns the PSF of the imaging dataset, if the inversion is performed on an imaging dataset.
 
         The `GalaxiesToInversion` class acts as an interface between the dataset and inversion module for
-        both imaging and interferometer datasets. Only imaging datasets have a convolver, thus this property
-        ensures that for an interferometer dataset code which references a convolver does not raise an error.
+        both imaging and interferometer datasets. Only imaging datasets have a PSF, thus this property
+        ensures that for an interferometer dataset code which references a PSF does not raise an error.
 
         Returns
         -------
-        The convolver of the imaging dataset, if it is an imaging dataset.
+        The psf of the imaging dataset, if it is an imaging dataset.
         """
         try:
-            return self.dataset.convolver
+            return self.dataset.psf
         except AttributeError:
             return None
 
@@ -310,7 +310,7 @@ class GalaxiesToInversion(AbstractToInversion):
                         lp_linear_func = LightProfileLinearObjFuncList(
                             grid=self.dataset.grids.lp,
                             blurring_grid=self.dataset.grids.blurring,
-                            convolver=self.dataset.convolver,
+                            psf=self.dataset.psf,
                             light_profile_list=light_profile_list,
                             regularization=light_profile.regularization,
                         )

@@ -202,7 +202,7 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
 
     galaxy_image = galaxy.blurred_image_2d_from(
         grid=masked_dataset.grids.lp,
-        convolver=masked_dataset.convolver,
+        psf=masked_dataset.psf,
         blurring_grid=masked_dataset.grids.blurring,
     )
 

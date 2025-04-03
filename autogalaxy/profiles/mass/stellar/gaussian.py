@@ -1,6 +1,7 @@
 import copy
 import numpy as np
 from autofit.jax_wrapper import use_jax
+
 if use_jax:
     import jax
 from scipy.special import wofz
@@ -192,11 +193,7 @@ class Gaussian(MassProfile, StellarProfile):
     def axis_ratio(self):
         axis_ratio = super().axis_ratio
         if use_jax:
-            return jax.lax.select(
-                axis_ratio < 0.9999,
-                axis_ratio,
-                0.9999
-            )
+            return jax.lax.select(axis_ratio < 0.9999, axis_ratio, 0.9999)
         else:
             return axis_ratio if axis_ratio < 0.9999 else 0.9999
 

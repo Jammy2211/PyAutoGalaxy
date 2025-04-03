@@ -66,11 +66,7 @@ def axis_ratio_and_angle_from(ell_comps: Tuple[float, float]) -> Tuple[float, fl
     angle *= 180.0 / np.pi
 
     if use_jax:
-        angle = jax.lax.select(
-            angle < -45,
-            angle + 180,
-            angle
-        )
+        angle = jax.lax.select(angle < -45, angle + 180, angle)
     else:
         if abs(angle) > 45 and angle < 0:
             angle += 180

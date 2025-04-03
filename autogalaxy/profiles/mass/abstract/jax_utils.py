@@ -6,7 +6,7 @@ from jax import custom_jvp
 r1_s1 = [2.5, 2, 1.5, 1, 0.5]
 
 
-def reg1(z, _ , i_sqrt_pi):
+def reg1(z, _, i_sqrt_pi):
     v = z
     for coef in r1_s1:
         v = z - coef / v
@@ -18,7 +18,7 @@ r2_s2 = [1.841439, 61.57037, 364.2191, 2186.181, 9022.228, 24322.84, 32066.6]
 
 
 def reg2(z, sqrt_pi, _):
-    mz2 = -z**2
+    mz2 = -(z**2)
     f1 = sqrt_pi
     f2 = 1.0
     for s in r2_s1:
@@ -64,17 +64,17 @@ def w_f_approx(z):
     # use a single partial fraction approx for all large abs(z)**2
     # to have better approx of the auto-derivatives
     r1 = (abs_z2 >= 62.0) | ((abs_z2 >= 30.0) & (abs_z2 < 62.0) & (z_imag2 >= 1e-13))
-    # region bounds for 5 taken directly from Zaghloul (2017) 
+    # region bounds for 5 taken directly from Zaghloul (2017)
     # https://dl.acm.org/doi/pdf/10.1145/3119904
     r2_1 = (abs_z2 >= 30.0) & (abs_z2 < 62.0) & (z_imag2 < 1e-13)
     r2_2 = (abs_z2 >= 2.5) & (abs_z2 < 30.0) & (z_imag2 < 0.072)
     r2 = r2_1 | r2_2
     r3 = jnp.logical_not(r1) & jnp.logical_not(r2)
 
-    # exploit symmetry to avoid overflow in some regions 
+    # exploit symmetry to avoid overflow in some regions
     r_flip = z.imag < 0
     z_adjust = jnp.where(r_flip, -z, z)
-    two_exp_zz = 2 * jnp.exp(-z_adjust**2)
+    two_exp_zz = 2 * jnp.exp(-(z_adjust**2))
 
     args = (z_adjust, sqrt_pi, i_sqrt_pi)
     wz = jnp.empty_like(z)
@@ -82,7 +82,7 @@ def w_f_approx(z):
     wz = jnp.where(r2, reg2(*args), wz)
     wz = jnp.where(r3, reg3(*args), wz)
 
-    # exploit symmetry to avoid overflow in some regions 
+    # exploit symmetry to avoid overflow in some regions
     wz = jnp.where(r_flip, two_exp_zz - wz, wz)
 
     return wz
@@ -91,8 +91,8 @@ def w_f_approx(z):
 @w_f_approx.defjvp
 def w_f_approx_jvp(primals, tangents):
     # define a custom jvp to avoid the issue using `jnp.where` with `jax.grad`
-    z, = primals
-    z_dot, = tangents
+    (z,) = primals
+    (z_dot,) = tangents
     primal_out = w_f_approx(z)
     i_sqrt_pi = 1j / jnp.sqrt(jnp.pi)
     tangent_out = z_dot * 2 * (i_sqrt_pi - z * primal_out)

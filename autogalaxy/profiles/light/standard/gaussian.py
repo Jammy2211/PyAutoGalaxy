@@ -66,7 +66,9 @@ class Gaussian(LightProfile):
                 np.exp(
                     -0.5
                     * np.square(
-                        np.divide(grid_radii.array, self.sigma / np.sqrt(self.axis_ratio))
+                        np.divide(
+                            grid_radii.array, self.sigma / np.sqrt(self.axis_ratio)
+                        )
                     )
                 ),
             )
