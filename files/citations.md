@@ -18,7 +18,6 @@ This work uses the following software packages:
 - `NumPy` https://github.com/numpy/numpy [@numpy]
 - `PyAutoFit` https://github.com/rhayes777/PyAutoFit [@pyautofit]
 - `PyAutoGalaxy` https://github.com/Jammy2211/PyAutoGalaxy [@Nightingale2018] [@pyautogalaxy]
-- `PyLops` https://github.com/equinor/pylops [@pylops]
 - `PyNUFFT` https://github.com/jyhmiinlin/pynufft [@pynufft]
 - `PySwarms` https://github.com/ljvmiranda921/pyswarms [@pyswarms]
 - `Python` https://www.python.org/ [@python]

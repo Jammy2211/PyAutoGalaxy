@@ -127,7 +127,7 @@ reconstruct the source galaxies of strong gravitational lenses in `PyAutoGalaxy`
 `PyAutoGalaxy` includes a comprehensive visualization library for the analysis of both direct imaging and interferometer 
 datasets and tools for preprocessing data to formats suitable for galaxy model-fitting. The `astropy` cosmology module 
 handles unit conversions and calculations are optimized using the packages `NumPy` [@numpy], `numba` [@numba],
- `PyNUFFT` [@pynufft] and `PyLops` [@PyLops].
+and `PyNUFFT` [@pynufft].
 
 To perform model-fitting, `PyAutoGalaxy` adopts the probabilistic programming  
 language `PyAutoFit` (https://github.com/rhayes777/PyAutoFit). `PyAutoFit` allows users to compose a 
@@ -172,7 +172,6 @@ taken without a local `PyAutoGalaxy` installation.
 - `numba` [@numba]
 - `NumPy` [@numpy]
 - `PyAutoFit` [@pyautofit]
-- `PyLops` [@PyLops]
 - `PyNUFFT` [@pynufft]
 - `pyprojroot` (https://github.com/chendaniely/pyprojroot)
 - `PySwarms` [@pyswarms]
