@@ -52,7 +52,6 @@ class PowerLawBroken(MassProfile):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Returns the dimensionless density kappa=Sigma/Sigma_c (eq. 1)
@@ -77,7 +76,6 @@ class PowerLawBroken(MassProfile):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid, max_terms=20, **kwargs):
         """
         Returns the complex deflection angle from eq. 18 and 19

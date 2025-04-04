@@ -88,7 +88,6 @@ class gNFW(AbstractgNFW):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike, **kwargs):
         return self._deflections_2d_via_mge_from(
             grid=grid, sigmas_factor=self.axis_ratio
@@ -96,7 +95,6 @@ class gNFW(AbstractgNFW):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_integral_from(
         self, grid: aa.type.Grid2DLike, tabulate_bins=1000, **kwargs
     ):
@@ -233,7 +231,6 @@ class gNFW(AbstractgNFW):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def potential_2d_from(self, grid: aa.type.Grid2DLike, tabulate_bins=1000, **kwargs):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
@@ -365,7 +362,6 @@ class gNFWSph(gNFW):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.

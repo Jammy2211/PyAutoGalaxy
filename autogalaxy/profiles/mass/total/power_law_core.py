@@ -52,7 +52,6 @@ class PowerLawCore(MassProfile):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
@@ -78,7 +77,6 @@ class PowerLawCore(MassProfile):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the potential on a grid of (y,x) arc-second coordinates.
@@ -109,7 +107,6 @@ class PowerLawCore(MassProfile):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -219,7 +216,6 @@ class PowerLawCoreSph(PowerLawCore):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.

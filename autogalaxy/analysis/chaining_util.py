@@ -215,39 +215,29 @@ def extra_galaxies_from(
 
         for extra_galaxy_index in range(len(result.instance.extra_galaxies)):
             if hasattr(result.instance.extra_galaxies[extra_galaxy_index], "mass"):
-                extra_galaxies[
-                    extra_galaxy_index
-                ].mass.centre = result.instance.extra_galaxies[
-                    extra_galaxy_index
-                ].mass.centre
-                extra_galaxies[
-                    extra_galaxy_index
-                ].mass.einstein_radius = result.model.extra_galaxies[
-                    extra_galaxy_index
-                ].mass.einstein_radius
+                extra_galaxies[extra_galaxy_index].mass.centre = (
+                    result.instance.extra_galaxies[extra_galaxy_index].mass.centre
+                )
+                extra_galaxies[extra_galaxy_index].mass.einstein_radius = (
+                    result.model.extra_galaxies[extra_galaxy_index].mass.einstein_radius
+                )
                 if free_centre:
-                    extra_galaxies[
-                        extra_galaxy_index
-                    ].mass.centre = result.model.extra_galaxies[
-                        extra_galaxy_index
-                    ].mass.centre
+                    extra_galaxies[extra_galaxy_index].mass.centre = (
+                        result.model.extra_galaxies[extra_galaxy_index].mass.centre
+                    )
 
     elif light_as_model:
         extra_galaxies = result.instance.extra_galaxies.as_model((LightProfile,))
 
         for extra_galaxy_index in range(len(result.instance.extra_galaxies)):
             if extra_galaxies[extra_galaxy_index].bulge is not None:
-                extra_galaxies[
-                    extra_galaxy_index
-                ].bulge.centre = result.instance.extra_galaxies[
-                    extra_galaxy_index
-                ].bulge.centre
+                extra_galaxies[extra_galaxy_index].bulge.centre = (
+                    result.instance.extra_galaxies[extra_galaxy_index].bulge.centre
+                )
                 if free_centre:
-                    extra_galaxies[
-                        extra_galaxy_index
-                    ].bulge.centre = result.model.extra_galaxies[
-                        extra_galaxy_index
-                    ].bulge.centre
+                    extra_galaxies[extra_galaxy_index].bulge.centre = (
+                        result.model.extra_galaxies[extra_galaxy_index].bulge.centre
+                    )
 
     else:
         extra_galaxies = result.instance.extra_galaxies.as_model(())

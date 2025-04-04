@@ -1,4 +1,5 @@
-import numpy as np
+# import numpy as np
+from autofit.jax_wrapper import numpy as np, use_jax
 from typing import Optional, Tuple
 
 import autoarray as aa
@@ -59,21 +60,33 @@ class Gaussian(LightProfile):
         grid_radii
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
-        return np.multiply(
-            self._intensity,
-            np.exp(
-                -0.5
-                * np.square(
-                    np.divide(grid_radii, self.sigma / np.sqrt(self.axis_ratio))
-                )
-            ),
-        )
+        if use_jax:
+            return np.multiply(
+                self._intensity,
+                np.exp(
+                    -0.5
+                    * np.square(
+                        np.divide(
+                            grid_radii.array, self.sigma / np.sqrt(self.axis_ratio)
+                        )
+                    )
+                ),
+            )
+        else:
+            return np.multiply(
+                self._intensity,
+                np.exp(
+                    -0.5
+                    * np.square(
+                        np.divide(grid_radii, self.sigma / np.sqrt(self.axis_ratio))
+                    )
+                ),
+            )
 
     @aa.over_sample
     @aa.grid_dec.to_array
     @check_operated_only
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
     ) -> np.ndarray:
