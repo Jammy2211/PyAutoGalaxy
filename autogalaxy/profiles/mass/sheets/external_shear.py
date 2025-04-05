@@ -1,4 +1,4 @@
-import numpy as np
+import jax.numpy as jnp
 
 import autoarray as aa
 
@@ -40,19 +40,19 @@ class ExternalShear(MassProfile):
 
     @aa.grid_dec.to_array
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return np.zeros(shape=grid.shape[0])
+        return jnp.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         shear_angle = (
             self.angle - 90
         )  ##to be onsistent with autolens deflection angle calculation
-        phig = np.deg2rad(shear_angle)
+        phig = jnp.deg2rad(shear_angle)
         shear_amp = self.magnitude
-        phicoord = np.arctan2(grid[:, 0], grid[:, 1])
-        rcoord = np.sqrt(grid[:, 0] ** 2.0 + grid[:, 1] ** 2.0)
+        phicoord = jnp.arctan2(grid[:, 0], grid[:, 1])
+        rcoord = jnp.sqrt(grid[:, 0] ** 2.0 + grid[:, 1] ** 2.0)
 
-        return -0.5 * shear_amp * rcoord**2 * np.cos(2 * (phicoord - phig))
+        return -0.5 * shear_amp * rcoord**2 * jnp.cos(2 * (phicoord - phig))
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
@@ -66,8 +66,8 @@ class ExternalShear(MassProfile):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
-        deflection_y = -np.multiply(self.magnitude, grid[:, 0])
-        deflection_x = np.multiply(self.magnitude, grid[:, 1])
+        deflection_y = -jnp.multiply(self.magnitude, grid[:, 0])
+        deflection_x = jnp.multiply(self.magnitude, grid[:, 1])
         return self.rotated_grid_from_reference_frame_from(
-            np.vstack((deflection_y, deflection_x)).T
+            jnp.vstack((deflection_y, deflection_x)).T
         )
