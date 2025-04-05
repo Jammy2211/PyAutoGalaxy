@@ -1,14 +1,8 @@
-import numpy as np
-from scipy.special import hermite, factorial
-from typing import Optional, Tuple
+from typing import Tuple
 
-import autoarray as aa
 
 from autogalaxy.profiles.light import standard as lp
 
-from autogalaxy.profiles.light.decorators import (
-    check_operated_only,
-)
 from autogalaxy.profiles.light.linear.abstract import LightProfileLinear
 
 
@@ -49,55 +43,6 @@ class ShapeletCartesian(lp.ShapeletCartesian, LightProfileLinear):
         super().__init__(
             n_y=n_y, n_x=n_x, centre=centre, ell_comps=ell_comps, beta=beta
         )
-
-    @aa.over_sample
-    @aa.grid_dec.to_array
-    @check_operated_only
-    @aa.grid_dec.transform
-    def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
-    ) -> np.ndarray:
-        """
-        Returns the Cartesian Shapelet light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
-
-        If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
-        profile `centre`), this is performed automatically.
-
-        Parameters
-        ----------
-        grid
-            The 2D (y, x) coordinates in the original reference frame of the grid.
-
-        Returns
-        -------
-        image
-            The image of the Cartesian Shapelet evaluated at every (y,x) coordinate on the transformed grid.
-        """
-
-        hermite_y = hermite(n=self.n_y)
-        hermite_x = hermite(n=self.n_x)
-
-        y = grid[:, 0]
-        x = grid[:, 1]
-
-        shapelet_y = hermite_y(y / self.beta)
-        shapelet_x = hermite_x(x / self.beta)
-
-        return (
-            shapelet_y
-            * shapelet_x
-            * np.exp(-0.5 * (y**2 + x**2) / (self.beta**2))
-            / self.beta
-            / (
-                np.sqrt(
-                    2 ** (self.n_x + self.n_y)
-                    * (np.pi)
-                    * factorial(self.n_y)
-                    * factorial(self.n_x)
-                )
-            )
-        )
-
 
 class ShapeletCartesianSph(ShapeletCartesian):
     def __init__(
