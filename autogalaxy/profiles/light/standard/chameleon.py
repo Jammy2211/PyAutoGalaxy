@@ -1,3 +1,4 @@
+import jax.numpy as jnp
 import numpy as np
 from typing import Optional, Tuple
 
@@ -66,23 +67,23 @@ class Chameleon(LightProfile):
 
         axis_ratio_factor = (1.0 + self.axis_ratio) ** 2.0
 
-        return np.multiply(
+        return jnp.multiply(
             self._intensity / (1 + self.axis_ratio),
-            np.add(
-                np.divide(
+            jnp.add(
+                jnp.divide(
                     1.0,
-                    np.sqrt(
-                        np.add(
-                            np.square(grid_radii),
+                    jnp.sqrt(
+                        jnp.add(
+                            jnp.square(grid_radii.array),
                             (4.0 * self.core_radius_0**2.0) / axis_ratio_factor,
                         )
                     ),
                 ),
-                -np.divide(
+                -jnp.divide(
                     1.0,
-                    np.sqrt(
-                        np.add(
-                            np.square(grid_radii),
+                    jnp.sqrt(
+                        jnp.add(
+                            jnp.square(grid_radii.array),
                             (4.0 * self.core_radius_1**2.0) / axis_ratio_factor,
                         )
                     ),
