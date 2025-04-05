@@ -44,4 +44,4 @@ def test__image_2d_from():
 
     image_spherical = spherical.image_2d_from(grid=grid)
 
-    assert image_elliptical == pytest.approx(image_spherical, 1.0e-4)
+    assert image_elliptical.array == pytest.approx(image_spherical.array, 1.0e-4)

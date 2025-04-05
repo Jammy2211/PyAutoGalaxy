@@ -1,3 +1,4 @@
+import jax.numpy as jnp
 import numpy as np
 from typing import Tuple
 
@@ -63,7 +64,7 @@ class SersicCore(Sersic):
         return (
             self._intensity
             * (2.0 ** (-self.gamma / self.alpha))
-            * np.exp(
+            * jnp.exp(
                 self.sersic_constant
                 * (
                     ((2.0 ** (1.0 / self.alpha)) * self.radius_break)
@@ -84,25 +85,25 @@ class SersicCore(Sersic):
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
 
-        return np.multiply(
-            np.multiply(
+        return jnp.multiply(
+            jnp.multiply(
                 self.intensity_prime,
-                np.power(
-                    np.add(
+                jnp.power(
+                    jnp.add(
                         1,
-                        np.power(np.divide(self.radius_break, grid_radii), self.alpha),
+                        jnp.power(jnp.divide(self.radius_break, grid_radii.array), self.alpha),
                     ),
                     (self.gamma / self.alpha),
                 ),
             ),
-            np.exp(
-                np.multiply(
+            jnp.exp(
+                jnp.multiply(
                     -self.sersic_constant,
                     (
-                        np.power(
-                            np.divide(
-                                np.add(
-                                    np.power(grid_radii, self.alpha),
+                        jnp.power(
+                            jnp.divide(
+                                jnp.add(
+                                    jnp.power(grid_radii.array, self.alpha),
                                     (self.radius_break**self.alpha),
                                 ),
                                 (self.effective_radius**self.alpha),
