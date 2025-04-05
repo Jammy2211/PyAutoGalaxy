@@ -304,10 +304,10 @@ class EllProfile(SphProfile):
         grid
             The (y, x) coordinates in the reference frame of the elliptical profile.
         """
-        return np.sqrt(
-            np.add(
-                np.square(np.array(grid)[:, 1]),
-                np.square(np.divide(np.array(grid)[:, 0], self.axis_ratio)),
+        return jnp.sqrt(
+            jnp.add(
+                jnp.square(grid.array[:, 1]),
+                jnp.square(jnp.divide(grid.array[:, 0], self.axis_ratio)),
             )
         )
 
@@ -329,9 +329,9 @@ class EllProfile(SphProfile):
             The (y, x) coordinates in the reference frame of the elliptical profile.
         """
 
-        grid_radii = np.array(self.elliptical_radii_grid_from(grid=grid, **kwargs))
+        grid_radii = self.elliptical_radii_grid_from(grid=grid, **kwargs)
 
-        return np.multiply(np.sqrt(self.axis_ratio), grid_radii)  # .view(np.ndarray)
+        return jnp.multiply(jnp.sqrt(self.axis_ratio), grid_radii.array)  # .view(np.ndarray)
 
     @aa.grid_dec.to_grid
     def transformed_to_reference_frame_grid_from(
