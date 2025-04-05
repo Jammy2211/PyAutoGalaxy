@@ -141,7 +141,7 @@ class SphProfile(GeometryProfile):
         grid
             The (y, x) coordinates in the original reference frame of the grid.
         """
-        return jnp.subtract(grid.array, jnp.array(self.centre))
+        return jnp.subtract(jnp.array(grid), jnp.array(self.centre))
 
     @aa.grid_dec.to_grid
     def transformed_from_reference_frame_grid_from(self, grid, **kwargs):
@@ -156,7 +156,7 @@ class SphProfile(GeometryProfile):
         grid
             The (y, x) coordinates in the reference frame of the profile.
         """
-        return jnp.add(grid.array, jnp.array(self.centre))
+        return jnp.add(jnp.array(grid), jnp.array(self.centre))
 
 
 class EllProfile(SphProfile):
@@ -374,7 +374,7 @@ class EllProfile(SphProfile):
             return super().transformed_from_reference_frame_grid_from(grid=grid)
 
         return aa.util.geometry.transform_grid_2d_from_reference_frame(
-            grid_2d=grid.array, centre=self.centre, angle=self.angle
+            grid_2d=jnp.array(grid), centre=self.centre, angle=self.angle
         )
 
     def _eta_u(self, u, coordinates):
