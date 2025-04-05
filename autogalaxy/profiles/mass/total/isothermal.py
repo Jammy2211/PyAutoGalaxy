@@ -129,12 +129,13 @@ class Isothermal(PowerLaw):
 
         gamma_2 = (
             -2
-            * convergence
-            * jnp.divide(grid[:, 1] * grid.array[:, 0], grid.array[:, 1] ** 2 + grid.array[:, 0] ** 2)
+            * convergence.array
+            * jnp.divide(grid.array[:, 1] * grid.array[:, 0], grid.array[:, 1] ** 2 + grid.array[:, 0] ** 2)
         )
-        gamma_1 = -convergence * jnp.divide(
+        gamma_1 = -convergence.array * jnp.divide(
             grid.array[:, 1] ** 2 - grid.array[:, 0] ** 2, grid.array[:, 1] ** 2 + grid.array[:, 0] ** 2
         )
+
 
         shear_field = self.rotated_grid_from_reference_frame_from(
             grid=jnp.vstack((gamma_2, gamma_1)).T, angle=self.angle * 2

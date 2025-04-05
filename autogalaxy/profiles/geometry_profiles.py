@@ -125,7 +125,7 @@ class SphProfile(GeometryProfile):
         radius
             The circular radius of each coordinate from the profile center.
         """
-        grid_angles = jnp.arctan2(grid[:, 0], grid[:, 1])
+        grid_angles = jnp.arctan2(grid.array[:, 0], grid.array[:, 1])
         cos_theta, sin_theta = self.angle_to_profile_grid_from(grid_angles=grid_angles)
         return jnp.multiply(radius[:, None], jnp.vstack((sin_theta, cos_theta)).T)
 
