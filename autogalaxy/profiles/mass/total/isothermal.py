@@ -1,12 +1,5 @@
-import os
-
-if os.environ.get("USE_JAX", "0") == "1":
-    USING_JAX = True
-    import jax.numpy as np
-    from jax.lax import min
-else:
-    USING_JAX = False
-    import numpy as np
+import jax.numpy as jnp
+import numpy as np
 
 from typing import Tuple
 
@@ -39,22 +32,11 @@ def psi_from(grid, axis_ratio, core_radius):
         The value of the Psi term.
 
     """
-    if USING_JAX:
-        return np.sqrt(
-            (axis_ratio**2.0 * (grid[:, 1] ** 2.0 + core_radius**2.0))
-            + grid[:, 0] ** 2.0
-            + 1e-16
-        )
-    else:
-        return np.sqrt(
-            np.add(
-                np.multiply(
-                    axis_ratio**2.0, np.add(np.square(grid[:, 1]), core_radius**2.0)
-                ),
-                np.square(grid[:, 0]),
-            )
-        )
-
+    return np.sqrt(
+        (axis_ratio**2.0 * (grid.array[:, 1] ** 2.0 + core_radius**2.0))
+        + grid.array[:, 0] ** 2.0
+        + 1e-16
+    )
 
 class Isothermal(PowerLaw):
     def __init__(
@@ -108,21 +90,19 @@ class Isothermal(PowerLaw):
             2.0
             * self.einstein_radius_rescaled
             * self.axis_ratio
-            / np.sqrt(1 - self.axis_ratio**2)
+            / jnp.sqrt(1 - self.axis_ratio**2)
         )
-        if USING_JAX:
-            grid = grid.array
 
         psi = psi_from(grid=grid, axis_ratio=self.axis_ratio, core_radius=0.0)
 
-        deflection_y = np.arctanh(
-            np.divide(np.multiply(np.sqrt(1 - self.axis_ratio**2), grid[:, 0]), psi)
+        deflection_y = jnp.arctanh(
+            jnp.divide(jnp.multiply(jnp.sqrt(1 - self.axis_ratio**2), grid.array[:, 0]), psi)
         )
-        deflection_x = np.arctan(
-            np.divide(np.multiply(np.sqrt(1 - self.axis_ratio**2), grid[:, 1]), psi)
+        deflection_x = jnp.arctan(
+            jnp.divide(jnp.multiply(jnp.sqrt(1 - self.axis_ratio**2), grid.array[:, 1]), psi)
         )
         return self.rotated_grid_from_reference_frame_from(
-            grid=np.multiply(factor, np.vstack((deflection_y, deflection_x)).T),
+            grid=jnp.multiply(factor, jnp.vstack((deflection_y, deflection_x)).T),
             **kwargs
         )
 
@@ -150,14 +130,14 @@ class Isothermal(PowerLaw):
         gamma_2 = (
             -2
             * convergence
-            * np.divide(grid[:, 1] * grid[:, 0], grid[:, 1] ** 2 + grid[:, 0] ** 2)
+            * jnp.divide(grid[:, 1] * grid.array[:, 0], grid.array[:, 1] ** 2 + grid.array[:, 0] ** 2)
         )
-        gamma_1 = -convergence * np.divide(
-            grid[:, 1] ** 2 - grid[:, 0] ** 2, grid[:, 1] ** 2 + grid[:, 0] ** 2
+        gamma_1 = -convergence * jnp.divide(
+            grid.array[:, 1] ** 2 - grid.array[:, 0] ** 2, grid.array[:, 1] ** 2 + grid.array[:, 0] ** 2
         )
 
         shear_field = self.rotated_grid_from_reference_frame_from(
-            grid=np.vstack((gamma_2, gamma_1)).T, angle=self.angle * 2
+            grid=jnp.vstack((gamma_2, gamma_1)).T, angle=self.angle * 2
         )
 
         return aa.VectorYX2DIrregular(values=shear_field, grid=grid)
@@ -214,6 +194,6 @@ class IsothermalSph(Isothermal):
         """
         return self._cartesian_grid_via_radial_from(
             grid=grid,
-            radius=np.full(grid.shape[0], 2.0 * self.einstein_radius_rescaled),
+            radius=jnp.full(grid.shape[0], 2.0 * self.einstein_radius_rescaled),
             **kwargs
         )
