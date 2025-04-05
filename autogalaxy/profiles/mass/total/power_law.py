@@ -1,8 +1,6 @@
 import jax.numpy as jnp
-import numpy as np
 from .jax_utils import omega
 
-from scipy import special
 from typing import Tuple
 
 import autoarray as aa
