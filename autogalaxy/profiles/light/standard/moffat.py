@@ -1,3 +1,4 @@
+import jax.numpy as jnp
 import numpy as np
 from typing import Optional, Tuple
 
@@ -57,12 +58,12 @@ class Moffat(LightProfile):
         grid_radii
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
-        return np.multiply(
+        return jnp.multiply(
             self._intensity,
-            np.power(
+            jnp.power(
                 1
-                + np.square(
-                    np.divide(grid_radii, self.alpha / np.sqrt(self.axis_ratio))
+                + jnp.square(
+                    jnp.divide(grid_radii.array, self.alpha / jnp.sqrt(self.axis_ratio))
                 ),
                 -self.beta,
             ),
