@@ -1,4 +1,4 @@
-import copy
+import jax.numpy as jnp
 import numpy as np
 from scipy.integrate import quad
 from typing import Tuple
@@ -95,8 +95,8 @@ class PowerLawCore(MassProfile):
                 a=0.0,
                 b=1.0,
                 args=(
-                    grid[i, 0],
-                    grid[i, 1],
+                    grid.array[i, 0],
+                    grid.array[i, 1],
                     self.axis_ratio,
                     self.slope,
                     self.core_radius,
@@ -121,7 +121,7 @@ class PowerLawCore(MassProfile):
         def calculate_deflection_component(npow, index):
             einstein_radius_rescaled = self.einstein_radius_rescaled
 
-            deflection_grid = self.axis_ratio * grid[:, index]
+            deflection_grid = np.array(self.axis_ratio * grid.array[:, index])
 
             for i in range(grid.shape[0]):
                 deflection_grid[i] *= (
@@ -131,8 +131,8 @@ class PowerLawCore(MassProfile):
                         a=0.0,
                         b=1.0,
                         args=(
-                            grid[i, 0],
-                            grid[i, 1],
+                            grid.array[i, 0],
+                            grid.array[i, 1],
                             npow,
                             self.axis_ratio,
                             self.slope,

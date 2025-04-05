@@ -162,14 +162,14 @@ def test__compare_to_cored_power_law():
     )
 
     assert isothermal.potential_2d_from(grid=grid) == pytest.approx(
-        cored_power_law.potential_2d_from(grid=grid), 1e-3
+        cored_power_law.potential_2d_from(grid=grid).array, 1e-3
     )
     assert isothermal.potential_2d_from(grid=grid) == pytest.approx(
-        cored_power_law.potential_2d_from(grid=grid), 1e-3
+        cored_power_law.potential_2d_from(grid=grid).array, 1e-3
     )
     assert isothermal.deflections_yx_2d_from(grid=grid) == pytest.approx(
-        cored_power_law.deflections_yx_2d_from(grid=grid), 1e-3
+        cored_power_law.deflections_yx_2d_from(grid=grid).array, 1e-3
     )
     assert isothermal.deflections_yx_2d_from(grid=grid) == pytest.approx(
-        cored_power_law.deflections_yx_2d_from(grid=grid), 1e-3
+        cored_power_law.deflections_yx_2d_from(grid=grid).array, 1e-3
     )
