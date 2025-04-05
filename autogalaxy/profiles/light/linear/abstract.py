@@ -264,7 +264,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         for pixel, light_profile in enumerate(self.light_profile_list):
             image_2d = light_profile.image_2d_from(grid=self.grid).slim
 
-            mapping_matrix[:, pixel] = image_2d
+            mapping_matrix[:, pixel] = image_2d.array
 
         return mapping_matrix
 
@@ -302,6 +302,6 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
                 image=image_2d, blurring_image=blurring_image_2d
             )
 
-            operated_mapping_matrix[:, pixel] = blurred_image_2d
+            operated_mapping_matrix[:, pixel] = blurred_image_2d.array
 
         return operated_mapping_matrix

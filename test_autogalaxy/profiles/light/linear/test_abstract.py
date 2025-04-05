@@ -26,10 +26,10 @@ def test__mapping_matrix_from(grid_2d_7x7, blurring_grid_2d_7x7, psf_3x3):
     lp_1_image = lp_1.image_2d_from(grid=grid_2d_7x7)
 
     assert lp_linear_obj_func_list.mapping_matrix[:, 0] == pytest.approx(
-        lp_0_image, 1.0e-4
+        lp_0_image.array, 1.0e-4
     )
     assert lp_linear_obj_func_list.mapping_matrix[:, 1] == pytest.approx(
-        lp_1_image, 1.0e-4
+        lp_1_image.array, 1.0e-4
     )
 
     lp_0_blurred_image = lp_0.blurred_image_2d_from(
@@ -42,10 +42,10 @@ def test__mapping_matrix_from(grid_2d_7x7, blurring_grid_2d_7x7, psf_3x3):
 
     assert lp_linear_obj_func_list.operated_mapping_matrix_override[
         :, 0
-    ] == pytest.approx(lp_0_blurred_image, 1.0e-4)
+    ] == pytest.approx(lp_0_blurred_image.array, 1.0e-4)
     assert lp_linear_obj_func_list.operated_mapping_matrix_override[
         :, 1
-    ] == pytest.approx(lp_1_blurred_image, 1.0e-4)
+    ] == pytest.approx(lp_1_blurred_image.array, 1.0e-4)
 
 
 def test__lp_from():
