@@ -1,3 +1,4 @@
+import jax.numpy as jnp
 import numpy as np
 from scipy.special import factorial, genlaguerre
 from typing import Optional, Tuple
@@ -85,30 +86,30 @@ class ShapeletExponential(AbstractShapelet):
         """
 
         radial = (grid[:, 0] ** 2 + grid[:, 1] ** 2) / self.beta
-        theta = np.arctan(grid[:, 1] / grid[:, 0])
+        theta = jnp.arctan(grid[:, 1] / grid[:, 0])
 
         prefactor = (
             1.0
-            / np.sqrt(2 * np.pi)
+            / jnp.sqrt(2 * jnp.pi)
             / self.beta
-            * (self.n + 0.5) ** (-1 - np.abs(self.m))
+            * (self.n + 0.5) ** (-1 - jnp.abs(self.m))
             * (-1) ** (self.n + self.m)
-            * np.sqrt(
-                factorial(self.n - np.abs(self.m)) / 2 * self.n
-                + 1 / factorial(self.n + np.abs(self.m))
+            * jnp.sqrt(
+                factorial(self.n - jnp.abs(self.m)) / 2 * self.n
+                + 1 / factorial(self.n + jnp.abs(self.m))
             )
         )
 
-        laguerre = genlaguerre(n=self.n - np.abs(self.m), alpha=2 * np.abs(self.m))
+        laguerre = genlaguerre(n=self.n - jnp.abs(self.m), alpha=2 * jnp.abs(self.m))
         shapelet = laguerre(radial / (self.n + 0.5))
 
-        return np.abs(
+        return jnp.abs(
             prefactor
-            * np.exp(-radial / (2 * self.n + 1))
-            * radial ** (np.abs(self.m))
+            * jnp.exp(-radial / (2 * self.n + 1))
+            * radial ** (jnp.abs(self.m))
             * shapelet
-            * np.cos(self.m * theta)
-            + -1.0j * np.sin(self.m * theta)
+            * jnp.cos(self.m * theta)
+            + -1.0j * jnp.sin(self.m * theta)
         )
 
 
