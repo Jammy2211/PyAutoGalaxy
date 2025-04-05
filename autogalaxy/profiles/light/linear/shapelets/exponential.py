@@ -1,14 +1,7 @@
-import numpy as np
-from scipy.special import factorial, genlaguerre
-from typing import Optional, Tuple
-
-import autoarray as aa
+from typing import Tuple
 
 from autogalaxy.profiles.light import standard as lp
 
-from autogalaxy.profiles.light.decorators import (
-    check_operated_only,
-)
 from autogalaxy.profiles.light.linear.abstract import LightProfileLinear
 
 
@@ -48,57 +41,6 @@ class ShapeletExponential(lp.ShapeletExponential, LightProfileLinear):
         """
 
         super().__init__(n=n, m=m, centre=centre, ell_comps=ell_comps, beta=beta)
-
-    @aa.over_sample
-    @aa.grid_dec.to_array
-    @check_operated_only
-    @aa.grid_dec.transform
-    def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
-    ) -> np.ndarray:
-        """
-        Returns the Exponential Shapelet light profile's 2D image from a 2D grid of Exponential (y,x) coordinates.
-
-        If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
-        profile `centre`), this is performed automatically.
-
-        Parameters
-        ----------
-        grid
-            The 2D (y, x) coordinates in the original reference frame of the grid.
-
-        Returns
-        -------
-        image
-            The image of the Exponential Shapelet evaluated at every (y,x) coordinate on the transformed grid.
-        """
-
-        radial = (grid[:, 0] ** 2 + grid[:, 1] ** 2) / self.beta
-        theta = np.arctan(grid[:, 1] / grid[:, 0])
-
-        prefactor = (
-            1.0
-            / np.sqrt(2 * np.pi)
-            / self.beta
-            * (self.n + 0.5) ** (-1 - np.abs(self.m))
-            * (-1) ** (self.n + self.m)
-            * np.sqrt(
-                factorial(self.n - np.abs(self.m)) / 2 * self.n
-                + 1 / factorial(self.n + np.abs(self.m))
-            )
-        )
-
-        laguerre = genlaguerre(n=self.n - np.abs(self.m), alpha=2 * np.abs(self.m))
-        shapelet = laguerre(radial / (self.n + 0.5))
-
-        return np.abs(
-            prefactor
-            * np.exp(-radial / (2 * self.n + 1))
-            * radial ** (np.abs(self.m))
-            * shapelet
-            * np.cos(self.m * theta)
-            + -1.0j * np.sin(self.m * theta)
-        )
 
 
 class ShapeletExponentialSph(ShapeletExponential):
