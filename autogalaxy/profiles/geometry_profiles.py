@@ -94,7 +94,7 @@ class SphProfile(GeometryProfile):
         grid
             The grid of (y, x) coordinates which are converted to radial distances.
         """
-        return np.sqrt(np.add(np.square(grid[:, 0]), np.square(grid[:, 1])))
+        return np.sqrt(np.add(np.square(grid.array[:, 0]), np.square(grid.array[:, 1])))
 
     def angle_to_profile_grid_from(
         self, grid_angles: np.ndarray, **kwargs
