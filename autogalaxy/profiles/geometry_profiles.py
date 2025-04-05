@@ -1,15 +1,7 @@
-import os
+import jax.numpy as jnp
+import numpy as np
 
 from typing import Optional, Tuple, Type
-
-if os.environ.get("USE_JAX", "0") == "1":
-    import jax.numpy as np
-
-    use_jax = True
-else:
-    import numpy as np
-
-    use_jax = False
 
 import autoarray as aa
 
@@ -133,12 +125,9 @@ class SphProfile(GeometryProfile):
         radius
             The circular radius of each coordinate from the profile center.
         """
-        if use_jax:
-            grid_angles = np.arctan2(np.array(grid)[:, 0], np.array(grid)[:, 1])
-        else:
-            grid_angles = np.arctan2(grid[:, 0], grid[:, 1])
+        grid_angles = jnp.arctan2(grid[:, 0], grid[:, 1])
         cos_theta, sin_theta = self.angle_to_profile_grid_from(grid_angles=grid_angles)
-        return np.multiply(radius[:, None], np.vstack((sin_theta, cos_theta)).T)
+        return jnp.multiply(radius[:, None], jnp.vstack((sin_theta, cos_theta)).T)
 
     @aa.grid_dec.to_grid
     def transformed_to_reference_frame_grid_from(self, grid, **kwargs):
@@ -152,10 +141,7 @@ class SphProfile(GeometryProfile):
         grid
             The (y, x) coordinates in the original reference frame of the grid.
         """
-        if use_jax:
-            return np.subtract(np.array(grid), np.array(self.centre))
-        else:
-            return np.subtract(grid, self.centre)
+        return jnp.subtract(grid.array, jnp.array(self.centre))
 
     @aa.grid_dec.to_grid
     def transformed_from_reference_frame_grid_from(self, grid, **kwargs):
@@ -170,7 +156,7 @@ class SphProfile(GeometryProfile):
         grid
             The (y, x) coordinates in the reference frame of the profile.
         """
-        return np.add(grid, self.centre)
+        return jnp.add(grid.array, jnp.array(self.centre))
 
 
 class EllProfile(SphProfile):
@@ -386,7 +372,7 @@ class EllProfile(SphProfile):
             return super().transformed_from_reference_frame_grid_from(grid=grid)
 
         return aa.util.geometry.transform_grid_2d_from_reference_frame(
-            grid_2d=grid, centre=self.centre, angle=self.angle
+            grid_2d=grid.array, centre=self.centre, angle=self.angle
         )
 
     def _eta_u(self, u, coordinates):
