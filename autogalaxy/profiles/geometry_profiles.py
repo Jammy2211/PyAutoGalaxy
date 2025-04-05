@@ -331,7 +331,9 @@ class EllProfile(SphProfile):
 
         grid_radii = self.elliptical_radii_grid_from(grid=grid, **kwargs)
 
-        return jnp.multiply(jnp.sqrt(self.axis_ratio), grid_radii.array)  # .view(np.ndarray)
+        return jnp.multiply(
+            jnp.sqrt(self.axis_ratio), grid_radii.array
+        )  # .view(np.ndarray)
 
     @aa.grid_dec.to_grid
     def transformed_to_reference_frame_grid_from(

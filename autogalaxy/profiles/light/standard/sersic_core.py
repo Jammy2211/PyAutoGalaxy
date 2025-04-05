@@ -91,7 +91,9 @@ class SersicCore(Sersic):
                 jnp.power(
                     jnp.add(
                         1,
-                        jnp.power(jnp.divide(self.radius_break, grid_radii.array), self.alpha),
+                        jnp.power(
+                            jnp.divide(self.radius_break, grid_radii.array), self.alpha
+                        ),
                     ),
                     (self.gamma / self.alpha),
                 ),

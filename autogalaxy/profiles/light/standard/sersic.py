@@ -1,4 +1,6 @@
-from autofit.jax_wrapper import numpy as np
+import jax.numpy as jnp
+import numpy as np
+
 from numpy import seterr
 from typing import Optional, Tuple
 
@@ -51,7 +53,7 @@ class AbstractSersic(LightProfile):
         The elliptical effective radius instead describes the major-axis radius of the ellipse containing
         half the light, and may be more appropriate for highly flattened systems like disk galaxies.
         """
-        return self.effective_radius / np.sqrt(self.axis_ratio)
+        return self.effective_radius / jnp.sqrt(self.axis_ratio)
 
     @property
     def sersic_constant(self) -> float:
@@ -78,7 +80,7 @@ class AbstractSersic(LightProfile):
         grid_radii
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
-        return self._intensity * np.exp(
+        return self._intensity * jnp.exp(
             -self.sersic_constant
             * (((radius / self.effective_radius) ** (1.0 / self.sersic_index)) - 1)
         )
@@ -129,14 +131,14 @@ class Sersic(AbstractSersic, LightProfile):
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
         seterr(all="ignore")
-        return np.multiply(
+        return jnp.multiply(
             self._intensity,
-            np.exp(
-                np.multiply(
+            jnp.exp(
+                jnp.multiply(
                     -self.sersic_constant,
-                    np.add(
-                        np.power(
-                            np.divide(np.array(grid_radii), self.effective_radius),
+                    jnp.add(
+                        jnp.power(
+                            jnp.divide(grid_radii.array, self.effective_radius),
                             1.0 / self.sersic_index,
                         ),
                         -1,
