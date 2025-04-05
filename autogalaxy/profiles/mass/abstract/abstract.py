@@ -33,8 +33,8 @@ class MassProfile(EllProfile, OperateDeflections):
     def deflections_2d_via_potential_2d_from(self, grid):
         potential = self.potential_2d_from(grid=grid)
 
-        deflections_y_2d = np.gradient(potential.native, grid.native[:, 0, 0], axis=0)
-        deflections_x_2d = np.gradient(potential.native, grid.native[0, :, 1], axis=1)
+        deflections_y_2d = np.gradient(potential.native.array, grid.native.array[:, 0, 0], axis=0)
+        deflections_x_2d = np.gradient(potential.native.array, grid.native.array[0, :, 1], axis=1)
 
         return aa.Grid2D(
             values=np.stack((deflections_y_2d, deflections_x_2d), axis=-1),
