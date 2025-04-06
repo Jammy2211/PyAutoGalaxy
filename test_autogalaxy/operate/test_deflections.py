@@ -360,7 +360,7 @@ def test__radial_caustic_list_from___compare_via_magnification():
         mass_profile=mp, grid=grid
     )[1]
 
-    radial_caustic_list = mp.radial_caustic_list_from(grid=grid, pixel_scale=0.08)
+    radial_caustic_list = mp.radial_caustic_list_from(grid=grid)
 
     assert sum(radial_caustic_list[0]) == pytest.approx(
         sum(caustic_radial_via_magnification), 7e-1
@@ -499,64 +499,3 @@ def test__convergence_2d_via_jacobian_from__compare_via_jacobian_and_analytic():
     mean_error = np.mean(convergence_via_jacobian.slim - convergence_via_analytic.slim)
 
     assert mean_error < 1e-1
-
-
-def test__evaluation_grid__changes_resolution_based_on_pixel_scale_input():
-    from autogalaxy.operate.deflections import evaluation_grid
-
-    @evaluation_grid
-    def mock_func(lensing_obj, grid, pixel_scale=0.05):
-        return grid
-
-    grid = ag.Grid2D.uniform(shape_native=(4, 4), pixel_scales=0.05)
-
-    evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=0.05)
-
-    assert (evaluation_grid == grid).all()
-
-    evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=0.1)
-    downscaled_grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=0.1)
-
-    assert (evaluation_grid == downscaled_grid).all()
-
-    evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=0.025)
-    upscaled_grid = ag.Grid2D.uniform(shape_native=(8, 8), pixel_scales=0.025)
-
-    assert (evaluation_grid == upscaled_grid).all()
-
-    evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=0.03)
-    upscaled_grid = ag.Grid2D.uniform(shape_native=(6, 6), pixel_scales=0.03)
-
-    assert (evaluation_grid == upscaled_grid).all()
-
-
-def test__evaluation_grid__changes_to_uniform_and_zoomed_in_if_masked():
-    from autogalaxy.operate.deflections import evaluation_grid
-
-    @evaluation_grid
-    def mock_func(lensing_obj, grid, pixel_scale=0.05):
-        return grid
-
-    mask = ag.Mask2D.circular(shape_native=(11, 11), pixel_scales=1.0, radius=3.0)
-
-    grid = ag.Grid2D.from_mask(mask=mask)
-
-    evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=1.0)
-    grid_uniform = ag.Grid2D.uniform(shape_native=(7, 7), pixel_scales=1.0)
-
-    assert (evaluation_grid[0] == np.array([3.0, -3.0])).all()
-    assert (evaluation_grid == grid_uniform).all()
-
-    mask = ag.Mask2D.circular(
-        shape_native=(29, 29), pixel_scales=1.0, radius=3.0, centre=(5.0, 5.0)
-    )
-
-    grid = ag.Grid2D.from_mask(mask=mask)
-
-    evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=1.0)
-    grid_uniform = ag.Grid2D.uniform(
-        shape_native=(7, 7), pixel_scales=1.0, origin=(5.0, 5.0)
-    )
-
-    assert (evaluation_grid[0] == np.array([8.0, 2.0])).all()
-    assert (evaluation_grid == grid_uniform).all()
