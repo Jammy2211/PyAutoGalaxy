@@ -32,7 +32,7 @@ def psi_from(grid, axis_ratio, core_radius):
         The value of the Psi term.
 
     """
-    return np.sqrt(
+    return jnp.sqrt(
         (axis_ratio**2.0 * (grid.array[:, 1] ** 2.0 + core_radius**2.0))
         + grid.array[:, 0] ** 2.0
         + 1e-16

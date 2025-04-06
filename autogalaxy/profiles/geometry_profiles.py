@@ -141,7 +141,7 @@ class SphProfile(GeometryProfile):
         grid
             The (y, x) coordinates in the original reference frame of the grid.
         """
-        return jnp.subtract(jnp.array(grid), jnp.array(self.centre))
+        return jnp.subtract(grid.array, jnp.array(self.centre))
 
     @aa.grid_dec.to_grid
     def transformed_from_reference_frame_grid_from(self, grid, **kwargs):
@@ -246,8 +246,8 @@ class EllProfile(SphProfile):
         Determine the sin and cosine of the angle between the profile's ellipse and the positive x-axis,
         counter-clockwise.
         """
-        angle_radians = np.radians(self.angle)
-        return np.cos(angle_radians), np.sin(angle_radians)
+        angle_radians = jnp.radians(self.angle)
+        return jnp.cos(angle_radians), jnp.sin(angle_radians)
 
     def angle_to_profile_grid_from(self, grid_angles, **kwargs):
         """
@@ -258,8 +258,8 @@ class EllProfile(SphProfile):
         grid_angles
             The angle theta counter-clockwise from the positive x-axis to each coordinate in radians.
         """
-        theta_coordinate_to_profile = np.add(grid_angles, -self.angle_radians)
-        return np.cos(theta_coordinate_to_profile), np.sin(theta_coordinate_to_profile)
+        theta_coordinate_to_profile = jnp.add(grid_angles, -self.angle_radians)
+        return jnp.cos(theta_coordinate_to_profile), jnp.sin(theta_coordinate_to_profile)
 
     @aa.grid_dec.to_grid
     def rotated_grid_from_reference_frame_from(
