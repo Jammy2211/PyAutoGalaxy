@@ -66,8 +66,8 @@ class ExternalShear(MassProfile):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
-        deflection_y = -jnp.multiply(self.magnitude, grid[:, 0])
-        deflection_x = jnp.multiply(self.magnitude, grid[:, 1])
+        deflection_y = -jnp.multiply(self.magnitude, grid.array[:, 0])
+        deflection_x = jnp.multiply(self.magnitude, grid.array[:, 1])
         return self.rotated_grid_from_reference_frame_from(
             jnp.vstack((deflection_y, deflection_x)).T
         )
