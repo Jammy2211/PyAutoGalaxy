@@ -229,7 +229,7 @@ def test__tangential_critical_curve_list_from__compare_via_magnification():
 def test__radial_critical_curve_list_from():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
+    mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
 
     radial_critical_curve_list = mp.radial_critical_curve_list_from(grid=grid)
 
@@ -239,7 +239,7 @@ def test__radial_critical_curve_list_from():
     assert -0.05 < y_centre < 0.05
     assert -0.05 < x_centre < 0.05
 
-    mp = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
+    mp = ag.mp.PowerLawSph(centre=(0.5, 1.0), einstein_radius=2.0, slope=1.5)
 
     radial_critical_curve_list = mp.radial_critical_curve_list_from(grid=grid)
 
@@ -249,21 +249,17 @@ def test__radial_critical_curve_list_from():
     assert 0.45 < y_centre < 0.55
     assert 0.95 < x_centre < 1.05
 
-
 def test__radial_critical_curve_list_from__compare_via_magnification():
+
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    mp = ag.mp.Isothermal(
-        centre=(0.0, 0.0), einstein_radius=2, ell_comps=(0.109423, -0.019294)
-    )
+    mp = ag.mp.PowerLaw(centre=(0.0, 0.0), einstein_radius=2, ell_comps=(0.109423, -0.019294), slope=1.5)
 
     critical_curve_radial_via_magnification = critical_curve_via_magnification_from(
         mass_profile=mp, grid=grid
     )[1]
 
     radial_critical_curve_list = mp.radial_critical_curve_list_from(grid=grid)
-
-    print(radial_critical_curve_list)
 
     assert sum(critical_curve_radial_via_magnification) == pytest.approx(
         sum(radial_critical_curve_list[0]), abs=0.7
@@ -317,7 +313,7 @@ def test__tangential_caustic_list_from___compare_via_magnification():
 def test__radial_caustic_list_from():
     grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.2)
 
-    mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
+    mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
 
     radial_caustic_list = mp.radial_caustic_list_from(grid=grid)
 
@@ -327,12 +323,12 @@ def test__radial_caustic_list_from():
     )
 
     assert np.mean(x_caustic_radial**2 + y_caustic_radial**2) == pytest.approx(
-        mp.einstein_radius**2, 5e-1
+        0.25, 5e-1
     )
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
+    mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
 
     radial_caustic_list = mp.radial_caustic_list_from(grid=grid)
 
@@ -342,7 +338,7 @@ def test__radial_caustic_list_from():
     assert -0.2 < y_centre < 0.2
     assert -0.35 < x_centre < 0.35
 
-    mp = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
+    mp = ag.mp.PowerLawSph(centre=(0.5, 1.0), einstein_radius=2.0, slope=1.5)
 
     radial_caustic_list = mp.radial_caustic_list_from(grid=grid)
 
@@ -354,10 +350,10 @@ def test__radial_caustic_list_from():
 
 
 def test__radial_caustic_list_from___compare_via_magnification():
-    grid = ag.Grid2D.uniform(shape_native=(60, 60), pixel_scales=0.08)
+    grid = ag.Grid2D.uniform(shape_native=(180, 180), pixel_scales=0.02)
 
-    mp = ag.mp.Isothermal(
-        centre=(0.0, 0.0), einstein_radius=2, ell_comps=(0.109423, -0.019294)
+    mp = ag.mp.PowerLaw(
+        centre=(0.0, 0.0), einstein_radius=2, ell_comps=(0.109423, -0.019294), slope=1.5
     )
 
     caustic_radial_via_magnification = caustics_via_magnification_from(
@@ -374,13 +370,13 @@ def test__radial_caustic_list_from___compare_via_magnification():
 def test__radial_critical_curve_area_list_from():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
+    mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
 
     area_within_radial_critical_curve_list = mp.radial_critical_curve_area_list_from(
         grid=grid
     )
 
-    assert area_within_radial_critical_curve_list[0] == pytest.approx(0.0455, 1e-1)
+    assert area_within_radial_critical_curve_list[0] == pytest.approx(0.78293, 1e-1)
 
 
 def test__tangential_critical_curve_area_list_from():
