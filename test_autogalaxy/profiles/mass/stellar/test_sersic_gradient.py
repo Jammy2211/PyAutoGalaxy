@@ -269,11 +269,11 @@ def test__compare_to_sersic():
     )
 
     assert sersic_deflections[0, 0] == pytest.approx(
-        exponential_deflections[0, 0], 1e-3
+        exponential_deflections.array[0, 0], 1e-3
     )
     assert sersic_deflections[0, 0] == pytest.approx(0.90493, 1e-3)
     assert sersic_deflections[0, 1] == pytest.approx(
-        exponential_deflections[0, 1], 1e-3
+        exponential_deflections.array[0, 1], 1e-3
     )
     assert sersic_deflections[0, 1] == pytest.approx(0.62569, 1e-3)
 
@@ -333,10 +333,10 @@ def test__compare_to_sersic():
     )
 
     assert sersic_deflections[0, 0] == pytest.approx(
-        sersic_grad_deflections[0, 0], 1e-3
+        sersic_grad_deflections.array[0, 0], 1e-3
     )
     assert sersic_deflections[0, 0] == pytest.approx(1.1446, 1e-3)
     assert sersic_deflections[0, 1] == pytest.approx(
-        sersic_grad_deflections[0, 1], 1e-3
+        sersic_grad_deflections.array[0, 1], 1e-3
     )
     assert sersic_deflections[0, 1] == pytest.approx(0.79374, 1e-3)

@@ -166,8 +166,8 @@ class MassProfileCSE(ABC):
         )
         q = self.axis_ratio
         q2 = q**2.0
-        grid_y = grid[:, 0]
-        grid_x = grid[:, 1]
+        grid_y = grid.array[:, 0]
+        grid_x = grid.array[:, 1]
         gridx2 = grid_x**2.0
         gridy2 = grid_y**2.0
         term1 = q2 * gridx2 + gridy2
