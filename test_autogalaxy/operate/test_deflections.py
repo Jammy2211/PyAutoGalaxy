@@ -206,7 +206,7 @@ def test__tangential_critical_curve_list_from__compare_via_magnification():
     )[0]
 
     tangential_critical_curve_list = mp.tangential_critical_curve_list_from(
-        grid=grid, pixel_scale=0.2
+        grid=grid,
     )
 
     assert tangential_critical_curve_list[0] == pytest.approx(
@@ -218,7 +218,7 @@ def test__tangential_critical_curve_list_from__compare_via_magnification():
     )[0]
 
     tangential_critical_curve_list = mp.tangential_critical_curve_list_from(
-        grid=grid, pixel_scale=0.2
+        grid=grid, 
     )
 
     assert tangential_critical_curve_list[0] == pytest.approx(
@@ -302,7 +302,7 @@ def test__tangential_caustic_list_from___compare_via_magnification():
     )[0]
 
     tangential_caustic_list = mp.tangential_caustic_list_from(
-        grid=grid, pixel_scale=0.2
+        grid=grid,
     )
 
     assert sum(tangential_caustic_list[0]) == pytest.approx(
