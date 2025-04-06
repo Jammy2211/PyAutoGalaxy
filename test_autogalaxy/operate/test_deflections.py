@@ -218,7 +218,7 @@ def test__tangential_critical_curve_list_from__compare_via_magnification():
     )[0]
 
     tangential_critical_curve_list = mp.tangential_critical_curve_list_from(
-        grid=grid, 
+        grid=grid,
     )
 
     assert tangential_critical_curve_list[0] == pytest.approx(

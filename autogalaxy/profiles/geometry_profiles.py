@@ -127,7 +127,7 @@ class SphProfile(GeometryProfile):
         """
         grid_angles = jnp.arctan2(grid.array[:, 0], grid.array[:, 1])
         cos_theta, sin_theta = self.angle_to_profile_grid_from(grid_angles=grid_angles)
-        return jnp.multiply(radius[:, None], jnp.vstack((sin_theta, cos_theta)).T)
+        return jnp.multiply(radius.array[:, None], jnp.vstack((sin_theta, cos_theta)).T)
 
     @aa.grid_dec.to_grid
     def transformed_to_reference_frame_grid_from(self, grid, **kwargs):
