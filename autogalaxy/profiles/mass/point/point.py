@@ -43,7 +43,7 @@ class PointMass(MassProfile):
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         grid_radii = self.radial_grid_from(grid=grid, **kwargs)
         return self._cartesian_grid_via_radial_from(
-            grid=grid, radius=self.einstein_radius**2 / grid_radii
+            grid=grid, radius=self.einstein_radius**2 / grid_radii.array
         )
 
     @property

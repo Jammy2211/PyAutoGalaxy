@@ -227,17 +227,17 @@ class PowerLawCoreSph(PowerLawCore):
 
         """
         eta = self.radial_grid_from(grid=grid, **kwargs)
-        deflection = np.multiply(
+        deflection = jnp.multiply(
             2.0 * self.einstein_radius_rescaled,
-            np.divide(
-                np.add(
-                    np.power(
-                        np.add(self.core_radius**2, np.square(eta)),
+            jnp.divide(
+                jnp.add(
+                    jnp.power(
+                        jnp.add(self.core_radius**2, jnp.square(eta.array)),
                         (3.0 - self.slope) / 2.0,
                     ),
                     -self.core_radius ** (3 - self.slope),
                 ),
-                np.multiply((3.0 - self.slope), eta),
+                jnp.multiply((3.0 - self.slope), eta.array),
             ),
         )
         return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection)

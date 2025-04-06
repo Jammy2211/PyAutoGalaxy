@@ -156,5 +156,5 @@ def test__deflections_yx_2d_from():
     deflections_1 = smbh_1.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[1.0, 1.0]]))
 
     assert deflections[0, 0] == pytest.approx(
-        deflections_0[0, 0] + deflections_1[0, 0], 1e-2
+        deflections_0.array[0, 0] + deflections_1.array[0, 0], 1e-2
     )
