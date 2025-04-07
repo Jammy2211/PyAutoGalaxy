@@ -7,7 +7,7 @@ import autoarray as aa
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
-from autogalaxy.profiles.mass.abstract.mge import (
+from autogalaxy.profiles.mass.abstract.mge_numpy import (
     MassProfileMGE,
 )
 

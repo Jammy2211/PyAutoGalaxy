@@ -79,7 +79,7 @@ class SersicCore(Sersic):
                     jnp.add(
                         1,
                         jnp.power(
-                            jnp.divide(self.radius_break, grid_radii), self.alpha
+                            jnp.divide(self.radius_break, grid_radii.array), self.alpha
                         ),
                     ),
                     (self.gamma / self.alpha),
@@ -92,7 +92,7 @@ class SersicCore(Sersic):
                         jnp.power(
                             jnp.divide(
                                 jnp.add(
-                                    jnp.power(grid_radii, self.alpha),
+                                    jnp.power(grid_radii.array, self.alpha),
                                     (self.radius_break**self.alpha),
                                 ),
                                 (self.effective_radius**self.alpha),
@@ -114,7 +114,7 @@ class SersicCore(Sersic):
                 * self.intensity_prime
                 * (1.0 + (self.radius_break / r) ** self.alpha)
                 ** (self.gamma / self.alpha)
-                * jnp.exp(
+                * np.exp(
                     -self.sersic_constant
                     * (
                         (r**self.alpha + self.radius_break**self.alpha)

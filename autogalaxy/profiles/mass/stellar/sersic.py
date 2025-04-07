@@ -1,4 +1,3 @@
-import jax.numpy as jnp
 import numpy as np
 
 from scipy.integrate import quad
@@ -7,7 +6,7 @@ from typing import List, Tuple
 import autoarray as aa
 
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
-from autogalaxy.profiles.mass.abstract.mge import (
+from autogalaxy.profiles.mass.abstract.mge_numpy import (
     MassProfileMGE,
 )
 from autogalaxy.profiles.mass.abstract.cse import (

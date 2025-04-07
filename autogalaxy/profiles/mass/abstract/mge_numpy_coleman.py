@@ -126,8 +126,8 @@ class MassProfileMGE:
 
         scale_factor = axis_ratio / (sigmas[0] * np.sqrt(2.0 * (1.0 - q2)))
 
-        xs = np.array((grid.array[:, 1] * scale_factor).copy())
-        ys = np.array((grid.array[:, 0] * scale_factor).copy())
+        xs = np.array((grid[:, 1] * scale_factor).copy())
+        ys = np.array((grid[:, 0] * scale_factor).copy())
 
         ys_minus = ys < 0.0
         ys[ys_minus] *= -1
@@ -219,7 +219,7 @@ class MassProfileMGE:
 
         for i in range(func_gaussians):
             f_sigma = np.sum(etas * np.real(func(sigma_list[i] * kesis)))
-            if (i == -1) or (i == (func_gaussians - 1)):
+            if (i == 0) or (i == (func_gaussians - 1)):
                 amplitude_list[i] = 0.5 * f_sigma * d_log_sigma / np.sqrt(2.0 * np.pi)
             else:
                 amplitude_list[i] = f_sigma * d_log_sigma / np.sqrt(2.0 * np.pi)
@@ -229,7 +229,7 @@ class MassProfileMGE:
     def convergence_2d_via_mge_from(self, grid_radii):
         raise NotImplementedError()
 
-    def _convergence_2d_via_mge_from(self, grid_radii, **kwargs):
+    def _convergence_2d_via_mge_from(self, grid_radii):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -251,7 +251,7 @@ class MassProfileMGE:
 
         for i in range(len(sigmas)):
             convergence += self.convergence_func_gaussian(
-                grid_radii=grid_radii.array, sigma=sigmas[i], intensity=amps[i]
+                grid_radii=grid_radii, sigma=sigmas[i], intensity=amps[i]
             )
         return convergence
 
@@ -260,8 +260,8 @@ class MassProfileMGE:
             intensity, np.exp(-0.5 * np.square(np.divide(grid_radii, sigma)))
         )
 
-    def _deflections_2d_via_mge_from(self, grid, sigmas_factor=1.0, func_terms=None, func_gaussians=None):
-        axis_ratio = np.array(self.axis_ratio)
+    def _deflections_2d_via_mge_from(self, grid, sigmas_factor=1.0):
+        axis_ratio = self.axis_ratio
 
         if axis_ratio > 0.9999:
             axis_ratio = 0.9999
