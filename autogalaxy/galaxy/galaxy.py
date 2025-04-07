@@ -357,6 +357,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             convergence_1d_list = []
 
             for mass_profile in self.cls_list_from(cls=MassProfile):
+
                 grid_radial = self.grid_radial_from(
                     grid=grid, centre=mass_profile.centre, angle=mass_profile.angle
                 )
