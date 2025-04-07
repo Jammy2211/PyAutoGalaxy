@@ -1,5 +1,6 @@
 from typing import Dict, List, Optional, Type, Union
 
+import jax.numpy as jnp
 import numpy as np
 
 from autoconf.dictable import instance_as_dict, to_dict
@@ -229,7 +230,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
         ):
             return sum(self.image_2d_list_from(grid=grid, operated_only=operated_only))
 
-        return np.zeros((grid.shape[0],))
+        return jnp.zeros((grid.shape[0],))
 
     @aa.grid_dec.to_projected
     def image_1d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
@@ -262,7 +263,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
             return sum(image_1d_list)
 
-        return np.zeros((grid.shape[0],))
+        return jnp.zeros((grid.shape[0],))
 
     @aa.grid_dec.to_vector_yx
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
@@ -290,7 +291,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
                     self.cls_list_from(cls=MassProfile),
                 )
             )
-        return np.zeros((grid.shape[0], 2))
+        return jnp.zeros((grid.shape[0], 2))
 
     @aa.grid_dec.to_array
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
@@ -317,7 +318,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
                     self.cls_list_from(cls=MassProfile),
                 )
             )
-        return np.zeros((grid.shape[0],))
+        return jnp.zeros((grid.shape[0],))
 
     @aa.grid_dec.to_grid
     def traced_grid_2d_from(self, grid: aa.type.Grid2DLike) -> aa.type.Grid2DLike:
@@ -366,7 +367,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
             return sum(convergence_1d_list)
 
-        return np.zeros((grid.shape[0],))
+        return jnp.zeros((grid.shape[0],))
 
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
@@ -393,7 +394,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
                     self.cls_list_from(cls=MassProfile),
                 )
             )
-        return np.zeros((grid.shape[0],))
+        return jnp.zeros((grid.shape[0],))
 
     @aa.grid_dec.to_projected
     def potential_1d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
@@ -426,7 +427,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
             return sum(potential_1d_list)
 
-        return np.zeros((grid.shape[0],))
+        return jnp.zeros((grid.shape[0],))
 
     @property
     def half_light_radius(self):

@@ -132,8 +132,6 @@ def test__unmasked_blurred_image_2d_from():
         padded_array=image_2d_not_operated, psf=psf, image_shape=grid.mask.shape
     )
 
-    image_2d_operated = light_operated.image_2d_from(grid=grid)
-
     image_2d_operated = light_operated.image_2d_from(grid=padded_grid)
 
     image_2d_operated = padded_grid.mask.unmasked_blurred_array_from(
