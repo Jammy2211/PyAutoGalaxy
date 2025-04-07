@@ -108,18 +108,20 @@ class PlotterInterfaceInterferometer(PlotterInterface):
         if should_plot("subplot_dataset"):
             dataset_plotter.subplot_dataset()
 
-        hdu_list = hdu_list_for_output_from(
-            values_list=[
-                dataset.real_space_mask.astype("float"),
-                dataset.data.in_array,
-                dataset.noise_map.in_array,
-                dataset.uv_wavelengths,
-            ],
-            ext_name_list=["mask", "data", "noise_map", "uv_wavelengths"],
-            header_dict=dataset.real_space_mask.header_dict,
-        )
+        if should_plot("fits_dataset"):
 
-        hdu_list.writeto(self.image_path / "dataset.fits", overwrite=True)
+            hdu_list = hdu_list_for_output_from(
+                values_list=[
+                    dataset.real_space_mask.astype("float"),
+                    dataset.data.in_array,
+                    dataset.noise_map.in_array,
+                    dataset.uv_wavelengths,
+                ],
+                ext_name_list=["mask", "data", "noise_map", "uv_wavelengths"],
+                header_dict=dataset.real_space_mask.header_dict,
+            )
+
+            hdu_list.writeto(self.image_path / "dataset.fits", overwrite=True)
 
     def fit_interferometer(
         self,

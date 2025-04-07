@@ -14,7 +14,7 @@ subplot_format: [png]                      # Output format of all subplots, can 
 
 dataset:                                   # Settings for plots of all datasets (e.g. ImagingPlotter, InterferometerPlotter).
   subplot_dataset: true                    # Plot subplot containing all dataset quantities (e.g. the data, noise-map, etc.)?
-  fits_dataset : true                      # Output a .fits file containing the dataset data, noise-map and other quantities?
+  fits_dataset: true                      # Output a .fits file containing the dataset data, noise-map and other quantities?
 
 fit:                                       # Settings for plots of all fits (e.g. FitImagingPlotter, FitInterferometerPlotter).
   subplot_fit: true                        # Plot subplot of all fit quantities for any dataset (e.g. the model data, residual-map, etc.)?
