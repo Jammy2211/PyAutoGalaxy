@@ -60,7 +60,7 @@ class NFW(gNFW, MassProfileCSE):
         """
 
         def calculate_deflection_component(npow, index):
-            deflection_grid = self.axis_ratio * grid[:, index]
+            deflection_grid = np.array(self.axis_ratio * grid.array[:, index])
 
             for i in range(grid.shape[0]):
                 deflection_grid[i] *= (
@@ -70,8 +70,8 @@ class NFW(gNFW, MassProfileCSE):
                         a=0.0,
                         b=1.0,
                         args=(
-                            grid[i, 0],
-                            grid[i, 1],
+                            grid.array[i, 0],
+                            grid.array[i, 1],
                             npow,
                             self.axis_ratio,
                             self.scale_radius,
@@ -278,8 +278,8 @@ class NFW(gNFW, MassProfileCSE):
 
         # Define dimensionless length coords
 
-        x1 = grid[:, 1] / self.scale_radius
-        x2 = grid[:, 0] / self.scale_radius
+        x1 = grid.array[:, 1] / self.scale_radius
+        x2 = grid.array[:, 0] / self.scale_radius
 
         # Avoid nans due to x=0
         x1 = np.where(np.abs(x1) < 1e-6, 1e-6, x1)
@@ -322,8 +322,8 @@ class NFW(gNFW, MassProfileCSE):
 
         # Define dimensionless length coords
 
-        x1 = grid[:, 1] / self.scale_radius
-        x2 = grid[:, 0] / self.scale_radius
+        x1 = grid.array[:, 1] / self.scale_radius
+        x2 = grid.array[:, 0] / self.scale_radius
 
         # Avoid nans due to x=0
 
