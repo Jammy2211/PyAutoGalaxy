@@ -104,7 +104,6 @@ class PlotterInterfaceImaging(PlotterInterface):
             dataset_plotter.subplot_dataset()
 
         if should_plot("fits_dataset"):
-
             hdu_list = hdu_list_for_output_from(
                 values_list=[
                     dataset.mask.astype("float"),

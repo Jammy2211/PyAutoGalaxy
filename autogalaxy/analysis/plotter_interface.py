@@ -260,7 +260,6 @@ class PlotterInterface:
             )
 
         if should_plot("fits_adapt_images"):
-
             values_list = [
                 adapt_images.galaxy_name_image_dict[name].native
                 for name in adapt_images.galaxy_name_image_dict.keys()
@@ -271,7 +270,8 @@ class PlotterInterface:
                     adapt_images.mask.astype("float"),
                 ]
                 + values_list,
-                ext_name_list=["mask"] + list(adapt_images.galaxy_name_image_dict.keys()),
+                ext_name_list=["mask"]
+                + list(adapt_images.galaxy_name_image_dict.keys()),
                 header_dict=adapt_images.mask.header_dict,
             )
 

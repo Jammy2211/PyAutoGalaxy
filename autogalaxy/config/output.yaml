@@ -93,8 +93,4 @@ latent_results: true # Whether to output the `latent.results` file.
 
 # Other Files:
 
-covariance: true # `covariance.csv`: The [free parameters x free parameters] covariance matrix.
-data: true # `data.json`: The value of every data point in the data.
-noise_map: true # `noise_map.json`: The value of every RMS noise map value.
-
 search_log: true # `search.log`: logging produced whilst running the fit or fit_sequential method
