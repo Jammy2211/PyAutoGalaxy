@@ -29,7 +29,7 @@ def test__image_2d_from(grid_2d_7x7, gal_x1_lp):
 
     image = galaxies.image_2d_from(grid=grid_2d_7x7)
 
-    assert image == pytest.approx(galaxy_image, 1.0e-4)
+    assert image == pytest.approx(galaxy_image.array, 1.0e-4)
 
     # Overwrite one value so intensity in each pixel is different
     grid_2d_7x7[5] = np.array([2.0, 2.0])
@@ -45,7 +45,7 @@ def test__image_2d_from(grid_2d_7x7, gal_x1_lp):
 
     image = galaxies.image_2d_from(grid=grid_2d_7x7)
 
-    assert image == pytest.approx(g0_image + g1_image, 1.0e-4)
+    assert image == pytest.approx(g0_image.array + g1_image.array, 1.0e-4)
 
 
 def test__image_2d_list_from(grid_2d_7x7):
@@ -65,8 +65,8 @@ def test__image_2d_list_from(grid_2d_7x7):
 
     image = galaxies.image_2d_from(grid=grid_2d_7x7)
 
-    assert image[0] == pytest.approx(lp0_image[0] + lp1_image[0], 1.0e-4)
-    assert image[1] == pytest.approx(lp0_image[1] + lp1_image[1], 1.0e-4)
+    assert image[0] == pytest.approx(lp0_image.array[0] + lp1_image.array[0], 1.0e-4)
+    assert image[1] == pytest.approx(lp0_image.array[1] + lp1_image.array[1], 1.0e-4)
 
     image_of_galaxies = galaxies.image_2d_list_from(grid=grid_2d_7x7)
 
@@ -89,14 +89,14 @@ def test__image_2d_from__operated_only_input(grid_2d_7x7, lp_0, lp_operated_0):
     galaxies = ag.Galaxies(galaxies=[galaxy_0, galaxy_1, galaxy_2])
 
     image_2d = galaxies.image_2d_from(grid=grid_2d_7x7, operated_only=False)
-    assert image_2d == pytest.approx(image_2d_not_operated, 1.0e-4)
+    assert image_2d == pytest.approx(image_2d_not_operated.array, 1.0e-4)
 
     image_2d = galaxies.image_2d_from(grid=grid_2d_7x7, operated_only=True)
-    assert image_2d == pytest.approx(3.0 * image_2d_operated, 1.0e-4)
+    assert image_2d == pytest.approx(3.0 * image_2d_operated.array, 1.0e-4)
 
     image_2d = galaxies.image_2d_from(grid=grid_2d_7x7, operated_only=None)
     assert image_2d == pytest.approx(
-        image_2d_not_operated + 3.0 * image_2d_operated, 1.0e-4
+        image_2d_not_operated.array + 3.0 * image_2d_operated.array, 1.0e-4
     )
 
 
@@ -113,18 +113,18 @@ def test__image_2d_list_from__operated_only_input(grid_2d_7x7, lp_0, lp_operated
     galaxies = ag.Galaxies(galaxies=[galaxy_0, galaxy_1, galaxy_2])
 
     image_2d_list = galaxies.image_2d_list_from(grid=grid_2d_7x7, operated_only=False)
-    assert image_2d_list[0] == pytest.approx(image_2d_not_operated, 1.0e-4)
+    assert image_2d_list[0] == pytest.approx(image_2d_not_operated.array, 1.0e-4)
     assert image_2d_list[1] == pytest.approx(np.zeros((9)), 1.0e-4)
     assert image_2d_list[2] == pytest.approx(np.zeros((9)), 1.0e-4)
 
     image_2d_list = galaxies.image_2d_list_from(grid=grid_2d_7x7, operated_only=True)
-    assert image_2d_list[0] == pytest.approx(image_2d_operated, 1.0e-4)
-    assert image_2d_list[1] == pytest.approx(2.0 * image_2d_operated, 1.0e-4)
+    assert image_2d_list[0] == pytest.approx(image_2d_operated.array, 1.0e-4)
+    assert image_2d_list[1] == pytest.approx(2.0 * image_2d_operated.array, 1.0e-4)
     assert image_2d_list[2] == pytest.approx(np.zeros((9)), 1.0e-4)
 
     image_2d_list = galaxies.image_2d_list_from(grid=grid_2d_7x7, operated_only=None)
     assert image_2d_list[0] + image_2d_list[1] == pytest.approx(
-        image_2d_not_operated + 3.0 * image_2d_operated, 1.0e-4
+        image_2d_not_operated.array + 3.0 * image_2d_operated.array, 1.0e-4
     )
 
 
@@ -194,7 +194,7 @@ def test__potential_2d_from(grid_2d_7x7):
 
     potential = galaxies.potential_2d_from(grid=grid_2d_7x7)
 
-    assert potential == pytest.approx(g0_potential + g1_potential, 1.0e-8)
+    assert potential == pytest.approx(g0_potential.array + g1_potential.array, 1.0e-8)
 
 
 def test__deflections_yx_2d_from(grid_2d_7x7):
@@ -212,7 +212,7 @@ def test__deflections_yx_2d_from(grid_2d_7x7):
 
     deflections = galaxies.deflections_yx_2d_from(grid=grid_2d_7x7)
 
-    assert deflections == pytest.approx(g0_deflections + g1_deflections, 1.0e-4)
+    assert deflections == pytest.approx(g0_deflections.array + g1_deflections.array, 1.0e-4)
 
 
 def test__has():
