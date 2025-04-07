@@ -5,7 +5,6 @@ import os
 
 from autoconf import conf
 from autoconf.dictable import to_dict, output_to_json
-from autoconf.fitsable import hdu_list_for_output_from
 
 import autofit as af
 import autoarray as aa
