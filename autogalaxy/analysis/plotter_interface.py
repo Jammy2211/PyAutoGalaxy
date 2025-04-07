@@ -259,18 +259,20 @@ class PlotterInterface:
                 adapt_galaxy_name_image_dict=adapt_images.galaxy_name_image_dict
             )
 
-        values_list = [
-            adapt_images.galaxy_name_image_dict[name].native
-            for name in adapt_images.galaxy_name_image_dict.keys()
-        ]
+        if should_plot("fits_adapt_images"):
 
-        hdu_list = hdu_list_for_output_from(
-            values_list=[
-                adapt_images.mask.astype("float"),
+            values_list = [
+                adapt_images.galaxy_name_image_dict[name].native
+                for name in adapt_images.galaxy_name_image_dict.keys()
             ]
-            + values_list,
-            ext_name_list=["mask"] + list(adapt_images.galaxy_name_image_dict.keys()),
-            header_dict=adapt_images.mask.header_dict,
-        )
 
-        hdu_list.writeto(self.image_path / "adapt_images.fits", overwrite=True)
+            hdu_list = hdu_list_for_output_from(
+                values_list=[
+                    adapt_images.mask.astype("float"),
+                ]
+                + values_list,
+                ext_name_list=["mask"] + list(adapt_images.galaxy_name_image_dict.keys()),
+                header_dict=adapt_images.mask.header_dict,
+            )
+
+            hdu_list.writeto(self.image_path / "adapt_images.fits", overwrite=True)
