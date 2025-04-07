@@ -2,9 +2,10 @@ from typing import Dict, List, Optional, Type, Union
 
 import numpy as np
 
+from autoconf.dictable import instance_as_dict, to_dict
+
 import autoarray as aa
 import autofit as af
-from autoconf.dictable import instance_as_dict, to_dict
 
 from autogalaxy import exc
 from autogalaxy.operate.deflections import OperateDeflections

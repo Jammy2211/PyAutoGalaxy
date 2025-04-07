@@ -1,4 +1,5 @@
 from __future__ import annotations
+import jax.numpy as jnp
 import numpy as np
 from typing import TYPE_CHECKING, Dict, List, Optional
 
@@ -188,7 +189,7 @@ class OperateImage:
 
         image_2d = self.image_2d_from(grid=grid)
 
-        if not np.any(image_2d):
+        if not jnp.any(image_2d.array):
             return aa.Visibilities.zeros(
                 shape_slim=(transformer.uv_wavelengths.shape[0],)
             )
@@ -290,13 +291,13 @@ class OperateImageList(OperateImage):
         """
         padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
 
-        padded_image_1d_list = self.image_2d_list_from(grid=padded_grid)
+        padded_image_2d_list = self.image_2d_list_from(grid=padded_grid)
 
         unmasked_blurred_image_list = []
 
-        for padded_image_1d in padded_image_1d_list:
+        for padded_image_2d in padded_image_2d_list:
             unmasked_blurred_array_2d = padded_grid.mask.unmasked_blurred_array_from(
-                padded_array=padded_image_1d, psf=psf, image_shape=grid.mask.shape
+                padded_array=padded_image_2d, psf=psf, image_shape=grid.mask.shape
             )
 
             unmasked_blurred_image_list.append(unmasked_blurred_array_2d)
@@ -334,7 +335,7 @@ class OperateImageList(OperateImage):
         visibilities_list = []
 
         for image_2d in image_2d_list:
-            if not np.any(image_2d):
+            if not jnp.any(image_2d.array):
                 visibilities = aa.Visibilities.zeros(
                     shape_slim=(transformer.uv_wavelengths.shape[0],)
                 )
@@ -453,7 +454,7 @@ class OperateImageGalaxies(OperateImageList):
         for galaxy_key in galaxy_image_2d_dict.keys():
             image_2d = galaxy_image_2d_dict[galaxy_key]
 
-            if not np.any(image_2d):
+            if not jnp.any(image_2d.array):
                 visibilities = aa.Visibilities.zeros(
                     shape_slim=(transformer.uv_wavelengths.shape[0],)
                 )
