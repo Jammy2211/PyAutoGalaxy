@@ -62,7 +62,7 @@ class MassProfile(EllProfile, OperateDeflections):
         raise NotImplementedError
 
     def mass_integral(self, x):
-        return 2 * np.pi * x * self.convergence_func(grid_radius=x)
+        return 2 * np.pi * x * self.convergence_func(grid_radius=aa.ArrayIrregular(x))
 
     @property
     def ellipticity_rescale(self):
