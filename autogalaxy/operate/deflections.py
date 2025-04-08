@@ -47,6 +47,7 @@ def precompute_jacobian(func):
 
     return wrapper
 
+
 def one_step(r, _, theta, fun, fun_dr):
     r = jnp.abs(r - fun(r, theta) / fun_dr(r, theta))
     return r, None
@@ -86,13 +87,12 @@ class OperateDeflections:
         # and outputs a 2D vector.  Needed for JAX auto differentiation.
 
         mask = aa.Mask2D.all_false(
-            shape_native=(1,1),
+            shape_native=(1, 1),
             pixel_scales=pixel_scales,
         )
 
         g = aa.Grid2D(
-            values=jnp.stack((y.reshape(1), x.reshape(1)), axis=-1),
-            mask=mask
+            values=jnp.stack((y.reshape(1), x.reshape(1)), axis=-1), mask=mask
         )
 
         return self.deflections_yx_2d_from(g).squeeze()
@@ -335,7 +335,8 @@ class OperateDeflections:
         return grid_contour.contour_list
 
     def tangential_critical_curve_list_from(
-        self, grid, 
+        self,
+        grid,
     ) -> List[aa.Grid2DIrregular]:
         """
         Returns all tangential critical curves of the lensing system, which are computed as follows:
@@ -360,7 +361,8 @@ class OperateDeflections:
         return self.contour_list_from(grid=grid, contour_array=tangential_eigen_values)
 
     def radial_critical_curve_list_from(
-        self, grid, 
+        self,
+        grid,
     ) -> List[aa.Grid2DIrregular]:
         """
         Returns all radial critical curves of the lensing system, which are computed as follows:
@@ -385,7 +387,8 @@ class OperateDeflections:
         return self.contour_list_from(grid=grid, contour_array=radial_eigen_values)
 
     def tangential_caustic_list_from(
-        self, grid, 
+        self,
+        grid,
     ) -> List[aa.Grid2DIrregular]:
         """
         Returns all tangential caustics of the lensing system, which are computed as follows:
@@ -426,7 +429,8 @@ class OperateDeflections:
         return tangential_caustic_list
 
     def radial_caustic_list_from(
-        self, grid, 
+        self,
+        grid,
     ) -> List[aa.Grid2DIrregular]:
         """
         Returns all radial caustics of the lensing system, which are computed as follows:
@@ -449,9 +453,7 @@ class OperateDeflections:
             caustic to be computed more accurately using a higher resolution grid.
         """
 
-        radial_critical_curve_list = self.radial_critical_curve_list_from(
-            grid=grid
-        )
+        radial_critical_curve_list = self.radial_critical_curve_list_from(grid=grid)
 
         radial_caustic_list = []
 
@@ -466,9 +468,7 @@ class OperateDeflections:
 
         return radial_caustic_list
 
-    def radial_critical_curve_area_list_from(
-        self, grid
-    ) -> List[float]:
+    def radial_critical_curve_area_list_from(self, grid) -> List[float]:
         """
         Returns the surface area within each radial critical curve as a list, the calculation of which is described in
         the function `radial_critical_curve_list_from()`.
@@ -488,14 +488,13 @@ class OperateDeflections:
             If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
             caustic to be computed more accurately using a higher resolution grid.
         """
-        radial_critical_curve_list = self.radial_critical_curve_list_from(
-            grid=grid
-        )
+        radial_critical_curve_list = self.radial_critical_curve_list_from(grid=grid)
 
         return self.area_within_curve_list_from(curve_list=radial_critical_curve_list)
 
     def tangential_critical_curve_area_list_from(
-        self, grid, 
+        self,
+        grid,
     ) -> List[float]:
         """
         Returns the surface area within each tangential critical curve as a list, the calculation of which is
@@ -536,7 +535,8 @@ class OperateDeflections:
         return area_within_each_curve_list
 
     def einstein_radius_list_from(
-        self, grid, 
+        self,
+        grid,
     ):
         """
         Returns a list of the Einstein radii corresponding to the area within each tangential critical curve.
@@ -563,15 +563,14 @@ class OperateDeflections:
             caustic to be computed more accurately using a higher resolution grid.
         """
         try:
-            area_list = self.tangential_critical_curve_area_list_from(
-                grid=grid
-            )
+            area_list = self.tangential_critical_curve_area_list_from(grid=grid)
             return [jnp.sqrt(area / jnp.pi) for area in area_list]
         except TypeError:
             raise TypeError("The grid input was unable to estimate the Einstein Radius")
 
     def einstein_radius_from(
-        self, grid, 
+        self,
+        grid,
     ):
         """
         Returns the Einstein radius corresponding to the area within the tangential critical curve.
@@ -614,7 +613,8 @@ class OperateDeflections:
         return sum(einstein_radii_list)
 
     def einstein_mass_angular_list_from(
-        self, grid, 
+        self,
+        grid,
     ) -> List[float]:
         """
         Returns a list of the angular Einstein massses corresponding to the area within each tangential critical curve.
@@ -643,13 +643,12 @@ class OperateDeflections:
             If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
             caustic to be computed more accurately using a higher resolution grid.
         """
-        einstein_radius_list = self.einstein_radius_list_from(
-            grid=grid
-        )
+        einstein_radius_list = self.einstein_radius_list_from(grid=grid)
         return [jnp.pi * einstein_radius**2 for einstein_radius in einstein_radius_list]
 
     def einstein_mass_angular_from(
-        self, grid, 
+        self,
+        grid,
     ) -> float:
         """
         Returns the Einstein radius corresponding to the area within the tangential critical curve.
@@ -678,9 +677,7 @@ class OperateDeflections:
             If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
             caustic to be computed more accurately using a higher resolution grid.
         """
-        einstein_mass_angular_list = self.einstein_mass_angular_list_from(
-            grid=grid
-        )
+        einstein_mass_angular_list = self.einstein_mass_angular_list_from(grid=grid)
 
         if len(einstein_mass_angular_list) > 1:
             logger.info(
@@ -694,9 +691,7 @@ class OperateDeflections:
 
     def jacobian_stack(self, y, x, pixel_scales):
         return jnp.stack(
-            jax.jacfwd(self.deflections_yx_scalar, argnums=(0, 1))(
-                y, x, pixel_scales
-            )
+            jax.jacfwd(self.deflections_yx_scalar, argnums=(0, 1))(y, x, pixel_scales)
         )
 
     def jacobian_stack_vector(self, y, x, pixel_scales):

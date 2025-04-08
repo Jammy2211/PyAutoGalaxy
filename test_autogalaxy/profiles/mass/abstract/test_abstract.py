@@ -191,7 +191,9 @@ def test__regression__centre_of_profile_in_right_place():
     )
     assert max_indexes == (1, 4)
 
-    mass_profile = ag.mp.IsothermalSph(centre=(1.9999999, 0.999999), einstein_radius=1.0)
+    mass_profile = ag.mp.IsothermalSph(
+        centre=(1.9999999, 0.999999), einstein_radius=1.0
+    )
     potential = mass_profile.potential_2d_from(grid=grid)
     max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
     assert max_indexes == (1, 4)

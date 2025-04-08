@@ -407,13 +407,15 @@ def test__mass_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric_
     assert gal_x4_mp.deflections_yx_2d_from(
         grid=ag.Grid2DIrregular([[1.0, 0.0]])
     ) == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[99.0, 0.0]])).array, abs=1e-6
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[99.0, 0.0]])).array,
+        abs=1e-6,
     )
 
     assert gal_x4_mp.deflections_yx_2d_from(
         grid=ag.Grid2DIrregular([[49.0, 0.0]])
     ) == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[51.0, 0.0]])).array, 1e-6
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[51.0, 0.0]])).array,
+        1e-6,
     )
 
     mp_0 = ag.mp.IsothermalSph(einstein_radius=1.0)
@@ -471,7 +473,8 @@ def test__mass_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric_
     assert gal_x4_mp.potential_2d_from(
         grid=ag.Grid2DIrregular([[100.0, 49.0]])
     ) == pytest.approx(
-        gal_x4_mp.potential_2d_from(grid=ag.Grid2DIrregular([[100.0, 51.0]])).array, 1e-5
+        gal_x4_mp.potential_2d_from(grid=ag.Grid2DIrregular([[100.0, 51.0]])).array,
+        1e-5,
     )
 
     assert gal_x4_mp.potential_2d_from(
@@ -483,60 +486,72 @@ def test__mass_profile_2d_quantity_from_grid__symmetric_profiles_give_symmetric_
     assert -1.0 * gal_x4_mp.deflections_yx_2d_from(
         grid=ag.Grid2DIrregular([[49.0, 0.0]])
     )[0, 0] == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[51.0, 0.0]])).array[0, 0],
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[51.0, 0.0]])).array[
+            0, 0
+        ],
         1e-5,
     )
 
     assert 1.0 * gal_x4_mp.deflections_yx_2d_from(
         grid=ag.Grid2DIrregular([[0.0, 49.0]])
     )[0, 0] == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.0, 51.0]])).array[0, 0],
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.0, 51.0]])).array[
+            0, 0
+        ],
         1e-5,
     )
 
     assert 1.0 * gal_x4_mp.deflections_yx_2d_from(
         grid=ag.Grid2DIrregular([[100.0, 49.0]])
     )[0, 0] == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[100.0, 51.0]])).array[
-            0, 0
-        ],
+        gal_x4_mp.deflections_yx_2d_from(
+            grid=ag.Grid2DIrregular([[100.0, 51.0]])
+        ).array[0, 0],
         1e-5,
     )
 
     assert -1.0 * gal_x4_mp.deflections_yx_2d_from(
         grid=ag.Grid2DIrregular([[49.0, 49.0]])
     )[0, 0] == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[51.0, 51.0]])).array[0, 0],
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[51.0, 51.0]])).array[
+            0, 0
+        ],
         1e-5,
     )
 
     assert 1.0 * gal_x4_mp.deflections_yx_2d_from(
         grid=ag.Grid2DIrregular([[49.0, 0.0]])
     )[0, 1] == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[51.0, 0.0]])).array[0, 1],
-        1e-5,
-    )
-
-    assert -1.0 * gal_x4_mp.deflections_yx_2d_from(
-        grid=ag.Grid2DIrregular([[0.0, 49.0]])
-    )[0, 1] == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.0, 51.0]])).array[0, 1],
-        1e-5,
-    )
-
-    assert -1.0 * gal_x4_mp.deflections_yx_2d_from(
-        grid=ag.Grid2DIrregular([[100.0, 49.0]])
-    )[0, 1] == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[100.0, 51.0]])).array[
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[51.0, 0.0]])).array[
             0, 1
         ],
         1e-5,
     )
 
     assert -1.0 * gal_x4_mp.deflections_yx_2d_from(
+        grid=ag.Grid2DIrregular([[0.0, 49.0]])
+    )[0, 1] == pytest.approx(
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.0, 51.0]])).array[
+            0, 1
+        ],
+        1e-5,
+    )
+
+    assert -1.0 * gal_x4_mp.deflections_yx_2d_from(
+        grid=ag.Grid2DIrregular([[100.0, 49.0]])
+    )[0, 1] == pytest.approx(
+        gal_x4_mp.deflections_yx_2d_from(
+            grid=ag.Grid2DIrregular([[100.0, 51.0]])
+        ).array[0, 1],
+        1e-5,
+    )
+
+    assert -1.0 * gal_x4_mp.deflections_yx_2d_from(
         grid=ag.Grid2DIrregular([[49.0, 49.0]])
     )[0, 1] == pytest.approx(
-        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[51.0, 51.0]])).array[0, 1],
+        gal_x4_mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[51.0, 51.0]])).array[
+            0, 1
+        ],
         1e-5,
     )
 

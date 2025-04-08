@@ -83,7 +83,9 @@ class PowerLaw(PowerLawCore):
             jnp.multiply(jnp.cos(angle), 1 + 0j), jnp.multiply(jnp.sin(angle), 0 + 1j)
         )
 
-        R = jnp.sqrt((self.axis_ratio * grid.array[:, 1]) ** 2 + grid.array[:, 0] ** 2 + 1e-16)
+        R = jnp.sqrt(
+            (self.axis_ratio * grid.array[:, 1]) ** 2 + grid.array[:, 0] ** 2 + 1e-16
+        )
         zh = omega(z, slope, factor, n_terms=20)
 
         complex_angle = (
@@ -104,7 +106,9 @@ class PowerLaw(PowerLawCore):
 
     def convergence_func(self, grid_radius: float) -> float:
         if grid_radius.array > 0.0:
-            return self.einstein_radius_rescaled * grid_radius.array ** (-(self.slope - 1))
+            return self.einstein_radius_rescaled * grid_radius.array ** (
+                -(self.slope - 1)
+            )
         return jnp.inf
 
     @staticmethod
@@ -153,7 +157,8 @@ class PowerLawSph(PowerLaw):
             2.0
             * self.einstein_radius_rescaled
             * jnp.divide(
-                jnp.power(eta, (3.0 - self.slope)), jnp.multiply((3.0 - self.slope), eta)
+                jnp.power(eta, (3.0 - self.slope)),
+                jnp.multiply((3.0 - self.slope), eta),
             )
         )
 

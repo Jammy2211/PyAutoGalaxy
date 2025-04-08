@@ -94,7 +94,9 @@ class SphProfile(GeometryProfile):
         grid
             The grid of (y, x) coordinates which are converted to radial distances.
         """
-        return jnp.sqrt(jnp.add(jnp.square(grid.array[:, 0]), jnp.square(grid.array[:, 1])))
+        return jnp.sqrt(
+            jnp.add(jnp.square(grid.array[:, 0]), jnp.square(grid.array[:, 1]))
+        )
 
     def angle_to_profile_grid_from(
         self, grid_angles: np.ndarray, **kwargs
@@ -263,7 +265,9 @@ class EllProfile(SphProfile):
             The angle theta counter-clockwise from the positive x-axis to each coordinate in radians.
         """
         theta_coordinate_to_profile = jnp.add(grid_angles, -self.angle_radians)
-        return jnp.cos(theta_coordinate_to_profile), jnp.sin(theta_coordinate_to_profile)
+        return jnp.cos(theta_coordinate_to_profile), jnp.sin(
+            theta_coordinate_to_profile
+        )
 
     @aa.grid_dec.to_grid
     def rotated_grid_from_reference_frame_from(

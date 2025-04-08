@@ -86,7 +86,9 @@ class ShapeletPolar(AbstractShapelet):
             The image of the Polar Shapelet evaluated at every (y,x) coordinate on the transformed grid.
         """
 
-        laguerre = genlaguerre(n=(self.n - jnp.abs(self.m)) / 2.0, alpha=jnp.abs(self.m))
+        laguerre = genlaguerre(
+            n=(self.n - jnp.abs(self.m)) / 2.0, alpha=jnp.abs(self.m)
+        )
 
         const = (
             ((-1) ** ((self.n - jnp.abs(self.m)) // 2))

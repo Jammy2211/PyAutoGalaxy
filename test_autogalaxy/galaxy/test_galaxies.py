@@ -212,7 +212,9 @@ def test__deflections_yx_2d_from(grid_2d_7x7):
 
     deflections = galaxies.deflections_yx_2d_from(grid=grid_2d_7x7)
 
-    assert deflections == pytest.approx(g0_deflections.array + g1_deflections.array, 1.0e-4)
+    assert deflections == pytest.approx(
+        g0_deflections.array + g1_deflections.array, 1.0e-4
+    )
 
 
 def test__has():

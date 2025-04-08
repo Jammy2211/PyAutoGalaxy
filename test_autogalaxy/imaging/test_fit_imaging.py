@@ -68,7 +68,9 @@ def test__fit_figure_of_merit(
     assert fit.perform_inversion is True
     assert fit.figure_of_merit == pytest.approx(-22.9005, 1.0e-4)
 
-    galaxy_light = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0, centre=(0.05, 0.05)))
+    galaxy_light = ag.Galaxy(
+        redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0, centre=(0.05, 0.05))
+    )
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=[galaxy_light, galaxy_pix])
 
@@ -134,10 +136,12 @@ def test__fit_figure_of_merit(
     assert fit.figure_of_merit == pytest.approx(-289.6050404, 1.0e-4)
 
     g0_linear_operated_light = ag.Galaxy(
-        redshift=0.5, bulge=ag.lp_linear_operated.Sersic(sersic_index=1.0, centre=(0.05, 0.05))
+        redshift=0.5,
+        bulge=ag.lp_linear_operated.Sersic(sersic_index=1.0, centre=(0.05, 0.05)),
     )
     g1_linear_operated_light = ag.Galaxy(
-        redshift=0.5, bulge=ag.lp_linear_operated.Sersic(sersic_index=4.0, centre=(0.05, 0.05))
+        redshift=0.5,
+        bulge=ag.lp_linear_operated.Sersic(sersic_index=4.0, centre=(0.05, 0.05)),
     )
 
     fit = ag.FitImaging(
@@ -163,6 +167,7 @@ def test__fit_figure_of_merit(
     assert fit.perform_inversion is False
     assert fit.figure_of_merit == pytest.approx(-107.62350171, 1.0e-4)
 
+
 def test__fit__model_dataset__sky___handles_special_behaviour(masked_imaging_7x7):
     g0 = ag.Galaxy(
         redshift=0.5,
@@ -183,8 +188,12 @@ def test__fit__model_dataset__grid_offset__handles_special_behaviour(
     masked_imaging_7x7,
     masked_imaging_7x7_sub_2,
 ):
-    g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(centre=(-1.05, -2.05), intensity=1.0))
-    g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(centre=(-1.05, -2.05), intensity=1.0))
+    g0 = ag.Galaxy(
+        redshift=0.5, bulge=ag.lp.Sersic(centre=(-1.05, -2.05), intensity=1.0)
+    )
+    g1 = ag.Galaxy(
+        redshift=0.5, bulge=ag.lp.Sersic(centre=(-1.05, -2.05), intensity=1.0)
+    )
 
     fit = ag.FitImaging(
         dataset=masked_imaging_7x7,
@@ -194,8 +203,12 @@ def test__fit__model_dataset__grid_offset__handles_special_behaviour(
 
     assert fit.figure_of_merit == pytest.approx(-71.4691196459, 1.0e-4)
 
-    g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(centre=(-1.05, -2.05), intensity=1.0))
-    g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(centre=(-1.05, -2.05), intensity=1.0))
+    g0 = ag.Galaxy(
+        redshift=0.5, bulge=ag.lp.Sersic(centre=(-1.05, -2.05), intensity=1.0)
+    )
+    g1 = ag.Galaxy(
+        redshift=0.5, bulge=ag.lp.Sersic(centre=(-1.05, -2.05), intensity=1.0)
+    )
 
     fit = ag.FitImaging(
         dataset=masked_imaging_7x7_sub_2,
@@ -247,8 +260,12 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
         psf=masked_imaging_7x7.psf,
     )
 
-    assert fit.galaxy_model_image_dict[g0] == pytest.approx(g0_blurred_image_2d.array, 1.0e-4)
-    assert fit.galaxy_model_image_dict[g1] == pytest.approx(g1_blurred_image_2d.array, 1.0e-4)
+    assert fit.galaxy_model_image_dict[g0] == pytest.approx(
+        g0_blurred_image_2d.array, 1.0e-4
+    )
+    assert fit.galaxy_model_image_dict[g1] == pytest.approx(
+        g1_blurred_image_2d.array, 1.0e-4
+    )
     assert fit.galaxy_model_image_dict[g2] == pytest.approx(
         g0_blurred_image_2d.array + g1_blurred_image_2d.array, 1.0e-4
     )
@@ -344,7 +361,8 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
     )
 
     assert fit.model_data == pytest.approx(
-        fit.galaxy_model_image_dict[g0].array + fit.inversion.mapped_reconstructed_image.array,
+        fit.galaxy_model_image_dict[g0].array
+        + fit.inversion.mapped_reconstructed_image.array,
         1.0e-4,
     )
 
@@ -501,8 +519,12 @@ def test__light_profile_linear__intensity_dict(masked_imaging_7x7):
 def test__galaxies_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
     g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0, centre=(0.05, 0.05)))
 
-    g0_linear = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.Sersic(sersic_index=1.0, centre=(0.05, 0.05)))
-    g1_linear = ag.Galaxy(redshift=1.0, bulge=ag.lp_linear.Sersic(sersic_index=4.0, centre=(0.05, 0.05)))
+    g0_linear = ag.Galaxy(
+        redshift=0.5, bulge=ag.lp_linear.Sersic(sersic_index=1.0, centre=(0.05, 0.05))
+    )
+    g1_linear = ag.Galaxy(
+        redshift=1.0, bulge=ag.lp_linear.Sersic(sersic_index=4.0, centre=(0.05, 0.05))
+    )
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=[g0, g0_linear, g1_linear])
 
@@ -525,7 +547,9 @@ def test__galaxies_linear_light_profiles_to_light_profiles(masked_imaging_7x7):
     )
 
     g0_linear = ag.Galaxy(redshift=0.5, bulge=basis)
-    g1_linear = ag.Galaxy(redshift=1.0, bulge=ag.lp_linear.Sersic(sersic_index=4.0, centre=(0.05, 0.05)))
+    g1_linear = ag.Galaxy(
+        redshift=1.0, bulge=ag.lp_linear.Sersic(sersic_index=4.0, centre=(0.05, 0.05))
+    )
 
     fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=[g0, g0_linear, g1_linear])
 

@@ -249,11 +249,14 @@ def test__radial_critical_curve_list_from():
     assert 0.45 < y_centre < 0.55
     assert 0.95 < x_centre < 1.05
 
+
 def test__radial_critical_curve_list_from__compare_via_magnification():
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    mp = ag.mp.PowerLaw(centre=(0.0, 0.0), einstein_radius=2, ell_comps=(0.109423, -0.019294), slope=1.5)
+    mp = ag.mp.PowerLaw(
+        centre=(0.0, 0.0), einstein_radius=2, ell_comps=(0.109423, -0.019294), slope=1.5
+    )
 
     critical_curve_radial_via_magnification = critical_curve_via_magnification_from(
         mass_profile=mp, grid=grid

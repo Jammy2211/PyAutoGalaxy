@@ -250,7 +250,10 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         """
         return self.intensity * np.exp(
             -self.sersic_constant
-            * (((radius.array / self.effective_radius) ** (1.0 / self.sersic_index)) - 1)
+            * (
+                ((radius.array / self.effective_radius) ** (1.0 / self.sersic_index))
+                - 1
+            )
         )
 
     def decompose_convergence_via_mge(

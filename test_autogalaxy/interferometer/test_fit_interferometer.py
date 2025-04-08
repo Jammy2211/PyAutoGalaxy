@@ -53,7 +53,9 @@ def test__fit_figure_of_merit(interferometer_7):
     assert fit.perform_inversion is True
     assert fit.figure_of_merit == pytest.approx(-66.90612, 1.0e-4)
 
-    galaxy_light = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0, centre=(0.05, 0.05)))
+    galaxy_light = ag.Galaxy(
+        redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0, centre=(0.05, 0.05))
+    )
 
     pixelization = ag.Pixelization(
         mesh=ag.mesh.Rectangular(shape=(3, 3)),
@@ -130,7 +132,9 @@ def test___galaxy_model_image_dict(interferometer_7):
 
     assert fit.galaxy_model_image_dict[g0] == pytest.approx(g0_image.array, 1.0e-4)
     assert fit.galaxy_model_image_dict[g1] == pytest.approx(g1_image.array, 1.0e-4)
-    assert fit.galaxy_model_image_dict[g2] == pytest.approx(g0_image.array + g1_image.array, 1.0e-4)
+    assert fit.galaxy_model_image_dict[g2] == pytest.approx(
+        g0_image.array + g1_image.array, 1.0e-4
+    )
 
     # Linear Light Profiles Only
 
@@ -269,7 +273,7 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     )
 
     assert fit.galaxy_model_visibilities_dict[g0_linear][0] == pytest.approx(
-        0.9965209248910107+0.00648675263899049j, 1.0e-4
+        0.9965209248910107 + 0.00648675263899049j, 1.0e-4
     )
 
     # Pixelization + Regularizaiton only
@@ -328,17 +332,17 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     )
 
     assert fit.galaxy_model_visibilities_dict[g0_linear][0] == pytest.approx(
-        -47.30219078770512-0.3079088489343429j, 1.0e-4
+        -47.30219078770512 - 0.3079088489343429j, 1.0e-4
     )
 
     assert fit.galaxy_model_visibilities_dict[g1] == pytest.approx(
         g1_visibilities, 1.0e-4
     )
     assert fit.galaxy_model_visibilities_dict[galaxy_pix_0][0] == pytest.approx(
-        -0.007889864570437388+0.22558558295704295j, 1.0e-4
+        -0.007889864570437388 + 0.22558558295704295j, 1.0e-4
     )
     assert fit.galaxy_model_visibilities_dict[galaxy_pix_1][0] == pytest.approx(
-        -0.007760865740849596+0.05639639626962996j, 1.0e-4
+        -0.007760865740849596 + 0.05639639626962996j, 1.0e-4
     )
 
     mapped_reconstructed_visibilities = (

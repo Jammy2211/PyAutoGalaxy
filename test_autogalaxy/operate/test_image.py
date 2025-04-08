@@ -62,7 +62,9 @@ def test__blurred_image_2d_from(
 
     assert (
         blurred_image_2d
-        == pytest.approx(blurred_image_2d_manual_not_operated.array + image_2d_operated.array),
+        == pytest.approx(
+            blurred_image_2d_manual_not_operated.array + image_2d_operated.array
+        ),
         1.0e-4,
     )
 

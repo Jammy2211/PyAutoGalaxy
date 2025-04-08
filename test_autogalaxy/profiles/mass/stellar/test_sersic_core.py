@@ -97,6 +97,7 @@ grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 #     assert elliptical_deflections == pytest.approx(spherical_deflections, 1.0e-4)
 #
 
+
 def test__convergence_2d_from():
     mp = ag.mp.SersicCore(
         ell_comps=(0.0, 0.0),

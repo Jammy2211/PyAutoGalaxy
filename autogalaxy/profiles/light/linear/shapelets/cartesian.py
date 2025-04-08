@@ -44,6 +44,7 @@ class ShapeletCartesian(lp.ShapeletCartesian, LightProfileLinear):
             n_y=n_y, n_x=n_x, centre=centre, ell_comps=ell_comps, beta=beta
         )
 
+
 class ShapeletCartesianSph(ShapeletCartesian):
     def __init__(
         self,
