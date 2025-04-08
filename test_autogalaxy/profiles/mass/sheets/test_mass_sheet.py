@@ -13,14 +13,14 @@ def test__deflections_yx_2d_from():
     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[2.0, 0.0]]))
 
     assert deflections[0, 0] == pytest.approx(2.0, 1e-3)
-    assert deflections[0, 1] == pytest.approx(0.0, 1e-3)
+    assert deflections[0, 1] == pytest.approx(0.0, abs=1e-3)
 
     mp = ag.mp.MassSheet(centre=(0.0, 0.0), kappa=-1.0)
 
     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[2.0, 0.0]]))
 
     assert deflections[0, 0] == pytest.approx(-2.0, 1e-3)
-    assert deflections[0, 1] == pytest.approx(0.0, 1e-3)
+    assert deflections[0, 1] == pytest.approx(0.0, abs=1e-3)
 
     # The radial coordinate at (1.0, 1.0) is sqrt(2)
     # This is decomposed into (y,x) angles of sin(45) = cos(45) = sqrt(2) / 2.0

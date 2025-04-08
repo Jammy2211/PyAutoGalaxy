@@ -72,7 +72,6 @@ label:
     SMBH: smbh
     Redshift: z
     Regularization: reg
-    InputDeflections: defl
 label_format:
   format:
     sigma: '{:.4f}'

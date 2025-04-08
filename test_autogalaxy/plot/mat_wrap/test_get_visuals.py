@@ -216,7 +216,10 @@ def test__2d__via_light_mass_obj(gal_x1_lp_x1_mp, grid_2d_7x7):
         visuals_2d_via.tangential_critical_curves[0]
         == gal_x1_lp_x1_mp.tangential_critical_curve_list_from(grid=grid_2d_7x7)[0]
     ).all()
-    assert visuals_2d_via.radial_critical_curves is None
+    assert (
+        visuals_2d_via.radial_critical_curves[0]
+        == gal_x1_lp_x1_mp.radial_critical_curve_list_from(grid=grid_2d_7x7)[0]
+    ).all()
     assert visuals_2d_via.vectors == 2
 
     include_2d = aplt.Include2D(
@@ -274,7 +277,12 @@ def test__via_fit_imaging_from(fit_imaging_x2_galaxy_7x7, grid_2d_7x7):
             grid=grid_2d_7x7
         )[0]
     ).all()
-    assert visuals_2d_via.radial_critical_curves is None
+    assert (
+        visuals_2d_via.radial_critical_curves[0]
+        == fit_imaging_x2_galaxy_7x7.galaxies.radial_critical_curve_list_from(
+            grid=grid_2d_7x7
+        )[0]
+    ).all()
     assert visuals_2d_via.vectors == 2
 
     include_2d = aplt.Include2D(

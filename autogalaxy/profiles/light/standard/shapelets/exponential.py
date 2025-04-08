@@ -1,5 +1,7 @@
+import jax.numpy as jnp
 import numpy as np
-from scipy.special import factorial, genlaguerre
+from scipy.special import genlaguerre
+from jax.scipy.special import factorial
 from typing import Optional, Tuple
 
 import autoarray as aa
@@ -64,7 +66,6 @@ class ShapeletExponential(AbstractShapelet):
     @aa.grid_dec.to_array
     @check_operated_only
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
     ) -> np.ndarray:
@@ -85,31 +86,31 @@ class ShapeletExponential(AbstractShapelet):
             The image of the Exponential Shapelet evaluated at every (y,x) coordinate on the transformed grid.
         """
 
-        radial = (grid[:, 0] ** 2 + grid[:, 1] ** 2) / self.beta
-        theta = np.arctan(grid[:, 1] / grid[:, 0])
+        radial = (grid.array[:, 0] ** 2 + grid.array[:, 1] ** 2) / self.beta
+        theta = jnp.arctan(grid.array[:, 1] / grid.array[:, 0])
 
         prefactor = (
             1.0
-            / np.sqrt(2 * np.pi)
+            / jnp.sqrt(2 * jnp.pi)
             / self.beta
-            * (self.n + 0.5) ** (-1 - np.abs(self.m))
+            * (self.n + 0.5) ** (-1 - jnp.abs(self.m))
             * (-1) ** (self.n + self.m)
-            * np.sqrt(
-                factorial(self.n - np.abs(self.m)) / 2 * self.n
-                + 1 / factorial(self.n + np.abs(self.m))
+            * jnp.sqrt(
+                factorial(self.n - jnp.abs(self.m)) / 2 * self.n
+                + 1 / factorial(self.n + jnp.abs(self.m))
             )
         )
 
-        laguerre = genlaguerre(n=self.n - np.abs(self.m), alpha=2 * np.abs(self.m))
+        laguerre = genlaguerre(n=self.n - jnp.abs(self.m), alpha=2 * jnp.abs(self.m))
         shapelet = laguerre(radial / (self.n + 0.5))
 
-        return np.abs(
+        return jnp.abs(
             prefactor
-            * np.exp(-radial / (2 * self.n + 1))
-            * radial ** (np.abs(self.m))
+            * jnp.exp(-radial / (2 * self.n + 1))
+            * radial ** (jnp.abs(self.m))
             * shapelet
-            * np.cos(self.m * theta)
-            + -1.0j * np.sin(self.m * theta)
+            * jnp.cos(self.m * theta)
+            + -1.0j * jnp.sin(self.m * theta)
         )
 
 

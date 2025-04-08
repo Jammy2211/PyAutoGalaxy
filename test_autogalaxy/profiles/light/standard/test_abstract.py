@@ -57,9 +57,9 @@ def test__image_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities()
     image_1d = lp.image_1d_from(grid=grid_2d)
     image_2d = lp.image_2d_from(grid=grid_2d)
 
-    assert image_1d[0] == pytest.approx(image_2d.native[2, 2], 1.0e-4)
-    assert image_1d[1] == pytest.approx(image_2d.native[2, 3], 1.0e-4)
-    assert image_1d[2] == pytest.approx(image_2d.native[2, 4], 1.0e-4)
+    assert image_1d[0] == pytest.approx(image_2d.native.array[2, 2], 1.0e-4)
+    assert image_1d[1] == pytest.approx(image_2d.native.array[2, 3], 1.0e-4)
+    assert image_1d[2] == pytest.approx(image_2d.native.array[2, 4], 1.0e-4)
 
     lp = ag.lp.Gaussian(
         centre=(0.2, 0.2), ell_comps=(0.3, 0.3), intensity=1.0, sigma=1.0
@@ -73,7 +73,7 @@ def test__image_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities()
 
     image_projected = lp.image_2d_from(grid=grid_2d_projected)
 
-    assert image_1d == pytest.approx(image_projected, 1.0e-4)
+    assert image_1d == pytest.approx(image_projected.array, 1.0e-4)
     assert (image_1d.grid_radial == np.array([0.0, 1.0, 2.0])).all()
 
 

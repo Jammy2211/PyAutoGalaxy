@@ -32,7 +32,7 @@ def test__deflections_yx_2d_from():
         grid=ag.Grid2DIrregular([[1.0, 0.0]])
     )
 
-    assert deflections == pytest.approx(deflections_via_integral, 1.0e-4)
+    assert deflections == pytest.approx(deflections_via_integral.array, 1.0e-4)
 
     mp = ag.mp.ChameleonSph()
 
@@ -41,7 +41,7 @@ def test__deflections_yx_2d_from():
         grid=ag.Grid2DIrregular([[1.0, 0.0]])
     )
 
-    assert deflections == pytest.approx(deflections_via_integral, 1.0e-4)
+    assert deflections == pytest.approx(deflections_via_integral.array, 1.0e-4)
 
 
 def test__spherical_and_elliptical_identical():
@@ -59,7 +59,7 @@ def test__spherical_and_elliptical_identical():
     elliptical_deflections = elliptical.deflections_yx_2d_from(grid=grid)
     spherical_deflections = spherical.deflections_yx_2d_from(grid=grid)
 
-    assert elliptical_deflections == pytest.approx(spherical_deflections, 1.0e-4)
+    assert elliptical_deflections == pytest.approx(spherical_deflections.array, 1.0e-4)
 
 
 def test__convergence_2d_from():
@@ -99,5 +99,5 @@ def test__convergence_2d_from():
     )
 
     assert elliptical.convergence_2d_from(grid=grid) == pytest.approx(
-        spherical.convergence_2d_from(grid=grid), 1.0e-4
+        spherical.convergence_2d_from(grid=grid).array, 1.0e-4
     )

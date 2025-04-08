@@ -166,7 +166,7 @@ def test__extract_attribute():
 def test__regression__centre_of_profile_in_right_place():
     grid = ag.Grid2D.uniform(shape_native=(7, 7), pixel_scales=1.0)
 
-    mass_profile = ag.mp.Isothermal(centre=(2.0, 1.0), einstein_radius=1.0)
+    mass_profile = ag.mp.Isothermal(centre=(1.999999, 0.9999999), einstein_radius=1.0)
     convergence = mass_profile.convergence_2d_from(grid=grid)
     max_indexes = np.unravel_index(
         convergence.native.argmax(), convergence.shape_native
@@ -178,6 +178,7 @@ def test__regression__centre_of_profile_in_right_place():
     assert max_indexes == (1, 4)
 
     deflections = mass_profile.deflections_yx_2d_from(grid=grid)
+
     assert deflections.native[1, 4, 0] > 0
     assert deflections.native[2, 4, 0] < 0
     assert deflections.native[1, 4, 1] > 0
@@ -190,7 +191,9 @@ def test__regression__centre_of_profile_in_right_place():
     )
     assert max_indexes == (1, 4)
 
-    mass_profile = ag.mp.IsothermalSph(centre=(2.0, 1.0), einstein_radius=1.0)
+    mass_profile = ag.mp.IsothermalSph(
+        centre=(1.9999999, 0.999999), einstein_radius=1.0
+    )
     potential = mass_profile.potential_2d_from(grid=grid)
     max_indexes = np.unravel_index(potential.native.argmin(), potential.shape_native)
     assert max_indexes == (1, 4)
@@ -214,9 +217,9 @@ def test__decorators__convergence_1d_from__grid_2d_in__returns_1d_image_via_proj
     convergence_1d = sie.convergence_1d_from(grid=grid_2d)
     convergence_2d = sie.convergence_2d_from(grid=grid_2d)
 
-    assert convergence_1d[0] == pytest.approx(convergence_2d.native[2, 2], 1.0e-4)
-    assert convergence_1d[1] == pytest.approx(convergence_2d.native[2, 3], 1.0e-4)
-    assert convergence_1d[2] == pytest.approx(convergence_2d.native[2, 4], 1.0e-4)
+    assert convergence_1d[0] == pytest.approx(convergence_2d.native.array[2, 2], 1.0e-4)
+    assert convergence_1d[1] == pytest.approx(convergence_2d.native.array[2, 3], 1.0e-4)
+    assert convergence_1d[2] == pytest.approx(convergence_2d.native.array[2, 4], 1.0e-4)
 
     sie = ag.mp.Isothermal(centre=(0.2, 0.2), ell_comps=(0.3, 0.3), einstein_radius=1.0)
 
@@ -228,7 +231,7 @@ def test__decorators__convergence_1d_from__grid_2d_in__returns_1d_image_via_proj
 
     convergence_projected = sie.convergence_2d_from(grid=grid_2d_projected)
 
-    assert convergence_1d == pytest.approx(convergence_projected, 1.0e-4)
+    assert convergence_1d == pytest.approx(convergence_projected.array, 1.0e-4)
     assert (convergence_1d.grid_radial == np.array([0.0, 1.0, 2.0])).all()
 
 
@@ -287,9 +290,9 @@ def test__decorators__potential_1d_from__grid_2d_in__returns_1d_image_via_projec
     potential_1d = sie.potential_1d_from(grid=grid_2d)
     potential_2d = sie.potential_2d_from(grid=grid_2d)
 
-    assert potential_1d[0] == pytest.approx(potential_2d.native[2, 2], 1.0e-4)
-    assert potential_1d[1] == pytest.approx(potential_2d.native[2, 3], 1.0e-4)
-    assert potential_1d[2] == pytest.approx(potential_2d.native[2, 4], 1.0e-4)
+    assert potential_1d[0] == pytest.approx(potential_2d.native.array[2, 2], 1.0e-4)
+    assert potential_1d[1] == pytest.approx(potential_2d.native.array[2, 3], 1.0e-4)
+    assert potential_1d[2] == pytest.approx(potential_2d.native.array[2, 4], 1.0e-4)
 
     sie = ag.mp.Isothermal(centre=(0.2, 0.2), ell_comps=(0.3, 0.3), einstein_radius=1.0)
 
@@ -301,5 +304,5 @@ def test__decorators__potential_1d_from__grid_2d_in__returns_1d_image_via_projec
 
     potential_projected = sie.potential_2d_from(grid=grid_2d_projected)
 
-    assert potential_1d == pytest.approx(potential_projected, 1.0e-4)
+    assert potential_1d == pytest.approx(potential_projected.array, 1.0e-4)
     assert (potential_1d.grid_radial == np.array([0.0, 1.0, 2.0])).all()

@@ -131,7 +131,9 @@ class LightProfile(EllProfile, OperateImage):
         x
             The 1D (x) radial coordinates where the luminosity integral is evaluated.
         """
-        return 2 * np.pi * x * self.image_2d_via_radii_from(x)
+        from autoarray.structures.arrays.irregular import ArrayIrregular
+
+        return 2 * np.pi * x * self.image_2d_via_radii_from(ArrayIrregular(x))
 
     @property
     def half_light_radius(self) -> float:

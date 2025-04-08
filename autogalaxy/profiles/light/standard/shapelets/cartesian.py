@@ -1,5 +1,7 @@
+import jax.numpy as jnp
 import numpy as np
-from scipy.special import hermite, factorial
+from scipy.special import hermite
+from jax.scipy.special import factorial
 from typing import Optional, Tuple
 
 import autoarray as aa
@@ -63,7 +65,6 @@ class ShapeletCartesian(AbstractShapelet):
     @aa.grid_dec.to_array
     @check_operated_only
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
     ) -> np.ndarray:
@@ -87,8 +88,8 @@ class ShapeletCartesian(AbstractShapelet):
         hermite_y = hermite(n=self.n_y)
         hermite_x = hermite(n=self.n_x)
 
-        y = grid[:, 0]
-        x = grid[:, 1]
+        y = grid.array[:, 0]
+        x = grid.array[:, 1]
 
         shapelet_y = hermite_y(y / self.beta)
         shapelet_x = hermite_x(x / self.beta)
@@ -96,12 +97,12 @@ class ShapeletCartesian(AbstractShapelet):
         return (
             shapelet_y
             * shapelet_x
-            * np.exp(-0.5 * (y**2 + x**2) / (self.beta**2))
+            * jnp.exp(-0.5 * (y**2 + x**2) / (self.beta**2))
             / self.beta
             / (
-                np.sqrt(
+                jnp.sqrt(
                     2 ** (self.n_x + self.n_y)
-                    * (np.pi)
+                    * (jnp.pi)
                     * factorial(self.n_y)
                     * factorial(self.n_x)
                 )

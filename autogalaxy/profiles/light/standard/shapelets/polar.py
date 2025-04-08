@@ -1,5 +1,7 @@
+import jax.numpy as jnp
 import numpy as np
-from scipy.special import factorial, genlaguerre
+from scipy.special import genlaguerre
+from jax.scipy.special import factorial
 from typing import Optional, Tuple
 
 import autoarray as aa
@@ -64,7 +66,6 @@ class ShapeletPolar(AbstractShapelet):
     @aa.grid_dec.to_array
     @check_operated_only
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
     ) -> np.ndarray:
@@ -85,28 +86,30 @@ class ShapeletPolar(AbstractShapelet):
             The image of the Polar Shapelet evaluated at every (y,x) coordinate on the transformed grid.
         """
 
-        laguerre = genlaguerre(n=(self.n - np.abs(self.m)) / 2.0, alpha=np.abs(self.m))
-
-        const = (
-            ((-1) ** ((self.n - np.abs(self.m)) // 2))
-            * np.sqrt(
-                factorial((self.n - np.abs(self.m)) // 2)
-                / factorial((self.n + np.abs(self.m)) // 2)
-            )
-            / self.beta
-            / np.sqrt(np.pi)
+        laguerre = genlaguerre(
+            n=(self.n - jnp.abs(self.m)) / 2.0, alpha=jnp.abs(self.m)
         )
 
-        rsq = (grid[:, 0] ** 2 + grid[:, 1] ** 2) / self.beta**2
-        theta = np.arctan2(grid[:, 1], grid[:, 0])
-        radial = rsq ** (abs(self.m / 2.0)) * np.exp(-rsq / 2.0) * laguerre(rsq)
+        const = (
+            ((-1) ** ((self.n - jnp.abs(self.m)) // 2))
+            * jnp.sqrt(
+                factorial((self.n - jnp.abs(self.m)) // 2)
+                / factorial((self.n + jnp.abs(self.m)) // 2)
+            )
+            / self.beta
+            / jnp.sqrt(jnp.pi)
+        )
+
+        rsq = (grid.array[:, 0] ** 2 + grid.array[:, 1] ** 2) / self.beta**2
+        theta = jnp.arctan2(grid.array[:, 1], grid.array[:, 0])
+        radial = rsq ** (abs(self.m / 2.0)) * jnp.exp(-rsq / 2.0) * laguerre(rsq)
 
         if self.m == 0:
             azimuthal = 1
         elif self.m > 0:
-            azimuthal = np.sin((-1) * self.m * theta)
+            azimuthal = jnp.sin((-1) * self.m * theta)
         else:
-            azimuthal = np.cos((-1) * self.m * theta)
+            azimuthal = jnp.cos((-1) * self.m * theta)
 
         return const * radial * azimuthal
 

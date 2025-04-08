@@ -52,7 +52,6 @@ class SersicGradient(AbstractSersic):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -68,6 +67,7 @@ class SersicGradient(AbstractSersic):
             sersic_constant = self.sersic_constant
 
             deflection_grid = self.axis_ratio * grid[:, index]
+            deflection_grid = np.array(deflection_grid.array)
 
             for i in range(grid.shape[0]):
                 deflection_grid[i] *= (
@@ -78,8 +78,8 @@ class SersicGradient(AbstractSersic):
                         a=0.0,
                         b=1.0,
                         args=(
-                            grid[i, 0],
-                            grid[i, 1],
+                            grid.array[i, 0],
+                            grid.array[i, 1],
                             npow,
                             self.axis_ratio,
                             self.sersic_index,
@@ -126,7 +126,6 @@ class SersicGradient(AbstractSersic):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -150,7 +149,7 @@ class SersicGradient(AbstractSersic):
             * self.image_2d_via_radii_from(grid_radius)
         )
 
-    def decompose_convergence_via_mge(self):
+    def decompose_convergence_via_mge(self, **kwargs):
         radii_min = self.effective_radius / 100.0
         radii_max = self.effective_radius * 20.0
 
