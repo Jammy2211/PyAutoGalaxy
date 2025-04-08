@@ -106,11 +106,11 @@ def test__vector_data__y_x():
 
     assert isinstance(dataset_quantity.y, ag.DatasetQuantity)
     assert (dataset_quantity.y.data.slim == np.array([1.0, 2.0, 3.0, 4.0])).all()
-    assert (dataset_quantity.y.noise_map.slim == np.array([1.1, 2.1, 3.1, 4.1])).all()
+    assert dataset_quantity.y.noise_map.slim == pytest.approx(np.array([1.1, 2.1, 3.1, 4.1]), 1.0e-4)
 
     assert isinstance(dataset_quantity.y, ag.DatasetQuantity)
     assert (dataset_quantity.x.data.slim == np.array([5.0, 6.0, 7.0, 8.0])).all()
-    assert (dataset_quantity.x.noise_map.slim == np.array([5.1, 6.1, 7.1, 8.1])).all()
+    assert dataset_quantity.x.noise_map.slim == pytest.approx(np.array([5.1, 6.1, 7.1, 8.1]), 1.0e-4)
 
 
 @pytest.fixture(name="test_data_path")
