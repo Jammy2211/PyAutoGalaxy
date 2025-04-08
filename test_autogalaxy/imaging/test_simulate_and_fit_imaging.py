@@ -108,7 +108,7 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
     dataset = simulator.via_galaxies_from(galaxies=[galaxy_0, galaxy_1], grid=grid)
 
     mask = ag.Mask2D.circular(
-        shape_native=dataset.data.shape_native, pixel_scales=0.2, radius=2.0
+        shape_native=dataset.data.shape_native, pixel_scales=0.2, radius=2.005
     )
 
     masked_dataset = dataset.apply_mask(mask=mask)
@@ -150,8 +150,8 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
 
     galaxy = ag.Galaxy(
         redshift=0.5,
-        bulge=ag.lp.Sersic(intensity=0.1, sersic_index=1.0),
-        disk=ag.lp.Sersic(intensity=0.2, sersic_index=4.0),
+        bulge=ag.lp.Sersic(centre=(0.05, 0.05), intensity=0.1, sersic_index=1.0),
+        disk=ag.lp.Sersic(centre=(0.05, 0.05), intensity=0.2, sersic_index=4.0),
     )
 
     simulator = ag.SimulatorImaging(
@@ -166,18 +166,19 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
     mask = ag.Mask2D.circular(
         shape_native=dataset.data.shape_native,
         pixel_scales=0.2,
-        radius=0.8,
+        radius=0.81,
     )
 
     masked_dataset = dataset.apply_mask(mask=mask)
+
     masked_dataset = masked_dataset.apply_over_sampling(over_sample_size_lp=1)
 
     fit = ag.FitImaging(dataset=masked_dataset, galaxies=[galaxy])
 
     galaxy_linear = ag.Galaxy(
         redshift=0.5,
-        bulge=ag.lp_linear.Sersic(sersic_index=1.0),
-        disk=ag.lp_linear.Sersic(sersic_index=4.0),
+        bulge=ag.lp_linear.Sersic(centre=(0.05, 0.05), sersic_index=1.0),
+        disk=ag.lp_linear.Sersic(centre=(0.05, 0.05), sersic_index=4.0),
     )
 
     fit_linear = ag.FitImaging(
@@ -207,5 +208,5 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
     )
 
     assert fit_linear.galaxy_model_image_dict[galaxy_linear] == pytest.approx(
-        galaxy_image, 1.0e-4
+        galaxy_image.array, 1.0e-4
     )
