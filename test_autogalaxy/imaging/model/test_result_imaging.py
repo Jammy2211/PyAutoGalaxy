@@ -48,7 +48,7 @@ def test___image_dict(analysis_imaging_7x7):
 
 def test___linear_light_profiles_in_result(analysis_imaging_7x7):
     galaxies = af.ModelInstance()
-    galaxies.galaxy = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.Sersic())
+    galaxies.galaxy = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.Sersic(centre=(0.05, 0.05)))
 
     instance = af.ModelInstance()
     instance.galaxies = galaxies
@@ -64,5 +64,5 @@ def test___linear_light_profiles_in_result(analysis_imaging_7x7):
         ag.lp_linear.LightProfileLinear,
     )
     assert result.max_log_likelihood_galaxies[0].bulge.intensity == pytest.approx(
-        0.0054343, 1.0e-4
+        0.18686846, 1.0e-4
     )
