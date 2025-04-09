@@ -40,7 +40,7 @@ class NFWTruncatedSph(AbstractgNFW):
         """
 
         eta = np.multiply(
-            1.0 / self.scale_radius, self.radial_grid_from(grid=grid, **kwargs)
+            1.0 / self.scale_radius, self.radial_grid_from(grid=grid, **kwargs).array
         )
 
         deflection_grid = np.multiply(
@@ -56,7 +56,7 @@ class NFWTruncatedSph(AbstractgNFW):
 
     def convergence_func(self, grid_radius: float) -> float:
         grid_radius = ((1.0 / self.scale_radius) * grid_radius) + 0j
-        return np.real(2.0 * self.kappa_s * self.coord_func_l(grid_radius=grid_radius))
+        return np.real(2.0 * self.kappa_s * self.coord_func_l(grid_radius=grid_radius.array))
 
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):

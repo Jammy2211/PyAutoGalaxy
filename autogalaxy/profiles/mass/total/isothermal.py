@@ -1,5 +1,4 @@
 import jax.numpy as jnp
-import numpy as np
 
 from typing import Tuple
 

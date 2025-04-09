@@ -1,3 +1,4 @@
+import jax.numpy as jnp
 import numpy as np
 from scipy.integrate import quad
 from typing import Tuple
@@ -165,8 +166,8 @@ class NFW(gNFW, MassProfileCSE):
                 a=0.0,
                 b=1.0,
                 args=(
-                    grid[i, 0],
-                    grid[i, 1],
+                    grid.array[i, 0],
+                    grid.array[i, 1],
                     self.axis_ratio,
                     self.kappa_s,
                     self.scale_radius,
@@ -380,11 +381,11 @@ class NFWSph(NFW):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
-        eta = np.multiply(
-            1.0 / self.scale_radius, self.radial_grid_from(grid=grid, **kwargs)
+        eta = jnp.multiply(
+            1.0 / self.scale_radius, self.radial_grid_from(grid=grid, **kwargs).array
         )
 
-        deflection_grid = np.multiply(
+        deflection_grid = jnp.multiply(
             (4.0 * self.kappa_s * self.scale_radius / eta),
             self.deflection_func_sph(grid_radius=eta),
         )
@@ -393,7 +394,7 @@ class NFWSph(NFW):
 
     def deflection_func_sph(self, grid_radius):
         grid_radius = grid_radius + 0j
-        return np.real(self.coord_func_h(grid_radius=grid_radius))
+        return jnp.real(self.coord_func_h(grid_radius=grid_radius))
 
     @aa.over_sample
     @aa.grid_dec.to_array

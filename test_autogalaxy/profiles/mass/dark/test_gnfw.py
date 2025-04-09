@@ -68,7 +68,7 @@ def test__deflections_2d_via_mge_from():
         grid=ag.Grid2DIrregular([[0.1875, 0.1625]])
     )
 
-    assert deflections_via_integral == pytest.approx(deflections_via_mge, 1.0e-3)
+    assert deflections_via_integral == pytest.approx(deflections_via_mge.array, 1.0e-3)
 
     mp = ag.mp.gNFWSph(
         centre=(0.3, 0.2), kappa_s=2.5, inner_slope=1.5, scale_radius=4.0
@@ -81,7 +81,7 @@ def test__deflections_2d_via_mge_from():
         grid=ag.Grid2DIrregular([[0.1875, 0.1625]])
     )
 
-    assert deflections_via_integral == pytest.approx(deflections_via_mge, 1.0e-3)
+    assert deflections_via_integral == pytest.approx(deflections_via_mge.array, 1.0e-3)
 
     mp = ag.mp.gNFW(
         centre=(0.0, 0.0),
@@ -98,7 +98,7 @@ def test__deflections_2d_via_mge_from():
         grid=ag.Grid2DIrregular([[0.1875, 0.1625]])
     )
 
-    assert deflections_via_integral == pytest.approx(deflections_via_mge, 1.0e-3)
+    assert deflections_via_integral == pytest.approx(deflections_via_mge.array, 1.0e-3)
 
     mp = ag.mp.gNFW(
         centre=(0.3, 0.2),
@@ -115,7 +115,7 @@ def test__deflections_2d_via_mge_from():
         grid=ag.Grid2DIrregular([[0.1875, 0.1625]])
     )
 
-    assert deflections_via_integral == pytest.approx(deflections_via_mge, 1.0e-3)
+    assert deflections_via_integral == pytest.approx(deflections_via_mge.array, 1.0e-3)
 
 
 def test__deflections_yx_2d_from():
@@ -126,7 +126,7 @@ def test__deflections_yx_2d_from():
         grid=ag.Grid2DIrregular([[1.0, 0.0]])
     )
 
-    assert deflections == pytest.approx(deflections_via_mge, 1.0e-4)
+    assert deflections == pytest.approx(deflections_via_mge.array, 1.0e-4)
 
     mp = ag.mp.gNFWSph()
 
@@ -135,7 +135,7 @@ def test__deflections_yx_2d_from():
         grid=ag.Grid2DIrregular([[1.0, 0.0]])
     )
 
-    assert deflections == pytest.approx(deflections_via_mge, 1.0e-4)
+    assert deflections == pytest.approx(deflections_via_mge.array, 1.0e-4)
 
     elliptical = ag.mp.gNFW(
         centre=(0.1, 0.2),
@@ -149,7 +149,7 @@ def test__deflections_yx_2d_from():
     )
 
     assert elliptical.deflections_yx_2d_from(grid) == pytest.approx(
-        spherical.deflections_yx_2d_from(grid), 1e-4
+        spherical.deflections_yx_2d_from(grid).array, 1e-4
     )
 
 
@@ -258,7 +258,7 @@ def test__potential_2d_from():
     )
 
     assert elliptical.convergence_2d_from(grid) == pytest.approx(
-        spherical.convergence_2d_from(grid), 1e-4
+        spherical.convergence_2d_from(grid).array, 1e-4
     )
 
 
@@ -278,15 +278,15 @@ def test__compare_to_nfw():
     )
 
     assert nfw.deflections_yx_2d_from(grid) == pytest.approx(
-        gnfw.deflections_yx_2d_from(grid), 1e-3
+        gnfw.deflections_yx_2d_from(grid).array, 1e-3
     )
     assert nfw.deflections_yx_2d_from(grid) == pytest.approx(
-        gnfw.deflections_yx_2d_from(grid), 1e-3
+        gnfw.deflections_yx_2d_from(grid).array, 1e-3
     )
 
     assert nfw.potential_2d_from(grid) == pytest.approx(
-        gnfw.potential_2d_from(grid), 1e-3
+        gnfw.potential_2d_from(grid).array, 1e-3
     )
     assert nfw.potential_2d_from(grid) == pytest.approx(
-        gnfw.potential_2d_from(grid), 1e-3
+        gnfw.potential_2d_from(grid).array, 1e-3
     )

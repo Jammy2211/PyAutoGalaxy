@@ -132,8 +132,8 @@ class gNFW(AbstractgNFW):
                         a=0.0,
                         b=1.0,
                         args=(
-                            grid[i, 0],
-                            grid[i, 1],
+                            grid.array[i, 0],
+                            grid.array[i, 1],
                             npow,
                             self.axis_ratio,
                             minimum_log_eta,
@@ -205,7 +205,7 @@ class gNFW(AbstractgNFW):
         def integral_y(y, eta):
             return (y + eta) ** (self.inner_slope - 4) * (1 - np.sqrt(1 - y**2))
 
-        grid_radius = (1.0 / self.scale_radius) * grid_radius
+        grid_radius = np.array((1.0 / self.scale_radius) * grid_radius.array)
 
         for index in range(grid_radius.shape[0]):
             integral_y_value = quad(
@@ -292,8 +292,8 @@ class gNFW(AbstractgNFW):
                 a=0.0,
                 b=1.0,
                 args=(
-                    grid[i, 0],
-                    grid[i, 1],
+                    grid.array[i, 0],
+                    grid.array[i, 1],
                     self.axis_ratio,
                     minimum_log_eta,
                     maximum_log_eta,
@@ -373,7 +373,7 @@ class gNFWSph(gNFW):
         """
 
         eta = np.multiply(
-            1.0 / self.scale_radius, self.radial_grid_from(grid, **kwargs)
+            1.0 / self.scale_radius, self.radial_grid_from(grid, **kwargs).array
         )
 
         deflection_grid = np.zeros(grid.shape[0])

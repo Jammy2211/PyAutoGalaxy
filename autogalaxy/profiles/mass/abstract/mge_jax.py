@@ -1,4 +1,4 @@
-import jax.numpy as np
+import jax.numpy as jnp
 
 from .jax_utils import w_f_approx
 
@@ -21,12 +21,12 @@ class MassProfileMGE:
         """
         q2 = axis_ratio**2.0
 
-        scale_factor = axis_ratio / np.sqrt(2.0 * (1.0 - q2))
+        scale_factor = axis_ratio / jnp.sqrt(2.0 * (1.0 - q2))
 
-        xs = np.array((grid.array[:, 1] * scale_factor).copy())
-        ys = np.array((grid.array[:, 0] * scale_factor).copy())
+        xs = jnp.array((grid.array[:, 1] * scale_factor).copy())
+        ys = jnp.array((grid.array[:, 0] * scale_factor).copy())
 
-        y_sign = np.sign(ys)
+        y_sign = jnp.sign(ys)
         ys = ys * y_sign
 
         z = xs + 1j * ys
@@ -40,7 +40,7 @@ class MassProfileMGE:
         # could try `jax.lax.scan` instead if this is too much memory
         w = w_f_approx(inv_sigma_ * z)
         wq = w_f_approx(inv_sigma_ * zq)
-        exp_factor = np.exp(inv_sigma_**2 * expv)
+        exp_factor = jnp.exp(inv_sigma_**2 * expv)
 
         sigma_func_real = w.imag - exp_factor * wq.imag
         sigma_func_imag = (-w.real + exp_factor * wq.real) * y_sign
@@ -53,8 +53,8 @@ class MassProfileMGE:
         """
         see Eq.(6) of 1906.08263
         """
-        n_list = np.arange(0, 2 * p + 1, 1)
-        return (2.0 * p * np.log(10) / 3.0 + 2.0 * np.pi * n_list * 1j) ** (0.5)
+        n_list = jnp.arange(0, 2 * p + 1, 1)
+        return (2.0 * p * jnp.log(10) / 3.0 + 2.0 * jnp.pi * n_list * 1j) ** (0.5)
 
     @staticmethod
     def eta(p):
@@ -62,15 +62,15 @@ class MassProfileMGE:
         see Eq.(6) of 1906.00263
         """
 
-        i = np.arange(1, p, 1)
+        i = jnp.arange(1, p, 1)
         kesi_last = 1 / 2**p
-        k = kesi_last + np.cumsum(np.cumprod((p + 1 - i) / i) * kesi_last)
+        k = kesi_last + jnp.cumsum(jnp.cumprod((p + 1 - i) / i) * kesi_last)
 
-        kesi_list = np.hstack(
-            [np.array([0.5]), np.ones(p), k[::-1], np.array([kesi_last])]
+        kesi_list = jnp.hstack(
+            [jnp.array([0.5]), jnp.ones(p), k[::-1], jnp.array([kesi_last])]
         )
-        coef = (-1) ** np.arange(0, 2 * p + 1, 1)
-        eta_const = 2.0 * np.sqrt(2.0 * np.pi) * 10 ** (p / 3.0)
+        coef = (-1) ** jnp.arange(0, 2 * p + 1, 1)
+        eta_const = 2.0 * jnp.sqrt(2.0 * jnp.pi) * 10 ** (p / 3.0)
         eta_list = coef * kesi_list
         return eta_const, eta_list
 
@@ -102,17 +102,17 @@ class MassProfileMGE:
 
         # sigma is sampled from logspace between these radii.
 
-        log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), func_gaussians)
+        log_sigmas = jnp.linspace(jnp.log(radii_min), jnp.log(radii_max), func_gaussians)
         d_log_sigma = log_sigmas[1] - log_sigmas[0]
-        sigma_list = np.exp(log_sigmas)
+        sigma_list = jnp.exp(log_sigmas)
 
-        amplitude_list = np.zeros(func_gaussians)
-        f_sigma = eta_constant * np.sum(
-            eta_n * np.real(func(sigma_list.reshape(-1, 1) * kesis)), axis=1
+        f_sigma = eta_constant * jnp.sum(
+            eta_n * jnp.real(func(sigma_list.reshape(-1, 1) * kesis)), axis=1
         )
-        amplitude_list = f_sigma * d_log_sigma / np.sqrt(2.0 * np.pi)
+        amplitude_list = f_sigma * d_log_sigma / jnp.sqrt(2.0 * jnp.pi)
         amplitude_list = amplitude_list.at[0].multiply(0.5)
         amplitude_list = amplitude_list.at[-1].multiply(0.5)
+
         return amplitude_list, sigma_list
 
     def convergence_2d_via_mge_from(self, grid_radii):
@@ -133,17 +133,15 @@ class MassProfileMGE:
             func_terms=func_terms, func_gaussians=func_gaussians
         )
 
-        convergence = 0.0
-
         inv_sigma_ = 1 / sigmas.reshape((-1,) + (1,) * grid_radii.array.ndim)
         amps_ = amps.reshape((-1,) + (1,) * grid_radii.array.ndim)
-        convergence = amps_ * np.exp(-0.5 * (grid_radii.array * inv_sigma_) ** 2)
+        convergence = amps_ * jnp.exp(-0.5 * (grid_radii.array * inv_sigma_) ** 2)
         return convergence.sum(axis=0)
 
     def _deflections_2d_via_mge_from(
         self, grid, sigmas_factor=1.0, func_terms=28, func_gaussians=20
     ):
-        axis_ratio = np.min(np.array([self.axis_ratio, 0.9999]))
+        axis_ratio = jnp.min(jnp.array([self.axis_ratio, 0.9999]))
 
         amps, sigmas = self.decompose_convergence_via_mge(
             func_terms=func_terms, func_gaussians=func_gaussians
@@ -154,8 +152,8 @@ class MassProfileMGE:
             grid=grid, amps=amps, sigmas=sigmas, axis_ratio=axis_ratio
         )
 
-        angle *= np.sqrt((2.0 * np.pi) / (1.0 - axis_ratio**2.0))
+        angle *= jnp.sqrt((2.0 * jnp.pi) / (1.0 - axis_ratio**2.0))
 
         return self.rotated_grid_from_reference_frame_from(
-            np.vstack((-angle.imag, angle.real)).T
+            jnp.vstack((-angle.imag, angle.real)).T
         )
