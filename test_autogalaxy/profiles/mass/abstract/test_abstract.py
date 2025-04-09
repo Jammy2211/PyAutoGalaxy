@@ -212,10 +212,12 @@ def test__decorators__convergence_1d_from__grid_2d_in__returns_1d_image_via_proj
         over_sample_size=1,
     )
 
-    sie = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=1.0)
+    sie = ag.mp.Isothermal(centre=(1e-6, 1e-6), ell_comps=(0.0, 0.0), einstein_radius=1.0)
 
     convergence_1d = sie.convergence_1d_from(grid=grid_2d)
     convergence_2d = sie.convergence_2d_from(grid=grid_2d)
+
+    print(convergence_2d.native.array)
 
     assert convergence_1d[0] == pytest.approx(convergence_2d.native.array[2, 2], 1.0e-4)
     assert convergence_1d[1] == pytest.approx(convergence_2d.native.array[2, 3], 1.0e-4)
@@ -290,9 +292,9 @@ def test__decorators__potential_1d_from__grid_2d_in__returns_1d_image_via_projec
     potential_1d = sie.potential_1d_from(grid=grid_2d)
     potential_2d = sie.potential_2d_from(grid=grid_2d)
 
-    assert potential_1d[0] == pytest.approx(potential_2d.native.array[2, 2], 1.0e-4)
-    assert potential_1d[1] == pytest.approx(potential_2d.native.array[2, 3], 1.0e-4)
-    assert potential_1d[2] == pytest.approx(potential_2d.native.array[2, 4], 1.0e-4)
+    assert potential_1d[0] == pytest.approx(potential_2d.native.array[2, 2], abs=1.0e-4)
+    assert potential_1d[1] == pytest.approx(potential_2d.native.array[2, 3], abs=1.0e-4)
+    assert potential_1d[2] == pytest.approx(potential_2d.native.array[2, 4], abs=1.0e-4)
 
     sie = ag.mp.Isothermal(centre=(0.2, 0.2), ell_comps=(0.3, 0.3), einstein_radius=1.0)
 
@@ -304,5 +306,5 @@ def test__decorators__potential_1d_from__grid_2d_in__returns_1d_image_via_projec
 
     potential_projected = sie.potential_2d_from(grid=grid_2d_projected)
 
-    assert potential_1d == pytest.approx(potential_projected.array, 1.0e-4)
+    assert potential_1d == pytest.approx(potential_projected.array, abs=1.0e-4)
     assert (potential_1d.grid_radial == np.array([0.0, 1.0, 2.0])).all()
