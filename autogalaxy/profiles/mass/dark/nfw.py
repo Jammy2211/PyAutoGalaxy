@@ -166,8 +166,8 @@ class NFW(gNFW, MassProfileCSE):
                 a=0.0,
                 b=1.0,
                 args=(
-                    grid[i, 0],
-                    grid[i, 1],
+                    grid.array[i, 0],
+                    grid.array[i, 1],
                     self.axis_ratio,
                     self.kappa_s,
                     self.scale_radius,

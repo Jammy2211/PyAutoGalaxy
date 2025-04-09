@@ -132,6 +132,8 @@ class SphProfile(GeometryProfile):
 
         if isinstance(radius, jnp.ndarray):
             return jnp.multiply(radius[:, None], jnp.vstack((sin_theta, cos_theta)).T)
+        elif isinstance(radius, np.ndarray):
+            return np.multiply(radius[:, None], np.vstack((sin_theta, cos_theta)).T)
 
         return jnp.multiply(radius.array[:, None], jnp.vstack((sin_theta, cos_theta)).T)
 
