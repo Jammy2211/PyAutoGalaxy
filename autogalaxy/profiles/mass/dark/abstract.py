@@ -7,7 +7,7 @@ import autoarray as aa
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.cosmology.wrap import Planck15
-from autogalaxy.profiles.mass.abstract.mge_numpy import (
+from autogalaxy.profiles.mass.abstract.mge_jax import (
     MassProfileMGE,
 )
 
@@ -109,7 +109,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         return eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size
 
-    def decompose_convergence_via_mge(self):
+    def decompose_convergence_via_mge(self, **kwargs):
         rho_at_scale_radius = (
             self.kappa_s / self.scale_radius
         )  # density parameter of 3D gNFW
