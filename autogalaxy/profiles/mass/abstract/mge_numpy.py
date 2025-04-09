@@ -16,6 +16,8 @@ def w_f_approx(z):
     # written by Anowar J. Shajib (see 1906.08263)
     """
 
+    z = np.array(z)
+
     reg_minus_imag = z.imag < 0.0
     z[reg_minus_imag] = np.conj(z[reg_minus_imag])
 
