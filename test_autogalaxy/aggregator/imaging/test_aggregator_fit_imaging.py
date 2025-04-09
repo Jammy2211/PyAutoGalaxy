@@ -1,48 +1,21 @@
-from pathlib import Path
-
-import pytest
-
 import autogalaxy as ag
-import autofit as af
-from uuid import uuid4
-from autoconf import conf
-from autoconf.conf import with_config
 
 from test_autogalaxy.aggregator.conftest import clean, aggregator_from
 
 database_file = "db_fit_imaging"
 
 
-@pytest.fixture(name="agg_7x7")
-@with_config(
-    "general",
-    "output",
-    "samples_to_csv",
-    value=True,
-)
-def make_agg_7x7(samples, model, analysis_imaging_7x7):
-    output_path = Path(conf.instance.output_path)
-
-    search = ag.m.MockSearch(
-        samples=samples, result=ag.m.MockResult(model=model, samples=samples)
-    )
-    file_prefix = str(uuid4())
-    search.paths = af.DirectoryPaths(path_prefix=file_prefix)
-    search.fit(model=model, analysis=analysis_imaging_7x7)
-
-    analysis_imaging_7x7.visualize_before_fit(paths=search.paths, model=model)
-
-    database_file = output_path / f"{file_prefix}.sqlite"
-
-    agg = af.Aggregator.from_database(filename=database_file)
-    agg.add_directory(directory=output_path / file_prefix)
-    return agg
-
-
-def test__fit_imaging_randomly_drawn_via_pdf_gen_from__analysis_has_single_dataset(
-    agg_7x7,
+def test__fit_imaging_randomly_drawn_via_pdf_gen_from__single_analysis(
+    analysis_imaging_7x7, samples, model
 ):
-    fit_agg = ag.agg.FitImagingAgg(aggregator=agg_7x7)
+    agg = aggregator_from(
+        database_file=database_file,
+        analysis=analysis_imaging_7x7,
+        model=model,
+        samples=samples,
+    )
+
+    fit_agg = ag.agg.FitImagingAgg(aggregator=agg)
     fit_pdf_gen = fit_agg.randomly_drawn_via_pdf_gen_from(total_samples=2)
 
     i = 0

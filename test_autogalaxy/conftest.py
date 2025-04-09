@@ -1,5 +1,4 @@
 import os
-import shutil
 from os import path
 
 import pytest
@@ -8,6 +7,11 @@ from matplotlib import pyplot
 from autoconf import conf
 from autogalaxy import fixtures
 
+import logging
+
+logger = logging.getLogger(__name__)
+
+logger.setLevel(level="INFO")
 
 class PlotPatch:
     def __init__(self):
@@ -29,13 +33,10 @@ directory = path.dirname(path.realpath(__file__))
 
 @pytest.fixture(autouse=True)
 def set_config_path(request):
-    output_path = path.join(directory, "output")
     conf.instance.push(
         new_path=path.join(directory, "config"),
-        output_path=output_path,
+        output_path=path.join(directory, "output"),
     )
-    yield
-    shutil.rmtree(output_path, ignore_errors=True)
 
 
 @pytest.fixture(autouse=True, scope="session")
