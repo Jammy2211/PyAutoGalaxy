@@ -6,7 +6,7 @@ class FITSFit(Enum):
     The HDUs that can be extracted from the fit.fits file.
     """
 
-    model_image = "MODEL_IMAGE"
+    model_data = "MODEL_DATA"
     residual_map = "RESIDUAL_MAP"
     normalized_residual_map = "NORMALIZED_RESIDUAL_MAP"
     chi_squared_map = "CHI_SQUARED_MAP"
@@ -38,7 +38,7 @@ class SubplotFit(Enum):
 
     data = (0, 0)
     signal_to_noise_map = (1, 0)
-    model_image = (2, 0)
+    model_data = (2, 0)
     normalized_residual_map = (0, 1)
     normalized_residual_map_one_sigma = (1, 1)
     chi_squared_map = (2, 1)

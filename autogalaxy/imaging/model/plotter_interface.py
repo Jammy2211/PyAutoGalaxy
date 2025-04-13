@@ -38,10 +38,10 @@ def fits_to_fits(
         hdu_list = hdu_list_for_output_from(
             values_list=[
                 fit.mask.astype("float"),
-                fit.model_data,
-                fit.residual_map,
-                fit.normalized_residual_map,
-                fit.chi_squared_map,
+                fit.model_data.native,
+                fit.residual_map.native,
+                fit.normalized_residual_map.native,
+                fit.chi_squared_map.native,
             ],
             ext_name_list=[
                 "mask",
