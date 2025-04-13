@@ -1,4 +1,5 @@
 import os
+import numpy as np
 from pathlib import Path
 from typing import List, Union
 
@@ -219,10 +220,25 @@ class PlotterInterface:
         )
 
         if should_plot("subplot_inversion"):
+
             mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
 
             for mapper_index in range(len(mapper_list)):
                 inversion_plotter.subplot_of_mapper(mapper_index=mapper_index)
+
+        if should_plot("fits_reconstruction_mesh"):
+
+            mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
+
+            fits_table_mapper_dict = inversion.fits_table_mapper_dict
+
+            for i, mapper in enumerate(mapper_list):
+
+                suffix = "" if len(mapper_list) == 1 else f"_{i}"
+
+                fits_table = fits_table_mapper_dict[mapper]
+                fits_table.writeto(self.image_path / f"inversion_reconstruction_mesh{suffix}.fits", overwrite=True)
+
 
     def adapt_images(
         self,
