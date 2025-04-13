@@ -1,3 +1,4 @@
+from astropy.table import Table
 import shutil
 from os import path
 import pytest
@@ -58,6 +59,11 @@ def test__inversion(
     )
 
     assert path.join(plot_path, "subplot_inversion_0.png") in plot_patch.paths
+
+    # Load the table from a FITS file
+    pixels_table = Table.read(path.join(plot_path, "inversion_reconstruction.fits"), format="fits")
+
+    assert pixels_table["x"][0] == pytest.approx(0.8333333333333334, rel=1.0e-2)
 
 
 def test__adapt_images(

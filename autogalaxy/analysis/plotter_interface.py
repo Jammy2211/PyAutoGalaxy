@@ -12,7 +12,6 @@ import autoarray.plot as aplt
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
-from autogalaxy.galaxy.plot.galaxy_plotters import GalaxyPlotter
 from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
 from autogalaxy.galaxy.plot.adapt_plotters import AdaptPlotter
 
@@ -183,7 +182,7 @@ class PlotterInterface:
         if should_plot("fits_galaxy_images"):
             hdu_list = hdu_list_for_output_from(
                 values_list=[grid.mask.astype("float")]
-                + [galaxy.image_2d_from(grid=grid) for galaxy in galaxies],
+                + [galaxy.image_2d_from(grid=grid).native for galaxy in galaxies],
                 ext_name_list=["mask"] + [f"galaxy_{i}" for i in range(len(galaxies))],
                 header_dict=grid.mask.header_dict,
             )
@@ -226,7 +225,7 @@ class PlotterInterface:
             for mapper_index in range(len(mapper_list)):
                 inversion_plotter.subplot_of_mapper(mapper_index=mapper_index)
 
-        if should_plot("fits_reconstruction_mesh"):
+        if should_plot("fits_reconstruction"):
 
             mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
 
@@ -237,7 +236,7 @@ class PlotterInterface:
                 suffix = "" if len(mapper_list) == 1 else f"_{i}"
 
                 fits_table = fits_table_mapper_dict[mapper]
-                fits_table.writeto(self.image_path / f"inversion_reconstruction_mesh{suffix}.fits", overwrite=True)
+                fits_table.writeto(self.image_path / f"inversion_reconstruction{suffix}.fits", overwrite=True)
 
 
     def adapt_images(
