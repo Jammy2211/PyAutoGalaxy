@@ -378,7 +378,7 @@ plots:
     subplot_adapt_images: true
   inversion:
     subplot_inversion: true
-    fits_reconstruction: true          # output reconstruction_mesh.fits containing the reconstructed pixelization and noise map on the source-plane mesh?
+    csv_reconstruction: true          # output reconstruction_mesh.fits containing the reconstructed pixelization and noise map on the source-plane mesh?
   galaxies:
     subplot_galaxies: true
     subplot_galaxy_images: true

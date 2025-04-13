@@ -1,5 +1,5 @@
+import csv
 import os
-import numpy as np
 from pathlib import Path
 from typing import List, Union
 
@@ -219,25 +219,34 @@ class PlotterInterface:
         )
 
         if should_plot("subplot_inversion"):
-
             mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
 
-            for mapper_index in range(len(mapper_list)):
-                inversion_plotter.subplot_of_mapper(mapper_index=mapper_index)
-
-        if should_plot("fits_reconstruction"):
-
-            mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
-
-            fits_table_mapper_dict = inversion.fits_table_mapper_dict
-
-            for i, mapper in enumerate(mapper_list):
-
+            for i in range(len(mapper_list)):
                 suffix = "" if len(mapper_list) == 1 else f"_{i}"
 
-                fits_table = fits_table_mapper_dict[mapper]
-                fits_table.writeto(self.image_path / f"inversion_reconstruction{suffix}.fits", overwrite=True)
+                inversion_plotter.subplot_of_mapper(
+                    mapper_index=i, auto_filename=f"subplot_inversion{suffix}"
+                )
 
+        if should_plot("csv_reconstruction"):
+            mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
+
+            for i, mapper in enumerate(mapper_list):
+                y = mapper.mapper_grids.source_plane_mesh_grid[:, 0]
+                x = mapper.mapper_grids.source_plane_mesh_grid[:, 1]
+                reconstruction = inversion.reconstruction_dict[mapper]
+                noise_map = inversion.reconstruction_noise_map_dict[mapper]
+
+                with open(
+                    self.image_path / f"inversion_reconstruction_{i}.csv",
+                    mode="w",
+                    newline="",
+                ) as file:
+                    writer = csv.writer(file)
+                    writer.writerow(["y", "x", "reconstruction", "noise_map"])  # header
+
+                    for i in range(len(x)):
+                        writer.writerow([y[i], x[i], reconstruction[i], noise_map[i]])
 
     def adapt_images(
         self,

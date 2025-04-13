@@ -1,5 +1,6 @@
-from astropy.table import Table
+import csv
 import shutil
+import numpy as np
 from os import path
 import pytest
 
@@ -60,10 +61,21 @@ def test__inversion(
 
     assert path.join(plot_path, "subplot_inversion_0.png") in plot_patch.paths
 
-    # Load the table from a FITS file
-    pixels_table = Table.read(path.join(plot_path, "inversion_reconstruction.fits"), format="fits")
+    with open(path.join(plot_path, "inversion_reconstruction_0.csv"), mode="r") as file:
+        reader = csv.reader(file)
+        header_list = next(reader)  # ['y', 'x', 'reconstruction', 'noise_map']
 
-    assert pixels_table["x"][0] == pytest.approx(0.8333333333333334, rel=1.0e-2)
+        reconstruction_dict = {header: [] for header in header_list}
+
+        for row in reader:
+            for key, value in zip(header_list, row):
+                reconstruction_dict[key].append(float(value))
+
+        # Convert lists to NumPy arrays
+        for key in reconstruction_dict:
+            reconstruction_dict[key] = np.array(reconstruction_dict[key])
+
+    assert reconstruction_dict["x"][0] == pytest.approx(-0.8333333333333334, rel=1.0e-2)
 
 
 def test__adapt_images(
