@@ -56,7 +56,9 @@ def evaluation_grid(func):
 
         pixel_scale_ratio = grid.pixel_scale / pixel_scale
 
-        zoom_shape_native = grid.mask.zoom_shape_native
+        zoom = aa.Zoom2D(mask=grid.mask)
+
+        zoom_shape_native = zoom.shape_native
         shape_native = (
             int(pixel_scale_ratio * zoom_shape_native[0]),
             int(pixel_scale_ratio * zoom_shape_native[1]),
