@@ -180,9 +180,11 @@ class PlotterInterface:
             pass
 
         if should_plot("fits_galaxy_images"):
+
+            image_list = [galaxy.image_2d_from(grid=grid).native for galaxy in galaxies]
+
             hdu_list = hdu_list_for_output_from(
-                values_list=[grid.mask.astype("float")]
-                + [galaxy.image_2d_from(grid=grid).native for galaxy in galaxies],
+                values_list=[image_list[0].mask.astype("float")] + image_list,
                 ext_name_list=["mask"] + [f"galaxy_{i}" for i in range(len(galaxies))],
                 header_dict=grid.mask.header_dict,
             )
@@ -284,16 +286,16 @@ class PlotterInterface:
             )
 
         if should_plot("fits_adapt_images"):
-            values_list = [
-                adapt_images.galaxy_name_image_dict[name].native
+            image_list = [
+                adapt_images.galaxy_name_image_dict[name].native_for_fits
                 for name in adapt_images.galaxy_name_image_dict.keys()
             ]
 
             hdu_list = hdu_list_for_output_from(
                 values_list=[
-                    adapt_images.mask.astype("float"),
+                    image_list[0].mask.astype("float"),
                 ]
-                + values_list,
+                + image_list,
                 ext_name_list=["mask"]
                 + list(adapt_images.galaxy_name_image_dict.keys()),
                 header_dict=adapt_images.mask.header_dict,

@@ -35,14 +35,19 @@ def fits_to_fits(
     """
 
     if should_plot("fits_fit"):
+
+        image_list = [
+            fit.model_data.native_for_fits,
+            fit.residual_map.native_for_fits,
+            fit.normalized_residual_map.native_for_fits,
+            fit.chi_squared_map.native_for_fits,
+        ]
+
         hdu_list = hdu_list_for_output_from(
             values_list=[
-                fit.mask.astype("float"),
-                fit.model_data.native,
-                fit.residual_map.native,
-                fit.normalized_residual_map.native,
-                fit.chi_squared_map.native,
-            ],
+                image_list[0].mask.astype("float"),
+            ]
+            + image_list,
             ext_name_list=[
                 "mask",
                 "model_data",
@@ -58,9 +63,12 @@ def fits_to_fits(
     if should_plot("fits_model_galaxy_images"):
         number_plots = len(fit.galaxy_model_image_dict.keys()) + 1
 
+        image_list = [
+            image.native_for_fits for image in fit.galaxy_model_image_dict.values()
+        ]
+
         hdu_list = hdu_list_for_output_from(
-            values_list=[fit.mask.astype("float")]
-            + [image.native for image in fit.galaxy_model_image_dict.values()],
+            values_list=[image_list[0].mask.astype("float")] + image_list,
             ext_name_list=[
                 "mask",
             ]
@@ -104,15 +112,16 @@ class PlotterInterfaceImaging(PlotterInterface):
             dataset_plotter.subplot_dataset()
 
         if should_plot("fits_dataset"):
+            image_list = [
+                dataset.data.native_for_fits,
+                dataset.noise_map.native_for_fits,
+                dataset.psf.native_for_fits,
+                dataset.grids.lp.over_sample_size.native_for_fits,
+                dataset.grids.pixelization.over_sample_size.native_for_fits,
+            ]
+
             hdu_list = hdu_list_for_output_from(
-                values_list=[
-                    dataset.mask.astype("float"),
-                    dataset.data.native,
-                    dataset.noise_map.native,
-                    dataset.psf.native,
-                    dataset.grids.lp.over_sample_size.native,
-                    dataset.grids.pixelization.over_sample_size.native,
-                ],
+                values_list=[image_list[0].mask.astype("float")] + image_list,
                 ext_name_list=[
                     "mask",
                     "data",
