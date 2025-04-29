@@ -1,4 +1,6 @@
+import csv
 import shutil
+import numpy as np
 from os import path
 import pytest
 
@@ -35,10 +37,10 @@ def test__galaxies(
     )
 
     image = ag.ndarray_via_fits_from(
-        file_path=path.join(plot_path, "galaxy_images.fits"), hdu=0
+        file_path=path.join(plot_path, "galaxy_images.fits"), hdu=1
     )
 
-    assert image.shape == (7, 7)
+    assert image.shape == (5, 5)
 
 
 def test__inversion(
@@ -58,6 +60,22 @@ def test__inversion(
     )
 
     assert path.join(plot_path, "subplot_inversion_0.png") in plot_patch.paths
+
+    with open(path.join(plot_path, "inversion_reconstruction_0.csv"), mode="r") as file:
+        reader = csv.reader(file)
+        header_list = next(reader)  # ['y', 'x', 'reconstruction', 'noise_map']
+
+        reconstruction_dict = {header: [] for header in header_list}
+
+        for row in reader:
+            for key, value in zip(header_list, row):
+                reconstruction_dict[key].append(float(value))
+
+        # Convert lists to NumPy arrays
+        for key in reconstruction_dict:
+            reconstruction_dict[key] = np.array(reconstruction_dict[key])
+
+    assert reconstruction_dict["x"][0] == pytest.approx(-0.8333333333333334, rel=1.0e-2)
 
 
 def test__adapt_images(
@@ -83,7 +101,7 @@ def test__adapt_images(
     assert path.join(plot_path, "subplot_adapt_images.png") in plot_patch.paths
 
     image = ag.ndarray_via_fits_from(
-        file_path=path.join(plot_path, "adapt_images.fits"), hdu=0
+        file_path=path.join(plot_path, "adapt_images.fits"), hdu=1
     )
 
-    assert image.shape == (7, 7)
+    assert image.shape == (5, 5)

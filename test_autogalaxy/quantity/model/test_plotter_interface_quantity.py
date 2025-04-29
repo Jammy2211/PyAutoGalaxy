@@ -28,7 +28,7 @@ def test__dataset(
     PlotterInterface.dataset_quantity(dataset=dataset_quantity_7x7_array_2d)
 
     image = ag.ndarray_via_fits_from(
-        file_path=path.join(plot_path, "dataset.fits"), hdu=0
+        file_path=path.join(plot_path, "dataset.fits"), hdu=1
     )
 
     assert image.shape == (7, 7)

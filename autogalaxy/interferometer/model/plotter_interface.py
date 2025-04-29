@@ -36,9 +36,13 @@ def fits_to_fits(
     """
 
     if should_plot("fits_model_galaxy_images"):
+
+        image_list = [
+            image.native_for_fits for image in fit.galaxy_model_image_dict.values()
+        ]
+
         hdu_list = hdu_list_for_output_from(
-            values_list=[fit.dataset.real_space_mask.astype("float")]
-            + [image.native for image in fit.galaxy_model_image_dict.values()],
+            values_list=[image_list[0].mask.astype("float")] + image_list,
             ext_name_list=["mask"]
             + [f"galaxy_{i}" for i in range(len(fit.galaxy_model_image_dict.values()))],
             header_dict=fit.dataset.real_space_mask.header_dict,
@@ -47,16 +51,18 @@ def fits_to_fits(
         hdu_list.writeto(image_path / "model_galaxy_images.fits", overwrite=True)
 
     if should_plot("fits_dirty_images"):
+
+        image_list = [
+            fit.dirty_image.native_for_fits,
+            fit.dirty_noise_map.native_for_fits,
+            fit.dirty_model_image.native_for_fits,
+            fit.dirty_residual_map.native_for_fits,
+            fit.dirty_normalized_residual_map.native_for_fits,
+            fit.dirty_chi_squared_map.native_for_fits,
+        ]
+
         hdu_list = hdu_list_for_output_from(
-            values_list=[
-                fit.dataset.real_space_mask.astype("float"),
-                fit.dirty_image.native,
-                fit.dirty_noise_map.native,
-                fit.dirty_model_image.native,
-                fit.dirty_residual_map.native,
-                fit.dirty_normalized_residual_map.native,
-                fit.dirty_chi_squared_map.native,
-            ],
+            values_list=[image_list[0].mask.astype("float")] + image_list,
             ext_name_list=["mask"]
             + [
                 "dirty_image",
@@ -109,6 +115,7 @@ class PlotterInterfaceInterferometer(PlotterInterface):
             dataset_plotter.subplot_dataset()
 
         if should_plot("fits_dataset"):
+
             hdu_list = hdu_list_for_output_from(
                 values_list=[
                     dataset.real_space_mask.astype("float"),
