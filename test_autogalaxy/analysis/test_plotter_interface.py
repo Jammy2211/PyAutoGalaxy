@@ -37,10 +37,10 @@ def test__galaxies(
     )
 
     image = ag.ndarray_via_fits_from(
-        file_path=path.join(plot_path, "galaxy_images.fits"), hdu=0
+        file_path=path.join(plot_path, "galaxy_images.fits"), hdu=1
     )
 
-    assert image.shape == (7, 7)
+    assert image.shape == (5, 5)
 
 
 def test__inversion(
@@ -101,7 +101,7 @@ def test__adapt_images(
     assert path.join(plot_path, "subplot_adapt_images.png") in plot_patch.paths
 
     image = ag.ndarray_via_fits_from(
-        file_path=path.join(plot_path, "adapt_images.fits"), hdu=0
+        file_path=path.join(plot_path, "adapt_images.fits"), hdu=1
     )
 
-    assert image.shape == (7, 7)
+    assert image.shape == (5, 5)

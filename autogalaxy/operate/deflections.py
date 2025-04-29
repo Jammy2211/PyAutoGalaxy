@@ -80,7 +80,7 @@ def evaluation_grid(func):
         grid = aa.Grid2D.uniform(
             shape_native=shape_native,
             pixel_scales=(pixel_scale, pixel_scale),
-            origin=grid.mask.zoom_offset_scaled,
+            origin=zoom.offset_scaled,
         )
 
         grid.is_evaluation_grid = True

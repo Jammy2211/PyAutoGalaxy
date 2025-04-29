@@ -11,7 +11,7 @@ from autoarray.mask.mask_2d import Mask2DKeys
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 
 
-def mask_header_from(fit):
+def mask_header_from(fit, name="dataset"):
     """
     Returns the mask, header and pixel scales of the `PyAutoFit` `Fit` object.
 
@@ -30,7 +30,7 @@ def mask_header_from(fit):
     The mask, header and pixel scales of the `PyAutoFit` `Fit` object.
     """
 
-    header = aa.Header(header_sci_obj=fit.value(name="dataset")[0].header)
+    header = aa.Header(header_sci_obj=fit.value(name=name)[0].header)
     pixel_scales = (
         header.header_sci_obj[Mask2DKeys.PIXSCAY.value],
         header.header_sci_obj[Mask2DKeys.PIXSCAY.value],
@@ -40,7 +40,7 @@ def mask_header_from(fit):
         header.header_sci_obj[Mask2DKeys.ORIGINX.value],
     )
     mask = aa.Mask2D(
-        mask=ndarray_via_hdu_from(fit.value(name="dataset")[0]),
+        mask=ndarray_via_hdu_from(fit.value(name=name)[0]),
         pixel_scales=pixel_scales,
         origin=origin,
     )
@@ -79,7 +79,7 @@ def adapt_images_from(
     adapt_images_list = []
 
     for fit in fit_list:
-        mask, header = mask_header_from(fit=fit)
+        mask, header = mask_header_from(fit=fit, name="adapt_images")
 
         galaxy_name_image_dict = {}
 

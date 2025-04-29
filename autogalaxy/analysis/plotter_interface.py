@@ -181,7 +181,9 @@ class PlotterInterface:
 
         if should_plot("fits_galaxy_images"):
 
-            image_list = [galaxy.image_2d_from(grid=grid).native for galaxy in galaxies]
+            image_list = [
+                galaxy.image_2d_from(grid=grid).native_for_fits for galaxy in galaxies
+            ]
 
             hdu_list = hdu_list_for_output_from(
                 values_list=[image_list[0].mask.astype("float")] + image_list,
