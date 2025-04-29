@@ -1,4 +1,5 @@
 import inspect
+import jax.numpy as jnp
 import numpy as np
 from typing import ClassVar, Dict, List, Optional
 
@@ -291,7 +292,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         if isinstance(self.light_profile_list[0], LightProfileOperated):
             return self.mapping_matrix
 
-        operated_mapping_matrix = np.zeros(shape=(self.pixels_in_mask, self.params))
+        blurred_image_2d_list = []
 
         for pixel, light_profile in enumerate(self.light_profile_list):
             image_2d = light_profile.image_2d_from(grid=self.grid)
@@ -302,6 +303,8 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
                 image=image_2d, blurring_image=blurring_image_2d
             )
 
-            operated_mapping_matrix[:, pixel] = blurred_image_2d.array
+            blurred_image_2d_list.append(blurred_image_2d.array)
 
-        return operated_mapping_matrix
+        return jnp.stack(blurred_image_2d_list, axis=1)
+
+
