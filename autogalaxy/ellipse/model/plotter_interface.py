@@ -44,12 +44,13 @@ class PlotterInterfaceEllipse(PlotterInterface):
         if should_plot("subplot_dataset"):
             dataset_plotter.subplot_dataset()
 
+        image_list = [
+            dataset.data.native_for_fits,
+            dataset.noise_map.native_for_fits,
+        ]
+
         hdu_list = hdu_list_for_output_from(
-            values_list=[
-                dataset.mask.astype("float"),
-                dataset.data.native,
-                dataset.noise_map.native,
-            ],
+            values_list=[image_list[0].mask.astype("float")] + image_list,
             ext_name_list=[
                 "mask",
                 "data",

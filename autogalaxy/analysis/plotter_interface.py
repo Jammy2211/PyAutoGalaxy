@@ -1,3 +1,4 @@
+import csv
 import os
 from pathlib import Path
 from typing import List, Union
@@ -11,7 +12,6 @@ import autoarray.plot as aplt
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
-from autogalaxy.galaxy.plot.galaxy_plotters import GalaxyPlotter
 from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
 from autogalaxy.galaxy.plot.adapt_plotters import AdaptPlotter
 
@@ -180,9 +180,13 @@ class PlotterInterface:
             pass
 
         if should_plot("fits_galaxy_images"):
+
+            image_list = [
+                galaxy.image_2d_from(grid=grid).native_for_fits for galaxy in galaxies
+            ]
+
             hdu_list = hdu_list_for_output_from(
-                values_list=[grid.mask.astype("float")]
-                + [galaxy.image_2d_from(grid=grid) for galaxy in galaxies],
+                values_list=[image_list[0].mask.astype("float")] + image_list,
                 ext_name_list=["mask"] + [f"galaxy_{i}" for i in range(len(galaxies))],
                 header_dict=grid.mask.header_dict,
             )
@@ -221,8 +225,32 @@ class PlotterInterface:
         if should_plot("subplot_inversion"):
             mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
 
-            for mapper_index in range(len(mapper_list)):
-                inversion_plotter.subplot_of_mapper(mapper_index=mapper_index)
+            for i in range(len(mapper_list)):
+                suffix = "" if len(mapper_list) == 1 else f"_{i}"
+
+                inversion_plotter.subplot_of_mapper(
+                    mapper_index=i, auto_filename=f"subplot_inversion{suffix}"
+                )
+
+        if should_plot("csv_reconstruction"):
+            mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
+
+            for i, mapper in enumerate(mapper_list):
+                y = mapper.mapper_grids.source_plane_mesh_grid[:, 0]
+                x = mapper.mapper_grids.source_plane_mesh_grid[:, 1]
+                reconstruction = inversion.reconstruction_dict[mapper]
+                noise_map = inversion.reconstruction_noise_map_dict[mapper]
+
+                with open(
+                    self.image_path / f"inversion_reconstruction_{i}.csv",
+                    mode="w",
+                    newline="",
+                ) as file:
+                    writer = csv.writer(file)
+                    writer.writerow(["y", "x", "reconstruction", "noise_map"])  # header
+
+                    for i in range(len(x)):
+                        writer.writerow([y[i], x[i], reconstruction[i], noise_map[i]])
 
     def adapt_images(
         self,
@@ -260,16 +288,16 @@ class PlotterInterface:
             )
 
         if should_plot("fits_adapt_images"):
-            values_list = [
-                adapt_images.galaxy_name_image_dict[name].native
+            image_list = [
+                adapt_images.galaxy_name_image_dict[name].native_for_fits
                 for name in adapt_images.galaxy_name_image_dict.keys()
             ]
 
             hdu_list = hdu_list_for_output_from(
                 values_list=[
-                    adapt_images.mask.astype("float"),
+                    image_list[0].mask.astype("float"),
                 ]
-                + values_list,
+                + image_list,
                 ext_name_list=["mask"]
                 + list(adapt_images.galaxy_name_image_dict.keys()),
                 header_dict=adapt_images.mask.header_dict,
