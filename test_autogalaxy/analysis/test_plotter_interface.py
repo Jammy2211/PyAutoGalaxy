@@ -61,7 +61,9 @@ def test__inversion(
 
     assert path.join(plot_path, "subplot_inversion_0.png") in plot_patch.paths
 
-    with open(path.join(plot_path, "inversion_reconstruction_0.csv"), mode="r") as file:
+    with open(
+        path.join(plot_path, "source_plane_reconstruction_0.csv"), mode="r"
+    ) as file:
         reader = csv.reader(file)
         header_list = next(reader)  # ['y', 'x', 'reconstruction', 'noise_map']
 

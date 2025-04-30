@@ -242,7 +242,7 @@ class PlotterInterface:
                 noise_map = inversion.reconstruction_noise_map_dict[mapper]
 
                 with open(
-                    self.image_path / f"inversion_reconstruction_{i}.csv",
+                    self.image_path / f"source_plane_reconstruction_{i}.csv",
                     mode="w",
                     newline="",
                 ) as file:
