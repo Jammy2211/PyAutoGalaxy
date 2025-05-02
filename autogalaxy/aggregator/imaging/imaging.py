@@ -58,10 +58,9 @@ def _imaging_from(
         data = values_from(hdu=1, cls=aa.Array2D)
         noise_map = values_from(hdu=2, cls=aa.Array2D)
 
-        try:
-            psf = values_from(hdu=3, cls=aa.Kernel2D)
-        except (TypeError, IndexError):
-            psf = None
+        psf = values_from(hdu=3, cls=aa.Kernel2D)
+
+        print(psf)
 
         dataset = aa.Imaging(
             data=data,
