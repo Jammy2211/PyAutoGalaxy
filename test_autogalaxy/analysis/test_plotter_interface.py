@@ -69,7 +69,7 @@ def test__inversion(
 
         for row in reader:
             for key, value in zip(header_list, row):
-                reconstruction_dict[key].append(float(value))
+                reconstruction_dict[key].append(value.astype(float))
 
         # Convert lists to NumPy arrays
         for key in reconstruction_dict:

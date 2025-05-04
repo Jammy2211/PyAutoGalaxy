@@ -305,6 +305,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
 
             blurred_image_2d_list.append(blurred_image_2d.array)
 
-        return jnp.stack(blurred_image_2d_list, axis=1)
+        return np.stack(blurred_image_2d_list, axis=1)
 
+        # return jnp.stack(blurred_image_2d_list, axis=1)
 

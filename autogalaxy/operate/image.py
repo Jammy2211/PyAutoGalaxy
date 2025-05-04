@@ -40,10 +40,15 @@ class OperateImage:
         psf: aa.Kernel2D,
     ) -> aa.Array2D:
 
-        values = psf.convolve_image(
-            image=image_2d,
-            blurring_image=blurring_image_2d,
+        values = psf.convolved_array_with_mask_from(
+            array=image_2d.native + blurring_image_2d.native,
+            mask=image_2d.mask,
         )
+
+        # values = psf.convolve_image(
+        #     image=image_2d,
+        #     blurring_image=blurring_image_2d,
+        # )
         return Array2D(values=values, mask=image_2d.mask)
 
     def blurred_image_2d_from(
