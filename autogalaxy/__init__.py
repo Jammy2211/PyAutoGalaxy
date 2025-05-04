@@ -28,6 +28,7 @@ from autoarray.operators.transformer import TransformerNUFFT  # noqa
 from autoarray.layout.layout import Layout2D  # noqa
 from autoarray.structures.arrays.uniform_1d import Array1D  # noqa
 from autoarray.structures.arrays.uniform_2d import Array2D  # noqa
+from autoarray.structures.arrays.rgb import Array2DRGB
 from autoarray.structures.arrays.irregular import ArrayIrregular  # noqa
 from autoarray.structures.header import Header  # noqa
 from autoarray.structures.grids.uniform_1d import Grid1D  # noqa
