@@ -11,7 +11,9 @@ from autoarray.mask.mask_2d import Mask2DKeys
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 
 
-def instance_list_from(fit: af.Fit, instance: Optional[af.ModelInstance] = None) -> List[af.ModelInstance]:
+def instance_list_from(
+    fit: af.Fit, instance: Optional[af.ModelInstance] = None
+) -> List[af.ModelInstance]:
     """
     Returns the list of instances of the maximum likelihood model, depending on the model composition and whether
     multiple `Analysis` objects were fitted simultaneously.
@@ -45,7 +47,9 @@ def instance_list_from(fit: af.Fit, instance: Optional[af.ModelInstance] = None)
     if instance is None:
         if len(fit.children) == 0:
             return [fit.instance]
-        return fit.instance[0:-1] # [0:-1] excludes the last instance, which is the `FactorGraphModel` object itself.
+        return fit.instance[
+            0:-1
+        ]  # [0:-1] excludes the last instance, which is the `FactorGraphModel` object itself.
 
     if isinstance(list(instance.child_items.values())[-1], af.FactorGraphModel):
         return list(instance.child_items.values())[0:-1]

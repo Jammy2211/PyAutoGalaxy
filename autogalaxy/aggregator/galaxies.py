@@ -57,6 +57,7 @@ def _galaxies_from(fit: af.Fit, instance: af.ModelInstance) -> List[Galaxy]:
 
     return galaxies_list
 
+
 class GalaxiesAgg(af.AggBase):
     """
     Interfaces with an `PyAutoFit` aggregator object to create instances of `Galaxy` objects from the results
