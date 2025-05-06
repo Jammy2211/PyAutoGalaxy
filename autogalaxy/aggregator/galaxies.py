@@ -7,6 +7,7 @@ if TYPE_CHECKING:
 
 import autofit as af
 
+from autogalaxy.aggregator import agg_util
 
 logger = logging.getLogger(__name__)
 
@@ -40,35 +41,21 @@ def _galaxies_from(fit: af.Fit, instance: af.ModelInstance) -> List[Galaxy]:
         randomly from the PDF).
     """
 
-    if instance is not None:
+    instance_list = agg_util.instance_list_from(fit=fit, instance=instance)
+
+    galaxies_list = []
+
+    for instance in instance_list:
+
         galaxies = instance.galaxies
 
         if hasattr(instance, "extra_galaxies"):
-            if fit.instance.extra_galaxies is not None:
-                galaxies = galaxies + fit.instance.extra_galaxies
+            if instance.extra_galaxies is not None:
+                galaxies = galaxies + instance.extra_galaxies
 
-    else:
-        galaxies = fit.instance.galaxies
+        galaxies_list.append(galaxies)
 
-        if hasattr(fit.instance, "extra_galaxies"):
-            if fit.instance.extra_galaxies is not None:
-                galaxies = galaxies + fit.instance.extra_galaxies
-
-    if fit.children is not None:
-        if len(fit.children) > 0:
-            logger.info(
-                """
-                Using database for a fit with multiple summed Analysis objects.
-    
-                Galaxy objects do not fully support this yet (e.g. variables across Analysis objects may not be correct)
-                so proceed with caution!
-                """
-            )
-
-            return [galaxies] * len(fit.children)
-
-    return [galaxies]
-
+    return galaxies_list
 
 class GalaxiesAgg(af.AggBase):
     """
