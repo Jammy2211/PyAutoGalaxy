@@ -5,6 +5,8 @@ from typing import List
 import autofit as af
 import autoarray as aa
 
+from autogalaxy.aggregator import agg_util
+
 logger = logging.getLogger(__name__)
 
 
@@ -38,28 +40,14 @@ def _dataset_model_from(
         randomly from the PDF).
     """
 
-    if instance is not None:
-        try:
-            dataset_model = instance.dataset_model
-        except AttributeError:
-            dataset_model = None
-    else:
-        try:
-            dataset_model = fit.instance.dataset_model
-        except AttributeError:
-            dataset_model = None
+    instance_list = agg_util.instance_list_from(fit=fit, instance=instance)
 
-    if fit.children is not None:
-        if len(fit.children) > 0:
-            logger.info(
-                """
-                Using database for a fit with multiple summed Analysis objects.
-    
-                DatasetModel objects do not fully support this yet (e.g. variables across Analysis objects may not be correct)
-                so proceed with caution!
-                """
-            )
+    dataset_model_list = []
 
-            return [dataset_model] * len(fit.children)
+    for instance in instance_list:
 
-    return [dataset_model]
+        dataset_model = instance.dataset_model
+
+        dataset_model_list.append(dataset_model)
+
+    return dataset_model_list
