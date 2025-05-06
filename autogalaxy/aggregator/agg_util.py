@@ -11,6 +11,52 @@ from autoarray.mask.mask_2d import Mask2DKeys
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 
 
+def instance_list_from(
+    fit: af.Fit, instance: Optional[af.ModelInstance] = None
+) -> List[af.ModelInstance]:
+    """
+    Returns the list of instances of the maximum likelihood model, depending on the model composition and whether
+    multiple `Analysis` objects were fitted simultaneously.
+
+    This if loop accounts for 4 scenarios:
+
+    - A single `Analysis` object was fitted, in which case the instance is a single object and converted to a list.
+
+    - Multiple `Analysis` objects were fitted via a `FactorGraphModel`, in which case the instance is a list of
+    objects and all but the last object (which is the overall `FactorGraphModel` are returned.
+
+    - A single instance is manually input, in which case it is converted to a list.
+
+    - Multiple `Analysis` objects were fitted via a `FactorGraphModel`, in which case the instance is a list of
+    objects and all but the last object (which is the overall `FactorGraphModel` are returned.
+
+    Parameters
+    ----------
+    fit
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
+        an output directory or from an sqlite database.
+    instance
+        An optional instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
+        randomly from the PDF).
+
+    Returns
+    -------
+    The list of instances of the maximum likelihood model.
+    """
+
+    if instance is None:
+        if len(fit.children) == 0:
+            return [fit.instance]
+        return fit.instance[
+            0:-1
+        ]  # [0:-1] excludes the last instance, which is the `FactorGraphModel` object itself.
+
+    if isinstance(list(instance.child_items.values())[-1], af.FactorGraphModel):
+        return list(instance.child_items.values())[0:-1]
+
+    return [instance]
+
+
 def mask_header_from(fit, name="dataset"):
     """
     Returns the mask, header and pixel scales of the `PyAutoFit` `Fit` object.

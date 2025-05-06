@@ -23,6 +23,8 @@ from autoarray.inversion.pixelization.border_relocator import BorderRelocator
 from autoarray.mask.mask_1d import Mask1D  # noqa
 from autoarray.mask.mask_2d import Mask2D  # noqa
 from autoarray.mask.derive.zoom_2d import Zoom2D
+from autoarray.operators.convolver import Convolver  # noqa
+from autoarray.operators.convolver import Convolver  # noqa
 from autoarray.operators.transformer import TransformerDFT  # noqa
 from autoarray.operators.transformer import TransformerNUFFT  # noqa
 from autoarray.layout.layout import Layout2D  # noqa
