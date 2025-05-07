@@ -46,7 +46,10 @@ def _dataset_model_from(
 
     for instance in instance_list:
 
-        dataset_model = instance.dataset_model
+        try:
+            dataset_model = instance.dataset_model
+        except AttributeError:
+            dataset_model = None
 
         dataset_model_list.append(dataset_model)
 
