@@ -6,22 +6,7 @@ from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
 class dPIESph(MassProfile):
-    '''
-    The dual Pseudo-Isothermal Elliptical mass distribution introduced in
-    Eliasdottir 2007: https://arxiv.org/abs/0710.5636
 
-    This version is without ellipticity, so perhaps the "E" is a misnomer.
-
-    Corresponds to a projected density profile that looks like:
-
-        \\Sigma(R) = \\Sigma_0 (ra * rs) / (rs - ra) *
-                      (1 / \\sqrt(ra^2 + R^2) - 1 / \\sqrt(rs^2 + R^2))
-
-    (c.f. Eliasdottir '07 eqn. A3)
-
-    In this parameterization, ra and rs are the scale radii above in angular
-    units (arcsec). The parameter `kappa_scale` is \\Sigma_0 / \\Sigma_crit.
-    '''
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -29,6 +14,34 @@ class dPIESph(MassProfile):
         rs: float = 2.0,
         kappa_scale: float = 0.1,
     ):
+        """
+        The dual Pseudo-Isothermal Elliptical mass distribution introduced in
+        Eliasdottir 2007: https://arxiv.org/abs/0710.5636
+
+        This version is without ellipticity, so perhaps the "E" is a misnomer.
+
+        Corresponds to a projected density profile that looks like:
+
+            \\Sigma(R) = \\Sigma_0 (ra * rs) / (rs - ra) *
+                          (1 / \\sqrt(ra^2 + R^2) - 1 / \\sqrt(rs^2 + R^2))
+
+        (c.f. Eliasdottir '07 eqn. A3)
+
+        In this parameterization, ra and rs are the scale radii above in angular
+        units (arcsec). The parameter `kappa_scale` is \\Sigma_0 / \\Sigma_crit.
+
+        Parameters
+        ----------
+        centre
+            The (y,x) arc-second coordinates of the profile centre.
+        ra
+            A scale radius in arc-seconds.
+        rs
+            The second scale radius in arc-seconds.
+        kappa_scale
+            Scales the overall normalization of the profile, so related to the mass
+        """
+
         # Ensure rs > ra (things will probably break otherwise)
         if ra > rs:
             ra, rs = rs, ra
@@ -64,9 +77,6 @@ class dPIESph(MassProfile):
             (1/np.sqrt(a**2 + radsq) - 1/np.sqrt(s**2 + radsq))
         )
 
-    def _potential(self, radii):
-        raise NotImplementedError
-
     @aa.grid_dec.to_vector_yx
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         ys, xs = grid.T
@@ -92,11 +102,8 @@ class dPIESph(MassProfile):
         return self._convergence(np.sqrt(radsq))
 
     @aa.grid_dec.to_array
-    @aa.grid_dec.relocate_to_radial_minimum
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        # already transformed to center on profile centre so this works
-        radsq = (grid[:, 0]**2 + grid[:, 1]**2)
-        return self._potential(np.sqrt(radsq))
+        return np.zeros(shape=grid.shape[0])
 
 
 class dPIE(dPIESph):
@@ -212,10 +219,4 @@ class dPIE(dPIESph):
 
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        ys, xs = grid.T
-        (ycen, xcen) = self.centre
-        xoff, yoff = xs - xcen, ys - ycen
-        _ys, _xs = self._align_to_major_axis(yoff, xoff)
-        ellip = self._ellip()
-        _radii = np.sqrt(_xs**2 * (1 - ellip) + _ys**2 * (1 + ellip))
-        return super(dPIESph, self)._potential(_radii)
+        return np.zeros(shape=grid.shape[0])
