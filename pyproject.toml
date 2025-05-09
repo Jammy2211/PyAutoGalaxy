@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "autogalaxy"
-dynamic = ["version", "dependencies"]
+dynamic = ["version"]
 description="Open-Source Multi Wavelength Galaxy Structure & Morphology"
 readme = { file = "README.rst", content-type = "text/x-rst" }
 license-files = [
