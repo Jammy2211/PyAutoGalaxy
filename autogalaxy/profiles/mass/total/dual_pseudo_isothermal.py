@@ -7,27 +7,7 @@ from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
 class dPIE(MassProfile):
-    '''
-    The dual Pseudo-Isothermal Elliptical mass distribution introduced in
-    Eliasdottir 2007: https://arxiv.org/abs/0710.5636
 
-    Corresponds to a projected density profile that looks like:
-
-        \\Sigma(R) = \\Sigma_0 (ra * rs) / (rs - ra) *
-                      (1 / \\sqrt(ra^2 + R^2) - 1 / \\sqrt(rs^2 + R^2))
-
-    (c.f. Eliasdottir '07 eqn. A3)
-
-    In this parameterization, ra and rs are the scale radii above in angular
-    units (arcsec). The parameter kappa_scale is \\Sigma_0 / \\Sigma_crit.
-
-    WARNING: This uses the "pseud-elliptical" approximation, where the ellipticity
-    is applied to the *potential* rather than the *mass* to ease calculation.
-    Use at your own risk! (And TODO Jack: fix this!)
-    This approximation is used by the lenstronomy PJAFFE profile (which is the
-    same functional form), but not by the lenstool PIEMD (also synonymous with this),
-    which correctly solved the differential equations for the mass-based ellipticity.
-    '''
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -36,7 +16,42 @@ class dPIE(MassProfile):
         rs: float = 2.0,
         kappa_scale: float = 0.1,
     ):
-        super().__init__(centre, ell_comps)
+        """
+        The dual Pseudo-Isothermal mass profile (dPIE) without ellipticity, based on the
+        formulation from Eliasdottir (2007): https://arxiv.org/abs/0710.5636.
+
+        This profile describes a circularly symmetric (non-elliptical) projected mass
+        distribution with two scale radii (`ra` and `rs`) and a normalization factor
+        `kappa_scale`. Although originally called the dPIE (Elliptical), this version
+        lacks ellipticity, so the "E" may be a misnomer.
+
+        The projected surface mass density is given by:
+
+        .. math::
+
+            \\Sigma(R) = \\Sigma_0 (ra * rs) / (rs - ra) *
+                          (1 / \\sqrt(ra^2 + R^2) - 1 / \\sqrt(rs^2 + R^2))
+
+        (See Eliasdottir 2007, Eq. A3.)
+
+        In this implementation:
+        - `ra` and `rs` are scale radii in arcseconds.
+        - `kappa_scale` = Σ₀ / Σ_crit is the dimensionless normalization.
+
+        Credit: Jackson O'Donnell for implementing this profile in PyAutoLens.
+
+        Parameters
+        ----------
+        centre
+            The (y,x) arc-second coordinates of the profile centre.
+        ra
+            The inner core scale radius in arcseconds.
+        rs
+            The outer truncation scale radius in arcseconds.
+        kappa_scale
+            The dimensionless normalization factor controlling the overall mass.
+        """
+        super().__init__(centre=centre, ell_comps=ell_comps)
 
         if ra > rs:
             ra, rs = rs, ra
@@ -81,7 +96,14 @@ class dPIE(MassProfile):
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+        """
+        Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
+        """
         ellip = self._ellip()
         grid_radii = np.sqrt(grid[:,1]**2 * (1 - ellip) + grid[:,0]**2 * (1 + ellip))
 
@@ -102,7 +124,17 @@ class dPIE(MassProfile):
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+        """
+        Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
 
+        The `grid_2d_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See
+        *aa.grid_2d_to_structure* for a description of the output.
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+        """
         ellip = self._ellip()
         grid_radii = np.sqrt(grid[:,1]**2 * (1 - ellip) + grid[:,0]**2 * (1 + ellip))
 
@@ -132,39 +164,45 @@ class dPIESph(dPIE):
         kappa_scale: float = 0.1,
     ):
         """
-        The dual Pseudo-Isothermal Elliptical mass distribution introduced in
-        Eliasdottir 2007: https://arxiv.org/abs/0710.5636
+        The dual Pseudo-Isothermal mass profile (dPIE) without ellipticity, based on the
+        formulation from Eliasdottir (2007): https://arxiv.org/abs/0710.5636.
 
-        This version is without ellipticity, so perhaps the "E" is a misnomer.
+        This profile describes a circularly symmetric (non-elliptical) projected mass
+        distribution with two scale radii (`ra` and `rs`) and a normalization factor
+        `kappa_scale`. Although originally called the dPIE (Elliptical), this version
+        lacks ellipticity, so the "E" may be a misnomer.
 
-        Corresponds to a projected density profile that looks like:
+        The projected surface mass density is given by:
+
+        .. math::
 
             \\Sigma(R) = \\Sigma_0 (ra * rs) / (rs - ra) *
                           (1 / \\sqrt(ra^2 + R^2) - 1 / \\sqrt(rs^2 + R^2))
 
-        (c.f. Eliasdottir '07 eqn. A3)
+        (See Eliasdottir 2007, Eq. A3.)
 
-        In this parameterization, ra and rs are the scale radii above in angular
-        units (arcsec). The parameter `kappa_scale` is \\Sigma_0 / \\Sigma_crit.
+        In this implementation:
+        - `ra` and `rs` are scale radii in arcseconds.
+        - `kappa_scale` = Σ₀ / Σ_crit is the dimensionless normalization.
 
-        Credit: Jackson O'Donnell for writing the PyAutoLens implementation of the dPIE mass profile.
+        Credit: Jackson O'Donnell for implementing this profile in PyAutoLens.
 
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
         ra
-            A scale radius in arc-seconds.
+            The inner core scale radius in arcseconds.
         rs
-            The second scale radius in arc-seconds.
+            The outer truncation scale radius in arcseconds.
         kappa_scale
-            Scales the overall normalization of the profile, so related to the mass
+            The dimensionless normalization factor controlling the overall mass.
         """
 
         # Ensure rs > ra (things will probably break otherwise)
         if ra > rs:
             ra, rs = rs, ra
-        super().__init__(centre, (0.0, 0.0))
+        super().__init__(centre=centre, ell_comps=(0.0, 0.0))
         self.ra = ra
         self.rs = rs
         self.kappa_scale = kappa_scale
@@ -173,7 +211,14 @@ class dPIESph(dPIE):
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+        """
+        Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
+        """
         radii = self.radial_grid_from(grid=grid, **kwargs)
 
         alpha = self._deflection_angle(radii)
@@ -190,7 +235,17 @@ class dPIESph(dPIE):
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        
+        """
+        Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
+
+        The `grid_2d_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See
+        *aa.grid_2d_to_structure* for a description of the output.
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+        """
         # already transformed to center on profile centre so this works
         radsq = (grid[:, 0]**2 + grid[:, 1]**2)
         
