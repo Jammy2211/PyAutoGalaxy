@@ -106,7 +106,7 @@ class Isothermal(PowerLaw):
         )
         return self.rotated_grid_from_reference_frame_from(
             grid=np.multiply(factor, np.vstack((deflection_y, deflection_x)).T),
-            **kwargs
+            **kwargs,
         )
 
     @aa.grid_dec.to_vector_yx
@@ -201,5 +201,5 @@ class IsothermalSph(Isothermal):
         return self._cartesian_grid_via_radial_from(
             grid=grid,
             radius=np.full(grid.shape[0], 2.0 * self.einstein_radius_rescaled),
-            **kwargs
+            **kwargs,
         )
