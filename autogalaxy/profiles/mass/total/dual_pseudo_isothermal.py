@@ -202,7 +202,9 @@ class dPIESph(dPIE):
         # Ensure rs > ra (things will probably break otherwise)
         if ra > rs:
             ra, rs = rs, ra
+
         super().__init__(centre=centre, ell_comps=(0.0, 0.0))
+
         self.ra = ra
         self.rs = rs
         self.kappa_scale = kappa_scale
