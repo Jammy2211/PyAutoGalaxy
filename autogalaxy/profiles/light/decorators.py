@@ -29,7 +29,7 @@ def check_operated_only(func):
         grid: aa.type.Grid1D2DLike,
         operated_only: Optional[bool] = None,
         *args,
-        **kwargs
+        **kwargs,
     ) -> Union[aa.Array2D, np.ndarray]:
         """
         This decorator checks if a light profile is a `LightProfileOperated` class and therefore already has had operations like a
