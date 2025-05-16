@@ -2,7 +2,7 @@ from collections import OrderedDict
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt
-
+from typing import Tuple
 
 class Scribbler:
     def __init__(
@@ -14,6 +14,7 @@ class Scribbler:
         brush_width=0.05,
         backend="TkAgg",
         mask_overlay=None,
+        extent: Tuple[float, float, float, float] = None,
     ):
         """
 
@@ -22,6 +23,38 @@ class Scribbler:
 
         This script is Adapted from https://gist.github.com/brikeats/4f63f867fd8ea0f196c78e9b835150ab
         """
+
+        if extent is not None:
+
+            central_pixel_coordinates = image.geometry.central_pixel_coordinates
+            origin = image.geometry.origin
+            pixel_scales = image.geometry.pixel_scales
+
+            x0_pix =  int(
+                (extent[0] - origin[1]) / pixel_scales[1]
+                + central_pixel_coordinates[1]
+                + 0.5
+            )
+
+            x1_pix =  int(
+                (extent[1] - origin[1]) / pixel_scales[1]
+                + central_pixel_coordinates[1]
+                + 0.5
+            )
+
+            y0_pix =  int(
+                (extent[2] - origin[0]) / pixel_scales[0]
+                + central_pixel_coordinates[0]
+                + 0.5
+            )
+
+            y1_pix =  int(
+                (extent[3] - origin[0]) / pixel_scales[0]
+                + central_pixel_coordinates[0]
+                + 0.5
+            )
+
+            extent = (x0_pix, x1_pix, y0_pix, y1_pix)
 
         import matplotlib.pyplot as plt
 

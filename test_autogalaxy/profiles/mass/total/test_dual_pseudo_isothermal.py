@@ -20,14 +20,18 @@ def test__deflections_yx_2d_from():
     assert deflections[0, 0] == pytest.approx(1.4212977207, 1e-4)
     assert deflections[0, 1] == pytest.approx(0.308977765378, 1e-4)
 
-    mp = ag.mp.dPIE(centre=(0, 0), ell_comps=(0.0, 0.333333), kappa_scale=1.0, ra=2.0, rs=3.0)
+    mp = ag.mp.dPIE(
+        centre=(0, 0), ell_comps=(0.0, 0.333333), kappa_scale=1.0, ra=2.0, rs=3.0
+    )
 
     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.1625, 0.1625]]))
 
     assert deflections[0, 0] == pytest.approx(0.186341843, 1e-3)
     assert deflections[0, 1] == pytest.approx(0.13176363087, 1e-3)
 
-    mp = ag.mp.dPIE(centre=(0, 0), ell_comps=(0.0, 0.333333), kappa_scale=1.0, ra=2.0, rs=3.0)
+    mp = ag.mp.dPIE(
+        centre=(0, 0), ell_comps=(0.0, 0.333333), kappa_scale=1.0, ra=2.0, rs=3.0
+    )
 
     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.1625, 0.1625]]))
 
@@ -54,13 +58,17 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(1.57182995, 1e-3)
 
-    mp = ag.mp.dPIE(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), kappa_scale=1.0, ra=2.0, rs=3.0)
+    mp = ag.mp.dPIE(
+        centre=(0.0, 0.0), ell_comps=(0.0, 0.0), kappa_scale=1.0, ra=2.0, rs=3.0
+    )
 
     convergence = mp.convergence_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]))
 
     assert convergence == pytest.approx(0.78591498, 1e-3)
 
-    mp = ag.mp.dPIE(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), kappa_scale=2.0, ra=2.0, rs=3.0)
+    mp = ag.mp.dPIE(
+        centre=(0.0, 0.0), ell_comps=(0.0, 0.0), kappa_scale=2.0, ra=2.0, rs=3.0
+    )
 
     convergence = mp.convergence_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]))
 
@@ -82,4 +90,3 @@ def test__convergence_2d_from():
     assert elliptical.convergence_2d_from(grid=grid) == pytest.approx(
         spherical.convergence_2d_from(grid=grid), 1e-4
     )
-

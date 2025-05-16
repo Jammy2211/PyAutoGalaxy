@@ -5,7 +5,6 @@ import autoarray as aa
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
-
 class dPIE(MassProfile):
 
     def __init__(
@@ -61,20 +60,19 @@ class dPIE(MassProfile):
         self.kappa_scale = kappa_scale
 
     def _ellip(self):
-        ellip = np.sqrt(self.ell_comps[0]**2 + self.ell_comps[1]**2)
+        ellip = np.sqrt(self.ell_comps[0] ** 2 + self.ell_comps[1] ** 2)
         MAX_ELLIP = 0.99999
         return min(ellip, MAX_ELLIP)
 
     def _deflection_angle(self, radii):
-        '''
+        """
         For a circularly symmetric dPIE profile, computes the magnitude of the deflection at each radius.
-        '''
+        """
         r_ra = radii / self.ra
         r_rs = radii / self.rs
         # c.f. Eliasdottir '07 eq. A20
-        f = (
-            r_ra / (1 + np.sqrt(1 + r_ra * r_ra))
-            - r_rs / (1 + np.sqrt(1 + r_rs * r_rs))
+        f = r_ra / (1 + np.sqrt(1 + r_ra * r_ra)) - r_rs / (
+            1 + np.sqrt(1 + r_rs * r_rs)
         )
 
         ra, rs = self.ra, self.rs
@@ -88,8 +86,10 @@ class dPIE(MassProfile):
         a, s = self.ra, self.rs
         # c.f. Eliasdottir '07 eqn (A3)
         return (
-            self.kappa_scale * (a * s) / (s - a) *
-            (1/np.sqrt(a**2 + radsq) - 1/np.sqrt(s**2 + radsq))
+            self.kappa_scale
+            * (a * s)
+            / (s - a)
+            * (1 / np.sqrt(a**2 + radsq) - 1 / np.sqrt(s**2 + radsq))
         )
 
     @aa.grid_dec.to_vector_yx
@@ -104,19 +104,20 @@ class dPIE(MassProfile):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
         ellip = self._ellip()
-        grid_radii = np.sqrt(grid[:,1]**2 * (1 - ellip) + grid[:,0]**2 * (1 + ellip))
+        grid_radii = np.sqrt(
+            grid[:, 1] ** 2 * (1 - ellip) + grid[:, 0] ** 2 * (1 + ellip)
+        )
 
         # Compute the deflection magnitude of a *non-elliptical* profile
         alpha_circ = self._deflection_angle(grid_radii)
 
         # This is in axes aligned to the major/minor axis
-        deflection_y = alpha_circ * np.sqrt(1 + ellip) * (grid[:,0] / grid_radii)
-        deflection_x = alpha_circ * np.sqrt(1 - ellip) * (grid[:,1] / grid_radii)
+        deflection_y = alpha_circ * np.sqrt(1 + ellip) * (grid[:, 0] / grid_radii)
+        deflection_x = alpha_circ * np.sqrt(1 - ellip) * (grid[:, 1] / grid_radii)
 
         # And here we convert back to the real axes
         return self.rotated_grid_from_reference_frame_from(
-            grid=np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T),
-            **kwargs
+            grid=np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T), **kwargs
         )
 
     @aa.grid_dec.to_vector_yx
@@ -134,13 +135,18 @@ class dPIE(MassProfile):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
         ellip = self._ellip()
-        grid_radii = np.sqrt(grid[:,1]**2 * (1 - ellip) + grid[:,0]**2 * (1 + ellip))
+        grid_radii = np.sqrt(
+            grid[:, 1] ** 2 * (1 - ellip) + grid[:, 0] ** 2 * (1 + ellip)
+        )
 
         # Compute the convergence and deflection of a *circular* profile
         kappa_circ = self._convergence(grid_radii)
         alpha_circ = self._deflection_angle(grid_radii)
 
-        asymm_term = (ellip * (1 - ellip) * grid[:,1]**2 - ellip * (1 + ellip) * grid[:,0]**2) / grid_radii**2
+        asymm_term = (
+            ellip * (1 - ellip) * grid[:, 1] ** 2
+            - ellip * (1 + ellip) * grid[:, 0] ** 2
+        ) / grid_radii**2
 
         # convergence = 1/2 \nabla \alpha = 1/2 \nabla^2 potential
         # The "asymm_term" is asymmetric on x and y, so averages out to
@@ -200,7 +206,9 @@ class dPIESph(dPIE):
         # Ensure rs > ra (things will probably break otherwise)
         if ra > rs:
             ra, rs = rs, ra
+
         super().__init__(centre=centre, ell_comps=(0.0, 0.0))
+
         self.ra = ra
         self.rs = rs
         self.kappa_scale = kappa_scale
@@ -221,12 +229,10 @@ class dPIESph(dPIE):
         alpha = self._deflection_angle(radii)
 
         # now we decompose the deflection into y/x components
-        defl_y = alpha * grid[:,0] / radii
-        defl_x = alpha * grid[:,1] / radii
+        defl_y = alpha * grid[:, 0] / radii
+        defl_x = alpha * grid[:, 1] / radii
 
-        return aa.Grid2DIrregular.from_yx_1d(
-            defl_y, defl_x
-        )
+        return aa.Grid2DIrregular.from_yx_1d(defl_y, defl_x)
 
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
@@ -243,8 +249,8 @@ class dPIESph(dPIE):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
         # already transformed to center on profile centre so this works
-        radsq = (grid[:, 0]**2 + grid[:, 1]**2)
-        
+        radsq = grid[:, 0] ** 2 + grid[:, 1] ** 2
+
         return self._convergence(np.sqrt(radsq))
 
     @aa.grid_dec.to_array

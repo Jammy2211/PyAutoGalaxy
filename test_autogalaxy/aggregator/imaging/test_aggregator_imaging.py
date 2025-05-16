@@ -37,6 +37,7 @@ def test__dataset_generator_from_aggregator__analysis_has_single_dataset(
 
     clean(database_file=database_file)
 
+
 # TODO : Use FactorGraphmodel
 
 #
