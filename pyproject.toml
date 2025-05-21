@@ -56,7 +56,7 @@ optional=[
     "ultranest==3.6.2",
     "zeus-mcmc==2.5.4",
     "getdist==1.4"
-]
+] 
 docs=[
     "sphinx",
     "furo",
