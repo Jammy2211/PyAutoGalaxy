@@ -57,6 +57,15 @@ optional=[
     "zeus-mcmc==2.5.4",
     "getdist==1.4"
 ]
+docs=[
+    "sphinx",
+    "furo",
+    "myst-parser",
+    "sphinx_copybutton",
+    "sphinx_design",
+    "sphinx_inline_tabs",
+    "sphinx_autodoc_typehints"
+]
 test = ["pytest"]
 dev = ["pytest", "black"]
 
