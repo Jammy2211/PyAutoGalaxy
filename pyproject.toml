@@ -45,7 +45,7 @@ exclude = ["docs", "test_autogalaxy", "test_autogalaxy*"]
 
 [tool.setuptools_scm]
 version_scheme = "post-release"
-local_scheme = "no-local-version" 
+local_scheme = "no-local-version"  
 
 
 [project.optional-dependencies]
