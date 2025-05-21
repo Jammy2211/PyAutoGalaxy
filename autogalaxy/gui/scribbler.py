@@ -14,6 +14,7 @@ class Scribbler:
         brush_width=0.05,
         backend="TkAgg",
         mask_overlay=None,
+        rgb_image=None,
         extent: Tuple[float, float, float, float] = None,
     ):
         """
