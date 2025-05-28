@@ -1,3 +1,4 @@
+from .dual_pseudo_isothermal import dPIE, dPIESph
 from .isothermal import Isothermal, IsothermalSph
 from .isothermal_core import IsothermalCore, IsothermalCoreSph
 from .power_law import PowerLaw, PowerLawSph

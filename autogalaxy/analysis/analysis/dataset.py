@@ -5,6 +5,7 @@ import os
 
 from autoconf import conf
 from autoconf.dictable import to_dict, output_to_json
+
 import autofit as af
 import autoarray as aa
 
@@ -151,10 +152,14 @@ class AnalysisDataset(Analysis):
 
         For this analysis the following are output:
 
-        - The dataset (data / noise-map / over sampler / etc.).
         - The settings associated with the inversion.
         - The settings associated with the pixelization.
         - The Cosmology.
+
+        The following .fits files are also output via the plotter interface:
+
+        - The mask applied to the dataset, in the `PrimaryHDU` of `dataset.fits`.
+        - The dataset (data / noise-map / over sampler / etc.).
         - The adapt image's model image and galaxy images, if used.
 
         It is common for these attributes to be loaded by many of the template aggregator functions given in the
@@ -168,26 +173,6 @@ class AnalysisDataset(Analysis):
             The paths object which manages all paths, e.g. where the non-linear search outputs are stored,
             visualization, and the pickled objects used by the aggregator output by this function.
         """
-        paths.save_fits(
-            name="data",
-            hdu=self.dataset.data.hdu_for_output,
-            prefix="dataset",
-        )
-        paths.save_fits(
-            name="noise_map",
-            hdu=self.dataset.noise_map.hdu_for_output,
-            prefix="dataset",
-        )
-        paths.save_fits(
-            name="over_sample_size_lp",
-            hdu=self.dataset.grids.lp.over_sample_size.native.hdu_for_output,
-            prefix="dataset",
-        )
-        paths.save_fits(
-            name="over_sample_size_pixelization",
-            hdu=self.dataset.grids.pixelization.over_sample_size.native.hdu_for_output,
-            prefix="dataset",
-        )
         paths.save_json(
             name="settings_inversion",
             object_dict=to_dict(self.settings_inversion),
@@ -196,22 +181,6 @@ class AnalysisDataset(Analysis):
             name="cosmology",
             object_dict=to_dict(self.cosmology),
         )
-
-        if self.adapt_images is not None:
-            paths.save_json(
-                name="adapt_images",
-                object_dict=to_dict(
-                    list(self.adapt_images.galaxy_name_image_dict.keys())
-                ),
-                prefix="adapt_images",
-            )
-
-            for name in self.adapt_images.galaxy_name_image_dict.keys():
-                paths.save_fits(
-                    name=name,
-                    hdu=self.adapt_images.galaxy_name_image_dict[name].hdu_for_output,
-                    prefix="adapt_images",
-                )
 
     def save_results(self, paths: af.DirectoryPaths, result: ResultDataset):
         """

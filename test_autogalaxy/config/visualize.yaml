@@ -363,85 +363,27 @@ mat_wrap_2d:
       s: 17
 plots:
   dataset:
-    data: true
-    noise_map: false
-    signal_to_noise_map: false
     subplot_dataset: true
   fit:
-    all_at_end_fits: true
-    all_at_end_png: false
-    chi_squared_map: true
-    data: true
-    model_data: true
-    model_images_of_galaxies: false
-    noise_map: false
-    normalized_residual_map: true
-    residual_map: false
-    signal_to_noise_map: false
     subplot_fit: true
     subplot_of_galaxies: false
-    subtracted_images_of_galaxies: true
+    fits_fit: true                          # Output a .fits file containing the fit model data, residual map, normalized residual map and chi-squared?
+    fits_model_galaxy_images : true         # Output a .fits file containing the model images of every galaxy?
   fit_imaging: {}
   fit_interferometer:
-    amplitudes_vs_uv_distances: false
-    dirty_chi_squared_map: false
-    dirty_image: false
-    dirty_noise_map: false
-    dirty_normalized_residual_map: false
-    dirty_residual_map: false
-    dirty_signal_to_noise_map: false
-    phases_vs_uv_distances: false
-    uv_wavelengths: false
+    fits_dirty_images: true                 # output dirty_images.fits showing the dirty image, noise-map, model-data, resiual-map, normalized residual map and chi-squared map?
   fit_quantity:
-    all_at_end_fits: false
-    all_at_end_png: false
-    chi_squared_map: false
-    image: true
-    model_image: true
-    noise_map: false
-    normalized_residual_map: false
-    residual_map: false
     subplot_fit: false
-  galaxies_1d:
-    convergence: false
-    image: true
-    potential: true
   adapt:
-    images_of_galaxies: true
-    model_image: true
-  imaging:
-    psf: true
-  interferometer:
-    amplitudes_vs_uv_distances: false
-    dirty_image: false
-    dirty_noise_map: false
-    dirty_signal_to_noise_map: false
-    phases_vs_uv_distances: false
-    uv_wavelengths: false
+    subplot_adapt_images: true
   inversion:
-    all_at_end_png: false
-    chi_squared_map: true
-    reconstruction_noise_map: false
-    interpolated_errors: true
-    interpolated_reconstruction: true
-    normalized_residual_map: false
-    reconstructed_image: true
-    reconstruction: true
-    regularization_weights: false
-    residual_map: false
     subplot_inversion: true
-  other:
-    stochastic_histogram: false
+    csv_reconstruction: true          # output reconstruction_mesh.fits containing the reconstructed pixelization and noise map on the source-plane mesh?
   galaxies:
-    all_at_end_fits: true
-    all_at_end_png: false
-    convergence: true
-    deflections: false
-    image: true
-    magnification: true
-    potential: false
-    source_plane_image: true
     subplot_galaxies: true
     subplot_galaxy_images: true
+    subplot_galaxies_1d: true
+    subplot_galaxies_1d_decomposed: true
+    fits_galaxy_images: true                # Output a .fits file containing images of every galaxy?
   positions:
     image_with_positions: true

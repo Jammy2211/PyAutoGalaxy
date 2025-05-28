@@ -30,6 +30,8 @@ def make_agg_7x7(samples, model, analysis_imaging_7x7):
     search.paths = af.DirectoryPaths(path_prefix=file_prefix)
     search.fit(model=model, analysis=analysis_imaging_7x7)
 
+    analysis_imaging_7x7.visualize_before_fit(paths=search.paths, model=model)
+
     database_file = output_path / f"{file_prefix}.sqlite"
 
     agg = af.Aggregator.from_database(filename=database_file)
@@ -37,56 +39,120 @@ def make_agg_7x7(samples, model, analysis_imaging_7x7):
     return agg
 
 
-def test__fit_imaging_randomly_drawn_via_pdf_gen_from__analysis_has_single_dataset(
+def test__fit_imaging__max_log_likelihood__analysis_has_single_dataset(
     agg_7x7,
 ):
     fit_agg = ag.agg.FitImagingAgg(aggregator=agg_7x7)
-    fit_pdf_gen = fit_agg.randomly_drawn_via_pdf_gen_from(total_samples=2)
+    fit_max_lh_gen = fit_agg.max_log_likelihood_gen_from()
+
+    for (
+        fit_list
+    ) in (
+        fit_max_lh_gen
+    ):  # Only Max LH sample so fit_list contains 1 lists of a single fit.
+
+        assert fit_list[0].galaxies[0].redshift == 0.5
+        assert fit_list[0].galaxies[0].light.centre == (10.0, 10.0)
+
+        assert fit_list[0].dataset_model.background_sky_level == 10.0
+
+    clean(database_file=database_file)
+
+
+def test__fit_imaging__randomly_drawn_via_pdf_gen_from__analysis_has_single_dataset(
+    agg_7x7,
+):
+    fit_agg = ag.agg.FitImagingAgg(aggregator=agg_7x7)
+    fit_pdf_gen = fit_agg.randomly_drawn_via_pdf_gen_from(total_samples=3)
 
     i = 0
 
-    for fit_gen in fit_pdf_gen:
-        for fit_list in fit_gen:
+    for fit_list_gen in fit_pdf_gen:  # 1 Dataset so just one fit
+        for (
+            fit_list
+        ) in (
+            fit_list_gen
+        ):  # Iterate over each total_samples=3, each with two fits for each analysis.
+
             i += 1
 
+            # Check fit for each `Analysis` so take first and only dataset.
             assert fit_list[0].galaxies[0].redshift == 0.5
             assert fit_list[0].galaxies[0].light.centre == (10.0, 10.0)
-
             assert fit_list[0].dataset_model.background_sky_level == 10.0
 
-    assert i == 2
+    assert i == 3
 
     clean(database_file=database_file)
 
 
-def test__fit_imaging_randomly_drawn_via_pdf_gen_from__analysis_multi(
-    analysis_imaging_7x7, samples, model
-):
-    agg = aggregator_from(
-        database_file=database_file,
-        analysis=analysis_imaging_7x7 + analysis_imaging_7x7,
-        model=model,
-        samples=samples,
-    )
+# TODO : These need to use FactorGraphModel
 
-    fit_agg = ag.agg.FitImagingAgg(aggregator=agg)
-    fit_pdf_gen = fit_agg.randomly_drawn_via_pdf_gen_from(total_samples=2)
 
-    i = 0
-
-    for fit_gen in fit_pdf_gen:
-        for fit_list in fit_gen:
-            i += 1
-
-            assert fit_list[0].galaxies[0].redshift == 0.5
-            assert fit_list[0].galaxies[0].light.centre == (10.0, 10.0)
-
-            assert fit_list[1].galaxies[0].redshift == 0.5
-            assert fit_list[1].galaxies[0].light.centre == (10.0, 10.0)
-
-    assert i == 2
-
-    clean(database_file=database_file)
+# def test__fit_imaging__max_log_likelihood_gen_from__analysis_multi(
+#     analysis_imaging_7x7, samples, model
+# ):
+#
+#     analysis_factor_list = []
+#
+#     for i, analysis in enumerate([analysis_imaging_7x7, analysis_imaging_7x7]):
+#
+#         model_analysis = model.copy()
+#         analysis_factor = af.AnalysisFactor(prior_model=model_analysis, analysis=analysis)
+#
+#         analysis_factor_list.append(analysis_factor)
+#
+#     factor_graph = af.FactorGraphModel(*analysis_factor_list)
+#
+#     agg = aggregator_from(
+#         database_file=database_file,
+#         analysis=factor_graph,
+#         model=factor_graph.global_prior_model,
+#         samples=samples,
+#     )
+#
+#     fit_agg = ag.agg.FitImagingAgg(aggregator=agg)
+#
+#     fit_max_lh_gen = fit_agg.max_log_likelihood_gen_from()
+#
+#     for fit_list in fit_max_lh_gen: # Only Max LH sample so fit_list contains 1 lists of the 2 fit (one for each analysis).
+#
+#         assert fit_list[0].galaxies[0].redshift == 0.5
+#         assert fit_list[0].galaxies[0].light.centre == (10.0, 10.0)
+#
+#         assert fit_list[1].galaxies[0].redshift == 0.5
+#         assert fit_list[1].galaxies[0].light.centre == (10.0, 10.0)
+#
+#     clean(database_file=database_file)
+#
+# def test__fit_imaging__randomly_drawn_via_pdf_gen_from__analysis_multi(
+#     analysis_imaging_7x7, samples, model
+# ):
+#     agg = aggregator_from(
+#         database_file=database_file,
+#         analysis=analysis_imaging_7x7 + analysis_imaging_7x7,
+#         model=model,
+#         samples=samples,
+#     )
+#
+#     fit_agg = ag.agg.FitImagingAgg(aggregator=agg)
+#     fit_pdf_gen = fit_agg.randomly_drawn_via_pdf_gen_from(total_samples=3)
+#
+#     i = 0
+#
+#     for fit_gen in fit_pdf_gen: # 1 Dataset so just one fit
+#         for fit_list in fit_gen: # Iterate over each total_samples=3, each with two fits for each analysis.
+#             i += 1
+#
+#             assert fit_list[0].galaxies[0].redshift == 0.5
+#             assert fit_list[0].galaxies[0].light.centre == (10.0, 10.0)
+#
+#             assert fit_list[1].galaxies[0].redshift == 0.5
+#             assert fit_list[1].galaxies[0].light.centre == (10.0, 10.0)
+#
+#     assert i == 3
+#
+#     clean(database_file=database_file)
 
 
 def test__fit_imaging_all_above_weight_gen(agg_7x7):

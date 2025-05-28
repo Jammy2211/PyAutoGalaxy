@@ -9,6 +9,7 @@ label:
     centre_1: x
     coefficient: \lambda
     c_2: c_{\rm 2}
+    c_gNFW: c_{\rm gNFW}
     concentration: conc
     core_radius: C_{\rm r}
     core_radius_0: C_{rm r0}

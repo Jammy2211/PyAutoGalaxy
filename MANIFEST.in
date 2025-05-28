@@ -19,4 +19,4 @@ recursive-include autogalaxy/config *
 exclude docs
 
 global-exclude test_autogalaxy
-recursive-exclude test_autogalaxy *
+recursive-exclude test_autogalaxy * 

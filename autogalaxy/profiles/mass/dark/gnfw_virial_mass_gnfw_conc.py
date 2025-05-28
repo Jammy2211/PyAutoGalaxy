@@ -11,9 +11,15 @@ from scipy.integrate import quad
 
 
 def kappa_s_and_scale_radius(
-    cosmology, virial_mass, c_2, overdens, redshift_object, redshift_source, inner_slope
+    cosmology,
+    virial_mass,
+    concentration,
+    overdens,
+    redshift_object,
+    redshift_source,
+    inner_slope,
 ):
-    concentration = (2 - inner_slope) * c_2  # gNFW concentration
+    # gNFW concentration imported
 
     critical_density = (
         cosmology.critical_density(redshift_object).to(units.solMass / units.kpc**3)
@@ -59,19 +65,19 @@ def kappa_s_and_scale_radius(
     return kappa_s, scale_radius, virial_radius, overdens
 
 
-class gNFWVirialMassConcSph(gNFWSph):
+class gNFWVirialMassgNFWConcSph(gNFWSph):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
         log10m_vir: float = 12.0,
-        c_2: float = 10.0,
+        c_gNFW: float = 10.0,
         overdens: float = 0.0,
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
         inner_slope: float = 1.0,
     ):
         """
-        Spherical gNFW profile initialized with the virial mass and c_2 concentration of the halo.
+        Spherical gNFW profile initialized with the virial mass and c_gNFW concentration of the halo.
 
         The virial radius of the halo is defined as the radius at which the density of the halo
         equals overdens * the critical density of the Universe. r_vir = (3*m_vir/4*pi*overdens*critical_density)^1/3.
@@ -84,9 +90,8 @@ class gNFWVirialMassConcSph(gNFWSph):
             The (y,x) arc-second coordinates of the profile centre.
         log10m_vir
             The log10(virial mass) of the dark matter halo.
-        c_2
-            The c_2 concentration of the dark matter halo, which equals r_vir/r_2, where r_2 is the
-            radius at which the logarithmic density slope equals -2.
+        c_gNFW
+            The c_gNFW concentration of the dark matter halo
         overdens
             The spherical overdensity used to define the virial radius of the dark matter
             halo: r_vir = (3*m_vir/4*pi*overdens*critical_density)^1/3. If this parameter is set to 0, the virial
@@ -100,7 +105,7 @@ class gNFWVirialMassConcSph(gNFWSph):
         """
 
         self.log10m_vir = log10m_vir
-        self.c_2 = c_2
+        self.c_gNFW = c_gNFW
         self.redshift_object = redshift_object
         self.redshift_source = redshift_source
         self.inner_slope = inner_slope
@@ -113,7 +118,7 @@ class gNFWVirialMassConcSph(gNFWSph):
         ) = kappa_s_and_scale_radius(
             cosmology=cosmo.Planck15(),
             virial_mass=10**log10m_vir,
-            c_2=c_2,
+            concentration=c_gNFW,
             overdens=overdens,
             redshift_object=redshift_object,
             redshift_source=redshift_source,

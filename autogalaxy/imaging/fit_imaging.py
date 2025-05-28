@@ -50,7 +50,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
            noise-map (if an inversion is performed the `log_evidence`, including additional terms describing the linear
            algebra solution, is computed).
 
-        When performing a `model-fit`via an `AnalysisImaging` object the `figure_of_merit` of this `FitImaging` object
+        When performing a `model-fit`via an `AnalysisImaging` object the `figure_of_merit` of this object
         is called and returned in the `log_likelihood_function`.
 
         Parameters
@@ -220,9 +220,9 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
 
             subtracted_image = self.data - sum(other_galaxies_model_images)
 
-            subtracted_images_of_galaxies_dict[
-                self.galaxies[galaxy_index]
-            ] = subtracted_image
+            subtracted_images_of_galaxies_dict[self.galaxies[galaxy_index]] = (
+                subtracted_image
+            )
 
         return subtracted_images_of_galaxies_dict
 

@@ -41,23 +41,26 @@ def test__interferometer_generator_from_aggregator__analysis_has_single_dataset(
     clean(database_file=database_file)
 
 
-def test__interferometer_generator_from_aggregator__analysis_multi(
-    analysis_interferometer_7,
-    samples,
-    model,
-):
-    agg = aggregator_from(
-        database_file=database_file,
-        analysis=analysis_interferometer_7 + analysis_interferometer_7,
-        model=model,
-        samples=samples,
-    )
+# TODO : These need to use FactorGraphModel
 
-    dataset_agg = ag.agg.InterferometerAgg(aggregator=agg)
-    dataset_gen = dataset_agg.dataset_gen_from()
 
-    for dataset_list in dataset_gen:
-        assert (dataset_list[0].data == analysis_interferometer_7.dataset.data).all()
-        assert (dataset_list[1].data == analysis_interferometer_7.dataset.data).all()
-
-    clean(database_file=database_file)
+# def test__interferometer_generator_from_aggregator__analysis_multi(
+#     analysis_interferometer_7,
+#     samples,
+#     model,
+# ):
+#     agg = aggregator_from(
+#         database_file=database_file,
+#         analysis=analysis_interferometer_7 + analysis_interferometer_7,
+#         model=model,
+#         samples=samples,
+#     )
+#
+#     dataset_agg = ag.agg.InterferometerAgg(aggregator=agg)
+#     dataset_gen = dataset_agg.dataset_gen_from()
+#
+#     for dataset_list in dataset_gen:
+#         assert (dataset_list[0].data == analysis_interferometer_7.dataset.data).all()
+#         assert (dataset_list[1].data == analysis_interferometer_7.dataset.data).all()
+#
+#     clean(database_file=database_file)

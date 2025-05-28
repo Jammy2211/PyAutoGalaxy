@@ -1,17 +1,105 @@
 from __future__ import annotations
 from typing import List, Optional
 
+from autoconf.fitsable import ndarray_via_hdu_from
+
 import autofit as af
 import autoarray as aa
 
+from autoarray.mask.mask_2d import Mask2DKeys
+
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
+
+
+def instance_list_from(
+    fit: af.Fit, instance: Optional[af.ModelInstance] = None
+) -> List[af.ModelInstance]:
+    """
+    Returns the list of instances of the maximum likelihood model, depending on the model composition and whether
+    multiple `Analysis` objects were fitted simultaneously.
+
+    This if loop accounts for 4 scenarios:
+
+    - A single `Analysis` object was fitted, in which case the instance is a single object and converted to a list.
+
+    - Multiple `Analysis` objects were fitted via a `FactorGraphModel`, in which case the instance is a list of
+    objects and all but the last object (which is the overall `FactorGraphModel` are returned.
+
+    - A single instance is manually input, in which case it is converted to a list.
+
+    - Multiple `Analysis` objects were fitted via a `FactorGraphModel`, in which case the instance is a list of
+    objects and all but the last object (which is the overall `FactorGraphModel` are returned.
+
+    Parameters
+    ----------
+    fit
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
+        an output directory or from an sqlite database.
+    instance
+        An optional instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
+        randomly from the PDF).
+
+    Returns
+    -------
+    The list of instances of the maximum likelihood model.
+    """
+
+    if instance is None:
+        if len(fit.children) == 0:
+            return [fit.instance]
+        return fit.instance[
+            0:-1
+        ]  # [0:-1] excludes the last instance, which is the `FactorGraphModel` object itself.
+
+    if isinstance(list(instance.child_items.values())[-1], af.FactorGraphModel):
+        return list(instance.child_items.values())[0:-1]
+
+    return [instance]
+
+
+def mask_header_from(fit, name="dataset"):
+    """
+    Returns the mask, header and pixel scales of the `PyAutoFit` `Fit` object.
+
+    These quantities are commonly loaded during the aggregator interface therefore this method is used to
+    avoid code duplication.
+
+    Parameters
+    ----------
+    fit
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
+        an output directory or from an sqlite database.
+
+
+    Returns
+    -------
+    The mask, header and pixel scales of the `PyAutoFit` `Fit` object.
+    """
+
+    header = aa.Header(header_sci_obj=fit.value(name=name)[0].header)
+    pixel_scales = (
+        header.header_sci_obj[Mask2DKeys.PIXSCAY.value],
+        header.header_sci_obj[Mask2DKeys.PIXSCAY.value],
+    )
+    origin = (
+        header.header_sci_obj[Mask2DKeys.ORIGINY.value],
+        header.header_sci_obj[Mask2DKeys.ORIGINX.value],
+    )
+    mask = aa.Mask2D(
+        mask=ndarray_via_hdu_from(fit.value(name=name)[0]),
+        pixel_scales=pixel_scales,
+        origin=origin,
+    )
+
+    return mask, header
 
 
 def adapt_images_from(
     fit: af.Fit,
 ) -> List[AdaptImages]:
     """
-    Updates adaptive images when loading the galaxies from a `PyAutoFit` sqlite database `Fit` object.
+    Updates adaptive images when loading the galaxies from a `PyAutoFit` loaded directory `Fit` or sqlite
+    database `Fit` object.
 
     This function ensures that if adaptive features (e.g. an `Hilbert` image-mesh) are used in a model-fit,
     they work when using the database to load and inspect the results of the model-fit.
@@ -19,7 +107,8 @@ def adapt_images_from(
     Parameters
     ----------
     fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
+        an output directory or from an sqlite database.
     galaxies
         A list of galaxies corresponding to a sample of a non-linear search and model-fit.
 
@@ -30,31 +119,26 @@ def adapt_images_from(
 
     fit_list = [fit] if not fit.children else fit.children
 
-    if fit.value(name="adapt_images.adapt_images") is None:
+    if fit.value(name="adapt_images") is None:
         return [None] * len(fit_list)
 
     adapt_images_list = []
 
     for fit in fit_list:
-        try:
-            mask = aa.Mask2D.from_primary_hdu(
-                primary_hdu=fit.value(name="dataset.mask")
-            )
-        except AttributeError:
-            mask = aa.Mask2D.from_primary_hdu(
-                primary_hdu=fit.value(name="dataset.real_space_mask")
-            )
+        mask, header = mask_header_from(fit=fit, name="adapt_images")
 
         galaxy_name_image_dict = {}
 
-        adapt_image_name_list = fit.value(name="adapt_images.adapt_images")
-
-        for name in adapt_image_name_list:
-            adapt_image = aa.Array2D.from_primary_hdu(
-                primary_hdu=fit.value(name=f"adapt_images.{name}")
+        for i, value in enumerate(fit.value(name="adapt_images")[1:]):
+            adapt_image = aa.Array2D.no_mask(
+                values=ndarray_via_hdu_from(value),
+                pixel_scales=mask.pixel_scales,
+                header=header,
+                origin=mask.origin,
             )
             adapt_image = adapt_image.apply_mask(mask=mask)
-            galaxy_name_image_dict[name] = adapt_image
+
+            galaxy_name_image_dict[value.header["EXTNAME"].lower()] = adapt_image
 
         instance = fit.model.instance_from_prior_medians(ignore_prior_limits=True)
 
@@ -91,7 +175,8 @@ def mesh_grids_of_planes_list_from(
     Parameters
     ----------
     fit
-        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry in a sqlite database.
+        A `PyAutoFit` `Fit` object which contains the results of a model-fit as an entry which has been loaded from
+        an output directory or from an sqlite database..
     total_fits
         The total number of `Analysis` objects summed to create the fit.
     use_preloaded_grid

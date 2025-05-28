@@ -2,7 +2,7 @@ import logging
 import time
 from typing import Dict, List, Optional, Tuple
 
-from autoconf.dictable import to_dict
+from autoconf.fitsable import hdu_list_for_output_from
 
 import autofit as af
 import autoarray as aa
@@ -188,21 +188,7 @@ class AnalysisEllipse(af.Analysis):
              The paths object which manages all paths, e.g. where the non-linear search outputs are stored,
              visualization, and the pickled objects used by the aggregator output by this function.
         """
-        paths.save_fits(
-            name="data",
-            hdu=self.dataset.data.hdu_for_output,
-            prefix="dataset",
-        )
-        paths.save_fits(
-            name="noise_map",
-            hdu=self.dataset.noise_map.hdu_for_output,
-            prefix="dataset",
-        )
-        paths.save_fits(
-            name="mask",
-            hdu=self.dataset.mask.hdu_for_output,
-            prefix="dataset",
-        )
+        pass
 
     def profile_log_likelihood_function(
         self, instance: af.ModelInstance, paths: Optional[af.DirectoryPaths] = None

@@ -1,15 +1,17 @@
+import csv
 import os
-from os import path
-from typing import Dict, List, Union
+from pathlib import Path
+from typing import List, Union
 
 from autoconf import conf
+from autoconf.fitsable import hdu_list_for_output_from
+
 import autoarray as aa
 import autoarray.plot as aplt
 
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
-from autogalaxy.galaxy.plot.galaxy_plotters import GalaxyPlotter
 from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
 from autogalaxy.galaxy.plot.adapt_plotters import AdaptPlotter
 
@@ -36,7 +38,7 @@ def plot_setting(section: Union[List[str], str], name: str) -> bool:
 
 
 class PlotterInterface:
-    def __init__(self, image_path: str, title_prefix: str = None):
+    def __init__(self, image_path: Union[Path, str], title_prefix: str = None):
         """
         Provides an interface between an output path and all plotter objects.
 
@@ -60,25 +62,21 @@ class PlotterInterface:
             A string that is added before the title of all figures output by visualization, for example to
             put the name of the dataset and galaxy in the title.
         """
-        self.image_path = image_path
+        self.image_path = Path(image_path)
         self.title_prefix = title_prefix
 
         self.include_2d = Include2D()
 
         os.makedirs(image_path, exist_ok=True)
 
-    def mat_plot_1d_from(self, subfolders: str, format: str = "png") -> MatPlot1D:
+    @property
+    def fmt(self) -> List[str]:
+        return conf.instance["visualize"]["plots"]["subplot_format"]
+
+    def mat_plot_1d_from(self) -> MatPlot1D:
         """
         Returns a 1D matplotlib plotting object whose `Output` class uses the `image_path`, such that it outputs
         images to the `image` folder of the non-linear search.
-
-        Parameters
-        ----------
-        subfolders
-            Subfolders between the `image` folder of the non-linear search and where the images are output. For example,
-            images associsted with a fit are output to the subfolder `fit`.
-        format
-            The format images are output as, e.g. `.png` files.
 
         Returns
         -------
@@ -87,23 +85,13 @@ class PlotterInterface:
         """
         return MatPlot1D(
             title=aplt.Title(prefix=self.title_prefix),
-            output=aplt.Output(
-                path=path.join(self.image_path, subfolders), format=format
-            ),
+            output=aplt.Output(path=self.image_path, format=self.fmt),
         )
 
-    def mat_plot_2d_from(self, subfolders, format="png") -> MatPlot2D:
+    def mat_plot_2d_from(self) -> MatPlot2D:
         """
         Returns a 2D matplotlib plotting object whose `Output` class uses the `image_path`, such that it outputs
         images to the `image` folder of the non-linear search.
-
-        Parameters
-        ----------
-        subfolders
-            Subfolders between the `image` folder of the non-linear search and where the images are output. For example,
-            images associsted with a fit are output to the subfolder `fit`.
-        format
-            The format images are output as, e.g. `.png` files.
 
         Returns
         -------
@@ -112,26 +100,26 @@ class PlotterInterface:
         """
         return MatPlot2D(
             title=aplt.Title(prefix=self.title_prefix),
-            output=aplt.Output(
-                path=path.join(self.image_path, subfolders), format=format
-            ),
+            output=aplt.Output(path=self.image_path, format=self.fmt),
         )
 
     def galaxies(
-        self, galaxies: List[Galaxy], grid: aa.type.Grid2DLike, during_analysis: bool
+        self,
+        galaxies: List[Galaxy],
+        grid: aa.type.Grid2DLike,
     ):
         """
         Visualizes a list of galaxies.
 
-        Images are output to the `image` folder of the `image_path` in a subfolder called `galaxies`. When
-        used with a non-linear search the `image_path` points to the search's results folder and this function
-        visualizes the maximum log likelihood galaxies inferred by the search so far.
+        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the
+        `image_path` points to the search's results folder and this function visualizes the maximum log likelihood
+        galaxies inferred by the search so far.
 
-        Visualization includes individual images of attributes of the galaxies (e.g. its image, convergence, deflection
-        angles) and a subplot of all these attributes on the same figure.
+        Visualization includes subplots of the individual images of attributes of the galaxies (e.g. its image,
+        convergence, deflection angles) and .fits files containing these attributes.
 
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
-        [galaxies] header.
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
+        the `galaxies` header.
 
         Parameters
         ----------
@@ -140,8 +128,6 @@ class PlotterInterface:
         grid
             A 2D grid of (y,x) arc-second coordinates used to perform ray-tracing, which is the masked grid tied to
             the dataset.
-        during_analysis
-            Whether visualization is performed during a non-linear search or once it is completed.
         """
 
         galaxies = Galaxies(galaxies=galaxies)
@@ -149,9 +135,7 @@ class PlotterInterface:
         def should_plot(name):
             return plot_setting(section="galaxies", name=name)
 
-        subfolders = "galaxies"
-
-        mat_plot_2d = self.mat_plot_2d_from(subfolders=subfolders)
+        mat_plot_2d = self.mat_plot_2d_from()
 
         plotter = GalaxiesPlotter(
             galaxies=galaxies,
@@ -163,37 +147,7 @@ class PlotterInterface:
         if should_plot("subplot_galaxy_images"):
             plotter.subplot_galaxy_images()
 
-        plotter.figures_2d(
-            image=should_plot("image"),
-            convergence=should_plot("convergence"),
-            potential=should_plot("potential"),
-            deflections_y=should_plot("deflections"),
-            deflections_x=should_plot("deflections"),
-            magnification=should_plot("magnification"),
-        )
-
-        if not during_analysis and should_plot("all_at_end_png"):
-            mat_plot_2d = self.mat_plot_2d_from(
-                subfolders=path.join(subfolders, "end"),
-            )
-
-            plotter = GalaxiesPlotter(
-                galaxies=galaxies,
-                grid=grid,
-                mat_plot_2d=mat_plot_2d,
-                include_2d=self.include_2d,
-            )
-
-            plotter.figures_2d(
-                image=True,
-                convergence=True,
-                potential=True,
-                deflections_y=True,
-                deflections_x=True,
-                magnification=True,
-            )
-
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="")
+        mat_plot_2d = self.mat_plot_2d_from()
 
         plotter = GalaxiesPlotter(
             galaxies=galaxies,
@@ -205,124 +159,64 @@ class PlotterInterface:
         if should_plot("subplot_galaxies"):
             plotter.subplot()
 
-        if not during_analysis and should_plot("all_at_end_fits"):
-            mat_plot_2d = self.mat_plot_2d_from(
-                subfolders=path.join(subfolders, "fits"), format="fits"
+        mat_plot_1d = self.mat_plot_1d_from()
+
+        galaxies_plotter = GalaxiesPlotter(
+            galaxies=galaxies,
+            grid=grid,
+            mat_plot_1d=mat_plot_1d,
+        )
+
+        try:
+            if should_plot("subplot_galaxies_1d"):
+                galaxies_plotter.subplot_galaxies_1d()
+        except OverflowError:
+            pass
+
+        try:
+            if should_plot("subplot_galaxies_1d_decomposed"):
+                galaxies_plotter.subplot_galaxies_1d_decomposed()
+        except OverflowError:
+            pass
+
+        if should_plot("fits_galaxy_images"):
+
+            image_list = [
+                galaxy.image_2d_from(grid=grid).native_for_fits for galaxy in galaxies
+            ]
+
+            hdu_list = hdu_list_for_output_from(
+                values_list=[image_list[0].mask.astype("float")] + image_list,
+                ext_name_list=["mask"] + [f"galaxy_{i}" for i in range(len(galaxies))],
+                header_dict=grid.mask.header_dict,
             )
 
-            plotter = GalaxiesPlotter(
-                galaxies=galaxies,
-                grid=grid,
-                mat_plot_2d=mat_plot_2d,
-                include_2d=self.include_2d,
-            )
+            hdu_list.writeto(self.image_path / "galaxy_images.fits", overwrite=True)
 
-            plotter.figures_2d(
-                image=True,
-                convergence=True,
-                potential=True,
-                deflections_y=True,
-                deflections_x=True,
-                magnification=True,
-            )
-
-    def galaxies_1d(
-        self, galaxies: [List[Galaxy]], grid: aa.type.Grid2DLike, during_analysis: bool
-    ):
-        """
-        Visualizes a list of `Galaxy` objects.
-
-        Images are output to the `image` folder of the `image_path` in a subfolder called `galaxies`. When
-        used with a non-linear search the `image_path` points to the search's results folder and this function
-        visualizes the maximum log likelihood `Galaxy`'s inferred by the search so far.
-
-        Visualization includes individual images of attributes of each galaxy (e.g. 1D plots of their image,
-        convergence) and a subplot of all these attributes on the same figure.
-
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
-        [galaxies] header.
-
-        Parameters
-        ----------
-        galaxies
-            A list of the maximum log likelihood `Galaxy`'s of the non-linear search.
-        grid
-            A 2D grid of (y,x) arc-second coordinates used to perform ray-tracing, which is the masked grid tied to
-            the dataset.
-        during_analysis
-            Whether visualization is performed during a non-linear search or once it is completed.
-        """
-
-        def should_plot(name):
-            return plot_setting(section="galaxies_1d", name=name)
-
-        mat_plot_1d = self.mat_plot_1d_from(subfolders="galaxies_1d")
-
-        for galaxy in galaxies:
-            galaxy_plotter = GalaxyPlotter(
-                galaxy=galaxy,
-                grid=grid,
-                mat_plot_1d=mat_plot_1d,
-                include_2d=self.include_2d,
-            )
-
-            try:
-                galaxy_plotter.figures_1d_decomposed(
-                    image=should_plot("image"),
-                    convergence=should_plot("convergence"),
-                    potential=should_plot("potential"),
-                )
-            except OverflowError:
-                pass
-
-    def inversion(self, inversion: aa.Inversion, during_analysis: bool):
+    def inversion(self, inversion: aa.Inversion):
         """
         Visualizes an `Inversion` object.
 
-        Images are output to the `image` folder of the `image_path` in a subfolder called `inversion`. When
-        used with a non-linear search the `image_path` points to the search's results folder and this function
-        visualizes the maximum log likelihood `Inversion` inferred by the search so far.
+        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the `image_path`
+        points to the search's results folder and this function visualizes the maximum log likelihood `Inversion`
+        inferred by the search so far.
 
-        Visualization includes individual images of attributes of the dataset (e.g. the reconstructed image, the
-        reconstruction) and a subplot of all these attributes on the same figure.
+        Visualization includes subplots of individual images of attributes of the dataset (e.g. the reconstructed image,
+        the reconstruction) and .fits file of attributes.
 
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
-        [inversion] header.
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
+        the `inversion` header.
 
         Parameters
         ----------
         inversion
             The inversion used to fit the dataset whose attributes are visualized.
-        during_analysis
-            Whether visualization is performed during a non-linear search or once it is completed.
         """
 
         def should_plot(name):
             return plot_setting(section="inversion", name=name)
 
-        subfolders = "inversion"
-
-        mat_plot_2d = self.mat_plot_2d_from(subfolders=subfolders)
-
-        inversion_plotter = aplt.InversionPlotter(
-            inversion=inversion, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
-        )
-
-        inversion_plotter.figures_2d(
-            reconstructed_image=should_plot("reconstructed_image")
-        )
-
-        inversion_plotter.figures_2d_of_pixelization(
-            pixelization_index=0,
-            data_subtracted=should_plot("data_subtracted"),
-            reconstructed_image=should_plot("reconstructed_image"),
-            reconstruction=should_plot("reconstruction"),
-            mesh_pixels_per_image_pixels=should_plot("mesh_pixels_per_image_pixels"),
-            reconstruction_noise_map=should_plot("reconstruction_noise_map"),
-            regularization_weights=should_plot("regularization_weights"),
-        )
-
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="")
+        mat_plot_2d = self.mat_plot_2d_from()
 
         inversion_plotter = aplt.InversionPlotter(
             inversion=inversion, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
@@ -331,45 +225,32 @@ class PlotterInterface:
         if should_plot("subplot_inversion"):
             mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
 
-            for mapper_index in range(len(mapper_list)):
-                inversion_plotter.subplot_of_mapper(mapper_index=mapper_index)
+            for i in range(len(mapper_list)):
+                suffix = "" if len(mapper_list) == 1 else f"_{i}"
 
-        if not during_analysis and should_plot("all_at_end_png"):
-            mat_plot_2d = self.mat_plot_2d_from(subfolders=path.join(subfolders, "end"))
+                inversion_plotter.subplot_of_mapper(
+                    mapper_index=i, auto_filename=f"subplot_inversion{suffix}"
+                )
 
-            inversion_plotter = aplt.InversionPlotter(
-                inversion=inversion, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
-            )
+        if should_plot("csv_reconstruction"):
+            mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
 
-            inversion_plotter.figures_2d(reconstructed_image=True)
+            for i, mapper in enumerate(mapper_list):
+                y = mapper.mapper_grids.source_plane_mesh_grid[:, 0]
+                x = mapper.mapper_grids.source_plane_mesh_grid[:, 1]
+                reconstruction = inversion.reconstruction_dict[mapper]
+                noise_map = inversion.reconstruction_noise_map_dict[mapper]
 
-            inversion_plotter.figures_2d_of_pixelization(
-                pixelization_index=0,
-                reconstructed_image=True,
-                reconstruction=True,
-                reconstruction_noise_map=True,
-                regularization_weights=True,
-            )
+                with open(
+                    self.image_path / f"source_plane_reconstruction_{i}.csv",
+                    mode="w",
+                    newline="",
+                ) as file:
+                    writer = csv.writer(file)
+                    writer.writerow(["y", "x", "reconstruction", "noise_map"])  # header
 
-        if not during_analysis and should_plot("all_at_end_fits"):
-            mat_plot_2d = self.mat_plot_2d_from(
-                subfolders=path.join(subfolders, "fits"), format="fits"
-            )
-
-            inversion_plotter = aplt.InversionPlotter(
-                inversion=inversion, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
-            )
-
-            inversion_plotter.figures_2d(reconstructed_image=True)
-
-            inversion_plotter.figures_2d_of_pixelization(
-                pixelization_index=0,
-                reconstructed_image=True,
-                reconstruction=True,
-                reconstruction_noise_map=True,
-                regularization_weights=True,
-                interpolate_to_uniform=True,
-            )
+                    for i in range(len(x)):
+                        writer.writerow([y[i], x[i], reconstruction[i], noise_map[i]])
 
     def adapt_images(
         self,
@@ -378,14 +259,13 @@ class PlotterInterface:
         """
         Visualizes the adapt images used by a model-fit for adaptive pixelization mesh's and regularization.
 
-        Images are output to the `image` folder of the `image_path` in a subfolder called `adapt`. When
-        used with a non-linear search the `image_path` is the output folder of the non-linear search.
+        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the `image_path`
+        is the output folder of the non-linear search.
 
-        Visualization includes an image of the overall adapt model image and a subplot of all galaxy images on the same
-        figure.
+        Visualization includes a subplot image of all galaxy images on the same figure.
 
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
-        [adapt] header.
+        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
+        the `adapt` header.
 
         Parameters
         ----------
@@ -396,16 +276,31 @@ class PlotterInterface:
         def should_plot(name):
             return plot_setting(section="adapt", name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from(subfolders="adapt")
+        mat_plot_2d = self.mat_plot_2d_from()
 
         adapt_plotter = AdaptPlotter(
             mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
         )
 
-        if should_plot("model_image"):
-            adapt_plotter.figure_model_image(model_image=adapt_images.model_image)
-
-        if should_plot("images_of_galaxies"):
-            adapt_plotter.subplot_images_of_galaxies(
-                adapt_galaxy_name_image_dict=adapt_images.galaxy_image_dict
+        if should_plot("subplot_adapt_images"):
+            adapt_plotter.subplot_adapt_images(
+                adapt_galaxy_name_image_dict=adapt_images.galaxy_name_image_dict
             )
+
+        if should_plot("fits_adapt_images"):
+            image_list = [
+                adapt_images.galaxy_name_image_dict[name].native_for_fits
+                for name in adapt_images.galaxy_name_image_dict.keys()
+            ]
+
+            hdu_list = hdu_list_for_output_from(
+                values_list=[
+                    image_list[0].mask.astype("float"),
+                ]
+                + image_list,
+                ext_name_list=["mask"]
+                + list(adapt_images.galaxy_name_image_dict.keys()),
+                header_dict=adapt_images.mask.header_dict,
+            )
+
+            hdu_list.writeto(self.image_path / "adapt_images.fits", overwrite=True)

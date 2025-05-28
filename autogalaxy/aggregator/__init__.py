@@ -6,3 +6,6 @@ from autogalaxy.aggregator.interferometer.fit_interferometer import FitInterfero
 from autogalaxy.aggregator.ellipse.ellipses import EllipsesAgg
 from autogalaxy.aggregator.ellipse.multipoles import MultipolesAgg
 from autogalaxy.aggregator.ellipse.fit_ellipse import FitEllipseAgg
+from autogalaxy.aggregator.subplot import SubplotDataset as subplot_dataset
+from autogalaxy.aggregator.subplot import SubplotFit as subplot_fit
+from autogalaxy.aggregator.subplot import FITSFit as fits_fit

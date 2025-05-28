@@ -56,7 +56,9 @@ def evaluation_grid(func):
 
         pixel_scale_ratio = grid.pixel_scale / pixel_scale
 
-        zoom_shape_native = grid.mask.zoom_shape_native
+        zoom = aa.Zoom2D(mask=grid.mask)
+
+        zoom_shape_native = zoom.shape_native
         shape_native = (
             int(pixel_scale_ratio * zoom_shape_native[0]),
             int(pixel_scale_ratio * zoom_shape_native[1]),
@@ -78,7 +80,7 @@ def evaluation_grid(func):
         grid = aa.Grid2D.uniform(
             shape_native=shape_native,
             pixel_scales=(pixel_scale, pixel_scale),
-            origin=grid.mask.zoom_offset_scaled,
+            origin=zoom.offset_scaled,
         )
 
         grid.is_evaluation_grid = True
@@ -662,9 +664,7 @@ class OperateDeflections:
         einstein_radius_list = self.einstein_radius_list_from(
             grid=grid, pixel_scale=pixel_scale
         )
-        return [
-            np.pi * einstein_radius**2 for einstein_radius in einstein_radius_list
-        ]
+        return [np.pi * einstein_radius**2 for einstein_radius in einstein_radius_list]
 
     @evaluation_grid
     def einstein_mass_angular_from(
