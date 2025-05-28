@@ -152,3 +152,4 @@ def test__points_from_major_axis():
     assert ellipse.points_from_major_axis_from(pixel_scale=1.0)[1][0] == pytest.approx(
         -0.2123224755, 1.0e-4
     )
+

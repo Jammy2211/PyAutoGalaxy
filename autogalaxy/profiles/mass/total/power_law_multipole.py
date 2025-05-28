@@ -68,7 +68,7 @@ class PowerLawMultipole(MassProfile):
         :math: (\epsilon_{\rm 1}^{\rm mp}\,\epsilon_{\rm 2}^{\rm mp}), which are given by:
 
         .. math::
-                \phi^{\rm mass}_m = \arctan{\frac{\epsilon_{\rm 2}^{\rm mp}}{\epsilon_{\rm 2}^{\rm mp}}}, \, \,
+                \phi^{\rm mass}_m = \frac{1}{m} \arctan{\frac{\epsilon_{\rm 2}^{\rm mp}}{\epsilon_{\rm 1}^{\rm mp}}}, \, \,
                 k^{\rm mass}_m = \sqrt{{\epsilon_{\rm 1}^{\rm mp}}^2 + {\epsilon_{\rm 2}^{\rm mp}}^2} \, .
 
         This mass profile is described fully in the following paper: https://arxiv.org/abs/1302.5482

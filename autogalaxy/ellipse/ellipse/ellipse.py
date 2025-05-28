@@ -106,7 +106,7 @@ class Ellipse(EllProfile):
 
         return np.min([500, int(np.round(circular_radius_pixels, 1))])
 
-    def angles_from_x0_from(self, pixel_scale: float) -> np.ndarray:
+    def angles_from_x0_from(self, pixel_scale: float, n_i : int = 0) -> np.ndarray:
         """
         Returns the angles from the x-axis to a discrete number of points ranging from 0.0 to 2.0 * np.pi radians.
 
@@ -126,6 +126,9 @@ class Ellipse(EllProfile):
         ----------
         pixel_scale
             The pixel scale of the data that the ellipse is fitted to and interpolated over.
+        n_i
+            The number of points on the ellipse which hit a masked regions and cannot be computed, where this
+            value is used to change the range of angles computed.
 
         Returns
         -------
@@ -133,9 +136,9 @@ class Ellipse(EllProfile):
         """
         total_points = self.total_points_from(pixel_scale)
 
-        return np.linspace(0.0, 2.0 * np.pi, total_points)[:-1]
+        return np.linspace(0.0, 2.0 * np.pi, total_points + n_i)[:-1]
 
-    def ellipse_radii_from_major_axis_from(self, pixel_scale: float) -> np.ndarray:
+    def ellipse_radii_from_major_axis_from(self, pixel_scale: float, n_i : int = 0) -> np.ndarray:
         """
         Returns the distance from the centre of the ellipse to every point on the ellipse, which are called
         the ellipse radii.
@@ -147,13 +150,16 @@ class Ellipse(EllProfile):
         ----------
         pixel_scale
             The pixel scale of the data that the ellipse is fitted to and interpolated over.
+        n_i
+            The number of points on the ellipse which hit a masked regions and cannot be computed, where this
+            value is used to change the range of angles computed.
 
         Returns
         -------
         The ellipse radii from the major-axis of the ellipse.
         """
 
-        angles_from_x0 = self.angles_from_x0_from(pixel_scale=pixel_scale)
+        angles_from_x0 = self.angles_from_x0_from(pixel_scale=pixel_scale, n_i=n_i)
 
         return np.divide(
             self.major_axis * self.minor_axis,
@@ -167,7 +173,7 @@ class Ellipse(EllProfile):
             ),
         )
 
-    def x_from_major_axis_from(self, pixel_scale: float) -> np.ndarray:
+    def x_from_major_axis_from(self, pixel_scale: float, n_i : int = 0) -> np.ndarray:
         """
         Returns the x-coordinates of the points on the ellipse, starting from the x-coordinate of the major-axis
         of the ellipse after rotation by its `angle` and moving counter-clockwise.
@@ -176,21 +182,24 @@ class Ellipse(EllProfile):
         ----------
         pixel_scale
             The pixel scale of the data that the ellipse is fitted to and interpolated over.
+        n_i
+            The number of points on the ellipse which hit a masked regions and cannot be computed, where this
+            value is used to change the range of angles computed.
 
         Returns
         -------
         The x-coordinates of the points on the ellipse.
         """
 
-        angles_from_x0 = self.angles_from_x0_from(pixel_scale=pixel_scale)
+        angles_from_x0 = self.angles_from_x0_from(pixel_scale=pixel_scale, n_i=n_i)
         ellipse_radii_from_major_axis = self.ellipse_radii_from_major_axis_from(
-            pixel_scale=pixel_scale
+            pixel_scale=pixel_scale, n_i=n_i
         )
 
         return ellipse_radii_from_major_axis * np.cos(angles_from_x0) + self.centre[1]
 
     def y_from_major_axis_from(
-        self, pixel_scale: float, flip_y: bool = False
+        self, pixel_scale: float, n_i : int = 0
     ) -> np.ndarray:
         """
         Returns the y-coordinates of the points on the ellipse, starting from the y-coordinate of the major-axis
@@ -200,37 +209,29 @@ class Ellipse(EllProfile):
         that the convention of the y-axis increasing upwards is followed, meaning that `ell_comps` adopt the
         same definition as used for evaluating light profiles in PyAutoGalaxy.
 
-        When plotting the ellipses, y coordinates must be flipped to match the convention of the y-axis increasing
-        downwards in 2D data, which is performed by setting `flip_y=True`.
-
         Parameters
         ----------
         pixel_scale
             The pixel scale of the data that the ellipse is fitted to and interpolated over.
-        flip_y
-            If True, the y-coordinates are flipped to match the convention of the y-axis increasing downwards in 2D data.
+        n_i
+            The number of points on the ellipse which hit a masked regions and cannot be computed, where this
+            value is used to change the range of angles computed.
 
         Returns
         -------
         The y-coordinates of the points on the ellipse.
         """
-        angles_from_x0 = self.angles_from_x0_from(pixel_scale=pixel_scale)
+        angles_from_x0 = self.angles_from_x0_from(pixel_scale=pixel_scale, n_i=n_i)
         ellipse_radii_from_major_axis = self.ellipse_radii_from_major_axis_from(
-            pixel_scale=pixel_scale
+            pixel_scale=pixel_scale, n_i=n_i
         )
-
-        if flip_y:
-            return (
-                ellipse_radii_from_major_axis * np.sin(angles_from_x0) + self.centre[0]
-            )
 
         return (
             -1.0 * (ellipse_radii_from_major_axis * np.sin(angles_from_x0))
             - self.centre[0]
         )
 
-    def points_from_major_axis_from(
-        self, pixel_scale: float, flip_y: bool = False
+    def points_from_major_axis_from(self, pixel_scale: float, n_i : int = 0,
     ) -> np.ndarray:
         """
         Returns the (y,x) coordinates of the points on the ellipse, starting from the major-axis of the ellipse
@@ -239,21 +240,21 @@ class Ellipse(EllProfile):
         This is the format inputs into the inteprolation functions which match the ellipse to 2D data and enable
         us to determine how well the ellipse represents the data.
 
-        When plotting the ellipses, y coordinates must be flipped to match the convention of the y-axis increasing
-        downwards in 2D data, which is performed by setting `flip_y=True`.
-
         Parameters
         ----------
         pixel_scale
             The pixel scale of the data that the ellipse is fitted to and interpolated over.
+        n_i
+            The number of points on the ellipse which hit a masked regions and cannot be computed, where this
+            value is used to change the range of angles computed.
 
         Returns
         -------
         The (y,x) coordinates of the points on the ellipse.
         """
 
-        x = self.x_from_major_axis_from(pixel_scale=pixel_scale)
-        y = self.y_from_major_axis_from(pixel_scale=pixel_scale, flip_y=flip_y)
+        x = self.x_from_major_axis_from(pixel_scale=pixel_scale, n_i=n_i)
+        y = self.y_from_major_axis_from(pixel_scale=pixel_scale, n_i=n_i)
 
         idx = np.logical_or(np.isnan(x), np.isnan(y))
         if np.sum(idx) > 0.0:
