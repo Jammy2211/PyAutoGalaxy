@@ -15,10 +15,6 @@ import datetime
 
 from pyprojroot import here
 
-# /home/docs/checkouts/readthedocs.org/user_builds/pyautolens/checkouts/latest/docs
-
-clone_path = str(here())
-
 import os
 import sys
 
