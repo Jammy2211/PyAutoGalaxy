@@ -30,8 +30,8 @@ def make_imaging_lh_masked(imaging_lh):
         mask=[
             [True, True, True, True, True, True, True],
             [True, True, True, True, True, True, True],
-            [True, True, False, False, False, True, True],
-            [True, True, False, True, False, True, True],
+            [True, True, False, False, True, True, True],
+            [True, True, False, False, True, True, True],
             [True, True, False, False, False, True, True],
             [True, True, True, True, True, True, True],
             [True, True, True, True, True, True, True],
@@ -215,3 +215,85 @@ def test__log_likelihood(imaging_lh, imaging_lh_masked):
     fit = ag.FitEllipse(dataset=imaging_lh_masked, ellipse=ellipse_0)
 
     assert fit.log_likelihood == pytest.approx(0.0, 1.0e-4)
+
+
+def test__points_from_major_axis_from__with_mask_interp_but_mask_all_false(imaging_lh, imaging_lh_masked):
+
+    ellipse_0 = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
+
+    # fit = ag.FitEllipse(dataset=imaging_lh, ellipse=ellipse_0)
+    # points = fit.points_from_major_axis_from()
+
+    fit = ag.FitEllipse(dataset=imaging_lh_masked, ellipse=ellipse_0)
+    points_masked = fit.points_from_major_axis_from()
+
+    assert points.shape[0] == points_masked.shape[0] == 5
+
+    fff
+
+
+    print(fit.points_from_major_axis_from())
+    ffff
+
+    assert fit.mask_interp == pytest.approx([False, True, True, True, True], 1.0e-4)
+
+    ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
+
+    points = ellipse.points_from_major_axis_from(pixel_scale=1.0)
+
+    print(points)
+
+    data = ag.Array2D.ones(
+        shape_native=(3, 3),
+        pixel_scales=1.0
+    )
+    noise_map = ag.Array2D.ones(shape_native=(3, 3), pixel_scales=1.0)
+
+    mask = ag.Mask2D(
+        mask=np.array(
+            [[False, False, False], [False, False, False], [False, False, False]]
+        ),
+        pixel_scales=1.0,
+    )
+
+    dataset = ag.Imaging(data=data, noise_map=noise_map)
+    dataset = dataset.apply_mask(mask=mask)
+    interp = ag.DatasetInterp(dataset=dataset)
+
+    assert ellipse.points_from_major_axis_from(pixel_scale=1.0, mask_interp=interp.mask_interp)[0][1] == pytest.approx(
+        1.0, 1.0e-4
+    )
+    assert ellipse.points_from_major_axis_from(pixel_scale=1.0, mask_interp=interp.mask_interp)[0][0] == pytest.approx(
+        0.0, 1.0e-4
+    )
+
+
+def test__points_from_major_axis_from__with_mask_interp_but_mask_removes_points():
+    ellipse = ag.Ellipse(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), major_axis=1.0)
+
+    data = ag.Array2D.ones(
+        shape_native=(3, 3),
+        pixel_scales=1.0
+    )
+    noise_map = ag.Array2D.ones(shape_native=(3, 3), pixel_scales=1.0)
+
+    mask = ag.Mask2D(
+        mask=np.array(
+            [[False, False, False], [True, False, False], [False, False, True]]
+        ),
+        pixel_scales=1.0,
+    )
+
+    dataset = ag.Imaging(data=data, noise_map=noise_map)
+    dataset = dataset.apply_mask(mask=mask)
+    interp = ag.DatasetInterp(dataset=dataset)
+
+    points = ellipse.points_from_major_axis_from(pixel_scale=1.0, mask_interp=interp.mask_interp)
+
+    assert len(points) == 5
+    assert points[1][1] == pytest.approx(
+        1.0, 1.0e-4
+    )
+    # assert ellipse.points_from_major_axis_from(pixel_scale=1.0, mask_interp=interp.mask_interp)[0][0] == pytest.approx(
+    #     0.0, 1.0e-4
+    # )
