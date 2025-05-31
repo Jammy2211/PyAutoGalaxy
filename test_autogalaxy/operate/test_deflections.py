@@ -55,6 +55,17 @@ def caustics_via_magnification_from(mass_profile, grid):
 
     return caustics
 
+def test__time_delay_geometry_term_from():
+
+    grid = ag.Grid2DIrregular(values=[(0.7, 0.5), (1.0, 1.0)])
+
+    mp = ag.mp.Isothermal(
+        centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
+    )
+
+    time_delay_geometry_term = mp.time_delay_geometry_term_from(grid=grid)
+
+    assert time_delay_geometry_term == pytest.approx(np.array([1.92815688, 1.97625436]), 1.0e-4)
 
 def test__hessian_from():
     grid = ag.Grid2DIrregular(values=[(0.5, 0.5), (1.0, 1.0)])

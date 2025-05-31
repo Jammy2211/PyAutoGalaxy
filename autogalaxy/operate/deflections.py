@@ -112,6 +112,59 @@ class OperateDeflections:
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ and self.__class__ is other.__class__
 
+    def time_delay_geometry_term_from(self, grid) -> aa.Array2D:
+        """
+        Returns the geometric time delay term of the Fermat potential for a given grid of image-plane positions.
+
+        This term is given by:
+
+        \[
+        \tau_{\text{geom}}(\boldsymbol{\theta}) = \frac{1}{2} |\boldsymbol{\theta} - \boldsymbol{\beta}|^2
+        \]
+
+        where:
+        - \( \boldsymbol{\theta} \) is the image-plane coordinate,
+        - \( \boldsymbol{\beta} = \boldsymbol{\theta} - \boldsymbol{\alpha}(\boldsymbol{\theta}) \) is the source-plane coordinate,
+        - \( \boldsymbol{\alpha} \) is the deflection angle at each image-plane coordinate.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and time delay geometric term are computed
+            on.
+
+        Returns
+        -------
+        The geometric time delay term at each grid position.
+        """
+        deflections = self.deflections_yx_2d_from(grid=grid)
+
+        src_y = grid[:, 0] - deflections[:, 0]
+        src_x = grid[:, 1] - deflections[:, 1]
+
+        delay = 0.5 * ((grid[:, 0] - src_y) ** 2 + (grid[:, 1] - src_x) ** 2)
+
+        if isinstance(grid, aa.Grid2DIrregular):
+            return aa.ArrayIrregular(values=delay)
+        return aa.Array2D(values=delay, mask=grid.mask)
+
+    def time_delays_from(self, grid) -> aa.Array2D:
+        """
+        Returns the 2D time delay map of lensing object, which is computed as the deflection angles in the y and x
+        directions multiplied by the y and x coordinates of the grid.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and time delay are computed on.
+        """
+        deflections_yx = self.deflections_yx_2d_from(grid=grid)
+
+        return aa.Array2D(
+            values=deflections_yx[:, 0] * grid[:, 0] + deflections_yx[:, 1] * grid[:, 1],
+            mask=grid.mask,
+        )
+
     @precompute_jacobian
     def tangential_eigen_value_from(self, grid, jacobian=None) -> aa.Array2D:
         """
