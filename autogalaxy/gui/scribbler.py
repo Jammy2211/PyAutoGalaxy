@@ -4,6 +4,7 @@ import matplotlib
 import matplotlib.pyplot as plt
 from typing import Tuple
 
+
 class Scribbler:
     def __init__(
         self,
@@ -31,25 +32,25 @@ class Scribbler:
             origin = image.geometry.origin
             pixel_scales = image.geometry.pixel_scales
 
-            x0_pix =  int(
+            x0_pix = int(
                 (extent[0] - origin[1]) / pixel_scales[1]
                 + central_pixel_coordinates[1]
                 + 0.5
             )
 
-            x1_pix =  int(
+            x1_pix = int(
                 (extent[1] - origin[1]) / pixel_scales[1]
                 + central_pixel_coordinates[1]
                 + 0.5
             )
 
-            y0_pix =  int(
+            y0_pix = int(
                 (extent[2] - origin[0]) / pixel_scales[0]
                 + central_pixel_coordinates[0]
                 + 0.5
             )
 
-            y1_pix =  int(
+            y1_pix = int(
                 (extent[3] - origin[0]) / pixel_scales[0]
                 + central_pixel_coordinates[0]
                 + 0.5

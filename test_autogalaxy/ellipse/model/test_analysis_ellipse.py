@@ -11,8 +11,8 @@ directory = path.dirname(path.realpath(__file__))
 def test__make_result__result_imaging_is_returned(masked_imaging_7x7):
     ellipse_list = af.Collection(af.Model(ag.Ellipse) for _ in range(2))
 
-    ellipse_list[0].major_axis = 1.0
-    ellipse_list[1].major_axis = 2.0
+    ellipse_list[0].major_axis = 0.2
+    ellipse_list[1].major_axis = 0.4
 
     model = af.Collection(ellipses=ellipse_list)
 
@@ -30,8 +30,8 @@ def test__figure_of_merit(
 ):
     ellipse_list = af.Collection(af.Model(ag.Ellipse) for _ in range(2))
 
-    ellipse_list[0].major_axis = 1.0
-    ellipse_list[1].major_axis = 2.0
+    ellipse_list[0].major_axis = 0.2
+    ellipse_list[1].major_axis = 0.4
 
     multipole_0_prior_0 = af.UniformPrior(lower_limit=0.0, upper_limit=0.1)
     multipole_0_prior_1 = af.UniformPrior(lower_limit=0.0, upper_limit=0.1)
