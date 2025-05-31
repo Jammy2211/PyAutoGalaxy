@@ -118,9 +118,8 @@ class OperateDeflections:
 
         This term is given by:
 
-        \[
-        \tau_{\text{geom}}(\boldsymbol{\theta}) = \frac{1}{2} |\boldsymbol{\theta} - \boldsymbol{\beta}|^2
-        \]
+    .. math::
+            \[\tau_{\text{geom}}(\boldsymbol{\theta}) = \frac{1}{2} |\boldsymbol{\theta} - \boldsymbol{\beta}|^2\]
 
         where:
         - \( \boldsymbol{\theta} \) is the image-plane coordinate,
@@ -147,6 +146,40 @@ class OperateDeflections:
         if isinstance(grid, aa.Grid2DIrregular):
             return aa.ArrayIrregular(values=delay)
         return aa.Array2D(values=delay, mask=grid.mask)
+
+    def fermat_potential_from(self, grid) -> aa.Array2D:
+        """
+        Returns the Fermat potential for a given grid of image-plane positions.
+
+        This is the sum of the geometric time delay term and the gravitational (Shapiro) delay term (i.e. the lensing
+        potential), and is given by:
+
+        .. math::
+            \[\phi(\boldsymbol{\theta}) = \frac{1}{2} |\boldsymbol{\theta} - \boldsymbol{\beta}|^2 - \psi(\boldsymbol{\theta})\]
+
+        where:
+        - \( \boldsymbol{\theta} \) is the image-plane coordinate,
+        - \( \boldsymbol{\beta} = \boldsymbol{\theta} - \boldsymbol{\alpha}(\boldsymbol{\theta}) \) is the source-plane coordinate,
+        - \( \psi(\boldsymbol{\theta}) \) is the lensing potential,
+        - \( \phi(\boldsymbol{\theta}) \) is the Fermat potential.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the Fermat potential is computed on.
+
+        Returns
+        -------
+        The Fermat potential at each grid position.
+        """
+        time_delay_geometry_term = self.time_delay_geometry_term_from(grid=grid)
+        potential = self.potential_2d_from(grid=grid)
+
+        fermat_potential = time_delay_geometry_term - potential
+
+        if isinstance(grid, aa.Grid2DIrregular):
+            return aa.ArrayIrregular(values=fermat_potential)
+        return aa.Array2D(values=fermat_potential, mask=grid.mask)
 
     def time_delays_from(self, grid) -> aa.Array2D:
         """
