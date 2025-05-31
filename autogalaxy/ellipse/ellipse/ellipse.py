@@ -106,7 +106,7 @@ class Ellipse(EllProfile):
 
         return np.min([500, int(np.round(circular_radius_pixels, 1))])
 
-    def angles_from_x0_from(self, pixel_scale: float, n_i : int = 0) -> np.ndarray:
+    def angles_from_x0_from(self, pixel_scale: float, n_i: int = 0) -> np.ndarray:
         """
         Returns the angles from the x-axis to a discrete number of points ranging from 0.0 to 2.0 * np.pi radians.
 
@@ -138,7 +138,9 @@ class Ellipse(EllProfile):
 
         return np.linspace(0.0, 2.0 * np.pi, total_points + n_i)[:-1]
 
-    def ellipse_radii_from_major_axis_from(self, pixel_scale: float, n_i : int = 0) -> np.ndarray:
+    def ellipse_radii_from_major_axis_from(
+        self, pixel_scale: float, n_i: int = 0
+    ) -> np.ndarray:
         """
         Returns the distance from the centre of the ellipse to every point on the ellipse, which are called
         the ellipse radii.
@@ -173,7 +175,7 @@ class Ellipse(EllProfile):
             ),
         )
 
-    def x_from_major_axis_from(self, pixel_scale: float, n_i : int = 0) -> np.ndarray:
+    def x_from_major_axis_from(self, pixel_scale: float, n_i: int = 0) -> np.ndarray:
         """
         Returns the x-coordinates of the points on the ellipse, starting from the x-coordinate of the major-axis
         of the ellipse after rotation by its `angle` and moving counter-clockwise.
@@ -198,9 +200,7 @@ class Ellipse(EllProfile):
 
         return ellipse_radii_from_major_axis * np.cos(angles_from_x0) + self.centre[1]
 
-    def y_from_major_axis_from(
-        self, pixel_scale: float, n_i : int = 0
-    ) -> np.ndarray:
+    def y_from_major_axis_from(self, pixel_scale: float, n_i: int = 0) -> np.ndarray:
         """
         Returns the y-coordinates of the points on the ellipse, starting from the y-coordinate of the major-axis
         of the ellipse after rotation by its `angle` and moving counter-clockwise.
@@ -231,7 +231,10 @@ class Ellipse(EllProfile):
             - self.centre[0]
         )
 
-    def points_from_major_axis_from(self, pixel_scale: float, n_i : int = 0,
+    def points_from_major_axis_from(
+        self,
+        pixel_scale: float,
+        n_i: int = 0,
     ) -> np.ndarray:
         """
         Returns the (y,x) coordinates of the points on the ellipse, starting from the major-axis of the ellipse

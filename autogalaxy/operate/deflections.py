@@ -114,27 +114,27 @@ class OperateDeflections:
 
     def time_delay_geometry_term_from(self, grid) -> aa.Array2D:
         """
-        Returns the geometric time delay term of the Fermat potential for a given grid of image-plane positions.
+            Returns the geometric time delay term of the Fermat potential for a given grid of image-plane positions.
 
-        This term is given by:
+            This term is given by:
 
-    .. math::
-            \[\tau_{\text{geom}}(\boldsymbol{\theta}) = \frac{1}{2} |\boldsymbol{\theta} - \boldsymbol{\beta}|^2\]
+        .. math::
+                \[\tau_{\text{geom}}(\boldsymbol{\theta}) = \frac{1}{2} |\boldsymbol{\theta} - \boldsymbol{\beta}|^2\]
 
-        where:
-        - \( \boldsymbol{\theta} \) is the image-plane coordinate,
-        - \( \boldsymbol{\beta} = \boldsymbol{\theta} - \boldsymbol{\alpha}(\boldsymbol{\theta}) \) is the source-plane coordinate,
-        - \( \boldsymbol{\alpha} \) is the deflection angle at each image-plane coordinate.
+            where:
+            - \( \boldsymbol{\theta} \) is the image-plane coordinate,
+            - \( \boldsymbol{\beta} = \boldsymbol{\theta} - \boldsymbol{\alpha}(\boldsymbol{\theta}) \) is the source-plane coordinate,
+            - \( \boldsymbol{\alpha} \) is the deflection angle at each image-plane coordinate.
 
-        Parameters
-        ----------
-        grid
-            The 2D grid of (y,x) arc-second coordinates the deflection angles and time delay geometric term are computed
-            on.
+            Parameters
+            ----------
+            grid
+                The 2D grid of (y,x) arc-second coordinates the deflection angles and time delay geometric term are computed
+                on.
 
-        Returns
-        -------
-        The geometric time delay term at each grid position.
+            Returns
+            -------
+            The geometric time delay term at each grid position.
         """
         deflections = self.deflections_yx_2d_from(grid=grid)
 
@@ -194,7 +194,8 @@ class OperateDeflections:
         deflections_yx = self.deflections_yx_2d_from(grid=grid)
 
         return aa.Array2D(
-            values=deflections_yx[:, 0] * grid[:, 0] + deflections_yx[:, 1] * grid[:, 1],
+            values=deflections_yx[:, 0] * grid[:, 0]
+            + deflections_yx[:, 1] * grid[:, 1],
             mask=grid.mask,
         )
 

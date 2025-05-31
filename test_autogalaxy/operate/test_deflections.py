@@ -55,6 +55,7 @@ def caustics_via_magnification_from(mass_profile, grid):
 
     return caustics
 
+
 def test__time_delay_geometry_term_from():
 
     grid = ag.Grid2DIrregular(values=[(0.7, 0.5), (1.0, 1.0)])
@@ -65,7 +66,9 @@ def test__time_delay_geometry_term_from():
 
     time_delay_geometry_term = mp.time_delay_geometry_term_from(grid=grid)
 
-    assert time_delay_geometry_term == pytest.approx(np.array([1.92815688, 1.97625436]), 1.0e-4)
+    assert time_delay_geometry_term == pytest.approx(
+        np.array([1.92815688, 1.97625436]), 1.0e-4
+    )
 
 
 def test__fermat_potential_from():
@@ -78,7 +81,9 @@ def test__fermat_potential_from():
 
     fermat_potential = mp.fermat_potential_from(grid=grid)
 
-    assert fermat_potential == pytest.approx(np.array([0.24329033, -0.82766592]), 1.0e-4)
+    assert fermat_potential == pytest.approx(
+        np.array([0.24329033, -0.82766592]), 1.0e-4
+    )
 
 
 def test__hessian_from():
