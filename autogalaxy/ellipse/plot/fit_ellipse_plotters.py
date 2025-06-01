@@ -88,15 +88,13 @@ class FitEllipsePlotter(Plotter):
                 points = fit.points_from_major_axis_from()
 
                 x = points[:, 1]
-                y = points[:, 0] * -1.0 # flip for plot
+                y = points[:, 0] * -1.0  # flip for plot
 
                 ellipse_list.append(aa.Grid2DIrregular.from_yx_1d(y=y, x=x))
 
             visuals_2d = self.get_visuals_2d() + Visuals2D(
-                positions=ellipse_list,
-                lines=ellipse_list
+                positions=ellipse_list, lines=ellipse_list
             )
-
 
             self.mat_plot_2d.plot_array(
                 array=self.fit_list[0].data,
