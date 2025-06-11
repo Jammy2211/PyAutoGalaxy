@@ -102,7 +102,9 @@ class MassProfileMGE:
 
         # sigma is sampled from logspace between these radii.
 
-        log_sigmas = jnp.linspace(jnp.log(radii_min), jnp.log(radii_max), func_gaussians)
+        log_sigmas = jnp.linspace(
+            jnp.log(radii_min), jnp.log(radii_max), func_gaussians
+        )
         d_log_sigma = log_sigmas[1] - log_sigmas[0]
         sigma_list = jnp.exp(log_sigmas)
 

@@ -112,8 +112,12 @@ class dPIE(MassProfile):
         alpha_circ = self._deflection_angle(grid_radii)
 
         # This is in axes aligned to the major/minor axis
-        deflection_y = alpha_circ * jnp.sqrt(1 + ellip) * (grid.array[:, 0] / grid_radii)
-        deflection_x = alpha_circ * jnp.sqrt(1 - ellip) * (grid.array[:, 1] / grid_radii)
+        deflection_y = (
+            alpha_circ * jnp.sqrt(1 + ellip) * (grid.array[:, 0] / grid_radii)
+        )
+        deflection_x = (
+            alpha_circ * jnp.sqrt(1 - ellip) * (grid.array[:, 1] / grid_radii)
+        )
 
         # And here we convert back to the real axes
         return self.rotated_grid_from_reference_frame_from(

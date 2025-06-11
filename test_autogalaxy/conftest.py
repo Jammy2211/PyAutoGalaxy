@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 
 logger.setLevel(level="INFO")
 
+
 class PlotPatch:
     def __init__(self):
         self.paths = []

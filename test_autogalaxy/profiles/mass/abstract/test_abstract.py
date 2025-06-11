@@ -212,7 +212,9 @@ def test__decorators__convergence_1d_from__grid_2d_in__returns_1d_image_via_proj
         over_sample_size=1,
     )
 
-    sie = ag.mp.Isothermal(centre=(1e-6, 1e-6), ell_comps=(0.0, 0.0), einstein_radius=1.0)
+    sie = ag.mp.Isothermal(
+        centre=(1e-6, 1e-6), ell_comps=(0.0, 0.0), einstein_radius=1.0
+    )
 
     convergence_1d = sie.convergence_1d_from(grid=grid_2d)
     convergence_2d = sie.convergence_2d_from(grid=grid_2d)

@@ -307,7 +307,6 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
     #
     #     return operated_mapping_matrix
 
-
     @cached_property
     def operated_mapping_matrix_override(self) -> Optional[np.ndarray]:
         """
@@ -344,7 +343,5 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
 
             blurred_image_2d_list.append(blurred_image_2d.array)
 
-
-#         return jnp.stack(blurred_image_2d_list, axis=1)
+        #         return jnp.stack(blurred_image_2d_list, axis=1)
         return np.stack(blurred_image_2d_list, axis=1)
-

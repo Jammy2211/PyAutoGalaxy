@@ -4,6 +4,7 @@ from typing import Tuple
 import jax
 import jax.numpy as jnp
 
+
 def ell_comps_from(axis_ratio: float, angle: float) -> Tuple[float, float]:
     """
     Returns the elliptical components e1 and e2 of a light or mass profile from an input angle in degrees and axis
@@ -197,7 +198,9 @@ def shear_magnitude_and_angle_from(
     magnitude = jnp.sqrt(gamma_1**2 + gamma_2**2)
 
     angle = jnp.where(angle < 0, angle + 180.0, angle)
-    angle = jnp.where((jnp.abs(angle - 90.0) > 45.0) & (angle > 90.0), angle - 180.0, angle)
+    angle = jnp.where(
+        (jnp.abs(angle - 90.0) > 45.0) & (angle > 90.0), angle - 180.0, angle
+    )
 
     return magnitude, angle
 
