@@ -69,7 +69,7 @@ class Isothermal(PowerLaw):
     @property
     def axis_ratio(self):
         axis_ratio = super().axis_ratio
-        return min(axis_ratio, 0.99999)
+        return jnp.minimum(axis_ratio, 0.99999)
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform

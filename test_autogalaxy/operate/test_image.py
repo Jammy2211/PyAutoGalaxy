@@ -319,8 +319,8 @@ def test__galaxy_blurred_image_2d_dict_from(grid_2d_7x7, blurring_grid_2d_7x7, p
         blurring_grid=blurring_grid_2d_7x7,
     )
 
-    assert blurred_image_dict[g0] == pytest.approx(blurred_image_2d_list[1], 1.0e-4)
-    assert blurred_image_dict[g1] == pytest.approx(blurred_image_2d_list[0], 1.0e-4)
+    assert blurred_image_dict[g0].array == pytest.approx(blurred_image_2d_list[1].array, 1.0e-4)
+    assert blurred_image_dict[g1].array == pytest.approx(blurred_image_2d_list[0].array, 1.0e-4)
     assert blurred_image_dict[g2].array == pytest.approx(blurred_image_2d_list[2].array, 1.0e-4)
 
     image_2d = lp_0.image_2d_from(grid=grid_2d_7x7)
