@@ -289,8 +289,8 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
     )
     assert (fit.galaxy_model_image_dict[g3] == np.zeros(9)).all()
 
-    assert fit.model_data.native == pytest.approx(
-        fit.galaxy_model_image_dict[g0_linear].native, 1.0e-4
+    assert fit.model_data.native.array == pytest.approx(
+        fit.galaxy_model_image_dict[g0_linear].native.array, 1.0e-4
     )
 
     # Pixelization + Regularizaiton only
@@ -357,7 +357,7 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
     )
 
     assert mapped_reconstructed_image == pytest.approx(
-        fit.inversion.mapped_reconstructed_image, 1.0e-4
+        fit.inversion.mapped_reconstructed_image.array, 1.0e-4
     )
 
     assert fit.model_data == pytest.approx(
@@ -385,11 +385,11 @@ def test__model_images_of_galaxies_list(masked_imaging_7x7):
     assert fit.model_images_of_galaxies_list[0] == pytest.approx(
         fit.galaxy_model_image_dict[galaxy_light].array, 1.0e-4
     )
-    assert fit.model_images_of_galaxies_list[1] == pytest.approx(
-        fit.galaxy_model_image_dict[galaxy_linear], 1.0e-4
+    assert fit.model_images_of_galaxies_list[1].array == pytest.approx(
+        fit.galaxy_model_image_dict[galaxy_linear].array, 1.0e-4
     )
     assert fit.model_images_of_galaxies_list[2] == pytest.approx(
-        fit.galaxy_model_image_dict[galaxy_pix], 1.0e-4
+        fit.galaxy_model_image_dict[galaxy_pix].array, 1.0e-4
     )
 
 

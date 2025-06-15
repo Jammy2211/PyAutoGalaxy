@@ -187,8 +187,8 @@ def test___galaxy_model_image_dict(interferometer_7):
 
     assert (fit.galaxy_model_image_dict[g0].native == 0.0 + 0.0j * np.zeros((7,))).all()
 
-    assert fit.galaxy_model_image_dict[galaxy_pix_0] == pytest.approx(
-        inversion.mapped_reconstructed_image.slim, 1.0e-4
+    assert fit.galaxy_model_image_dict[galaxy_pix_0].array == pytest.approx(
+        inversion.mapped_reconstructed_image.slim.array, 1.0e-4
     )
 
     # Linear Light PRofiles + Pixelization + Regularizaiton
@@ -223,8 +223,8 @@ def test___galaxy_model_image_dict(interferometer_7):
         + fit.galaxy_model_image_dict[galaxy_pix_1]
     )
 
-    assert mapped_reconstructed_image == pytest.approx(
-        fit.inversion.mapped_reconstructed_image, 1.0e-4
+    assert mapped_reconstructed_image.array == pytest.approx(
+        fit.inversion.mapped_reconstructed_image.array, 1.0e-4
     )
 
 

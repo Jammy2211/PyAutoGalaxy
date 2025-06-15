@@ -269,44 +269,6 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
 
         return mapping_matrix
 
-    # @cached_property
-    # def operated_mapping_matrix_override(self) -> Optional[np.ndarray]:
-    #     """
-    #     The inversion object takes the `mapping_matrix` of each linear object and combines it with the `Convolver`
-    #     operator to perform a 2D convolution and compute the `operated_mapping_matrix`.
-    #
-    #     If this property is overwritten this operation is not performed, with the `operated_mapping_matrix` output this
-    #     property automatically used instead.
-    #
-    #     This is used for a linear light profile because the in-built mapping matrix convolution does not account for
-    #     how light profile images have flux outside the masked region which is blurred into the masked region. This
-    #     flux is outside the region that defines the `mapping_matrix` and thus this override is required to properly
-    #     incorporate it.
-    #
-    #     Returns
-    #     -------
-    #     A blurred mapping matrix of dimensions (total_mask_pixels, 1) which overrides the mapping matrix calculations
-    #     performed in the linear equation solvers.
-    #     """
-    #
-    #     if isinstance(self.light_profile_list[0], LightProfileOperated):
-    #         return self.mapping_matrix
-    #
-    #     operated_mapping_matrix = np.zeros(shape=(self.pixels_in_mask, self.params))
-    #
-    #     for pixel, light_profile in enumerate(self.light_profile_list):
-    #         image_2d = light_profile.image_2d_from(grid=self.grid)
-    #
-    #         blurring_image_2d = light_profile.image_2d_from(grid=self.blurring_grid)
-    #
-    #         blurred_image_2d = self.convolver.convolve_image(
-    #             image=image_2d, blurring_image=blurring_image_2d
-    #         )
-    #
-    #         operated_mapping_matrix[:, pixel] = blurred_image_2d
-    #
-    #     return operated_mapping_matrix
-
     @cached_property
     def operated_mapping_matrix_override(self) -> Optional[np.ndarray]:
         """
@@ -343,5 +305,4 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
 
             blurred_image_2d_list.append(blurred_image_2d.array)
 
-        #         return jnp.stack(blurred_image_2d_list, axis=1)
-        return np.stack(blurred_image_2d_list, axis=1)
+        return jnp.stack(blurred_image_2d_list, axis=1)
