@@ -1,6 +1,6 @@
 from __future__ import annotations
+import jax
 import jax.numpy as jnp
-import numpy as np
 from typing import TYPE_CHECKING, Dict, List, Optional
 
 from autoarray import Array2D
@@ -9,8 +9,6 @@ if TYPE_CHECKING:
     from autogalaxy.galaxy.galaxy import Galaxy
 
 import autoarray as aa
-
-from autogalaxy import exc
 
 
 class OperateImage:
@@ -189,12 +187,14 @@ class OperateImage:
 
         image_2d = self.image_2d_from(grid=grid)
 
-        if not jnp.any(image_2d.array):
-            return aa.Visibilities.zeros(
+        return jax.lax.cond(
+            jnp.any(image_2d.array),
+            lambda _: transformer.visibilities_from(image=image_2d),
+            lambda _: aa.Visibilities.zeros(
                 shape_slim=(transformer.uv_wavelengths.shape[0],)
-            )
-
-        return transformer.visibilities_from(image=image_2d)
+            ),
+            operand=None,
+        )
 
 
 class OperateImageList(OperateImage):

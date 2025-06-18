@@ -1,11 +1,10 @@
 import inspect
 import jax.numpy as jnp
 import numpy as np
-from typing import ClassVar, Dict, List, Optional
+from typing import Dict, List, Optional
 
 from autoconf import cached_property
 import autoarray as aa
-import autofit as af
 
 from autogalaxy.profiles.light.operated.abstract import (
     LightProfileOperated,
@@ -256,18 +255,25 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         This function iterates over each light profile in the list and evaluates its image on the grid, storing this
         image in the `mapping_matrix`.
 
+        The standard behaviour is that this is only used for linear light profiles computed when fitting interferometer
+        data, where the `mapping_matrix` is used to compute the `operated_mapping_matrix` via a fast Fourier transform.
+        This is because the FFT does not require light outside the masked region to computed, unlike for imaging
+        data which omits this function and uses `operated_mapping_matrix_override` instead.
+
         Returns
         -------
         The `mapping_matrix` of the linear light profiles.
         """
-        mapping_matrix = np.zeros(shape=(self.pixels_in_mask, self.params))
+
+        image_2d_list = []
 
         for pixel, light_profile in enumerate(self.light_profile_list):
+
             image_2d = light_profile.image_2d_from(grid=self.grid).slim
 
-            mapping_matrix[:, pixel] = image_2d.array
+            image_2d_list.append(image_2d.array)
 
-        return mapping_matrix
+        return jnp.stack(image_2d_list, axis=1)
 
     @cached_property
     def operated_mapping_matrix_override(self) -> Optional[np.ndarray]:
