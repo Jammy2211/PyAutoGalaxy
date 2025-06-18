@@ -11,7 +11,6 @@ if TYPE_CHECKING:
 import autoarray as aa
 
 
-
 class OperateImage:
     """
     Packages methods which operate on the 2D image returned from the `image_2d_from` function of a light object
@@ -194,7 +193,7 @@ class OperateImage:
             lambda _: aa.Visibilities.zeros(
                 shape_slim=(transformer.uv_wavelengths.shape[0],)
             ),
-            operand=None
+            operand=None,
         )
 
 
