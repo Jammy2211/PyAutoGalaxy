@@ -195,7 +195,7 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
         ),
     )
 
-    assert fit_linear.inversion.reconstruction.array == pytest.approx(
+    assert fit_linear.inversion.reconstruction == pytest.approx(
         np.array([0.1, 0.2]), 1.0e-2
     )
     assert fit_linear.linear_light_profile_intensity_dict[

@@ -1,11 +1,10 @@
 import inspect
 import jax.numpy as jnp
 import numpy as np
-from typing import ClassVar, Dict, List, Optional
+from typing import Dict, List, Optional, Union
 
 from autoconf import cached_property
 import autoarray as aa
-import autofit as af
 
 from autogalaxy.profiles.light.operated.abstract import (
     LightProfileOperated,
@@ -145,6 +144,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         grid: aa.type.Grid1D2DLike,
         blurring_grid: aa.type.Grid1D2DLike,
         psf: Optional[aa.Kernel2D],
+        transformer: Optional[Union[aa.TransformerDFT, aa.TransformerNUFFT]],
         light_profile_list: List[LightProfileLinear],
         regularization=Optional[aa.reg.Regularization],
         run_time_dict: Optional[Dict] = None,
@@ -212,7 +212,18 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
 
         self.blurring_grid = blurring_grid
         self.psf = psf
+        self.transformer = transformer
         self.light_profile_list = light_profile_list
+
+    @property
+    def uses_imaging(self) -> bool:
+        """
+        Returns True if the linear light profiles are used to fit an imaging dataset.
+
+        This is determinined based on whether the `psf` is not None, as the PSF is used to convolve the
+        light profile images before they are used to fit the data.
+        """
+        return self.psf is not None
 
     @property
     def params(self) -> int:
