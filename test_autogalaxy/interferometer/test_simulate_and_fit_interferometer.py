@@ -216,6 +216,6 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
         grid=dataset.grids.lp, transformer=dataset.transformer
     )
 
-    assert fit_linear.galaxy_model_visibilities_dict[galaxy_linear] == pytest.approx(
-        galaxy_visibilities, 1.0e-4
-    )
+    assert fit_linear.galaxy_model_visibilities_dict[
+        galaxy_linear
+    ].array == pytest.approx(galaxy_visibilities.array, 1.0e-4)
