@@ -68,8 +68,8 @@ def make_model():
     return af.Collection(
         dataset_model=dataset_model,
         galaxies=af.Collection(
-            g0=af.Model(ag.Galaxy, redshift=0.5, light=ag.lp.SersicSph),
-            g1=af.Model(ag.Galaxy, redshift=1.0, light=ag.lp.SersicSph),
+            g0=af.Model(ag.Galaxy, redshift=0.5, light=ag.lp.Sersic),
+            g1=af.Model(ag.Galaxy, redshift=1.0, light=ag.lp.Sersic),
         ),
     )
 

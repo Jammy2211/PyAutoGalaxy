@@ -20,11 +20,9 @@ Ellipse:
       lower: -inf
       upper: inf
   ell_comps_0:
-    type: TruncatedGaussian
+    type: Gaussian
     mean: 0.0
     sigma: 0.3
-    lower_limit: -1.0
-    upper_limit: 1.0
     width_modifier:
       type: Absolute
       value: 0.2
@@ -32,11 +30,9 @@ Ellipse:
       lower: -1.0
       upper: 1.0
   ell_comps_1:
-    type: TruncatedGaussian
+    type: Gaussian
     mean: 0.0
     sigma: 0.3
-    lower_limit: -1.0
-    upper_limit: 1.0
     width_modifier:
       type: Absolute
       value: 0.2
