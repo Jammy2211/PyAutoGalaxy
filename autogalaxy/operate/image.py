@@ -30,7 +30,6 @@ class OperateImage:
     def has(self, cls) -> bool:
         raise NotImplementedError
 
-    @aa.profile_func
     def _blurred_image_2d_from(
         self,
         image_2d: aa.Array2D,
@@ -158,7 +157,6 @@ class OperateImage:
 
         return padded_image_2d + padded_image_2d_operated
 
-    @aa.profile_func
     def visibilities_from(
         self, grid: aa.Grid2D, transformer: aa.type.Transformer
     ) -> aa.Visibilities:
