@@ -75,11 +75,8 @@ class AnalysisEllipse(af.Analysis):
         float
             The log likelihood indicating how well this model instance fitted the imaging data.
         """
-        try:
-            fit_list = self.fit_list_from(instance=instance)
-            return sum(fit.log_likelihood for fit in fit_list)
-        except ValueError as e:
-            raise exc.FitException from e
+        fit_list = self.fit_list_from(instance=instance)
+        return sum(fit.log_likelihood for fit in fit_list)
 
     def fit_list_from(self, instance: af.ModelInstance) -> List[FitEllipse]:
         """

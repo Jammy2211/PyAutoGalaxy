@@ -6,7 +6,7 @@ AdaptiveBrightnessSplitZeroth:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   zeroth_signal_scale:
@@ -16,7 +16,7 @@ AdaptiveBrightnessSplitZeroth:
     width_modifier:
       type: Relative
       value: 0.2
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   inner_coefficient:
@@ -26,7 +26,7 @@ AdaptiveBrightnessSplitZeroth:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   outer_coefficient:
@@ -36,7 +36,7 @@ AdaptiveBrightnessSplitZeroth:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   signal_scale:
@@ -46,6 +46,6 @@ AdaptiveBrightnessSplitZeroth:
     width_modifier:
       type: Relative
       value: 0.2
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf

@@ -3,24 +3,20 @@ ShapeletExponentialSph:
     type: Gaussian
     mean: 0.0
     sigma: 0.3
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   centre_1:
     type: Gaussian
     mean: 0.0
     sigma: 0.3
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   beta:
@@ -30,7 +26,7 @@ ShapeletExponentialSph:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
 ShapeletExponential:
@@ -38,28 +34,24 @@ ShapeletExponential:
     type: Gaussian
     mean: 0.0
     sigma: 0.3
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   centre_1:
     type: Gaussian
     mean: 0.0
     sigma: 0.3
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   ell_comps_0:
-    type: Gaussian
+    type: TruncatedGaussian
     mean: 0.0
     sigma: 0.3
     lower_limit: -1.0
@@ -67,11 +59,11 @@ ShapeletExponential:
     width_modifier:
       type: Absolute
       value: 0.2
-    gaussian_limits:
+    limits:
       lower: -1.0
       upper: 1.0
   ell_comps_1:
-    type: Gaussian
+    type: TruncatedGaussian
     mean: 0.0
     sigma: 0.3
     lower_limit: -1.0
@@ -79,7 +71,7 @@ ShapeletExponential:
     width_modifier:
       type: Absolute
       value: 0.2
-    gaussian_limits:
+    limits:
       lower: -1.0
       upper: 1.0
   beta:
@@ -89,6 +81,6 @@ ShapeletExponential:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf

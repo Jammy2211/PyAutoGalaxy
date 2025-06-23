@@ -133,19 +133,7 @@ class AnalysisImaging(AnalysisDataset):
         float
             The log likelihood indicating how well this model instance fitted the imaging data.
         """
-
-        try:
-            return self.fit_from(instance=instance).figure_of_merit
-        except (
-            PixelizationException,
-            exc.PixelizationException,
-            exc.InversionException,
-            exc.GridException,
-            ValueError,
-            np.linalg.LinAlgError,
-            OverflowError,
-        ) as e:
-            raise exc.FitException from e
+        return self.fit_from(instance=instance).figure_of_merit
 
     def fit_from(
         self,

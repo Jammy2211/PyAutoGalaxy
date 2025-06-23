@@ -3,24 +3,20 @@ MassSheet:
     type: Gaussian
     mean: 0.0
     sigma: 0.1
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   centre_1:
     type: Gaussian
     mean: 0.0
     sigma: 0.1
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   kappa:
@@ -30,6 +26,6 @@ MassSheet:
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
