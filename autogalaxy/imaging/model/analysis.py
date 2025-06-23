@@ -138,7 +138,6 @@ class AnalysisImaging(AnalysisDataset):
     def fit_from(
         self,
         instance: af.ModelInstance,
-        run_time_dict: Optional[Dict] = None,
     ) -> FitImaging:
         """
         Given a model instance create a `FitImaging` object.
@@ -153,8 +152,6 @@ class AnalysisImaging(AnalysisDataset):
             via a non-linear search).
         preload_overwrite
             If a `Preload` object is input this is used instead of the preloads stored as an attribute in the analysis.
-        run_time_dict
-            A dictionary which times functions called to fit the model to data, for profiling.
 
         Returns
         -------
@@ -163,7 +160,7 @@ class AnalysisImaging(AnalysisDataset):
         """
 
         galaxies = self.galaxies_via_instance_from(
-            instance=instance, run_time_dict=run_time_dict
+            instance=instance,
         )
 
         dataset_model = self.dataset_model_via_instance_from(instance=instance)
@@ -176,7 +173,6 @@ class AnalysisImaging(AnalysisDataset):
             dataset_model=dataset_model,
             adapt_images=adapt_images,
             settings_inversion=self.settings_inversion,
-            run_time_dict=run_time_dict,
         )
 
     def save_attributes(self, paths: af.DirectoryPaths):

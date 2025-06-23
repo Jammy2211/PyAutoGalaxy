@@ -30,29 +30,25 @@ Sersic:
       lower: 0.0
       upper: inf
   ell_comps_0:
-    type: TruncatedGaussian
-    mean: 0.0
-    sigma: 0.3
-    lower_limit: -1.0
-    upper_limit: 1.0
-    width_modifier:
-      type: Absolute
-      value: 0.2
     limits:
       lower: -1.0
       upper: 1.0
+    mean: 0.0
+    sigma: 0.3
+    type: Gaussian
+    width_modifier:
+      type: Absolute
+      value: 0.2
   ell_comps_1:
-    type: TruncatedGaussian
-    mean: 0.0
-    sigma: 0.3
-    lower_limit: -1.0
-    upper_limit: 1.0
-    width_modifier:
-      type: Absolute
-      value: 0.2
     limits:
       lower: -1.0
       upper: 1.0
+    mean: 0.0
+    sigma: 0.3
+    type: Gaussian
+    width_modifier:
+      type: Absolute
+      value: 0.2
   intensity:
     type: LogUniform
     lower_limit: 1.0e-06

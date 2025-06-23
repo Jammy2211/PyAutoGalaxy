@@ -146,7 +146,6 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         psf: Optional[aa.Kernel2D],
         light_profile_list: List[LightProfileLinear],
         regularization=Optional[aa.reg.Regularization],
-        run_time_dict: Optional[Dict] = None,
     ):
         """
         A list of linear light profiles which fits a dataset via linear algebra using the images of each linear light
@@ -206,7 +205,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
                 )
 
         super().__init__(
-            grid=grid, regularization=regularization, run_time_dict=run_time_dict
+            grid=grid, regularization=regularization,
         )
 
         self.blurring_grid = blurring_grid
