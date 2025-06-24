@@ -37,4 +37,3 @@ def test__figure_of_merit__matches_correct_fit_given_galaxy_profiles(
     fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=galaxies)
 
     assert fit.log_likelihood == fit_figure_of_merit
-

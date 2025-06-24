@@ -222,8 +222,6 @@ class GalaxiesToInversion(AbstractToInversion):
             the pixelization's pixels to the brightest regions of the image.
         settings_inversion
             The settings of the inversion, which controls how the linear algebra calculation is performed.
-        run_time_dict
-            A dictionary of run-time values used to compute the inversion, for example the noise-map normalization.
         """
         self.galaxies = Galaxies(galaxies)
 

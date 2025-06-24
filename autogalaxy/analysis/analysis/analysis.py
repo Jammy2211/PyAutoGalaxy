@@ -37,7 +37,8 @@ class Analysis(af.Analysis):
         self.cosmology = cosmology
 
     def galaxies_via_instance_from(
-        self, instance: af.ModelInstance,
+        self,
+        instance: af.ModelInstance,
     ) -> List[Galaxy]:
         """
         Create a list of galaxies from a model instance, which is used to fit the dataset.
