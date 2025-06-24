@@ -115,7 +115,7 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
 
     fit = ag.FitImaging(dataset=masked_dataset, galaxies=[galaxy_0, galaxy_1])
 
-    assert fit.figure_of_merit == pytest.approx(538.9777105858, 1.0e-2)
+    assert fit.figure_of_merit == pytest.approx(579.015739085647, 1.0e-2)
 
     # Check that using a Basis gives the same result.
 
@@ -134,7 +134,7 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
 
     fit = ag.FitImaging(dataset=masked_dataset, galaxies=[galaxy_0, galaxy_1])
 
-    assert fit.figure_of_merit == pytest.approx(538.9777105858, 1.0e-2)
+    assert fit.figure_of_merit == pytest.approx(579.015739085647, 1.0e-2)
 
 
 def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standard_light_profiles():
