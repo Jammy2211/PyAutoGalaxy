@@ -6,24 +6,20 @@ PowerLawMultipole:
     type: Gaussian
     mean: 0.0
     sigma: 0.1
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   centre_1:
     type: Gaussian
     mean: 0.0
     sigma: 0.1
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   einstein_radius:
@@ -33,7 +29,7 @@ PowerLawMultipole:
     width_modifier:
       type: Relative
       value: 0.25
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   slope:
@@ -43,7 +39,7 @@ PowerLawMultipole:
     width_modifier:
       type: Absolute
       value: 0.2
-    gaussian_limits:
+    limits:
       lower: 1.0
       upper: 3.0
   multipole_comps_0:
@@ -53,7 +49,7 @@ PowerLawMultipole:
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   multipole_comps_1:
@@ -63,6 +59,6 @@ PowerLawMultipole:
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf

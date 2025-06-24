@@ -3,24 +3,20 @@ SersicGradient:
     type: Gaussian
     mean: 0.0
     sigma: 0.1
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   centre_1:
     type: Gaussian
     mean: 0.0
     sigma: 0.1
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   effective_radius:
@@ -30,11 +26,11 @@ SersicGradient:
     width_modifier:
       type: Relative
       value: 1.0
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   ell_comps_0:
-    type: Gaussian
+    type: TruncatedGaussian
     mean: 0.0
     sigma: 0.3
     lower_limit: -1.0
@@ -42,11 +38,11 @@ SersicGradient:
     width_modifier:
       type: Absolute
       value: 0.2
-    gaussian_limits:
+    limits:
       lower: -1.0
       upper: 1.0
   ell_comps_1:
-    type: Gaussian
+    type: TruncatedGaussian
     mean: 0.0
     sigma: 0.3
     lower_limit: -1.0
@@ -54,7 +50,7 @@ SersicGradient:
     width_modifier:
       type: Absolute
       value: 0.2
-    gaussian_limits:
+    limits:
       lower: -1.0
       upper: 1.0
   intensity:
@@ -64,7 +60,7 @@ SersicGradient:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   mass_to_light_gradient:
@@ -74,7 +70,7 @@ SersicGradient:
     width_modifier:
       type: Absolute
       value: 0.2
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   mass_to_light_ratio:
@@ -84,7 +80,7 @@ SersicGradient:
     width_modifier:
       type: Relative
       value: 0.3
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   sersic_index:
@@ -94,7 +90,7 @@ SersicGradient:
     width_modifier:
       type: Absolute
       value: 1.5
-    gaussian_limits:
+    limits:
       lower: 0.8
       upper: 5.0
 SersicGradientSph:
@@ -102,24 +98,20 @@ SersicGradientSph:
     type: Gaussian
     mean: 0.0
     sigma: 0.1
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   centre_1:
     type: Gaussian
     mean: 0.0
     sigma: 0.1
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   effective_radius:
@@ -129,7 +121,7 @@ SersicGradientSph:
     width_modifier:
       type: Relative
       value: 1.0
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   intensity:
@@ -139,7 +131,7 @@ SersicGradientSph:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   mass_to_light_gradient:
@@ -149,7 +141,7 @@ SersicGradientSph:
     width_modifier:
       type: Absolute
       value: 0.2
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   mass_to_light_ratio:
@@ -159,7 +151,7 @@ SersicGradientSph:
     width_modifier:
       type: Relative
       value: 0.3
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   sersic_index:
@@ -169,6 +161,6 @@ SersicGradientSph:
     width_modifier:
       type: Absolute
       value: 1.5
-    gaussian_limits:
+    limits:
       lower: 0.8
       upper: 5.0

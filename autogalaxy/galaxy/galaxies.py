@@ -15,7 +15,6 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
     def __init__(
         self,
         galaxies: List[Galaxy],
-        run_time_dict: Optional[Dict] = None,
     ):
         """
         A collection of galaxies, used to perform operations on the galaxies as a group.
@@ -42,13 +41,9 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         ----------
         galaxies
             The list of galaxies whose calculations are performed by this class.
-        run_time_dict
-            A dictionary of information on the run-times of function calls, including the total time and time spent on
-            different calculations.
         """
 
         super().__init__(galaxies)
-        self.run_time_dict = run_time_dict
 
     @property
     def redshift(self):

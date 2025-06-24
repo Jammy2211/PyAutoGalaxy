@@ -23,7 +23,6 @@ class AbstractToInversion:
         dataset: Optional[Union[aa.Imaging, aa.Interferometer, aa.DatasetInterface]],
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
-        run_time_dict: Optional[Dict] = None,
     ):
         """
         Abstract class which interfaces a dataset and input modeling object (e.g. galaxies, a tracer) with the
@@ -57,8 +56,6 @@ class AbstractToInversion:
             the pixelization's pixels to the brightest regions of the image.
         settings_inversion
             The settings of the inversion, which controls how the linear algebra calculation is performed.
-        run_time_dict
-            A dictionary of run-time values used to compute the inversion, for example the noise-map normalization.
         """
         if dataset is not None:
             if dataset.noise_covariance_matrix is not None:
@@ -77,8 +74,6 @@ class AbstractToInversion:
         self.adapt_images = adapt_images
 
         self.settings_inversion = settings_inversion
-
-        self.run_time_dict = run_time_dict
 
     @property
     def psf(self) -> Optional[aa.Kernel2D]:
@@ -193,7 +188,6 @@ class GalaxiesToInversion(AbstractToInversion):
         galaxies: List[Galaxy],
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
-        run_time_dict: Optional[Dict] = None,
     ):
         """
         Interfaces a dataset and input list of galaxies with the inversion module. to setup a
@@ -228,8 +222,6 @@ class GalaxiesToInversion(AbstractToInversion):
             the pixelization's pixels to the brightest regions of the image.
         settings_inversion
             The settings of the inversion, which controls how the linear algebra calculation is performed.
-        run_time_dict
-            A dictionary of run-time values used to compute the inversion, for example the noise-map normalization.
         """
         self.galaxies = Galaxies(galaxies)
 
@@ -237,7 +229,6 @@ class GalaxiesToInversion(AbstractToInversion):
             dataset=dataset,
             adapt_images=adapt_images,
             settings_inversion=settings_inversion,
-            run_time_dict=run_time_dict,
         )
 
     @property
@@ -491,13 +482,11 @@ class GalaxiesToInversion(AbstractToInversion):
             source_plane_mesh_grid=source_plane_mesh_grid,
             image_plane_mesh_grid=image_plane_mesh_grid,
             adapt_data=adapt_galaxy_image,
-            run_time_dict=self.run_time_dict,
         )
 
         return mapper_from(
             mapper_grids=mapper_grids,
             regularization=regularization,
-            run_time_dict=self.run_time_dict,
         )
 
     @cached_property
@@ -579,7 +568,6 @@ class GalaxiesToInversion(AbstractToInversion):
             dataset=self.dataset,
             linear_obj_list=self.linear_obj_list,
             settings=self.settings_inversion,
-            run_time_dict=self.run_time_dict,
         )
 
         inversion.linear_obj_galaxy_dict = self.linear_obj_galaxy_dict

@@ -6,7 +6,7 @@ Rectangular:
     width_modifier:
       type: Absolute
       value: 8.0
-    gaussian_limits:
+    limits:
       lower: 3.0
       upper: inf
   shape_1:
@@ -16,6 +16,6 @@ Rectangular:
     width_modifier:
       type: Absolute
       value: 8.0
-    gaussian_limits:
+    limits:
       lower: 3.0
       upper: inf

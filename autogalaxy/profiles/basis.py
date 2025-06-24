@@ -152,7 +152,7 @@ class Basis(LightProfile, MassProfile):
         """
         if len(self.mass_profile_list) > 0:
             return sum(
-                [mass.convergence_2d_from(grid=grid) for mass in self.mass_profile_list]
+                [mass.convergence_2d_from(grid=grid) for mass in self.profile_list]
             )
         return np.zeros((grid.shape[0],))
 

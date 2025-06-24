@@ -6,7 +6,7 @@ KMeans:
     width_modifier:
       type: Absolute
       value: 100.0
-    gaussian_limits:
+    limits:
       lower: 50.0
       upper: inf
   weight_floor:
@@ -16,7 +16,7 @@ KMeans:
     width_modifier:
       type: Absolute
       value: 0.1
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   weight_power:
@@ -26,6 +26,6 @@ KMeans:
     width_modifier:
       type: Absolute
       value: 5.0
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf

@@ -146,7 +146,6 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         psf: Optional[aa.Kernel2D],
         light_profile_list: List[LightProfileLinear],
         regularization=Optional[aa.reg.Regularization],
-        run_time_dict: Optional[Dict] = None,
     ):
         """
         A list of linear light profiles which fits a dataset via linear algebra using the images of each linear light
@@ -191,8 +190,6 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
             A list of the linear light profiles that are used to fit the data via linear algebra.
         regularization
             The regularization scheme which may be applied to this linear object in order to smooth its solution.
-        run_time_dict
-            A dictionary which contains timing of certain functions calls which is used for profiling.
         """
         for light_profile in light_profile_list:
             if not isinstance(light_profile, LightProfileLinear):
@@ -206,7 +203,8 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
                 )
 
         super().__init__(
-            grid=grid, regularization=regularization, run_time_dict=run_time_dict
+            grid=grid,
+            regularization=regularization,
         )
 
         self.blurring_grid = blurring_grid

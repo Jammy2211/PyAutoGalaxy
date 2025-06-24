@@ -20,7 +20,6 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         dataset_model: Optional[aa.DatasetModel] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
-        run_time_dict: Optional[Dict] = None,
     ):
         """
         Fits an interferometer dataset using a list of galaxies.
@@ -60,9 +59,6 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             reconstructed galaxy's morphology.
         settings_inversion
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
-        run_time_dict
-            A dictionary which if passed to the fit records how long fucntion calls which have the `profile_func`
-            decorator take to run.
         """
 
         try:
@@ -70,13 +66,12 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         except ImportError:
             settings_inversion.use_w_tilde = False
 
-        self.galaxies = Galaxies(galaxies=galaxies, run_time_dict=run_time_dict)
+        self.galaxies = Galaxies(galaxies=galaxies)
 
         super().__init__(
             dataset=dataset,
             dataset_model=dataset_model,
             use_mask_in_fit=False,
-            run_time_dict=run_time_dict,
         )
         AbstractFitInversion.__init__(
             self=self,
@@ -119,7 +114,6 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             galaxies=self.galaxies,
             adapt_images=self.adapt_images,
             settings_inversion=self.settings_inversion,
-            run_time_dict=self.run_time_dict,
         )
 
     @cached_property

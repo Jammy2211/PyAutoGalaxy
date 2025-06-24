@@ -6,7 +6,7 @@ ExponentialKernel:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   scale:
@@ -16,6 +16,6 @@ ExponentialKernel:
     width_modifier:
       type: Relative
       value: 0.2
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf

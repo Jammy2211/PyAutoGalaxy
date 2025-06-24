@@ -38,25 +38,3 @@ def test__fit_figure_of_merit__matches_correct_fit_given_galaxy_profiles(
     fit = ag.FitInterferometer(dataset=interferometer_7, galaxies=galaxies)
 
     assert fit.log_likelihood == fit_figure_of_merit
-
-
-def test__profile_log_likelihood_function(interferometer_7):
-    pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(3, 3)),
-        regularization=ag.reg.Constant(coefficient=1.0),
-    )
-
-    galaxy = ag.Galaxy(redshift=0.5, pixelization=pixelization)
-
-    model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
-
-    instance = model.instance_from_unit_vector([])
-
-    analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
-
-    run_time_dict, info_dict = analysis.profile_log_likelihood_function(
-        instance=instance
-    )
-
-    assert "regularization_term_0" in run_time_dict
-    assert "log_det_regularization_matrix_term_0" in run_time_dict

@@ -140,7 +140,7 @@ def adapt_images_from(
 
             galaxy_name_image_dict[value.header["EXTNAME"].lower()] = adapt_image
 
-        instance = fit.model.instance_from_prior_medians(ignore_prior_limits=True)
+        instance = fit.model.instance_from_prior_medians(ignore_assertions=True)
 
         adapt_images = AdaptImages(galaxy_name_image_dict=galaxy_name_image_dict)
 

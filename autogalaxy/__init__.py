@@ -1,3 +1,8 @@
+from autoconf.dictable import register_parser
+from autofit import conf
+
+conf.instance.register(__file__)
+
 from autoconf.dictable import from_dict, from_json, output_to_json, to_dict
 from autoarray.dataset import preprocess  # noqa
 from autoarray.dataset.imaging.dataset import Imaging  # noqa
@@ -111,7 +116,5 @@ from autoconf.fitsable import ndarray_via_fits_from
 from autoconf.fitsable import header_obj_from
 from autoconf.fitsable import output_to_fits
 from autoconf.fitsable import hdu_list_for_output_from
-
-conf.instance.register(__file__)
 
 __version__ = "2025.5.10.1"

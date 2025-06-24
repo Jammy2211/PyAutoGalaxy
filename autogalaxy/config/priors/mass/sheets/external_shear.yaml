@@ -6,7 +6,7 @@ ExternalShear:
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   gamma_2:
@@ -16,6 +16,6 @@ ExternalShear:
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
