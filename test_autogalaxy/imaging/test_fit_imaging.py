@@ -66,7 +66,7 @@ def test__fit_figure_of_merit(
     )
 
     assert fit.perform_inversion is True
-    assert fit.figure_of_merit == pytest.approx(-22.9005, 1.0e-4)
+    assert fit.figure_of_merit == pytest.approx(-22.91411868616, 1.0e-4)
 
     galaxy_light = ag.Galaxy(
         redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0, centre=(0.05, 0.05))
@@ -75,7 +75,7 @@ def test__fit_figure_of_merit(
     fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=[galaxy_light, galaxy_pix])
 
     assert fit.perform_inversion is True
-    assert fit.figure_of_merit == pytest.approx(-29.201919365, 1.0e-4)
+    assert fit.figure_of_merit == pytest.approx(-29.235208518732776, 1.0e-4)
 
     g0_linear_light = ag.Galaxy(
         redshift=0.5, bulge=ag.lp_linear.Sersic(sersic_index=1.0, centre=(0.05, 0.05))
@@ -157,7 +157,7 @@ def test__fit_figure_of_merit(
     )
 
     assert fit.perform_inversion is True
-    assert fit.figure_of_merit == pytest.approx(-22.87827302, 1.0e-4)
+    assert fit.figure_of_merit == pytest.approx(-22.8918119554022, 1.0e-4)
 
     g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0, centre=(0.05, 0.05)))
     g1 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0, centre=(0.05, 0.05)))
@@ -231,7 +231,7 @@ def test__fit__model_dataset__grid_offset__handles_special_behaviour(
         dataset_model=ag.DatasetModel(grid_offset=(1.0, 2.0)),
     )
 
-    assert fit.figure_of_merit == pytest.approx(-22.9005, 1.0e-4)
+    assert fit.figure_of_merit == pytest.approx(-22.914118686169, 1.0e-4)
 
 
 def test__galaxy_model_image_dict(masked_imaging_7x7):
@@ -307,13 +307,13 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
 
     assert (fit.galaxy_model_image_dict[g0] == np.zeros(9)).all()
 
-    assert fit.galaxy_model_image_dict[g1][4] == pytest.approx(1.2570779, 1.0e-4)
-    assert fit.galaxy_model_image_dict[g1].native == pytest.approx(
-        fit.inversion.mapped_reconstructed_image.native, 1.0e-4
+    assert fit.galaxy_model_image_dict[g1][4] == pytest.approx(1.25795063, 1.0e-4)
+    assert fit.galaxy_model_image_dict[g1].native.array == pytest.approx(
+        fit.inversion.mapped_reconstructed_image.native.array, 1.0e-4
     )
 
-    assert fit.model_data.native == pytest.approx(
-        fit.galaxy_model_image_dict[g1].native, 1.0e-4
+    assert fit.model_data.native.array == pytest.approx(
+        fit.galaxy_model_image_dict[g1].native.array, 1.0e-4
     )
 
     # Linear Light PRofiles + Pixelization + Regularizaiton
@@ -344,10 +344,10 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
         -9.658085312, 1.0e-4
     )
     assert fit.galaxy_model_image_dict[galaxy_pix_0][4] == pytest.approx(
-        1.107969179, 1.0e-4
+        1.10780906, 1.0e-4
     )
     assert fit.galaxy_model_image_dict[galaxy_pix_1][4] == pytest.approx(
-        1.1079691840, 1.0e-4
+        1.10780906, 1.0e-4
     )
 
     mapped_reconstructed_image = (

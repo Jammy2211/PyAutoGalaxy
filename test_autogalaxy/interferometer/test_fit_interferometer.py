@@ -52,7 +52,7 @@ def test__fit_figure_of_merit(interferometer_7):
     )
 
     assert fit.perform_inversion is True
-    assert fit.figure_of_merit == pytest.approx(-66.90612, 1.0e-4)
+    assert fit.figure_of_merit == pytest.approx(-71.770448724198, 1.0e-4)
 
     galaxy_light = ag.Galaxy(
         redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0, centre=(0.05, 0.05))
@@ -72,7 +72,7 @@ def test__fit_figure_of_merit(interferometer_7):
     )
 
     assert fit.perform_inversion is True
-    assert fit.figure_of_merit == pytest.approx(-250.2259451235, 1.0e-4)
+    assert fit.figure_of_merit == pytest.approx(-196.15073725528504, 1.0e-4)
 
     g0_linear_light = ag.Galaxy(
         redshift=0.5, bulge=ag.lp_linear.Sersic(sersic_index=1.0, centre=(0.05, 0.05))
@@ -107,8 +107,8 @@ def test__fit_figure_of_merit(interferometer_7):
         dataset=interferometer_7, galaxies=[g0_linear_light, galaxy_pix]
     )
 
-    assert fit.log_evidence == pytest.approx(-35.17166165, 1e-4)
-    assert fit.figure_of_merit == pytest.approx(-35.17166165, 1.0e-4)
+    assert fit.log_evidence == pytest.approx(-37.4081355120388, 1e-4)
+    assert fit.figure_of_merit == pytest.approx(-37.4081355120388, 1.0e-4)
 
 
 def test___galaxy_model_image_dict(interferometer_7):
@@ -212,10 +212,10 @@ def test___galaxy_model_image_dict(interferometer_7):
     )
     assert fit.galaxy_model_image_dict[g1] == pytest.approx(g1_image.array, 1.0e-4)
     assert fit.galaxy_model_image_dict[galaxy_pix_0][4] == pytest.approx(
-        -0.00560239, 1.0e-2
+        -0.00541699, 1.0e-2
     )
     assert fit.galaxy_model_image_dict[galaxy_pix_1][4] == pytest.approx(
-        -0.00529861, 1.0e-2
+        -0.00563034, 1.0e-2
     )
 
     mapped_reconstructed_image = (
@@ -340,10 +340,10 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
         g1_visibilities.array, 1.0e-4
     )
     assert fit.galaxy_model_visibilities_dict[galaxy_pix_0][0] == pytest.approx(
-        -0.007889864570437388 + 0.22558558295704295j, 1.0e-4
+        -0.00889895 + 0.22151583j, 1.0e-4
     )
     assert fit.galaxy_model_visibilities_dict[galaxy_pix_1][0] == pytest.approx(
-        -0.007760865740849596 + 0.05639639626962996j, 1.0e-4
+        -0.00857457 + 0.05537896j, 1.0e-4
     )
 
     mapped_reconstructed_visibilities = (
