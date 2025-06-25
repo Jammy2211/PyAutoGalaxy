@@ -42,10 +42,12 @@ class SphericalPowerlawMultipoleEuclid(MassProfile):
         self.einstein_radius = einstein_radius
         self.gamma = gamma
 
+    @aa.over_sample
     @aa.grid_dec.to_array
     def convergence_2d_from(self, grid, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
+    @aa.over_sample
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid, **kwargs):
         return np.zeros(shape=grid.shape[0])

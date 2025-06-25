@@ -47,10 +47,12 @@ class ShearEuclid(MassProfile):
         self.gamma_ext = gamma_ext
         self.phi_ext = phi_ext
 
+    @aa.over_sample
     @aa.grid_dec.to_array
     def convergence_2d_from(self, grid, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
+    @aa.over_sample
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid, **kwargs):
         return np.zeros(shape=grid.shape[0])
