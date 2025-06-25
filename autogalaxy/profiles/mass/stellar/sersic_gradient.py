@@ -66,8 +66,7 @@ class SersicGradient(AbstractSersic):
         def calculate_deflection_component(npow, index):
             sersic_constant = self.sersic_constant
 
-            deflection_grid = self.axis_ratio * grid[:, index]
-            deflection_grid = np.array(deflection_grid.array)
+            deflection_grid = np.array(self.axis_ratio * grid.array[:, index])
 
             for i in range(grid.shape[0]):
                 deflection_grid[i] *= (
