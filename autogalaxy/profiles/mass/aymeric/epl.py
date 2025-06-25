@@ -9,6 +9,8 @@ The function derivatives_q_phi() has been added, for practicality.
 All credits go to Nicolas Tessore and the Lenstronomy contributors.
 """
 
+import autoarray as aa
+
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 __author__ = "ntessore, Lenstronomy contributors"
@@ -37,12 +39,15 @@ class EPLEuclid(MassProfile):
         self.einstein_radius = einstein_radius
         self.gamma = gamma
 
+    @aa.grid_dec.to_array
     def convergence_2d_from(self, grid, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
+    @aa.grid_dec.to_array
     def potential_2d_from(self, grid, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
+    @aa.grid_dec.to_vector_yx
     def deflections_yx_2d_from(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.

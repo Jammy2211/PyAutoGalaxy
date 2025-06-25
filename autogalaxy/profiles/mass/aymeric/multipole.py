@@ -7,6 +7,8 @@ Note that only the m=4 case is implemented for the deflection angles.
 Credits to Leon Ecker (LMU), based on Chu et al. (2013) and Nightingale et al. (2023).
 """
 
+import autoarray as aa
+
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 __author__ = "Leon Ecker"
@@ -40,12 +42,15 @@ class SphericalPowerlawMultipoleEuclid(MassProfile):
         self.einstein_radius = einstein_radius
         self.gamma = gamma
 
+    @aa.grid_dec.to_array
     def convergence_2d_from(self, grid, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
+    @aa.grid_dec.to_array
     def potential_2d_from(self, grid, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
+    @aa.grid_dec.to_vector_yx
     def deflections_yx_2d_from(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.

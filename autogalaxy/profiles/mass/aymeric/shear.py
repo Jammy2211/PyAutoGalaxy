@@ -6,6 +6,8 @@ This code a copy of the following lenstronomy submodules, with some functions re
 All credits go to Simon Birrer and lenstronomy contributors.
 """
 
+import autoarray as aa
+
 __author__ = "sibirrer, Lenstronomy contributors"
 
 import numpy as np
@@ -45,12 +47,15 @@ class ShearEuclid(MassProfile):
         self.gamma_ext = gamma_ext
         self.phi_ext = phi_ext
 
+    @aa.grid_dec.to_array
     def convergence_2d_from(self, grid, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
+    @aa.grid_dec.to_array
     def potential_2d_from(self, grid, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
+    @aa.grid_dec.to_vector_yx
     def deflections_yx_2d_from(self, grid, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
