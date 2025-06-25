@@ -1,3 +1,9 @@
+import jax.numpy as jnp
+
+def pytest_configure():
+    _ = jnp.sum(jnp.array([0.0]))  # Force backend init
+
+
 import os
 from os import path
 
