@@ -51,3 +51,5 @@ from .stellar import (
     ChameleonSph,
 )
 from .sheets import ExternalShear, MassSheet, InputDeflections
+
+from .aymeric import ShearEuclid, EPLEuclid, SphericalPowerlawMultipoleEuclid
