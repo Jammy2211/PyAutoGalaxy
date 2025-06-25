@@ -181,24 +181,6 @@ class OperateDeflections:
             return aa.ArrayIrregular(values=fermat_potential)
         return aa.Array2D(values=fermat_potential, mask=grid.mask)
 
-    def time_delays_from(self, grid) -> aa.Array2D:
-        """
-        Returns the 2D time delay map of lensing object, which is computed as the deflection angles in the y and x
-        directions multiplied by the y and x coordinates of the grid.
-
-        Parameters
-        ----------
-        grid
-            The 2D grid of (y,x) arc-second coordinates the deflection angles and time delay are computed on.
-        """
-        deflections_yx = self.deflections_yx_2d_from(grid=grid)
-
-        return aa.Array2D(
-            values=deflections_yx[:, 0] * grid[:, 0]
-            + deflections_yx[:, 1] * grid[:, 1],
-            mask=grid.mask,
-        )
-
     @precompute_jacobian
     def tangential_eigen_value_from(self, grid, jacobian=None) -> aa.Array2D:
         """
