@@ -28,10 +28,9 @@ class Analysis(af.Analysis):
         cosmology
             The Cosmology assumed for this analysis.
         """
-        from autogalaxy.cosmology.wrap import Planck15
-        cosmology = cosmology or Planck15()
 
-        self.cosmology = cosmology
+        from autogalaxy.cosmology.wrap import Planck15
+        self.cosmology = cosmology or Planck15()
 
     def galaxies_via_instance_from(
         self,
