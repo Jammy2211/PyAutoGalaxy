@@ -1,16 +1,17 @@
-from astropy import constants
-from astropy import cosmology as cosmo
 import math
 import numpy as np
 
-
-class LensingCosmology(cosmo.FLRW):
+class LensingCosmology:
     """
     Class containing specific functions for performing gravitational lensing cosmology calculations.
 
     By inheriting from the astropy `cosmo.FLRW` class this provides many additional methods for performing cosmological
     calculations.
     """
+    def __init__(self):
+
+        from astropy.cosmology import FLRW
+        self._cosmo = FLRW()
 
     def arcsec_per_kpc_from(self, redshift: float) -> float:
         """
@@ -189,6 +190,8 @@ class LensingCosmology(cosmo.FLRW):
             The redshift of the second strong lens galaxy (E.g. the lens galaxy) for which the critical surface
             density is calculated.
         """
+        from astropy import constants
+
         const = constants.c.to("kpc / s") ** 2.0 / (
             4 * math.pi * constants.G.to("kpc3 / (solMass s2)")
         )
@@ -305,6 +308,8 @@ class LensingCosmology(cosmo.FLRW):
         redshift_1
             The redshift of the second strong lens galaxy (the source).
         """
+        from astropy import constants
+
         const = constants.c.to("kpc / s")
 
         angular_diameter_distance_to_redshift_0_kpc = (

@@ -1,7 +1,5 @@
 import jax.numpy as jnp
 import numpy as np
-from scipy.special import genlaguerre
-from jax.scipy.special import factorial
 from typing import Optional, Tuple
 
 import autoarray as aa
@@ -85,6 +83,8 @@ class ShapeletPolar(AbstractShapelet):
         image
             The image of the Polar Shapelet evaluated at every (y,x) coordinate on the transformed grid.
         """
+        from scipy.special import genlaguerre
+        from jax.scipy.special import factorial
 
         laguerre = genlaguerre(
             n=(self.n - jnp.abs(self.m)) / 2.0, alpha=jnp.abs(self.m)

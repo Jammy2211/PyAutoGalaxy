@@ -1,13 +1,8 @@
-import matplotlib.pyplot as plt
 import numpy as np
 from typing import List
 
-from autoconf import conf
-
 import autoarray as aa
 from autoarray import plot as aplt
-
-from autoarray.plot.auto_labels import AutoLabels
 
 from autogalaxy.ellipse.fit_ellipse import FitEllipse
 from autogalaxy.plot.abstract_plotters import Plotter
@@ -23,12 +18,12 @@ class FitEllipsePlotter(Plotter):
     def __init__(
         self,
         fit_list: List[FitEllipse],
-        mat_plot_1d: MatPlot1D = MatPlot1D(),
-        visuals_1d: Visuals1D = Visuals1D(),
-        include_1d: Include1D = Include1D(),
-        mat_plot_2d: MatPlot2D = MatPlot2D(),
-        visuals_2d: Visuals2D = Visuals2D(),
-        include_2d: Include2D = Include2D(),
+        mat_plot_1d: MatPlot1D = None,
+        visuals_1d: Visuals1D = None,
+        include_1d: Include1D = None,
+        mat_plot_2d: MatPlot2D = None,
+        visuals_2d: Visuals2D = None,
+        include_2d: Include2D = None,
     ):
         super().__init__(
             mat_plot_1d=mat_plot_1d,

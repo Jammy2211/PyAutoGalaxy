@@ -4,7 +4,6 @@ from typing import Tuple
 import autoarray as aa
 
 from autogalaxy.cosmology.lensing import LensingCosmology
-from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.profiles.mass.dark.abstract import AbstractgNFW
 
 
@@ -109,8 +108,11 @@ class NFWTruncatedSph(AbstractgNFW):
         redshift_profile,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = None,
     ):
+        from autogalaxy.cosmology.wrap import Planck15
+        cosmology = cosmology or Planck15()
+
         mass_at_200 = self.mass_at_200_solar_masses(
             redshift_object=redshift_profile,
             redshift_source=redshift_source,

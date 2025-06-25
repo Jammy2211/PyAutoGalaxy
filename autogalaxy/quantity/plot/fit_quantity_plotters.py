@@ -17,9 +17,9 @@ class FitQuantityPlotter(Plotter):
     def __init__(
         self,
         fit: FitQuantity,
-        mat_plot_2d: MatPlot2D = MatPlot2D(),
-        visuals_2d: Visuals2D = Visuals2D(),
-        include_2d: Include2D = Include2D(),
+        mat_plot_2d: MatPlot2D = None,
+        visuals_2d: Visuals2D = None,
+        include_2d: Include2D = None,
     ):
         """
         Plots the attributes of `FitQuantity` objects using the matplotlib method `imshow()` and many

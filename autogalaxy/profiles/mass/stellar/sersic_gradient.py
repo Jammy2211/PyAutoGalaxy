@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.integrate import quad
 from typing import List, Tuple
 
 import autoarray as aa
@@ -62,6 +61,7 @@ class SersicGradient(AbstractSersic):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
+        from scipy.integrate import quad
 
         def calculate_deflection_component(npow, index):
             sersic_constant = self.sersic_constant

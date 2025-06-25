@@ -7,7 +7,9 @@ grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__duffy__mass_and_concentration_consistent_with_normal_truncated_nfw():
-    cosmology = ag.cosmo.FlatLambdaCDMWrap(H0=70.0, Om0=0.3)
+
+    from autogalaxy.cosmology.model import FlatLambdaCDMWrap
+    cosmology = FlatLambdaCDMWrap(H0=70.0, Om0=0.3)
 
     mp = ag.mp.NFWTruncatedMCRDuffySph(
         centre=(1.0, 2.0),
@@ -51,7 +53,9 @@ def test__duffy__mass_and_concentration_consistent_with_normal_truncated_nfw():
 
 
 def test__ludlow__mass_and_concentration_consistent_with_normal_truncated_nfw__scatter_0():
-    cosmology = ag.cosmo.FlatLambdaCDMWrap(H0=70.0, Om0=0.3)
+
+    from autogalaxy.cosmology.model import FlatLambdaCDMWrap
+    cosmology = FlatLambdaCDMWrap(H0=70.0, Om0=0.3)
 
     mp = ag.mp.NFWTruncatedMCRLudlowSph(
         centre=(1.0, 2.0),

@@ -1,10 +1,5 @@
-from astropy import units
-
 import numpy as np
 import warnings
-
-from autogalaxy.cosmology.wrap import Planck15
-
 
 def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_source):
     """
@@ -13,6 +8,10 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
 
     Interprets mass as *`M_{200c}`*, not `M_{200m}`.
     """
+
+    from astropy import units
+
+    from autogalaxy.cosmology.wrap import Planck15
     cosmology = Planck15()
 
     cosmic_average_density = (
@@ -64,11 +63,13 @@ def kappa_s_and_scale_radius_for_ludlow(
 
     Interprets mass as *`M_{200c}`*, not `M_{200m}`.
     """
+    from astropy import units
     from colossus.cosmology import cosmology as col_cosmology
     from colossus.halo.concentration import concentration as col_concentration
 
     warnings.filterwarnings("ignore")
 
+    from autogalaxy.cosmology.wrap import Planck15
     cosmology = Planck15()
 
     col_cosmo = col_cosmology.setCosmology("planck15")

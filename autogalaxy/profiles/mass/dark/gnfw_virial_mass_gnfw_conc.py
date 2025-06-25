@@ -2,13 +2,8 @@ from typing import Tuple
 
 from autogalaxy.profiles.mass.dark.gnfw import gNFWSph
 
-from astropy import units
-
 import numpy as np
 from autogalaxy import cosmology as cosmo
-
-from scipy.integrate import quad
-
 
 def kappa_s_and_scale_radius(
     cosmology,
@@ -19,6 +14,9 @@ def kappa_s_and_scale_radius(
     redshift_source,
     inner_slope,
 ):
+    from astropy import units
+    from scipy.integrate import quad
+
     # gNFW concentration imported
 
     critical_density = (

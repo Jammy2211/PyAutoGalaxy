@@ -1,23 +1,17 @@
 import logging
-import numpy as np
-from typing import Dict, Optional, Tuple
+from typing import Optional
 
 from autoconf.dictable import to_dict
-from autoconf.fitsable import hdu_list_for_output_from
 
 import autofit as af
 import autoarray as aa
 
-from autoarray.exc import PixelizationException
-
 from autogalaxy.analysis.adapt_images.adapt_image_maker import AdaptImageMaker
 from autogalaxy.analysis.analysis.dataset import AnalysisDataset
 from autogalaxy.cosmology.lensing import LensingCosmology
-from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.interferometer.model.result import ResultInterferometer
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.interferometer.model.visualizer import VisualizerInterferometer
-from autogalaxy import exc
 
 logger = logging.getLogger(__name__)
 
@@ -32,7 +26,7 @@ class AnalysisInterferometer(AnalysisDataset):
         self,
         dataset: aa.Interferometer,
         adapt_image_maker: Optional[AdaptImageMaker] = None,
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = None,
         settings_inversion: aa.SettingsInversion = None,
         title_prefix: str = None,
     ):

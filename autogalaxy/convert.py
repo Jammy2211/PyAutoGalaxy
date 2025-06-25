@@ -1,4 +1,3 @@
-from astropy import units
 from typing import Tuple
 
 import jax
@@ -322,6 +321,8 @@ def multipole_comps_from(k_m: float, phi_m: float, m: int) -> Tuple[float, float
     -------
     The multipole component parameters.
     """
+    from astropy import units
+
     multipole_comp_0 = k_m * jnp.sin(phi_m * float(m) * units.deg.to(units.rad))
     multipole_comp_1 = k_m * jnp.cos(phi_m * float(m) * units.deg.to(units.rad))
 

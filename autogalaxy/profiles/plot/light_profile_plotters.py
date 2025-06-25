@@ -23,12 +23,12 @@ class LightProfilePlotter(Plotter):
         self,
         light_profile: LightProfile,
         grid: aa.type.Grid1D2DLike,
-        mat_plot_1d: MatPlot1D = MatPlot1D(),
-        visuals_1d: Visuals1D = Visuals1D(),
-        include_1d: Include1D = Include1D(),
-        mat_plot_2d: MatPlot2D = MatPlot2D(),
-        visuals_2d: Visuals2D = Visuals2D(),
-        include_2d: Include2D = Include2D(),
+        mat_plot_1d: MatPlot1D = None,
+        visuals_1d: Visuals1D = None,
+        include_1d: Include1D = None,
+        mat_plot_2d: MatPlot2D = None,
+        visuals_2d: Visuals2D = None,
+        include_2d: Include2D = None,
     ):
         """
         Plots the attributes of `LightProfile` objects using the matplotlib methods `plot()` and `imshow()` and many
@@ -156,12 +156,12 @@ class LightProfilePDFPlotter(LightProfilePlotter):
         self,
         light_profile_pdf_list: List[LightProfile],
         grid: aa.type.Grid2DLike,
-        mat_plot_1d: MatPlot1D = MatPlot1D(),
-        visuals_1d: Visuals1D = Visuals1D(),
-        include_1d: Include1D = Include1D(),
-        mat_plot_2d: MatPlot2D = MatPlot2D(),
-        visuals_2d: Visuals2D = Visuals2D(),
-        include_2d: Include2D = Include2D(),
+        mat_plot_1d: MatPlot1D = None,
+        visuals_1d: Visuals1D = None,
+        include_1d: Include1D = None,
+        mat_plot_2d: MatPlot2D = None,
+        visuals_2d: Visuals2D = None,
+        include_2d: Include2D = None,
         sigma: Optional[float] = 3.0,
     ):
         """

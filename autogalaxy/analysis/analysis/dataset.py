@@ -1,4 +1,3 @@
-import copy
 import logging
 from typing import Optional, Union
 
@@ -10,7 +9,6 @@ import autoarray as aa
 from autogalaxy.analysis.adapt_images.adapt_image_maker import AdaptImageMaker
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.cosmology.lensing import LensingCosmology
-from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.analysis.analysis.analysis import Analysis
 from autogalaxy.analysis.result import ResultDataset
 
@@ -24,7 +22,7 @@ class AnalysisDataset(Analysis):
         self,
         dataset: Union[aa.Imaging, aa.Interferometer],
         adapt_image_maker: Optional[AdaptImageMaker] = None,
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = None,
         settings_inversion: aa.SettingsInversion = None,
         title_prefix: str = None,
     ):

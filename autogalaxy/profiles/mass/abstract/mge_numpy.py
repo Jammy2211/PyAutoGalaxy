@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.special import comb
 
 
 def w_f_approx(z):
@@ -165,6 +164,8 @@ class MassProfileMGE:
         """
         see Eq.(6) of 1906.00263
         """
+        from scipy.special import comb
+
         eta_list = np.zeros(int(2 * p + 1))
         kesi_list = np.zeros(int(2 * p + 1))
         kesi_list[0] = 0.5

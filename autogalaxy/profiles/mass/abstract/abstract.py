@@ -1,6 +1,4 @@
 import numpy as np
-from scipy.integrate import quad
-from scipy.optimize import root_scalar
 from typing import Tuple
 
 import autoarray as aa
@@ -82,6 +80,7 @@ class MassProfile(EllProfile, OperateDeflections):
         radius : dim.Length
             The radius of the circle to compute the dimensionless mass within.
         """
+        from scipy.integrate import quad
 
         return quad(self.mass_integral, a=0.0, b=radius)[0]
 
@@ -124,6 +123,7 @@ class MassProfile(EllProfile, OperateDeflections):
         This radius corresponds to the Einstein radius of the mass profile, and is a property of a number of \
         mass profiles below.
         """
+        from scipy.optimize import root_scalar
 
         def func(radius):
             return (

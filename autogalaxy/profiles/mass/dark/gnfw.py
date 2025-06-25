@@ -1,8 +1,5 @@
 import inspect
 import numpy as np
-from scipy import LowLevelCallable
-from scipy import special
-from scipy.integrate import quad
 from typing import Tuple
 
 import autoarray as aa
@@ -11,6 +8,8 @@ from autogalaxy.profiles.mass.dark.abstract import AbstractgNFW
 
 
 def jit_integrand(integrand_function):
+    from scipy import LowLevelCallable
+
     from numba import cfunc
     from numba.types import intc, CPointer, float64
 
@@ -119,6 +118,9 @@ class gNFW(AbstractgNFW):
             )
 
         def calculate_deflection_component(npow, yx_index):
+
+            from scipy.integrate import quad
+
             deflection_grid = np.zeros(grid.shape[0])
 
             for i in range(grid.shape[0]):
@@ -202,6 +204,9 @@ class gNFW(AbstractgNFW):
         return kap / (1.0 - (1.0 - axis_ratio**2) * u) ** (npow + 0.5)
 
     def convergence_func(self, grid_radius: float) -> float:
+
+        from scipy.integrate import quad
+
         def integral_y(y, eta):
             return (y + eta) ** (self.inner_slope - 4) * (1 - np.sqrt(1 - y**2))
 
@@ -243,6 +248,9 @@ class gNFW(AbstractgNFW):
             The number of bins to tabulate the inner integral of this profile.
 
         """
+
+        from scipy import special
+        from scipy.integrate import quad
 
         @jit_integrand
         def deflection_integrand(x, kappa_radius, scale_radius, inner_slope):
@@ -390,6 +398,10 @@ class gNFWSph(gNFW):
         return (y + eta) ** (inner_slope - 3) * ((1 - np.sqrt(1 - y**2)) / y)
 
     def deflection_func_sph(self, eta):
+
+        from scipy import special
+        from scipy.integrate import quad
+
         integral_y_2 = quad(
             self.deflection_integrand,
             a=0.0,

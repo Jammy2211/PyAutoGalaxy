@@ -1,7 +1,4 @@
-from astropy import constants
 import math
-
-from autogalaxy.cosmology.wrap import Planck15
 
 # Mock Cosmology #
 
@@ -14,7 +11,7 @@ class Value:
         return Value(value=self.value)
 
 
-class MockCosmology(Planck15):
+class MockCosmology:
     def __init__(
         self,
         arcsec_per_kpc=0.5,
@@ -22,7 +19,6 @@ class MockCosmology(Planck15):
         critical_surface_density=2.0,
         cosmic_average_density=2.0,
     ):
-        super().__init__()
 
         self.arcsec_per_kpc = arcsec_per_kpc
         self.kpc_per_arcsec = kpc_per_arcsec
@@ -39,6 +35,8 @@ class MockCosmology(Planck15):
         return Value(value=1.0)
 
     def angular_diameter_distance_z1z2(self, z1, z2):
+        from astropy import constants
+
         const = constants.c.to("kpc / s") ** 2.0 / (
             4 * math.pi * constants.G.to("kpc3 / (solMass s2)")
         )

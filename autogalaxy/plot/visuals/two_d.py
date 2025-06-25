@@ -1,4 +1,3 @@
-from matplotlib import patches as ptch
 from typing import List, Union, Optional
 
 import autoarray as aa
@@ -16,7 +15,7 @@ class Visuals2D(aplt.Visuals2D):
         grid: Union[aa.Grid2D] = None,
         mesh_grid: aa.Grid2D = None,
         vectors: aa.VectorYX2DIrregular = None,
-        patches: Union[ptch.Patch] = None,
+        patches: "Union[ptch.Patch]" = None,
         array_overlay: aa.Array2D = None,
         light_profile_centres: aa.Grid2DIrregular = None,
         mass_profile_centres: aa.Grid2DIrregular = None,

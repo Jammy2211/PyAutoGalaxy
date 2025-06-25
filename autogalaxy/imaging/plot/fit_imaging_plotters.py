@@ -18,9 +18,9 @@ class FitImagingPlotter(Plotter):
     def __init__(
         self,
         fit: FitImaging,
-        mat_plot_2d: MatPlot2D = MatPlot2D(),
-        visuals_2d: Visuals2D = Visuals2D(),
-        include_2d: Include2D = Include2D(),
+        mat_plot_2d: MatPlot2D = None,
+        visuals_2d: Visuals2D = None,
+        include_2d: Include2D = None,
         residuals_symmetric_cmap: bool = True,
     ):
         """

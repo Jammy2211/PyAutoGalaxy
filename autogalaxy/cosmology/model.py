@@ -2,7 +2,6 @@ from astropy import cosmology as cosmo
 
 from autogalaxy.cosmology.lensing import LensingCosmology
 
-
 class LambdaCDMWrap(cosmo.LambdaCDM, LensingCosmology):
     def __init__(
         self,

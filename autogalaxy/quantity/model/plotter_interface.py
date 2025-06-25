@@ -51,7 +51,7 @@ class PlotterInterfaceQuantity(PlotterInterface):
     def fit_quantity(
         self,
         fit: FitQuantity,
-        visuals_2d: Visuals2D = Visuals2D(),
+        visuals_2d: Visuals2D = None,
         fit_quanaity_plotter_cls=FitQuantityPlotter,
     ):
         """

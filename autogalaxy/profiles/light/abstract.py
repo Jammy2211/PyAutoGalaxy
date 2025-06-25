@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.integrate import quad
 from typing import Optional, Tuple
 
 import autoarray as aa
@@ -117,6 +116,7 @@ class LightProfile(EllProfile, OperateImage):
         radius
             The radius of the circle to compute the dimensionless luminosity within.
         """
+        from scipy.integrate import quad
 
         return quad(func=self.luminosity_integral, a=0.0, b=radius)[0]
 

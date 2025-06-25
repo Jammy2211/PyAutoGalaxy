@@ -1,25 +1,26 @@
-from astropy import cosmology as cosmo
+def Planck15():
 
-from autogalaxy.cosmology.lensing import LensingCosmology
+    """
+    A lazy-loading wrapper for the astropy `Planck15` cosmology class.
 
+    The actual class is only created (and astropy imported) when this function is called.
+    """
 
-class Planck15(cosmo.FlatLambdaCDM, LensingCosmology):
-    def __init__(self):
-        """
-        A wrapper for the astropy `Planck15` cosmology class.
+    from astropy import cosmology as cosmo
+    from autogalaxy.cosmology.lensing import LensingCosmology
 
-        The only role of this class is to instantiate the `Planck15` cosmology class from astropy, but to additionally
-        inherit from `LensingCosmology`, which is a class that provides additional functionality for calculating lensing
-        specific quantities in the cosmology.
-        """
-        Planck15 = cosmo.Planck15
+    class _Planck15(cosmo.FlatLambdaCDM, LensingCosmology):
+        def __init__(self):
+            Planck15_astropy = cosmo.Planck15
 
-        super().__init__(
-            H0=Planck15.H0,
-            Om0=Planck15.Om0,
-            Tcmb0=Planck15.Tcmb0,
-            Neff=Planck15.Neff,
-            m_nu=Planck15.m_nu,
-            Ob0=Planck15.Ob0,
-            name=Planck15.name,
-        )
+            super().__init__(
+                H0=Planck15_astropy.H0,
+                Om0=Planck15_astropy.Om0,
+                Tcmb0=Planck15_astropy.Tcmb0,
+                Neff=Planck15_astropy.Neff,
+                m_nu=Planck15_astropy.m_nu,
+                Ob0=Planck15_astropy.Ob0,
+                name=Planck15_astropy.name,
+            )
+
+    return _Planck15()

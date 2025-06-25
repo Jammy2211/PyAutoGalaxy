@@ -2,17 +2,16 @@ from typing import Tuple
 
 from autogalaxy.profiles.mass.dark.nfw import NFWSph
 
-from astropy import units
-
 import numpy as np
-import warnings
-
-from autogalaxy.cosmology.wrap import Planck15
 
 
 def kappa_s_and_scale_radius(
     virial_mass, concentration, virial_overdens, redshift_object, redshift_source
 ):
+
+    from astropy import units
+    from autogalaxy.cosmology.wrap import Planck15
+
     cosmology = Planck15()
 
     cosmic_average_density = (

@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 import numpy as np
-from scipy.linalg import lstsq
 from typing import Callable, List, Tuple
 
 
@@ -85,6 +84,8 @@ class MassProfileCSE(ABC):
             A list of amplitudes and core radii of every cored steep elliptical (cse) the mass profile is decomposed
             into.
         """
+        from scipy.linalg import lstsq
+
         error_sigma = 0.1  # error spread. Could be any value.
 
         r_samples = np.logspace(np.log10(radii_min), np.log10(radii_max), sample_points)
