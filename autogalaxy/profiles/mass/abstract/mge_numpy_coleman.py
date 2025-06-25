@@ -107,7 +107,6 @@ class MassProfileMGE:
         self.expv = 0
 
     @staticmethod
-    #  @aa.util.numba.jit()
     def zeta_from(grid, amps, sigmas, axis_ratio):
         """
         The key part to compute the deflection angle of each Gaussian.

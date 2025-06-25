@@ -139,7 +139,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         )
 
     @staticmethod
-    @aa.util.numba.jit()
     def coord_func_f_jit(grid_radius, f):
         for index in range(f.shape[0]):
             if np.real(grid_radius[index]) > 1.0:
@@ -166,7 +165,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         )
 
     @staticmethod
-    @aa.util.numba.jit()
     def coord_func_g_jit(grid_radius, f_r, g):
         for index in range(f_r.shape[0]):
             if np.real(grid_radius[index]) > 1.0:
