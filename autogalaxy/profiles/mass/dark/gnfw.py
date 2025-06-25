@@ -160,6 +160,8 @@ class gNFW(AbstractgNFW):
         surface_density_integral = np.zeros((tabulate_bins,))
 
         for i in range(tabulate_bins):
+            from scipy.integrate import quad
+
             eta = 10.0 ** (minimum_log_eta + (i - 1) * bin_size)
 
             integral = quad(

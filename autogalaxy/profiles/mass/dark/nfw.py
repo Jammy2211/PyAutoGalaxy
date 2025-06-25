@@ -157,6 +157,7 @@ class NFW(gNFW, MassProfileCSE):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
+        from scipy.integrate import quad
 
         potential_grid = np.zeros(grid.shape[0])
 
