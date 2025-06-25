@@ -9,6 +9,8 @@ The function derivatives_q_phi() has been added, for practicality.
 All credits go to Nicolas Tessore and the Lenstronomy contributors.
 """
 
+from autogalaxy.profiles.mass.abstract.abstract import MassProfile
+
 __author__ = "ntessore, Lenstronomy contributors"
 
 import numpy as np
@@ -18,7 +20,7 @@ from typing import Tuple
 __all__ = ["EPL", "EPLMajorAxis"]
 
 
-class EPLEuclid:
+class EPLEuclid(MassProfile):
 
     def __init__(
         self,

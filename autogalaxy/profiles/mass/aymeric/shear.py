@@ -12,7 +12,9 @@ import numpy as np
 
 __all__ = ["ShearGammaPsi", "Shear"]
 
-class ShearEuclid:
+from autogalaxy.profiles.mass.abstract.abstract import MassProfile
+
+class ShearEuclid(MassProfile):
     # def __init__(self, gamma_1: float = 0.0, gamma_2: float = 0.0):
     #     """
     #     An `ExternalShear` term, to model the line-of-sight contribution of other galaxies / satellites.

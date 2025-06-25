@@ -7,6 +7,8 @@ Note that only the m=4 case is implemented for the deflection angles.
 Credits to Leon Ecker (LMU), based on Chu et al. (2013) and Nightingale et al. (2023).
 """
 
+from autogalaxy.profiles.mass.abstract.abstract import MassProfile
+
 __author__ = "Leon Ecker"
 
 import numpy as np
@@ -21,7 +23,7 @@ def cart2polar(x, y, center_x=0, center_y=0):
 
 
 
-class SphericalPowerlawMultipoleEuclid:
+class SphericalPowerlawMultipoleEuclid(MassProfile):
 
     def __init__(
         self,
