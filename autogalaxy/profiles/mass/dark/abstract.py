@@ -249,6 +249,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
     ):
 
         from autogalaxy.cosmology.wrap import Planck15
+
         cosmology = cosmology or Planck15()
 
         from scipy.optimize import fsolve
@@ -312,6 +313,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         cosmology: LensingCosmology = None,
     ):
         from autogalaxy.cosmology.wrap import Planck15
+
         cosmology = cosmology or Planck15()
 
         """

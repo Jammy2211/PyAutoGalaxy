@@ -204,11 +204,13 @@ class Scribbler:
 
     def quit_(self):
         import matplotlib.pyplot as plt
+
         plt.close()
         self.figure.canvas.stop_event_loop()
 
     def show_mask(self):
         import matplotlib.pyplot as plt
+
         masks = self.get_scribble_masks()
         junk_mask = masks["1"]
         feature_mask = masks["2"]

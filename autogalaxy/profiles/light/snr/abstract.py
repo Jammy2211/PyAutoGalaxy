@@ -3,6 +3,7 @@ from typing import Optional
 
 import autoarray as aa
 
+
 class LightProfileSNR:
     def __init__(self, signal_to_noise_ratio: float = 10.0):
         """

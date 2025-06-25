@@ -111,6 +111,7 @@ class NFWTruncatedSph(AbstractgNFW):
         cosmology: LensingCosmology = None,
     ):
         from autogalaxy.cosmology.wrap import Planck15
+
         cosmology = cosmology or Planck15()
 
         mass_at_200 = self.mass_at_200_solar_masses(

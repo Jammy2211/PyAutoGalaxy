@@ -30,6 +30,7 @@ class Analysis(af.Analysis):
         """
 
         from autogalaxy.cosmology.wrap import Planck15
+
         self.cosmology = cosmology or Planck15()
 
     def galaxies_via_instance_from(

@@ -5,6 +5,7 @@ from autogalaxy.profiles.mass.dark.gnfw import gNFWSph
 import numpy as np
 from autogalaxy import cosmology as cosmo
 
+
 def kappa_s_and_scale_radius(
     cosmology,
     virial_mass,

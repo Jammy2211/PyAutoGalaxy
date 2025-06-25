@@ -11,6 +11,7 @@ from autogalaxy.plot.visuals.two_d import Visuals2D
 from autogalaxy.plot.include.one_d import Include1D
 from autogalaxy.plot.include.two_d import Include2D
 
+
 class Plotter(AbstractPlotter):
 
     def __init__(

@@ -30,6 +30,7 @@ class SMBH(PointMass):
             The redshift of the source galaxy, which is used to convert the mass of the SMBH to an Einstein radius.
         """
         from autogalaxy.cosmology.wrap import Planck15
+
         cosmology = Planck15()
 
         self.mass = mass

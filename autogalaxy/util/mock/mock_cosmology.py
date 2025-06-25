@@ -63,7 +63,6 @@ class MockCosmology:
 
         return cosmic_average_density_kpc
 
-
     def critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
         self, redshift_0: float, redshift_1: float
     ) -> float:
@@ -144,7 +143,6 @@ class MockCosmology:
 
         return angular_diameter_distance_kpc.value
 
-
     def angular_diameter_distance_between_redshifts_in_kpc_from(
         self, redshift_0: float, redshift_1: float
     ) -> float:
@@ -166,7 +164,6 @@ class MockCosmology:
         )
 
         return angular_diameter_distance_between_redshifts_kpc.value
-
 
     def kpc_per_arcsec_from(self, redshift: float) -> float:
         """

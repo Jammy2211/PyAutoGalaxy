@@ -1,6 +1,7 @@
 import numpy as np
 import warnings
 
+
 def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_source):
     """
     Computes the AutoGalaxy NFW parameters (kappa_s, scale_radius) for an NFW halo of the given
@@ -12,6 +13,7 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
     from astropy import units
 
     from autogalaxy.cosmology.wrap import Planck15
+
     cosmology = Planck15()
 
     cosmic_average_density = (
@@ -70,6 +72,7 @@ def kappa_s_and_scale_radius_for_ludlow(
     warnings.filterwarnings("ignore")
 
     from autogalaxy.cosmology.wrap import Planck15
+
     cosmology = Planck15()
 
     col_cosmo = col_cosmology.setCosmology("planck15")

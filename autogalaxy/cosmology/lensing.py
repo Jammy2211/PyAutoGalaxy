@@ -1,6 +1,7 @@
 import math
 import numpy as np
 
+
 class LensingCosmology:
     """
     Class containing specific functions for performing gravitational lensing cosmology calculations.
@@ -8,9 +9,11 @@ class LensingCosmology:
     By inheriting from the astropy `cosmo.FLRW` class this provides many additional methods for performing cosmological
     calculations.
     """
+
     def __init__(self):
 
         from astropy.cosmology import FLRW
+
         self._cosmo = FLRW()
 
     def arcsec_per_kpc_from(self, redshift: float) -> float:

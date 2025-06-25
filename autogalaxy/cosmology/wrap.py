@@ -1,5 +1,4 @@
 def Planck15():
-
     """
     A lazy-loading wrapper for the astropy `Planck15` cosmology class.
 
