@@ -19,7 +19,7 @@ class AbstractFitInversion:
         settings_inversion: aa.SettingsInversion,
     ):
         """
-        An abstract fit object which fits to datasets (e.g. imaging, interferometer) inherit from.
+        An abstract fit object  which fits to datasets (e.g. imaging, interferometer) inherit from.
 
         This object primarily inspects the `model_obj` (e.g. a galaxies object PyAutoGalaxy or tracer in PyAutoLens)
         and determines the properties used for the fit by inspecting the galaxies / light profiles in this object.
