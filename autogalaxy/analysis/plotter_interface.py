@@ -1,7 +1,10 @@
+from __future__ import annotations
 import csv
 import os
-from pathlib import Path
-from typing import List, Union
+from typing import List, Union, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 from autoconf import conf
 from autoconf.fitsable import hdu_list_for_output_from

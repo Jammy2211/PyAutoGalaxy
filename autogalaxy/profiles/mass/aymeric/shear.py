@@ -44,6 +44,7 @@ class ShearEuclid(MassProfile):
         ----------
         gamma
         """
+        self.centre = (0.0, 0.0)
         self.gamma_ext = gamma_ext
         self.phi_ext = phi_ext
 

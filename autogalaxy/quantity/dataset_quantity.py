@@ -1,7 +1,10 @@
+from __future__ import annotations
 import logging
 import numpy as np
-from pathlib import Path
-from typing import List, Optional, Union
+from typing import Optional, Union, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 import autoarray as aa
 from autoarray.dataset.abstract.dataset import AbstractDataset

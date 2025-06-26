@@ -1,4 +1,8 @@
-from pathlib import Path
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 from autoconf.fitsable import hdu_list_for_output_from
 
