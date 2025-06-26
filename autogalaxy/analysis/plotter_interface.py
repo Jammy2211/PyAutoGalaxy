@@ -65,6 +65,8 @@ class PlotterInterface:
             A string that is added before the title of all figures output by visualization, for example to
             put the name of the dataset and galaxy in the title.
         """
+        from pathlib import Path
+
         self.image_path = Path(image_path)
         self.title_prefix = title_prefix
 
