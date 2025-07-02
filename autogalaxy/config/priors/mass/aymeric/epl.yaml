@@ -53,7 +53,7 @@ EPLEuclid:
     gaussian_limits:
       lower: 0.0
       upper: inf
-  slope:
+  gamma:
     type: Uniform
     lower_limit: 1.5
     upper_limit: 3.0
