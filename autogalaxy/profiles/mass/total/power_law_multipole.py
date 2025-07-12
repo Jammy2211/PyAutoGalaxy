@@ -1,4 +1,3 @@
-from astropy import units
 import jax.numpy as jnp
 import numpy as np
 from typing import Tuple
@@ -114,6 +113,8 @@ class PowerLawMultipole(MassProfile):
             grid=grid
         )
         """
+        from astropy import units
+
         super().__init__(centre=centre, ell_comps=(0.0, 0.0))
 
         self.m = int(m)

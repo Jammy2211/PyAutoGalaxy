@@ -13,9 +13,9 @@ from autogalaxy.plot.include.two_d import Include2D
 class AdaptPlotter(Plotter):
     def __init__(
         self,
-        mat_plot_2d: MatPlot2D = MatPlot2D(),
-        visuals_2d: Visuals2D = Visuals2D(),
-        include_2d: Include2D = Include2D(),
+        mat_plot_2d: MatPlot2D = None,
+        visuals_2d: Visuals2D = None,
+        include_2d: Include2D = None,
     ):
         super().__init__(
             mat_plot_2d=mat_plot_2d, include_2d=include_2d, visuals_2d=visuals_2d

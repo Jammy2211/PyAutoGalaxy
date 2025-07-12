@@ -1,7 +1,5 @@
 import jax.numpy as jnp
 import numpy as np
-from scipy.special import hermite
-from jax.scipy.special import factorial
 from typing import Optional, Tuple
 
 import autoarray as aa
@@ -84,6 +82,8 @@ class ShapeletCartesian(AbstractShapelet):
         image
             The image of the Cartesian Shapelet evaluated at every (y,x) coordinate on the transformed grid.
         """
+        from jax.scipy.special import factorial
+        from scipy.special import hermite
 
         hermite_y = hermite(n=self.n_y)
         hermite_x = hermite(n=self.n_x)

@@ -1,18 +1,12 @@
-import json
 import logging
-from typing import Dict, List, Optional, Tuple, Union
-from os import path
-import os
-import time
+from typing import List, Optional
 
-from autoconf import conf
 import autofit as af
 import autoarray as aa
 
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.cosmology.lensing import LensingCosmology
-from autogalaxy.cosmology.wrap import Planck15
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +14,7 @@ logger.setLevel(level="INFO")
 
 
 class Analysis(af.Analysis):
-    def __init__(self, cosmology: LensingCosmology = Planck15):
+    def __init__(self, cosmology: LensingCosmology = None):
         """
         Fits a model to a dataset via a non-linear search.
 
@@ -34,7 +28,10 @@ class Analysis(af.Analysis):
         cosmology
             The Cosmology assumed for this analysis.
         """
-        self.cosmology = cosmology
+
+        from autogalaxy.cosmology.wrap import Planck15
+
+        self.cosmology = cosmology or Planck15()
 
     def galaxies_via_instance_from(
         self,

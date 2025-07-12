@@ -1,17 +1,13 @@
 from autoconf.dictable import to_dict
-from autoconf.fitsable import hdu_list_for_output_from
 
 import autofit as af
 
 from autogalaxy.analysis.analysis.analysis import Analysis
 from autogalaxy.cosmology.lensing import LensingCosmology
-from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.quantity.dataset_quantity import DatasetQuantity
 from autogalaxy.quantity.model.result import ResultQuantity
 from autogalaxy.quantity.model.visualizer import VisualizerQuantity
 from autogalaxy.quantity.fit_quantity import FitQuantity
-
-from autogalaxy import exc
 
 
 class AnalysisQuantity(Analysis):
@@ -22,7 +18,7 @@ class AnalysisQuantity(Analysis):
         self,
         dataset: DatasetQuantity,
         func_str: str,
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = None,
         title_prefix: str = None,
     ):
         """

@@ -1,11 +1,9 @@
-import copy
 import numpy as np
 from autofit.jax_wrapper import use_jax
 
 if use_jax:
     import jax
-from scipy.special import wofz
-from scipy.integrate import quad
+
 from typing import Tuple
 
 import autoarray as aa
@@ -102,6 +100,7 @@ class Gaussian(MassProfile, StellarProfile):
         Note: sigma is divided by sqrt(q) here.
 
         """
+        from scipy.integrate import quad
 
         def calculate_deflection_component(npow, index):
             deflection_grid = np.array(self.axis_ratio * grid.array[:, index])
@@ -195,6 +194,9 @@ class Gaussian(MassProfile, StellarProfile):
             return axis_ratio if axis_ratio < 0.9999 else 0.9999
 
     def zeta_from(self, grid: aa.type.Grid2DLike):
+
+        from scipy.special import wofz
+
         q2 = self.axis_ratio**2.0
         ind_pos_y = grid.array[:, 0] >= 0
         shape_grid = np.shape(grid)

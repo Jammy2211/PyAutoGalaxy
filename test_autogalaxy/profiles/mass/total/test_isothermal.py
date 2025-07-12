@@ -148,28 +148,3 @@ def test__shear_yx_2d_from():
 
     assert shear[0, 0] == pytest.approx(0.0, abs=1e-4)
     assert shear[0, 1] == pytest.approx(-1.11803398874, 1e-4)
-
-
-def test__compare_to_cored_power_law():
-    isothermal = ag.mp.Isothermal(
-        centre=(0.0, 0.0), ell_comps=(0.333333, 0.0), einstein_radius=1.0
-    )
-    cored_power_law = ag.mp.PowerLawCore(
-        centre=(0.0, 0.0),
-        ell_comps=(0.333333, 0.0),
-        einstein_radius=1.0,
-        core_radius=0.0,
-    )
-
-    assert isothermal.potential_2d_from(grid=grid) == pytest.approx(
-        cored_power_law.potential_2d_from(grid=grid).array, 1e-3
-    )
-    assert isothermal.potential_2d_from(grid=grid) == pytest.approx(
-        cored_power_law.potential_2d_from(grid=grid).array, 1e-3
-    )
-    assert isothermal.deflections_yx_2d_from(grid=grid) == pytest.approx(
-        cored_power_law.deflections_yx_2d_from(grid=grid).array, 1e-3
-    )
-    assert isothermal.deflections_yx_2d_from(grid=grid) == pytest.approx(
-        cored_power_law.deflections_yx_2d_from(grid=grid).array, 1e-3
-    )

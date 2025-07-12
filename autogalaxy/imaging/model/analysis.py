@@ -1,22 +1,14 @@
-import numpy as np
-from typing import Dict, Optional, Tuple
-
-from autoconf.fitsable import hdu_list_for_output_from
+from typing import Optional
 
 import autofit as af
 import autoarray as aa
 
-from autoarray.exc import PixelizationException
-
 from autogalaxy.analysis.adapt_images.adapt_image_maker import AdaptImageMaker
 from autogalaxy.analysis.analysis.dataset import AnalysisDataset
 from autogalaxy.cosmology.lensing import LensingCosmology
-from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.imaging.model.result import ResultImaging
 from autogalaxy.imaging.model.visualizer import VisualizerImaging
 from autogalaxy.imaging.fit_imaging import FitImaging
-
-from autogalaxy import exc
 
 
 class AnalysisImaging(AnalysisDataset):
@@ -27,7 +19,7 @@ class AnalysisImaging(AnalysisDataset):
         self,
         dataset: aa.Imaging,
         adapt_image_maker: Optional[AdaptImageMaker] = None,
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = None,
         settings_inversion: aa.SettingsInversion = None,
         title_prefix: str = None,
     ):

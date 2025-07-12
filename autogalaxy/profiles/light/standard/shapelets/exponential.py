@@ -1,7 +1,5 @@
 import jax.numpy as jnp
 import numpy as np
-from scipy.special import genlaguerre
-from jax.scipy.special import factorial
 from typing import Optional, Tuple
 
 import autoarray as aa
@@ -85,6 +83,8 @@ class ShapeletExponential(AbstractShapelet):
         image
             The image of the Exponential Shapelet evaluated at every (y,x) coordinate on the transformed grid.
         """
+        from scipy.special import genlaguerre
+        from jax.scipy.special import factorial
 
         radial = (grid.array[:, 0] ** 2 + grid.array[:, 1] ** 2) / self.beta
         theta = jnp.arctan(grid.array[:, 1] / grid.array[:, 0])

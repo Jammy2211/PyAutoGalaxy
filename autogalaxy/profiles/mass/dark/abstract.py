@@ -1,12 +1,10 @@
 import numpy as np
-from scipy.optimize import fsolve
 from typing import Tuple
 
 import autoarray as aa
 
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.cosmology.lensing import LensingCosmology
-from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.profiles.mass.abstract.mge_numpy import (
     MassProfileMGE,
 )
@@ -141,7 +139,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         )
 
     @staticmethod
-    @aa.util.numba.jit()
     def coord_func_f_jit(grid_radius, f):
         for index in range(f.shape[0]):
             if np.real(grid_radius[index]) > 1.0:
@@ -168,7 +165,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         )
 
     @staticmethod
-    @aa.util.numba.jit()
     def coord_func_g_jit(grid_radius, f_r, g):
         for index in range(f_r.shape[0]):
             if np.real(grid_radius[index]) > 1.0:
@@ -184,11 +180,15 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         return np.log(grid_radius / 2.0) + self.coord_func_f(grid_radius=grid_radius)
 
     def rho_at_scale_radius_solar_mass_per_kpc3(
-        self, redshift_object, redshift_source, cosmology: LensingCosmology = Planck15()
+        self, redshift_object, redshift_source, cosmology: LensingCosmology = None
     ):
         """
         The Cosmic average density is defined at the redshift of the profile.
         """
+
+        from autogalaxy.cosmology.wrap import Planck15
+
+        cosmology = cosmology or Planck15()
 
         critical_surface_density = cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
             redshift_0=redshift_object, redshift_1=redshift_source
@@ -207,8 +207,13 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_object,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = None,
     ):
+
+        from autogalaxy.cosmology.wrap import Planck15
+
+        cosmology = cosmology or Planck15()
+
         if redshift_of_cosmic_average_density == "profile":
             redshift_calc = redshift_object
         elif redshift_of_cosmic_average_density == "local":
@@ -238,8 +243,15 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_profile,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = None,
     ):
+
+        from autogalaxy.cosmology.wrap import Planck15
+
+        cosmology = cosmology or Planck15()
+
+        from scipy.optimize import fsolve
+
         """
         Computes the NFW halo concentration, `c_{200m}`
         """
@@ -273,11 +285,15 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_object,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = None,
     ):
         """
         Returns `r_{200m}` for this halo in **arcseconds**
         """
+        from autogalaxy.cosmology.wrap import Planck15
+
+        cosmology = cosmology or Planck15()
+
         concentration = self.concentration(
             redshift_profile=redshift_object,
             redshift_source=redshift_source,
@@ -292,8 +308,12 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_object,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = None,
     ):
+        from autogalaxy.cosmology.wrap import Planck15
+
+        cosmology = cosmology or Planck15()
+
         """
         Returns `M_{200m}` of this NFW halo, in solar masses, at the given cosmology.
         """

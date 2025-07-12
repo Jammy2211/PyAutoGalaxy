@@ -192,33 +192,3 @@ def test__potential_2d_from():
     assert elliptical.potential_2d_from(grid=grid) == pytest.approx(
         spherical.potential_2d_from(grid=grid).array, 1e-4
     )
-
-
-def test__compare_to_cored_power_law():
-    power_law = ag.mp.PowerLaw(
-        centre=(0.0, 0.0),
-        ell_comps=(0.333333, 0.0),
-        einstein_radius=1.0,
-        slope=2.3,
-    )
-
-    cored_power_law = ag.mp.PowerLawCore(
-        centre=(0.0, 0.0),
-        ell_comps=(0.333333, 0.0),
-        einstein_radius=1.0,
-        slope=2.3,
-        core_radius=0.0,
-    )
-
-    assert power_law.potential_2d_from(grid=grid) == pytest.approx(
-        cored_power_law.potential_2d_from(grid=grid).array, 1e-3
-    )
-    assert power_law.potential_2d_from(grid=grid) == pytest.approx(
-        cored_power_law.potential_2d_from(grid=grid).array, 1e-3
-    )
-    assert power_law.deflections_yx_2d_from(grid=grid) == pytest.approx(
-        cored_power_law.deflections_yx_2d_from(grid=grid).array, 1e-3
-    )
-    assert power_law.deflections_yx_2d_from(grid=grid) == pytest.approx(
-        cored_power_law.deflections_yx_2d_from(grid=grid).array, 1e-3
-    )

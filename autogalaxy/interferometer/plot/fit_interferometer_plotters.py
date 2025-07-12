@@ -22,12 +22,12 @@ class FitInterferometerPlotter(Plotter):
     def __init__(
         self,
         fit: FitInterferometer,
-        mat_plot_1d: MatPlot1D = MatPlot1D(),
-        visuals_1d: Visuals1D = Visuals1D(),
-        include_1d: Include1D = Include1D(),
-        mat_plot_2d: MatPlot2D = MatPlot2D(),
-        visuals_2d: Visuals2D = Visuals2D(),
-        include_2d: Include2D = Include2D(),
+        mat_plot_1d: MatPlot1D = None,
+        visuals_1d: Visuals1D = None,
+        include_1d: Include1D = None,
+        mat_plot_2d: MatPlot2D = None,
+        visuals_2d: Visuals2D = None,
+        include_2d: Include2D = None,
         residuals_symmetric_cmap: bool = True,
     ):
         """

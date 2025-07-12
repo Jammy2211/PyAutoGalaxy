@@ -1,6 +1,5 @@
 import jax.numpy as jnp
 import numpy as np
-from scipy.integrate import quad
 from typing import Tuple
 
 import autoarray as aa
@@ -59,6 +58,7 @@ class NFW(gNFW, MassProfileCSE):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
+        from scipy.integrate import quad
 
         def calculate_deflection_component(npow, index):
             deflection_grid = np.array(self.axis_ratio * grid.array[:, index])
@@ -157,6 +157,7 @@ class NFW(gNFW, MassProfileCSE):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
+        from scipy.integrate import quad
 
         potential_grid = np.zeros(grid.shape[0])
 

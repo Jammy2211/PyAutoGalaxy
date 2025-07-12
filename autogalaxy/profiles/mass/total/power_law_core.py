@@ -1,6 +1,5 @@
 import jax.numpy as jnp
 import numpy as np
-from scipy.integrate import quad
 from typing import Tuple
 
 import autoarray as aa
@@ -86,6 +85,7 @@ class PowerLawCore(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
+        from scipy.integrate import quad
 
         potential_grid = np.zeros(grid.shape[0])
 
@@ -117,6 +117,7 @@ class PowerLawCore(MassProfile):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
+        from scipy.integrate import quad
 
         def calculate_deflection_component(npow, index):
             einstein_radius_rescaled = self.einstein_radius_rescaled
