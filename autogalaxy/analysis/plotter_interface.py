@@ -255,7 +255,14 @@ class PlotterInterface:
                     writer.writerow(["y", "x", "reconstruction", "noise_map"])  # header
 
                     for i in range(len(x)):
-                        writer.writerow([float(y[i]), float(x[i]), float(reconstruction[i]), float(noise_map[i])])
+                        writer.writerow(
+                            [
+                                float(y[i]),
+                                float(x[i]),
+                                float(reconstruction[i]),
+                                float(noise_map[i]),
+                            ]
+                        )
 
     def adapt_images(
         self,

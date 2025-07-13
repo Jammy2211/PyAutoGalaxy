@@ -14,7 +14,9 @@ logger.setLevel(level="INFO")
 
 
 class Analysis(af.Analysis):
-    def __init__(self, cosmology: LensingCosmology = None, preloads : aa.Preloads = None):
+    def __init__(
+        self, cosmology: LensingCosmology = None, preloads: aa.Preloads = None
+    ):
         """
         Fits a model to a dataset via a non-linear search.
 
