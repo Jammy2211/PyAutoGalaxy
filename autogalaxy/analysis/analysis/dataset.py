@@ -24,6 +24,7 @@ class AnalysisDataset(Analysis):
         adapt_image_maker: Optional[AdaptImageMaker] = None,
         cosmology: LensingCosmology = None,
         settings_inversion: aa.SettingsInversion = None,
+        preloads: aa.Preloads = None,
         title_prefix: str = None,
     ):
         """
@@ -49,7 +50,10 @@ class AnalysisDataset(Analysis):
             A string that is added before the title of all figures output by visualization, for example to
             put the name of the dataset and galaxy in the title.
         """
-        super().__init__(cosmology=cosmology)
+        super().__init__(
+            cosmology=cosmology,
+            preloads=preloads,
+        )
 
         self.dataset = dataset
         self.adapt_image_maker = adapt_image_maker

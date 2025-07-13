@@ -1,7 +1,10 @@
+from __future__ import annotations
 import csv
 import os
-from pathlib import Path
-from typing import List, Union
+from typing import List, Union, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from pathlib import Path
 
 from autoconf import conf
 from autoconf.fitsable import hdu_list_for_output_from
@@ -62,6 +65,8 @@ class PlotterInterface:
             A string that is added before the title of all figures output by visualization, for example to
             put the name of the dataset and galaxy in the title.
         """
+        from pathlib import Path
+
         self.image_path = Path(image_path)
         self.title_prefix = title_prefix
 
@@ -250,7 +255,7 @@ class PlotterInterface:
                     writer.writerow(["y", "x", "reconstruction", "noise_map"])  # header
 
                     for i in range(len(x)):
-                        writer.writerow([y[i], x[i], reconstruction[i], noise_map[i]])
+                        writer.writerow([float(y[i]), float(x[i]), float(reconstruction[i]), float(noise_map[i])])
 
     def adapt_images(
         self,

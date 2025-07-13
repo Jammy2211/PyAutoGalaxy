@@ -44,9 +44,7 @@ def test__galaxies(
 
 
 def test__inversion(
-    masked_imaging_7x7,
     rectangular_inversion_7x7_3x3,
-    include_2d_all,
     plot_path,
     plot_patch,
 ):
@@ -60,6 +58,8 @@ def test__inversion(
     )
 
     assert path.join(plot_path, "subplot_inversion_0.png") in plot_patch.paths
+
+    print(plot_path)
 
     with open(
         path.join(plot_path, "source_plane_reconstruction_0.csv"), mode="r"
