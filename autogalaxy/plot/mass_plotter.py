@@ -7,7 +7,6 @@ from autogalaxy.operate.deflections import OperateDeflections
 
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 from autogalaxy.plot.visuals.two_d import Visuals2D
-from autogalaxy.plot.include.two_d import Include2D
 
 from autogalaxy.plot.abstract_plotters import Plotter
 
@@ -20,11 +19,8 @@ class MassPlotter(Plotter):
         get_visuals_2d: Callable,
         mat_plot_2d: MatPlot2D = None,
         visuals_2d: Visuals2D = None,
-        include_2d: Include2D = None,
     ):
-        super().__init__(
-            mat_plot_2d=mat_plot_2d, include_2d=include_2d, visuals_2d=visuals_2d
-        )
+        super().__init__(mat_plot_2d=mat_plot_2d, visuals_2d=visuals_2d)
 
         self.mass_obj = mass_obj
         self.grid = grid

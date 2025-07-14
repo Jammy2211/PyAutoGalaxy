@@ -247,18 +247,18 @@ def test__decorators__convergence_1d_from__grid_2d_irregular_in__returns_1d_quan
     convergence_1d = sie.convergence_1d_from(grid=grid_2d)
     convergence_2d = sie.convergence_2d_from(grid=grid_2d)
 
-    assert convergence_1d[0] == pytest.approx(convergence_2d[0], 1.0e-4)
-    assert convergence_1d[1] == pytest.approx(convergence_2d[1], 1.0e-4)
-    assert convergence_1d[2] == pytest.approx(convergence_2d[2], 1.0e-4)
+    assert convergence_1d[0] == pytest.approx(convergence_2d[0].array, 1.0e-4)
+    assert convergence_1d[1] == pytest.approx(convergence_2d[1].array, 1.0e-4)
+    assert convergence_1d[2] == pytest.approx(convergence_2d[2].array, 1.0e-4)
 
     sie = ag.mp.Isothermal(centre=(0.2, 0.2), ell_comps=(0.3, 0.3), einstein_radius=1.0)
 
     convergence_1d = sie.convergence_1d_from(grid=grid_2d)
     convergence_2d = sie.convergence_2d_from(grid=grid_2d)
 
-    assert convergence_1d[0] == pytest.approx(convergence_2d[0], 1.0e-4)
-    assert convergence_1d[1] == pytest.approx(convergence_2d[1], 1.0e-4)
-    assert convergence_1d[2] == pytest.approx(convergence_2d[2], 1.0e-4)
+    assert convergence_1d[0] == pytest.approx(convergence_2d[0].array, 1.0e-4)
+    assert convergence_1d[1] == pytest.approx(convergence_2d[1].array, 1.0e-4)
+    assert convergence_1d[2] == pytest.approx(convergence_2d[2].array, 1.0e-4)
 
 
 def test__decorators__convergence_1d_from__grid_1d_in__returns_1d_quantities_via_projection():
@@ -269,9 +269,9 @@ def test__decorators__convergence_1d_from__grid_1d_in__returns_1d_quantities_via
     convergence_1d = sie.convergence_1d_from(grid=grid_1d)
     convergence_2d = sie.convergence_2d_from(grid=grid_1d)
 
-    assert convergence_1d[0] == pytest.approx(convergence_2d[0], 1.0e-4)
-    assert convergence_1d[1] == pytest.approx(convergence_2d[1], 1.0e-4)
-    assert convergence_1d[2] == pytest.approx(convergence_2d[2], 1.0e-4)
+    assert convergence_1d[0] == pytest.approx(convergence_2d[0].array, 1.0e-4)
+    assert convergence_1d[1] == pytest.approx(convergence_2d[1].array, 1.0e-4)
+    assert convergence_1d[2] == pytest.approx(convergence_2d[2].array, 1.0e-4)
 
     sie = ag.mp.Isothermal(centre=(0.5, 0.5), ell_comps=(0.2, 0.2), einstein_radius=1.0)
 
@@ -281,9 +281,9 @@ def test__decorators__convergence_1d_from__grid_1d_in__returns_1d_quantities_via
 
     convergence_2d = sie.convergence_2d_from(grid=grid_2d_radial)
 
-    assert convergence_1d[0] == pytest.approx(convergence_2d[0], 1.0e-4)
-    assert convergence_1d[1] == pytest.approx(convergence_2d[1], 1.0e-4)
-    assert convergence_1d[2] == pytest.approx(convergence_2d[2], 1.0e-4)
+    assert convergence_1d[0] == pytest.approx(convergence_2d[0].array, 1.0e-4)
+    assert convergence_1d[1] == pytest.approx(convergence_2d[1].array, 1.0e-4)
+    assert convergence_1d[2] == pytest.approx(convergence_2d[2].array, 1.0e-4)
 
 
 def test__decorators__potential_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities():

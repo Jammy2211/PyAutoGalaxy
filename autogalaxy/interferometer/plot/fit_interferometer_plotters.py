@@ -12,8 +12,6 @@ from autogalaxy.plot.mat_plot.one_d import MatPlot1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 from autogalaxy.plot.visuals.one_d import Visuals1D
 from autogalaxy.plot.visuals.two_d import Visuals2D
-from autogalaxy.plot.include.one_d import Include1D
-from autogalaxy.plot.include.two_d import Include2D
 
 from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
 
@@ -24,10 +22,8 @@ class FitInterferometerPlotter(Plotter):
         fit: FitInterferometer,
         mat_plot_1d: MatPlot1D = None,
         visuals_1d: Visuals1D = None,
-        include_1d: Include1D = None,
         mat_plot_2d: MatPlot2D = None,
         visuals_2d: Visuals2D = None,
-        include_2d: Include2D = None,
         residuals_symmetric_cmap: bool = True,
     ):
         """
@@ -40,8 +36,7 @@ class FitInterferometerPlotter(Plotter):
         customize the figure's appearance.
 
         Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
-        extracted from the `FitInterferometer` and plotted via the visuals object, if the corresponding entry is `True` in
-        the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
+        extracted from the `FitInterferometer` and plotted via the visuals object.
 
         Parameters
         ----------
@@ -51,24 +46,18 @@ class FitInterferometerPlotter(Plotter):
             Contains objects which wrap the matplotlib function calls that make 1D plots.
         visuals_1d
             Contains 1D visuals that can be overlaid on 1D plots.
-        include_1d
-            Specifies which attributes of the `FitInterferometer` are extracted and plotted as visuals for 1D plots.
         mat_plot_2d
             Contains objects which wrap the matplotlib function calls that make 2D plots.
         visuals_2d
             Contains 2D visuals that can be overlaid on 2D plots.
-        include_2d
-            Specifies which attributes of the `FitInterferometer` are extracted and plotted as visuals for 2D plots.
         residuals_symmetric_cmap
             If true, the `residual_map` and `normalized_residual_map` are plotted with a symmetric color map such
             that `abs(vmin) = abs(vmax)`.
         """
         super().__init__(
             mat_plot_1d=mat_plot_1d,
-            include_1d=include_1d,
             visuals_1d=visuals_1d,
             mat_plot_2d=mat_plot_2d,
-            include_2d=include_2d,
             visuals_2d=visuals_2d,
         )
 
@@ -78,10 +67,8 @@ class FitInterferometerPlotter(Plotter):
             fit=self.fit,
             get_visuals_2d_real_space=self.get_visuals_2d_real_space,
             mat_plot_1d=self.mat_plot_1d,
-            include_1d=self.include_1d,
             visuals_1d=self.visuals_1d,
             mat_plot_2d=self.mat_plot_2d,
-            include_2d=self.include_2d,
             visuals_2d=self.visuals_2d,
             residuals_symmetric_cmap=residuals_symmetric_cmap,
         )
@@ -114,7 +101,6 @@ class FitInterferometerPlotter(Plotter):
             grid=self.fit.grids.lp,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.get_visuals_2d_real_space(),
-            include_2d=self.include_2d,
         )
 
     @property
@@ -131,7 +117,6 @@ class FitInterferometerPlotter(Plotter):
             inversion=self.fit.inversion,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.get_visuals_2d_real_space(),
-            include_2d=self.include_2d,
         )
 
     def subplot_fit(self):

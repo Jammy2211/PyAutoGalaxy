@@ -79,8 +79,8 @@ def test__convergence_2d_from():
     )
     spherical = ag.mp.IsothermalSph(centre=(1.1, 1.1), einstein_radius=3.0)
 
-    assert elliptical.convergence_2d_from(grid=grid) == pytest.approx(
-        spherical.convergence_2d_from(grid=grid), 1e-4
+    assert elliptical.convergence_2d_from(grid=grid).array == pytest.approx(
+        spherical.convergence_2d_from(grid=grid).array, 1e-4
     )
 
 
@@ -119,19 +119,19 @@ def test__shear_yx_2d_from():
     shear = mp.shear_yx_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]))
 
     assert shear[0, 0] == pytest.approx(0.0, 1e-4)
-    assert shear[0, 1] == pytest.approx(-convergence[0], 1e-4)
+    assert shear[0, 1] == pytest.approx(-convergence.array[0], 1e-4)
 
     convergence = mp.convergence_2d_from(grid=ag.Grid2DIrregular([[2.0, 1.0]]))
     shear = mp.shear_yx_2d_from(grid=ag.Grid2DIrregular([[2.0, 1.0]]))
 
-    assert shear[0, 0] == pytest.approx(-(4.0 / 5.0) * convergence[0], 1e-4)
-    assert shear[0, 1] == pytest.approx((3.0 / 5.0) * convergence[0], 1e-4)
+    assert shear[0, 0] == pytest.approx(-(4.0 / 5.0) * convergence.array[0], 1e-4)
+    assert shear[0, 1] == pytest.approx((3.0 / 5.0) * convergence.array[0], 1e-4)
 
     convergence = mp.convergence_2d_from(grid=ag.Grid2DIrregular([[3.0, 5.0]]))
     shear = mp.shear_yx_2d_from(grid=ag.Grid2DIrregular([[3.0, 5.0]]))
 
-    assert shear[0, 0] == pytest.approx(-(30.0 / 34.0) * convergence[0], 1e-4)
-    assert shear[0, 1] == pytest.approx(-(16.0 / 34.0) * convergence[0], 1e-4)
+    assert shear[0, 0] == pytest.approx(-(30.0 / 34.0) * convergence.array[0], 1e-4)
+    assert shear[0, 1] == pytest.approx(-(16.0 / 34.0) * convergence.array[0], 1e-4)
 
     mp = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=2.0)
 
@@ -140,7 +140,7 @@ def test__shear_yx_2d_from():
     shear = mp.shear_yx_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]))
 
     assert shear[0, 0] == pytest.approx(0.0, 1e-4)
-    assert shear[0, 1] == pytest.approx(-convergence[0], 1e-4)
+    assert shear[0, 1] == pytest.approx(-convergence.array[0], 1e-4)
 
     mp = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.3, 0.4), einstein_radius=2.0)
 

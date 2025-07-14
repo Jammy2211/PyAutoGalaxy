@@ -105,7 +105,8 @@ class PlotterInterfaceImaging(PlotterInterface):
         mat_plot_2d = self.mat_plot_2d_from()
 
         dataset_plotter = aplt.ImagingPlotter(
-            dataset=dataset, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+            dataset=dataset,
+            mat_plot_2d=mat_plot_2d,
         )
 
         if should_plot("subplot_dataset"):
@@ -164,7 +165,8 @@ class PlotterInterfaceImaging(PlotterInterface):
         mat_plot_2d = self.mat_plot_2d_from()
 
         fit_plotter = FitImagingPlotter(
-            fit=fit, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+            fit=fit,
+            mat_plot_2d=mat_plot_2d,
         )
 
         if should_plot("subplot_fit"):
@@ -206,7 +208,8 @@ class PlotterInterfaceImaging(PlotterInterface):
 
         dataset_plotter_list = [
             aplt.ImagingPlotter(
-                dataset=dataset, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+                dataset=dataset,
+                mat_plot_2d=mat_plot_2d,
             )
             for dataset in dataset_list
         ]
@@ -260,7 +263,8 @@ class PlotterInterfaceImaging(PlotterInterface):
 
         fit_plotter_list = [
             FitImagingPlotter(
-                fit=fit, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+                fit=fit,
+                mat_plot_2d=mat_plot_2d,
             )
             for fit in fit_list
         ]

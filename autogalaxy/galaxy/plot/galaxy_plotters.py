@@ -10,8 +10,6 @@ from autogalaxy.plot.mat_plot.one_d import MatPlot1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 from autogalaxy.plot.visuals.one_d import Visuals1D
 from autogalaxy.plot.visuals.two_d import Visuals2D
-from autogalaxy.plot.include.one_d import Include1D
-from autogalaxy.plot.include.two_d import Include2D
 from autogalaxy.plot.mass_plotter import MassPlotter
 
 from autogalaxy.profiles.light.abstract import LightProfile
@@ -35,10 +33,8 @@ class GalaxyPlotter(Plotter):
         grid: aa.type.Grid1D2DLike,
         mat_plot_1d: MatPlot1D = None,
         visuals_1d: Visuals1D = None,
-        include_1d: Include1D = None,
         mat_plot_2d: MatPlot2D = None,
         visuals_2d: Visuals2D = None,
-        include_2d: Include2D = None,
     ):
         """
         Plots the attributes of `Galaxy` objects using the matplotlib methods `plot()` and `imshow()` and many
@@ -50,8 +46,7 @@ class GalaxyPlotter(Plotter):
         customize the figure's appearance.
 
         Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
-        extracted from the `MassProfile` and plotted via the visuals object, if the corresponding entry is `True` in
-        the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
+        extracted from the `MassProfile` and plotted via the visuals object.
 
         Parameters
         ----------
@@ -63,14 +58,10 @@ class GalaxyPlotter(Plotter):
             Contains objects which wrap the matplotlib function calls that make 1D plots.
         visuals_1d
             Contains 1D visuals that can be overlaid on 1D plots.
-        include_1d
-            Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 1D plots.
         mat_plot_2d
             Contains objects which wrap the matplotlib function calls that make 2D plots.
         visuals_2d
             Contains 2D visuals that can be overlaid on 2D plots.
-        include_2d
-            Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 2D plots.
         """
 
         from autogalaxy.profiles.light.linear import (
@@ -85,10 +76,8 @@ class GalaxyPlotter(Plotter):
 
         super().__init__(
             mat_plot_2d=mat_plot_2d,
-            include_2d=include_2d,
             visuals_2d=visuals_2d,
             mat_plot_1d=mat_plot_1d,
-            include_1d=include_1d,
             visuals_1d=visuals_1d,
         )
 
@@ -100,7 +89,6 @@ class GalaxyPlotter(Plotter):
             grid=self.grid,
             get_visuals_2d=self.get_visuals_2d,
             mat_plot_2d=self.mat_plot_2d,
-            include_2d=self.include_2d,
             visuals_2d=self.visuals_2d,
         )
 
@@ -143,10 +131,8 @@ class GalaxyPlotter(Plotter):
                 visuals_2d=self.get_2d.via_light_obj_from(
                     light_obj=light_profile, grid=self.grid
                 ),
-                include_2d=self.include_2d,
                 mat_plot_1d=self.mat_plot_1d,
                 visuals_1d=self.get_1d.via_light_obj_from(light_obj=light_profile),
-                include_1d=self.include_1d,
             )
 
         return LightProfilePlotter(
@@ -154,7 +140,6 @@ class GalaxyPlotter(Plotter):
             grid=self.grid,
             mat_plot_1d=self.mat_plot_1d,
             visuals_1d=self.get_1d.via_light_obj_from(light_obj=light_profile),
-            include_1d=self.include_1d,
         )
 
     def mass_profile_plotter_from(
@@ -183,12 +168,10 @@ class GalaxyPlotter(Plotter):
                 visuals_2d=self.get_2d.via_mass_obj_from(
                     mass_obj=mass_profile, grid=self.grid
                 ),
-                include_2d=self.include_2d,
                 mat_plot_1d=self.mat_plot_1d,
                 visuals_1d=self.get_1d.via_mass_obj_from(
                     mass_obj=mass_profile, grid=self.grid
                 ),
-                include_1d=self.include_1d,
             )
 
         return MassProfilePlotter(
@@ -198,7 +181,6 @@ class GalaxyPlotter(Plotter):
             visuals_1d=self.get_1d.via_mass_obj_from(
                 mass_obj=mass_profile, grid=self.grid
             ),
-            include_1d=self.include_1d,
         )
 
     @property
@@ -537,10 +519,8 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         grid: aa.Grid2D,
         mat_plot_1d: MatPlot1D = None,
         visuals_1d: Visuals1D = None,
-        include_1d: Include1D = None,
         mat_plot_2d: MatPlot2D = None,
         visuals_2d: Visuals2D = None,
-        include_2d: Include2D = None,
         sigma: Optional[float] = 3.0,
     ):
         """
@@ -558,8 +538,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         customize the figure's appearance.
 
         Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
-        extracted from the `GalaxyProfile` and plotted via the visuals object, if the corresponding entry is `True` in
-        the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
+        extracted from the `GalaxyProfile` and plotted via the visuals object.
 
         Parameters
         ----------
@@ -571,14 +550,10 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             Contains objects which wrap the matplotlib function calls that make 1D plots.
         visuals_1d
             Contains 1D visuals that can be overlaid on 1D plots.
-        include_1d
-            Specifies which attributes of the `GalaxyProfile` are extracted and plotted as visuals for 1D plots.
         mat_plot_2d
             Contains objects which wrap the matplotlib function calls that make 2D plots.
         visuals_2d
             Contains 2D visuals that can be overlaid on 2D plots.
-        include_2d
-            Specifies which attributes of the `GalaxyProfile` are extracted and plotted as visuals for 2D plots.
         sigma
             The confidence interval in terms of a sigma value at which the errors are computed (e.g. a value of
             sigma=3.0 uses confidence intevals at ~0.01 and 0.99 the PDF).
@@ -587,10 +562,8 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             galaxy=None,
             grid=grid,
             mat_plot_2d=mat_plot_2d,
-            include_2d=include_2d,
             visuals_2d=visuals_2d,
             mat_plot_1d=mat_plot_1d,
-            include_1d=include_1d,
             visuals_1d=visuals_1d,
         )
 
@@ -645,10 +618,8 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             grid=self.grid,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.visuals_2d,
-            include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
             visuals_1d=self.visuals_1d,
-            include_1d=self.include_1d,
         )
 
     @property
@@ -693,10 +664,8 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             grid=self.grid,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.visuals_2d,
-            include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
             visuals_1d=self.visuals_1d,
-            include_1d=self.include_1d,
         )
 
     def figures_1d(

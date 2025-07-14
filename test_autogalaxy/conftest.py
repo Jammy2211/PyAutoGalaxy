@@ -383,16 +383,6 @@ def make_voronoi_mapper_9_3x3():
     return fixtures.make_voronoi_mapper_9_3x3()
 
 
-@pytest.fixture(name="include_1d_all")
-def make_include_1d_all():
-    return fixtures.make_include_1d_all()
-
-
-@pytest.fixture(name="include_2d_all")
-def make_include_2d_all():
-    return fixtures.make_include_2d_all()
-
-
 @pytest.fixture(name="samples_summary_with_result")
 def make_samples_summary_with_result():
     return fixtures.make_samples_summary_with_result()

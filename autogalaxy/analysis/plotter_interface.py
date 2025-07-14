@@ -18,7 +18,6 @@ from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
 from autogalaxy.galaxy.plot.adapt_plotters import AdaptPlotter
 
-from autogalaxy.plot.include.two_d import Include2D
 from autogalaxy.plot.mat_plot.one_d import MatPlot1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 
@@ -69,8 +68,6 @@ class PlotterInterface:
 
         self.image_path = Path(image_path)
         self.title_prefix = title_prefix
-
-        self.include_2d = Include2D()
 
         os.makedirs(image_path, exist_ok=True)
 
@@ -146,7 +143,6 @@ class PlotterInterface:
             galaxies=galaxies,
             grid=grid,
             mat_plot_2d=mat_plot_2d,
-            include_2d=self.include_2d,
         )
 
         if should_plot("subplot_galaxy_images"):
@@ -158,7 +154,6 @@ class PlotterInterface:
             galaxies=galaxies,
             grid=grid,
             mat_plot_2d=mat_plot_2d,
-            include_2d=self.include_2d,
         )
 
         if should_plot("subplot_galaxies"):
@@ -224,7 +219,8 @@ class PlotterInterface:
         mat_plot_2d = self.mat_plot_2d_from()
 
         inversion_plotter = aplt.InversionPlotter(
-            inversion=inversion, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+            inversion=inversion,
+            mat_plot_2d=mat_plot_2d,
         )
 
         if should_plot("subplot_inversion"):
@@ -291,7 +287,7 @@ class PlotterInterface:
         mat_plot_2d = self.mat_plot_2d_from()
 
         adapt_plotter = AdaptPlotter(
-            mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+            mat_plot_2d=mat_plot_2d,
         )
 
         if should_plot("subplot_adapt_images"):

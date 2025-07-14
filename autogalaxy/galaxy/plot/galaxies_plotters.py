@@ -8,8 +8,6 @@ from autogalaxy.plot.mat_plot.one_d import MatPlot1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 from autogalaxy.plot.visuals.one_d import Visuals1D
 from autogalaxy.plot.visuals.two_d import Visuals2D
-from autogalaxy.plot.include.one_d import Include1D
-from autogalaxy.plot.include.two_d import Include2D
 from autogalaxy.plot.mass_plotter import MassPlotter
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
@@ -25,10 +23,8 @@ class GalaxiesPlotter(Plotter):
         grid: aa.type.Grid1D2DLike,
         mat_plot_1d: MatPlot1D = None,
         visuals_1d: Visuals1D = None,
-        include_1d: Include1D = None,
         mat_plot_2d: MatPlot2D = None,
         visuals_2d: Visuals2D = None,
-        include_2d: Include2D = None,
     ):
         """
         Plots the attributes of a list of galaxies using the matplotlib methods `plot()` and `imshow()` and many
@@ -40,8 +36,7 @@ class GalaxiesPlotter(Plotter):
         customize the figure's appearance.
 
         Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
-        extracted from the `MassProfile` and plotted via the visuals object, if the corresponding entry is `True` in
-        the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
+        extracted from the `MassProfile` and plotted via the visuals object.
 
         Parameters
         ----------
@@ -53,14 +48,10 @@ class GalaxiesPlotter(Plotter):
             Contains objects which wrap the matplotlib function calls that make 1D plots.
         visuals_1d
             Contains 1D visuals that can be overlaid on 1D plots.
-        include_1d
-            Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 1D plots.
         mat_plot_2d
             Contains objects which wrap the matplotlib function calls that make 2D plots.
         visuals_2d
             Contains 2D visuals that can be overlaid on 2D plots.
-        include_2d
-            Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 2D plots.
         """
 
         self.galaxies = Galaxies(galaxies=galaxies)
@@ -76,10 +67,8 @@ class GalaxiesPlotter(Plotter):
 
         super().__init__(
             mat_plot_2d=mat_plot_2d,
-            include_2d=include_2d,
             visuals_2d=visuals_2d,
             mat_plot_1d=mat_plot_1d,
-            include_1d=include_1d,
             visuals_1d=visuals_1d,
         )
 
@@ -90,7 +79,6 @@ class GalaxiesPlotter(Plotter):
             grid=self.grid,
             get_visuals_2d=self.get_visuals_2d,
             mat_plot_2d=self.mat_plot_2d,
-            include_2d=self.include_2d,
             visuals_2d=self.visuals_2d,
         )
 
@@ -119,7 +107,6 @@ class GalaxiesPlotter(Plotter):
             grid=self.grid,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.get_visuals_2d_of_galaxy(galaxy_index=galaxy_index),
-            include_2d=self.include_2d,
         )
 
     def figures_2d(

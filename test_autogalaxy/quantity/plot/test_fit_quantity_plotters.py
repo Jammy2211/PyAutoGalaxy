@@ -20,13 +20,11 @@ def make_galaxy_fit_plotter_setup():
 def test__fit_individuals__source_and_galaxy__dependent_on_input(
     fit_quantity_7x7_array_2d,
     fit_quantity_7x7_vector_yx_2d,
-    include_2d_all,
     plot_path,
     plot_patch,
 ):
     fit_quantity_plotter = aplt.FitQuantityPlotter(
         fit=fit_quantity_7x7_array_2d,
-        include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
 
@@ -39,7 +37,6 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
 
     fit_quantity_plotter = aplt.FitQuantityPlotter(
         fit=fit_quantity_7x7_vector_yx_2d,
-        include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
 
@@ -58,7 +55,6 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
 def test__fit_sub_plot__all_types_of_fit(
     fit_quantity_7x7_array_2d,
     fit_quantity_7x7_vector_yx_2d,
-    include_2d_all,
     plot_patch,
     plot_path,
 ):

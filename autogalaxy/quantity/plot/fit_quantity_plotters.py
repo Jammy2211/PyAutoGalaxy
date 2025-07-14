@@ -7,7 +7,6 @@ from autogalaxy.quantity.fit_quantity import FitQuantity
 from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 from autogalaxy.plot.visuals.two_d import Visuals2D
-from autogalaxy.plot.include.two_d import Include2D
 
 
 # TODO : Ew, this is a mass, but it works. Clean up one day!
@@ -19,7 +18,6 @@ class FitQuantityPlotter(Plotter):
         fit: FitQuantity,
         mat_plot_2d: MatPlot2D = None,
         visuals_2d: Visuals2D = None,
-        include_2d: Include2D = None,
     ):
         """
         Plots the attributes of `FitQuantity` objects using the matplotlib method `imshow()` and many
@@ -31,8 +29,7 @@ class FitQuantityPlotter(Plotter):
         customize the figure's appearance.
 
         Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
-        extracted from the `FitQuantity` and plotted via the visuals object, if the corresponding entry is `True` in
-        the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
+        extracted from the `FitQuantity` and plotted via the visuals object.
 
         Parameters
         ----------
@@ -42,12 +39,8 @@ class FitQuantityPlotter(Plotter):
             Contains objects which wrap the matplotlib function calls that make 2D plots.
         visuals_2d
             Contains 2D visuals that can be overlaid on 2D plots.
-        include_2d
-            Specifies which attributes of the `FitQuantity` are extracted and plotted as visuals for 2D plots.
         """
-        super().__init__(
-            mat_plot_2d=mat_plot_2d, include_2d=include_2d, visuals_2d=visuals_2d
-        )
+        super().__init__(mat_plot_2d=mat_plot_2d, visuals_2d=visuals_2d)
 
         self.fit = fit
 
@@ -99,7 +92,6 @@ class FitQuantityPlotter(Plotter):
                 fit=self.fit,
                 get_visuals_2d=self.get_visuals_2d,
                 mat_plot_2d=self.mat_plot_2d,
-                include_2d=self.include_2d,
                 visuals_2d=self.visuals_2d,
             )
 
@@ -118,7 +110,6 @@ class FitQuantityPlotter(Plotter):
                 fit=self.fit.y,
                 get_visuals_2d=self.get_visuals_2d_y,
                 mat_plot_2d=self.mat_plot_2d,
-                include_2d=self.include_2d,
                 visuals_2d=self.visuals_2d,
             )
 
@@ -137,7 +128,6 @@ class FitQuantityPlotter(Plotter):
                 fit=self.fit.y,
                 get_visuals_2d=self.get_visuals_2d_x,
                 mat_plot_2d=self.mat_plot_2d,
-                include_2d=self.include_2d,
                 visuals_2d=self.visuals_2d,
             )
 
@@ -162,7 +152,6 @@ class FitQuantityPlotter(Plotter):
                 fit=self.fit,
                 get_visuals_2d=self.get_visuals_2d,
                 mat_plot_2d=self.mat_plot_2d,
-                include_2d=self.include_2d,
                 visuals_2d=self.visuals_2d,
             )
 
@@ -181,7 +170,6 @@ class FitQuantityPlotter(Plotter):
                 fit=self.fit.y,
                 get_visuals_2d=self.get_visuals_2d_y,
                 mat_plot_2d=self.mat_plot_2d,
-                include_2d=self.include_2d,
                 visuals_2d=self.visuals_2d,
             )
 
@@ -199,7 +187,6 @@ class FitQuantityPlotter(Plotter):
                 fit=self.fit.x,
                 get_visuals_2d=self.get_visuals_2d_x,
                 mat_plot_2d=self.mat_plot_2d,
-                include_2d=self.include_2d,
                 visuals_2d=self.visuals_2d,
             )
 

@@ -4,7 +4,6 @@ import autoarray as aa
 import autoarray.plot as aplt
 
 from autogalaxy.imaging.fit_imaging import FitImaging
-from autogalaxy.plot.include.two_d import Include2D
 from autogalaxy.plot.visuals.two_d import Visuals2D
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
@@ -12,13 +11,9 @@ from autogalaxy.galaxy.galaxy import Galaxy
 
 
 class GetVisuals2D(aplt.GetVisuals2D):
-    def __init__(self, include: Include2D, visuals: Visuals2D):
+    def __init__(self, visuals: Visuals2D):
         """
         Class which gets 2D attributes and adds them to a `Visuals2D` objects, such that they are plotted on 2D figures.
-
-        For a visual to be extracted and added for plotting, it must have a `True` value in its corresponding entry in
-        the `Include2D` object. If this entry is `False`, the `GetVisuals2D.get` method returns a None and the
-        attribute is omitted from the plot.
 
         The `GetVisuals2D` class adds new visuals to a pre-existing `Visuals2D` object that is passed to
         its `__init__` method. This only adds a new entry if the visual are not already in this object.
@@ -31,7 +26,7 @@ class GetVisuals2D(aplt.GetVisuals2D):
         visuals
             The pre-existing visuals of the plotter which new visuals are added too via the `GetVisuals2D` class.
         """
-        super().__init__(include=include, visuals=visuals)
+        super().__init__(visuals=visuals)
 
     def via_light_obj_from(
         self, light_obj: Union[LightProfile, Galaxy], grid
@@ -40,8 +35,7 @@ class GetVisuals2D(aplt.GetVisuals2D):
         From an object with light profiles (e.g. a `LightProfile`, `Galaxy`) get its attributes that can be
         plotted and return them  in a `Visuals2D` object.
 
-        Only attributes not already in `self.visuals` and with `True` entries in the `Include1D` object are extracted
-        for plotting.
+        Only attributes not already in `self.visuals` are extracted for plotting.
 
         From a light object the following 2D attributes can be extracted for plotting:
 
@@ -89,8 +83,7 @@ class GetVisuals2D(aplt.GetVisuals2D):
         From an object with mass profiles (e.g. a `MassProfile`, `Galaxy`) get its attributes that can be
         plotted and return them  in a `Visuals2D` object.
 
-        Only attributes not already in `self.visuals` and with `True` entries in the `Include1D` object are extracted
-        for plotting.
+        Only attributes not already in `self.visuals` are extracted for plotting.
 
         From a mass object the following 2D attributes can be extracted for plotting:
 
@@ -129,7 +122,6 @@ class GetVisuals2D(aplt.GetVisuals2D):
         tangential_critical_curves = self.get(
             "tangential_critical_curves",
             mass_obj.tangential_critical_curve_list_from(grid=grid),
-            "tangential_critical_curves",
         )
 
         radial_critical_curves = None
@@ -142,7 +134,6 @@ class GetVisuals2D(aplt.GetVisuals2D):
             radial_critical_curves = self.get(
                 "radial_critical_curves",
                 mass_obj.radial_critical_curve_list_from(grid=grid),
-                "radial_critical_curves",
             )
 
         return (
@@ -254,9 +245,6 @@ class GetVisuals2D(aplt.GetVisuals2D):
     def via_fit_imaging_from(self, fit: FitImaging) -> Visuals2D:
         """
         From a `FitImaging` get its attributes that can be plotted and return them in a `Visuals2D` object.
-
-        Only attributes not already in `self.visuals` and with `True` entries in the `Include2D` object are extracted
-        for plotting.
 
         From a `FitImaging` the following attributes can be extracted for plotting:
 
