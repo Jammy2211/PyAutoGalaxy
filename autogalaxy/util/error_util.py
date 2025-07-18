@@ -66,3 +66,86 @@ def quantile_profile_1d(profile_1d_list, q, weights=None):
         radial_quantile[radial_index] = quantile(x=radial_list, q=q, weights=weights)[0]
 
     return radial_quantile
+
+
+def quantile_ellipse(ellipse_list, q):
+    """
+    Compute the per-point quantile ellipse for a list of 2D ellipses.
+    """
+    stacked = np.stack(ellipse_list, axis=0)  # shape: (n_samples, n_points, 2)
+    return np.quantile(stacked, q=q, axis=0)  # shape: (n_points, 2)
+
+def ellipse_median_and_error_region_via_quantile(ellipse_list, low_limit):
+    """
+    Compute the median and confidence bounds for an ellipse shape.
+    """
+    median_ellipse = quantile_ellipse(ellipse_list, q=0.5)
+    lower_ellipse = quantile_ellipse(ellipse_list, q=low_limit)
+    upper_ellipse = quantile_ellipse(ellipse_list, q=1.0 - low_limit)
+
+    return median_ellipse, [lower_ellipse, upper_ellipse]
+
+
+def cartesian_to_polar(yx, center=(0.0, 0.0)):
+    y, x = yx[..., 0], yx[..., 1]
+    y0, x0 = center
+    r = np.sqrt((x - x0) ** 2 + (y - y0) ** 2)
+    theta = np.arctan2(y - y0, x - x0)
+    # Wrap to [0, 2π]
+    theta = np.mod(theta, 2 * np.pi)
+    return r, theta
+
+
+def polar_to_cartesian(r, theta, center=(0.0, 0.0)):
+    y0, x0 = center
+    x = r * np.cos(theta) + x0
+    y = r * np.sin(theta) + y0
+    return np.stack([y, x], axis=-1)
+
+
+def ellipse_median_and_error_region_in_polar(
+    ellipse_list, low_limit, center=(0.0, 0.0)
+):
+    """
+    Computes median and error ellipses in (y,x) space using polar quantiles.
+
+    Parameters
+    ----------
+    ellipse_list : list of arrays, each of shape (n_points, 2)
+        A list of (y, x) coordinate ellipses.
+    sigma : float
+        The sigma confidence level (e.g. 1.0 for 68%).
+    center : tuple of float
+        The center (y0, x0) for the polar projection.
+
+    Returns
+    -------
+    (median, [lower, upper]) : tuple of np.ndarray
+        Each array has shape (n_points, 2), giving the (y, x) coordinates
+        of the median and error ellipses.
+    """
+
+    # Convert all ellipses to polar (r, θ), shape: (n_ellipses, n_points)
+    r_list = []
+    theta_ref = None
+
+    for ellipse in ellipse_list:
+
+        r, theta = cartesian_to_polar(ellipse, center=center)
+        r_list.append(r)
+
+        if theta_ref is None:
+            theta_ref = theta  # Assume all ellipses use same angle ordering
+
+    r_array = np.stack(r_list, axis=0)  # shape: (n_ellipses, n_points)
+
+    median_r = np.quantile(r_array, q=0.5, axis=0)
+    lower_r = np.quantile(r_array, q=low_limit, axis=0)
+    upper_r = np.quantile(r_array, q=1 - low_limit, axis=0)
+
+    # Convert back to (y, x)
+    median_yx = polar_to_cartesian(median_r, theta_ref, center=center)
+    lower_yx = polar_to_cartesian(lower_r, theta_ref, center=center)
+    upper_yx = polar_to_cartesian(upper_r, theta_ref, center=center)
+
+    return median_yx, [lower_yx, upper_yx]

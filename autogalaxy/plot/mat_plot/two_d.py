@@ -25,6 +25,7 @@ class MatPlot2D(aplt.MatPlot2D):
         output: Optional[aplt.Output] = None,
         array_overlay: Optional[aplt.ArrayOverlay] = None,
         contour: Optional[aplt.Contour] = None,
+        fill: Optional[aplt.Fill] = None,
         grid_scatter: Optional[aplt.GridScatter] = None,
         grid_plot: Optional[aplt.GridPlot] = None,
         vector_yx_quiver: Optional[aplt.VectorYXQuiver] = None,
@@ -104,6 +105,8 @@ class MatPlot2D(aplt.MatPlot2D):
             Sets any annotations on the figure and customizes its appearance using `plt.annotate`.
         legend
             Sets whether the plot inclues a legend and customizes its appearance and labels using `plt.legend`.
+        fill
+            Sets the fill of the figure using `plt.fill` and customizes its appearance, such as the color and alpha.
         output
             Sets if the figure is displayed on the user's screen or output to `.png` using `plt.show` and `plt.savefig`
         array_overlay
@@ -191,6 +194,7 @@ class MatPlot2D(aplt.MatPlot2D):
             xlabel=xlabel,
             text=text,
             annotate=annotate,
+            fill=fill,
             output=output,
             origin_scatter=origin_scatter,
             mask_scatter=mask_scatter,
