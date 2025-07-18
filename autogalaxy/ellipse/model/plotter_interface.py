@@ -105,6 +105,10 @@ class PlotterInterfaceEllipse(PlotterInterface):
 
             )
 
+        if should_plot("subplot_fit_ellipse"):
+
+            fit_plotter.subplot_fit_ellipse()
+
         fit_plotter.mat_plot_2d.use_log10 = True
 
         fit_plotter.figures_2d(data=should_plot("data"))
