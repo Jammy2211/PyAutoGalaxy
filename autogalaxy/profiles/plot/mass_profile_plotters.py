@@ -65,18 +65,11 @@ class MassProfilePlotter(Plotter):
         self._mass_plotter = MassPlotter(
             mass_obj=self.mass_profile,
             grid=self.grid,
-            get_visuals_2d=self.get_visuals_2d,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.visuals_2d,
         )
 
         self.figures_2d = self._mass_plotter.figures_2d
-
-    def get_visuals_1d(self) -> Visuals1D:
-        return self.get_1d.via_mass_obj_from(mass_obj=self.mass_profile, grid=self.grid)
-
-    def get_visuals_2d(self) -> Visuals2D:
-        return self.get_2d.via_mass_obj_from(mass_obj=self.mass_profile, grid=self.grid)
 
     def figures_1d(self, convergence: bool = False, potential: bool = False):
         """
@@ -108,7 +101,7 @@ class MassProfilePlotter(Plotter):
             self.mat_plot_1d.plot_yx(
                 y=convergence_1d,
                 x=convergence_1d.grid_radial,
-                visuals_1d=self.get_visuals_1d(),
+                visuals_1d=self.visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius (arcsec)",
                     yunit="",
@@ -124,7 +117,7 @@ class MassProfilePlotter(Plotter):
             self.mat_plot_1d.plot_yx(
                 y=potential_1d,
                 x=potential_1d.grid_radial,
-                visuals_1d=self.get_visuals_1d(),
+                visuals_1d=self.visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius (arcsec)",
                     yunit="",
@@ -242,12 +235,12 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                 profile_1d_list=convergence_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d_via_lensing_obj_list = self.get_1d.via_mass_obj_list_from(
+            visuals_1d_via_lensing_obj_list = Visuals1D().add_einstein_radius_errors(
                 mass_obj_list=self.mass_profile_pdf_list,
                 grid=self.grid,
                 low_limit=self.low_limit,
             )
-            visuals_1d_with_shaded_region = self.visuals_1d.__class__(
+            visuals_1d_with_shaded_region = Visuals1D(
                 shaded_region=errors_convergence_1d
             )
 
@@ -286,14 +279,12 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                 profile_1d_list=potential_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d_via_lensing_obj_list = self.get_1d.via_mass_obj_list_from(
+            visuals_1d_via_lensing_obj_list = Visuals1D().add_einstein_radius_errors(
                 mass_obj_list=self.mass_profile_pdf_list,
                 grid=self.grid,
                 low_limit=self.low_limit,
             )
-            visuals_1d_with_shaded_region = self.visuals_1d.__class__(
-                shaded_region=errors_potential_1d
-            )
+            visuals_1d_with_shaded_region = Visuals1D(shaded_region=errors_potential_1d)
 
             visuals_1d = visuals_1d_via_lensing_obj_list + visuals_1d_with_shaded_region
 

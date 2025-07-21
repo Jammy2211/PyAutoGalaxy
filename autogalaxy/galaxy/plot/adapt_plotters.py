@@ -17,9 +17,6 @@ class AdaptPlotter(Plotter):
     ):
         super().__init__(mat_plot_2d=mat_plot_2d, visuals_2d=visuals_2d)
 
-    def get_visuals_2d(self) -> Visuals2D:
-        return self.visuals_2d
-
     def figure_model_image(self, model_image: aa.Array2D):
         """
         Plots the adapt model image (e.g. sum of all individual galaxy model images).
@@ -32,7 +29,7 @@ class AdaptPlotter(Plotter):
 
         self.mat_plot_2d.plot_array(
             array=model_image,
-            visuals_2d=self.get_visuals_2d(),
+            visuals_2d=self.visuals_2d,
             auto_labels=aplt.AutoLabels(
                 title="adapt image", filename="adapt_model_image"
             ),
@@ -49,7 +46,7 @@ class AdaptPlotter(Plotter):
         """
         self.mat_plot_2d.plot_array(
             array=galaxy_image,
-            visuals_2d=self.get_visuals_2d(),
+            visuals_2d=self.visuals_2d,
             auto_labels=aplt.AutoLabels(
                 title="galaxy Image", filename="adapt_galaxy_image"
             ),

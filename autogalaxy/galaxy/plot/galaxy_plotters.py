@@ -87,20 +87,8 @@ class GalaxyPlotter(Plotter):
         self._mass_plotter = MassPlotter(
             mass_obj=self.galaxy,
             grid=self.grid,
-            get_visuals_2d=self.get_visuals_2d,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.visuals_2d,
-        )
-
-    def get_visuals_1d_light(self) -> Visuals1D:
-        return self.get_1d.via_light_obj_from(light_obj=self.galaxy)
-
-    def get_visuals_1d_mass(self) -> Visuals1D:
-        return self.get_1d.via_mass_obj_from(mass_obj=self.galaxy, grid=self.grid)
-
-    def get_visuals_2d(self) -> Visuals2D:
-        return self.get_2d.via_light_mass_obj_from(
-            light_mass_obj=self.galaxy, grid=self.grid
         )
 
     def light_profile_plotter_from(
@@ -124,22 +112,23 @@ class GalaxyPlotter(Plotter):
         from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
 
         if not one_d_only:
+
             return LightProfilePlotter(
                 light_profile=light_profile,
                 grid=self.grid,
                 mat_plot_2d=self.mat_plot_2d,
-                visuals_2d=self.get_2d.via_light_obj_from(
-                    light_obj=light_profile, grid=self.grid
-                ),
+                visuals_2d=self.visuals_2d,
                 mat_plot_1d=self.mat_plot_1d,
-                visuals_1d=self.get_1d.via_light_obj_from(light_obj=light_profile),
+                visuals_1d=self.visuals_1d
+                + Visuals1D().add_half_light_radius(light_obj=light_profile),
             )
 
         return LightProfilePlotter(
             light_profile=light_profile,
             grid=self.grid,
             mat_plot_1d=self.mat_plot_1d,
-            visuals_1d=self.get_1d.via_light_obj_from(light_obj=light_profile),
+            visuals_1d=self.visuals_1d
+            + Visuals1D().add_half_light_radius(light_obj=light_profile),
         )
 
     def mass_profile_plotter_from(
@@ -165,11 +154,10 @@ class GalaxyPlotter(Plotter):
                 mass_profile=mass_profile,
                 grid=self.grid,
                 mat_plot_2d=self.mat_plot_2d,
-                visuals_2d=self.get_2d.via_mass_obj_from(
-                    mass_obj=mass_profile, grid=self.grid
-                ),
+                visuals_2d=self._mass_plotter.visuals_2d_with_critical_curves,
                 mat_plot_1d=self.mat_plot_1d,
-                visuals_1d=self.get_1d.via_mass_obj_from(
+                visuals_1d=self.visuals_1d
+                + Visuals1D().add_einstein_radius(
                     mass_obj=mass_profile, grid=self.grid
                 ),
             )
@@ -178,9 +166,8 @@ class GalaxyPlotter(Plotter):
             mass_profile=mass_profile,
             grid=self.grid,
             mat_plot_1d=self.mat_plot_1d,
-            visuals_1d=self.get_1d.via_mass_obj_from(
-                mass_obj=mass_profile, grid=self.grid
-            ),
+            visuals_1d=self.visuals_1d
+            + Visuals1D().add_einstein_radius(mass_obj=mass_profile, grid=self.grid),
         )
 
     @property
@@ -246,7 +233,8 @@ class GalaxyPlotter(Plotter):
             self.mat_plot_1d.plot_yx(
                 y=image_1d,
                 x=image_1d.grid_radial,
-                visuals_1d=self.get_visuals_1d_light(),
+                visuals_1d=self.visuals_1d
+                + Visuals1D().add_half_light_radius(self.galaxy),
                 auto_labels=aplt.AutoLabels(
                     title="Image vs Radius",
                     ylabel="Image ",
@@ -263,7 +251,8 @@ class GalaxyPlotter(Plotter):
             self.mat_plot_1d.plot_yx(
                 y=convergence_1d,
                 x=convergence_1d.grid_radial,
-                visuals_1d=self.get_visuals_1d_mass(),
+                visuals_1d=self.visuals_1d
+                + Visuals1D().add_einstein_radius(mass_obj=self.galaxy, grid=self.grid),
                 auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius",
                     ylabel="Convergence ",
@@ -280,7 +269,7 @@ class GalaxyPlotter(Plotter):
             self.mat_plot_1d.plot_yx(
                 y=potential_1d,
                 x=potential_1d.grid_radial,
-                visuals_1d=self.get_visuals_1d_mass(),
+                visuals_1d=self.visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius",
                     ylabel="Potential ",
@@ -420,7 +409,7 @@ class GalaxyPlotter(Plotter):
         if image:
             self.mat_plot_2d.plot_array(
                 array=self.galaxy.image_2d_from(grid=self.grid),
-                visuals_2d=self.get_visuals_2d(),
+                visuals_2d=self.visuals_2d,
                 auto_labels=aplt.AutoLabels(
                     title=f"Image{title_suffix}", filename=f"image_2d{filename_suffix}"
                 ),
@@ -718,7 +707,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 profile_1d_list=image_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d_via_light_obj_list = self.get_1d.via_light_obj_list_from(
+            visuals_1d_via_light_obj_list = Visuals1D().add_half_light_radius_errors(
                 light_obj_list=self.galaxy_pdf_list, low_limit=self.low_limit
             )
             visuals_1d_with_shaded_region = self.visuals_1d.__class__(
@@ -765,7 +754,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 profile_1d_list=convergence_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d_via_lensing_obj_list = self.get_1d.via_mass_obj_list_from(
+            visuals_1d_via_lensing_obj_list = Visuals1D().add_einstein_radius_errors(
                 mass_obj_list=self.galaxy_pdf_list,
                 grid=self.grid,
                 low_limit=self.low_limit,
@@ -814,7 +803,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 profile_1d_list=potential_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d_via_lensing_obj_list = self.get_1d.via_mass_obj_list_from(
+            visuals_1d_via_lensing_obj_list = Visuals1D().add_einstein_radius_errors(
                 mass_obj_list=self.galaxy_pdf_list,
                 grid=self.grid,
                 low_limit=self.low_limit,

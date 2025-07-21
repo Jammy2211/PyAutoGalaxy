@@ -77,19 +77,8 @@ class GalaxiesPlotter(Plotter):
         self._mass_plotter = MassPlotter(
             mass_obj=self.galaxies,
             grid=self.grid,
-            get_visuals_2d=self.get_visuals_2d,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.visuals_2d,
-        )
-
-    def get_visuals_2d(self) -> Visuals2D:
-        return self.get_2d.via_light_mass_obj_from(
-            light_mass_obj=self.galaxies, grid=self.grid
-        )
-
-    def get_visuals_2d_of_galaxy(self, galaxy_index: int) -> aplt.Visuals2D:
-        return self.get_2d.via_galaxies_from(
-            galaxies=self.galaxies, grid=self.grid, galaxy_index=galaxy_index
         )
 
     def galaxy_plotter_from(self, galaxy_index: int) -> GalaxyPlotter:
@@ -106,7 +95,7 @@ class GalaxiesPlotter(Plotter):
             galaxy=self.galaxies[galaxy_index],
             grid=self.grid,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.get_visuals_2d_of_galaxy(galaxy_index=galaxy_index),
+            visuals_2d=self._mass_plotter.visuals_2d_with_critical_curves,
         )
 
     def figures_2d(
@@ -159,7 +148,7 @@ class GalaxiesPlotter(Plotter):
         if image:
             self.mat_plot_2d.plot_array(
                 array=self.galaxies.image_2d_from(grid=self.grid),
-                visuals_2d=self.get_visuals_2d(),
+                visuals_2d=self.visuals_2d,
                 auto_labels=aplt.AutoLabels(
                     title=f"Image{title_suffix}", filename=f"image_2d{filename_suffix}"
                 ),
@@ -175,7 +164,7 @@ class GalaxiesPlotter(Plotter):
                 array=self.galaxies.plane_image_2d_from(
                     grid=self.grid, zoom_to_brightest=zoom_to_brightest
                 ),
-                visuals_2d=self.get_visuals_2d(),
+                visuals_2d=self.visuals_2d,
                 auto_labels=aplt.AutoLabels(
                     title=title,
                     filename=f"plane_image{filename_suffix}",
@@ -190,7 +179,7 @@ class GalaxiesPlotter(Plotter):
 
             self.mat_plot_2d.plot_grid(
                 grid=self.grid,
-                visuals_2d=self.get_visuals_2d(),
+                visuals_2d=self.visuals_2d,
                 auto_labels=aplt.AutoLabels(
                     title=title,
                     filename=f"plane_grid{filename_suffix}",

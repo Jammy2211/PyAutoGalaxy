@@ -30,12 +30,6 @@ class FitEllipsePlotter(Plotter):
 
         self.fit_list = fit_list
 
-    def get_visuals_1d(self) -> Visuals1D:
-        return self.visuals_1d
-
-    def get_visuals_2d(self):
-        return self.get_2d.via_mask_from(mask=self.fit_list[0].dataset.mask)
-
     def figures_2d(
         self,
         data: bool = False,
@@ -81,7 +75,7 @@ class FitEllipsePlotter(Plotter):
 
                 ellipse_list.append(aa.Grid2DIrregular.from_yx_1d(y=y, x=x))
 
-            visuals_2d = self.get_visuals_2d() + Visuals2D(
+            visuals_2d = self.visuals_2d + Visuals2D(
                 positions=ellipse_list, lines=ellipse_list
             )
 

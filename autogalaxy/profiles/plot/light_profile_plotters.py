@@ -73,14 +73,6 @@ class LightProfilePlotter(Plotter):
             visuals_1d=visuals_1d,
         )
 
-    def get_visuals_1d(self) -> Visuals1D:
-        return self.get_1d.via_light_obj_from(light_obj=self.light_profile)
-
-    def get_visuals_2d(self) -> Visuals2D:
-        return self.get_2d.via_light_obj_from(
-            light_obj=self.light_profile, grid=self.grid
-        )
-
     def figures_1d(self, image: bool = False):
         """
         Plots the individual attributes of the plotter's `LightProfile` object in 1D, which are computed via the
@@ -109,7 +101,7 @@ class LightProfilePlotter(Plotter):
             self.mat_plot_1d.plot_yx(
                 y=image_1d,
                 x=image_1d.grid_radial,
-                visuals_1d=self.get_visuals_1d(),
+                visuals_1d=self.visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title=r"Image ($\mathrm{e^{-}}\,\mathrm{s^{-1}}$) vs Radius (arcsec)",
                     yunit="",
@@ -135,7 +127,7 @@ class LightProfilePlotter(Plotter):
         if image:
             self.mat_plot_2d.plot_array(
                 array=self.light_profile.image_2d_from(grid=self.grid),
-                visuals_2d=self.get_visuals_2d(),
+                visuals_2d=self.visuals_2d,
                 auto_labels=aplt.AutoLabels(title="Image", filename="image_2d"),
             )
 
@@ -245,12 +237,12 @@ class LightProfilePDFPlotter(LightProfilePlotter):
                 profile_1d_list=image_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d_via_light_obj_list = self.get_1d.via_light_obj_list_from(
-                light_obj_list=self.light_profile_pdf_list, low_limit=self.low_limit
+            visuals_1d_via_light_obj_list = Visuals1D().add_half_light_radius_errors(
+                light_obj_list=self.light_profile_pdf_list,
+                low_limit=self.low_limit,
             )
-            visuals_1d_with_shaded_region = self.visuals_1d.__class__(
-                shaded_region=errors_image_1d
-            )
+
+            visuals_1d_with_shaded_region = Visuals1D(shaded_region=errors_image_1d)
 
             visuals_1d = visuals_1d_via_light_obj_list + visuals_1d_with_shaded_region
 

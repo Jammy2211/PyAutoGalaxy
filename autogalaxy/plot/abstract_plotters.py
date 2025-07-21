@@ -32,15 +32,3 @@ class Plotter(AbstractPlotter):
 
         self.visuals_2d = visuals_2d or Visuals2D()
         self.mat_plot_2d = mat_plot_2d or MatPlot2D()
-
-    @property
-    def get_1d(self):
-        from autogalaxy.plot.get_visuals.one_d import GetVisuals1D
-
-        return GetVisuals1D(visuals=self.visuals_1d)
-
-    @property
-    def get_2d(self):
-        from autogalaxy.plot.get_visuals.two_d import GetVisuals2D
-
-        return GetVisuals2D(visuals=self.visuals_2d)

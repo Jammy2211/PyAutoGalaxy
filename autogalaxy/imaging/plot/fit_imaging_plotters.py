@@ -50,7 +50,6 @@ class FitImagingPlotter(Plotter):
 
         self._fit_imaging_meta_plotter = FitImagingPlotterMeta(
             fit=self.fit,
-            get_visuals_2d=self.get_visuals_2d,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.visuals_2d,
             residuals_symmetric_cmap=residuals_symmetric_cmap,
@@ -58,9 +57,6 @@ class FitImagingPlotter(Plotter):
 
         self.figures_2d = self._fit_imaging_meta_plotter.figures_2d
         self.subplot = self._fit_imaging_meta_plotter.subplot
-
-    def get_visuals_2d(self) -> Visuals2D:
-        return self.get_2d.via_fit_imaging_from(fit=self.fit)
 
     @property
     def inversion_plotter(self) -> aplt.InversionPlotter:
@@ -75,7 +71,7 @@ class FitImagingPlotter(Plotter):
         return aplt.InversionPlotter(
             inversion=self.fit.inversion,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.get_visuals_2d(),
+            visuals_2d=self.visuals_2d,
         )
 
     @property
@@ -144,7 +140,7 @@ class FitImagingPlotter(Plotter):
 
                 self.mat_plot_2d.plot_array(
                     array=self.fit.subtracted_images_of_galaxies_list[galaxy_index],
-                    visuals_2d=self.get_visuals_2d(),
+                    visuals_2d=self.visuals_2d,
                     auto_labels=aplt.AutoLabels(
                         title=f"Subtracted Image of Galaxy {galaxy_index}",
                         filename=f"subtracted_image_of_galaxy_{galaxy_index}",
@@ -154,7 +150,7 @@ class FitImagingPlotter(Plotter):
             if model_image:
                 self.mat_plot_2d.plot_array(
                     array=self.fit.model_images_of_galaxies_list[galaxy_index],
-                    visuals_2d=self.get_visuals_2d(),
+                    visuals_2d=self.visuals_2d,
                     auto_labels=aplt.AutoLabels(
                         title=f"Model Image of Galaxy {galaxy_index}",
                         filename=f"model_image_of_galaxy_{galaxy_index}",

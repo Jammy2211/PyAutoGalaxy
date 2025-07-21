@@ -65,7 +65,6 @@ class FitInterferometerPlotter(Plotter):
 
         self._fit_interferometer_meta_plotter = FitInterferometerPlotterMeta(
             fit=self.fit,
-            get_visuals_2d_real_space=self.get_visuals_2d_real_space,
             mat_plot_1d=self.mat_plot_1d,
             visuals_1d=self.visuals_1d,
             mat_plot_2d=self.mat_plot_2d,
@@ -79,9 +78,6 @@ class FitInterferometerPlotter(Plotter):
         self.subplot_fit_dirty_images = (
             self._fit_interferometer_meta_plotter.subplot_fit_dirty_images
         )
-
-    def get_visuals_2d_real_space(self) -> Visuals2D:
-        return self.get_2d.via_mask_from(mask=self.fit.dataset.real_space_mask)
 
     @property
     def galaxies(self) -> List[Galaxy]:
@@ -100,7 +96,7 @@ class FitInterferometerPlotter(Plotter):
             galaxies=galaxies,
             grid=self.fit.grids.lp,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.get_visuals_2d_real_space(),
+            visuals_2d=self.visuals_2d,
         )
 
     @property
@@ -116,7 +112,7 @@ class FitInterferometerPlotter(Plotter):
         return aplt.InversionPlotter(
             inversion=self.fit.inversion,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.get_visuals_2d_real_space(),
+            visuals_2d=self.visuals_2d,
         )
 
     def subplot_fit(self):

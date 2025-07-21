@@ -44,15 +44,6 @@ class FitQuantityPlotter(Plotter):
 
         self.fit = fit
 
-    def get_visuals_2d(self) -> Visuals2D:
-        return self.get_2d.via_fit_imaging_from(fit=self.fit)
-
-    def get_visuals_2d_y(self) -> Visuals2D:
-        return self.get_2d.via_fit_imaging_from(fit=self.fit.y)
-
-    def get_visuals_2d_x(self) -> Visuals2D:
-        return self.get_2d.via_fit_imaging_from(fit=self.fit.x)
-
     def figures_2d(
         self,
         image: bool = False,
@@ -90,7 +81,6 @@ class FitQuantityPlotter(Plotter):
         if isinstance(self.fit.dataset.data, aa.Array2D):
             fit_plotter = FitImagingPlotterMeta(
                 fit=self.fit,
-                get_visuals_2d=self.get_visuals_2d,
                 mat_plot_2d=self.mat_plot_2d,
                 visuals_2d=self.visuals_2d,
             )
@@ -108,7 +98,6 @@ class FitQuantityPlotter(Plotter):
         else:
             fit_plotter_y = FitImagingPlotterMeta(
                 fit=self.fit.y,
-                get_visuals_2d=self.get_visuals_2d_y,
                 mat_plot_2d=self.mat_plot_2d,
                 visuals_2d=self.visuals_2d,
             )
@@ -126,7 +115,6 @@ class FitQuantityPlotter(Plotter):
 
             fit_plotter_x = FitImagingPlotterMeta(
                 fit=self.fit.y,
-                get_visuals_2d=self.get_visuals_2d_x,
                 mat_plot_2d=self.mat_plot_2d,
                 visuals_2d=self.visuals_2d,
             )
@@ -150,7 +138,6 @@ class FitQuantityPlotter(Plotter):
         if isinstance(self.fit.dataset.data, aa.Array2D):
             fit_plotter = FitImagingPlotterMeta(
                 fit=self.fit,
-                get_visuals_2d=self.get_visuals_2d,
                 mat_plot_2d=self.mat_plot_2d,
                 visuals_2d=self.visuals_2d,
             )
@@ -168,7 +155,6 @@ class FitQuantityPlotter(Plotter):
         else:
             fit_plotter_y = FitImagingPlotterMeta(
                 fit=self.fit.y,
-                get_visuals_2d=self.get_visuals_2d_y,
                 mat_plot_2d=self.mat_plot_2d,
                 visuals_2d=self.visuals_2d,
             )
@@ -185,7 +171,6 @@ class FitQuantityPlotter(Plotter):
 
             fit_plotter_x = FitImagingPlotterMeta(
                 fit=self.fit.x,
-                get_visuals_2d=self.get_visuals_2d_x,
                 mat_plot_2d=self.mat_plot_2d,
                 visuals_2d=self.visuals_2d,
             )

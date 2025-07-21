@@ -25,6 +25,7 @@ class MatPlot2D(aplt.MatPlot2D):
         output: Optional[aplt.Output] = None,
         array_overlay: Optional[aplt.ArrayOverlay] = None,
         contour: Optional[aplt.Contour] = None,
+        fill: Optional[aplt.Fill] = None,
         grid_scatter: Optional[aplt.GridScatter] = None,
         grid_plot: Optional[aplt.GridPlot] = None,
         vector_yx_quiver: Optional[aplt.VectorYXQuiver] = None,
@@ -110,6 +111,8 @@ class MatPlot2D(aplt.MatPlot2D):
             Overlays an input `Array2D` over the figure using `plt.imshow`.
         contour
             Overlays contours of an input `Array2D` over the figure using `plt.contour`.
+        fill
+            Sets the fill of the figure using `plt.fill` and customizes its appearance, such as the color and alpha.
         grid_scatter
             Scatters a `Grid2D` of (y,x) coordinates over the figure using `plt.scatter`.
         grid_plot
@@ -204,6 +207,7 @@ class MatPlot2D(aplt.MatPlot2D):
             patch_overlay=patch_overlay,
             array_overlay=array_overlay,
             contour=contour,
+            fill=fill,
             grid_plot=grid_plot,
             interpolated_reconstruction=interpolated_reconstruction,
             delaunay_drawer=delaunay_drawer,

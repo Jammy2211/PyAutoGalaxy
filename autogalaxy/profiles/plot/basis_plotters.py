@@ -72,12 +72,6 @@ class BasisPlotter(Plotter):
             visuals_1d=visuals_1d,
         )
 
-    def get_visuals_1d(self) -> Visuals1D:
-        return self.get_1d.via_light_obj_from(light_obj=self.basis)
-
-    def get_visuals_2d(self) -> Visuals2D:
-        return self.get_2d.via_light_obj_from(light_obj=self.basis, grid=self.grid)
-
     def light_profile_plotter_from(
         self,
         light_profile: LightProfile,
@@ -123,7 +117,7 @@ class BasisPlotter(Plotter):
         for light_profile in self.basis.light_profile_list:
             self.mat_plot_2d.plot_array(
                 array=light_profile.image_2d_from(grid=self.grid),
-                visuals_2d=self.get_visuals_2d(),
+                visuals_2d=self.visuals_2d,
                 auto_labels=aplt.AutoLabels(title=light_profile.coefficient_tag),
             )
 

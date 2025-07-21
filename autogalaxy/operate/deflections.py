@@ -441,7 +441,6 @@ class OperateDeflections:
             If input, the `evaluation_grid` decorator creates the 2D grid at this resolution, therefore enabling the
             critical curve to be computed more accurately using a higher resolution grid.
         """
-        print("aaaa")
         tangential_eigen_values = self.tangential_eigen_value_from(grid=grid)
 
         return self.contour_list_from(grid=grid, contour_array=tangential_eigen_values)
