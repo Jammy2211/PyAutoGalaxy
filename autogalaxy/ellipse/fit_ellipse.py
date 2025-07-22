@@ -78,6 +78,17 @@ class FitEllipse(aa.FitDataset):
                 if total_points_required == total_points - total_points_masked:
                     continue
 
+                if total_points_required < total_points - total_points_masked:
+
+                    number_of_extra_points = total_points - total_points_masked - total_points_required
+
+                    unmasked_indices = np.where(self.interp.mask_interp(points) == 0)[0]
+                    unmasked_indices = unmasked_indices[number_of_extra_points:]
+
+                    points = points[unmasked_indices]
+
+                    continue
+
                 points = self.ellipse.points_from_major_axis_from(
                     pixel_scale=self.dataset.pixel_scales[0], n_i=i
                 )
