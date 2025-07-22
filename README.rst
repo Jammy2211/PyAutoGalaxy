@@ -24,6 +24,14 @@ PyAutoGalaxy: Open-Source Multi Wavelength Galaxy Structure & Morphology
     :target: https://www.repostatus.org/#active
     :alt: Project Status: Active
 
+.. image:: https://img.shields.io/pypi/pyversions/autogalaxy
+    :target: https://pypi.org/project/autogalaxy/
+    :alt: Python Versions
+
+.. image:: https://img.shields.io/pypi/v/autogalaxy.svg
+    :target: https://pypi.org/project/autogalaxy/
+    :alt: PyPI Version
+
 `Installation Guide <https://pyautogalaxy.readthedocs.io/en/latest/installation/overview.html>`_ |
 `readthedocs <https://pyautogalaxy.readthedocs.io/en/latest/index.html>`_ |
 `Introduction on Binder <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=start_here.ipynb>`_ |
