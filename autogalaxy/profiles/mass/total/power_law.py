@@ -105,11 +105,7 @@ class PowerLaw(PowerLawCore):
         )
 
     def convergence_func(self, grid_radius: float) -> float:
-        if grid_radius.array > 0.0:
-            return self.einstein_radius_rescaled * grid_radius.array ** (
-                -(self.slope - 1)
-            )
-        return jnp.inf
+        return self.einstein_radius_rescaled * grid_radius.array ** (-(self.slope - 1))
 
     @staticmethod
     def potential_func(u, y, x, axis_ratio, slope, core_radius):

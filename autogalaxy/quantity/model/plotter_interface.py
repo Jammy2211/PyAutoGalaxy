@@ -86,7 +86,6 @@ class PlotterInterfaceQuantity(PlotterInterface):
             fit=fit,
             mat_plot_2d=mat_plot_2d,
             visuals_2d=visuals_2d,
-            include_2d=self.include_2d,
         )
 
         if should_plot("subplot_fit"):

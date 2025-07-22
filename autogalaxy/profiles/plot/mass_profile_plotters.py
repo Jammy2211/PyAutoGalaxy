@@ -11,8 +11,6 @@ from autogalaxy.plot.mat_plot.one_d import MatPlot1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 from autogalaxy.plot.visuals.one_d import Visuals1D
 from autogalaxy.plot.visuals.two_d import Visuals2D
-from autogalaxy.plot.include.one_d import Include1D
-from autogalaxy.plot.include.two_d import Include2D
 
 from autogalaxy.util import error_util
 
@@ -24,10 +22,8 @@ class MassProfilePlotter(Plotter):
         grid: aa.type.Grid2DLike,
         mat_plot_1d: MatPlot1D = None,
         visuals_1d: Visuals1D = None,
-        include_1d: Include1D = None,
         mat_plot_2d: MatPlot2D = None,
         visuals_2d: Visuals2D = None,
-        include_2d: Include2D = None,
     ):
         """
         Plots the attributes of `MassProfile` objects using the matplotlib methods `plot()` and `imshow()` and many
@@ -39,8 +35,7 @@ class MassProfilePlotter(Plotter):
         customize the figure's appearance.
 
         Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
-        extracted from the `MassProfile` and plotted via the visuals object, if the corresponding entry is `True` in
-        the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
+        extracted from the `MassProfile` and plotted via the visuals object.
 
         Parameters
         ----------
@@ -52,21 +47,15 @@ class MassProfilePlotter(Plotter):
             Contains objects which wrap the matplotlib function calls that make 1D plots.
         visuals_1d
             Contains 1D visuals that can be overlaid on 1D plots.
-        include_1d
-            Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 1D plots.
         mat_plot_2d
             Contains objects which wrap the matplotlib function calls that make 2D plots.
         visuals_2d
             Contains 2D visuals that can be overlaid on 2D plots.
-        include_2d
-            Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 2D plots.
         """
         super().__init__(
             mat_plot_2d=mat_plot_2d,
-            include_2d=include_2d,
             visuals_2d=visuals_2d,
             mat_plot_1d=mat_plot_1d,
-            include_1d=include_1d,
             visuals_1d=visuals_1d,
         )
 
@@ -76,19 +65,11 @@ class MassProfilePlotter(Plotter):
         self._mass_plotter = MassPlotter(
             mass_obj=self.mass_profile,
             grid=self.grid,
-            get_visuals_2d=self.get_visuals_2d,
             mat_plot_2d=self.mat_plot_2d,
-            include_2d=self.include_2d,
             visuals_2d=self.visuals_2d,
         )
 
         self.figures_2d = self._mass_plotter.figures_2d
-
-    def get_visuals_1d(self) -> Visuals1D:
-        return self.get_1d.via_mass_obj_from(mass_obj=self.mass_profile, grid=self.grid)
-
-    def get_visuals_2d(self) -> Visuals2D:
-        return self.get_2d.via_mass_obj_from(mass_obj=self.mass_profile, grid=self.grid)
 
     def figures_1d(self, convergence: bool = False, potential: bool = False):
         """
@@ -120,7 +101,7 @@ class MassProfilePlotter(Plotter):
             self.mat_plot_1d.plot_yx(
                 y=convergence_1d,
                 x=convergence_1d.grid_radial,
-                visuals_1d=self.get_visuals_1d(),
+                visuals_1d=self.visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius (arcsec)",
                     yunit="",
@@ -136,7 +117,7 @@ class MassProfilePlotter(Plotter):
             self.mat_plot_1d.plot_yx(
                 y=potential_1d,
                 x=potential_1d.grid_radial,
-                visuals_1d=self.get_visuals_1d(),
+                visuals_1d=self.visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius (arcsec)",
                     yunit="",
@@ -154,10 +135,8 @@ class MassProfilePDFPlotter(MassProfilePlotter):
         grid: aa.Grid2D,
         mat_plot_1d: MatPlot1D = None,
         visuals_1d: Visuals1D = None,
-        include_1d: Include1D = None,
         mat_plot_2d: MatPlot2D = None,
         visuals_2d: Visuals2D = None,
-        include_2d: Include2D = None,
         sigma: Optional[float] = 3.0,
     ):
         """
@@ -175,8 +154,7 @@ class MassProfilePDFPlotter(MassProfilePlotter):
         customize the figure's appearance.
 
         Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
-        extracted from the `MassProfile` and plotted via the visuals object, if the corresponding entry is `True` in
-        the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
+        extracted from the `MassProfile` and plotted via the visuals object.
 
         Parameters
         ----------
@@ -188,14 +166,10 @@ class MassProfilePDFPlotter(MassProfilePlotter):
             Contains objects which wrap the matplotlib function calls that make 1D plots.
         visuals_1d
             Contains 1D visuals that can be overlaid on 1D plots.
-        include_1d
-            Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 1D plots.
         mat_plot_2d
             Contains objects which wrap the matplotlib function calls that make 2D plots.
         visuals_2d
             Contains 2D visuals that can be overlaid on 2D plots.
-        include_2d
-            Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 2D plots.
         sigma
             The confidence interval in terms of a sigma value at which the errors are computed (e.g. a value of
             sigma=3.0 uses confidence intevals at ~0.01 and 0.99 the PDF).
@@ -205,10 +179,8 @@ class MassProfilePDFPlotter(MassProfilePlotter):
             grid=grid,
             mat_plot_1d=mat_plot_1d,
             visuals_1d=visuals_1d,
-            include_1d=include_1d,
             mat_plot_2d=mat_plot_2d,
             visuals_2d=visuals_2d,
-            include_2d=include_2d,
         )
 
         self.mass_profile_pdf_list = mass_profile_pdf_list
@@ -263,12 +235,12 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                 profile_1d_list=convergence_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d_via_lensing_obj_list = self.get_1d.via_mass_obj_list_from(
+            visuals_1d_via_lensing_obj_list = Visuals1D().add_einstein_radius_errors(
                 mass_obj_list=self.mass_profile_pdf_list,
                 grid=self.grid,
                 low_limit=self.low_limit,
             )
-            visuals_1d_with_shaded_region = self.visuals_1d.__class__(
+            visuals_1d_with_shaded_region = Visuals1D(
                 shaded_region=errors_convergence_1d
             )
 
@@ -307,14 +279,12 @@ class MassProfilePDFPlotter(MassProfilePlotter):
                 profile_1d_list=potential_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d_via_lensing_obj_list = self.get_1d.via_mass_obj_list_from(
+            visuals_1d_via_lensing_obj_list = Visuals1D().add_einstein_radius_errors(
                 mass_obj_list=self.mass_profile_pdf_list,
                 grid=self.grid,
                 low_limit=self.low_limit,
             )
-            visuals_1d_with_shaded_region = self.visuals_1d.__class__(
-                shaded_region=errors_potential_1d
-            )
+            visuals_1d_with_shaded_region = Visuals1D(shaded_region=errors_potential_1d)
 
             visuals_1d = visuals_1d_via_lensing_obj_list + visuals_1d_with_shaded_region
 

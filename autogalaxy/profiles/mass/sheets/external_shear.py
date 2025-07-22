@@ -49,8 +49,8 @@ class ExternalShear(MassProfile):
         )  ##to be onsistent with autolens deflection angle calculation
         phig = jnp.deg2rad(shear_angle)
         shear_amp = self.magnitude
-        phicoord = jnp.arctan2(grid[:, 0], grid[:, 1])
-        rcoord = jnp.sqrt(grid[:, 0] ** 2.0 + grid[:, 1] ** 2.0)
+        phicoord = jnp.arctan2(grid.array[:, 0], grid.array[:, 1])
+        rcoord = jnp.sqrt(grid.array[:, 0] ** 2.0 + grid.array[:, 1] ** 2.0)
 
         return -0.5 * shear_amp * rcoord**2 * jnp.cos(2 * (phicoord - phig))
 

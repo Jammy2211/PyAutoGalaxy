@@ -140,8 +140,8 @@ def test__convergence_2d_from():
 
     spherical = ag.mp.PowerLawSph(centre=(1.1, 1.1), einstein_radius=3.0, slope=2.4)
 
-    assert elliptical.convergence_2d_from(grid=grid) == pytest.approx(
-        spherical.convergence_2d_from(grid=grid), 1e-4
+    assert elliptical.convergence_2d_from(grid=grid).array == pytest.approx(
+        spherical.convergence_2d_from(grid=grid).array, 1e-4
     )
 
 

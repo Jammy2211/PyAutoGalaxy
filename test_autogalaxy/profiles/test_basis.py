@@ -86,4 +86,6 @@ def test__mass_profile_quantities(grid_2d_7x7, mp_0, mp_1):
 
     convergence_2d = basis.convergence_2d_from(grid=grid_2d_7x7)
 
-    assert convergence_2d == pytest.approx(convergence_2d_0 + convergence_2d_1, 1.0e-4)
+    assert convergence_2d.array == pytest.approx(
+        convergence_2d_0.array + convergence_2d_1.array, 1.0e-4
+    )

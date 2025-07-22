@@ -179,7 +179,9 @@ def test__convergence_2d_from(grid_2d_7x7):
 
     convergence = galaxies.convergence_2d_from(grid=grid_2d_7x7)
 
-    assert convergence == pytest.approx(g0_convergence + g1_convergence, 1.0e-8)
+    assert convergence.array == pytest.approx(
+        g0_convergence.array + g1_convergence.array, 1.0e-8
+    )
 
 
 def test__potential_2d_from(grid_2d_7x7):
