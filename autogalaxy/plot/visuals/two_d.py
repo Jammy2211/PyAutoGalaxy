@@ -150,6 +150,7 @@ class Visuals2D(aplt.Visuals2D):
         vis.Visuals2D
             A collection of attributes that can be plotted by a `Plotter` object.
         """
+        print("bbbb")
         if plane_index == 0:
             return self.add_critical_curves(mass_obj=mass_obj, grid=grid)
         return self.add_caustics(mass_obj=mass_obj, grid=grid)
