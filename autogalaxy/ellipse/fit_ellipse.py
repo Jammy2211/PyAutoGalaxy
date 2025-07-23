@@ -80,7 +80,9 @@ class FitEllipse(aa.FitDataset):
 
                 if total_points_required < total_points - total_points_masked:
 
-                    number_of_extra_points = total_points - total_points_masked - total_points_required
+                    number_of_extra_points = (
+                        total_points - total_points_masked - total_points_required
+                    )
 
                     unmasked_indices = np.where(self.interp.mask_interp(points) == 0)[0]
                     unmasked_indices = unmasked_indices[number_of_extra_points:]
@@ -100,7 +102,7 @@ class FitEllipse(aa.FitDataset):
                             pixel_scale=self.dataset.pixel_scales[0],
                             points=points,
                             ellipse=self.ellipse,
-                            n_i=i
+                            n_i=i,
                         )
 
                 if i == i_total:
@@ -300,4 +302,4 @@ class FitEllipse(aa.FitDataset):
         -------
         The figure of merit of the fit.
         """
-        return -0.5* (self.chi_squared + self.noise_normalization)
+        return -0.5 * (self.chi_squared + self.noise_normalization)

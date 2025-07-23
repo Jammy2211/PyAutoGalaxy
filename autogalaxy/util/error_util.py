@@ -75,6 +75,7 @@ def quantile_ellipse(ellipse_list, q):
     stacked = np.stack(ellipse_list, axis=0)  # shape: (n_samples, n_points, 2)
     return np.quantile(stacked, q=q, axis=0)  # shape: (n_points, 2)
 
+
 def ellipse_median_and_error_region_via_quantile(ellipse_list, low_limit):
     """
     Compute the median and confidence bounds for an ellipse shape.

@@ -4,13 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-def plot_ellipse_residuals(
-    array,
-    fit_list,
-    colors,
-    output,
-    for_subplot : bool = False
-):
+def plot_ellipse_residuals(array, fit_list, colors, output, for_subplot: bool = False):
 
     color = itertools.cycle(colors)
 
@@ -18,9 +12,7 @@ def plot_ellipse_residuals(
         ax = plt.subplot(1, 2, 2)
     else:
 
-        fig = plt.figure(
-            figsize=(8, 8)
-        )
+        fig = plt.figure(figsize=(8, 8))
 
         ax = fig.add_subplot(111)
 
@@ -54,36 +46,38 @@ def plot_ellipse_residuals(
     ax.set_ylabel(
         r"$\rm I(\phi)$ [E/s]",
         fontsize=20,
-        labelpad=-5.,
+        labelpad=-5.0,
     )
-    ax.tick_params(axis='y', labelsize=12.5)
+    ax.tick_params(axis="y", labelsize=12.5)
     ax.yaxis.tick_right()
     ax.yaxis.set_label_position("right")
 
     ax.minorticks_on()
     ax.tick_params(
-        axis='both',
+        axis="both",
         which="major",
         length=6,
         width=2,
         right=True,
         top=True,
         direction="in",
-        colors="black", labelsize=15
+        colors="black",
+        labelsize=15,
     )
     ax.tick_params(
-        axis='both',
+        axis="both",
         which="minor",
         length=3,
         width=1,
         right=True,
         top=True,
         direction="in",
-        colors="black", labelsize=15
+        colors="black",
+        labelsize=15,
     )
 
     ax.set_yscale("log")
-    
+
     ax.set_title("Ellipse 1D Residuals", fontsize=20)
 
     if not for_subplot:
@@ -96,4 +90,3 @@ def plot_ellipse_residuals(
         output.bbox_inches = bbox_original
 
         plt.close()
-

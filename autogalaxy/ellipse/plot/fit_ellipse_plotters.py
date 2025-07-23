@@ -18,6 +18,7 @@ from autogalaxy.plot.include.two_d import Include2D
 
 from autogalaxy.util import error_util
 
+
 class FitEllipsePlotter(Plotter):
     def __init__(
         self,
@@ -51,7 +52,7 @@ class FitEllipsePlotter(Plotter):
         data: bool = False,
         disable_data_contours: bool = False,
         ellipse_residuals: bool = False,
-        for_subplot : bool = False,
+        for_subplot: bool = False,
         suffix: str = "",
     ):
         """
@@ -94,9 +95,7 @@ class FitEllipsePlotter(Plotter):
 
                 ellipse_list.append(aa.Grid2DIrregular.from_yx_1d(y=y, x=x))
 
-            visuals_2d = self.get_visuals_2d() + Visuals2D(
-                lines=ellipse_list
-            )
+            visuals_2d = self.get_visuals_2d() + Visuals2D(lines=ellipse_list)
 
             self.mat_plot_2d.plot_array(
                 array=self.fit_list[0].data,
@@ -126,7 +125,6 @@ class FitEllipsePlotter(Plotter):
             )
 
     def subplot_fit_ellipse(self):
-
         """
         Standard subplot of the attributes of the plotter's `FitEllipse` object.
         """
@@ -138,6 +136,7 @@ class FitEllipsePlotter(Plotter):
 
         self.mat_plot_2d.output.subplot_to_figure(auto_filename="subplot_fit_ellipse")
         self.close_subplot_figure()
+
 
 class FitEllipsePDFPlotter(Plotter):
     def __init__(
@@ -203,9 +202,7 @@ class FitEllipsePDFPlotter(Plotter):
                 x = points[:, 1]
                 y = points[:, 0] * -1.0  # flip for plot
 
-                fit_ellipse_list[i].append(
-                    aa.Grid2DIrregular.from_yx_1d(y=y, x=x)
-                )
+                fit_ellipse_list[i].append(aa.Grid2DIrregular.from_yx_1d(y=y, x=x))
 
                 print(i, len(x))
 
@@ -215,8 +212,12 @@ class FitEllipsePDFPlotter(Plotter):
 
         for i in range(len(fit_ellipse_list)):
 
-            median_ellipse, [lower_ellipse, upper_ellipse] = error_util.ellipse_median_and_error_region_in_polar(
-                fit_ellipse_list[i], low_limit=self.low_limit, center=ellipse_centre_list[i]
+            median_ellipse, [lower_ellipse, upper_ellipse] = (
+                error_util.ellipse_median_and_error_region_in_polar(
+                    fit_ellipse_list[i],
+                    low_limit=self.low_limit,
+                    center=ellipse_centre_list[i],
+                )
             )
 
             # Unpack points
@@ -228,8 +229,7 @@ class FitEllipsePDFPlotter(Plotter):
             y_fill = np.concatenate([y_lower, y_upper[::-1]])
 
             visuals_2d = self.get_visuals_2d() + Visuals2D(
-                lines=median_ellipse,
-                fill_region=[y_fill, x_fill]
+                lines=median_ellipse, fill_region=[y_fill, x_fill]
             )
 
             self.mat_plot_2d.plot_array(
@@ -241,7 +241,9 @@ class FitEllipsePDFPlotter(Plotter):
                 ),
             )
 
-        self.mat_plot_2d.output.subplot_to_figure(auto_filename="subplot_ellipse_errors")
+        self.mat_plot_2d.output.subplot_to_figure(
+            auto_filename="subplot_ellipse_errors"
+        )
         self.close_subplot_figure()
 
         self.mat_plot_2d.contour = contour_original

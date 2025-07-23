@@ -45,8 +45,8 @@ class PlotterInterfaceEllipse(PlotterInterface):
             dataset_plotter.subplot_dataset()
 
         image_list = [
-            dataset.data.native_for_fits,
-            dataset.noise_map.native_for_fits,
+            dataset.data.native,
+            dataset.noise_map.native,
         ]
 
         hdu_list = hdu_list_for_output_from(
@@ -102,7 +102,6 @@ class PlotterInterfaceEllipse(PlotterInterface):
             fit_plotter.figures_2d(
                 data=True,
                 disable_data_contours=True,
-
             )
 
         if should_plot("subplot_fit_ellipse"):
