@@ -172,9 +172,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         grid
             The 2D (y, x) coordinates where values of the deflections are evaluated.
         """
-        if self:
-            return sum(map(lambda g: g.deflections_yx_2d_from(grid=grid), self))
-        return np.zeros(shape=(grid.shape[0], 2))
+        return sum(map(lambda g: g.deflections_yx_2d_from(grid=grid), self))
 
     @aa.grid_dec.to_grid
     def traced_grid_2d_from(self, grid: aa.type.Grid2DLike) -> aa.type.Grid2DLike:
@@ -205,9 +203,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         grid
             The 2D (y, x) coordinates where values of the convergence are evaluated.
         """
-        if self:
-            return sum(map(lambda g: g.convergence_2d_from(grid=grid), self))
-        return np.zeros((grid.shape[0],))
+        return sum(map(lambda g: g.convergence_2d_from(grid=grid), self))
 
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
@@ -231,9 +227,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         grid
             The 2D (y, x) coordinates where values of the potential are evaluated.
         """
-        if self:
-            return sum(map(lambda g: g.potential_2d_from(grid=grid), self))
-        return np.zeros((grid.shape[0],))
+        return sum(map(lambda g: g.potential_2d_from(grid=grid), self))
 
     def has(self, cls: Union[Type, Tuple[Type]]) -> bool:
         """
