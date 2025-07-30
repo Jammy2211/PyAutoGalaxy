@@ -59,6 +59,7 @@ from . import util
 from .ellipse.dataset_interp import DatasetInterp
 from .ellipse.ellipse.ellipse import Ellipse
 from .ellipse.ellipse.ellipse_multipole import EllipseMultipole
+from .ellipse.ellipse.ellipse_multipole import EllipseMultipoleRelative
 from .ellipse.fit_ellipse import FitEllipse
 from .ellipse.model.analysis import AnalysisEllipse
 from .operate.image import OperateImage
