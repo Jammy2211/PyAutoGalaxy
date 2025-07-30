@@ -77,7 +77,7 @@ class EllipseMultipoleRelative(EllipseMultipole):
         input_multipole_comps: Tuple[float, float] = (0.0, 0.0),
         major_axis=1.,
     ):
-
+        self.input_multipole_comps = input_multipole_comps
         k, phi = multipole_k_m_and_phi_m_from(multipole_comps=input_multipole_comps, m=m)
         k_adjusted = k*major_axis
 
