@@ -4,7 +4,7 @@ import numpy as np
 import autoarray as aa
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
-class PIEMD(MassProfile):
+class PIEMD(MassProfile): 
 
     def __init__(
         self,

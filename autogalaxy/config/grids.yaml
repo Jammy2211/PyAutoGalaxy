@@ -17,7 +17,7 @@ radial_minimum:
     dPIESph: 1.0e-08
     PIEMD: 1.0e-08
     dPIEMD: 1.0e-08
-    dPIEMDSph: 1.0e-08
+    dPIEMDSph: 1.0e-08 
     ExponentialGradient: 1.0e-06
     ExponentialGradientSph: 1.0e-06
     ElsonFreeFall: 1.0e-08
