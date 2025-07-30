@@ -131,6 +131,7 @@ class FitEllipsePlotter(Plotter):
 
         self.open_subplot_figure(number_subplots=2)
 
+        self.mat_plot_2d.use_log10 = True
         self.figures_2d(data=True)
         self.figures_2d(ellipse_residuals=True, for_subplot=True)
 
@@ -237,7 +238,7 @@ class FitEllipsePDFPlotter(Plotter):
                 visuals_2d=visuals_2d,
                 auto_labels=aplt.AutoLabels(
                     title=f"Ellipse Fit",
-                    filename=f"subhplot_ellipse_errors",
+                    filename=f"subplot_ellipse_errors",
                 ),
             )
 
