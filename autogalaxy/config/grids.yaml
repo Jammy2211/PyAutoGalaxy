@@ -15,6 +15,8 @@ radial_minimum:
     DevVaucouleursSph: 1.0e-06
     dPIE: 1.0e-08
     dPIESph: 1.0e-08
+    dPIEP: 1.0e-08
+    dPIEPSph: 1.0e-08
     PIEMD: 1.0e-08
     dPIEMD: 1.0e-08
     dPIEMDSph: 1.0e-08 
