@@ -4,9 +4,8 @@ import numpy as np
 import autoarray as aa
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
-# Within this profile family, PIEMD, dPIEMD, and dPIEMDSph are directly ported from Lenstool's C code.
-# The dPIEP and dPIEPSph profiles are modified from the original `dPIE` implementation in autogalaxy by Jackson O'Donnell.
-# This profile family was integrated and thoroughly annotated by Hengkai Ding.
+# Within this profile family, PIEMD, dPIEMD, and dPIEMDSph are directly ported from Lenstool's C code, and have been thoroughly annotated and adapted for PyAutoLens.
+# The dPIEP and dPIEPSph profiles are modified from the original `dPIE` and `dPIESph`, which were implemented to PyAutoLens by Jackson O'Donnell.
 
 def _ci05(x, y, eps, rcore):
     """
@@ -757,7 +756,6 @@ class dPIEP(MassProfile):
 
 
 class dPIEPSph(dPIEP):
-
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
