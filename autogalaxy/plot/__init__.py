@@ -93,3 +93,4 @@ from autogalaxy.interferometer.plot.fit_interferometer_plotters import (
 from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
 from autogalaxy.galaxy.plot.adapt_plotters import AdaptPlotter
 from autogalaxy.ellipse.plot.fit_ellipse_plotters import FitEllipsePlotter
+from autogalaxy.ellipse.plot.fit_ellipse_plotters import FitEllipsePDFPlotter

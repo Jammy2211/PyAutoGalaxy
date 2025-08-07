@@ -38,7 +38,7 @@ class EllipseMultipole:
         self.multipole_comps = multipole_comps
 
     def points_perturbed_from(
-        self, pixel_scale, points, ellipse: Ellipse
+        self, pixel_scale, points, ellipse: Ellipse, n_i: int = 0
     ) -> np.ndarray:
         """
         Returns the (y,x) coordinates of the input points, which are perturbed by the multipole of the ellipse.
@@ -57,7 +57,7 @@ class EllipseMultipole:
         The (y,x) coordinates of the input points, which are perturbed by the multipole.
         """
 
-        angles = ellipse.angles_from_x0_from(pixel_scale=pixel_scale)
+        angles = ellipse.angles_from_x0_from(pixel_scale=pixel_scale, n_i=n_i)
 
         radial = np.add(
             self.multipole_comps[1] * np.cos(self.m * (angles - ellipse.angle_radians)),
