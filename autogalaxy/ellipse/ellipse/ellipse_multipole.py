@@ -57,14 +57,18 @@ class EllipseMultipole:
         The (y,x) coordinates of the input points, which are perturbed by the multipole.
         """
 
-        angles = ellipse.angles_from_x0_from(pixel_scale=pixel_scale, n_i=n_i)
+        # 1) compute cartesian (polar) angle
+        theta = np.arctan2(points[:,0], points[:,1])  # <- true polar angle
 
-        radial = np.add(
-            self.multipole_comps[1] * np.cos(self.m * (angles - ellipse.angle_radians)),
-            self.multipole_comps[0] * np.sin(self.m * (angles - ellipse.angle_radians)),
+        # 2) multipole in that same frame
+        delta_theta = self.m * (theta - ellipse.angle_radians)
+        radial = (
+                self.multipole_comps[1] * np.cos(delta_theta)
+                + self.multipole_comps[0] * np.sin(delta_theta)
         )
 
-        x = points[:, 1] + (radial * np.cos(angles))
-        y = points[:, 0] + (radial * np.sin(angles))
+        # 3) perturb along the true radial direction
+        x = points[:, 1] + radial * np.cos(theta)
+        y = points[:, 0] + radial * np.sin(theta)
 
-        return np.stack(arrays=(y, x), axis=-1)
+        return np.stack((y, x), axis=-1)
