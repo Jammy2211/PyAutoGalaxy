@@ -20,6 +20,8 @@ label:
     ell_comps_1: \epsilon_{\rm 2}
     multipole_comps_0: M_{\rm 1}
     multipole_comps_1: M_{\rm 2}
+    input_multipole_comps_0: M_{\rm 1}
+    input_multipole_comps_1: M_{\rm 2}
     flux: F
     gamma: \gamma
     gamma_1: \gamma
@@ -96,6 +98,8 @@ label_format:
     ell_comps_1: '{:.4f}'
     multipole_comps_0: '{:.4f}'
     multipole_comps_1: '{:.4f}'
+    input_multipole_comps_0: '{:.4f}'
+    input_multipole_comps_1: '{:.4f}'
     flux: '{:.4e}'
     gamma: '{:.4f}'
     inner_coefficient: '{:.4f}'
