@@ -109,7 +109,7 @@ class FitEllipse(aa.FitDataset):
 
                     raise ValueError(
                         """
-                        The code has attempted to add over 1000 points to the ellipse and still not found a set of points that
+                        The code has attempted to add over 300 extra points to the ellipse and still not found a set of points that
                         do not hit the mask with the expected number of points. 
         
                         This is likely due to the mask being too large or a strange geometry, and the code is unable to find a

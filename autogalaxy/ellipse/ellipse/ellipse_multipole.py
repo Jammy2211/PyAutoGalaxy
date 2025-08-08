@@ -13,7 +13,7 @@ class EllipseMultipole:
         multipole_comps: Tuple[float, float] = (0.0, 0.0),
     ):
         """
-        class representing the multipole of an ellispe with, which is used to perform ellipse fitting to
+        class representing the multipole of an ellipse, which is used to perform ellipse fitting to
         2D data (e.g. an image).
 
         The multipole is added to the (y,x) coordinates of an ellipse that are already computed via the `Ellipse` class.
@@ -74,22 +74,52 @@ class EllipseMultipole:
 
         return np.stack((y, x), axis=-1)
 
-class EllipseMultipoleRelative(EllipseMultipole):
+class EllipseMultipoleScaled(EllipseMultipole):
     def __init__(
         self,
         m=4,
-        input_multipole_comps: Tuple[float, float] = (0.0, 0.0),
+        scaled_multipole_comps: Tuple[float, float] = (0.0, 0.0),
         major_axis=1.,
     ):
-        self.input_multipole_comps = input_multipole_comps
-        k, phi = multipole_k_m_and_phi_m_from(multipole_comps=input_multipole_comps, m=m)
+        """
+        class representing the multipole of an ellipse, which is used to perform ellipse fitting to
+        2D data (e.g. an image). This multipole is fit with its strength held relative to an ellipse with a
+        major_axis of 1, allowing for a set of ellipse multipoles to be fit at different major axes but with
+        the same scaled strength k/a.
+
+        The scaled_multipole_comps (for all ellipses) are converted to a k value, which is then reset to
+        its `true' value for a multipole at the given major axis value, which is then used to perturb an ellipse
+        as per the normal `EllipseMultipole' class and below.
+
+        The multipole is added to the (y,x) coordinates of an ellipse that are already computed via the `Ellipse` class.
+
+        The addition of the multipole is performed as follows:
+
+        :math: r_m = \sum_{i=1}^{m} \left( a_i \cos(i(\theta - \phi)) + b_i \sin(i(\theta - \phi)) \right)
+        :math: y_m = r_m \sin(\theta)
+        :math: x_m = r_m \cos(\theta)
+
+        Where:
+
+        m = The order of the multipole.
+        r = The radial coordinate of the ellipse perturbed by the multipole.
+        \phi = The angle of the ellipse.
+        a = The amplitude of the cosine term of the multipole.
+        b = The amplitude of the sine term of the multipole.
+        y = The y-coordinate of the ellipse perturbed by the multipole.
+        x = The x-coordinate of the ellipse perturbed by the multipole.
+        """
+
+
+        self.scaled_multipole_comps = scaled_multipole_comps
+        k, phi = multipole_k_m_and_phi_m_from(multipole_comps=scaled_multipole_comps, m=m)
         k_adjusted = k*major_axis
 
-        adjusted_multipole_comps = multipole_comps_from(k_adjusted, phi, m)
+        specific_multipole_comps = multipole_comps_from(k_adjusted, phi, m)
 
-        super().__init__(m, adjusted_multipole_comps)
+        super().__init__(m, specific_multipole_comps)
 
-        self.adjusted_multipole_comps = adjusted_multipole_comps
+        self.specific_multipole_comps = specific_multipole_comps
         self.m = m
 
     def points_perturbed_from(
@@ -118,8 +148,8 @@ class EllipseMultipoleRelative(EllipseMultipole):
         # 2) multipole in that same frame
         delta_theta = self.m * (theta - ellipse.angle_radians)
         radial = (
-                self.adjusted_multipole_comps[1] * np.cos(delta_theta)
-                + self.adjusted_multipole_comps[0] * np.sin(delta_theta)
+                self.specific_multipole_comps[1] * np.cos(delta_theta)
+                + self.specific_multipole_comps[0] * np.sin(delta_theta)
         )
 
         # 3) perturb along the true radial direction
