@@ -1,3 +1,4 @@
+import jax.numpy as jnp
 import numpy as np
 from typing import Tuple
 
@@ -64,7 +65,7 @@ class MassProfile(EllProfile, OperateDeflections):
         raise NotImplementedError
 
     def mass_integral(self, x):
-        return 2 * np.pi * x * self.convergence_func(grid_radius=aa.ArrayIrregular(x))
+        return 2 * jnp.pi * x * self.convergence_func(grid_radius=aa.ArrayIrregular(x))
 
     @property
     def ellipticity_rescale(self):

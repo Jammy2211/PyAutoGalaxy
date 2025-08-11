@@ -142,7 +142,9 @@ class NFW(gNFW, MassProfileCSE):
 
     def convergence_func(self, grid_radius: float) -> float:
         grid_radius = (1.0 / self.scale_radius) * grid_radius.array + 0j
-        return np.real(2.0 * self.kappa_s * self.coord_func_g(grid_radius=grid_radius))
+        return np.real(
+            2.0 * self.kappa_s * np.array(self.coord_func_g(grid_radius=grid_radius))
+        )
 
     @aa.over_sample
     @aa.grid_dec.to_array
@@ -249,15 +251,6 @@ class NFW(gNFW, MassProfileCSE):
             total_cses=total_cses,
             sample_points=sample_points,
         )
-
-    @staticmethod
-    def coord_func(r):
-        if r > 1:
-            return (1.0 / np.sqrt(r**2 - 1)) * np.arctan(np.sqrt(r**2 - 1))
-        elif r < 1:
-            return (1.0 / np.sqrt(1 - r**2)) * np.arctanh(np.sqrt(1 - r**2))
-        elif r == 1:
-            return 1
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform

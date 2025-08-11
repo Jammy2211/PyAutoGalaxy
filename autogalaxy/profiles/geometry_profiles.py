@@ -110,11 +110,11 @@ class SphProfile(GeometryProfile):
         grid_angles
             The angle theta counter-clockwise from the positive x-axis to each coordinate in radians.
         """
-        return np.cos(grid_angles), np.sin(grid_angles)
+        return jnp.cos(grid_angles), jnp.sin(grid_angles)
 
     @aa.grid_dec.to_grid
     def _cartesian_grid_via_radial_from(
-        self, grid: aa.type.Grid2DLike, radius: np.ndarray, **kwargs
+        self, grid: aa.type.Grid2DLike, radius: jnp.ndarray, **kwargs
     ) -> aa.type.Grid2DLike:
         """
         Convert a grid of (y,x) coordinates with their specified radial distances (e.g. :math: r = x**2 + y**2) to
@@ -239,7 +239,7 @@ class EllProfile(SphProfile):
         The position angle in radians of the major-axis of the ellipse defined by profile, defined counter clockwise
         from the positive x-axis (0.0 > angle > 2pi).
         """
-        return np.radians(self.angle)
+        return jnp.radians(self.angle)
 
     @property
     def _cos_angle(self) -> float:
@@ -305,7 +305,7 @@ class EllProfile(SphProfile):
     @aa.grid_dec.to_array
     def elliptical_radii_grid_from(
         self, grid: aa.type.Grid2DLike, **kwargs
-    ) -> np.ndarray:
+    ) -> jnp.ndarray:
         """
         Convert a grid of (y,x) coordinates to their elliptical radii values: :math: (x^2 + (y^2/q))^0.5
 
@@ -324,7 +324,7 @@ class EllProfile(SphProfile):
     @aa.grid_dec.to_array
     def eccentric_radii_grid_from(
         self, grid: aa.type.Grid2DLike, **kwargs
-    ) -> np.ndarray:
+    ) -> jnp.ndarray:
         """
         Convert a grid of (y,x) coordinates to an eccentric radius: :math: axis_ratio^0.5 (x^2 + (y^2/q))^0.5
 
@@ -341,14 +341,12 @@ class EllProfile(SphProfile):
 
         grid_radii = self.elliptical_radii_grid_from(grid=grid, **kwargs)
 
-        return jnp.multiply(
-            jnp.sqrt(self.axis_ratio), grid_radii.array
-        )  # .view(np.ndarray)
+        return jnp.multiply(jnp.sqrt(self.axis_ratio), grid_radii.array)
 
     @aa.grid_dec.to_grid
     def transformed_to_reference_frame_grid_from(
         self, grid: aa.type.Grid2DLike, **kwargs
-    ) -> np.ndarray:
+    ) -> jnp.ndarray:
         """
         Transform a grid of (y,x) coordinates to the reference frame of the profile.
 
