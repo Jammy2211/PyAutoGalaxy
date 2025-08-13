@@ -41,7 +41,7 @@ class Ellipse(EllProfile):
     @property
     def circular_radius(self) -> float:
         """
-        The radius of the circle that bounds the ellipse, assuming that the `major_axis` is the radius of the circle.
+        The circumference of the circle that bounds the ellipse, assuming that the `major_axis` is the radius of the circle.
         """
         return 2.0 * np.pi * np.sqrt((2.0 * self.major_axis**2.0) / 2.0)
 
