@@ -1,8 +1,10 @@
 from .abstract.abstract import MassProfile
 from .point import PointMass, SMBH, SMBHBinary
 from .total import (
-    dPIE,
-    dPIESph,
+    dPIEMD,
+    dPIEMDSph,
+    dPIEP,
+    dPIEPSph,
     PowerLawCore,
     PowerLawCoreSph,
     PowerLawBroken,
