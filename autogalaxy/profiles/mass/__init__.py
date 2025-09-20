@@ -3,6 +3,7 @@ from .point import PointMass, SMBH, SMBHBinary
 from .total import (
     dPIEMD,
     dPIEMDSph,
+    PIEMD,
     dPIEP,
     dPIEPSph,
     PowerLawCore,
