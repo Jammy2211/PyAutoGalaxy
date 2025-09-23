@@ -55,7 +55,7 @@ def test__fit_figure_of_merit(
     assert fit.figure_of_merit == pytest.approx(-71.46911964, 1.0e-4)
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 
@@ -219,7 +219,7 @@ def test__fit__model_dataset__grid_offset__handles_special_behaviour(
     assert fit.figure_of_merit == pytest.approx(-14.93272811, 1.0e-4)
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 
@@ -296,7 +296,7 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
     # Pixelization + Regularizaiton only
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 
@@ -322,7 +322,7 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
     g1_linear = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.Sersic(centre=(0.05, 0.05)))
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 
@@ -372,7 +372,7 @@ def test__model_images_of_galaxies_list(masked_imaging_7x7):
     galaxy_linear = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.Sersic())
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 

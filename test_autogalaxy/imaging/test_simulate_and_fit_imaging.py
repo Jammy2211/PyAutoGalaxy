@@ -97,7 +97,7 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
     )
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(16, 16)),
+        mesh=ag.mesh.RectangularUniform(shape=(16, 16)),
         regularization=ag.reg.Constant(coefficient=(1.0)),
     )
 
