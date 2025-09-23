@@ -133,7 +133,7 @@ def make_galaxies_x2_7x7():
 def make_galaxies_x2_inversion_7x7():
     source_gal_inversion = ag.Galaxy(
         redshift=1.0,
-        pixelization=ag.mesh.Rectangular(),
+        pixelization=ag.mesh.RectangularUniform(),
         regularization=ag.reg.Constant(),
     )
 

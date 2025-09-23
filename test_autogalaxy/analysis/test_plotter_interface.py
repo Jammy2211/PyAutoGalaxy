@@ -57,8 +57,6 @@ def test__inversion(
 
     assert path.join(plot_path, "subplot_inversion_0.png") in plot_patch.paths
 
-    print(plot_path)
-
     with open(
         path.join(plot_path, "source_plane_reconstruction_0.csv"), mode="r"
     ) as file:
