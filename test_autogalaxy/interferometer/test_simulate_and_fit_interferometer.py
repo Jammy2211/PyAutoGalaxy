@@ -75,7 +75,7 @@ def test__perfect_fit__chi_squared_0():
     assert fit.chi_squared == pytest.approx(0.0)
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(7, 7)),
+        mesh=ag.mesh.RectangularUniform(shape=(7, 7)),
         regularization=ag.reg.Constant(coefficient=0.0001),
     )
 
@@ -115,7 +115,7 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
     )
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(16, 16)),
+        mesh=ag.mesh.RectangularUniform(shape=(16, 16)),
         regularization=ag.reg.Constant(coefficient=(1.0)),
     )
 

@@ -39,7 +39,7 @@ def test__fit_figure_of_merit(interferometer_7):
     assert fit.figure_of_merit == pytest.approx(-1994.3538395, 1.0e-4)
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=0.01),
     )
 
@@ -59,7 +59,7 @@ def test__fit_figure_of_merit(interferometer_7):
     )
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 
@@ -154,7 +154,7 @@ def test___galaxy_model_image_dict(interferometer_7):
     # Pixelization + Regularizaiton only
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 
@@ -195,7 +195,7 @@ def test___galaxy_model_image_dict(interferometer_7):
     # Linear Light PRofiles + Pixelization + Regularizaiton
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=2.0),
     )
 
@@ -280,7 +280,7 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     # Pixelization + Regularizaiton only
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 
@@ -320,7 +320,7 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
 
     # Linear Light PRofiles + Pixelization + Regularizaiton
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=2.0),
     )
 
@@ -362,7 +362,7 @@ def test__model_visibilities_of_galaxies_list(interferometer_7):
     galaxy_linear = ag.Galaxy(redshift=0.5, bulge=ag.lp_linear.Sersic())
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 

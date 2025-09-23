@@ -100,7 +100,7 @@ def test__image_plane_mesh_grid_list(masked_imaging_7x7):
 
 
 def test__mapper_galaxy_dict(masked_imaging_7x7):
-    mesh = ag.mesh.Rectangular(shape=(3, 3))
+    mesh = ag.mesh.RectangularUniform(shape=(3, 3))
 
     pixelization = ag.m.MockPixelization(mesh=mesh)
 
@@ -118,7 +118,7 @@ def test__mapper_galaxy_dict(masked_imaging_7x7):
     assert mapper_list[0].pixels == 9
     assert mapper_galaxy_dict[mapper_list[0]] == galaxy_pix
 
-    mesh = ag.mesh.Rectangular(shape=(4, 3))
+    mesh = ag.mesh.RectangularUniform(shape=(4, 3))
     pixelization = ag.m.MockPixelization(mesh=mesh)
 
     galaxy_pix_2 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
@@ -166,7 +166,7 @@ def test__inversion_imaging_from(grid_2d_7x7, masked_imaging_7x7):
     assert inversion.reconstruction[0] == pytest.approx(0.186868464426, 1.0e-2)
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(3, 3)),
+        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=0.0),
     )
 
@@ -205,7 +205,7 @@ def test__inversion_interferometer_from(grid_2d_7x7, interferometer_7):
     interferometer_7.data = ag.Visibilities.ones(shape_slim=(7,))
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(7, 7)),
+        mesh=ag.mesh.RectangularUniform(shape=(7, 7)),
         regularization=ag.reg.Constant(coefficient=0.0),
     )
 
