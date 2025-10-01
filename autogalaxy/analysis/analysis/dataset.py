@@ -26,6 +26,7 @@ class AnalysisDataset(Analysis):
         settings_inversion: aa.SettingsInversion = None,
         preloads: aa.Preloads = None,
         title_prefix: str = None,
+        **kwargs
     ):
         """
         Abstract Analysis class for all model-fits which fit galaxies to a dataset, like imaging or interferometer data.
@@ -53,6 +54,7 @@ class AnalysisDataset(Analysis):
         super().__init__(
             cosmology=cosmology,
             preloads=preloads,
+            **kwargs,
         )
 
         self.dataset = dataset

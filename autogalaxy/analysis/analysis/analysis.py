@@ -15,7 +15,7 @@ logger.setLevel(level="INFO")
 
 class Analysis(af.Analysis):
     def __init__(
-        self, cosmology: LensingCosmology = None, preloads: aa.Preloads = None
+        self, cosmology: LensingCosmology = None, preloads: aa.Preloads = None, **kwargs
     ):
         """
         Fits a model to a dataset via a non-linear search.
@@ -35,6 +35,7 @@ class Analysis(af.Analysis):
 
         self.cosmology = cosmology or Planck15()
         self.preloads = preloads
+        self.kwargs = kwargs
 
     def galaxies_via_instance_from(
         self,
