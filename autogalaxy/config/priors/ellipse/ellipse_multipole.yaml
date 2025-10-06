@@ -6,7 +6,7 @@ EllipseMultipole:
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   multipole_comps_1:
@@ -16,6 +16,6 @@ EllipseMultipole:
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf

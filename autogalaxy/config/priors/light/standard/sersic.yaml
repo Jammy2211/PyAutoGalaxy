@@ -3,24 +3,20 @@ Sersic:
     type: Gaussian
     mean: 0.0
     sigma: 0.3
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   centre_1:
     type: Gaussian
     mean: 0.0
     sigma: 0.3
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   effective_radius:
@@ -30,33 +26,29 @@ Sersic:
     width_modifier:
       type: Relative
       value: 1.0
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   ell_comps_0:
-    type: Gaussian
+    limits:
+      lower: -1.0
+      upper: 1.0
     mean: 0.0
     sigma: 0.3
-    lower_limit: -1.0
-    upper_limit: 1.0
+    type: Gaussian
     width_modifier:
       type: Absolute
       value: 0.2
-    gaussian_limits:
-      lower: -1.0
-      upper: 1.0
   ell_comps_1:
-    type: Gaussian
+    limits:
+      lower: -1.0
+      upper: 1.0
     mean: 0.0
     sigma: 0.3
-    lower_limit: -1.0
-    upper_limit: 1.0
+    type: Gaussian
     width_modifier:
       type: Absolute
       value: 0.2
-    gaussian_limits:
-      lower: -1.0
-      upper: 1.0
   intensity:
     type: LogUniform
     lower_limit: 1.0e-06
@@ -64,7 +56,7 @@ Sersic:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   sersic_index:
@@ -74,7 +66,7 @@ Sersic:
     width_modifier:
       type: Absolute
       value: 1.5
-    gaussian_limits:
+    limits:
       lower: 0.8
       upper: 5.0
 SersicSph:
@@ -82,24 +74,20 @@ SersicSph:
     type: Gaussian
     mean: 0.0
     sigma: 0.3
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   centre_1:
     type: Gaussian
     mean: 0.0
     sigma: 0.3
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   effective_radius:
@@ -109,7 +97,7 @@ SersicSph:
     width_modifier:
       type: Relative
       value: 1.0
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   intensity:
@@ -119,7 +107,7 @@ SersicSph:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   sersic_index:
@@ -129,6 +117,6 @@ SersicSph:
     width_modifier:
       type: Absolute
       value: 1.5
-    gaussian_limits:
+    limits:
       lower: 0.8
       upper: 5.0

@@ -7,22 +7,15 @@ from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 from autogalaxy.plot.visuals.two_d import Visuals2D
-from autogalaxy.plot.include.two_d import Include2D
 
 
 class AdaptPlotter(Plotter):
     def __init__(
         self,
-        mat_plot_2d: MatPlot2D = MatPlot2D(),
-        visuals_2d: Visuals2D = Visuals2D(),
-        include_2d: Include2D = Include2D(),
+        mat_plot_2d: MatPlot2D = None,
+        visuals_2d: Visuals2D = None,
     ):
-        super().__init__(
-            mat_plot_2d=mat_plot_2d, include_2d=include_2d, visuals_2d=visuals_2d
-        )
-
-    def get_visuals_2d(self) -> Visuals2D:
-        return self.visuals_2d
+        super().__init__(mat_plot_2d=mat_plot_2d, visuals_2d=visuals_2d)
 
     def figure_model_image(self, model_image: aa.Array2D):
         """
@@ -36,7 +29,7 @@ class AdaptPlotter(Plotter):
 
         self.mat_plot_2d.plot_array(
             array=model_image,
-            visuals_2d=self.get_visuals_2d(),
+            visuals_2d=self.visuals_2d,
             auto_labels=aplt.AutoLabels(
                 title="adapt image", filename="adapt_model_image"
             ),
@@ -53,7 +46,7 @@ class AdaptPlotter(Plotter):
         """
         self.mat_plot_2d.plot_array(
             array=galaxy_image,
-            visuals_2d=self.get_visuals_2d(),
+            visuals_2d=self.visuals_2d,
             auto_labels=aplt.AutoLabels(
                 title="galaxy Image", filename="adapt_galaxy_image"
             ),

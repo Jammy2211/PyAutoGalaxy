@@ -16,22 +16,22 @@ def test__deflections_yx_2d_from():
     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[2.0, 0.0]]))
 
     factor = (4.0 * 1.0 * 1.0) / (2.0 / 1.0)
-    assert deflections[0, 0] == pytest.approx(factor * 0.38209715, 1.0e-4)
-    assert deflections[0, 1] == pytest.approx(0.0, 1.0e-4)
+    assert deflections[0, 0] == pytest.approx(factor * 0.38209715, abs=1.0e-4)
+    assert deflections[0, 1] == pytest.approx(0.0, abs=1.0e-4)
 
     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.0, 2.0]]))
 
-    assert deflections[0, 0] == pytest.approx(0.0, 1.0e-4)
-    assert deflections[0, 1] == pytest.approx(factor * 0.38209715, 1.0e-4)
+    assert deflections[0, 0] == pytest.approx(0.0, abs=1.0e-4)
+    assert deflections[0, 1] == pytest.approx(factor * 0.38209715, abs=1.0e-4)
 
     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[1.0, 1.0]]))
 
     factor = (4.0 * 1.0 * 1.0) / (np.sqrt(2) / 1.0)
     assert deflections[0, 0] == pytest.approx(
-        (1.0 / np.sqrt(2)) * factor * 0.3125838, 1.0e-4
+        (1.0 / np.sqrt(2)) * factor * 0.3125838, abs=1.0e-4
     )
     assert deflections[0, 1] == pytest.approx(
-        (1.0 / np.sqrt(2)) * factor * 0.3125838, 1.0e-4
+        (1.0 / np.sqrt(2)) * factor * 0.3125838, abs=1.0e-4
     )
 
     mp = ag.mp.NFWTruncatedSph(
@@ -41,8 +41,8 @@ def test__deflections_yx_2d_from():
     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[2.0, 0.0]]))
 
     factor = (4.0 * 2.0 * 1.0) / (2.0 / 1.0)
-    assert deflections[0, 0] == pytest.approx(factor * 0.38209715, 1.0e-4)
-    assert deflections[0, 1] == pytest.approx(0.0, 1.0e-4)
+    assert deflections[0, 0] == pytest.approx(factor * 0.38209715, abs=1.0e-4)
+    assert deflections[0, 1] == pytest.approx(0.0, abs=1.0e-4)
 
     mp = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=1.0, scale_radius=4.0, truncation_radius=2.0
@@ -50,8 +50,8 @@ def test__deflections_yx_2d_from():
 
     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([(2.0, 0.0)]))
 
-    assert deflections[0, 0] == pytest.approx(2.1702661386, 1.0e-4)
-    assert deflections[0, 1] == pytest.approx(0.0, 1.0e-4)
+    assert deflections[0, 0] == pytest.approx(2.1702661386, abs=1.0e-4)
+    assert deflections[0, 1] == pytest.approx(0.0, abs=1.0e-4)
 
 
 def test__convergence_2d_from():
@@ -61,11 +61,11 @@ def test__convergence_2d_from():
 
     convergence = mp.convergence_2d_from(grid=ag.Grid2DIrregular([[2.0, 0.0]]))
 
-    assert convergence == pytest.approx(2.0 * 0.046409642, 1.0e-4)
+    assert convergence == pytest.approx(2.0 * 0.046409642, abs=1.0e-4)
 
     convergence = mp.convergence_2d_from(grid=ag.Grid2DIrregular([[1.0, 1.0]]))
 
-    assert convergence == pytest.approx(2.0 * 0.10549515, 1.0e-4)
+    assert convergence == pytest.approx(2.0 * 0.10549515, abs=1.0e-4)
 
     mp = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=3.0, scale_radius=1.0, truncation_radius=2.0
@@ -73,7 +73,7 @@ def test__convergence_2d_from():
 
     convergence = mp.convergence_2d_from(grid=ag.Grid2DIrregular([[2.0, 0.0]]))
 
-    assert convergence == pytest.approx(6.0 * 0.046409642, 1.0e-4)
+    assert convergence == pytest.approx(6.0 * 0.046409642, abs=1.0e-4)
 
     mp = ag.mp.NFWTruncatedSph(
         centre=(0.0, 0.0), kappa_s=3.0, scale_radius=5.0, truncation_radius=2.0
@@ -81,7 +81,7 @@ def test__convergence_2d_from():
 
     convergence = mp.convergence_2d_from(grid=ag.Grid2DIrregular([[2.0, 0.0]]))
 
-    assert convergence == pytest.approx(1.51047026, 1.0e-4)
+    assert convergence == pytest.approx(1.51047026, abs=1.0e-4)
 
 
 def test__mass_at_truncation_radius():
@@ -127,7 +127,7 @@ def test__mass_at_truncation_radius():
     # mass_at_truncation_radius = mp.mass_at_truncation_radius(redshift_galaxy=0.5, redshift_source=1.0,
     #     unit_length='arcsec', unit_mass='solMass', cosmology=cosmology)
     #
-    # assert mass_at_truncation_radius == pytest.approx(0.0000421512, 1.0e-4)
+    # assert mass_at_truncation_radius == pytest.approx(0.0000421512, abs=1.0e-4)
     #
     # mp = ag.mp.NFWTruncatedSph(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=8.0,
     #                                          truncation_radius=4.0)
@@ -135,7 +135,7 @@ def test__mass_at_truncation_radius():
     # mass_at_truncation_radius = mp.mass_at_truncation_radius(redshift_galaxy=0.5, redshift_source=1.0,
     #     unit_length='arcsec', unit_mass='solMass', cosmology=cosmology)
     #
-    # assert mass_at_truncation_radius == pytest.approx(0.00033636625, 1.0e-4)
+    # assert mass_at_truncation_radius == pytest.approx(0.00033636625, abs=1.0e-4)
 
 
 def test__compare_nfw_and_truncated_nfw_with_large_truncation_radius():
@@ -152,7 +152,7 @@ def test__compare_nfw_and_truncated_nfw_with_large_truncation_radius():
         grid=ag.Grid2DIrregular([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])
     )
 
-    assert truncated_nfw_convergence == pytest.approx(nfw_convergence, 1.0e-4)
+    assert truncated_nfw_convergence == pytest.approx(nfw_convergence, abs=1.0e-4)
 
     truncated_nfw_deflections = truncated_nfw.deflections_yx_2d_from(
         grid=ag.Grid2DIrregular([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])
@@ -161,4 +161,4 @@ def test__compare_nfw_and_truncated_nfw_with_large_truncation_radius():
         grid=ag.Grid2DIrregular([[2.0, 2.0], [3.0, 1.0], [-1.0, -9.0]])
     )
 
-    assert truncated_nfw_deflections == pytest.approx(nfw_deflections, 1.0e-4)
+    assert truncated_nfw_deflections == pytest.approx(nfw_deflections.array, abs=1.0e-4)

@@ -60,7 +60,7 @@ def test__deflections_yx_2d_from():
     )
 
     assert elliptical.deflections_yx_2d_from(grid=grid) == pytest.approx(
-        spherical.deflections_yx_2d_from(grid=grid), 1e-4
+        spherical.deflections_yx_2d_from(grid=grid).array, 1e-4
     )
 
 
@@ -150,8 +150,8 @@ def test__convergence_2d_from():
         centre=(1.1, 1.1), einstein_radius=3.0, core_radius=1.0
     )
 
-    assert elliptical.convergence_2d_from(grid=grid) == pytest.approx(
-        spherical.convergence_2d_from(grid=grid), 1e-4
+    assert elliptical.convergence_2d_from(grid=grid).array == pytest.approx(
+        spherical.convergence_2d_from(grid=grid).array, 1e-4
     )
 
 
@@ -205,35 +205,5 @@ def test__potential_2d_from():
     )
 
     assert elliptical.potential_2d_from(grid=grid) == pytest.approx(
-        spherical.potential_2d_from(grid=grid), 1e-4
-    )
-
-
-def test__compare_to_cored_power_law():
-    power_law = ag.mp.IsothermalCore(
-        centre=(0.0, 0.0),
-        ell_comps=(0.333333, 0.0),
-        einstein_radius=1.0,
-        core_radius=0.1,
-    )
-
-    cored_power_law = ag.mp.PowerLawCore(
-        centre=(0.0, 0.0),
-        ell_comps=(0.333333, 0.0),
-        einstein_radius=1.0,
-        slope=2.0,
-        core_radius=0.1,
-    )
-
-    assert power_law.potential_2d_from(grid=grid) == pytest.approx(
-        cored_power_law.potential_2d_from(grid=grid), 1e-3
-    )
-    assert power_law.potential_2d_from(grid=grid) == pytest.approx(
-        cored_power_law.potential_2d_from(grid=grid), 1e-3
-    )
-    assert power_law.deflections_yx_2d_from(grid=grid) == pytest.approx(
-        cored_power_law.deflections_yx_2d_from(grid=grid), 1e-3
-    )
-    assert power_law.deflections_yx_2d_from(grid=grid) == pytest.approx(
-        cored_power_law.deflections_yx_2d_from(grid=grid), 1e-3
+        spherical.potential_2d_from(grid=grid).array, 1e-4
     )

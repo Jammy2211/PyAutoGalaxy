@@ -1,5 +1,4 @@
 import numpy as np
-from scipy import interpolate
 from typing import Tuple
 
 from autoconf import cached_property
@@ -45,11 +44,13 @@ class DatasetInterp:
         return (x, y)
 
     @cached_property
-    def mask_interp(self) -> interpolate.RegularGridInterpolator:
+    def mask_interp(self) -> "interpolate.RegularGridInterpolator":
         """
         Returns a 2D interpolation of the mask, which is used to determine whether inteprolated values use a masked
         pixel for the interpolation and thus should not be included in a fit.
         """
+        from scipy import interpolate
+
         return interpolate.RegularGridInterpolator(
             points=self.points_interp,
             values=np.float64(self.dataset.data.mask),
@@ -58,10 +59,12 @@ class DatasetInterp:
         )
 
     @cached_property
-    def data_interp(self) -> interpolate.RegularGridInterpolator:
+    def data_interp(self) -> "interpolate.RegularGridInterpolator":
         """
         Returns a 2D interpolation of the data, which is used to evaluate the data at any point in 2D space.
         """
+        from scipy import interpolate
+
         return interpolate.RegularGridInterpolator(
             points=self.points_interp,
             values=np.float64(self.dataset.data.native),
@@ -70,10 +73,11 @@ class DatasetInterp:
         )
 
     @cached_property
-    def noise_map_interp(self) -> interpolate.RegularGridInterpolator:
+    def noise_map_interp(self) -> "interpolate.RegularGridInterpolator":
         """
         Returns a 2D interpolation of the noise-map, which is used to evaluate the noise-map at any point in 2D space.
         """
+        from scipy import interpolate
 
         return interpolate.RegularGridInterpolator(
             points=self.points_interp,

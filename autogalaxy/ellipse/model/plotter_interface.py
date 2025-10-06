@@ -38,7 +38,8 @@ class PlotterInterfaceEllipse(PlotterInterface):
         mat_plot_2d = self.mat_plot_2d_from()
 
         dataset_plotter = aplt.ImagingPlotter(
-            dataset=dataset, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+            dataset=dataset,
+            mat_plot_2d=mat_plot_2d,
         )
 
         if should_plot("subplot_dataset"):
@@ -90,7 +91,8 @@ class PlotterInterfaceEllipse(PlotterInterface):
         mat_plot_2d = self.mat_plot_2d_from()
 
         fit_plotter = FitEllipsePlotter(
-            fit_list=fit_list, mat_plot_2d=mat_plot_2d, include_2d=self.include_2d
+            fit_list=fit_list,
+            mat_plot_2d=mat_plot_2d,
         )
 
         fit_plotter.figures_2d(

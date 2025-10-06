@@ -1,6 +1,5 @@
-import copy
+import jax.numpy as jnp
 import numpy as np
-from scipy.integrate import quad
 from typing import Tuple
 
 import autoarray as aa
@@ -52,7 +51,6 @@ class PowerLawCore(MassProfile):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
@@ -65,20 +63,13 @@ class PowerLawCore(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
-
-        covnergence_grid = np.zeros(grid.shape[0])
-
         grid_eta = self.elliptical_radii_grid_from(grid=grid, **kwargs)
 
-        for i in range(grid.shape[0]):
-            covnergence_grid[i] = self.convergence_func(grid_eta[i])
-
-        return covnergence_grid
+        return self.convergence_func(grid_radius=grid_eta)
 
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the potential on a grid of (y,x) arc-second coordinates.
@@ -88,6 +79,7 @@ class PowerLawCore(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
+        from scipy.integrate import quad
 
         potential_grid = np.zeros(grid.shape[0])
 
@@ -97,8 +89,8 @@ class PowerLawCore(MassProfile):
                 a=0.0,
                 b=1.0,
                 args=(
-                    grid[i, 0],
-                    grid[i, 1],
+                    grid.array[i, 0],
+                    grid.array[i, 1],
                     self.axis_ratio,
                     self.slope,
                     self.core_radius,
@@ -109,7 +101,6 @@ class PowerLawCore(MassProfile):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -120,11 +111,12 @@ class PowerLawCore(MassProfile):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
+        from scipy.integrate import quad
 
         def calculate_deflection_component(npow, index):
             einstein_radius_rescaled = self.einstein_radius_rescaled
 
-            deflection_grid = self.axis_ratio * grid[:, index]
+            deflection_grid = np.array(self.axis_ratio * grid.array[:, index])
 
             for i in range(grid.shape[0]):
                 deflection_grid[i] *= (
@@ -134,8 +126,8 @@ class PowerLawCore(MassProfile):
                         a=0.0,
                         b=1.0,
                         args=(
-                            grid[i, 0],
-                            grid[i, 1],
+                            grid.array[i, 0],
+                            grid.array[i, 1],
                             npow,
                             self.axis_ratio,
                             self.slope,
@@ -219,7 +211,6 @@ class PowerLawCoreSph(PowerLawCore):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -231,17 +222,17 @@ class PowerLawCoreSph(PowerLawCore):
 
         """
         eta = self.radial_grid_from(grid=grid, **kwargs)
-        deflection = np.multiply(
+        deflection = jnp.multiply(
             2.0 * self.einstein_radius_rescaled,
-            np.divide(
-                np.add(
-                    np.power(
-                        np.add(self.core_radius**2, np.square(eta)),
+            jnp.divide(
+                jnp.add(
+                    jnp.power(
+                        jnp.add(self.core_radius**2, jnp.square(eta.array)),
                         (3.0 - self.slope) / 2.0,
                     ),
                     -self.core_radius ** (3 - self.slope),
                 ),
-                np.multiply((3.0 - self.slope), eta),
+                jnp.multiply((3.0 - self.slope), eta.array),
             ),
         )
         return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection)

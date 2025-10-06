@@ -7,7 +7,6 @@ import autoarray as aa
 
 from autogalaxy.abstract_fit import AbstractFitInversion
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
-from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.galaxy.to_inversion import GalaxiesToInversion
@@ -21,8 +20,6 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         dataset_model: Optional[aa.DatasetModel] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
-        preloads: aa.Preloads = Preloads(),
-        run_time_dict: Optional[Dict] = None,
     ):
         """
         Fits an interferometer dataset using a list of galaxies.
@@ -62,12 +59,6 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             reconstructed galaxy's morphology.
         settings_inversion
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
-        preloads
-            Contains preloaded calculations (e.g. linear algebra matrices) which can skip certain calculations in
-            the fit.
-        run_time_dict
-            A dictionary which if passed to the fit records how long fucntion calls which have the `profile_func`
-            decorator take to run.
         """
 
         try:
@@ -75,13 +66,12 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         except ImportError:
             settings_inversion.use_w_tilde = False
 
-        self.galaxies = Galaxies(galaxies=galaxies, run_time_dict=run_time_dict)
+        self.galaxies = Galaxies(galaxies=galaxies)
 
         super().__init__(
             dataset=dataset,
             dataset_model=dataset_model,
             use_mask_in_fit=False,
-            run_time_dict=run_time_dict,
         )
         AbstractFitInversion.__init__(
             self=self,
@@ -91,8 +81,6 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
 
         self.adapt_images = adapt_images
         self.settings_inversion = settings_inversion
-
-        self.preloads = preloads
 
     @property
     def profile_visibilities(self) -> aa.Visibilities:
@@ -126,8 +114,6 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             galaxies=self.galaxies,
             adapt_images=self.adapt_images,
             settings_inversion=self.settings_inversion,
-            preloads=self.preloads,
-            run_time_dict=self.run_time_dict,
         )
 
     @cached_property
@@ -223,44 +209,3 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         or `GalaxyPlotter` objects.
         """
         return self.model_obj_linear_light_profiles_to_light_profiles
-
-    def refit_with_new_preloads(
-        self,
-        preloads: Preloads,
-        settings_inversion: Optional[aa.SettingsInversion] = None,
-    ) -> "FitInterferometer":
-        """
-        Returns a new fit which uses the dataset, galaxies and other objects of this fit, but uses a different set of
-        preloads input into this function.
-
-        This is used when setting up the preloads objects, to concisely test how using different preloads objects
-        changes the attributes of the fit.
-
-        Parameters
-        ----------
-        preloads
-            The new preloads which are used to refit the data using the
-        settings_inversion
-            Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
-
-        Returns
-        -------
-        A new fit which has used new preloads input into this function but the same dataset, galaxies and other settings.
-        """
-        if self.run_time_dict is not None:
-            run_time_dict = {}
-        else:
-            run_time_dict = None
-
-        if settings_inversion is None:
-            settings_inversion = self.settings_inversion
-
-        return FitInterferometer(
-            dataset=self.dataset,
-            galaxies=self.galaxies,
-            dataset_model=self.dataset_model,
-            adapt_images=self.adapt_images,
-            settings_inversion=settings_inversion,
-            preloads=preloads,
-            run_time_dict=run_time_dict,
-        )

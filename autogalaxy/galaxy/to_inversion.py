@@ -15,7 +15,6 @@ from autogalaxy.profiles.basis import Basis
 from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
-from autogalaxy.analysis.preloads import Preloads
 
 
 class AbstractToInversion:
@@ -24,8 +23,6 @@ class AbstractToInversion:
         dataset: Optional[Union[aa.Imaging, aa.Interferometer, aa.DatasetInterface]],
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
-        preloads=Preloads(),
-        run_time_dict: Optional[Dict] = None,
     ):
         """
         Abstract class which interfaces a dataset and input modeling object (e.g. galaxies, a tracer) with the
@@ -59,10 +56,6 @@ class AbstractToInversion:
             the pixelization's pixels to the brightest regions of the image.
         settings_inversion
             The settings of the inversion, which controls how the linear algebra calculation is performed.
-        preloads
-            Preloads of the inversion, which are used to speed up the linear algebra calculation.
-        run_time_dict
-            A dictionary of run-time values used to compute the inversion, for example the noise-map normalization.
         """
         if dataset is not None:
             if dataset.noise_covariance_matrix is not None:
@@ -82,24 +75,21 @@ class AbstractToInversion:
 
         self.settings_inversion = settings_inversion
 
-        self.preloads = preloads
-        self.run_time_dict = run_time_dict
-
     @property
-    def convolver(self) -> Optional[aa.Convolver]:
+    def psf(self) -> Optional[aa.Kernel2D]:
         """
-        Returns the convolver of the imaging dataset, if the inversion is performed on an imaging dataset.
+        Returns the PSF of the imaging dataset, if the inversion is performed on an imaging dataset.
 
         The `GalaxiesToInversion` class acts as an interface between the dataset and inversion module for
-        both imaging and interferometer datasets. Only imaging datasets have a convolver, thus this property
-        ensures that for an interferometer dataset code which references a convolver does not raise an error.
+        both imaging and interferometer datasets. Only imaging datasets have a PSF, thus this property
+        ensures that for an interferometer dataset code which references a PSF does not raise an error.
 
         Returns
         -------
-        The convolver of the imaging dataset, if it is an imaging dataset.
+        The psf of the imaging dataset, if it is an imaging dataset.
         """
         try:
-            return self.dataset.convolver
+            return self.dataset.psf
         except AttributeError:
             return None
 
@@ -198,8 +188,6 @@ class GalaxiesToInversion(AbstractToInversion):
         galaxies: List[Galaxy],
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
-        preloads=aa.Preloads(),
-        run_time_dict: Optional[Dict] = None,
     ):
         """
         Interfaces a dataset and input list of galaxies with the inversion module. to setup a
@@ -234,10 +222,6 @@ class GalaxiesToInversion(AbstractToInversion):
             the pixelization's pixels to the brightest regions of the image.
         settings_inversion
             The settings of the inversion, which controls how the linear algebra calculation is performed.
-        preloads
-            Preloads of the inversion, which are used to speed up the linear algebra calculation.
-        run_time_dict
-            A dictionary of run-time values used to compute the inversion, for example the noise-map normalization.
         """
         self.galaxies = Galaxies(galaxies)
 
@@ -245,8 +229,6 @@ class GalaxiesToInversion(AbstractToInversion):
             dataset=dataset,
             adapt_images=adapt_images,
             settings_inversion=settings_inversion,
-            preloads=preloads,
-            run_time_dict=run_time_dict,
         )
 
     @property
@@ -319,7 +301,7 @@ class GalaxiesToInversion(AbstractToInversion):
                         lp_linear_func = LightProfileLinearObjFuncList(
                             grid=self.dataset.grids.lp,
                             blurring_grid=self.dataset.grids.blurring,
-                            convolver=self.dataset.convolver,
+                            psf=self.dataset.psf,
                             light_profile_list=light_profile_list,
                             regularization=light_profile.regularization,
                         )
@@ -500,14 +482,11 @@ class GalaxiesToInversion(AbstractToInversion):
             source_plane_mesh_grid=source_plane_mesh_grid,
             image_plane_mesh_grid=image_plane_mesh_grid,
             adapt_data=adapt_galaxy_image,
-            preloads=self.preloads,
-            run_time_dict=self.run_time_dict,
         )
 
         return mapper_from(
             mapper_grids=mapper_grids,
             regularization=regularization,
-            run_time_dict=self.run_time_dict,
         )
 
     @cached_property
@@ -589,8 +568,6 @@ class GalaxiesToInversion(AbstractToInversion):
             dataset=self.dataset,
             linear_obj_list=self.linear_obj_list,
             settings=self.settings_inversion,
-            preloads=self.preloads,
-            run_time_dict=self.run_time_dict,
         )
 
         inversion.linear_obj_galaxy_dict = self.linear_obj_galaxy_dict

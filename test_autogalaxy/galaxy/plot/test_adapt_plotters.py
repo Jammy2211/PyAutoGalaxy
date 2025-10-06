@@ -15,10 +15,9 @@ def make_adapt_plotter_setup():
 
 
 def test__plot_adapt_adapt_images(
-    adapt_galaxy_name_image_dict_7x7, mask_2d_7x7, include_2d_all, plot_path, plot_patch
+    adapt_galaxy_name_image_dict_7x7, mask_2d_7x7, plot_path, plot_patch
 ):
     adapt_plotter = aplt.AdaptPlotter(
-        include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
 

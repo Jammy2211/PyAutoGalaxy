@@ -1,13 +1,12 @@
+import jax.numpy as jnp
 import numpy as np
-from scipy.optimize import fsolve
 from typing import Tuple
 
 import autoarray as aa
 
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.cosmology.lensing import LensingCosmology
-from autogalaxy.cosmology.wrap import Planck15
-from autogalaxy.profiles.mass.abstract.mge import (
+from autogalaxy.profiles.mass.abstract.mge_numpy import (
     MassProfileMGE,
 )
 
@@ -58,7 +57,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -76,7 +74,6 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_via_mge_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -111,7 +108,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         return eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size
 
-    def decompose_convergence_via_mge(self):
+    def decompose_convergence_via_mge(self, **kwargs):
         rho_at_scale_radius = (
             self.kappa_s / self.scale_radius
         )  # density parameter of 3D gNFW
@@ -133,64 +130,91 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         amplitude_list *= np.sqrt(2.0 * np.pi) * sigma_list
         return amplitude_list, sigma_list
 
-    def coord_func_f(self, grid_radius):
+    def coord_func_f(self, grid_radius: jnp.ndarray) -> jnp.ndarray:
+        """
+        Given an array `grid_radius` and a work array `f`, fill f[i] with
+
+          • (1 / sqrt(r_i^2 − 1)) * arccos(1 / r_i)   if r_i > 1
+          • (1 / sqrt(1 − r_i^2)) * arccosh(1 / r_i)  if r_i < 1
+          • leave f[i] unchanged if r_i == 1 (you can adjust this if you want a different convention)
+
+        This version uses only pure JAX ops, so it can be jitted or grad’ed without
+        any Python control flow on tracer values.
+        """
         if isinstance(grid_radius, float) or isinstance(grid_radius, complex):
-            grid_radius = np.array([grid_radius])
+            grid_radius = jnp.array([grid_radius])
 
-        return self.coord_func_f_jit(
-            grid_radius=np.array(grid_radius),
-            f=np.ones(shape=grid_radius.shape[0], dtype="complex64"),
-        )
+        f = jnp.ones(shape=grid_radius.shape[0], dtype="complex64")
 
-    @staticmethod
-    @aa.util.numba.jit()
-    def coord_func_f_jit(grid_radius, f):
-        for index in range(f.shape[0]):
-            if np.real(grid_radius[index]) > 1.0:
-                f[index] = (
-                    1.0 / np.sqrt(np.square(grid_radius[index]) - 1.0)
-                ) * np.arccos(np.divide(1.0, grid_radius[index]))
-            elif np.real(grid_radius[index]) < 1.0:
-                f[index] = (
-                    1.0 / np.sqrt(1.0 - np.square(grid_radius[index]))
-                ) * np.arccosh(np.divide(1.0, grid_radius[index]))
+        # compute both branches
+        r = grid_radius
+        inv_r = 1.0 / r
 
-        return f
+        # branch for r > 1
+        out_gt = (1.0 / jnp.sqrt(r**2 - 1.0)) * jnp.arccos(inv_r)
 
-    def coord_func_g(self, grid_radius):
-        if isinstance(grid_radius, float) or isinstance(grid_radius, complex):
-            grid_radius = np.array([grid_radius])
+        # branch for r < 1
+        out_lt = (1.0 / jnp.sqrt(1.0 - r**2)) * jnp.arccosh(inv_r)
 
+        # combine: if r>1 pick out_gt, elif r<1 pick out_lt, else keep original f
+        return jnp.where(r > 1.0, out_gt, jnp.where(r < 1.0, out_lt, f))
+
+    def coord_func_g(self, grid_radius: jnp.ndarray) -> jnp.ndarray:
+        """
+        Vectorized version of the original looped `coord_func_g_jit`.
+
+        Applies conditional logic element-wise:
+          - if r > 1: g = (1 - f_r) / (r^2 - 1)
+          - if r < 1: g = (f_r - 1) / (1 - r^2)
+          - else:     g = 1/3
+
+        Parameters
+        ----------
+        grid_radius : jnp.ndarray
+            The input grid radius values.
+        f_r : jnp.ndarray
+            Precomputed values from `coord_func_f`.
+        g : jnp.ndarray
+            Output array (will be overwritten).
+
+        Returns
+        -------
+        jnp.ndarray
+            The updated `g` array.
+        """
+        # Convert single values to JAX arrays
+        if isinstance(grid_radius, (float, complex)):
+            grid_radius = jnp.array([grid_radius], dtype=jnp.complex64)
+
+        # Evaluate f_r
         f_r = self.coord_func_f(grid_radius=grid_radius)
 
-        return self.coord_func_g_jit(
-            grid_radius=np.array(grid_radius),
-            f_r=f_r,
-            g=np.zeros(shape=grid_radius.shape[0], dtype="complex64"),
+        r = jnp.real(grid_radius)
+        r2 = r**2
+
+        return jnp.where(
+            r > 1.0,
+            (1.0 - f_r) / (r2 - 1.0),
+            jnp.where(
+                r < 1.0,
+                (f_r - 1.0) / (1.0 - r2),
+                1.0 / 3.0,
+            ),
         )
 
-    @staticmethod
-    @aa.util.numba.jit()
-    def coord_func_g_jit(grid_radius, f_r, g):
-        for index in range(f_r.shape[0]):
-            if np.real(grid_radius[index]) > 1.0:
-                g[index] = (1.0 - f_r[index]) / (np.square(grid_radius[index]) - 1.0)
-            elif np.real(grid_radius[index]) < 1.0:
-                g[index] = (f_r[index] - 1.0) / (1.0 - np.square(grid_radius[index]))
-            else:
-                g[index] = 1.0 / 3.0
-
-        return g
-
     def coord_func_h(self, grid_radius):
-        return np.log(grid_radius / 2.0) + self.coord_func_f(grid_radius=grid_radius)
+        return jnp.log(grid_radius / 2.0) + self.coord_func_f(grid_radius=grid_radius)
 
     def rho_at_scale_radius_solar_mass_per_kpc3(
-        self, redshift_object, redshift_source, cosmology: LensingCosmology = Planck15()
+        self, redshift_object, redshift_source, cosmology: LensingCosmology = None
     ):
         """
         The Cosmic average density is defined at the redshift of the profile.
         """
+
+        from autogalaxy.cosmology.wrap import Planck15
+
+        cosmology = cosmology or Planck15()
 
         critical_surface_density = cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
             redshift_0=redshift_object, redshift_1=redshift_source
@@ -209,8 +233,13 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_object,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = None,
     ):
+
+        from autogalaxy.cosmology.wrap import Planck15
+
+        cosmology = cosmology or Planck15()
+
         if redshift_of_cosmic_average_density == "profile":
             redshift_calc = redshift_object
         elif redshift_of_cosmic_average_density == "local":
@@ -240,8 +269,15 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_profile,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = None,
     ):
+
+        from autogalaxy.cosmology.wrap import Planck15
+
+        cosmology = cosmology or Planck15()
+
+        from scipy.optimize import fsolve
+
         """
         Computes the NFW halo concentration, `c_{200m}`
         """
@@ -265,7 +301,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
                 concentration
                 * concentration
                 * concentration
-                / (np.log(1 + concentration) - concentration / (1 + concentration))
+                / (jnp.log(1 + concentration) - concentration / (1 + concentration))
             )
             - delta_concentration
         )
@@ -275,11 +311,15 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_object,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = None,
     ):
         """
         Returns `r_{200m}` for this halo in **arcseconds**
         """
+        from autogalaxy.cosmology.wrap import Planck15
+
+        cosmology = cosmology or Planck15()
+
         concentration = self.concentration(
             redshift_profile=redshift_object,
             redshift_source=redshift_source,
@@ -294,8 +334,12 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_object,
         redshift_source,
         redshift_of_cosmic_average_density="profile",
-        cosmology: LensingCosmology = Planck15(),
+        cosmology: LensingCosmology = None,
     ):
+        from autogalaxy.cosmology.wrap import Planck15
+
+        cosmology = cosmology or Planck15()
+
         """
         Returns `M_{200m}` of this NFW halo, in solar masses, at the given cosmology.
         """
@@ -328,7 +372,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         return (
             200.0
-            * ((4.0 / 3.0) * np.pi)
+            * ((4.0 / 3.0) * jnp.pi)
             * cosmic_average_density
             * (radius_at_200_kpc**3.0)
         )

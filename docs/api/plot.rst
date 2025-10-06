@@ -37,7 +37,6 @@ Create figures and subplots showing quantities of standard **PyAutoGalaxy** obje
     FitImagingPlotter
     FitInterferometerPlotter
     GalaxiesPlotter
-    AdaptPlotter
     FitImagingPlotter
     FitInterferometerPlotter
     MultiFigurePlotter
@@ -75,8 +74,6 @@ visuals to figures.
 
    MatPlot1D
    MatPlot2D
-   Include1D
-   Include2D
    Visuals1D
    Visuals2D
 

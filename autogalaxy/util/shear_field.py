@@ -1,5 +1,4 @@
 import logging
-from matplotlib.patches import Ellipse
 import numpy as np
 import typing
 
@@ -47,11 +46,12 @@ class AbstractShearField:
         )
 
     @property
-    def elliptical_patches(self) -> typing.List[Ellipse]:
+    def elliptical_patches(self) -> "typing.List[Ellipse]":
         """
         If we treat this vector field as a set of weak lensing shear measurements, the elliptical patch representing
         each galaxy ellipticity. This patch is used for visualizing an ellipse of each galaxy in an image.
         """
+        from matplotlib.patches import Ellipse
 
         return [
             Ellipse(

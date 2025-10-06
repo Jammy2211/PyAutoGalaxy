@@ -1,10 +1,11 @@
 import pytest
 
-import autogalaxy as ag
-
 
 def test__cosmology(Planck15):
-    cosmology = ag.cosmo.FlatwCDMWrap()
+
+    from autogalaxy.cosmology.model import FlatwCDMWrap
+
+    cosmology = FlatwCDMWrap()
 
     critical_surface_density = (
         cosmology.critical_surface_density_between_redshifts_from(
@@ -14,7 +15,9 @@ def test__cosmology(Planck15):
 
     assert critical_surface_density == pytest.approx(17613991217.945473, 1.0e-4)
 
-    cosmology = ag.cosmo.FlatLambdaCDMWrap()
+    from autogalaxy.cosmology.model import FlatLambdaCDMWrap
+
+    cosmology = FlatLambdaCDMWrap()
 
     critical_surface_density = (
         cosmology.critical_surface_density_between_redshifts_from(

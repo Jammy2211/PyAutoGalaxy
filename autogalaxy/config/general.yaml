@@ -1,9 +1,8 @@
-analysis:
-  preload_attempts: 250
+jax:
+  use_jax: true                       # If True, uses JAX internally, whereas False uses normal Numpy.
 fits:
   flip_for_ds9: true
 grid:
-  remove_projected_centre: false   # Whether 1D plots of a light profile should remove the central point to avoid the large numerical central value skewing the y axis.
   max_evaluation_grid_size: 1000   # An evaluation grid whose shape is adaptive chosen is used to compute quantities like critical curves, this integer is the max size of the grid ensuring faster run times.
 adapt:
   adapt_minimum_percent: 0.01
@@ -12,6 +11,4 @@ inversion:
   use_border_relocator: true          # If True, by default a pixelization's border is used to relocate all pixels outside its border to the border.
 test:
   check_likelihood_function: true   # if True, when a search is resumed the likelihood of a previous sample is recalculated to ensure it is consistent with the previous run.
-  check_preloads: false
   exception_override: false
-  preloads_check_threshold: 1.0     # If the figure of merit of a fit with and without preloads is greater than this threshold, the check preload test fails and an exception raised for a model-fit. 

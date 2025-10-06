@@ -1,6 +1,7 @@
-from astropy import units
-import numpy as np
 from typing import Tuple
+
+import jax
+import jax.numpy as jnp
 
 
 def ell_comps_from(axis_ratio: float, angle: float) -> Tuple[float, float]:
@@ -22,10 +23,10 @@ def ell_comps_from(axis_ratio: float, angle: float) -> Tuple[float, float]:
     angle
         Rotation angle of light profile counter-clockwise from positive x-axis.
     """
-    angle *= np.pi / 180.0
+    angle *= jnp.pi / 180.0
     fac = (1 - axis_ratio) / (1 + axis_ratio)
-    ellip_y = fac * np.sin(2 * angle)
-    ellip_x = fac * np.cos(2 * angle)
+    ellip_y = fac * jnp.sin(2 * angle)
+    ellip_x = fac * jnp.cos(2 * angle)
     return (ellip_y, ellip_x)
 
 
@@ -59,16 +60,14 @@ def axis_ratio_and_angle_from(ell_comps: Tuple[float, float]) -> Tuple[float, fl
     ell_comps
         The elliptical components of the light or mass profile which are converted to an angle.
     """
-    angle = np.arctan2(ell_comps[0], ell_comps[1]) / 2
-    angle *= 180.0 / np.pi
+    angle = jnp.arctan2(ell_comps[0], ell_comps[1]) / 2
+    angle *= 180.0 / jnp.pi
 
-    if abs(angle) > 45 and angle < 0:
-        angle += 180
+    angle = jax.lax.select(angle < -45, angle + 180, angle)
 
-    fac = np.sqrt(ell_comps[1] ** 2 + ell_comps[0] ** 2)
-    if fac > 0.999:
-        fac = 0.999  # avoid unphysical solution
-    # if fac > 1: print('unphysical e1,e2')
+    fac = jnp.sqrt(ell_comps[1] ** 2 + ell_comps[0] ** 2)
+    fac = jax.lax.min(fac, 0.999)
+
     axis_ratio = (1 - fac) / (1 + fac)
     return axis_ratio, angle
 
@@ -140,15 +139,15 @@ def shear_gamma_1_2_from(magnitude: float, angle: float) -> Tuple[float, float]:
 
     The gamma 1 and gamma 2 components of a shear are given by:
 
-    gamma_1 = magnitude * np.cos(2 * angle * np.pi / 180.0)
-    gamma_2 = magnitude * np.sin(2 * angle * np.pi / 180.0)
+    gamma_1 = magnitude * jnp.cos(2 * angle * jnp.pi / 180.0)
+    gamma_2 = magnitude * jnp.sin(2 * angle * jnp.pi / 180.0)
 
     Which are the values this function returns.
 
     Converting from gamma 1 and gamma 2 to magnitude and angle is given by:
 
-    magnitude = np.sqrt(gamma_1**2 + gamma_2**2)
-    angle = np.arctan2(gamma_2, gamma_1) / 2 * 180.0 / np.pi
+    magnitude = jnp.sqrt(gamma_1**2 + gamma_2**2)
+    angle = jnp.arctan2(gamma_2, gamma_1) / 2 * 180.0 / jnp.pi
 
     Parameters
     ----------
@@ -157,8 +156,8 @@ def shear_gamma_1_2_from(magnitude: float, angle: float) -> Tuple[float, float]:
     angle
         Rotation angle of light profile counter-clockwise from positive x-axis.
     """
-    gamma_1 = magnitude * np.cos(2 * angle * np.pi / 180.0)
-    gamma_2 = magnitude * np.sin(2 * angle * np.pi / 180.0)
+    gamma_1 = magnitude * jnp.cos(2 * angle * jnp.pi / 180.0)
+    gamma_2 = magnitude * jnp.sin(2 * angle * jnp.pi / 180.0)
     return (gamma_1, gamma_2)
 
 
@@ -170,13 +169,13 @@ def shear_magnitude_and_angle_from(
 
     The gamma 1 and gamma 2 components of a shear are given by:
 
-    gamma_1 = magnitude * np.cos(2 * angle * np.pi / 180.0)
-    gamma_2 = magnitude * np.sin(2 * angle * np.pi / 180.0)
+    gamma_1 = magnitude * jnp.cos(2 * angle * jnp.pi / 180.0)
+    gamma_2 = magnitude * jnp.sin(2 * angle * jnp.pi / 180.0)
 
     Converting from gamma 1 and gamma 2 to magnitude and angle is given by:
 
-    magnitude = np.sqrt(gamma_1**2 + gamma_2**2)
-    angle = np.arctan2(gamma_2, gamma_1) / 2 * 180.0 / np.pi
+    magnitude = jnp.sqrt(gamma_1**2 + gamma_2**2)
+    angle = jnp.arctan2(gamma_2, gamma_1) / 2 * 180.0 / jnp.pi
 
     Which are the values this function returns.
 
@@ -194,14 +193,13 @@ def shear_magnitude_and_angle_from(
     gamma_2
         The gamma 2 component of the shear.
     """
-    angle = np.arctan2(gamma_2, gamma_1) / 2 * 180.0 / np.pi
-    magnitude = np.sqrt(gamma_1**2 + gamma_2**2)
+    angle = jnp.arctan2(gamma_2, gamma_1) / 2 * 180.0 / jnp.pi
+    magnitude = jnp.sqrt(gamma_1**2 + gamma_2**2)
 
-    if angle < 0:
-        angle += 180.0
-
-    if abs(angle - 90) > 45 and angle > 90:
-        angle -= 180
+    angle = jnp.where(angle < 0, angle + 180.0, angle)
+    angle = jnp.where(
+        (jnp.abs(angle - 90.0) > 45.0) & (angle > 90.0), angle - 180.0, angle
+    )
 
     return magnitude, angle
 
@@ -212,13 +210,13 @@ def shear_magnitude_from(gamma_1: float, gamma_2: float) -> float:
 
     The gamma 1 and gamma 2 components of a shear are given by:
 
-    gamma_1 = magnitude * np.cos(2 * angle * np.pi / 180.0)
-    gamma_2 = magnitude * np.sin(2 * angle * np.pi / 180.0)
+    gamma_1 = magnitude * jnp.cos(2 * angle * jnp.pi / 180.0)
+    gamma_2 = magnitude * jnp.sin(2 * angle * jnp.pi / 180.0)
 
     Converting from gamma 1 and gamma 2 to magnitude and angle is given by:
 
-    magnitude = np.sqrt(gamma_1**2 + gamma_2**2)
-    angle = np.arctan2(gamma_2, gamma_1) / 2 * 180.0 / np.pi
+    magnitude = jnp.sqrt(gamma_1**2 + gamma_2**2)
+    angle = jnp.arctan2(gamma_2, gamma_1) / 2 * 180.0 / jnp.pi
 
     The magnitude value is what this function returns.
 
@@ -239,13 +237,13 @@ def shear_angle_from(gamma_1: float, gamma_2: float) -> float:
 
     The gamma 1 and gamma 2 components of a shear are given by:
 
-    gamma_1 = magnitude * np.cos(2 * angle * np.pi / 180.0)
-    gamma_2 = magnitude * np.sin(2 * angle * np.pi / 180.0)
+    gamma_1 = magnitude * jnp.cos(2 * angle * jnp.pi / 180.0)
+    gamma_2 = magnitude * jnp.sin(2 * angle * jnp.pi / 180.0)
 
     Converting from gamma 1 and gamma 2 to magnitude and angle is given by:
 
-    magnitude = np.sqrt(gamma_1**2 + gamma_2**2)
-    angle = np.arctan2(gamma_2, gamma_1) / 2 * 180.0 / np.pi
+    magnitude = jnp.sqrt(gamma_1**2 + gamma_2**2)
+    angle = jnp.arctan2(gamma_2, gamma_1) / 2 * 180.0 / jnp.pi
 
     The angle value is what this function returns.
 
@@ -292,12 +290,11 @@ def multipole_k_m_and_phi_m_from(
     The normalization and angle parameters of the multipole.
     """
     phi_m = (
-        np.arctan2(multipole_comps[0], multipole_comps[1]) * 180.0 / np.pi / float(m)
+        jnp.arctan2(multipole_comps[0], multipole_comps[1]) * 180.0 / jnp.pi / float(m)
     )
-    k_m = np.sqrt(multipole_comps[1] ** 2 + multipole_comps[0] ** 2)
+    k_m = jnp.sqrt(multipole_comps[1] ** 2 + multipole_comps[0] ** 2)
 
-    if phi_m < -90.0 / m:
-        phi_m += 360.0 / m
+    phi_m = jnp.where(phi_m < -90.0 / m, phi_m + 360.0 / m, phi_m)
 
     return k_m, phi_m
 
@@ -324,7 +321,9 @@ def multipole_comps_from(k_m: float, phi_m: float, m: int) -> Tuple[float, float
     -------
     The multipole component parameters.
     """
-    multipole_comp_0 = k_m * np.sin(phi_m * float(m) * units.deg.to(units.rad))
-    multipole_comp_1 = k_m * np.cos(phi_m * float(m) * units.deg.to(units.rad))
+    from astropy import units
+
+    multipole_comp_0 = k_m * jnp.sin(phi_m * float(m) * units.deg.to(units.rad))
+    multipole_comp_1 = k_m * jnp.cos(phi_m * float(m) * units.deg.to(units.rad))
 
     return (multipole_comp_0, multipole_comp_1)

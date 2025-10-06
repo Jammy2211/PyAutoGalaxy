@@ -14,13 +14,11 @@ def make_fit_dataset_plotter_setup():
 def test__fit_sub_plot_real_space(
     fit_interferometer_7x7,
     fit_interferometer_x2_galaxy_inversion_7x7,
-    include_2d_all,
     plot_path,
     plot_patch,
 ):
     fit_plotter = aplt.FitInterferometerPlotter(
         fit=fit_interferometer_7x7,
-        include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
 
@@ -32,7 +30,6 @@ def test__fit_sub_plot_real_space(
 
     fit_plotter = aplt.FitInterferometerPlotter(
         fit=fit_interferometer_x2_galaxy_inversion_7x7,
-        include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
 

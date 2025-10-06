@@ -34,21 +34,21 @@ def test__decorator_changes_behaviour_correctly():
     lp_image_2d = lp.image_2d_from(grid=grid)
 
     image_2d = lp.image_2d_from(grid=grid)
-    assert image_2d == pytest.approx(lp_image_2d, 1.0e-4)
+    assert image_2d == pytest.approx(lp_image_2d.array, 1.0e-4)
 
     image_2d = lp.image_2d_from(grid=grid, operated_only=True)
     assert image_2d == pytest.approx(np.zeros(shape=(9,)), 1.0e-4)
 
     image_2d = lp.image_2d_from(grid=grid, operated_only=False)
-    assert image_2d == pytest.approx(lp_image_2d, 1.0e-4)
+    assert image_2d == pytest.approx(lp_image_2d.array, 1.0e-4)
 
     lp = ag.lp_operated.Gaussian()
 
     image_2d = lp.image_2d_from(grid=grid)
-    assert image_2d == pytest.approx(lp_image_2d, 1.0e-4)
+    assert image_2d == pytest.approx(lp_image_2d.array, 1.0e-4)
 
     image_2d = lp.image_2d_from(grid=grid, operated_only=True)
-    assert image_2d == pytest.approx(lp_image_2d, 1.0e-4)
+    assert image_2d == pytest.approx(lp_image_2d.array, 1.0e-4)
 
     image_2d = lp.image_2d_from(grid=grid, operated_only=False)
     assert image_2d == pytest.approx(np.zeros(shape=(9,)), 1.0e-4)

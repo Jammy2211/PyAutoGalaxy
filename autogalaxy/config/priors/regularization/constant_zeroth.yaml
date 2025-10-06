@@ -6,7 +6,7 @@ ConstantZeroth:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   coefficient_zeroth:
@@ -16,6 +16,6 @@ ConstantZeroth:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf

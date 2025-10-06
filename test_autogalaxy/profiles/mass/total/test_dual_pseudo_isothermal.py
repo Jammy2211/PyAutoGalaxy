@@ -87,6 +87,6 @@ def test__convergence_2d_from():
     )
     spherical = ag.mp.dPIESph(centre=(1.1, 1.1), kappa_scale=3.0, ra=2.0, rs=3.0)
 
-    assert elliptical.convergence_2d_from(grid=grid) == pytest.approx(
-        spherical.convergence_2d_from(grid=grid), 1e-4
+    assert elliptical.convergence_2d_from(grid=grid).array == pytest.approx(
+        spherical.convergence_2d_from(grid=grid).array, 1e-4
     )

@@ -51,7 +51,6 @@ local_scheme = "no-local-version"
 [project.optional-dependencies]
 optional=[
     "numba",
-    "pylops>=1.10.0,<=2.3.1",
     "pynufft",
     "ultranest==3.6.2",
     "zeus-mcmc==2.5.4",

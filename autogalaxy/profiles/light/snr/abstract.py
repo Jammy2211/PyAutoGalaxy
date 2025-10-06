@@ -3,8 +3,6 @@ from typing import Optional
 
 import autoarray as aa
 
-from scipy.optimize import root_scalar
-
 
 class LightProfileSNR:
     def __init__(self, signal_to_noise_ratio: float = 10.0):
@@ -78,13 +76,17 @@ class LightProfileSNR:
             The psf of the simulated imaging which can change the S/N of the light profile due to spreading out
             the emission.
         """
+        from scipy.optimize import root_scalar
+
         self.intensity = 1.0
 
         background_sky_level_counts = background_sky_level * exposure_time
 
         image_2d = self.image_2d_from(grid=grid)
         if psf is not None:
-            image_2d = psf.convolved_array_from(array=image_2d)
+            image_2d = psf.convolve_image_no_blurring(
+                image=image_2d, mask=image_2d.mask
+            )
 
         brightest_value = np.max(image_2d)
 

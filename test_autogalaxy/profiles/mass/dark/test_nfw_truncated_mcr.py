@@ -7,7 +7,10 @@ grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
 def test__duffy__mass_and_concentration_consistent_with_normal_truncated_nfw():
-    cosmology = ag.cosmo.FlatLambdaCDMWrap(H0=70.0, Om0=0.3)
+
+    from autogalaxy.cosmology.model import FlatLambdaCDMWrap
+
+    cosmology = FlatLambdaCDMWrap(H0=70.0, Om0=0.3)
 
     mp = ag.mp.NFWTruncatedMCRDuffySph(
         centre=(1.0, 2.0),
@@ -42,24 +45,19 @@ def test__duffy__mass_and_concentration_consistent_with_normal_truncated_nfw():
     assert mass_at_200_via_kappa_s == mass_at_200_via_mass
     assert concentration_via_kappa_s == concentration_via_mass
 
-    assert isinstance(mp.kappa_s, float)
-
     assert mp.centre == (1.0, 2.0)
-
     assert mp.axis_ratio == 1.0
-    assert isinstance(mp.axis_ratio, float)
-
     assert mp.angle == 0.0
-    assert isinstance(mp.angle, float)
-
     assert mp.inner_slope == 1.0
-    assert isinstance(mp.inner_slope, float)
 
     assert mp.scale_radius == pytest.approx(0.273382, 1.0e-4)
 
 
 def test__ludlow__mass_and_concentration_consistent_with_normal_truncated_nfw__scatter_0():
-    cosmology = ag.cosmo.FlatLambdaCDMWrap(H0=70.0, Om0=0.3)
+
+    from autogalaxy.cosmology.model import FlatLambdaCDMWrap
+
+    cosmology = FlatLambdaCDMWrap(H0=70.0, Om0=0.3)
 
     mp = ag.mp.NFWTruncatedMCRLudlowSph(
         centre=(1.0, 2.0),
@@ -94,18 +92,10 @@ def test__ludlow__mass_and_concentration_consistent_with_normal_truncated_nfw__s
     assert mass_at_200_via_kappa_s == mass_at_200_via_mass
     assert concentration_via_kappa_s == concentration_via_mass
 
-    assert isinstance(mp.kappa_s, float)
-
     assert mp.centre == (1.0, 2.0)
-
     assert mp.axis_ratio == 1.0
-    assert isinstance(mp.axis_ratio, float)
-
     assert mp.angle == 0.0
-    assert isinstance(mp.angle, float)
-
     assert mp.inner_slope == 1.0
-    assert isinstance(mp.inner_slope, float)
 
     assert mp.scale_radius == pytest.approx(0.21157, 1.0e-4)
     assert mp.truncation_radius == pytest.approx(33.7134116, 1.0e-4)

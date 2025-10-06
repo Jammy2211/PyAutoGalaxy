@@ -1,7 +1,6 @@
 import numpy as np
 from typing import Tuple
 
-from autogalaxy.cosmology.wrap import Planck15
 from autogalaxy.profiles.mass.point.point import PointMass
 
 
@@ -30,10 +29,11 @@ class SMBH(PointMass):
         redshift_source
             The redshift of the source galaxy, which is used to convert the mass of the SMBH to an Einstein radius.
         """
-
-        self.mass = mass
+        from autogalaxy.cosmology.wrap import Planck15
 
         cosmology = Planck15()
+
+        self.mass = mass
 
         critical_surface_density = (
             cosmology.critical_surface_density_between_redshifts_from(

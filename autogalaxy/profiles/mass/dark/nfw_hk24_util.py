@@ -5,9 +5,6 @@ Created on Wed Apr  3 15:07:27 2024
 """
 
 import numpy as np
-from astropy.cosmology import Planck15
-
-cosmo = Planck15
 
 
 def semi_major_axis_from(x1: np.ndarray, x2: np.ndarray, e: np.ndarray) -> np.ndarray:

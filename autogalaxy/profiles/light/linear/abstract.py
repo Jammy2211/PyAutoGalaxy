@@ -1,10 +1,10 @@
 import inspect
+import jax.numpy as jnp
 import numpy as np
-from typing import ClassVar, Dict, List, Optional
+from typing import Dict, List, Optional
 
 from autoconf import cached_property
 import autoarray as aa
-import autofit as af
 
 from autogalaxy.profiles.light.operated.abstract import (
     LightProfileOperated,
@@ -143,10 +143,9 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         self,
         grid: aa.type.Grid1D2DLike,
         blurring_grid: aa.type.Grid1D2DLike,
-        convolver: Optional[aa.Convolver],
+        psf: Optional[aa.Kernel2D],
         light_profile_list: List[LightProfileLinear],
         regularization=Optional[aa.reg.Regularization],
-        run_time_dict: Optional[Dict] = None,
     ):
         """
         A list of linear light profiles which fits a dataset via linear algebra using the images of each linear light
@@ -184,15 +183,13 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         blurring_grid
             The blurring grid is all points whose light is outside the data's mask but close enough to the mask that
             it may be blurred into the mask. This is also used when evaluating the image of each light profile.
-        convolver
-            The convolver used to blur the light profile images of each light profile, the output of which
+        psf
+            The psf used to blur the light profile images of each light profile, the output of which
             makes up the columns of the `operated_mapping matrix`.
         light_profile_list
             A list of the linear light profiles that are used to fit the data via linear algebra.
         regularization
             The regularization scheme which may be applied to this linear object in order to smooth its solution.
-        run_time_dict
-            A dictionary which contains timing of certain functions calls which is used for profiling.
         """
         for light_profile in light_profile_list:
             if not isinstance(light_profile, LightProfileLinear):
@@ -206,11 +203,12 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
                 )
 
         super().__init__(
-            grid=grid, regularization=regularization, run_time_dict=run_time_dict
+            grid=grid,
+            regularization=regularization,
         )
 
         self.blurring_grid = blurring_grid
-        self.convolver = convolver
+        self.psf = psf
         self.light_profile_list = light_profile_list
 
     @property
@@ -255,23 +253,30 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         This function iterates over each light profile in the list and evaluates its image on the grid, storing this
         image in the `mapping_matrix`.
 
+        The standard behaviour is that this is only used for linear light profiles computed when fitting interferometer
+        data, where the `mapping_matrix` is used to compute the `operated_mapping_matrix` via a fast Fourier transform.
+        This is because the FFT does not require light outside the masked region to computed, unlike for imaging
+        data which omits this function and uses `operated_mapping_matrix_override` instead.
+
         Returns
         -------
         The `mapping_matrix` of the linear light profiles.
         """
-        mapping_matrix = np.zeros(shape=(self.pixels_in_mask, self.params))
+
+        image_2d_list = []
 
         for pixel, light_profile in enumerate(self.light_profile_list):
+
             image_2d = light_profile.image_2d_from(grid=self.grid).slim
 
-            mapping_matrix[:, pixel] = image_2d
+            image_2d_list.append(image_2d.array)
 
-        return mapping_matrix
+        return jnp.stack(image_2d_list, axis=1)
 
     @cached_property
     def operated_mapping_matrix_override(self) -> Optional[np.ndarray]:
         """
-        The inversion object takes the `mapping_matrix` of each linear object and combines it with the `Convolver`
+        The inversion object takes the `mapping_matrix` of each linear object and combines it with the PSF
         operator to perform a 2D convolution and compute the `operated_mapping_matrix`.
 
         If this property is overwritten this operation is not performed, with the `operated_mapping_matrix` output this
@@ -291,17 +296,17 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         if isinstance(self.light_profile_list[0], LightProfileOperated):
             return self.mapping_matrix
 
-        operated_mapping_matrix = np.zeros(shape=(self.pixels_in_mask, self.params))
+        blurred_image_2d_list = []
 
         for pixel, light_profile in enumerate(self.light_profile_list):
             image_2d = light_profile.image_2d_from(grid=self.grid)
 
             blurring_image_2d = light_profile.image_2d_from(grid=self.blurring_grid)
 
-            blurred_image_2d = self.convolver.convolve_image(
+            blurred_image_2d = self.psf.convolve_image(
                 image=image_2d, blurring_image=blurring_image_2d
             )
 
-            operated_mapping_matrix[:, pixel] = blurred_image_2d
+            blurred_image_2d_list.append(blurred_image_2d.array)
 
-        return operated_mapping_matrix
+        return jnp.stack(blurred_image_2d_list, axis=1)

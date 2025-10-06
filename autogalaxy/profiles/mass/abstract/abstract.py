@@ -1,6 +1,5 @@
+import jax.numpy as jnp
 import numpy as np
-from scipy.integrate import quad
-from scipy.optimize import root_scalar
 from typing import Tuple
 
 import autoarray as aa
@@ -33,8 +32,12 @@ class MassProfile(EllProfile, OperateDeflections):
     def deflections_2d_via_potential_2d_from(self, grid):
         potential = self.potential_2d_from(grid=grid)
 
-        deflections_y_2d = np.gradient(potential.native, grid.native[:, 0, 0], axis=0)
-        deflections_x_2d = np.gradient(potential.native, grid.native[0, :, 1], axis=1)
+        deflections_y_2d = np.gradient(
+            potential.native.array, grid.native.array[:, 0, 0], axis=0
+        )
+        deflections_x_2d = np.gradient(
+            potential.native.array, grid.native.array[0, :, 1], axis=1
+        )
 
         return aa.Grid2D(
             values=np.stack((deflections_y_2d, deflections_x_2d), axis=-1),
@@ -62,7 +65,7 @@ class MassProfile(EllProfile, OperateDeflections):
         raise NotImplementedError
 
     def mass_integral(self, x):
-        return 2 * np.pi * x * self.convergence_func(grid_radius=x)
+        return 2 * jnp.pi * x * self.convergence_func(grid_radius=aa.ArrayIrregular(x))
 
     @property
     def ellipticity_rescale(self):
@@ -78,6 +81,7 @@ class MassProfile(EllProfile, OperateDeflections):
         radius : dim.Length
             The radius of the circle to compute the dimensionless mass within.
         """
+        from scipy.integrate import quad
 
         return quad(self.mass_integral, a=0.0, b=radius)[0]
 
@@ -120,6 +124,7 @@ class MassProfile(EllProfile, OperateDeflections):
         This radius corresponds to the Einstein radius of the mass profile, and is a property of a number of \
         mass profiles below.
         """
+        from scipy.optimize import root_scalar
 
         def func(radius):
             return (

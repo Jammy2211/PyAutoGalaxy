@@ -3,24 +3,20 @@ NFWMCRScatterLudlowSph:
     type: Gaussian
     mean: 0.0
     sigma: 0.1
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   centre_1:
     type: Gaussian
     mean: 0.0
     sigma: 0.1
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   mass_at_200:
@@ -30,7 +26,7 @@ NFWMCRScatterLudlowSph:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   redshift_object:
@@ -40,7 +36,7 @@ NFWMCRScatterLudlowSph:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   redshift_source:
@@ -50,18 +46,16 @@ NFWMCRScatterLudlowSph:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   scatter:
     type: Gaussian
     mean: 0.0
     sigma: 3.0
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 1.0
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf

@@ -18,6 +18,7 @@ def set_test_mode():
 
 
 def clean(database_file):
+
     database_sqlite = path.join(conf.instance.output_path, f"{database_file}.sqlite")
 
     if path.exists(database_sqlite):

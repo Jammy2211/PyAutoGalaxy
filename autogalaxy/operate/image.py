@@ -1,13 +1,14 @@
 from __future__ import annotations
-import numpy as np
+import jax
+import jax.numpy as jnp
 from typing import TYPE_CHECKING, Dict, List, Optional
+
+from autoarray import Array2D
 
 if TYPE_CHECKING:
     from autogalaxy.galaxy.galaxy import Galaxy
 
 import autoarray as aa
-
-from autogalaxy import exc
 
 
 class OperateImage:
@@ -29,36 +30,24 @@ class OperateImage:
     def has(self, cls) -> bool:
         raise NotImplementedError
 
-    @aa.profile_func
     def _blurred_image_2d_from(
         self,
         image_2d: aa.Array2D,
         blurring_image_2d: aa.Array2D,
-        psf: Optional[aa.Kernel2D],
-        convolver: aa.Convolver,
+        psf: aa.Kernel2D,
     ) -> aa.Array2D:
-        if psf is not None:
-            return psf.convolved_array_with_mask_from(
-                array=image_2d.native + blurring_image_2d.native,
-                mask=image_2d.mask,
-            )
 
-        elif convolver is not None:
-            return convolver.convolve_image(
-                image=image_2d, blurring_image=blurring_image_2d
-            )
-
-        else:
-            raise exc.OperateException(
-                "A PSF or Convolver was not passed to the `blurred_image_2d_list_from()` function."
-            )
+        values = psf.convolve_image(
+            image=image_2d,
+            blurring_image=blurring_image_2d,
+        )
+        return Array2D(values=values, mask=image_2d.mask)
 
     def blurred_image_2d_from(
         self,
         grid: aa.Grid2D,
         blurring_grid: aa.Grid2D,
-        psf: Optional[aa.Kernel2D] = None,
-        convolver: aa.Convolver = None,
+        psf: aa.Kernel2D = None,
     ) -> aa.Array2D:
         """
         Evaluate the light object's 2D image from a input 2D grid of coordinates and convolve it with a PSF.
@@ -92,7 +81,6 @@ class OperateImage:
             image_2d=image_2d_not_operated,
             blurring_image_2d=blurring_image_2d_not_operated,
             psf=psf,
-            convolver=convolver,
         )
 
         if self.has(cls=LightProfileOperated):
@@ -169,7 +157,6 @@ class OperateImage:
 
         return padded_image_2d + padded_image_2d_operated
 
-    @aa.profile_func
     def visibilities_from(
         self, grid: aa.Grid2D, transformer: aa.type.Transformer
     ) -> aa.Visibilities:
@@ -198,12 +185,14 @@ class OperateImage:
 
         image_2d = self.image_2d_from(grid=grid)
 
-        if not np.any(image_2d):
-            return aa.Visibilities.zeros(
+        return jax.lax.cond(
+            jnp.any(image_2d.array),
+            lambda _: transformer.visibilities_from(image=image_2d),
+            lambda _: aa.Visibilities.zeros(
                 shape_slim=(transformer.uv_wavelengths.shape[0],)
-            )
-
-        return transformer.visibilities_from(image=image_2d)
+            ),
+            operand=None,
+        )
 
 
 class OperateImageList(OperateImage):
@@ -224,8 +213,7 @@ class OperateImageList(OperateImage):
         self,
         grid: aa.Grid2D,
         blurring_grid: aa.Grid2D,
-        psf: Optional[aa.Kernel2D] = None,
-        convolver: aa.Convolver = None,
+        psf: aa.Kernel2D = None,
     ) -> List[aa.Array2D]:
         """
         Evaluate the light object's list of 2D images from a input 2D grid of coordinates and convolve each image with
@@ -267,7 +255,6 @@ class OperateImageList(OperateImage):
                 image_2d=image_2d_not_operated,
                 blurring_image_2d=blurring_image_2d_not_operated,
                 psf=psf,
-                convolver=convolver,
             )
 
             image_2d_operated = image_2d_operated_list[i]
@@ -302,13 +289,13 @@ class OperateImageList(OperateImage):
         """
         padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
 
-        padded_image_1d_list = self.image_2d_list_from(grid=padded_grid)
+        padded_image_2d_list = self.image_2d_list_from(grid=padded_grid)
 
         unmasked_blurred_image_list = []
 
-        for padded_image_1d in padded_image_1d_list:
+        for padded_image_2d in padded_image_2d_list:
             unmasked_blurred_array_2d = padded_grid.mask.unmasked_blurred_array_from(
-                padded_array=padded_image_1d, psf=psf, image_shape=grid.mask.shape
+                padded_array=padded_image_2d, psf=psf, image_shape=grid.mask.shape
             )
 
             unmasked_blurred_image_list.append(unmasked_blurred_array_2d)
@@ -346,7 +333,7 @@ class OperateImageList(OperateImage):
         visibilities_list = []
 
         for image_2d in image_2d_list:
-            if not np.any(image_2d):
+            if not jnp.any(image_2d.array):
                 visibilities = aa.Visibilities.zeros(
                     shape_slim=(transformer.uv_wavelengths.shape[0],)
                 )
@@ -375,7 +362,7 @@ class OperateImageGalaxies(OperateImageList):
         raise NotImplementedError
 
     def galaxy_blurred_image_2d_dict_from(
-        self, grid, convolver, blurring_grid
+        self, grid, psf, blurring_grid
     ) -> Dict[Galaxy, aa.Array2D]:
         """
         Evaluate the light object's dictionary mapping galaixes to their corresponding 2D images and convolve each
@@ -418,7 +405,7 @@ class OperateImageGalaxies(OperateImageList):
                 galaxy_key
             ]
 
-            blurred_image_2d = convolver.convolve_image(
+            blurred_image_2d = psf.convolve_image(
                 image=image_2d_not_operated,
                 blurring_image=blurring_image_2d_not_operated,
             )
@@ -465,7 +452,7 @@ class OperateImageGalaxies(OperateImageList):
         for galaxy_key in galaxy_image_2d_dict.keys():
             image_2d = galaxy_image_2d_dict[galaxy_key]
 
-            if not np.any(image_2d):
+            if not jnp.any(image_2d.array):
                 visibilities = aa.Visibilities.zeros(
                     shape_slim=(transformer.uv_wavelengths.shape[0],)
                 )

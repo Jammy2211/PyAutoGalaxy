@@ -1,3 +1,4 @@
+import jax.numpy as jnp
 import numpy as np
 from typing import Optional, Tuple
 
@@ -59,12 +60,12 @@ class Gaussian(LightProfile):
         grid_radii
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
-        return np.multiply(
+        return jnp.multiply(
             self._intensity,
-            np.exp(
+            jnp.exp(
                 -0.5
-                * np.square(
-                    np.divide(grid_radii, self.sigma / np.sqrt(self.axis_ratio))
+                * jnp.square(
+                    jnp.divide(grid_radii.array, self.sigma / jnp.sqrt(self.axis_ratio))
                 )
             ),
         )
@@ -73,7 +74,6 @@ class Gaussian(LightProfile):
     @aa.grid_dec.to_array
     @check_operated_only
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def image_2d_from(
         self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
     ) -> np.ndarray:
