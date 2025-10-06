@@ -110,9 +110,7 @@ class AbstractFitInversion:
             reconstruction = self.inversion.reconstruction_dict[linear_obj_func]
 
             for i, light_profile in enumerate(linear_obj_func.light_profile_list):
-                linear_light_profile_intensity_dict[light_profile] = float(
-                    reconstruction[i]
-                )
+                linear_light_profile_intensity_dict[light_profile] = reconstruction[i]
 
         return linear_light_profile_intensity_dict
 
