@@ -277,6 +277,9 @@ class OperateDeflections:
         if deflections_func is None:
             deflections_func = self.deflections_yx_2d_from
 
+        if isinstance(grid, aa.Grid2DIrregular):
+            grid = grid.array
+
         grid_shift_y_up = aa.Grid2DIrregular(
             values=jnp.stack([grid[:, 0] + buffer, grid[:, 1]], axis=1)
         )
