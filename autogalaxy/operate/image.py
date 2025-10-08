@@ -185,14 +185,20 @@ class OperateImage:
 
         image_2d = self.image_2d_from(grid=grid)
 
-        return jax.lax.cond(
-            jnp.any(image_2d.array),
-            lambda _: transformer.visibilities_from(image=image_2d),
-            lambda _: aa.Visibilities.zeros(
-                shape_slim=(transformer.uv_wavelengths.shape[0],)
-            ),
-            operand=None,
+        if jnp.any(image_2d.array):
+            return transformer.visibilities_from(image=image_2d)
+        return aa.Visibilities.zeros(
+            shape_slim=(transformer.uv_wavelengths.shape[0],)
         )
+
+        # return jax.lax.cond(
+        #     jnp.any(image_2d.array),
+        #     lambda _: transformer.visibilities_from(image=image_2d),
+        #     lambda _: aa.Visibilities.zeros(
+        #         shape_slim=(transformer.uv_wavelengths.shape[0],)
+        #     ),
+        #     operand=None,
+        # )
 
 
 class OperateImageList(OperateImage):

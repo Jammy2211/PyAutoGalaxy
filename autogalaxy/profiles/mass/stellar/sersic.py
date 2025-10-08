@@ -1,3 +1,5 @@
+import jax
+import jax.numpy as jnp
 import numpy as np
 
 from typing import List, Tuple
@@ -121,9 +123,6 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         self.sersic_index = sersic_index
 
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        if self.intensity == 0.0:
-            return np.zeros((grid.shape[0], 2))
-
         return self.deflections_2d_via_cse_from(grid=grid, **kwargs)
 
     @aa.grid_dec.to_vector_yx

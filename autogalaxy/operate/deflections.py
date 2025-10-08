@@ -375,10 +375,7 @@ class OperateDeflections:
         gamma_1 = 0.5 * (hessian_xx - hessian_yy)
         gamma_2 = hessian_xy
 
-        shear_yx_2d = jnp.zeros(shape=(grid.shape_slim, 2))
-
-        shear_yx_2d[:, 0] = gamma_2
-        shear_yx_2d[:, 1] = gamma_1
+        shear_yx_2d = jnp.stack([gamma_2.array, gamma_1.array], axis=1)
 
         return ShearYX2DIrregular(values=shear_yx_2d, grid=grid)
 
