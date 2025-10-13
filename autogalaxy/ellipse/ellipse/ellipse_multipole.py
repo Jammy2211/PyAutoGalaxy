@@ -57,6 +57,11 @@ class EllipseMultipole:
         -------
         The (y,x) coordinates of the input points, which are perturbed by the multipole.
         """
+        symmetry = 360 / self.m
+        k_orig, phi_orig = multipole_k_m_and_phi_m_from(self.multipole_comps, self.m)
+        comps_adjusted = multipole_comps_from(k_orig,
+                                              symmetry-2*phi_orig+(symmetry-(ellipse.angle-phi_orig)), #Re-align light to match mass
+                                              self.m)
 
         # 1) compute cartesian (polar) angle
         theta = np.arctan2(points[:,0], points[:,1])  # <- true polar angle
@@ -64,8 +69,8 @@ class EllipseMultipole:
         # 2) multipole in that same frame
         delta_theta = self.m * (theta - ellipse.angle_radians)
         radial = (
-                self.multipole_comps[1] * np.cos(delta_theta)
-                + self.multipole_comps[0] * np.sin(delta_theta)
+                comps_adjusted[1] * np.cos(delta_theta)
+                + comps_adjusted[0] * np.sin(delta_theta)
         )
 
         # 3) perturb along the true radial direction
@@ -141,15 +146,20 @@ class EllipseMultipoleScaled(EllipseMultipole):
         -------
         The (y,x) coordinates of the input points, which are perturbed by the multipole.
         """
+        symmetry = 360/self.m
+        k_orig, phi_orig = multipole_k_m_and_phi_m_from(self.specific_multipole_comps, self.m)
+        comps_adjusted = multipole_comps_from(k_orig,
+                                              symmetry-2*phi_orig+(symmetry-(ellipse.angle-phi_orig)), #Re-align light to match mass
+                                              self.m)
 
         # 1) compute cartesian (polar) angle
-        theta = np.arctan2(points[:,0], points[:,1])  # <- true polar angle
+        theta = np.arctan2(points[:, 0], points[:, 1])  # <- true polar angle
 
         # 2) multipole in that same frame
         delta_theta = self.m * (theta - ellipse.angle_radians)
         radial = (
-                self.specific_multipole_comps[1] * np.cos(delta_theta)
-                + self.specific_multipole_comps[0] * np.sin(delta_theta)
+                comps_adjusted[1] * np.cos(delta_theta)
+                + comps_adjusted[0] * np.sin(delta_theta)
         )
 
         # 3) perturb along the true radial direction
