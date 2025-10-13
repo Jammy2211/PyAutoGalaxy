@@ -2,6 +2,8 @@ jax:
   use_jax: true                       # If True, uses JAX internally, whereas False uses normal Numpy.
 fits:
   flip_for_ds9: true
+psf:
+  use_fft_default: true              # If True, PSFs are convolved using FFTs by default, which is faster and uses less memory in all cases except for very small PSFs, False uses direct convolution.
 grid:
   max_evaluation_grid_size: 1000   # An evaluation grid whose shape is adaptive chosen is used to compute quantities like critical curves, this integer is the max size of the grid ensuring faster run times.
 adapt:

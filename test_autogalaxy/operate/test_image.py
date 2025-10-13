@@ -18,7 +18,7 @@ def test__blurred_image_2d_from(
     image_2d = lp.image_2d_from(grid=grid_2d_7x7)
     blurring_image_2d = lp.image_2d_from(grid=blurring_grid_2d_7x7)
 
-    blurred_image_2d_manual = psf_3x3.convolve_image(
+    blurred_image_2d_manual = psf_3x3.convolved_image_from(
         image=image_2d, blurring_image=blurring_image_2d
     )
 
@@ -55,7 +55,7 @@ def test__blurred_image_2d_from(
         grid=grid_2d_7x7, psf=psf_3x3, blurring_grid=blurring_grid_2d_7x7
     )
 
-    blurred_image_2d_manual_not_operated = psf_3x3.convolve_image(
+    blurred_image_2d_manual_not_operated = psf_3x3.convolved_image_from(
         image=image_2d_not_operated,
         blurring_image=blurring_image_2d_not_operated,
     )
@@ -332,7 +332,7 @@ def test__galaxy_blurred_image_2d_dict_from(grid_2d_7x7, blurring_grid_2d_7x7, p
     image_2d = lp_0.image_2d_from(grid=grid_2d_7x7)
     blurring_image_2d = lp_0.image_2d_from(grid=blurring_grid_2d_7x7)
 
-    image_2d_convolved = psf_3x3.convolve_image(
+    image_2d_convolved = psf_3x3.convolved_image_from(
         image=image_2d, blurring_image=blurring_image_2d
     )
 

@@ -296,6 +296,54 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         if isinstance(self.light_profile_list[0], LightProfileOperated):
             return self.mapping_matrix
 
+        # number of source pixels = number of light profiles
+        n_src = len(self.light_profile_list)
+
+        # allocate slim-form arrays for mapping matrices
+        mapping_matrix = jnp.zeros((self.grid.shape_slim, n_src))
+        blurring_mapping_matrix = jnp.zeros((self.blurring_grid.shape_slim, n_src))
+
+        # build each column
+        for pixel, light_profile in enumerate(self.light_profile_list):
+            # main grid mapping for this light profile
+            mapping_matrix = mapping_matrix.at[:, pixel].set(
+                light_profile.image_2d_from(grid=self.grid).array
+            )
+
+            # blurring grid mapping for this light profile
+            blurring_mapping_matrix = blurring_mapping_matrix.at[:, pixel].set(
+                light_profile.image_2d_from(grid=self.blurring_grid).array
+            )
+
+        return self.psf.convolved_mapping_matrix_from(
+            mapping_matrix=mapping_matrix,
+            mask=self.grid.mask,
+            blurring_mapping_matrix=blurring_mapping_matrix,
+        )
+
+    @cached_property
+    def operated_mapping_matrix_override_real_space(self) -> Optional[np.ndarray]:
+        """
+        The inversion object takes the `mapping_matrix` of each linear object and combines it with the PSF
+        operator to perform a 2D convolution and compute the `operated_mapping_matrix`.
+
+        If this property is overwritten this operation is not performed, with the `operated_mapping_matrix` output this
+        property automatically used instead.
+
+        This is used for a linear light profile because the in-built mapping matrix convolution does not account for
+        how light profile images have flux outside the masked region which is blurred into the masked region. This
+        flux is outside the region that defines the `mapping_matrix` and thus this override is required to properly
+        incorporate it.
+
+        Returns
+        -------
+        A blurred mapping matrix of dimensions (total_mask_pixels, 1) which overrides the mapping matrix calculations
+        performed in the linear equation solvers.
+        """
+
+        if isinstance(self.light_profile_list[0], LightProfileOperated):
+            return self.mapping_matrix
+
         blurred_image_2d_list = []
 
         for pixel, light_profile in enumerate(self.light_profile_list):
@@ -303,7 +351,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
 
             blurring_image_2d = light_profile.image_2d_from(grid=self.blurring_grid)
 
-            blurred_image_2d = self.psf.convolve_image(
+            blurred_image_2d = self.psf.convolved_image_from(
                 image=image_2d, blurring_image=blurring_image_2d
             )
 

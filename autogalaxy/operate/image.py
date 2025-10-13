@@ -37,7 +37,7 @@ class OperateImage:
         psf: aa.Kernel2D,
     ) -> aa.Array2D:
 
-        values = psf.convolve_image(
+        values = psf.convolved_image_from(
             image=image_2d,
             blurring_image=blurring_image_2d,
         )
@@ -187,9 +187,7 @@ class OperateImage:
 
         if jnp.any(image_2d.array):
             return transformer.visibilities_from(image=image_2d)
-        return aa.Visibilities.zeros(
-            shape_slim=(transformer.uv_wavelengths.shape[0],)
-        )
+        return aa.Visibilities.zeros(shape_slim=(transformer.uv_wavelengths.shape[0],))
 
         # return jax.lax.cond(
         #     jnp.any(image_2d.array),
@@ -411,7 +409,7 @@ class OperateImageGalaxies(OperateImageList):
                 galaxy_key
             ]
 
-            blurred_image_2d = psf.convolve_image(
+            blurred_image_2d = psf.convolved_image_from(
                 image=image_2d_not_operated,
                 blurring_image=blurring_image_2d_not_operated,
             )
