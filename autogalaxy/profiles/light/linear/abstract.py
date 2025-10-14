@@ -319,6 +319,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
             mapping_matrix=mapping_matrix,
             mask=self.grid.mask,
             blurring_mapping_matrix=blurring_mapping_matrix,
+            blurring_mask=self.blurring_grid.mask,
         )
 
     @cached_property
