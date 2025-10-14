@@ -274,7 +274,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         return jnp.stack(image_2d_list, axis=1)
 
     @cached_property
-    def operated_mapping_matrix_override(self) -> Optional[np.ndarray]:
+    def operated_mapping_matrix_overrideg(self) -> Optional[np.ndarray]:
         """
         The inversion object takes the `mapping_matrix` of each linear object and combines it with the PSF
         operator to perform a 2D convolution and compute the `operated_mapping_matrix`.
@@ -323,7 +323,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         )
 
     @cached_property
-    def operated_mapping_matrix_override_real_space(self) -> Optional[np.ndarray]:
+    def operated_mapping_matrix_override(self) -> Optional[np.ndarray]:
         """
         The inversion object takes the `mapping_matrix` of each linear object and combines it with the PSF
         operator to perform a 2D convolution and compute the `operated_mapping_matrix`.
