@@ -148,7 +148,14 @@ class PowerLawMultipole(MassProfile):
         The angle between the ellipse and the multipole, in degrees.
         """
 
-        return convert.angle_from(base_profile.ell_comps) - convert.multipole_k_m_and_phi_m_from(self.multipole_comps, self.m)[1]
+        angle = convert.angle_from(base_profile.ell_comps) - convert.multipole_k_m_and_phi_m_from(self.multipole_comps, self.m)[1]
+        if angle < -45:
+            angle += 180
+        elif angle > 135:
+            angle -= 180
+
+        return angle
+
 
     def jacobian(
         self, a_r: np.ndarray, a_angle: np.ndarray, polar_angle_grid: np.ndarray
