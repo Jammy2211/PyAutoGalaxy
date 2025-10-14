@@ -84,9 +84,7 @@ class LightProfileSNR:
 
         image_2d = self.image_2d_from(grid=grid)
         if psf is not None:
-            image_2d = psf.convolved_image_from(
-                image=image_2d, blurring_image=None
-            )
+            image_2d = psf.convolved_image_from(image=image_2d, blurring_image=None)
 
         brightest_value = np.max(image_2d)
 
