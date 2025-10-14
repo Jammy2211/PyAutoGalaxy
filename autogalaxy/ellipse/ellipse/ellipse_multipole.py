@@ -38,6 +38,29 @@ class EllipseMultipole:
         self.m = m
         self.multipole_comps = multipole_comps
 
+    def get_shape_angle(
+            self,
+            ellipse: Ellipse,
+    ) -> float:
+        """
+        The shape angle is the offset between the angle of the ellipse and the angle of the multipole,
+        this defines the shape that the multipole takes.
+
+        In the case of the m=4 multipole, angles of 0 or 90 indicate pure diskiness, angles +/- 45
+        indicate pure boxiness.
+
+        Parameters
+        ----------
+        ellipse
+            The base ellipse profile that is perturbed by the multipole.
+
+        Returns
+        -------
+        The angle between the ellipse and the multipole, in degrees.
+        """
+
+        return ellipse.angle-multipole_k_m_and_phi_m_from(self.multipole_comps, self.m)[1]
+
     def points_perturbed_from(
         self, pixel_scale, points, ellipse: Ellipse, n_i: int = 0
     ) -> np.ndarray:
