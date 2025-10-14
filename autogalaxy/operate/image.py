@@ -141,6 +141,9 @@ class OperateImage:
             grid=padded_grid, operated_only=False
         )
 
+        # Required to make sure right 2D indexes are computed with update mask
+        psf.slim_to_native_tuple = None
+
         padded_image_2d = padded_grid.mask.unmasked_blurred_array_from(
             padded_array=padded_image_2d_not_operated,
             psf=psf,
