@@ -75,7 +75,7 @@ API Overview
 ------------
 
 Galaxy morphology calculations are performed in **PyAutoGalaaxy** by building a ``Plane`` object from ``LightProfile``
-and ``Galaxy`` objects. Below, we create a simple galaxy system where a redshift 0.5
+and ``Galaxy`` objects. We create a simple galaxy system where a redshift 0.5
 ``Galaxy`` with an ``Sersic`` ``LightProfile`` representing a bulge and an ``Exponential`` ``LightProfile``
 representing a disk.
 

@@ -412,4 +412,6 @@ class NFWSph(NFW):
 
     @staticmethod
     def potential_func_sph(eta):
-        return ((np.log(eta.array / 2.0)) ** 2) - (np.arctanh(np.sqrt(1 - eta.array**2))) ** 2
+        return ((np.log(eta.array / 2.0)) ** 2) - (
+            np.arctanh(np.sqrt(1 - eta.array**2))
+        ) ** 2
