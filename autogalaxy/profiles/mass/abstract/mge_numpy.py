@@ -1,5 +1,4 @@
 import numpy as np
-from scipy.special import comb
 
 
 def w_f_approx(z):
@@ -15,6 +14,8 @@ def w_f_approx(z):
     # "https://github.com/sibirrer/lenstronomy/tree/main/lenstronomy/LensModel/Profiles"
     # written by Anowar J. Shajib (see 1906.08263)
     """
+
+    z = np.array(z)
 
     reg_minus_imag = z.imag < 0.0
     z[reg_minus_imag] = np.conj(z[reg_minus_imag])
@@ -108,7 +109,6 @@ class MassProfileMGE:
         self.expv = 0
 
     @staticmethod
-    #  @aa.util.numba.jit()
     def zeta_from(grid, amps, sigmas, axis_ratio):
         """
         The key part to compute the deflection angle of each Gaussian.
@@ -126,8 +126,8 @@ class MassProfileMGE:
 
         scale_factor = axis_ratio / (sigmas[0] * np.sqrt(2.0 * (1.0 - q2)))
 
-        xs = np.array((grid[:, 1] * scale_factor).copy())
-        ys = np.array((grid[:, 0] * scale_factor).copy())
+        xs = np.array((grid.array[:, 1] * scale_factor).copy())
+        ys = np.array((grid.array[:, 0] * scale_factor).copy())
 
         ys_minus = ys < 0.0
         ys[ys_minus] *= -1
@@ -163,6 +163,8 @@ class MassProfileMGE:
         """
         see Eq.(6) of 1906.00263
         """
+        from scipy.special import comb
+
         eta_list = np.zeros(int(2 * p + 1))
         kesi_list = np.zeros(int(2 * p + 1))
         kesi_list[0] = 0.5
@@ -229,7 +231,7 @@ class MassProfileMGE:
     def convergence_2d_via_mge_from(self, grid_radii):
         raise NotImplementedError()
 
-    def _convergence_2d_via_mge_from(self, grid_radii):
+    def _convergence_2d_via_mge_from(self, grid_radii, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -251,7 +253,7 @@ class MassProfileMGE:
 
         for i in range(len(sigmas)):
             convergence += self.convergence_func_gaussian(
-                grid_radii=grid_radii, sigma=sigmas[i], intensity=amps[i]
+                grid_radii=grid_radii.array, sigma=sigmas[i], intensity=amps[i]
             )
         return convergence
 
@@ -260,8 +262,10 @@ class MassProfileMGE:
             intensity, np.exp(-0.5 * np.square(np.divide(grid_radii, sigma)))
         )
 
-    def _deflections_2d_via_mge_from(self, grid, sigmas_factor=1.0):
-        axis_ratio = self.axis_ratio
+    def _deflections_2d_via_mge_from(
+        self, grid, sigmas_factor=1.0, func_terms=None, func_gaussians=None
+    ):
+        axis_ratio = np.array(self.axis_ratio)
 
         if axis_ratio > 0.9999:
             axis_ratio = 0.9999

@@ -1,7 +1,5 @@
 from collections import OrderedDict
 import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt
 from typing import Tuple
 
 
@@ -58,6 +56,7 @@ class Scribbler:
 
             extent = (x0_pix, x1_pix, y0_pix, y1_pix)
 
+        import matplotlib
         import matplotlib.pyplot as plt
 
         matplotlib.use(backend)
@@ -129,6 +128,9 @@ class Scribbler:
         self.add_circle_to_scribble(center)
 
     def on_mouse_motion(self, event):
+
+        import matplotlib
+
         center = (event.xdata, event.ydata)
 
         # draw the bush circle
@@ -166,6 +168,9 @@ class Scribbler:
             self.active_scribble_color = self.scribble_colors[num]
 
     def add_circle_to_scribble(self, center):
+
+        import matplotlib
+
         circle = matplotlib.patches.Circle(
             center,
             radius=self.brush_radius,
@@ -198,10 +203,14 @@ class Scribbler:
             self.figure.canvas.draw()
 
     def quit_(self):
+        import matplotlib.pyplot as plt
+
         plt.close()
         self.figure.canvas.stop_event_loop()
 
     def show_mask(self):
+        import matplotlib.pyplot as plt
+
         masks = self.get_scribble_masks()
         junk_mask = masks["1"]
         feature_mask = masks["2"]

@@ -112,6 +112,8 @@ class MatPlot2D(aplt.MatPlot2D):
             Overlays an input `Array2D` over the figure using `plt.imshow`.
         contour
             Overlays contours of an input `Array2D` over the figure using `plt.contour`.
+        fill
+            Sets the fill of the figure using `plt.fill` and customizes its appearance, such as the color and alpha.
         grid_scatter
             Scatters a `Grid2D` of (y,x) coordinates over the figure using `plt.scatter`.
         grid_plot

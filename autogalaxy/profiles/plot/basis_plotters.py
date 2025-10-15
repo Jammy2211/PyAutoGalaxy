@@ -8,8 +8,6 @@ from autogalaxy.plot.mat_plot.one_d import MatPlot1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 from autogalaxy.plot.visuals.one_d import Visuals1D
 from autogalaxy.plot.visuals.two_d import Visuals2D
-from autogalaxy.plot.include.one_d import Include1D
-from autogalaxy.plot.include.two_d import Include2D
 
 from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
 
@@ -21,12 +19,10 @@ class BasisPlotter(Plotter):
         self,
         basis: Basis,
         grid: aa.type.Grid1D2DLike,
-        mat_plot_1d: MatPlot1D = MatPlot1D(),
-        visuals_1d: Visuals1D = Visuals1D(),
-        include_1d: Include1D = Include1D(),
-        mat_plot_2d: MatPlot2D = MatPlot2D(),
-        visuals_2d: Visuals2D = Visuals2D(),
-        include_2d: Include2D = Include2D(),
+        mat_plot_1d: MatPlot1D = None,
+        visuals_1d: Visuals1D = None,
+        mat_plot_2d: MatPlot2D = None,
+        visuals_2d: Visuals2D = None,
     ):
         """
         Plots the attributes of `Basis` objects using the matplotlib methods `plot()` and `imshow()` and many
@@ -38,8 +34,7 @@ class BasisPlotter(Plotter):
         customize the figure's appearance.
 
         Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
-        extracted from the `LightProfile` and plotted via the visuals object, if the corresponding entry is `True` in
-        the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
+        extracted from the `LightProfile` and plotted via the visuals object.
 
         Parameters
         ----------
@@ -51,14 +46,10 @@ class BasisPlotter(Plotter):
             Contains objects which wrap the matplotlib function calls that make 1D plots.
         visuals_1d
             Contains 1D visuals that can be overlaid on 1D plots.
-        include_1d
-            Specifies which attributes of the `LightProfile` are extracted and plotted as visuals for 1D plots.
         mat_plot_2d
             Contains objects which wrap the matplotlib function calls that make 2D plots.
         visuals_2d
             Contains 2D visuals that can be overlaid on 2D plots.
-        include_2d
-            Specifies which attributes of the `LightProfile` are extracted and plotted as visuals for 2D plots.
         """
 
         from autogalaxy.profiles.light.linear import (
@@ -76,18 +67,10 @@ class BasisPlotter(Plotter):
 
         super().__init__(
             mat_plot_2d=mat_plot_2d,
-            include_2d=include_2d,
             visuals_2d=visuals_2d,
             mat_plot_1d=mat_plot_1d,
-            include_1d=include_1d,
             visuals_1d=visuals_1d,
         )
-
-    def get_visuals_1d(self) -> Visuals1D:
-        return self.get_1d.via_light_obj_from(light_obj=self.basis)
-
-    def get_visuals_2d(self) -> Visuals2D:
-        return self.get_2d.via_light_obj_from(light_obj=self.basis, grid=self.grid)
 
     def light_profile_plotter_from(
         self,
@@ -113,7 +96,6 @@ class BasisPlotter(Plotter):
             grid=self.grid,
             mat_plot_1d=self.mat_plot_1d,
             visuals_1d=self.get_1d.via_light_obj_from(light_obj=light_profile),
-            include_1d=self.include_1d,
         )
 
     def subplot_image(self):
@@ -135,7 +117,7 @@ class BasisPlotter(Plotter):
         for light_profile in self.basis.light_profile_list:
             self.mat_plot_2d.plot_array(
                 array=light_profile.image_2d_from(grid=self.grid),
-                visuals_2d=self.get_visuals_2d(),
+                visuals_2d=self.visuals_2d,
                 auto_labels=aplt.AutoLabels(title=light_profile.coefficient_tag),
             )
 

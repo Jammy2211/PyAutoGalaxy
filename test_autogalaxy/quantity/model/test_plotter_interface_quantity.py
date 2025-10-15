@@ -16,7 +16,6 @@ def make_plotter_interface_plotter_setup():
 
 def test__dataset(
     dataset_quantity_7x7_array_2d,
-    include_2d_all,
     plot_path,
     plot_patch,
 ):
@@ -37,7 +36,6 @@ def test__dataset(
 def test__fit_quantity(
     fit_quantity_7x7_array_2d,
     fit_quantity_7x7_vector_yx_2d,
-    include_2d_all,
     plot_path,
     plot_patch,
 ):

@@ -10,8 +10,6 @@ from autogalaxy.plot.mat_plot.one_d import MatPlot1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 from autogalaxy.plot.visuals.one_d import Visuals1D
 from autogalaxy.plot.visuals.two_d import Visuals2D
-from autogalaxy.plot.include.one_d import Include1D
-from autogalaxy.plot.include.two_d import Include2D
 from autogalaxy.plot.mass_plotter import MassPlotter
 
 from autogalaxy.profiles.light.abstract import LightProfile
@@ -33,12 +31,10 @@ class GalaxyPlotter(Plotter):
         self,
         galaxy: Galaxy,
         grid: aa.type.Grid1D2DLike,
-        mat_plot_1d: MatPlot1D = MatPlot1D(),
-        visuals_1d: Visuals1D = Visuals1D(),
-        include_1d: Include1D = Include1D(),
-        mat_plot_2d: MatPlot2D = MatPlot2D(),
-        visuals_2d: Visuals2D = Visuals2D(),
-        include_2d: Include2D = Include2D(),
+        mat_plot_1d: MatPlot1D = None,
+        visuals_1d: Visuals1D = None,
+        mat_plot_2d: MatPlot2D = None,
+        visuals_2d: Visuals2D = None,
     ):
         """
         Plots the attributes of `Galaxy` objects using the matplotlib methods `plot()` and `imshow()` and many
@@ -50,8 +46,7 @@ class GalaxyPlotter(Plotter):
         customize the figure's appearance.
 
         Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
-        extracted from the `MassProfile` and plotted via the visuals object, if the corresponding entry is `True` in
-        the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
+        extracted from the `MassProfile` and plotted via the visuals object.
 
         Parameters
         ----------
@@ -63,14 +58,10 @@ class GalaxyPlotter(Plotter):
             Contains objects which wrap the matplotlib function calls that make 1D plots.
         visuals_1d
             Contains 1D visuals that can be overlaid on 1D plots.
-        include_1d
-            Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 1D plots.
         mat_plot_2d
             Contains objects which wrap the matplotlib function calls that make 2D plots.
         visuals_2d
             Contains 2D visuals that can be overlaid on 2D plots.
-        include_2d
-            Specifies which attributes of the `MassProfile` are extracted and plotted as visuals for 2D plots.
         """
 
         from autogalaxy.profiles.light.linear import (
@@ -85,10 +76,8 @@ class GalaxyPlotter(Plotter):
 
         super().__init__(
             mat_plot_2d=mat_plot_2d,
-            include_2d=include_2d,
             visuals_2d=visuals_2d,
             mat_plot_1d=mat_plot_1d,
-            include_1d=include_1d,
             visuals_1d=visuals_1d,
         )
 
@@ -98,21 +87,8 @@ class GalaxyPlotter(Plotter):
         self._mass_plotter = MassPlotter(
             mass_obj=self.galaxy,
             grid=self.grid,
-            get_visuals_2d=self.get_visuals_2d,
             mat_plot_2d=self.mat_plot_2d,
-            include_2d=self.include_2d,
             visuals_2d=self.visuals_2d,
-        )
-
-    def get_visuals_1d_light(self) -> Visuals1D:
-        return self.get_1d.via_light_obj_from(light_obj=self.galaxy)
-
-    def get_visuals_1d_mass(self) -> Visuals1D:
-        return self.get_1d.via_mass_obj_from(mass_obj=self.galaxy, grid=self.grid)
-
-    def get_visuals_2d(self) -> Visuals2D:
-        return self.get_2d.via_light_mass_obj_from(
-            light_mass_obj=self.galaxy, grid=self.grid
         )
 
     def light_profile_plotter_from(
@@ -136,25 +112,23 @@ class GalaxyPlotter(Plotter):
         from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
 
         if not one_d_only:
+
             return LightProfilePlotter(
                 light_profile=light_profile,
                 grid=self.grid,
                 mat_plot_2d=self.mat_plot_2d,
-                visuals_2d=self.get_2d.via_light_obj_from(
-                    light_obj=light_profile, grid=self.grid
-                ),
-                include_2d=self.include_2d,
+                visuals_2d=self.visuals_2d,
                 mat_plot_1d=self.mat_plot_1d,
-                visuals_1d=self.get_1d.via_light_obj_from(light_obj=light_profile),
-                include_1d=self.include_1d,
+                visuals_1d=self.visuals_1d
+                + Visuals1D().add_half_light_radius(light_obj=light_profile),
             )
 
         return LightProfilePlotter(
             light_profile=light_profile,
             grid=self.grid,
             mat_plot_1d=self.mat_plot_1d,
-            visuals_1d=self.get_1d.via_light_obj_from(light_obj=light_profile),
-            include_1d=self.include_1d,
+            visuals_1d=self.visuals_1d
+            + Visuals1D().add_half_light_radius(light_obj=light_profile),
         )
 
     def mass_profile_plotter_from(
@@ -180,25 +154,20 @@ class GalaxyPlotter(Plotter):
                 mass_profile=mass_profile,
                 grid=self.grid,
                 mat_plot_2d=self.mat_plot_2d,
-                visuals_2d=self.get_2d.via_mass_obj_from(
-                    mass_obj=mass_profile, grid=self.grid
-                ),
-                include_2d=self.include_2d,
+                visuals_2d=self._mass_plotter.visuals_2d_with_critical_curves,
                 mat_plot_1d=self.mat_plot_1d,
-                visuals_1d=self.get_1d.via_mass_obj_from(
+                visuals_1d=self.visuals_1d
+                + Visuals1D().add_einstein_radius(
                     mass_obj=mass_profile, grid=self.grid
                 ),
-                include_1d=self.include_1d,
             )
 
         return MassProfilePlotter(
             mass_profile=mass_profile,
             grid=self.grid,
             mat_plot_1d=self.mat_plot_1d,
-            visuals_1d=self.get_1d.via_mass_obj_from(
-                mass_obj=mass_profile, grid=self.grid
-            ),
-            include_1d=self.include_1d,
+            visuals_1d=self.visuals_1d
+            + Visuals1D().add_einstein_radius(mass_obj=mass_profile, grid=self.grid),
         )
 
     @property
@@ -264,7 +233,8 @@ class GalaxyPlotter(Plotter):
             self.mat_plot_1d.plot_yx(
                 y=image_1d,
                 x=image_1d.grid_radial,
-                visuals_1d=self.get_visuals_1d_light(),
+                visuals_1d=self.visuals_1d
+                + Visuals1D().add_half_light_radius(self.galaxy),
                 auto_labels=aplt.AutoLabels(
                     title="Image vs Radius",
                     ylabel="Image ",
@@ -281,7 +251,8 @@ class GalaxyPlotter(Plotter):
             self.mat_plot_1d.plot_yx(
                 y=convergence_1d,
                 x=convergence_1d.grid_radial,
-                visuals_1d=self.get_visuals_1d_mass(),
+                visuals_1d=self.visuals_1d
+                + Visuals1D().add_einstein_radius(mass_obj=self.galaxy, grid=self.grid),
                 auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius",
                     ylabel="Convergence ",
@@ -298,7 +269,7 @@ class GalaxyPlotter(Plotter):
             self.mat_plot_1d.plot_yx(
                 y=potential_1d,
                 x=potential_1d.grid_radial,
-                visuals_1d=self.get_visuals_1d_mass(),
+                visuals_1d=self.visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius",
                     ylabel="Potential ",
@@ -438,7 +409,7 @@ class GalaxyPlotter(Plotter):
         if image:
             self.mat_plot_2d.plot_array(
                 array=self.galaxy.image_2d_from(grid=self.grid),
-                visuals_2d=self.get_visuals_2d(),
+                visuals_2d=self.visuals_2d,
                 auto_labels=aplt.AutoLabels(
                     title=f"Image{title_suffix}", filename=f"image_2d{filename_suffix}"
                 ),
@@ -535,12 +506,10 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         self,
         galaxy_pdf_list: List[Galaxy],
         grid: aa.Grid2D,
-        mat_plot_1d: MatPlot1D = MatPlot1D(),
-        visuals_1d: Visuals1D = Visuals1D(),
-        include_1d: Include1D = Include1D(),
-        mat_plot_2d: MatPlot2D = MatPlot2D(),
-        visuals_2d: Visuals2D = Visuals2D(),
-        include_2d: Include2D = Include2D(),
+        mat_plot_1d: MatPlot1D = None,
+        visuals_1d: Visuals1D = None,
+        mat_plot_2d: MatPlot2D = None,
+        visuals_2d: Visuals2D = None,
         sigma: Optional[float] = 3.0,
     ):
         """
@@ -558,8 +527,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
         customize the figure's appearance.
 
         Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
-        extracted from the `GalaxyProfile` and plotted via the visuals object, if the corresponding entry is `True` in
-        the `Include1D` or `Include2D` object or the `config/visualize/include.ini` file.
+        extracted from the `GalaxyProfile` and plotted via the visuals object.
 
         Parameters
         ----------
@@ -571,14 +539,10 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             Contains objects which wrap the matplotlib function calls that make 1D plots.
         visuals_1d
             Contains 1D visuals that can be overlaid on 1D plots.
-        include_1d
-            Specifies which attributes of the `GalaxyProfile` are extracted and plotted as visuals for 1D plots.
         mat_plot_2d
             Contains objects which wrap the matplotlib function calls that make 2D plots.
         visuals_2d
             Contains 2D visuals that can be overlaid on 2D plots.
-        include_2d
-            Specifies which attributes of the `GalaxyProfile` are extracted and plotted as visuals for 2D plots.
         sigma
             The confidence interval in terms of a sigma value at which the errors are computed (e.g. a value of
             sigma=3.0 uses confidence intevals at ~0.01 and 0.99 the PDF).
@@ -587,10 +551,8 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             galaxy=None,
             grid=grid,
             mat_plot_2d=mat_plot_2d,
-            include_2d=include_2d,
             visuals_2d=visuals_2d,
             mat_plot_1d=mat_plot_1d,
-            include_1d=include_1d,
             visuals_1d=visuals_1d,
         )
 
@@ -645,10 +607,8 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             grid=self.grid,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.visuals_2d,
-            include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
             visuals_1d=self.visuals_1d,
-            include_1d=self.include_1d,
         )
 
     @property
@@ -693,10 +653,8 @@ class GalaxyPDFPlotter(GalaxyPlotter):
             grid=self.grid,
             mat_plot_2d=self.mat_plot_2d,
             visuals_2d=self.visuals_2d,
-            include_2d=self.include_2d,
             mat_plot_1d=self.mat_plot_1d,
             visuals_1d=self.visuals_1d,
-            include_1d=self.include_1d,
         )
 
     def figures_1d(
@@ -749,7 +707,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 profile_1d_list=image_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d_via_light_obj_list = self.get_1d.via_light_obj_list_from(
+            visuals_1d_via_light_obj_list = Visuals1D().add_half_light_radius_errors(
                 light_obj_list=self.galaxy_pdf_list, low_limit=self.low_limit
             )
             visuals_1d_with_shaded_region = self.visuals_1d.__class__(
@@ -796,7 +754,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 profile_1d_list=convergence_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d_via_lensing_obj_list = self.get_1d.via_mass_obj_list_from(
+            visuals_1d_via_lensing_obj_list = Visuals1D().add_einstein_radius_errors(
                 mass_obj_list=self.galaxy_pdf_list,
                 grid=self.grid,
                 low_limit=self.low_limit,
@@ -845,7 +803,7 @@ class GalaxyPDFPlotter(GalaxyPlotter):
                 profile_1d_list=potential_1d_list, low_limit=self.low_limit
             )
 
-            visuals_1d_via_lensing_obj_list = self.get_1d.via_mass_obj_list_from(
+            visuals_1d_via_lensing_obj_list = Visuals1D().add_einstein_radius_errors(
                 mass_obj_list=self.galaxy_pdf_list,
                 grid=self.grid,
                 low_limit=self.low_limit,

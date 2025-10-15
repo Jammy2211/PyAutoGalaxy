@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
+import jax.numpy as jnp
 import numpy as np
-from scipy.linalg import lstsq
 from typing import Callable, List, Tuple
 
 
@@ -41,12 +41,12 @@ class MassProfileCSE(ABC):
         Parameters
         ----------
         """
-        phi = np.sqrt(axis_ratio_squared * core_radius**2.0 + term1)
+        phi = jnp.sqrt(axis_ratio_squared * core_radius**2.0 + term1)
         Psi = (phi + core_radius) ** 2.0 + term2
         bottom = core_radius * phi * Psi
         defl_x = (term3 * (phi + axis_ratio_squared * core_radius)) / bottom
         defl_y = (term4 * (phi + core_radius)) / bottom
-        return np.vstack((defl_y, defl_x))
+        return jnp.vstack((defl_y, defl_x))
 
     @abstractmethod
     def decompose_convergence_via_cse(self, grid_radii: np.ndarray):
@@ -85,6 +85,8 @@ class MassProfileCSE(ABC):
             A list of amplitudes and core radii of every cored steep elliptical (cse) the mass profile is decomposed
             into.
         """
+        from scipy.linalg import lstsq
+
         error_sigma = 0.1  # error spread. Could be any value.
 
         r_samples = np.logspace(np.log10(radii_min), np.log10(radii_max), sample_points)
@@ -166,8 +168,8 @@ class MassProfileCSE(ABC):
         )
         q = self.axis_ratio
         q2 = q**2.0
-        grid_y = grid[:, 0]
-        grid_x = grid[:, 1]
+        grid_y = grid.array[:, 0]
+        grid_x = grid.array[:, 1]
         gridx2 = grid_x**2.0
         gridy2 = grid_y**2.0
         term1 = q2 * gridx2 + gridy2

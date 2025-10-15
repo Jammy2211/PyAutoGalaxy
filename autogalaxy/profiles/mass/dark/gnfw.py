@@ -1,85 +1,9 @@
-import inspect
 import numpy as np
-from scipy import LowLevelCallable
-from scipy import special
-from scipy.integrate import quad
 from typing import Tuple
 
 import autoarray as aa
 
 from autogalaxy.profiles.mass.dark.abstract import AbstractgNFW
-
-
-def jit_integrand(integrand_function):
-    from numba import cfunc
-    from numba.types import intc, CPointer, float64
-
-    jitted_function = aa.util.numba.jit(nopython=True, cache=True)(integrand_function)
-    no_args = len(inspect.getfullargspec(integrand_function).args)
-
-    wrapped = None
-
-    if no_args == 4:
-        # noinspection PyUnusedLocal
-        def wrapped(n, xx):
-            return jitted_function(xx[0], xx[1], xx[2], xx[3])
-
-    elif no_args == 5:
-        # noinspection PyUnusedLocal
-        def wrapped(n, xx):
-            return jitted_function(xx[0], xx[1], xx[2], xx[3], xx[4])
-
-    elif no_args == 6:
-        # noinspection PyUnusedLocal
-        def wrapped(n, xx):
-            return jitted_function(xx[0], xx[1], xx[2], xx[3], xx[4], xx[5])
-
-    elif no_args == 7:
-        # noinspection PyUnusedLocal
-        def wrapped(n, xx):
-            return jitted_function(xx[0], xx[1], xx[2], xx[3], xx[4], xx[5], xx[6])
-
-    elif no_args == 8:
-        # noinspection PyUnusedLocal
-        def wrapped(n, xx):
-            return jitted_function(
-                xx[0], xx[1], xx[2], xx[3], xx[4], xx[5], xx[6], xx[7]
-            )
-
-    elif no_args == 9:
-        # noinspection PyUnusedLocal
-        def wrapped(n, xx):
-            return jitted_function(
-                xx[0], xx[1], xx[2], xx[3], xx[4], xx[5], xx[6], xx[7], xx[8]
-            )
-
-    elif no_args == 10:
-        # noinspection PyUnusedLocal
-        def wrapped(n, xx):
-            return jitted_function(
-                xx[0], xx[1], xx[2], xx[3], xx[4], xx[5], xx[6], xx[7], xx[8], xx[9]
-            )
-
-    elif no_args == 11:
-        # noinspection PyUnusedLocal
-        def wrapped(n, xx):
-            return jitted_function(
-                xx[0],
-                xx[1],
-                xx[2],
-                xx[3],
-                xx[4],
-                xx[5],
-                xx[6],
-                xx[7],
-                xx[8],
-                xx[9],
-                xx[10],
-            )
-
-    cf = cfunc(float64(intc, CPointer(float64)))
-
-    return LowLevelCallable(cf(wrapped).ctypes)
 
 
 class gNFW(AbstractgNFW):
@@ -88,7 +12,6 @@ class gNFW(AbstractgNFW):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike, **kwargs):
         return self._deflections_2d_via_mge_from(
             grid=grid, sigmas_factor=self.axis_ratio
@@ -96,7 +19,6 @@ class gNFW(AbstractgNFW):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_integral_from(
         self, grid: aa.type.Grid2DLike, tabulate_bins=1000, **kwargs
     ):
@@ -112,7 +34,6 @@ class gNFW(AbstractgNFW):
 
         """
 
-        @jit_integrand
         def surface_density_integrand(x, kappa_radius, scale_radius, inner_slope):
             return (
                 (3 - inner_slope)
@@ -121,6 +42,9 @@ class gNFW(AbstractgNFW):
             )
 
         def calculate_deflection_component(npow, yx_index):
+
+            from scipy.integrate import quad
+
             deflection_grid = np.zeros(grid.shape[0])
 
             for i in range(grid.shape[0]):
@@ -134,8 +58,8 @@ class gNFW(AbstractgNFW):
                         a=0.0,
                         b=1.0,
                         args=(
-                            grid[i, 0],
-                            grid[i, 1],
+                            grid.array[i, 0],
+                            grid.array[i, 1],
                             npow,
                             self.axis_ratio,
                             minimum_log_eta,
@@ -160,6 +84,8 @@ class gNFW(AbstractgNFW):
         surface_density_integral = np.zeros((tabulate_bins,))
 
         for i in range(tabulate_bins):
+            from scipy.integrate import quad
+
             eta = 10.0 ** (minimum_log_eta + (i - 1) * bin_size)
 
             integral = quad(
@@ -204,10 +130,13 @@ class gNFW(AbstractgNFW):
         return kap / (1.0 - (1.0 - axis_ratio**2) * u) ** (npow + 0.5)
 
     def convergence_func(self, grid_radius: float) -> float:
+
+        from scipy.integrate import quad
+
         def integral_y(y, eta):
             return (y + eta) ** (self.inner_slope - 4) * (1 - np.sqrt(1 - y**2))
 
-        grid_radius = (1.0 / self.scale_radius) * grid_radius
+        grid_radius = np.array((1.0 / self.scale_radius) * grid_radius.array)
 
         for index in range(grid_radius.shape[0]):
             integral_y_value = quad(
@@ -233,7 +162,6 @@ class gNFW(AbstractgNFW):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def potential_2d_from(self, grid: aa.type.Grid2DLike, tabulate_bins=1000, **kwargs):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
@@ -247,7 +175,9 @@ class gNFW(AbstractgNFW):
 
         """
 
-        @jit_integrand
+        from scipy import special
+        from scipy.integrate import quad
+
         def deflection_integrand(x, kappa_radius, scale_radius, inner_slope):
             return (x + kappa_radius / scale_radius) ** (inner_slope - 3) * (
                 (1 - np.sqrt(1 - x**2)) / x
@@ -295,8 +225,8 @@ class gNFW(AbstractgNFW):
                 a=0.0,
                 b=1.0,
                 args=(
-                    grid[i, 0],
-                    grid[i, 1],
+                    grid.array[i, 0],
+                    grid.array[i, 1],
                     self.axis_ratio,
                     minimum_log_eta,
                     maximum_log_eta,
@@ -365,7 +295,6 @@ class gNFWSph(gNFW):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -377,7 +306,7 @@ class gNFWSph(gNFW):
         """
 
         eta = np.multiply(
-            1.0 / self.scale_radius, self.radial_grid_from(grid, **kwargs)
+            1.0 / self.scale_radius, self.radial_grid_from(grid, **kwargs).array
         )
 
         deflection_grid = np.zeros(grid.shape[0])
@@ -394,6 +323,10 @@ class gNFWSph(gNFW):
         return (y + eta) ** (inner_slope - 3) * ((1 - np.sqrt(1 - y**2)) / y)
 
     def deflection_func_sph(self, eta):
+
+        from scipy import special
+        from scipy.integrate import quad
+
         integral_y_2 = quad(
             self.deflection_integrand,
             a=0.0,

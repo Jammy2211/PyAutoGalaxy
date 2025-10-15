@@ -1,3 +1,4 @@
+import jax.numpy as jnp
 import numpy as np
 from typing import Dict, List, Optional, Union
 
@@ -128,7 +129,7 @@ class Basis(LightProfile, MassProfile):
             (
                 light_profile.image_2d_from(grid=grid, operated_only=operated_only)
                 if not isinstance(light_profile, lp_linear.LightProfileLinear)
-                else np.zeros((grid.shape[0],))
+                else jnp.zeros((grid.shape[0],))
             )
             for light_profile in self.light_profile_list
         ]
@@ -152,9 +153,9 @@ class Basis(LightProfile, MassProfile):
         """
         if len(self.mass_profile_list) > 0:
             return sum(
-                [mass.convergence_2d_from(grid=grid) for mass in self.mass_profile_list]
+                [mass.convergence_2d_from(grid=grid) for mass in self.profile_list]
             )
-        return np.zeros((grid.shape[0],))
+        return jnp.zeros((grid.shape[0],))
 
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> aa.Array2D:
         """
@@ -177,7 +178,7 @@ class Basis(LightProfile, MassProfile):
             return sum(
                 [mass.potential_2d_from(grid=grid) for mass in self.profile_list]
             )
-        return np.zeros((grid.shape[0],))
+        return jnp.zeros((grid.shape[0],))
 
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> aa.Array2D:
         """
@@ -200,7 +201,7 @@ class Basis(LightProfile, MassProfile):
             return sum(
                 [mass.deflections_yx_2d_from(grid=grid) for mass in self.profile_list]
             )
-        return np.zeros((grid.shape[0], 2))
+        return jnp.zeros((grid.shape[0], 2))
 
     def lp_instance_from(self, linear_light_profile_intensity_dict: Dict):
         light_profile_list = []

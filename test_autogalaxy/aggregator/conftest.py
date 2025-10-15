@@ -6,6 +6,7 @@ import shutil
 from autoconf import conf
 import autofit as af
 import autogalaxy as ag
+
 from autoconf.conf import with_config
 from autofit.non_linear.samples import Sample
 

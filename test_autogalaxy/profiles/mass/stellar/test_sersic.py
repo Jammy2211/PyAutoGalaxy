@@ -57,7 +57,7 @@ def test__deflections_2d_via_mge_from():
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
-    assert deflections_via_integral == pytest.approx(deflections_via_mge, 1.0e-3)
+    assert deflections_via_integral == pytest.approx(deflections_via_mge.array, 1.0e-3)
 
     mp = ag.mp.Sersic(
         centre=(-0.4, -0.2),
@@ -75,7 +75,7 @@ def test__deflections_2d_via_mge_from():
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
-    assert deflections_via_integral == pytest.approx(deflections_via_mge, 1.0e-3)
+    assert deflections_via_integral == pytest.approx(deflections_via_mge.array, 1.0e-3)
 
 
 def test__deflections_2d_via_cse_from():
@@ -95,7 +95,7 @@ def test__deflections_2d_via_cse_from():
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
-    assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-4)
+    assert deflections_via_integral == pytest.approx(deflections_via_cse.array, 1.0e-4)
 
     mp = ag.mp.Sersic(
         centre=(-0.4, -0.2),
@@ -113,7 +113,7 @@ def test__deflections_2d_via_cse_from():
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
-    assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-3)
+    assert deflections_via_integral == pytest.approx(deflections_via_cse.array, 1.0e-3)
 
     mp = ag.mp.Sersic(
         centre=(-0.4, -0.2),
@@ -131,7 +131,7 @@ def test__deflections_2d_via_cse_from():
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
-    assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-3)
+    assert deflections_via_integral == pytest.approx(deflections_via_cse.array, 1.0e-3)
 
 
 def test__deflections_yx_2d_from():
@@ -142,7 +142,7 @@ def test__deflections_yx_2d_from():
         grid=ag.Grid2DIrregular([[1.0, 0.0]])
     )
 
-    assert deflections == pytest.approx(deflections_via_integral, 1.0e-4)
+    assert deflections == pytest.approx(deflections_via_integral.array, 1.0e-4)
 
     mp = ag.mp.SersicSph()
 
@@ -151,7 +151,7 @@ def test__deflections_yx_2d_from():
         grid=ag.Grid2DIrregular([[1.0, 0.0]])
     )
 
-    assert deflections == pytest.approx(deflections_via_integral, 1.0e-4)
+    assert deflections == pytest.approx(deflections_via_integral.array, 1.0e-4)
 
     elliptical = ag.mp.Sersic(
         centre=(0.0, 0.0),
@@ -173,7 +173,7 @@ def test__deflections_yx_2d_from():
     elliptical_deflections = elliptical.deflections_2d_via_integral_from(grid=grid)
     spherical_deflections = spherical.deflections_2d_via_integral_from(grid=grid)
 
-    assert elliptical_deflections == pytest.approx(spherical_deflections, 1.0e-4)
+    assert elliptical_deflections == pytest.approx(spherical_deflections.array, 1.0e-4)
 
 
 def test__convergence_2d_via_mge_from():

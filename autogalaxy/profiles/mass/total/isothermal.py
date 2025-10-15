@@ -1,4 +1,5 @@
-import numpy as np
+import jax.numpy as jnp
+
 from typing import Tuple
 
 import autoarray as aa
@@ -30,13 +31,10 @@ def psi_from(grid, axis_ratio, core_radius):
         The value of the Psi term.
 
     """
-    return np.sqrt(
-        np.add(
-            np.multiply(
-                axis_ratio**2.0, np.add(np.square(grid[:, 1]), core_radius**2.0)
-            ),
-            np.square(grid[:, 0]),
-        )
+    return jnp.sqrt(
+        (axis_ratio**2.0 * (grid.array[:, 1] ** 2.0 + core_radius**2.0))
+        + grid.array[:, 0] ** 2.0
+        + 1e-16
     )
 
 
@@ -71,11 +69,10 @@ class Isothermal(PowerLaw):
     @property
     def axis_ratio(self):
         axis_ratio = super().axis_ratio
-        return min(axis_ratio, 0.99999)
+        return jnp.minimum(axis_ratio, 0.99999)
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -93,25 +90,28 @@ class Isothermal(PowerLaw):
             2.0
             * self.einstein_radius_rescaled
             * self.axis_ratio
-            / np.sqrt(1 - self.axis_ratio**2)
+            / jnp.sqrt(1 - self.axis_ratio**2)
         )
 
         psi = psi_from(grid=grid, axis_ratio=self.axis_ratio, core_radius=0.0)
 
-        deflection_y = np.arctanh(
-            np.divide(np.multiply(np.sqrt(1 - self.axis_ratio**2), grid[:, 0]), psi)
+        deflection_y = jnp.arctanh(
+            jnp.divide(
+                jnp.multiply(jnp.sqrt(1 - self.axis_ratio**2), grid.array[:, 0]), psi
+            )
         )
-        deflection_x = np.arctan(
-            np.divide(np.multiply(np.sqrt(1 - self.axis_ratio**2), grid[:, 1]), psi)
+        deflection_x = jnp.arctan(
+            jnp.divide(
+                jnp.multiply(jnp.sqrt(1 - self.axis_ratio**2), grid.array[:, 1]), psi
+            )
         )
         return self.rotated_grid_from_reference_frame_from(
-            grid=np.multiply(factor, np.vstack((deflection_y, deflection_x)).T),
+            grid=jnp.multiply(factor, jnp.vstack((deflection_y, deflection_x)).T),
             **kwargs,
         )
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def shear_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the (gamma_y, gamma_x) shear vector field on a grid of (y,x) arc-second coordinates.
@@ -133,15 +133,19 @@ class Isothermal(PowerLaw):
 
         gamma_2 = (
             -2
-            * convergence
-            * np.divide(grid[:, 1] * grid[:, 0], grid[:, 1] ** 2 + grid[:, 0] ** 2)
+            * convergence.array
+            * jnp.divide(
+                grid.array[:, 1] * grid.array[:, 0],
+                grid.array[:, 1] ** 2 + grid.array[:, 0] ** 2,
+            )
         )
-        gamma_1 = -convergence * np.divide(
-            grid[:, 1] ** 2 - grid[:, 0] ** 2, grid[:, 1] ** 2 + grid[:, 0] ** 2
+        gamma_1 = -convergence.array * jnp.divide(
+            grid.array[:, 1] ** 2 - grid.array[:, 0] ** 2,
+            grid.array[:, 1] ** 2 + grid.array[:, 0] ** 2,
         )
 
         shear_field = self.rotated_grid_from_reference_frame_from(
-            grid=np.vstack((gamma_2, gamma_1)).T, angle=self.angle * 2
+            grid=jnp.vstack((gamma_2, gamma_1)).T, angle=self.angle * 2
         )
 
         return aa.VectorYX2DIrregular(values=shear_field, grid=grid)
@@ -173,7 +177,6 @@ class IsothermalSph(Isothermal):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the potential on a grid of (y,x) arc-second coordinates.
@@ -188,7 +191,6 @@ class IsothermalSph(Isothermal):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -200,6 +202,6 @@ class IsothermalSph(Isothermal):
         """
         return self._cartesian_grid_via_radial_from(
             grid=grid,
-            radius=np.full(grid.shape[0], 2.0 * self.einstein_radius_rescaled),
+            radius=jnp.full(grid.shape[0], 2.0 * self.einstein_radius_rescaled),
             **kwargs,
         )

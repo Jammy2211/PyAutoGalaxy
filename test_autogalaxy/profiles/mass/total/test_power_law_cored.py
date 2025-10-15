@@ -66,7 +66,7 @@ def test__deflections_yx_2d_from():
     )
 
     assert elliptical.deflections_yx_2d_from(grid=grid) == pytest.approx(
-        spherical.deflections_yx_2d_from(grid=grid), 1e-4
+        spherical.deflections_yx_2d_from(grid=grid).array, 1e-4
     )
 
 
@@ -114,8 +114,8 @@ def test__convergence_2d_from():
         centre=(1.1, 1.1), einstein_radius=3.0, slope=2.2, core_radius=0.1
     )
 
-    assert elliptical.convergence_2d_from(grid=grid) == pytest.approx(
-        spherical.convergence_2d_from(grid=grid), 1e-4
+    assert elliptical.convergence_2d_from(grid=grid).array == pytest.approx(
+        spherical.convergence_2d_from(grid=grid).array, 1e-4
     )
 
 
@@ -176,5 +176,5 @@ def test__potential_2d_from():
     )
 
     assert elliptical.potential_2d_from(grid=grid) == pytest.approx(
-        spherical.potential_2d_from(grid=grid), 1e-4
+        spherical.potential_2d_from(grid=grid).array, 1e-4
     )

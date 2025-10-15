@@ -61,7 +61,6 @@ label:
     weight_power: W_{\rm p}
   superscript:
     externalshear: ext
-    inputdeflections: defl
     pixelization: pix
     point: point
     redshift: ''

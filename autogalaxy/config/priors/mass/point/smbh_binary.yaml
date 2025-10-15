@@ -3,24 +3,20 @@ SMBHBinary:
     type: Gaussian
     mean: 0.0
     sigma: 1.0
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   centre_1:
     type: Gaussian
     mean: 0.0
     sigma: 1.0
-    lower_limit: -inf
-    upper_limit: inf
     width_modifier:
       type: Absolute
       value: 0.05
-    gaussian_limits:
+    limits:
       lower: -inf
       upper: inf
   separation:
@@ -30,7 +26,7 @@ SMBHBinary:
     width_modifier:
       type: Relative
       value: 0.25
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   angle_binary:
@@ -40,7 +36,7 @@ SMBHBinary:
     width_modifier:
       type: Relative
       value: 0.25
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   mass:
@@ -50,7 +46,7 @@ SMBHBinary:
     width_modifier:
       type: Relative
       value: 0.25
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   mass_ratio:
@@ -60,7 +56,7 @@ SMBHBinary:
     width_modifier:
       type: Relative
       value: 0.25
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   redshift_object:
@@ -70,7 +66,7 @@ SMBHBinary:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf
   redshift_source:
@@ -80,6 +76,6 @@ SMBHBinary:
     width_modifier:
       type: Relative
       value: 0.5
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf

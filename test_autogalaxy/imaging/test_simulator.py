@@ -37,7 +37,9 @@ def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
 
     create_fits(fits_path=image_path, array=[[1.0, 0.0], [0.0, 0.0]])
     create_fits(fits_path=noise_map_path, array=[[2.0, 1.0], [1.0, 1.0]])
-    create_fits(fits_path=psf_path, array=[[1.0, 1.0], [0.0, 0.0]])
+    create_fits(
+        fits_path=psf_path, array=[[1.0, 1.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
+    )
 
     dataset = ag.Imaging.from_fits(
         data_path=image_path,
@@ -48,7 +50,9 @@ def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
 
     assert (dataset.data.native == np.array([[0.0, 0.0], [1.0, 0.0]])).all()
     assert (dataset.noise_map.native == np.array([[1.0, 1.0], [2.0, 1.0]])).all()
-    assert (dataset.psf.native == np.array([[0.0, 0.0], [0.5, 0.5]])).all()
+    assert dataset.psf.native == pytest.approx(
+        np.array([[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.5, 0.5, 0.0]]), 1.0e-4
+    )
 
     dataset.output_to_fits(
         data_path=image_path,
@@ -67,7 +71,9 @@ def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
 
     hdu_list = fits.open(psf_path)
     psf = np.array(hdu_list[0].data).astype("float64")
-    assert (psf == np.array([[0.5, 0.5], [0.0, 0.0]])).all()
+    assert psf == pytest.approx(
+        np.array([[0.5, 0.5, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]), 1.0e-4
+    )
 
     clean_fits(fits_path=fits_path)
 
@@ -101,7 +107,7 @@ def test__simulator__via_galaxies_from():
     assert dataset.data.native[0, 0] != imaging_via_image.data.native[0, 0]
     assert dataset.data.native[10, 10] == imaging_via_image.data.native[10, 10]
     assert dataset.psf == pytest.approx(imaging_via_image.psf, 1.0e-4)
-    assert (dataset.noise_map == imaging_via_image.noise_map).all()
+    assert dataset.noise_map == pytest.approx(imaging_via_image.noise_map, 1.0e-4)
 
 
 def test__simulator__simulate_imaging_from_galaxy__source_galaxy__compare_to_imaging():
@@ -144,6 +150,6 @@ def test__simulator__simulate_imaging_from_galaxy__source_galaxy__compare_to_ima
     )
 
     assert dataset.shape_native == (11, 11)
-    assert dataset.data == pytest.approx(imaging_via_image.data, 1.0e-4)
+    assert dataset.data.array == pytest.approx(imaging_via_image.data.array, 1.0e-4)
     assert (dataset.psf == imaging_via_image.psf).all()
-    assert (dataset.noise_map == imaging_via_image.noise_map).all()
+    assert dataset.noise_map == pytest.approx(imaging_via_image.noise_map, 1.0e-4)

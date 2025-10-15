@@ -51,7 +51,7 @@ class PlotterInterfaceQuantity(PlotterInterface):
     def fit_quantity(
         self,
         fit: FitQuantity,
-        visuals_2d: Visuals2D = Visuals2D(),
+        visuals_2d: Visuals2D = None,
         fit_quanaity_plotter_cls=FitQuantityPlotter,
     ):
         """
@@ -86,7 +86,6 @@ class PlotterInterfaceQuantity(PlotterInterface):
             fit=fit,
             mat_plot_2d=mat_plot_2d,
             visuals_2d=visuals_2d,
-            include_2d=self.include_2d,
         )
 
         if should_plot("subplot_fit"):

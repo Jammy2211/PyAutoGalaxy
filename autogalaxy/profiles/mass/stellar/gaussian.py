@@ -1,7 +1,9 @@
-import copy
 import numpy as np
-from scipy.special import wofz
-from scipy.integrate import quad
+from autofit.jax_wrapper import use_jax
+
+if use_jax:
+    import jax
+
 from typing import Tuple
 
 import autoarray as aa
@@ -59,7 +61,6 @@ class Gaussian(MassProfile, StellarProfile):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -87,7 +88,6 @@ class Gaussian(MassProfile, StellarProfile):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -100,9 +100,10 @@ class Gaussian(MassProfile, StellarProfile):
         Note: sigma is divided by sqrt(q) here.
 
         """
+        from scipy.integrate import quad
 
         def calculate_deflection_component(npow, index):
-            deflection_grid = self.axis_ratio * grid[:, index]
+            deflection_grid = np.array(self.axis_ratio * grid.array[:, index])
 
             for i in range(grid.shape[0]):
                 deflection_grid[i] *= (
@@ -113,8 +114,8 @@ class Gaussian(MassProfile, StellarProfile):
                         a=0.0,
                         b=1.0,
                         args=(
-                            grid[i, 0],
-                            grid[i, 1],
+                            grid.array[i, 0],
+                            grid.array[i, 1],
                             npow,
                             self.axis_ratio,
                             self.sigma / np.sqrt(self.axis_ratio),
@@ -144,7 +145,6 @@ class Gaussian(MassProfile, StellarProfile):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -180,7 +180,7 @@ class Gaussian(MassProfile, StellarProfile):
             np.exp(
                 -0.5
                 * np.square(
-                    np.divide(grid_radii, self.sigma / np.sqrt(self.axis_ratio))
+                    np.divide(grid_radii.array, self.sigma / np.sqrt(self.axis_ratio))
                 )
             ),
         )
@@ -188,19 +188,25 @@ class Gaussian(MassProfile, StellarProfile):
     @property
     def axis_ratio(self):
         axis_ratio = super().axis_ratio
-        return axis_ratio if axis_ratio < 0.9999 else 0.9999
+        if use_jax:
+            return jax.lax.select(axis_ratio < 0.9999, axis_ratio, 0.9999)
+        else:
+            return axis_ratio if axis_ratio < 0.9999 else 0.9999
 
     def zeta_from(self, grid: aa.type.Grid2DLike):
+
+        from scipy.special import wofz
+
         q2 = self.axis_ratio**2.0
-        ind_pos_y = grid[:, 0] >= 0
+        ind_pos_y = grid.array[:, 0] >= 0
         shape_grid = np.shape(grid)
         output_grid = np.zeros((shape_grid[0]), dtype=np.complex128)
         scale_factor = self.axis_ratio / (self.sigma * np.sqrt(2.0 * (1.0 - q2)))
 
-        xs_0 = grid[:, 1][ind_pos_y] * scale_factor
-        ys_0 = grid[:, 0][ind_pos_y] * scale_factor
-        xs_1 = grid[:, 1][~ind_pos_y] * scale_factor
-        ys_1 = -grid[:, 0][~ind_pos_y] * scale_factor
+        xs_0 = grid.array[:, 1][ind_pos_y] * scale_factor
+        ys_0 = grid.array[:, 0][ind_pos_y] * scale_factor
+        xs_1 = grid.array[:, 1][~ind_pos_y] * scale_factor
+        ys_1 = -grid.array[:, 0][~ind_pos_y] * scale_factor
 
         output_grid[ind_pos_y] = -1j * (
             wofz(xs_0 + 1j * ys_0)

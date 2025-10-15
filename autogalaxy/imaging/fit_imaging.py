@@ -7,7 +7,6 @@ import autoarray as aa
 
 from autogalaxy.abstract_fit import AbstractFitInversion
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
-from autogalaxy.analysis.preloads import Preloads
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.galaxy.to_inversion import GalaxiesToInversion
@@ -26,8 +25,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         dataset_model: Optional[aa.DatasetModel] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
-        preloads: aa.Preloads = Preloads(),
-        run_time_dict: Optional[Dict] = None,
     ):
         """
         Fits an imaging dataset using a list of galaxies.
@@ -66,21 +63,13 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             reconstructed galaxy's morphology.
         settings_inversion
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
-        preloads
-            Contains preloaded calculations (e.g. linear algebra matrices) which can skip certain calculations in
-            the fit.
-        run_time_dict
-            A dictionary which if passed to the fit records how long fucntion calls which have the `profile_func`
-            decorator take to run.
         """
 
-        self.galaxies = Galaxies(galaxies=galaxies, run_time_dict=run_time_dict)
-        self.preloads = preloads
+        self.galaxies = Galaxies(galaxies=galaxies)
 
         super().__init__(
             dataset=dataset,
             dataset_model=dataset_model,
-            run_time_dict=run_time_dict,
         )
         AbstractFitInversion.__init__(
             self=self,
@@ -109,7 +98,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
 
         return self.galaxies.blurred_image_2d_from(
             grid=self.grids.lp,
-            convolver=self.dataset.convolver,
+            psf=self.dataset.psf,
             blurring_grid=self.grids.blurring,
         )
 
@@ -126,7 +115,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             data=self.profile_subtracted_image,
             noise_map=self.noise_map,
             grids=self.grids,
-            convolver=self.dataset.convolver,
+            psf=self.dataset.psf,
             w_tilde=self.w_tilde,
         )
 
@@ -135,8 +124,6 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             galaxies=self.galaxies,
             adapt_images=self.adapt_images,
             settings_inversion=self.settings_inversion,
-            preloads=self.preloads,
-            run_time_dict=self.run_time_dict,
         )
 
     @cached_property
@@ -186,7 +173,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
 
         galaxy_blurred_image_2d_dict = self.galaxies.galaxy_blurred_image_2d_dict_from(
             grid=self.grids.lp,
-            convolver=self.dataset.convolver,
+            psf=self.dataset.psf,
             blurring_grid=self.grids.blurring,
         )
 
@@ -285,44 +272,3 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         or `GalaxyPlotter` objects.
         """
         return self.model_obj_linear_light_profiles_to_light_profiles
-
-    def refit_with_new_preloads(
-        self,
-        preloads: Preloads,
-        settings_inversion: Optional[aa.SettingsInversion] = None,
-    ) -> "FitImaging":
-        """
-        Returns a new fit which uses the dataset, galaxies and other objects of this fit, but uses a different set of
-        preloads input into this function.
-
-        This is used when setting up the preloads objects, to concisely test how using different preloads objects
-        changes the attributes of the fit.
-
-        Parameters
-        ----------
-        preloads
-            The new preloads which are used to refit the data using the
-        settings_inversion
-            Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
-
-        Returns
-        -------
-        A new fit which has used new preloads input into this function but the same dataset, galaxies and other settings.
-        """
-        run_time_dict = {} if self.run_time_dict is not None else None
-
-        settings_inversion = (
-            self.settings_inversion
-            if settings_inversion is None
-            else settings_inversion
-        )
-
-        return FitImaging(
-            dataset=self.dataset,
-            galaxies=self.galaxies,
-            dataset_model=self.dataset_model,
-            adapt_images=self.adapt_images,
-            settings_inversion=settings_inversion,
-            preloads=preloads,
-            run_time_dict=run_time_dict,
-        )

@@ -179,7 +179,7 @@ def test__deflections_yx_2d_from__compare_to_power_law():
 
     power_law_yx_ratio = deflections[0, 0] / deflections[0, 1]
 
-    assert broken_yx_ratio == pytest.approx(power_law_yx_ratio, 1.0e-4)
+    assert broken_yx_ratio == pytest.approx(power_law_yx_ratio.array, 1.0e-4)
 
     mp = ag.mp.PowerLawBrokenSph(
         centre=(0, 0),
@@ -201,4 +201,4 @@ def test__deflections_yx_2d_from__compare_to_power_law():
 
     power_law_yx_ratio = deflections[0, 0] / deflections[0, 1]
 
-    assert broken_yx_ratio == pytest.approx(power_law_yx_ratio, 1.0e-4)
+    assert broken_yx_ratio == pytest.approx(power_law_yx_ratio.array, 1.0e-4)

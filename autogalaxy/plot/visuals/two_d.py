@@ -1,4 +1,3 @@
-from matplotlib import patches as ptch
 from typing import List, Union, Optional
 
 import autoarray as aa
@@ -16,7 +15,8 @@ class Visuals2D(aplt.Visuals2D):
         grid: Union[aa.Grid2D] = None,
         mesh_grid: aa.Grid2D = None,
         vectors: aa.VectorYX2DIrregular = None,
-        patches: Union[ptch.Patch] = None,
+        patches: "Union[ptch.Patch]" = None,
+        fill_region: Optional[List] = None,
         array_overlay: aa.Array2D = None,
         light_profile_centres: aa.Grid2DIrregular = None,
         mass_profile_centres: aa.Grid2DIrregular = None,
@@ -37,7 +37,6 @@ class Visuals2D(aplt.Visuals2D):
         serial_prescan=None,
         serial_overscan=None,
         indexes: Union[List[int], List[List[int]]] = None,
-        pix_indexes: Union[List[int], List[List[int]]] = None,
     ):
         super().__init__(
             mask=mask,
@@ -47,6 +46,7 @@ class Visuals2D(aplt.Visuals2D):
             mesh_grid=mesh_grid,
             vectors=vectors,
             patches=patches,
+            fill_region=fill_region,
             array_overlay=array_overlay,
             origin=origin,
             border=border,
@@ -54,7 +54,6 @@ class Visuals2D(aplt.Visuals2D):
             serial_prescan=serial_prescan,
             serial_overscan=serial_overscan,
             indexes=indexes,
-            pix_indexes=pix_indexes,
         )
 
         self.light_profile_centres = light_profile_centres
@@ -65,9 +64,10 @@ class Visuals2D(aplt.Visuals2D):
         self.tangential_caustics = tangential_caustics
         self.radial_caustics = radial_caustics
 
-    def plot_via_plotter(self, plotter, grid_indexes=None, mapper=None, geometry=None):
+    def plot_via_plotter(self, plotter, grid_indexes=None):
         super().plot_via_plotter(
-            plotter=plotter, grid_indexes=grid_indexes, mapper=mapper, geometry=geometry
+            plotter=plotter,
+            grid_indexes=grid_indexes,
         )
 
         if self.light_profile_centres is not None:
@@ -81,7 +81,9 @@ class Visuals2D(aplt.Visuals2D):
             )
 
         if self.multiple_images is not None:
-            plotter.multiple_images_scatter.scatter_grid(grid=self.multiple_images)
+            plotter.multiple_images_scatter.scatter_grid(
+                grid=self.multiple_images.array
+            )
 
         if self.tangential_critical_curves is not None:
             try:
@@ -101,9 +103,14 @@ class Visuals2D(aplt.Visuals2D):
 
         if self.tangential_caustics is not None:
             try:
-                plotter.tangential_caustics_plot.plot_grid(
-                    grid=self.tangential_caustics
-                )
+                try:
+                    plotter.tangential_caustics_plot.plot_grid(
+                        grid=self.tangential_caustics
+                    )
+                except (AttributeError, ValueError):
+                    plotter.tangential_caustics_plot.plot_grid(
+                        grid=self.tangential_caustics.array
+                    )
             except TypeError:
                 pass
 
@@ -112,3 +119,112 @@ class Visuals2D(aplt.Visuals2D):
                 plotter.radial_caustics_plot.plot_grid(grid=self.radial_caustics)
             except TypeError:
                 pass
+
+    def add_critical_curves_or_caustics(
+        self, mass_obj, grid: aa.type.Grid2DLike, plane_index: int
+    ):
+        """
+        From a object with mass profiles (e.g. mass profile, galaxy) extract the critical curves or caustics and
+        returns them in a `Visuals2D` object.
+
+        This includes support for a `plane_index`, which specifies the index of the plane in the tracer, which is
+        an object used in PyAutoLens to represent a lensing system with multiple planes (e.g. an image plane and a
+        source plane). The `plane_index` allows for the extraction of quantities from a specific plane in the tracer.
+
+        When plotting a `Tracer` it is common for plots to only display quantities corresponding to one plane at a time
+        (e.g. the convergence in the image plane, the source in the source plane). Therefore, quantities are only
+        extracted from one plane, specified by the  input `plane_index`.
+
+        Parameters
+        ----------
+        mass_obj
+            The mass object (e.g. mass profile, galaxy, tracer) object which has attributes extracted for plotting.
+        grid
+            The 2D grid of (y,x) coordinates used to plot the tracer's quantities in 2D.
+        plane_index
+            The index of the plane in the tracer which is used to extract quantities, as only one plane is plotted
+            at a time.
+
+        Returns
+        -------
+        vis.Visuals2D
+            A collection of attributes that can be plotted by a `Plotter` object.
+        """
+        if plane_index == 0:
+            return self.add_critical_curves(mass_obj=mass_obj, grid=grid)
+        return self.add_caustics(mass_obj=mass_obj, grid=grid)
+
+    def add_critical_curves(self, mass_obj, grid: aa.type.Grid2DLike):
+        """
+        From a object with mass profiles (e.g. mass profile, galaxy) extract the critical curves and
+        returns them in a `Visuals2D` object.
+
+        When plotting a `Tracer` it is common for plots to only display quantities corresponding to one plane at a time
+        (e.g. the convergence in the image plane, the source in the source plane). Therefore, quantities are only
+        extracted from one plane, specified by the  input `plane_index`.
+
+        Parameters
+        ----------
+        mass_obj
+            The mass object (e.g. mass profile, galaxy, tracer) object which has attributes extracted for plotting.
+        grid
+            The 2D grid of (y,x) coordinates used to plot the tracer's quantities in 2D.
+        plane_index
+            The index of the plane in the tracer which is used to extract quantities, as only one plane is plotted
+            at a time.
+
+        Returns
+        -------
+        vis.Visuals2D
+            A collection of attributes that can be plotted by a `Plotter` object.
+        """
+
+        tangential_critical_curves = mass_obj.tangential_critical_curve_list_from(
+            grid=grid
+        )
+
+        radial_critical_curves = None
+        radial_critical_curve_area_list = mass_obj.radial_critical_curve_area_list_from(
+            grid=grid
+        )
+
+        if any([area > grid.pixel_scale for area in radial_critical_curve_area_list]):
+            radial_critical_curves = mass_obj.radial_critical_curve_list_from(grid=grid)
+
+        return self + self.__class__(
+            tangential_critical_curves=tangential_critical_curves,
+            radial_critical_curves=radial_critical_curves,
+        )
+
+    def add_caustics(self, mass_obj, grid: aa.type.Grid2DLike):
+        """
+        From a object with mass profiles (e.g. mass profile, galaxy) extract the caustics and
+        returns them in a `Visuals2D` object.
+
+        When plotting a `Tracer` it is common for plots to only display quantities corresponding to one plane at a time
+        (e.g. the convergence in the image plane, the source in the source plane). Therefore, quantities are only
+        extracted from one plane, specified by the  input `plane_index`.
+
+        Parameters
+        ----------
+        mass_obj
+            The mass object (e.g. mass profile, galaxy, tracer) object which has attributes extracted for plotting.
+        grid
+            The 2D grid of (y,x) coordinates used to plot the tracer's quantities in 2D.
+        plane_index
+            The index of the plane in the tracer which is used to extract quantities, as only one plane is plotted
+            at a time.
+
+        Returns
+        -------
+        vis.Visuals2D
+            A collection of attributes that can be plotted by a `Plotter` object.
+        """
+
+        tangential_caustics = mass_obj.tangential_caustic_list_from(grid=grid)
+        radial_caustics = mass_obj.radial_caustic_list_from(grid=grid)
+
+        return self + self.__class__(
+            tangential_caustics=tangential_caustics,
+            radial_caustics=radial_caustics,
+        )

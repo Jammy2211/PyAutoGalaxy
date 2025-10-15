@@ -1,4 +1,4 @@
-from astropy import units
+import jax.numpy as jnp
 import numpy as np
 from typing import Tuple
 
@@ -27,14 +27,14 @@ def radial_and_angle_grid_from(
     -------
     The radial and polar coordinate grids of the input (y,x) Cartesian grid.
     """
-    y, x = grid.T
+    y, x = grid.array.T
 
-    x_shifted = np.subtract(x, centre[1])
-    y_shifted = np.subtract(y, centre[0])
+    x_shifted = jnp.subtract(x, centre[1])
+    y_shifted = jnp.subtract(y, centre[0])
 
-    radial_grid = np.sqrt(x_shifted**2 + y_shifted**2)
+    radial_grid = jnp.sqrt(x_shifted**2 + y_shifted**2)
 
-    angle_grid = np.arctan2(y_shifted, x_shifted)
+    angle_grid = jnp.arctan2(y_shifted, x_shifted)
 
     return radial_grid, angle_grid
 
@@ -114,6 +114,8 @@ class PowerLawMultipole(MassProfile):
             grid=grid
         )
         """
+        from astropy import units
+
         super().__init__(centre=centre, ell_comps=(0.0, 0.0))
 
         self.m = int(m)
@@ -173,13 +175,12 @@ class PowerLawMultipole(MassProfile):
             The polar angle coordinates of the input (y,x) Cartesian grid of coordinates.
         """
         return (
-            a_r * np.sin(polar_angle_grid) + a_angle * np.cos(polar_angle_grid),
-            a_r * np.cos(polar_angle_grid) - a_angle * np.sin(polar_angle_grid),
+            a_r * jnp.sin(polar_angle_grid) + a_angle * jnp.cos(polar_angle_grid),
+            a_r * jnp.cos(polar_angle_grid) - a_angle * jnp.sin(polar_angle_grid),
         )
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(
         self, grid: aa.type.Grid1D2DLike, **kwargs
     ) -> np.ndarray:
@@ -204,7 +205,7 @@ class PowerLawMultipole(MassProfile):
             )
             / (self.m**2.0 - (3.0 - self.slope) ** 2.0)
             * self.k_m
-            * np.cos(self.m * (polar_angle_grid - self.angle_m))
+            * jnp.cos(self.m * (polar_angle_grid - self.angle_m))
         )
 
         a_angle = (
@@ -215,10 +216,10 @@ class PowerLawMultipole(MassProfile):
             )
             / (self.m**2.0 - (3.0 - self.slope) ** 2.0)
             * self.k_m
-            * np.sin(self.m * (polar_angle_grid - self.angle_m))
+            * jnp.sin(self.m * (polar_angle_grid - self.angle_m))
         )
 
-        return np.stack(
+        return jnp.stack(
             self.jacobian(a_r=a_r, a_angle=a_angle, polar_angle_grid=polar_angle_grid),
             axis=-1,
         )
@@ -226,7 +227,6 @@ class PowerLawMultipole(MassProfile):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid1D2DLike, **kwargs) -> np.ndarray:
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
@@ -243,7 +243,7 @@ class PowerLawMultipole(MassProfile):
             / 2.0
             * (self.einstein_radius / r) ** (self.slope - 1)
             * self.k_m
-            * np.cos(self.m * (angle - self.angle_m))
+            * jnp.cos(self.m * (angle - self.angle_m))
         )
 
     @aa.grid_dec.to_array
@@ -256,4 +256,4 @@ class PowerLawMultipole(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        return np.zeros(shape=grid.shape[0])
+        return jnp.zeros(shape=grid.shape[0])

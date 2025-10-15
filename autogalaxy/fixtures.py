@@ -133,7 +133,7 @@ def make_galaxies_x2_7x7():
 def make_galaxies_x2_inversion_7x7():
     source_gal_inversion = ag.Galaxy(
         redshift=1.0,
-        pixelization=ag.mesh.Rectangular(),
+        pixelization=ag.mesh.RectangularUniform(),
         regularization=ag.reg.Constant(),
     )
 
@@ -282,25 +282,3 @@ def make_analysis_ellipse_7x7():
         dataset=make_masked_imaging_7x7(),
     )
     return analysis
-
-
-def make_include_1d_all():
-    return aplt.Include1D(half_light_radius=True)
-
-
-def make_include_2d_all():
-    return aplt.Include2D(
-        origin=True,
-        mask=True,
-        border=True,
-        positions=True,
-        light_profile_centres=True,
-        mass_profile_centres=True,
-        tangential_critical_curves=False,
-        radial_critical_curves=False,
-        tangential_caustics=False,
-        radial_caustics=False,
-        multiple_images=False,
-        mapper_source_plane_mesh_grid=True,
-        mapper_image_plane_mesh_grid=True,
-    )

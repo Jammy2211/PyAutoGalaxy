@@ -3,29 +3,6 @@ general:
     backend: default
     imshow_origin: upper
     zoom_around_mask: true
-include:
-  include_1d:
-    einstein_radius: true
-    half_light_radius: true
-  include_2d:
-    border: true
-    tangential_caustics: false
-    radial_caustics: false
-    tangential_critical_curves: false
-    radial_critical_curves: false
-    grid: false
-    light_profile_centres: true
-    mapper_image_plane_mesh_grid: false
-    mapper_source_plane_data_grid: false
-    mapper_source_plane_mesh_grid: false
-    mask: true
-    mass_profile_centres: true
-    multiple_images: false
-    origin: true
-    parallel_overscan: true
-    positions: true
-    serial_overscan: true
-    serial_prescan: true
 mat_wrap:
   Axis:
     figure:
@@ -293,47 +270,39 @@ mat_wrap_2d:
   TangentialCausticsPlot:
     figure:
       c: w,g
-      pointsize: 21
-      style: --
-      width: 5
+      linestyle: --
+      linewidth: 5
     subplot:
       c: g
-      pointsize: 23
-      style: --
-      width: 7
+      linestyle: --
+      linewidth: 7
   TangentialCriticalCurvesPlot:
     figure:
       c: w,k
-      pointsize: 20
-      style: '-'
-      width: 4
+      linestyle: '-'
+      linewidth: 4
     subplot:
       c: b
-      pointsize: 22
-      style: '-'
-      width: 6
+      linestyle: '-'
+      linewidth: 6
   RadialCausticsPlot:
     figure:
       c: w,g
-      pointsize: 21
-      style: --
-      width: 5
+      linestyle: --
+      linewidth: 5
     subplot:
       c: g
-      pointsize: 23
-      style: --
-      width: 7
+      linestyle: --
+      linewidth: 7
   RadialCriticalCurvesPlot:
     figure:
       c: w,k
-      pointsize: 20
-      style: '-'
-      width: 4
+      linestyle: '-'
+      linewidth: 4
     subplot:
       c: b
-      pointsize: 22
-      style: '-'
-      width: 6      
+      linestyle: '-'
+      linewidth: 6
   LightProfileCentresScatter:
     figure:
       c: k,r

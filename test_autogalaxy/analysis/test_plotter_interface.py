@@ -16,9 +16,7 @@ def make_plotter_interface_plotter_setup():
     return path.join("{}".format(directory), "files")
 
 
-def test__galaxies(
-    masked_imaging_7x7, galaxies_7x7, include_2d_all, plot_path, plot_patch
-):
+def test__galaxies(masked_imaging_7x7, galaxies_7x7, plot_path, plot_patch):
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
@@ -44,9 +42,7 @@ def test__galaxies(
 
 
 def test__inversion(
-    masked_imaging_7x7,
     rectangular_inversion_7x7_3x3,
-    include_2d_all,
     plot_path,
     plot_patch,
 ):
@@ -71,6 +67,7 @@ def test__inversion(
 
         for row in reader:
             for key, value in zip(header_list, row):
+                print(value)
                 reconstruction_dict[key].append(float(value))
 
         # Convert lists to NumPy arrays
@@ -82,7 +79,6 @@ def test__inversion(
 
 def test__adapt_images(
     masked_imaging_7x7,
-    include_2d_all,
     adapt_galaxy_name_image_dict_7x7,
     fit_imaging_x2_galaxy_inversion_7x7,
     plot_path,

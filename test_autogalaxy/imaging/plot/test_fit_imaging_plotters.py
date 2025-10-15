@@ -15,11 +15,10 @@ def make_fit_imaging_plotter_setup():
 
 
 def test__fit_individuals__source_and_galaxy__dependent_on_input(
-    fit_imaging_x2_galaxy_7x7, include_2d_all, plot_path, plot_patch
+    fit_imaging_x2_galaxy_7x7, plot_path, plot_patch
 ):
     fit_plotter = aplt.FitImagingPlotter(
         fit=fit_imaging_x2_galaxy_7x7,
-        include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
 
@@ -40,12 +39,9 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
     assert path.join(plot_path, "chi_squared_map.png") in plot_patch.paths
 
 
-def test__figures_of_galaxies(
-    fit_imaging_x2_galaxy_7x7, include_2d_all, plot_path, plot_patch
-):
+def test__figures_of_galaxies(fit_imaging_x2_galaxy_7x7, plot_path, plot_patch):
     fit_plotter = aplt.FitImagingPlotter(
         fit=fit_imaging_x2_galaxy_7x7,
-        include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
 
@@ -74,12 +70,9 @@ def test__figures_of_galaxies(
     assert path.join(plot_path, "model_image_of_galaxy_1.png") in plot_patch.paths
 
 
-def test__subplot_of_galaxy(
-    fit_imaging_x2_galaxy_7x7, include_2d_all, plot_path, plot_patch
-):
+def test__subplot_of_galaxy(fit_imaging_x2_galaxy_7x7, plot_path, plot_patch):
     fit_plotter = aplt.FitImagingPlotter(
         fit=fit_imaging_x2_galaxy_7x7,
-        include_2d=include_2d_all,
         mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
     )
     fit_plotter.subplot_of_galaxies()

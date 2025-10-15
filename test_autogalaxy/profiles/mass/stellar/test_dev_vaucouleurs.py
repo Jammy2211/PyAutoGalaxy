@@ -14,7 +14,7 @@ def test__deflections_yx_2d_from():
         grid=ag.Grid2DIrregular([[1.0, 0.0]])
     )
 
-    assert deflections == pytest.approx(deflections_via_cse, 1.0e-4)
+    assert deflections == pytest.approx(deflections_via_cse.array, 1.0e-4)
 
     mp = ag.mp.DevVaucouleursSph()
 
@@ -23,7 +23,7 @@ def test__deflections_yx_2d_from():
         grid=ag.Grid2DIrregular([[1.0, 0.0]])
     )
 
-    assert deflections == pytest.approx(deflections_via_cse, 1.0e-4)
+    assert deflections == pytest.approx(deflections_via_cse.array, 1.0e-4)
 
 
 def test__deflections_via_integral_from():
@@ -59,7 +59,7 @@ def test__deflections_2d_via_cse_from():
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
-    assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-4)
+    assert deflections_via_integral == pytest.approx(deflections_via_cse.array, 1.0e-4)
 
     mp = ag.mp.DevVaucouleurs(
         centre=(0.4, 0.2),
@@ -76,7 +76,7 @@ def test__deflections_2d_via_cse_from():
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
 
-    assert deflections_via_integral == pytest.approx(deflections_via_cse, 1.0e-4)
+    assert deflections_via_integral == pytest.approx(deflections_via_cse.array, 1.0e-4)
 
 
 def test__convergence_2d_via_mge_from():

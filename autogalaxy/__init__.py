@@ -1,3 +1,8 @@
+from autoconf.dictable import register_parser
+from autofit import conf
+
+conf.instance.register(__file__)
+
 from autoconf.dictable import from_dict, from_json, output_to_json, to_dict
 from autoarray.dataset import preprocess  # noqa
 from autoarray.dataset.imaging.dataset import Imaging  # noqa
@@ -23,8 +28,6 @@ from autoarray.inversion.pixelization.border_relocator import BorderRelocator
 from autoarray.mask.mask_1d import Mask1D  # noqa
 from autoarray.mask.mask_2d import Mask2D  # noqa
 from autoarray.mask.derive.zoom_2d import Zoom2D
-from autoarray.operators.convolver import Convolver  # noqa
-from autoarray.operators.convolver import Convolver  # noqa
 from autoarray.operators.transformer import TransformerDFT  # noqa
 from autoarray.operators.transformer import TransformerNUFFT  # noqa
 from autoarray.layout.layout import Layout2D  # noqa
@@ -50,8 +53,6 @@ from autoarray.structures.visibilities import VisibilitiesNoiseMap  # noqa
 
 from .analysis.adapt_images.adapt_images import AdaptImages
 from .analysis.adapt_images.adapt_image_maker import AdaptImageMaker
-from .analysis.maker import FitMaker
-from .analysis.preloads import Preloads
 from . import aggregator as agg
 from . import exc
 from . import plot
@@ -115,7 +116,5 @@ from autoconf.fitsable import ndarray_via_fits_from
 from autoconf.fitsable import header_obj_from
 from autoconf.fitsable import output_to_fits
 from autoconf.fitsable import hdu_list_for_output_from
-
-conf.instance.register(__file__)
 
 __version__ = "2025.5.10.1"

@@ -6,6 +6,6 @@ Redshift:
     width_modifier:
       type: Absolute
       value: 1.0
-    gaussian_limits:
+    limits:
       lower: 0.0
       upper: inf

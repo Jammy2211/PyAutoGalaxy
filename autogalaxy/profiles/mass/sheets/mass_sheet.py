@@ -1,3 +1,4 @@
+import jax.numpy as jnp
 import numpy as np
 from typing import Tuple
 
@@ -26,15 +27,14 @@ class MassSheet(MassProfile):
 
     @aa.grid_dec.to_array
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return np.full(shape=grid.shape[0], fill_value=self.kappa)
+        return jnp.full(shape=grid.shape[0], fill_value=self.kappa)
 
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return np.zeros(shape=grid.shape[0])
+        return jnp.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         grid_radii = self.radial_grid_from(grid=grid, **kwargs)
         return self._cartesian_grid_via_radial_from(

@@ -75,7 +75,7 @@ def test__perfect_fit__chi_squared_0():
     assert fit.chi_squared == pytest.approx(0.0)
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(7, 7)),
+        mesh=ag.mesh.RectangularUniform(shape=(7, 7)),
         regularization=ag.reg.Constant(coefficient=0.0001),
     )
 
@@ -115,7 +115,7 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
     )
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.Rectangular(shape=(16, 16)),
+        mesh=ag.mesh.RectangularUniform(shape=(16, 16)),
         regularization=ag.reg.Constant(coefficient=(1.0)),
     )
 
@@ -209,13 +209,13 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
     galaxy_image = galaxy.image_2d_from(grid=dataset.grids.lp)
 
     assert fit_linear.galaxy_model_image_dict[galaxy_linear] == pytest.approx(
-        galaxy_image, 1.0e-4
+        galaxy_image.array, 1.0e-4
     )
 
     galaxy_visibilities = galaxy.visibilities_from(
         grid=dataset.grids.lp, transformer=dataset.transformer
     )
 
-    assert fit_linear.galaxy_model_visibilities_dict[galaxy_linear] == pytest.approx(
-        galaxy_visibilities, 1.0e-4
-    )
+    assert fit_linear.galaxy_model_visibilities_dict[
+        galaxy_linear
+    ].array == pytest.approx(galaxy_visibilities.array, 1.0e-4)

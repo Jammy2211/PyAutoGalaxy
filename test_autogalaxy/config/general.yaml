@@ -1,8 +1,9 @@
 analysis:
   n_cores: 1
-  preload_attempts: 250
 fits:
   flip_for_ds9: true
+psf:
+  use_fft_default: false              # If True, PSFs are convolved using FFTs by default, which is faster and uses less memory in all cases except for very small PSFs, False uses direct convolution. Real space used for unit tests.
 grid:
   remove_projected_centre: false
 inversion:
@@ -39,6 +40,4 @@ structures:
   native_binned_only: false           # If True, data structures are only stored in their native and binned format. This is used to reduce memory usage in autocti.
 test:
   check_likelihood_function: false  # if True, when a search is resumed the likelihood of a previous sample is recalculated to ensure it is consistent with the previous run.
-  check_preloads: false
   exception_override: true
-  preloads_check_threshold: 1.0     # If the figure of merit of a fit with and without preloads is greater than this threshold, the check preload test fails and an exception raised for a model-fit. 

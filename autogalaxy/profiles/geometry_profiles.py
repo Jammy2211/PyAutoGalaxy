@@ -1,6 +1,7 @@
-from typing import Optional, Tuple, Type
-
+import jax.numpy as jnp
 import numpy as np
+
+from typing import Optional, Tuple, Type
 
 import autoarray as aa
 
@@ -86,14 +87,16 @@ class SphProfile(GeometryProfile):
     def radial_grid_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
         """
         Convert a grid of (y, x) coordinates, to their radial distances from the profile
-        centre (e.g. :math: r = x**2 + y**2).
+        centre (e.g. :math: r = sqrt(x**2 + y**2)).
 
         Parameters
         ----------
         grid
             The grid of (y, x) coordinates which are converted to radial distances.
         """
-        return np.sqrt(np.add(np.square(grid[:, 0]), np.square(grid[:, 1])))
+        return jnp.sqrt(
+            jnp.add(jnp.square(grid.array[:, 0]), jnp.square(grid.array[:, 1]))
+        )
 
     def angle_to_profile_grid_from(
         self, grid_angles: np.ndarray, **kwargs
@@ -107,11 +110,11 @@ class SphProfile(GeometryProfile):
         grid_angles
             The angle theta counter-clockwise from the positive x-axis to each coordinate in radians.
         """
-        return np.cos(grid_angles), np.sin(grid_angles)
+        return jnp.cos(grid_angles), jnp.sin(grid_angles)
 
     @aa.grid_dec.to_grid
     def _cartesian_grid_via_radial_from(
-        self, grid: aa.type.Grid2DLike, radius: np.ndarray, **kwargs
+        self, grid: aa.type.Grid2DLike, radius: jnp.ndarray, **kwargs
     ) -> aa.type.Grid2DLike:
         """
         Convert a grid of (y,x) coordinates with their specified radial distances (e.g. :math: r = x**2 + y**2) to
@@ -124,9 +127,15 @@ class SphProfile(GeometryProfile):
         radius
             The circular radius of each coordinate from the profile center.
         """
-        grid_angles = np.arctan2(grid[:, 0], grid[:, 1])
+        grid_angles = jnp.arctan2(grid.array[:, 0], grid.array[:, 1])
         cos_theta, sin_theta = self.angle_to_profile_grid_from(grid_angles=grid_angles)
-        return np.multiply(radius[:, None], np.vstack((sin_theta, cos_theta)).T)
+
+        if isinstance(radius, jnp.ndarray):
+            return jnp.multiply(radius[:, None], jnp.vstack((sin_theta, cos_theta)).T)
+        elif isinstance(radius, np.ndarray):
+            return np.multiply(radius[:, None], np.vstack((sin_theta, cos_theta)).T)
+
+        return jnp.multiply(radius.array[:, None], jnp.vstack((sin_theta, cos_theta)).T)
 
     @aa.grid_dec.to_grid
     def transformed_to_reference_frame_grid_from(self, grid, **kwargs):
@@ -140,7 +149,7 @@ class SphProfile(GeometryProfile):
         grid
             The (y, x) coordinates in the original reference frame of the grid.
         """
-        return np.subtract(grid, self.centre)
+        return jnp.subtract(grid.array, jnp.array(self.centre))
 
     @aa.grid_dec.to_grid
     def transformed_from_reference_frame_grid_from(self, grid, **kwargs):
@@ -155,7 +164,7 @@ class SphProfile(GeometryProfile):
         grid
             The (y, x) coordinates in the reference frame of the profile.
         """
-        return np.add(grid, self.centre)
+        return jnp.add(grid.array, jnp.array(self.centre))
 
 
 class EllProfile(SphProfile):
@@ -230,7 +239,7 @@ class EllProfile(SphProfile):
         The position angle in radians of the major-axis of the ellipse defined by profile, defined counter clockwise
         from the positive x-axis (0.0 > angle > 2pi).
         """
-        return np.radians(self.angle)
+        return jnp.radians(self.angle)
 
     @property
     def _cos_angle(self) -> float:
@@ -245,8 +254,8 @@ class EllProfile(SphProfile):
         Determine the sin and cosine of the angle between the profile's ellipse and the positive x-axis,
         counter-clockwise.
         """
-        angle_radians = np.radians(self.angle)
-        return np.cos(angle_radians), np.sin(angle_radians)
+        angle_radians = jnp.radians(self.angle)
+        return jnp.cos(angle_radians), jnp.sin(angle_radians)
 
     def angle_to_profile_grid_from(self, grid_angles, **kwargs):
         """
@@ -257,8 +266,10 @@ class EllProfile(SphProfile):
         grid_angles
             The angle theta counter-clockwise from the positive x-axis to each coordinate in radians.
         """
-        theta_coordinate_to_profile = np.add(grid_angles, -self.angle_radians)
-        return np.cos(theta_coordinate_to_profile), np.sin(theta_coordinate_to_profile)
+        theta_coordinate_to_profile = jnp.add(grid_angles, -self.angle_radians)
+        return jnp.cos(theta_coordinate_to_profile), jnp.sin(
+            theta_coordinate_to_profile
+        )
 
     @aa.grid_dec.to_grid
     def rotated_grid_from_reference_frame_from(
@@ -292,10 +303,9 @@ class EllProfile(SphProfile):
         )
 
     @aa.grid_dec.to_array
-    @aa.grid_dec.relocate_to_radial_minimum
     def elliptical_radii_grid_from(
         self, grid: aa.type.Grid2DLike, **kwargs
-    ) -> np.ndarray:
+    ) -> jnp.ndarray:
         """
         Convert a grid of (y,x) coordinates to their elliptical radii values: :math: (x^2 + (y^2/q))^0.5
 
@@ -304,17 +314,17 @@ class EllProfile(SphProfile):
         grid
             The (y, x) coordinates in the reference frame of the elliptical profile.
         """
-        return np.sqrt(
-            np.add(
-                np.square(grid[:, 1]), np.square(np.divide(grid[:, 0], self.axis_ratio))
+        return jnp.sqrt(
+            jnp.add(
+                jnp.square(grid.array[:, 1]),
+                jnp.square(jnp.divide(grid.array[:, 0], self.axis_ratio)),
             )
         )
 
     @aa.grid_dec.to_array
-    @aa.grid_dec.relocate_to_radial_minimum
     def eccentric_radii_grid_from(
         self, grid: aa.type.Grid2DLike, **kwargs
-    ) -> np.ndarray:
+    ) -> jnp.ndarray:
         """
         Convert a grid of (y,x) coordinates to an eccentric radius: :math: axis_ratio^0.5 (x^2 + (y^2/q))^0.5
 
@@ -331,12 +341,12 @@ class EllProfile(SphProfile):
 
         grid_radii = self.elliptical_radii_grid_from(grid=grid, **kwargs)
 
-        return np.multiply(np.sqrt(self.axis_ratio), grid_radii).view(np.ndarray)
+        return jnp.multiply(jnp.sqrt(self.axis_ratio), grid_radii.array)
 
     @aa.grid_dec.to_grid
     def transformed_to_reference_frame_grid_from(
         self, grid: aa.type.Grid2DLike, **kwargs
-    ) -> np.ndarray:
+    ) -> jnp.ndarray:
         """
         Transform a grid of (y,x) coordinates to the reference frame of the profile.
 
@@ -372,7 +382,7 @@ class EllProfile(SphProfile):
             return super().transformed_from_reference_frame_grid_from(grid=grid)
 
         return aa.util.geometry.transform_grid_2d_from_reference_frame(
-            grid_2d=grid, centre=self.centre, angle=self.angle
+            grid_2d=grid.array, centre=self.centre, angle=self.angle
         )
 
     def _eta_u(self, u, coordinates):

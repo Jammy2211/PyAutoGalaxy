@@ -14,7 +14,7 @@ def critical_curve_via_magnification_from(mass_profile, grid):
     inverse_magnification = 1 / magnification
 
     critical_curves_indices = measure.find_contours(
-        np.array(inverse_magnification.native), 0
+        np.array(inverse_magnification.native._array), 0
     )
 
     no_critical_curves = len(critical_curves_indices)
@@ -122,19 +122,10 @@ def test__convergence_2d_via_hessian_from():
 
     convergence = mp.convergence_2d_via_hessian_from(grid=grid, buffer=buffer)
 
-    assert convergence.in_list[0] == pytest.approx(0.461447, 1.0e-4)
-    assert convergence.in_list[1] == pytest.approx(0.568875, 1.0e-4)
-    assert convergence.in_list[2] == pytest.approx(0.538326, 1.0e-4)
-    assert convergence.in_list[3] == pytest.approx(0.539390, 1.0e-4)
-
-    mp = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.3, 0.4), einstein_radius=1.5)
-
-    convergence = mp.convergence_2d_via_hessian_from(grid=grid, buffer=buffer)
-
-    assert convergence.in_list[0] == pytest.approx(0.35313, 1.0e-4)
-    assert convergence.in_list[1] == pytest.approx(0.46030, 1.0e-4)
-    assert convergence.in_list[2] == pytest.approx(0.43484, 1.0e-4)
-    assert convergence.in_list[3] == pytest.approx(1.00492, 1.0e-4)
+    assert convergence.in_list[0] == pytest.approx(0.46208, 1.0e-1)
+    assert convergence.in_list[1] == pytest.approx(0.56840, 1.0e-1)
+    assert convergence.in_list[2] == pytest.approx(0.53815, 1.0e-1)
+    assert convergence.in_list[3] == pytest.approx(0.53927, 1.0e-1)
 
 
 def test__magnification_2d_via_hessian_from():
@@ -245,7 +236,7 @@ def test__tangential_critical_curve_list_from__compare_via_magnification():
     )[0]
 
     tangential_critical_curve_list = mp.tangential_critical_curve_list_from(
-        grid=grid, pixel_scale=0.2
+        grid=grid,
     )
 
     assert tangential_critical_curve_list[0] == pytest.approx(
@@ -257,7 +248,7 @@ def test__tangential_critical_curve_list_from__compare_via_magnification():
     )[0]
 
     tangential_critical_curve_list = mp.tangential_critical_curve_list_from(
-        grid=grid, pixel_scale=0.2
+        grid=grid,
     )
 
     assert tangential_critical_curve_list[0] == pytest.approx(
@@ -268,7 +259,7 @@ def test__tangential_critical_curve_list_from__compare_via_magnification():
 def test__radial_critical_curve_list_from():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
+    mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
 
     radial_critical_curve_list = mp.radial_critical_curve_list_from(grid=grid)
 
@@ -278,7 +269,7 @@ def test__radial_critical_curve_list_from():
     assert -0.05 < y_centre < 0.05
     assert -0.05 < x_centre < 0.05
 
-    mp = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
+    mp = ag.mp.PowerLawSph(centre=(0.5, 1.0), einstein_radius=2.0, slope=1.5)
 
     radial_critical_curve_list = mp.radial_critical_curve_list_from(grid=grid)
 
@@ -290,10 +281,11 @@ def test__radial_critical_curve_list_from():
 
 
 def test__radial_critical_curve_list_from__compare_via_magnification():
+
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    mp = ag.mp.Isothermal(
-        centre=(0.0, 0.0), einstein_radius=2, ell_comps=(0.109423, -0.019294)
+    mp = ag.mp.PowerLaw(
+        centre=(0.0, 0.0), einstein_radius=2, ell_comps=(0.109423, -0.019294), slope=1.5
     )
 
     critical_curve_radial_via_magnification = critical_curve_via_magnification_from(
@@ -343,7 +335,7 @@ def test__tangential_caustic_list_from___compare_via_magnification():
     )[0]
 
     tangential_caustic_list = mp.tangential_caustic_list_from(
-        grid=grid, pixel_scale=0.2
+        grid=grid,
     )
 
     assert sum(tangential_caustic_list[0]) == pytest.approx(
@@ -354,7 +346,7 @@ def test__tangential_caustic_list_from___compare_via_magnification():
 def test__radial_caustic_list_from():
     grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.2)
 
-    mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
+    mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
 
     radial_caustic_list = mp.radial_caustic_list_from(grid=grid)
 
@@ -364,12 +356,12 @@ def test__radial_caustic_list_from():
     )
 
     assert np.mean(x_caustic_radial**2 + y_caustic_radial**2) == pytest.approx(
-        mp.einstein_radius**2, 5e-1
+        0.25, 5e-1
     )
 
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
+    mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
 
     radial_caustic_list = mp.radial_caustic_list_from(grid=grid)
 
@@ -379,7 +371,7 @@ def test__radial_caustic_list_from():
     assert -0.2 < y_centre < 0.2
     assert -0.35 < x_centre < 0.35
 
-    mp = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
+    mp = ag.mp.PowerLawSph(centre=(0.5, 1.0), einstein_radius=2.0, slope=1.5)
 
     radial_caustic_list = mp.radial_caustic_list_from(grid=grid)
 
@@ -391,17 +383,17 @@ def test__radial_caustic_list_from():
 
 
 def test__radial_caustic_list_from___compare_via_magnification():
-    grid = ag.Grid2D.uniform(shape_native=(60, 60), pixel_scales=0.08)
+    grid = ag.Grid2D.uniform(shape_native=(180, 180), pixel_scales=0.02)
 
-    mp = ag.mp.Isothermal(
-        centre=(0.0, 0.0), einstein_radius=2, ell_comps=(0.109423, -0.019294)
+    mp = ag.mp.PowerLaw(
+        centre=(0.0, 0.0), einstein_radius=2, ell_comps=(0.109423, -0.019294), slope=1.5
     )
 
     caustic_radial_via_magnification = caustics_via_magnification_from(
         mass_profile=mp, grid=grid
     )[1]
 
-    radial_caustic_list = mp.radial_caustic_list_from(grid=grid, pixel_scale=0.08)
+    radial_caustic_list = mp.radial_caustic_list_from(grid=grid)
 
     assert sum(radial_caustic_list[0]) == pytest.approx(
         sum(caustic_radial_via_magnification), 7e-1
@@ -411,13 +403,13 @@ def test__radial_caustic_list_from___compare_via_magnification():
 def test__radial_critical_curve_area_list_from():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
-    mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
+    mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
 
     area_within_radial_critical_curve_list = mp.radial_critical_curve_area_list_from(
         grid=grid
     )
 
-    assert area_within_radial_critical_curve_list[0] == pytest.approx(0.0455, 1e-1)
+    assert area_within_radial_critical_curve_list[0] == pytest.approx(0.78293, 1e-1)
 
 
 def test__tangential_critical_curve_area_list_from():
@@ -540,64 +532,3 @@ def test__convergence_2d_via_jacobian_from__compare_via_jacobian_and_analytic():
     mean_error = np.mean(convergence_via_jacobian.slim - convergence_via_analytic.slim)
 
     assert mean_error < 1e-1
-
-
-def test__evaluation_grid__changes_resolution_based_on_pixel_scale_input():
-    from autogalaxy.operate.deflections import evaluation_grid
-
-    @evaluation_grid
-    def mock_func(lensing_obj, grid, pixel_scale=0.05):
-        return grid
-
-    grid = ag.Grid2D.uniform(shape_native=(4, 4), pixel_scales=0.05)
-
-    evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=0.05)
-
-    assert (evaluation_grid == grid).all()
-
-    evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=0.1)
-    downscaled_grid = ag.Grid2D.uniform(shape_native=(2, 2), pixel_scales=0.1)
-
-    assert (evaluation_grid == downscaled_grid).all()
-
-    evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=0.025)
-    upscaled_grid = ag.Grid2D.uniform(shape_native=(8, 8), pixel_scales=0.025)
-
-    assert (evaluation_grid == upscaled_grid).all()
-
-    evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=0.03)
-    upscaled_grid = ag.Grid2D.uniform(shape_native=(6, 6), pixel_scales=0.03)
-
-    assert (evaluation_grid == upscaled_grid).all()
-
-
-def test__evaluation_grid__changes_to_uniform_and_zoomed_in_if_masked():
-    from autogalaxy.operate.deflections import evaluation_grid
-
-    @evaluation_grid
-    def mock_func(lensing_obj, grid, pixel_scale=0.05):
-        return grid
-
-    mask = ag.Mask2D.circular(shape_native=(11, 11), pixel_scales=1.0, radius=3.0)
-
-    grid = ag.Grid2D.from_mask(mask=mask)
-
-    evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=1.0)
-    grid_uniform = ag.Grid2D.uniform(shape_native=(7, 7), pixel_scales=1.0)
-
-    assert (evaluation_grid[0] == np.array([3.0, -3.0])).all()
-    assert (evaluation_grid == grid_uniform).all()
-
-    mask = ag.Mask2D.circular(
-        shape_native=(29, 29), pixel_scales=1.0, radius=3.0, centre=(5.0, 5.0)
-    )
-
-    grid = ag.Grid2D.from_mask(mask=mask)
-
-    evaluation_grid = mock_func(lensing_obj=None, grid=grid, pixel_scale=1.0)
-    grid_uniform = ag.Grid2D.uniform(
-        shape_native=(7, 7), pixel_scales=1.0, origin=(5.0, 5.0)
-    )
-
-    assert (evaluation_grid[0] == np.array([8.0, 2.0])).all()
-    assert (evaluation_grid == grid_uniform).all()

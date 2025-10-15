@@ -1,12 +1,13 @@
-import copy
+import jax
+import jax.numpy as jnp
 import numpy as np
-from scipy.integrate import quad
+
 from typing import List, Tuple
 
 import autoarray as aa
 
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
-from autogalaxy.profiles.mass.abstract.mge import (
+from autogalaxy.profiles.mass.abstract.mge_numpy import (
     MassProfileMGE,
 )
 from autogalaxy.profiles.mass.abstract.cse import (
@@ -122,15 +123,13 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         self.sersic_index = sersic_index
 
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        if self.intensity == 0.0:
-            return np.zeros((grid.shape[0], 2))
-
         return self.deflections_2d_via_cse_from(grid=grid, **kwargs)
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
-    def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_2d_via_mge_from(
+        self, grid: aa.type.Grid2DLike, func_terms=28, func_gaussians=20, **kwargs
+    ):
         """
         Calculate the projected 2D deflection angles from a grid of (y,x) arc second coordinates, by computing and
         summing the convergence of each individual cse used to decompose the mass profile.
@@ -145,12 +144,14 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
         return self._deflections_2d_via_mge_from(
-            grid=grid, sigmas_factor=np.sqrt(self.axis_ratio)
+            grid=grid,
+            sigmas_factor=np.sqrt(self.axis_ratio),
+            func_terms=func_terms,
+            func_gaussians=func_gaussians,
         )
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the projected 2D deflection angles from a grid of (y,x) arc second coordinates, by computing and
@@ -170,7 +171,6 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -187,8 +187,9 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_via_mge_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def convergence_2d_via_mge_from(
+        self, grid: aa.type.Grid2DLike, func_terms=28, func_gaussians=20, **kwargs
+    ):
         """
         Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -201,12 +202,15 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
 
         eccentric_radii = self.eccentric_radii_grid_from(grid=grid, **kwargs)
 
-        return self._convergence_2d_via_mge_from(grid_radii=eccentric_radii)
+        return self._convergence_2d_via_mge_from(
+            grid_radii=eccentric_radii,
+            func_terms=func_terms,
+            func_gaussians=func_gaussians,
+        )
 
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_via_cse_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the projected 2D convergence from a grid of (y,x) arc second coordinates, by computing and summing
@@ -244,10 +248,15 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         """
         return self.intensity * np.exp(
             -self.sersic_constant
-            * (((radius / self.effective_radius) ** (1.0 / self.sersic_index)) - 1)
+            * (
+                ((radius.array / self.effective_radius) ** (1.0 / self.sersic_index))
+                - 1
+            )
         )
 
-    def decompose_convergence_via_mge(self) -> Tuple[List, List]:
+    def decompose_convergence_via_mge(
+        self, func_terms=28, func_gaussians=20
+    ) -> Tuple[List, List]:
         radii_min = self.effective_radius / 100.0
         radii_max = self.effective_radius * 20.0
 
@@ -262,7 +271,11 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
             )
 
         return self._decompose_convergence_via_mge(
-            func=sersic_2d, radii_min=radii_min, radii_max=radii_max
+            func=sersic_2d,
+            radii_min=radii_min,
+            radii_max=radii_max,
+            func_terms=func_terms,
+            func_gaussians=func_gaussians,
         )
 
     def decompose_convergence_via_cse(
@@ -359,7 +372,6 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
 class Sersic(AbstractSersic, MassProfileMGE, MassProfileCSE):
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -370,14 +382,15 @@ class Sersic(AbstractSersic, MassProfileMGE, MassProfileCSE):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
+        from scipy.integrate import quad
 
         def calculate_deflection_component(npow, index):
             sersic_constant = self.sersic_constant
 
-            deflection_grid = self.axis_ratio * grid[:, index]
+            deflection_grid = self.axis_ratio * grid.array[:, index]
 
             for i in range(grid.shape[0]):
-                deflection_grid[i] *= (
+                deflection_grid = deflection_grid.at[i].multiply(
                     self.intensity
                     * self.mass_to_light_ratio
                     * quad(
@@ -385,8 +398,8 @@ class Sersic(AbstractSersic, MassProfileMGE, MassProfileCSE):
                         a=0.0,
                         b=1.0,
                         args=(
-                            grid[i, 0],
-                            grid[i, 1],
+                            grid.array[i, 0],
+                            grid.array[i, 1],
                             npow,
                             self.axis_ratio,
                             self.sersic_index,

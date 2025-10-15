@@ -267,7 +267,10 @@ def test__mass_at_200__unit_conversions_work():
 
 
 def test__values_of_quantities_for_real_cosmology():
-    cosmology = ag.cosmo.LambdaCDMWrap(H0=70.0, Om0=0.3, Ode0=0.7)
+
+    from autogalaxy.cosmology.model import LambdaCDMWrap
+
+    cosmology = LambdaCDMWrap(H0=70.0, Om0=0.3, Ode0=0.7)
 
     mp = ag.mp.NFWTruncatedSph(kappa_s=0.5, scale_radius=5.0, truncation_radius=10.0)
 
