@@ -1,5 +1,5 @@
 from .dual_pseudo_isothermal_potential import dPIEPotential, dPIEPotentialSph
-from .dual_pseudo_isothermal_mass import PIEMD, dPIEMD, dPIEMDSph
+from .dual_pseudo_isothermal_mass import PIEMass, dPIEMass, dPIEMassSph
 from .isothermal import Isothermal, IsothermalSph
 from .isothermal_core import IsothermalCore, IsothermalCoreSph
 from .power_law import PowerLaw, PowerLawSph

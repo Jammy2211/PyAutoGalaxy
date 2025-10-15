@@ -1,0 +1,126 @@
+dPIEMass:
+  centre_0:
+    type: Gaussian
+    mean: 0.0
+    sigma: 0.1
+    width_modifier:
+      type: Absolute
+      value: 0.05
+    limits:
+      lower: -inf
+      upper: inf
+  centre_1:
+    type: Gaussian
+    mean: 0.0
+    sigma: 0.1
+    width_modifier:
+      type: Absolute
+      value: 0.05
+    limits:
+      lower: -inf
+      upper: inf
+  ell_comps_0:
+    type: TruncatedGaussian
+    mean: 0.0
+    sigma: 0.3
+    lower_limit: -1.0
+    upper_limit: 1.0
+    width_modifier:
+      type: Absolute
+      value: 0.2
+    limits:
+      lower: -1.0
+      upper: 1.0
+  ell_comps_1:
+    type: TruncatedGaussian
+    mean: 0.0
+    sigma: 0.3
+    lower_limit: -1.0
+    upper_limit: 1.0
+    width_modifier:
+      type: Absolute
+      value: 0.2
+    limits:
+      lower: -1.0
+      upper: 1.0
+  ra:
+    type: Uniform
+    lower_limit: 0.0
+    upper_limit: 10.0
+    width_modifier:
+      type: Relative
+      value: 0.25
+    limits:
+      lower: 0.0
+      upper: inf
+  rs:
+    type: Uniform
+    lower_limit: 0.0
+    upper_limit: 10.0
+    width_modifier:
+      type: Relative
+      value: 0.25
+    limits:
+      lower: 0.0
+      upper: inf
+  b0:
+    type: Uniform
+    lower_limit: 0.0
+    upper_limit: 10.0
+    width_modifier:
+      type: Relative
+      value: 0.25
+    limits:
+      lower: 0.0
+      upper: inf
+dPIEMassSph:
+  centre_0:
+    type: Gaussian
+    mean: 0.0
+    sigma: 0.1
+    width_modifier:
+      type: Absolute
+      value: 0.05
+    limits:
+      lower: -inf
+      upper: inf
+  centre_1:
+    type: Gaussian
+    mean: 0.0
+    sigma: 0.1
+    width_modifier:
+      type: Absolute
+      value: 0.05
+    limits:
+      lower: -inf
+      upper: inf
+  ra:
+    type: Uniform
+    lower_limit: 0.0
+    upper_limit: 10.0
+    width_modifier:
+      type: Relative
+      value: 0.25
+    limits:
+      lower: 0.0
+      upper: inf
+  rs:
+    type: Uniform
+    lower_limit: 0.0
+    upper_limit: 10.0
+    width_modifier:
+      type: Relative
+      value: 0.25
+    limits:
+      lower: 0.0
+      upper: inf
+  b0:
+    type: Uniform
+    lower_limit: 0.0
+    upper_limit: 10.0
+    width_modifier:
+      type: Relative
+      value: 0.25
+    limits:
+      lower: 0.0
+      upper: inf

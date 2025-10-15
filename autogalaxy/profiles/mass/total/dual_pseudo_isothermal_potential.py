@@ -199,7 +199,7 @@ class dPIEPotentialSph(dPIEPotential):
           `b0` is not in the Intermediate-Axis-Convention for its r_{em}^2 = x^2 / (1 + \\epsilon)^2 + y^2 / (1 - \\epsilon)^2
 
         Credit: Jackson O'Donnell for implementing this profile in PyAutoLens.
-        Note: This dPIEPotentialSph should be the same with dPIEMDSph for their same mathamatical formulations.
+        Note: This dPIEPotentialSph should be the same with dPIEMassSph for their same mathamatical formulations.
 
         Parameters
         ----------

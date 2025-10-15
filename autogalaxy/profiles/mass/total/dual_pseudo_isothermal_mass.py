@@ -4,13 +4,13 @@ import numpy as np
 import autoarray as aa
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
-# Within this profile family, PIEMD, dPIEMD, and dPIEMDSph are directly ported from Lenstool's C code, and have been thoroughly annotated and adapted for PyAutoLens.
+# Within this profile family, PIEMass, dPIEMass, and dPIEMassSph are directly ported from Lenstool's C code, and have been thoroughly annotated and adapted for PyAutoLens.
 # The dPIEPotential and dPIEPotentialSph profiles are modified from the original `dPIEPotential` and `dPIEPotentialSph`, which were implemented to PyAutoLens by Jackson O'Donnell.
 
 
 def _ci05(x, y, eps, rcore):
     """
-    Returns the first derivatives of the lens potential as complex number I'* = (∂ψ/∂x + i ∂ψ/∂y) / E0 for PIEMD at any positions (x,y),
+    Returns the first derivatives of the lens potential as complex number I'* = (∂ψ/∂x + i ∂ψ/∂y) / E0 for PIEMass at any positions (x,y),
     see Kassiola & Kovner(1993) Eq. 4.1.2, which is the integral of Eq. 2.3.8.
     Note here b0(or called E0) is out of the `_ci05`.
 
@@ -62,12 +62,12 @@ def _ci05(x, y, eps, rcore):
 
 def _ci05f(x, y, eps, rcore, rcut):
     """
-    Returns the first derivatives of the lens potential as complex number I'* = (∂ψ/∂x + i ∂ψ/∂y) / (b0 * ra / (rs - ra)) for dPIEMD at any positions (x,y),
+    Returns the first derivatives of the lens potential as complex number I'* = (∂ψ/∂x + i ∂ψ/∂y) / (b0 * ra / (rs - ra)) for dPIEMass at any positions (x,y),
     which is the integral of Eq. 2.3.8 in  Kassiola & Kovner(1993).
 
-    Note here (b0 * ra / (rs - ra)) is out of the `_ci05f`. The only difference of integral of Eq. 2.3.8 between dPIEMD and PIEMD is the \\kappa:
-    \\kappa(r_{em})_{dPIEMD} = rs / (rs - ra) * (\\kappa_{PIEMD,ra} - \\kappa_{PIEMD,rs}).
-    I*_{dPIEMD} = ra / (rs - ra) * (I*_{PIEMD}(ra) - I*_{PIEMD}(ra))
+    Note here (b0 * ra / (rs - ra)) is out of the `_ci05f`. The only difference of integral of Eq. 2.3.8 between dPIEMass and PIEMass is the \\kappa:
+    \\kappa(r_{em})_{dPIEMass} = rs / (rs - ra) * (\\kappa_{PIEMass,ra} - \\kappa_{PIEMass,rs}).
+    I*_{dPIEMass} = ra / (rs - ra) * (I*_{PIEMass}(ra) - I*_{PIEMass}(ra))
 
     Parameters
     ----------
@@ -135,7 +135,7 @@ def _ci05f(x, y, eps, rcore, rcut):
 
 def _mdci05(x, y, eps, rcore, b0):
     """
-    Returns the second derivatives (Hessian matrix) of the lens potential as complex number for PIEMD at any positions (x,y):
+    Returns the second derivatives (Hessian matrix) of the lens potential as complex number for PIEMass at any positions (x,y):
     ∂²ψ/∂x² = Re(∂I*/∂x), ∂²ψ/∂y² = Im(∂I*/∂y), ∂²ψ/∂x∂y = ∂²ψ/∂y∂x = Im(∂I*/∂x) = Re(∂I*/∂y)
     see Kassiola & Kovner(1993) Eq. 4.1.4.
 
@@ -221,7 +221,7 @@ def _mdci05(x, y, eps, rcore, b0):
     return a, b, c, d
 
 
-class PIEMD(MassProfile):
+class PIEMass(MassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -230,7 +230,7 @@ class PIEMD(MassProfile):
         b0: float = 0.1,
     ):
         """
-        The Pseudo Isothermal Elliptical Mass Distribution(PIEMD) profiles, based on the formulaiton from
+        The Pseudo Isothermal Elliptical Mass Distribution(PIEMass) profiles, based on the formulaiton from
         Kassiola & Kovner(1993) https://articles.adsabs.harvard.edu/pdf/1993ApJ...417..450K.
         This profile is ported from Lenstool's C code, which has the same formulation.
 
@@ -325,7 +325,7 @@ class PIEMD(MassProfile):
         return aa.Array2D(values=1.0 / det_A, mask=grid.mask)
 
 
-class dPIEMD(MassProfile):
+class dPIEMass(MassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -335,7 +335,7 @@ class dPIEMD(MassProfile):
         b0: float = 0.1,
     ):
         """
-        The dual Pseudo Isothermal Elliptical Mass Distribution(dPIEMD) profiles, which is a *two component PIEMD* with both a core radius and a truncation radius,
+        The dual Pseudo Isothermal Elliptical Mass Distribution(dPIEMass) profiles, which is a *two component PIEMass* with both a core radius and a truncation radius,
         see Eliasdottir (2007): https://arxiv.org/abs/0710.5636
         This profile is ported from Lenstool's C code, which has the same formulation.
 
@@ -343,8 +343,8 @@ class dPIEMD(MassProfile):
         and \\rho \~ r^{-4} in the outer parts:
         \\rho \\propto [(ra^2 + R^2) (rs^2 + R^2)]^{-1}
 
-        The convergence is given by two PIEMD with core radius ra and rs:
-        \\kappa(r_{em}) = rs / (rs - ra) * (\\kappa_{PIEMD,ra} - \\kappa_{PIEMD,rs})
+        The convergence is given by two PIEMass with core radius ra and rs:
+        \\kappa(r_{em}) = rs / (rs - ra) * (\\kappa_{PIEMass,ra} - \\kappa_{PIEMass,rs})
                         = b_0 / 2 * rs / (rs - ra) * ( \\frac{1}{\\sqrt{ ra^2 + r_{em}^2}} - \\frac{1}{\\sqrt{ rs^2 + r_{em}^2}} )
         where r_{em}^2 = x^2 / (1 + \\epsilon)^2 + y^2 / (1 - \\epsilon)^2.
         Note in Eliasdottir (2007), E0 = 6\\pi * \\sigma_{dPIEPotential}^2 / c^2 * (D_{LS} / D_{S}). Eliasdottir's E0 is not the same as E0 in Kassiola & Kovner(1993) which is also b0.
@@ -412,7 +412,7 @@ class dPIEMD(MassProfile):
     def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", **kwargs):
         """
         Calculate the hessian matrix on a grid of (y,x) arc-second coordinates.
-        Hessian_dPIEMD = rs * (rs - ra) * ( Hessian_PIEMD(ra) - Hessian_PIEMD(rs))
+        Hessian_dPIEMass = rs * (rs - ra) * ( Hessian_PIEMass(ra) - Hessian_PIEMass(rs))
 
         Parameters
         ----------
@@ -451,7 +451,7 @@ class dPIEMD(MassProfile):
         return aa.Array2D(values=1.0 / det_A, mask=grid.mask)
 
 
-class dPIEMDSph(dPIEMD):
+class dPIEMassSph(dPIEMass):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -460,7 +460,7 @@ class dPIEMDSph(dPIEMD):
         b0: float = 1.0,
     ):
         """
-        The dual Pseudo Isothermal Elliptical Mass Distribution(dPIEMD) profiles without ellipticity, which is a *two component PIEMD* with both a core radius and a truncation radius,
+        The dual Pseudo Isothermal Elliptical Mass Distribution(dPIEMass) profiles without ellipticity, which is a *two component PIEMass* with both a core radius and a truncation radius,
         see Eliasdottir (2007): https://arxiv.org/abs/0710.5636
         This profile is ported from Lenstool's C code, which has the same formulation.
 
@@ -468,8 +468,8 @@ class dPIEMDSph(dPIEMD):
         and \\rho \~ r^{-4} in the outer parts:
         \\rho \\propto [(ra^2 + R^2) (rs^2 + R^2)]^{-1}
 
-        The convergence is given by two PIEMD with core radius ra and rs:
-        \\kappa(r_{em}) = rs / (rs - ra) * (\\kappa_{PIEMD,ra} - \\kappa_{PIEMD,rs})
+        The convergence is given by two PIEMass with core radius ra and rs:
+        \\kappa(r_{em}) = rs / (rs - ra) * (\\kappa_{PIEMass,ra} - \\kappa_{PIEMass,rs})
                         = b_0 / 2 * rs / (rs - ra) * ( \\frac{1}{\\sqrt{ ra^2 + r_{em}^2}} - \\frac{1}{\\sqrt{ rs^2 + r_{em}^2}} )
         where r_{em}^2 = x^2 / (1 + \\epsilon)^2 + y^2 / (1 - \\epsilon)^2.
         Note in Eliasdottir (2007), E0 = 6\\pi * \\sigma_{dPIEPotential}^2 / c^2 * (D_{LS} / D_{S}). Eliasdottir's E0 is not the same as E0 in Kassiola & Kovner(1993) which is also b0.
