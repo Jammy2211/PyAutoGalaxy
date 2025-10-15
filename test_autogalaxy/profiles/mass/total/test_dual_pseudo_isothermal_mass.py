@@ -22,7 +22,9 @@ def test__deflections_yx_2d_from():
 
     # First deviation from potential case due to ellipticity
 
-    mp = ag.mp.dPIEMass(centre=(0, 0), ell_comps=(0.0, 0.333333), b0=4.0, ra=2.0, rs=3.0)
+    mp = ag.mp.dPIEMass(
+        centre=(0, 0), ell_comps=(0.0, 0.333333), b0=4.0, ra=2.0, rs=3.0
+    )
 
     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.1625, 0.1625]]))
 

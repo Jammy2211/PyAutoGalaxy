@@ -1,4 +1,4 @@
-dPIEP:
+dPIEPotential:
   centre_0:
     type: Gaussian
     mean: 0.0
@@ -73,7 +73,7 @@ dPIEP:
     limits:
       lower: 0.0
       upper: inf
-dPIEPSph:
+dPIEPotentialSph:
   centre_0:
     type: Gaussian
     mean: 0.0

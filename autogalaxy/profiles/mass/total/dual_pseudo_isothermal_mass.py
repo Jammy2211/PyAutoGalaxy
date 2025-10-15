@@ -396,7 +396,13 @@ class dPIEMass(MassProfile):
         """
         ellip = self._ellip()
         factor = self.b0 * self.rs / (self.rs - self.ra)
-        zis = _ci05f(x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.ra, rcut=self.rs)
+        zis = _ci05f(
+            x=grid.array[:, 1],
+            y=grid.array[:, 0],
+            eps=ellip,
+            rcore=self.ra,
+            rcut=self.rs,
+        )
 
         # This is in axes aligned to the major/minor axis
         deflection_x = zis.real

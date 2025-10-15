@@ -55,9 +55,6 @@ class dPIEPotential(MassProfile):
         """
         super().__init__(centre=centre, ell_comps=ell_comps)
 
-        if ra > rs:
-            ra, rs = rs, ra
-
         self.ra = ra
         self.rs = rs
         self.b0 = b0
@@ -65,7 +62,7 @@ class dPIEPotential(MassProfile):
     def _ellip(self):
         ellip = jnp.sqrt(self.ell_comps[0] ** 2 + self.ell_comps[1] ** 2)
         MAX_ELLIP = 0.99999
-        return min(ellip, MAX_ELLIP)
+        return jnp.min(jnp.array([ellip, MAX_ELLIP]))
 
     def _deflection_angle(self, radii):
         """
@@ -212,10 +209,6 @@ class dPIEPotentialSph(dPIEPotential):
         b0
             The lens strength in arcseconds.
         """
-
-        # Ensure rs > ra (things will probably break otherwise)
-        if ra > rs:
-            ra, rs = rs, ra
 
         super().__init__(centre=centre, ell_comps=(0.0, 0.0))
 
