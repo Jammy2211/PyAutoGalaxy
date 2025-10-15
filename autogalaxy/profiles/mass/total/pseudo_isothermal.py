@@ -254,7 +254,6 @@ class PIEMD(MassProfile):
     
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -278,7 +277,6 @@ class PIEMD(MassProfile):
         )
 
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def analytical_hessian_2d_from(self, grid: 'aa.type.Grid2DLike', **kwargs):
         """
         Calculate the hessian matrix on a grid of (y,x) arc-second coordinates.
@@ -369,7 +367,6 @@ class dPIEMD(MassProfile):
     
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -395,7 +392,6 @@ class dPIEMD(MassProfile):
         )
     
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def analytical_hessian_2d_from(self, grid: 'aa.type.Grid2DLike', **kwargs):
         """
         Calculate the hessian matrix on a grid of (y,x) arc-second coordinates.
@@ -489,7 +485,6 @@ class dPIEMDSph(dPIEMD):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -526,8 +521,8 @@ class dPIEMDSph(dPIEMD):
         return self.rotated_grid_from_reference_frame_from(
             grid=np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T), **kwargs
         )
+
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def analytical_hessian_2d_from(self, grid: 'aa.type.Grid2DLike', **kwargs):
         """
         Calculate the hessian matrix on a grid of (y,x) arc-second coordinates.
@@ -689,7 +684,6 @@ class dPIEP(MassProfile):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -718,7 +712,6 @@ class dPIEP(MassProfile):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
@@ -753,7 +746,6 @@ class dPIEP(MassProfile):
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         return np.zeros(shape=grid.shape[0])
-
 
 class dPIEPSph(dPIEP):
     def __init__(
@@ -814,7 +806,6 @@ class dPIEPSph(dPIEP):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -836,7 +827,6 @@ class dPIEPSph(dPIEP):
 
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    @aa.grid_dec.relocate_to_radial_minimum
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
