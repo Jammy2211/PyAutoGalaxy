@@ -5,7 +5,7 @@ import autoarray as aa
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
-class dPIE(MassProfile):
+class dPIEP(MassProfile):
 
     def __init__(
         self,
@@ -13,15 +13,15 @@ class dPIE(MassProfile):
         ell_comps: Tuple[float, float] = (0.0, 0.0),
         ra: float = 0.1,
         rs: float = 2.0,
-        kappa_scale: float = 0.1,
+        b0: float = 1.0,
     ):
         """
-        The dual Pseudo-Isothermal mass profile (dPIE) without ellipticity, based on the
+        The dual Pseudo Isothermal Elliptical Potential (dPIEP) with pseudo-ellipticity on potential, based on the
         formulation from Eliasdottir (2007): https://arxiv.org/abs/0710.5636.
 
         This profile describes a circularly symmetric (non-elliptical) projected mass
         distribution with two scale radii (`ra` and `rs`) and a normalization factor
-        `kappa_scale`. Although originally called the dPIE (Elliptical), this version
+        `kappa_scale`. Although originally called the dPIEP (Elliptical), this version
         lacks ellipticity, so the "E" may be a misnomer.
 
         The projected surface mass density is given by:
@@ -34,10 +34,13 @@ class dPIE(MassProfile):
         (See Eliasdottir 2007, Eq. A3.)
 
         In this implementation:
-        - `ra` and `rs` are scale radii in arcseconds.
-        - `kappa_scale` = Σ₀ / Σ_crit is the dimensionless normalization.
+        - `ra` is the core radius in unit of arcseconds.
+        - `b0` is the lens strength in unit of arcseconds, when ra->0 & rs->\\infty & q->1, b0 is the Einstein radius.
+          `b0` is related to the central velocity dispersion \\sigma_0: b_0 = 4\\pi * \\sigma_0^2 / c^2 * (D_{LS} / D_{S})
+          `b0` is not in the Intermediate-Axis-Convention for its r_{em}^2 = x^2 / (1 + \\epsilon)^2 + y^2 / (1 - \\epsilon)^2
 
         Credit: Jackson O'Donnell for implementing this profile in PyAutoLens.
+        Note: To ensure consistency, kappa_scale was replaced with b0, and the corresponding code was adjusted accordingly.
 
         Parameters
         ----------
@@ -47,8 +50,8 @@ class dPIE(MassProfile):
             The inner core scale radius in arcseconds.
         rs
             The outer truncation scale radius in arcseconds.
-        kappa_scale
-            The dimensionless normalization factor controlling the overall mass.
+        b0
+            The lens strength in arcseconds.
         """
         super().__init__(centre=centre, ell_comps=ell_comps)
 
@@ -57,7 +60,7 @@ class dPIE(MassProfile):
 
         self.ra = ra
         self.rs = rs
-        self.kappa_scale = kappa_scale
+        self.b0 = b0
 
     def _ellip(self):
         ellip = jnp.sqrt(self.ell_comps[0] ** 2 + self.ell_comps[1] ** 2)
@@ -66,28 +69,29 @@ class dPIE(MassProfile):
 
     def _deflection_angle(self, radii):
         """
-        For a circularly symmetric dPIE profile, computes the magnitude of the deflection at each radius.
+        For a circularly symmetric dPIEP profile, computes the magnitude of the deflection at each radius.
         """
-        r_ra = radii / self.ra
-        r_rs = radii / self.rs
-        # c.f. Eliasdottir '07 eq. A20
-        f = r_ra / (1 + jnp.sqrt(1 + r_ra * r_ra)) - r_rs / (
-            1 + jnp.sqrt(1 + r_rs * r_rs)
+        a, s = self.ra, self.rs
+        radii = jnp.maximum(radii, 1e-8)
+        f = radii / (a + jnp.sqrt(a**2 + radii**2)) - radii / (
+            s + jnp.sqrt(s**2 + radii**2)
         )
 
-        ra, rs = self.ra, self.rs
-        # c.f. Eliasdottir '07 eq. A19
+        # c.f. Eliasdottir '07 eq. A23
         # magnitude of deflection
-        alpha = 2 * self.kappa_scale * ra * rs / (rs - ra) * f
+        # alpha = self.E0 * (s + a) / s * f
+        alpha = self.b0 * s / (s - a) * f
         return alpha
 
     def _convergence(self, radii):
+
         radsq = radii * radii
         a, s = self.ra, self.rs
-        # c.f. Eliasdottir '07 eqn (A3)
+
         return (
-            self.kappa_scale
-            * (a * s)
+            self.b0
+            / 2
+            * s
             / (s - a)
             * (1 / jnp.sqrt(a**2 + radsq) - 1 / jnp.sqrt(s**2 + radsq))
         )
@@ -162,22 +166,21 @@ class dPIE(MassProfile):
         return jnp.zeros(shape=grid.shape[0])
 
 
-class dPIESph(dPIE):
-
+class dPIEPSph(dPIEP):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
         ra: float = 0.1,
         rs: float = 2.0,
-        kappa_scale: float = 0.1,
+        b0: float = 1.0,
     ):
         """
-        The dual Pseudo-Isothermal mass profile (dPIE) without ellipticity, based on the
+        The dual Pseudo-Isothermal mass profile (dPIEP) without ellipticity, based on the
         formulation from Eliasdottir (2007): https://arxiv.org/abs/0710.5636.
 
         This profile describes a circularly symmetric (non-elliptical) projected mass
         distribution with two scale radii (`ra` and `rs`) and a normalization factor
-        `kappa_scale`. Although originally called the dPIE (Elliptical), this version
+        `kappa_scale`. Although originally called the dPIEP (Elliptical), this version
         lacks ellipticity, so the "E" may be a misnomer.
 
         The projected surface mass density is given by:
@@ -190,10 +193,13 @@ class dPIESph(dPIE):
         (See Eliasdottir 2007, Eq. A3.)
 
         In this implementation:
-        - `ra` and `rs` are scale radii in arcseconds.
-        - `kappa_scale` = Σ₀ / Σ_crit is the dimensionless normalization.
+        - `ra` is the core radius in unit of arcseconds.
+        - `b0` is the lens strength in unit of arcseconds, when ra->0 & rs->\\infty & q->1, b0 is the Einstein radius.
+          `b0` is related to the central velocity dispersion \\sigma_0: b_0 = 4\\pi * \\sigma_0^2 / c^2 * (D_{LS} / D_{S})
+          `b0` is not in the Intermediate-Axis-Convention for its r_{em}^2 = x^2 / (1 + \\epsilon)^2 + y^2 / (1 - \\epsilon)^2
 
         Credit: Jackson O'Donnell for implementing this profile in PyAutoLens.
+        Note: This dPIEPSph should be the same with dPIEMDSph for their same mathamatical formulations.
 
         Parameters
         ----------
@@ -203,8 +209,8 @@ class dPIESph(dPIE):
             The inner core scale radius in arcseconds.
         rs
             The outer truncation scale radius in arcseconds.
-        kappa_scale
-            The dimensionless normalization factor controlling the overall mass.
+        b0
+            The lens strength in arcseconds.
         """
 
         # Ensure rs > ra (things will probably break otherwise)
@@ -215,7 +221,7 @@ class dPIESph(dPIE):
 
         self.ra = ra
         self.rs = rs
-        self.kappa_scale = kappa_scale
+        self.b0 = b0
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
