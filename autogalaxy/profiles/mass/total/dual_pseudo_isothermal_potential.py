@@ -5,7 +5,7 @@ import autoarray as aa
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
-class dPIEP(MassProfile):
+class dPIEPotential(MassProfile):
 
     def __init__(
         self,
@@ -16,12 +16,12 @@ class dPIEP(MassProfile):
         b0: float = 1.0,
     ):
         """
-        The dual Pseudo Isothermal Elliptical Potential (dPIEP) with pseudo-ellipticity on potential, based on the
+        The dual Pseudo Isothermal Elliptical Potential (dPIEPotential) with pseudo-ellipticity on potential, based on the
         formulation from Eliasdottir (2007): https://arxiv.org/abs/0710.5636.
 
         This profile describes a circularly symmetric (non-elliptical) projected mass
         distribution with two scale radii (`ra` and `rs`) and a normalization factor
-        `kappa_scale`. Although originally called the dPIEP (Elliptical), this version
+        `kappa_scale`. Although originally called the dPIEPotential (Elliptical), this version
         lacks ellipticity, so the "E" may be a misnomer.
 
         The projected surface mass density is given by:
@@ -69,7 +69,7 @@ class dPIEP(MassProfile):
 
     def _deflection_angle(self, radii):
         """
-        For a circularly symmetric dPIEP profile, computes the magnitude of the deflection at each radius.
+        For a circularly symmetric dPIEPotential profile, computes the magnitude of the deflection at each radius.
         """
         a, s = self.ra, self.rs
         radii = jnp.maximum(radii, 1e-8)
@@ -166,7 +166,7 @@ class dPIEP(MassProfile):
         return jnp.zeros(shape=grid.shape[0])
 
 
-class dPIEPSph(dPIEP):
+class dPIEPotentialSph(dPIEPotential):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -175,12 +175,12 @@ class dPIEPSph(dPIEP):
         b0: float = 1.0,
     ):
         """
-        The dual Pseudo-Isothermal mass profile (dPIEP) without ellipticity, based on the
+        The dual Pseudo-Isothermal mass profile (dPIEPotential) without ellipticity, based on the
         formulation from Eliasdottir (2007): https://arxiv.org/abs/0710.5636.
 
         This profile describes a circularly symmetric (non-elliptical) projected mass
         distribution with two scale radii (`ra` and `rs`) and a normalization factor
-        `kappa_scale`. Although originally called the dPIEP (Elliptical), this version
+        `kappa_scale`. Although originally called the dPIEPotential (Elliptical), this version
         lacks ellipticity, so the "E" may be a misnomer.
 
         The projected surface mass density is given by:
@@ -199,7 +199,7 @@ class dPIEPSph(dPIEP):
           `b0` is not in the Intermediate-Axis-Convention for its r_{em}^2 = x^2 / (1 + \\epsilon)^2 + y^2 / (1 - \\epsilon)^2
 
         Credit: Jackson O'Donnell for implementing this profile in PyAutoLens.
-        Note: This dPIEPSph should be the same with dPIEMDSph for their same mathamatical formulations.
+        Note: This dPIEPotentialSph should be the same with dPIEMDSph for their same mathamatical formulations.
 
         Parameters
         ----------

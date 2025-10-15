@@ -5,7 +5,7 @@ import autoarray as aa
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 # Within this profile family, PIEMD, dPIEMD, and dPIEMDSph are directly ported from Lenstool's C code, and have been thoroughly annotated and adapted for PyAutoLens.
-# The dPIEP and dPIEPSph profiles are modified from the original `dPIEP` and `dPIEPSph`, which were implemented to PyAutoLens by Jackson O'Donnell.
+# The dPIEPotential and dPIEPotentialSph profiles are modified from the original `dPIEPotential` and `dPIEPotentialSph`, which were implemented to PyAutoLens by Jackson O'Donnell.
 
 
 def _ci05(x, y, eps, rcore):
@@ -347,8 +347,8 @@ class dPIEMD(MassProfile):
         \\kappa(r_{em}) = rs / (rs - ra) * (\\kappa_{PIEMD,ra} - \\kappa_{PIEMD,rs})
                         = b_0 / 2 * rs / (rs - ra) * ( \\frac{1}{\\sqrt{ ra^2 + r_{em}^2}} - \\frac{1}{\\sqrt{ rs^2 + r_{em}^2}} )
         where r_{em}^2 = x^2 / (1 + \\epsilon)^2 + y^2 / (1 - \\epsilon)^2.
-        Note in Eliasdottir (2007), E0 = 6\\pi * \\sigma_{dPIEP}^2 / c^2 * (D_{LS} / D_{S}). Eliasdottir's E0 is not the same as E0 in Kassiola & Kovner(1993) which is also b0.
-        There is \\frac{\\sigma_{dPIEP}^2}{\\sigma_0^2} = \\frac{2}{3} \frac{rs^2}{rs^2-ra^2},
+        Note in Eliasdottir (2007), E0 = 6\\pi * \\sigma_{dPIEPotential}^2 / c^2 * (D_{LS} / D_{S}). Eliasdottir's E0 is not the same as E0 in Kassiola & Kovner(1993) which is also b0.
+        There is \\frac{\\sigma_{dPIEPotential}^2}{\\sigma_0^2} = \\frac{2}{3} \frac{rs^2}{rs^2-ra^2},
         thus E0(Kassiola & Kovner(1993)) = b0 = E0(Eliasdottir (2007)) * (rs^2 - ra^2) / rs^2. So when s->\\infty and a->0, they are equivalent.
 
         In this implementation:
@@ -472,8 +472,8 @@ class dPIEMDSph(dPIEMD):
         \\kappa(r_{em}) = rs / (rs - ra) * (\\kappa_{PIEMD,ra} - \\kappa_{PIEMD,rs})
                         = b_0 / 2 * rs / (rs - ra) * ( \\frac{1}{\\sqrt{ ra^2 + r_{em}^2}} - \\frac{1}{\\sqrt{ rs^2 + r_{em}^2}} )
         where r_{em}^2 = x^2 / (1 + \\epsilon)^2 + y^2 / (1 - \\epsilon)^2.
-        Note in Eliasdottir (2007), E0 = 6\\pi * \\sigma_{dPIEP}^2 / c^2 * (D_{LS} / D_{S}). Eliasdottir's E0 is not the same as E0 in Kassiola & Kovner(1993) which is also b0.
-        There is \\frac{\\sigma_{dPIEP}^2}{\\sigma_0^2} = \\frac{2}{3} \frac{rs^2}{rs^2-ra^2},
+        Note in Eliasdottir (2007), E0 = 6\\pi * \\sigma_{dPIEPotential}^2 / c^2 * (D_{LS} / D_{S}). Eliasdottir's E0 is not the same as E0 in Kassiola & Kovner(1993) which is also b0.
+        There is \\frac{\\sigma_{dPIEPotential}^2}{\\sigma_0^2} = \\frac{2}{3} \frac{rs^2}{rs^2-ra^2},
         thus E0(Kassiola & Kovner(1993)) = b0 = E0(Eliasdottir (2007)) * (rs^2 - ra^2) / rs^2. So when s->\\infty and a->0, they are equivalent.
 
         In this implementation:

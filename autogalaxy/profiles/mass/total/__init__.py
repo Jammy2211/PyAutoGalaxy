@@ -1,4 +1,4 @@
-from .dual_pseudo_isothermal_potential import dPIEP, dPIEPSph
+from .dual_pseudo_isothermal_potential import dPIEPotential, dPIEPotentialSph
 from .dual_pseudo_isothermal_mass import PIEMD, dPIEMD, dPIEMDSph
 from .isothermal import Isothermal, IsothermalSph
 from .isothermal_core import IsothermalCore, IsothermalCoreSph
