@@ -27,13 +27,6 @@ def test__deflections_yx_2d_from():
     assert deflections[0, 0] == pytest.approx(0.186341843, 1e-3)
     assert deflections[0, 1] == pytest.approx(0.13176363087, 1e-3)
 
-    mp = ag.mp.dPIEPotential(centre=(0, 0), ell_comps=(0.0, 0.333333), b0=4.0, ra=2.0, rs=3.0)
-
-    deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.1625, 0.1625]]))
-
-    assert deflections[0, 0] == pytest.approx(0.186341843, 1e-3)
-    assert deflections[0, 1] == pytest.approx(0.13176363087, 1e-3)
-
     elliptical = ag.mp.dPIEPotential(
         centre=(1.1, 1.1), ell_comps=(0.0, 0.0), b0=12.0, ra=2.0, rs=3.0
     )
