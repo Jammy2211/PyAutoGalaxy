@@ -1,4 +1,5 @@
 from typing import Tuple
+import jax.numpy as jnp
 import numpy as np
 
 import autoarray as aa
@@ -25,9 +26,7 @@ def _ci05(x, y, eps, rcore):
     complex
         The value of the I'* term.
     """
-    if eps < 1e-10:
-        eps = 1e-10
-    sqe = np.sqrt(eps)
+    sqe = jnp.sqrt(eps)
     axis_ratio = (1.0 - eps) / (1.0 + eps)
     cxro = (1.0 + eps) * (1.0 + eps)
     cyro = (1.0 - eps) * (1.0 - eps)
@@ -35,24 +34,24 @@ def _ci05(x, y, eps, rcore):
     ##### I'* = zres = zci * ln(zis) = zci * ln(znum / zden), see Eq. 4.1.2 #####
 
     # Define intermediate complex variables
-    zci = np.complex128(complex(0.0, -0.5 * (1.0 - eps * eps) / sqe))
-    znum = np.complex128(
+    zci = jnp.array(0.0 + 1j * (-0.5 * (1.0 - eps * eps) / sqe), dtype=jnp.complex128)
+    znum = jnp.complex128(
         axis_ratio * x
-        + 1j * (2.0 * sqe * np.sqrt(rcore * rcore + rem2) - y / axis_ratio)
+        + 1j * (2.0 * sqe * jnp.sqrt(rcore * rcore + rem2) - y / axis_ratio)
     )
-    zden = np.complex128(x + 1j * (2.0 * rcore * sqe - y))
+    zden = jnp.complex128(x + 1j * (2.0 * rcore * sqe - y))
 
     # zis = znum / zden = (a+bi)/(c+di) = [(ac+bd)+(bc-ad i)] / (c^2+d^2)
     norm = zden.real * zden.real + zden.imag * zden.imag  # |zden|^2
     zis_re = (znum.real * zden.real + znum.imag * zden.imag) / norm
     zis_im = (znum.imag * zden.real - znum.real * zden.imag) / norm
-    zis = np.complex128(zis_re + 1j * zis_im)
+    zis = jnp.complex128(zis_re + 1j * zis_im)
 
     # ln(zis) = ln(|zis|) + i*Arg(zis)
-    zis_mag = np.abs(zis)
-    zis_re = np.log(zis_mag)
-    zis_im = np.angle(zis)
-    zis = np.complex128(zis_re + 1j * zis_im)
+    zis_mag = jnp.abs(zis)
+    zis_re = jnp.log(zis_mag)
+    zis_im = jnp.angle(zis)
+    zis = jnp.complex128(zis_re + 1j * zis_im)
 
     # I'* = zres = zci * ln(zis)
     zres = zci * zis
@@ -82,9 +81,7 @@ def _ci05f(x, y, eps, rcore, rcut):
     complex
         The value of the I'* term.
     """
-    if eps < 1e-10:
-        eps = 1e-10
-    sqe = np.sqrt(eps)
+    sqe = jnp.sqrt(eps)
     axis_ratio = (1.0 - eps) / (1.0 + eps)
     cxro = (1.0 + eps) * (1.0 + eps)
     cyro = (1.0 - eps) * (1.0 - eps)
@@ -93,16 +90,17 @@ def _ci05f(x, y, eps, rcore, rcut):
     ##### I'* = zres_rc - zres_rcut = zci * ln(zis_rc / zis_rcut) = zci * ln((znum_rc / zden_rc) / (znum_rcut / zden_rcut)) #####
 
     # Define intermediate complex variables
-    zci = np.complex128(complex(0.0, -0.5 * (1.0 - eps * eps) / sqe))
-    znum_rc = np.complex128(
+    zci = jnp.array(0.0 + 1j * (-0.5 * (1.0 - eps * eps) / sqe), dtype=jnp.complex128)
+    znum_rc = jnp.complex128(
         axis_ratio * x
-        + 1j * (2.0 * sqe * np.sqrt(rcore * rcore + rem2) - y / axis_ratio)
+        + 1j * (2.0 * sqe * jnp.sqrt(rcore * rcore + rem2) - y / axis_ratio)
     )  # a + bi
-    zden_rc = np.complex128(x + 1j * (2.0 * rcore * sqe - y))  # c + di
-    znum_rcut = np.complex128(
-        axis_ratio * x + 1j * (2.0 * sqe * np.sqrt(rcut * rcut + rem2) - y / axis_ratio)
+    zden_rc = jnp.complex128(x + 1j * (2.0 * rcore * sqe - y))  # c + di
+    znum_rcut = jnp.complex128(
+        axis_ratio * x
+        + 1j * (2.0 * sqe * jnp.sqrt(rcut * rcut + rem2) - y / axis_ratio)
     )  # a + ei
-    zden_rcut = np.complex128(x + 1j * (2.0 * rcut * sqe - y))  # c + fi
+    zden_rcut = jnp.complex128(x + 1j * (2.0 * rcut * sqe - y))  # c + fi
 
     # zis_rc = znum_rc / zden_rc = (a+bi)/(c+di)
     # zis_rcut = znum_rcut / zden_rcut = (a+ei)/(c+fi)
@@ -119,13 +117,13 @@ def _ci05f(x, y, eps, rcore, rcut):
     norm = cc * cc + dd * dd
     aaa = (aa * cc + bb * dd) / norm
     bbb = (bb * cc - aa * dd) / norm
-    zis_tot = np.complex128(aaa + 1j * bbb)
+    zis_tot = jnp.complex128(aaa + 1j * bbb)
 
     # ln(zis_tot) = ln(|zis_tot|) + i*Arg(zis_tot)
-    zis_tot_mag = np.abs(zis_tot)
-    zr_re = np.log(zis_tot_mag)
-    zr_im = np.angle(zis_tot)
-    zr = np.complex128(zr_re + 1j * zr_im)
+    zis_tot_mag = jnp.abs(zis_tot)
+    zr_re = jnp.log(zis_tot_mag)
+    zr_im = jnp.angle(zis_tot)
+    zr = jnp.complex128(zr_re + 1j * zr_im)
 
     # I'* = zci * ln(zis_tot)
     zres = zci * zr
@@ -150,20 +148,18 @@ def _mdci05(x, y, eps, rcore, b0):
     complex
         The value of the I'* term.
     """
-    if eps < 1e-10:
-        eps = 1e-10
 
     # Calculate intermediate values
     # I*(x,y) = b0 * ci * (-i) * (ln{ q * x + (2.0 * sqe * wrem - y * 1/q )*i} - ln{ x + (2.0 * rcore * sqe - y)*i})
     #         = b0 * ci * (-i) * (ln{ q * x + num1*i} - ln{ x + num2*i})
     #         = b0 * ci * (-i) * (ln{u(x,y)} - ln{v(x,y)})
-    sqe = np.sqrt(eps)
+    sqe = jnp.sqrt(eps)
     axis_ratio = (1.0 - eps) / (1.0 + eps)
     axis_ratio_inv = 1.0 / axis_ratio
     cxro = (1.0 + eps) * (1.0 + eps)
     cyro = (1.0 - eps) * (1.0 - eps)
     ci = 0.5 * (1.0 - eps * eps) / sqe
-    wrem = np.sqrt(rcore * rcore + x * x / cxro + y * y / cyro)  # √(w(x,y))
+    wrem = jnp.sqrt(rcore * rcore + x * x / cxro + y * y / cyro)  # √(w(x,y))
     num1 = 2.0 * sqe * wrem - y * axis_ratio_inv
     den1 = axis_ratio * axis_ratio * x * x + num1 * num1  # |q * x + num1*i|^2
     num2 = 2.0 * rcore * sqe - y
@@ -264,9 +260,9 @@ class PIEMass(MassProfile):
         self.b0 = b0
 
     def _ellip(self):
-        ellip = np.sqrt(self.ell_comps[0] ** 2 + self.ell_comps[1] ** 2)
+        ellip = jnp.sqrt(self.ell_comps[0] ** 2 + self.ell_comps[1] ** 2)
         MAX_ELLIP = 0.99999
-        return min(ellip, MAX_ELLIP)
+        return jnp.min(jnp.array([ellip, MAX_ELLIP]))
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
@@ -289,7 +285,7 @@ class PIEMass(MassProfile):
 
         # And here we convert back to the real axes
         return self.rotated_grid_from_reference_frame_from(
-            grid=np.multiply(factor, np.vstack((deflection_y, deflection_x)).T),
+            grid=jnp.multiply(factor, jnp.vstack((deflection_y, deflection_x)).T),
             **kwargs,
         )
 
@@ -303,7 +299,7 @@ class PIEMass(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        grid = np.asarray(grid)
+        grid = jnp.asarray(grid)
         if grid.ndim != 2 or grid.shape[1] != 2:
             raise ValueError("Grid must be a 2D array with shape (n, 2)")
         ellip = self._ellip()
@@ -371,17 +367,14 @@ class dPIEMass(MassProfile):
         """
         super().__init__(centre=centre, ell_comps=ell_comps)
 
-        if ra > rs:
-            ra, rs = rs, ra
-
         self.ra = ra
         self.rs = rs
         self.b0 = b0
 
     def _ellip(self):
-        ellip = np.sqrt(self.ell_comps[0] ** 2 + self.ell_comps[1] ** 2)
+        ellip = jnp.sqrt(self.ell_comps[0] ** 2 + self.ell_comps[1] ** 2)
         MAX_ELLIP = 0.99999
-        return min(ellip, MAX_ELLIP)
+        return jnp.min(jnp.array([ellip, MAX_ELLIP]))
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
@@ -410,7 +403,7 @@ class dPIEMass(MassProfile):
 
         # And here we convert back to the real axes
         return self.rotated_grid_from_reference_frame_from(
-            grid=np.multiply(factor, np.vstack((deflection_y, deflection_x)).T),
+            grid=jnp.multiply(factor, jnp.vstack((deflection_y, deflection_x)).T),
             **kwargs,
         )
 
@@ -425,7 +418,7 @@ class dPIEMass(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        grid = np.asarray(grid)
+        grid = jnp.asarray(grid)
         if grid.ndim != 2 or grid.shape[1] != 2:
             raise ValueError("Grid must be a 2D array with shape (n, 2)")
         ellip = self._ellip()
@@ -534,7 +527,7 @@ class dPIEMassSph(dPIEMass):
         # radii = self.radial_grid_from(grid=grid, **kwargs)
         # R2 = radii * radii
         R2 = grid.array[:, 1] * grid.array[:, 1] + grid.array[:, 0] * grid.array[:, 0]
-        factor = np.sqrt(R2 + a * a) - a - np.sqrt(R2 + s * s) + s
+        factor = jnp.sqrt(R2 + a * a) - a - jnp.sqrt(R2 + s * s) + s
         factor *= self.b0 * s / (s - a) / R2
 
         # This is in axes aligned to the major/minor axis
@@ -543,7 +536,7 @@ class dPIEMassSph(dPIEMass):
 
         # And here we convert back to the real axes
         return self.rotated_grid_from_reference_frame_from(
-            grid=np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T), **kwargs
+            grid=jnp.multiply(1.0, jnp.vstack((deflection_y, deflection_x)).T), **kwargs
         )
 
     @aa.grid_dec.transform
@@ -561,7 +554,7 @@ class dPIEMassSph(dPIEMass):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        grid = np.asarray(grid)
+        grid = jnp.asarray(grid)
         if grid.ndim != 2 or grid.shape[1] != 2:
             raise ValueError("Grid must be a 2D array with shape (n, 2)")
 
@@ -587,9 +580,9 @@ class dPIEMassSph(dPIEMass):
         #                     = {( R^2 / √(R^2 + a^2)) - ( R^2 / √(R^2 + s^2)) - z} / R^2
         #                     = p
         R2 = grid.array[:, 1] * grid.array[:, 1] + grid.array[:, 0] * grid.array[:, 0]
-        z = np.sqrt(R2 + a * a) - a - np.sqrt(R2 + s * s) + s
-        p = (1.0 - a / np.sqrt(a * a + R2)) * a / R2 - (
-            1.0 - s / np.sqrt(s * s + R2)
+        z = jnp.sqrt(R2 + a * a) - a - jnp.sqrt(R2 + s * s) + s
+        p = (1.0 - a / jnp.sqrt(a * a + R2)) * a / R2 - (
+            1.0 - s / jnp.sqrt(s * s + R2)
         ) * s / R2
         X = grid.array[:, 1] * grid.array[:, 1] / R2  # x^2 / R^2
         Y = grid.array[:, 0] * grid.array[:, 0] / R2  # y^2 / R^2
