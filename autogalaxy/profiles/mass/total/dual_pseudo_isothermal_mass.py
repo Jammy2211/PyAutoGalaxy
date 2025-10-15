@@ -494,8 +494,7 @@ class dPIEMassSph(dPIEMass):
             The lens strength in arcseconds.
         """
         super().__init__(centre=centre, ell_comps=(0.0, 0.0))
-        if ra > rs:
-            ra, rs = rs, ra
+
         self.ra = ra
         self.rs = rs
         self.b0 = b0
