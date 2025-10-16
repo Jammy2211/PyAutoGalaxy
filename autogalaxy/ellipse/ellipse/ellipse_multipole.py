@@ -60,9 +60,9 @@ class EllipseMultipole:
         """
 
         angle = ellipse.angle-multipole_k_m_and_phi_m_from(self.multipole_comps, self.m)[1]
-        if angle < -45:
+        if angle < -90:
             angle += 180
-        elif angle > 135:
+        elif angle > 90:
             angle -= 180
 
         return angle
@@ -196,3 +196,4 @@ class EllipseMultipoleScaled(EllipseMultipole):
         y = points[:, 0] + radial * np.sin(theta)
 
         return np.stack((y, x), axis=-1)
+
