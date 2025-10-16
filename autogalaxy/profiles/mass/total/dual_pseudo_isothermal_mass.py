@@ -335,8 +335,9 @@ class dPIEMass(MassProfile):
         see Eliasdottir (2007): https://arxiv.org/abs/0710.5636
         This profile is ported from Lenstool's C code, which has the same formulation.
 
-        This proflie describes an elliptic isothermal mass distribution with a finite core, \\rho \~ r^{-2} while in the transition region (ra<=R<=rs),
-        and \\rho \~ r^{-4} in the outer parts:
+        This proflie describes an elliptic isothermal mass distribution with a finite core, \\rho  r^{-2} while in
+        the transition region (ra<=R<=rs),
+        and \\rho r^{-4} in the outer parts:
         \\rho \\propto [(ra^2 + R^2) (rs^2 + R^2)]^{-1}
 
         The convergence is given by two PIEMass with core radius ra and rs:
@@ -407,6 +408,68 @@ class dPIEMass(MassProfile):
             **kwargs,
         )
 
+    def _deflection_angle(self, radii):
+        """
+        For a circularly symmetric dPIEPotential profile, computes the magnitude of the deflection at each radius.
+        """
+        a, s = self.ra, self.rs
+        radii = jnp.maximum(radii, 1e-8)
+        f = radii / (a + jnp.sqrt(a**2 + radii**2)) - radii / (
+            s + jnp.sqrt(s**2 + radii**2)
+        )
+
+        # c.f. Eliasdottir '07 eq. A23
+        # magnitude of deflection
+        # alpha = self.E0 * (s + a) / s * f
+        alpha = self.b0 * s / (s - a) * f
+        return alpha
+
+    def _convergence(self, radii):
+
+        radsq = radii * radii
+        a, s = self.ra, self.rs
+
+        return (
+            self.b0
+            / 2
+            * s
+            / (s - a)
+            * (1 / jnp.sqrt(a**2 + radsq) - 1 / jnp.sqrt(s**2 + radsq))
+        )
+
+    @aa.grid_dec.to_vector_yx
+    @aa.grid_dec.transform
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+        """
+        Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
+
+        The `grid_2d_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See
+        *aa.grid_2d_to_structure* for a description of the output.
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+        """
+        ellip = self._ellip()
+        grid_radii = jnp.sqrt(
+            grid.array[:, 1] ** 2 * (1 - ellip) + grid.array[:, 0] ** 2 * (1 + ellip)
+        )
+
+        # Compute the convergence and deflection of a *circular* profile
+        kappa_circ = self._convergence(grid_radii)
+        alpha_circ = self._deflection_angle(grid_radii)
+
+        asymm_term = (
+            ellip * (1 - ellip) * grid.array[:, 1] ** 2
+            - ellip * (1 + ellip) * grid.array[:, 0] ** 2
+        ) / grid_radii**2
+
+        # convergence = 1/2 \nabla \alpha = 1/2 \nabla^2 potential
+        # The "asymm_term" is asymmetric on x and y, so averages out to
+        # zero over all space
+        return kappa_circ * (1 - asymm_term) + (alpha_circ / grid_radii) * asymm_term
+
     @aa.grid_dec.transform
     def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", **kwargs):
         """
@@ -449,6 +512,9 @@ class dPIEMass(MassProfile):
 
         return aa.Array2D(values=1.0 / det_A, mask=grid.mask)
 
+    @aa.grid_dec.to_array
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+        return jnp.zeros(shape=grid.shape[0])
 
 class dPIEMassSph(dPIEMass):
     def __init__(
@@ -463,8 +529,8 @@ class dPIEMassSph(dPIEMass):
         see Eliasdottir (2007): https://arxiv.org/abs/0710.5636
         This profile is ported from Lenstool's C code, which has the same formulation.
 
-        This proflie describes an spherical isothermal mass distribution with a finite core, \\rho \~ r^{-2} while in the transition region (ra<=R<=rs),
-        and \\rho \~ r^{-4} in the outer parts:
+        This proflie describes an spherical isothermal mass distribution with a finite core, \\rho r^{-2} while in the transition region (ra<=R<=rs),
+        and \\rho r^{-4} in the outer parts:
         \\rho \\propto [(ra^2 + R^2) (rs^2 + R^2)]^{-1}
 
         The convergence is given by two PIEMass with core radius ra and rs:
