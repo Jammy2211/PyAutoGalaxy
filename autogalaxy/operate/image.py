@@ -188,7 +188,7 @@ class OperateImage:
 
         from autogalaxy.profiles.light.abstract import LightProfile
 
-        if self.has(cls=LightProfile):
+        if self.has(cls=LightProfile) or isinstance(self, LightProfile):
 
             image_2d = self.image_2d_from(grid=grid)
             return transformer.visibilities_from(image=image_2d)
