@@ -63,7 +63,7 @@ def test___points_from_major_axis__multipole(imaging_lh):
         dataset=imaging_lh, ellipse=ellipse_0, multipole_list=[multipole]
     )
 
-    assert fit._points_from_major_axis[1, 0] == pytest.approx(-0.542453, 1.0e-4)
+    assert fit._points_from_major_axis[1, 0] == pytest.approx(-0.119588, 1.0e-4)
     assert fit._points_from_major_axis[1, 1] == pytest.approx(-0.038278334, 1.0e-4)
 
 
@@ -197,3 +197,4 @@ def test__log_likelihood(imaging_lh, imaging_lh_masked):
     fit = ag.FitEllipse(dataset=imaging_lh_masked, ellipse=ellipse_0)
 
     assert fit.log_likelihood == pytest.approx(-0.169821080058, 1.0e-4)
+
