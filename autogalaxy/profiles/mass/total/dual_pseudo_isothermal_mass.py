@@ -516,6 +516,7 @@ class dPIEMass(MassProfile):
     def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         return jnp.zeros(shape=grid.shape[0])
 
+
 class dPIEMassSph(dPIEMass):
     def __init__(
         self,

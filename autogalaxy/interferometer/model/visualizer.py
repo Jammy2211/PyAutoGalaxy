@@ -82,7 +82,8 @@ class VisualizerInterferometer(af.Visualizer):
 
         try:
             plotter_interface.fit_interferometer(
-                fit=fit, quick_update=quick_update,
+                fit=fit,
+                quick_update=quick_update,
             )
         except exc.InversionException:
             pass

@@ -136,11 +136,7 @@ class PlotterInterfaceImaging(PlotterInterface):
 
             hdu_list.writeto(self.image_path / "dataset.fits", overwrite=True)
 
-    def fit_imaging(
-        self,
-        fit: FitImaging,
-        quick_update: bool = False
-    ):
+    def fit_imaging(self, fit: FitImaging, quick_update: bool = False):
         """
         Visualizes a `FitImaging` object, which fits an imaging dataset.
 

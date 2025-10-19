@@ -131,7 +131,7 @@ class PlotterInterfaceInterferometer(PlotterInterface):
     def fit_interferometer(
         self,
         fit: FitInterferometer,
-        quick_update : bool = False,
+        quick_update: bool = False,
     ):
         """
         Visualizes a `FitInterferometer` object, which fits an interferometer dataset.

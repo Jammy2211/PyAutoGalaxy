@@ -90,7 +90,7 @@ class PlotterInterface:
             output=aplt.Output(path=self.image_path, format=self.fmt),
         )
 
-    def mat_plot_2d_from(self, quick_update : bool = False) -> MatPlot2D:
+    def mat_plot_2d_from(self, quick_update: bool = False) -> MatPlot2D:
         """
         Returns a 2D matplotlib plotting object whose `Output` class uses the `image_path`, such that it outputs
         images to the `image` folder of the non-linear search.

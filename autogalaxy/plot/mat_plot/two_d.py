@@ -50,7 +50,7 @@ class MatPlot2D(aplt.MatPlot2D):
         tangential_caustics_plot: Optional[w.TangentialCausticsPlot] = None,
         radial_caustics_plot: Optional[w.RadialCausticsPlot] = None,
         use_log10: bool = False,
-        quick_update : bool = False
+        quick_update: bool = False,
     ):
         """
         Visualizes data structures (e.g an `Array2D`, `Grid2D`, `VectorField`, etc.) using Matplotlib.
