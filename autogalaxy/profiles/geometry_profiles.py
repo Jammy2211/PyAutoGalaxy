@@ -360,7 +360,7 @@ class EllProfile(SphProfile):
         if self.__class__.__name__.endswith("Sph"):
             return super().transformed_to_reference_frame_grid_from(grid=grid)
         return aa.util.geometry.transform_grid_2d_to_reference_frame(
-            grid_2d=grid, centre=self.centre, angle=self.angle
+            grid_2d=grid.array, centre=self.centre, angle=self.angle
         )
 
     @aa.grid_dec.to_grid
