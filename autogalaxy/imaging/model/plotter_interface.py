@@ -139,6 +139,7 @@ class PlotterInterfaceImaging(PlotterInterface):
     def fit_imaging(
         self,
         fit: FitImaging,
+        quick_update: bool = False
     ):
         """
         Visualizes a `FitImaging` object, which fits an imaging dataset.
@@ -169,8 +170,11 @@ class PlotterInterfaceImaging(PlotterInterface):
             mat_plot_2d=mat_plot_2d,
         )
 
-        if should_plot("subplot_fit"):
+        if should_plot("subplot_fit") or quick_update:
             fit_plotter.subplot_fit()
+
+        if quick_update:
+            return
 
         if should_plot("subplot_of_galaxies"):
             fit_plotter.subplot_of_galaxies()

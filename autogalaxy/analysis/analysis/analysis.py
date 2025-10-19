@@ -127,3 +127,33 @@ class Analysis(af.Analysis):
             search_internal=search_internal,
             analysis=self,
         )
+
+    def perform_quick_update(self, paths, instance):
+        """
+        Perform a quick visualization update during non-linear search fitting.
+
+        This method is called intermittently while the sampler is running to produce
+        the `subplot+fit` plots of the current maximum-likelihood model fit. The intent
+        is to provide fast feedback (without waiting for the full run to complete) so that
+        users can monitor whether the fit is behaving sensibly.
+
+        The plot appears both in a matplotlib window (if running locally) and is also saved to the
+        `output` folder of the output path.
+
+        Parameters
+        ----------
+        paths : af.DirectoryPaths
+            Object describing the output folder structure where visualization files
+            should be written.
+        instance : model instance
+            The current maximum-likelihood instance of the model, used to generate
+            the visualization plots.
+        """
+
+        self.Visualizer().visualize(
+            analysis=self,
+            paths=paths,
+            instance=instance,
+            during_analysis=True,
+            quick_update=True,
+        )

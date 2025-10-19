@@ -43,6 +43,7 @@ class VisualizerInterferometer(af.Visualizer):
         paths: af.DirectoryPaths,
         instance: af.ModelInstance,
         during_analysis: bool,
+        quick_update: bool = False,
     ):
         """
         Outputs images of the maximum log likelihood model inferred by the model-fit. This function is called
@@ -75,28 +76,30 @@ class VisualizerInterferometer(af.Visualizer):
         """
         fit = analysis.fit_from(instance=instance)
 
-        PlotterInterface = PlotterInterfaceInterferometer(
+        plotter_interface = PlotterInterfaceInterferometer(
             image_path=paths.image_path, title_prefix=analysis.title_prefix
-        )
-        PlotterInterface.interferometer(dataset=analysis.interferometer)
-
-        galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
-
-        PlotterInterface.galaxies(
-            galaxies=galaxies,
-            grid=fit.grids.lp,
         )
 
         try:
-            PlotterInterface.fit_interferometer(
-                fit=fit,
+            plotter_interface.fit_interferometer(
+                fit=fit, quick_update=quick_update,
             )
         except exc.InversionException:
             pass
 
+        if quick_update:
+            return
+
+        galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
+
+        plotter_interface.galaxies(
+            galaxies=galaxies,
+            grid=fit.grids.lp,
+        )
+
         if fit.inversion is not None:
             try:
-                PlotterInterface.inversion(
+                plotter_interface.inversion(
                     inversion=fit.inversion,
                 )
             except IndexError:

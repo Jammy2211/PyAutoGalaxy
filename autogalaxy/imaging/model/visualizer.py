@@ -46,6 +46,7 @@ class VisualizerImaging(af.Visualizer):
         paths: af.DirectoryPaths,
         instance: af.ModelInstance,
         during_analysis: bool,
+        quick_update: bool = False,
     ):
         """
         Output images of the maximum log likelihood model inferred by the model-fit. This function is called throughout
@@ -78,12 +79,15 @@ class VisualizerImaging(af.Visualizer):
         plotter = PlotterInterfaceImaging(
             image_path=paths.image_path, title_prefix=analysis.title_prefix
         )
-        plotter.imaging(dataset=analysis.dataset)
+        # Quick Update only, skips everything after
 
         try:
-            plotter.fit_imaging(fit=fit)
+            plotter.fit_imaging(fit=fit, quick_update=quick_update)
         except exc.InversionException:
             pass
+
+        if quick_update:
+            return
 
         galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
 
