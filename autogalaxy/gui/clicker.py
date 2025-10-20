@@ -1,6 +1,8 @@
 import numpy as np
+from matplotlib import pyplot as plt
 
 import autoarray as aa
+import autoarray.plot as aplt
 
 from autogalaxy import exc
 
@@ -18,6 +20,26 @@ class Clicker:
 
         self.click_list = []
         self.in_pixels = in_pixels
+
+    def start(self, data, pixel_scales):
+
+        n_y, n_x = data.shape_native
+        hw = int(n_x / 2) * pixel_scales
+        ext = [-hw, hw, -hw, hw]
+        fig = plt.figure(figsize=(14, 14))
+        cmap = aplt.Cmap(cmap="jet", norm="log", vmin=1.0e-3, vmax=np.max(data) / 3.0)
+        norm = cmap.norm_from(array=data, use_log10=True)
+        plt.imshow(data.native, cmap="jet", norm=norm, extent=ext)
+        if not data.mask.is_all_false:
+            grid = data.mask.derive_grid.edge
+            plt.scatter(y=grid[:, 0], x=grid[:, 1], c="k", marker="x", s=10)
+        plt.colorbar()
+        cid = fig.canvas.mpl_connect("button_press_event", self.onclick)
+        plt.show()
+        fig.canvas.mpl_disconnect(cid)
+        plt.close(fig)
+
+        return aa.Grid2DIrregular(values=self.click_list)
 
     def onclick(self, event):
         if event.dblclick:

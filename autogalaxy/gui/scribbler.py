@@ -1,5 +1,7 @@
 from collections import OrderedDict
 import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
 from typing import Tuple
 
 
@@ -8,11 +10,11 @@ class Scribbler:
         self,
         image,
         segment_names=None,
-        title="Draw mask",
         cmap=None,
         brush_width=0.05,
         backend="TkAgg",
         mask_overlay=None,
+        figsize=(15, 15),
         rgb_image=None,
         extent: Tuple[float, float, float, float] = None,
     ):
@@ -56,14 +58,18 @@ class Scribbler:
 
             extent = (x0_pix, x1_pix, y0_pix, y1_pix)
 
-        import matplotlib
-        import matplotlib.pyplot as plt
-
         matplotlib.use(backend)
         self.im = image
 
         # create initial plot
-        self.figure = plt.figure()
+        self.figure = plt.figure(figsize=figsize)
+        mng = plt.get_current_fig_manager()
+        mng.window.wm_geometry("+50+50")  # For TkAgg backend
+        if rgb_image is not None:
+            self.ax = self.figure.add_subplot(121)
+            plt.axis(extent)
+            plt.axis("off")
+            plt.imshow(rgb_image)
         self.ax = self.figure.add_subplot(111)
 
         if cmap is None:
@@ -77,10 +83,8 @@ class Scribbler:
             grid = mask_overlay.geometry.grid_pixel_centres_2d_from(grid_scaled_2d=grid)
             plt.scatter(y=grid[:, 0], x=grid[:, 1], c="k", marker="x", s=10)
 
-        plt.axis([0, image.shape[1], image.shape[0], 0])
+        plt.axis(extent)
         plt.axis("off")
-        # if title:
-        #     self.figure.canvas.set_window_title(title)
 
         # disable default keybindings
         manager, canvas = self.figure.canvas.manager, self.figure.canvas
@@ -93,9 +97,9 @@ class Scribbler:
         self.figure.canvas.mpl_connect("button_release_event", self.on_mouse_up)
 
         # brush
-        self.brush_radius = int(image.shape[0] * brush_width)
+        self.brush_radius = int(image.shape_native[0] * brush_width)
         self.min_radius = 4
-        self.radius_increment = int(image.shape[0] * 0.01)
+        self.radius_increment = int(image.shape_native[0] * 0.01)
         self.brush_color = "b"
         self.brush = None
 
