@@ -65,4 +65,5 @@ Adapt
 .. autosummary::
    :toctree: generated/
 
-   SetupAdapt
+   AdaptImages
+   AdaptImageMaker

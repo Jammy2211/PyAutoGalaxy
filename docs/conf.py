@@ -43,11 +43,11 @@ extensions = [
     "sphinx.ext.intersphinx",
     "sphinx.ext.mathjax",
     "sphinx.ext.todo",
-    "sphinx.ext.napoleon",
     "sphinx.ext.viewcode",
-    "sphinx_autodoc_typehints",  # Automatically document param types (less noise in class signature)
+    "sphinx.ext.napoleon",
     "numpydoc",
-    # External stuff
+    "sphinx_autodoc_typehints",
+    # external
     "myst_parser",
     "sphinx_copybutton",
     "sphinx_design",
@@ -82,7 +82,11 @@ myst_heading_anchors = 3
 autosummary_generate = True
 autosummary_imported_members = True
 autodoc_member_order = "bysource"
-autodoc_default_flags = ["members"]
+autodoc_default_options = {
+    "members": True,
+    "undoc-members": True,
+    "show-inheritance": True,
+}
 autodoc_class_signature = "separated"
 autoclass_content = "init"
 
@@ -133,3 +137,7 @@ language = "en"
 from sphinx.builders.html import StandaloneHTMLBuilder
 
 StandaloneHTMLBuilder.supported_image_types = ["image/gif", "image/png", "image/jpeg"]
+
+typehints_fully_qualified = False
+always_document_param_types = False
+typehints_document_rtype = False

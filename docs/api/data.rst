@@ -67,7 +67,7 @@ applied to datasets to apply over sampling to their fit.
    :template: custom-class-template.rst
    :recursive:
 
-   OverSampling
+   OverSampler
 
 
 1D Data Structures
