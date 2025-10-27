@@ -131,6 +131,7 @@ class PlotterInterfaceInterferometer(PlotterInterface):
     def fit_interferometer(
         self,
         fit: FitInterferometer,
+        quick_update: bool = False,
     ):
         """
         Visualizes a `FitInterferometer` object, which fits an interferometer dataset.
@@ -163,11 +164,14 @@ class PlotterInterfaceInterferometer(PlotterInterface):
             mat_plot_2d=mat_plot_2d,
         )
 
-        if should_plot("subplot_fit"):
+        if should_plot("subplot_fit") or quick_update:
             fit_plotter.subplot_fit()
 
-        if should_plot("subplot_fit_dirty_images"):
+        if should_plot("subplot_fit_dirty_images") or quick_update:
             fit_plotter.subplot_fit_dirty_images()
+
+        if quick_update:
+            return
 
         if should_plot("subplot_fit_real_space"):
             fit_plotter.subplot_fit_real_space()

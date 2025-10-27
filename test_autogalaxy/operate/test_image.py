@@ -166,7 +166,7 @@ def test__visibilities_from_grid_and_transformer(grid_2d_7x7, transformer_7x7_7)
     image_2d = lp.image_2d_from(grid=grid_2d_7x7)
     visibilities = transformer_7x7_7.visibilities_from(image=image_2d)
 
-    assert visibilities == pytest.approx(lp_visibilities.array, 1.0e-4)
+    assert visibilities.array == pytest.approx(lp_visibilities.array, 1.0e-4)
 
 
 def test__blurred_image_2d_list_from(
