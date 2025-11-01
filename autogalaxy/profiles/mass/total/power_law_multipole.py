@@ -7,6 +7,7 @@ import autoarray as aa
 from autogalaxy import convert
 
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
+from autogalaxy.profiles.mass.total import PowerLaw
 
 
 def radial_and_angle_grid_from(
@@ -128,6 +129,36 @@ class PowerLawMultipole(MassProfile):
         )
         self.angle_m *= units.deg.to(units.rad)
 
+    def get_shape_angle(
+            self,
+            base_profile: PowerLaw,
+    ) -> float:
+        """
+        The shape angle is the offset between the angle of the ellipse and the angle of the multipole,
+        this defines the shape that the multipole takes.
+
+        In the case of the m=4 multipole, angles of 0 indicate pure diskiness, angles +- 45
+        indicate pure boxiness.
+
+        Parameters
+        ----------
+        base_profile
+            The base power-law mass profile that is perturbed by the multipole.
+
+        Returns
+        -------
+        The angle between the ellipse and the multipole, in degrees, between +- 180/m.
+        """
+
+        angle = convert.angle_from(base_profile.ell_comps) - convert.multipole_k_m_and_phi_m_from(self.multipole_comps, self.m)[1]
+        if angle < -180/self.m:
+            angle += 360/self.m
+        elif angle > 180/self.m:
+            angle -= 360/self.m
+
+        return angle
+
+
     def jacobian(
         self, a_r: np.ndarray, a_angle: np.ndarray, polar_angle_grid: np.ndarray
     ) -> Tuple[np.ndarray, Tuple]:
@@ -226,3 +257,5 @@ class PowerLawMultipole(MassProfile):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
         return jnp.zeros(shape=grid.shape[0])
+
+
