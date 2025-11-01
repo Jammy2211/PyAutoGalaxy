@@ -137,7 +137,7 @@ class PowerLawMultipole(MassProfile):
         The shape angle is the offset between the angle of the ellipse and the angle of the multipole,
         this defines the shape that the multipole takes.
 
-        In the case of the m=4 multipole, angles of 0 or 90 indicate pure diskiness, angles +- 45
+        In the case of the m=4 multipole, angles of 0 indicate pure diskiness, angles +- 45
         indicate pure boxiness.
 
         Parameters
@@ -147,14 +147,14 @@ class PowerLawMultipole(MassProfile):
 
         Returns
         -------
-        The angle between the ellipse and the multipole, in degrees, between +-90.
+        The angle between the ellipse and the multipole, in degrees, between +- 180/m.
         """
 
         angle = convert.angle_from(base_profile.ell_comps) - convert.multipole_k_m_and_phi_m_from(self.multipole_comps, self.m)[1]
-        if angle <= -90:
-            angle += 180
-        elif angle > 90:
-            angle -= 180
+        if angle < -180/self.m:
+            angle += 360/self.m
+        elif angle > 180/self.m:
+            angle -= 360/self.m
 
         return angle
 
@@ -257,4 +257,5 @@ class PowerLawMultipole(MassProfile):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
         return jnp.zeros(shape=grid.shape[0])
+
 
