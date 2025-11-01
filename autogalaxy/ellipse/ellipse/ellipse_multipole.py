@@ -46,7 +46,7 @@ class EllipseMultipole:
         The shape angle is the offset between the angle of the ellipse and the angle of the multipole,
         this defines the shape that the multipole takes.
 
-        In the case of the m=4 multipole, angles of 0 or 90 indicate pure diskiness, angles +- 45
+        In the case of the m=4 multipole, angles of 0 indicate pure diskiness, angles +- 45
         indicate pure boxiness.
 
         Parameters
@@ -56,14 +56,14 @@ class EllipseMultipole:
 
         Returns
         -------
-        The angle between the ellipse and the multipole, in degrees between +-90.
+        The angle between the ellipse and the multipole, in degrees between +- 180/m.
         """
 
         angle = ellipse.angle-multipole_k_m_and_phi_m_from(self.multipole_comps, self.m)[1]
-        if angle <= -90:
-            angle += 180
-        elif angle > 90:
-            angle -= 180
+        if angle < -180/self.m:
+            angle += 360/self.m
+        elif angle > 180/self.m:
+            angle -= 360/self.m
 
         return angle
 
@@ -196,5 +196,6 @@ class EllipseMultipoleScaled(EllipseMultipole):
         y = points[:, 0] + radial * np.sin(theta)
 
         return np.stack((y, x), axis=-1)
+
 
 
