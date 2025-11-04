@@ -1,5 +1,5 @@
 import numpy as np
-from autofit.jax_wrapper import use_jax
+from autoconf.jax_wrapper import use_jax
 
 if use_jax:
     import jax
