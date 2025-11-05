@@ -161,7 +161,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
         )
 
     def image_2d_list_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None
     ) -> List[aa.Array2D]:
         """
         Returns a list of the 2D images of the galaxy's light profiles from a 2D grid of Cartesian (y,x) coordinates.
@@ -194,7 +194,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             zeros.
         """
         return [
-            light_profile.image_2d_from(grid=grid, operated_only=operated_only)
+            light_profile.image_2d_from(grid=grid, xp=xp, operated_only=operated_only)
             for light_profile in self.cls_list_from(
                 cls=LightProfile, cls_filtered=LightProfileLinear
             )
@@ -202,7 +202,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
     @aa.grid_dec.to_array
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None,
     ) -> Union[np.ndarray, aa.Array2D]:
         """
         Returns the 2D image of all galaxy light profiles summed from a 2D grid of Cartesian (y,x) coordinates.
@@ -228,11 +228,11 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             len(self.cls_list_from(cls=LightProfile, cls_filtered=LightProfileLinear))
             > 0
         ):
-            return sum(self.image_2d_list_from(grid=grid, operated_only=operated_only))
-        return jnp.zeros((grid.shape[0],))
+            return sum(self.image_2d_list_from(grid=grid, xp=xp, operated_only=operated_only))
+        return xp.zeros((grid.shape[0],))
 
     @aa.grid_dec.to_projected
-    def image_1d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+    def image_1d_from(self, grid: aa.type.Grid2DLike, xp=np) -> np.ndarray:
         """
         Returns the summed 1D image of the galaxy's light profiles using a grid of Cartesian (y,x) coordinates.
 
@@ -262,10 +262,10 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
             return sum(image_1d_list)
 
-        return jnp.zeros((grid.shape[0],))
+        return xp.zeros((grid.shape[0],))
 
     @aa.grid_dec.to_vector_yx
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D deflection angles of the galaxy's mass profiles from a 2D grid of Cartesian (y,x)
         coordinates.
@@ -286,15 +286,15 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
         if self.has(cls=MassProfile):
             return sum(
                 map(
-                    lambda p: p.deflections_yx_2d_from(grid=grid),
+                    lambda p: p.deflections_yx_2d_from(grid=grid, xp=xp),
                     self.cls_list_from(cls=MassProfile),
                 )
             )
 
-        return jnp.zeros((grid.shape[0], 2))
+        return xp.zeros((grid.shape[0], 2))
 
     @aa.grid_dec.to_array
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D convergence of the galaxy's mass profiles from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -319,26 +319,26 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
                 )
             )
 
-        return jnp.zeros((grid.shape[0],))
+        return xp.zeros((grid.shape[0],))
 
     @aa.grid_dec.to_grid
-    def traced_grid_2d_from(self, grid: aa.type.Grid2DLike) -> aa.type.Grid2DLike:
+    def traced_grid_2d_from(self, grid: aa.type.Grid2DLike, xp=np) -> aa.type.Grid2DLike:
         """
         Trace an input grid using the galaxy's its deflection angles.
         """
         if isinstance(grid, aa.Grid2D):
             return aa.Grid2D(
-                values=grid - self.deflections_yx_2d_from(grid=grid),
+                values=grid - self.deflections_yx_2d_from(grid=grid, xp=xp),
                 mask=grid.mask,
                 over_sample_size=grid.over_sample_size,
                 over_sampled=grid.over_sampled
-                - self.deflections_yx_2d_from(grid=grid.over_sampled),
+                - self.deflections_yx_2d_from(grid=grid.over_sampled, xp=xp),
             )
 
-        return grid - self.deflections_yx_2d_from(grid=grid)
+        return grid - self.deflections_yx_2d_from(grid=grid, xp=xp)
 
     @aa.grid_dec.to_projected
-    def convergence_1d_from(self, grid: aa.type.Grid1D2DLike) -> np.ndarray:
+    def convergence_1d_from(self, grid: aa.type.Grid1D2DLike, xp=np) -> np.ndarray:
         """
         Returns the summed 1D convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
 
@@ -369,10 +369,10 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
             return sum(convergence_1d_list)
 
-        return jnp.zeros((grid.shape[0],))
+        return xp.zeros((grid.shape[0],))
 
     @aa.grid_dec.to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D potential of the galaxy's mass profiles from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -396,10 +396,10 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
                     self.cls_list_from(cls=MassProfile),
                 )
             )
-        return jnp.zeros((grid.shape[0],))
+        return xp.zeros((grid.shape[0],))
 
     @aa.grid_dec.to_projected
-    def potential_1d_from(self, grid: aa.type.Grid2DLike) -> np.ndarray:
+    def potential_1d_from(self, grid: aa.type.Grid2DLike, xp=np) -> np.ndarray:
         """
         Returns the summed 1D potential of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
 
@@ -429,7 +429,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
             return sum(potential_1d_list)
 
-        return jnp.zeros((grid.shape[0],))
+        return xp.zeros((grid.shape[0],))
 
     @property
     def half_light_radius(self):

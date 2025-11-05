@@ -1,4 +1,5 @@
 from __future__ import annotations
+import numpy as np
 from typing import Dict, List, Optional, Type, Union
 
 from autoconf import cached_property
@@ -23,6 +24,7 @@ class AbstractToInversion:
         dataset: Optional[Union[aa.Imaging, aa.Interferometer, aa.DatasetInterface]],
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        xp=np
     ):
         """
         Abstract class which interfaces a dataset and input modeling object (e.g. galaxies, a tracer) with the
@@ -74,6 +76,7 @@ class AbstractToInversion:
         self.adapt_images = adapt_images
 
         self.settings_inversion = settings_inversion
+        self.xp = xp
 
     @property
     def psf(self) -> Optional[aa.Kernel2D]:
@@ -188,6 +191,7 @@ class GalaxiesToInversion(AbstractToInversion):
         galaxies: List[Galaxy],
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        xp=np,
     ):
         """
         Interfaces a dataset and input list of galaxies with the inversion module. to setup a
@@ -229,6 +233,7 @@ class GalaxiesToInversion(AbstractToInversion):
             dataset=dataset,
             adapt_images=adapt_images,
             settings_inversion=settings_inversion,
+            xp=xp,
         )
 
     @property

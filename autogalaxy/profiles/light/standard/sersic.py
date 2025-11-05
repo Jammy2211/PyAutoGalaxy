@@ -120,7 +120,7 @@ class Sersic(AbstractSersic, LightProfile):
             sersic_index=sersic_index,
         )
 
-    def image_2d_via_radii_from(self, grid_radii: np.ndarray, **kwargs) -> np.ndarray:
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray, xp=np, **kwargs) -> np.ndarray:
         """
         Returns the 2D image of the Sersic light profile from a grid of coordinates which are the radial distances of
         each coordinate from the its `centre`.
@@ -131,14 +131,14 @@ class Sersic(AbstractSersic, LightProfile):
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
         seterr(all="ignore")
-        return jnp.multiply(
+        return xp.multiply(
             self._intensity,
-            jnp.exp(
-                jnp.multiply(
+            xp.exp(
+                xp.multiply(
                     -self.sersic_constant,
-                    jnp.add(
-                        jnp.power(
-                            jnp.divide(grid_radii.array, self.effective_radius),
+                    xp.add(
+                        xp.power(
+                            xp.divide(grid_radii.array, self.effective_radius),
                             1.0 / self.sersic_index,
                         ),
                         -1,
@@ -152,7 +152,7 @@ class Sersic(AbstractSersic, LightProfile):
     @check_operated_only
     @aa.grid_dec.transform
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
+        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, xp=np, **kwargs
     ) -> aa.Array2D:
         """
         Returns the Sersic light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
@@ -171,9 +171,9 @@ class Sersic(AbstractSersic, LightProfile):
             The image of the Sersic evaluated at every (y,x) coordinate on the transformed grid.
         """
 
-        grid_radii = self.eccentric_radii_grid_from(grid=grid, **kwargs)
+        grid_radii = self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs)
 
-        return self.image_2d_via_radii_from(grid_radii=grid_radii, **kwargs)
+        return self.image_2d_via_radii_from(grid_radii=grid_radii, xp=xp, **kwargs)
 
 
 class SersicSph(Sersic):
