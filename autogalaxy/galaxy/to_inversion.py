@@ -573,6 +573,7 @@ class GalaxiesToInversion(AbstractToInversion):
             dataset=self.dataset,
             linear_obj_list=self.linear_obj_list,
             settings=self.settings_inversion,
+            xp=self.xp
         )
 
         inversion.linear_obj_galaxy_dict = self.linear_obj_galaxy_dict
