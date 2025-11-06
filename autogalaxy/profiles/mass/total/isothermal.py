@@ -67,7 +67,7 @@ class Isothermal(PowerLaw):
         )
 
     def axis_ratio(self, xp=np):
-        axis_ratio = super().axis_ratio
+        axis_ratio = super().axis_ratio(xp=xp)
         return xp.minimum(axis_ratio, 0.99999)
 
     @aa.grid_dec.to_vector_yx
@@ -87,21 +87,21 @@ class Isothermal(PowerLaw):
 
         factor = (
             2.0
-            * self.einstein_radius_rescaled
-            * self.axis_ratio(xp=xp)
-            / xp.sqrt(1 - self.axis_ratio(xp=xp)**2)
+            * self.einstein_radius_rescaled(xp)
+            * self.axis_ratio(xp)
+            / xp.sqrt(1 - self.axis_ratio()(xp)**2)
         )
 
-        psi = psi_from(grid=grid, axis_ratio=self.axis_ratio(xp=xp), core_radius=0.0)
+        psi = psi_from(grid=grid, axis_ratio=self.axis_ratio()(xp=xp), core_radius=0.0)
 
         deflection_y = xp.arctanh(
             xp.divide(
-                xp.multiply(xp.sqrt(1 - self.axis_ratio(xp=xp)**2), grid.array[:, 0]), psi
+                xp.multiply(xp.sqrt(1 - self.axis_ratio()(xp=xp)**2), grid.array[:, 0]), psi
             )
         )
         deflection_x = xp.arctan(
             xp.divide(
-                xp.multiply(xp.sqrt(1 - self.axis_ratio(xp=xp)**2), grid.array[:, 1]), psi
+                xp.multiply(xp.sqrt(1 - self.axis_ratio()(xp=xp)**2), grid.array[:, 1]), psi
             )
         )
         return self.rotated_grid_from_reference_frame_from(
@@ -169,14 +169,13 @@ class IsothermalSph(Isothermal):
             centre=centre, ell_comps=(0.0, 0.0), einstein_radius=einstein_radius
         )
 
-    @property
-    def axis_ratio(self):
+    def axis_ratio(self, xp=np):
         return 1.0
 
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the potential on a grid of (y,x) arc-second coordinates.
 
@@ -186,7 +185,7 @@ class IsothermalSph(Isothermal):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
         eta = self.elliptical_radii_grid_from(grid=grid, **kwargs)
-        return 2.0 * self.einstein_radius_rescaled * eta
+        return 2.0 * self.einstein_radius_rescaled(xp) * eta
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
@@ -201,6 +200,6 @@ class IsothermalSph(Isothermal):
         """
         return self._cartesian_grid_via_radial_from(
             grid=grid,
-            radius=xp.full(grid.shape[0], 2.0 * self.einstein_radius_rescaled),
+            radius=xp.full(grid.shape[0], 2.0 * self.einstein_radius_rescaled(xp)),
             **kwargs,
         )

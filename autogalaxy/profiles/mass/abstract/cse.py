@@ -166,7 +166,7 @@ class MassProfileCSE(ABC):
         amplitude_list, core_radius_list = self.decompose_convergence_via_cse(
             grid_radii=self.radial_grid_from(grid=grid, **kwargs)
         )
-        q = self.axis_ratio
+        q = self.axis_ratio()
         q2 = q**2.0
         grid_y = grid.array[:, 0]
         grid_x = grid.array[:, 1]

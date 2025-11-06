@@ -66,7 +66,7 @@ class SersicGradient(AbstractSersic):
         def calculate_deflection_component(npow, index):
             sersic_constant = self.sersic_constant
 
-            deflection_grid = np.array(self.axis_ratio * grid.array[:, index])
+            deflection_grid = np.array(self.axis_ratio() * grid.array[:, index])
 
             for i in range(grid.shape[0]):
                 deflection_grid[i] *= (
@@ -80,7 +80,7 @@ class SersicGradient(AbstractSersic):
                             grid.array[i, 0],
                             grid.array[i, 1],
                             npow,
-                            self.axis_ratio,
+                            self.axis_ratio(),
                             self.sersic_index,
                             self.effective_radius,
                             self.mass_to_light_gradient,
@@ -142,7 +142,7 @@ class SersicGradient(AbstractSersic):
         return (
             self.mass_to_light_ratio
             * (
-                ((self.axis_ratio * grid_radius) / self.effective_radius)
+                ((self.axis_ratio() * grid_radius) / self.effective_radius)
                 ** -self.mass_to_light_gradient
             )
             * self.image_2d_via_radii_from(grid_radius)
@@ -157,7 +157,7 @@ class SersicGradient(AbstractSersic):
                 self.mass_to_light_ratio
                 * self.intensity
                 * (
-                    ((self.axis_ratio * r) / self.effective_radius)
+                    ((self.axis_ratio() * r) / self.effective_radius)
                     ** -self.mass_to_light_gradient
                 )
                 * np.exp(
@@ -205,7 +205,7 @@ class SersicGradient(AbstractSersic):
             mass_to_light_gradient=self.mass_to_light_gradient,
         )
 
-        scaled_effective_radius = self.effective_radius / np.sqrt(self.axis_ratio)
+        scaled_effective_radius = self.effective_radius / np.sqrt(self.axis_ratio())
         radii_min = scaled_effective_radius / 10.0**lower_dex
         radii_max = scaled_effective_radius * 10.0**upper_dex
 
@@ -214,7 +214,7 @@ class SersicGradient(AbstractSersic):
                 self.mass_to_light_ratio
                 * self.intensity
                 * (
-                    ((self.axis_ratio * r) / scaled_effective_radius)
+                    ((self.axis_ratio() * r) / scaled_effective_radius)
                     ** -self.mass_to_light_gradient
                 )
                 * np.exp(

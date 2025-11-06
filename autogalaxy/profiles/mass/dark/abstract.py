@@ -379,4 +379,4 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
     @property
     def ellipticity_rescale(self):
-        return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
+        return 1.0 - ((1.0 - self.axis_ratio()) / 2.0)

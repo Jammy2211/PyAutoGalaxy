@@ -61,7 +61,7 @@ class NFW(gNFW, MassProfileCSE):
         from scipy.integrate import quad
 
         def calculate_deflection_component(npow, index):
-            deflection_grid = np.array(self.axis_ratio * grid.array[:, index])
+            deflection_grid = np.array(self.axis_ratio() * grid.array[:, index])
 
             for i in range(grid.shape[0]):
                 deflection_grid[i] *= (
@@ -74,7 +74,7 @@ class NFW(gNFW, MassProfileCSE):
                             grid.array[i, 0],
                             grid.array[i, 1],
                             npow,
-                            self.axis_ratio,
+                            self.axis_ratio(),
                             self.scale_radius,
                         ),
                     )[0]
@@ -171,7 +171,7 @@ class NFW(gNFW, MassProfileCSE):
                 args=(
                     grid.array[i, 0],
                     grid.array[i, 1],
-                    self.axis_ratio,
+                    self.axis_ratio(),
                     self.kappa_s,
                     self.scale_radius,
                 ),

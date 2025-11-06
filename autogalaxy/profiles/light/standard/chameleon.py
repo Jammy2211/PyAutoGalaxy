@@ -45,13 +45,12 @@ class Chameleon(LightProfile):
         self.core_radius_0 = core_radius_0
         self.core_radius_1 = core_radius_1
 
-    @property
-    def axis_ratio(self) -> float:
+    def axis_ratio(self, xp=np) -> float:
         """
         The elliptical isothermal mass profile deflection angles break down for perfectly spherical systems where
         `axis_ratio=1.0`, thus we remove these solutions.
         """
-        axis_ratio = super().axis_ratio
+        axis_ratio = super().axis_ratio(xp=xp)
         return axis_ratio if axis_ratio < 0.99999 else 0.99999
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
@@ -65,10 +64,10 @@ class Chameleon(LightProfile):
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
 
-        axis_ratio_factor = (1.0 + self.axis_ratio) ** 2.0
+        axis_ratio_factor = (1.0 + self.axis_ratio()) ** 2.0
 
         return jnp.multiply(
-            self._intensity / (1 + self.axis_ratio),
+            self._intensity / (1 + self.axis_ratio()),
             jnp.add(
                 jnp.divide(
                     1.0,

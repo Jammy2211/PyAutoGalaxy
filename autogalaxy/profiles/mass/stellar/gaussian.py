@@ -76,7 +76,7 @@ class Gaussian(MassProfile, StellarProfile):
             self.mass_to_light_ratio
             * self.intensity
             * self.sigma
-            * np.sqrt((2 * np.pi) / (1.0 - self.axis_ratio**2.0))
+            * np.sqrt((2 * np.pi) / (1.0 - self.axis_ratio()**2.0))
             * self.zeta_from(grid=grid)
         )
 
@@ -103,7 +103,7 @@ class Gaussian(MassProfile, StellarProfile):
         from scipy.integrate import quad
 
         def calculate_deflection_component(npow, index):
-            deflection_grid = np.array(self.axis_ratio * grid.array[:, index])
+            deflection_grid = np.array(self.axis_ratio() * grid.array[:, index])
 
             for i in range(grid.shape[0]):
                 deflection_grid[i] *= (
@@ -117,8 +117,8 @@ class Gaussian(MassProfile, StellarProfile):
                             grid.array[i, 0],
                             grid.array[i, 1],
                             npow,
-                            self.axis_ratio,
-                            self.sigma / np.sqrt(self.axis_ratio),
+                            self.axis_ratio(),
+                            self.sigma / np.sqrt(self.axis_ratio()),
                         ),
                     )[0]
                 )
@@ -180,28 +180,24 @@ class Gaussian(MassProfile, StellarProfile):
             np.exp(
                 -0.5
                 * np.square(
-                    np.divide(grid_radii.array, self.sigma / np.sqrt(self.axis_ratio))
+                    np.divide(grid_radii.array, self.sigma / np.sqrt(self.axis_ratio()))
                 )
             ),
         )
 
-    @property
-    def axis_ratio(self):
-        axis_ratio = super().axis_ratio
-        if use_jax:
-            return jax.lax.select(axis_ratio < 0.9999, axis_ratio, 0.9999)
-        else:
-            return axis_ratio if axis_ratio < 0.9999 else 0.9999
+    def axis_ratio(self, xp=np):
+        axis_ratio = super().axis_ratio(xp=xp)
+        return xp.where(axis_ratio < 0.9999, axis_ratio, 0.9999)
 
     def zeta_from(self, grid: aa.type.Grid2DLike):
 
         from scipy.special import wofz
 
-        q2 = self.axis_ratio**2.0
+        q2 = self.axis_ratio()**2.0
         ind_pos_y = grid.array[:, 0] >= 0
         shape_grid = np.shape(grid)
         output_grid = np.zeros((shape_grid[0]), dtype=np.complex128)
-        scale_factor = self.axis_ratio / (self.sigma * np.sqrt(2.0 * (1.0 - q2)))
+        scale_factor = self.axis_ratio() / (self.sigma * np.sqrt(2.0 * (1.0 - q2)))
 
         xs_0 = grid.array[:, 1][ind_pos_y] * scale_factor
         ys_0 = grid.array[:, 0][ind_pos_y] * scale_factor
@@ -211,7 +207,7 @@ class Gaussian(MassProfile, StellarProfile):
         output_grid[ind_pos_y] = -1j * (
             wofz(xs_0 + 1j * ys_0)
             - np.exp(-(xs_0**2.0) * (1.0 - q2) - ys_0 * ys_0 * (1.0 / q2 - 1.0))
-            * wofz(self.axis_ratio * xs_0 + 1j * ys_0 / self.axis_ratio)
+            * wofz(self.axis_ratio() * xs_0 + 1j * ys_0 / self.axis_ratio())
         )
 
         output_grid[~ind_pos_y] = np.conj(
@@ -219,7 +215,7 @@ class Gaussian(MassProfile, StellarProfile):
             * (
                 wofz(xs_1 + 1j * ys_1)
                 - np.exp(-(xs_1**2.0) * (1.0 - q2) - ys_1 * ys_1 * (1.0 / q2 - 1.0))
-                * wofz(self.axis_ratio * xs_1 + 1j * ys_1 / self.axis_ratio)
+                * wofz(self.axis_ratio() * xs_1 + 1j * ys_1 / self.axis_ratio())
             )
         )
 

@@ -14,7 +14,7 @@ class gNFW(AbstractgNFW):
     @aa.grid_dec.transform
     def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike, **kwargs):
         return self._deflections_2d_via_mge_from(
-            grid=grid, sigmas_factor=self.axis_ratio
+            grid=grid, sigmas_factor=self.axis_ratio()
         )
 
     @aa.grid_dec.to_vector_yx
@@ -51,7 +51,7 @@ class gNFW(AbstractgNFW):
                 deflection_grid[i] = (
                     2.0
                     * self.kappa_s
-                    * self.axis_ratio
+                    * self.axis_ratio()
                     * grid[i, yx_index]
                     * quad(
                         self.deflection_func,
@@ -61,7 +61,7 @@ class gNFW(AbstractgNFW):
                             grid.array[i, 0],
                             grid.array[i, 1],
                             npow,
-                            self.axis_ratio,
+                            self.axis_ratio(),
                             minimum_log_eta,
                             maximum_log_eta,
                             tabulate_bins,
@@ -220,14 +220,14 @@ class gNFW(AbstractgNFW):
             )
 
         for i in range(grid.shape[0]):
-            potential_grid[i] = (2.0 * self.kappa_s * self.axis_ratio) * quad(
+            potential_grid[i] = (2.0 * self.kappa_s * self.axis_ratio()) * quad(
                 self.potential_func,
                 a=0.0,
                 b=1.0,
                 args=(
                     grid.array[i, 0],
                     grid.array[i, 1],
-                    self.axis_ratio,
+                    self.axis_ratio(),
                     minimum_log_eta,
                     maximum_log_eta,
                     tabulate_bins,

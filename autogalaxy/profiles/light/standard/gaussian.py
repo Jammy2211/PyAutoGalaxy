@@ -65,7 +65,7 @@ class Gaussian(LightProfile):
             jnp.exp(
                 -0.5
                 * jnp.square(
-                    jnp.divide(grid_radii.array, self.sigma / jnp.sqrt(self.axis_ratio))
+                    jnp.divide(grid_radii.array, self.sigma / jnp.sqrt(self.axis_ratio()))
                 )
             ),
         )

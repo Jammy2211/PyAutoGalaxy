@@ -63,7 +63,7 @@ class Moffat(LightProfile):
             jnp.power(
                 1
                 + jnp.square(
-                    jnp.divide(grid_radii.array, self.alpha / jnp.sqrt(self.axis_ratio))
+                    jnp.divide(grid_radii.array, self.alpha / jnp.sqrt(self.axis_ratio()))
                 ),
                 -self.beta,
             ),

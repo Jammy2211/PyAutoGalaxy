@@ -31,7 +31,7 @@ class PowerLawBroken(MassProfile):
         super().__init__(centre=centre, ell_comps=ell_comps)
 
         self.einstein_radius = einstein_radius
-        self.einstein_radius_elliptical = jnp.sqrt(self.axis_ratio) * einstein_radius
+        self.einstein_radius_elliptical = jnp.sqrt(self.axis_ratio()) * einstein_radius
         self.break_radius = break_radius
         self.inner_slope = inner_slope
         self.outer_slope = outer_slope
@@ -58,7 +58,7 @@ class PowerLawBroken(MassProfile):
         """
 
         # Ell radius
-        radius = jnp.hypot(grid.array[:, 1] * self.axis_ratio, grid.array[:, 0])
+        radius = jnp.hypot(grid.array[:, 1] * self.axis_ratio(), grid.array[:, 0])
 
         # Inside break radius
         kappa_inner = self.kB * (self.break_radius / radius) ** self.inner_slope
@@ -84,14 +84,14 @@ class PowerLawBroken(MassProfile):
         z = grid.array[:, 1] + 1j * grid.array[:, 0]
 
         # Ell radius
-        R = jnp.hypot(z.real * self.axis_ratio, z.imag)
+        R = jnp.hypot(z.real * self.axis_ratio(), z.imag)
 
         # Factors common to eq. 18 and 19
         factors = (
             2
             * self.kB
             * (self.break_radius**2)
-            / (self.axis_ratio * z * (2 - self.inner_slope))
+            / (self.axis_ratio() * z * (2 - self.inner_slope))
         )
 
         # Hypergeometric functions
@@ -99,16 +99,16 @@ class PowerLawBroken(MassProfile):
         # These can also be computed with scipy.special.hyp2f1(), it's
         # much slower can be a useful test
         F1 = self.hyp2f1_series(
-            self.inner_slope, self.axis_ratio, R, z, max_terms=max_terms
+            self.inner_slope, self.axis_ratio(), R, z, max_terms=max_terms
         )
         F2 = self.hyp2f1_series(
-            self.inner_slope, self.axis_ratio, self.break_radius, z, max_terms=max_terms
+            self.inner_slope, self.axis_ratio(), self.break_radius, z, max_terms=max_terms
         )
         F3 = self.hyp2f1_series(
-            self.outer_slope, self.axis_ratio, R, z, max_terms=max_terms
+            self.outer_slope, self.axis_ratio(), R, z, max_terms=max_terms
         )
         F4 = self.hyp2f1_series(
-            self.outer_slope, self.axis_ratio, self.break_radius, z, max_terms=max_terms
+            self.outer_slope, self.axis_ratio(), self.break_radius, z, max_terms=max_terms
         )
 
         # theta < break radius (eq. 18)

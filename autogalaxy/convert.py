@@ -64,7 +64,11 @@ def axis_ratio_and_angle_from(ell_comps: Tuple[float, float], xp=np) -> Tuple[fl
     angle = xp.where(angle < -45, angle + 180, angle)
 
     fac = xp.sqrt(ell_comps[1] ** 2 + ell_comps[0] ** 2)
-    fac = xp.min(fac, 0.999)
+    if xp.__name__.startswith("jax"):
+        import jax
+        fac = jax.lax.min(fac, 0.999)
+    else:  # NumPy
+        fac = np.minimum(fac, 0.999)
 
     axis_ratio = (1 - fac) / (1 + fac)
     return axis_ratio, angle
@@ -127,7 +131,6 @@ def angle_from(ell_comps: Tuple[float, float], xp=np) -> float:
         The elliptical components of the light or mass profile which are converted to an angle.
     """
     axis_ratio, angle = axis_ratio_and_angle_from(ell_comps=ell_comps, xp=xp)
-
     return angle
 
 

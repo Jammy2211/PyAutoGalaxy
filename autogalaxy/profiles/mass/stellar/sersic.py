@@ -145,7 +145,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         """
         return self._deflections_2d_via_mge_from(
             grid=grid,
-            sigmas_factor=np.sqrt(self.axis_ratio),
+            sigmas_factor=np.sqrt(self.axis_ratio()),
             func_terms=func_terms,
             func_gaussians=func_gaussians,
         )
@@ -313,7 +313,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
             mass_to_light_gradient=0.0,
         )
 
-        scaled_effective_radius = self.effective_radius / np.sqrt(self.axis_ratio)
+        scaled_effective_radius = self.effective_radius / np.sqrt(self.axis_ratio())
         radii_min = scaled_effective_radius / 10.0**lower_dex
         radii_max = scaled_effective_radius * 10.0**upper_dex
 
@@ -354,7 +354,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
 
     @property
     def ellipticity_rescale(self):
-        return 1.0 - ((1.0 - self.axis_ratio) / 2.0)
+        return 1.0 - ((1.0 - self.axis_ratio()) / 2.0)
 
     @property
     def elliptical_effective_radius(self):
@@ -366,7 +366,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         The elliptical effective radius instead describes the major-axis radius of the ellipse containing \
         half the light, and may be more appropriate for highly flattened systems like disk galaxies.
         """
-        return self.effective_radius / np.sqrt(self.axis_ratio)
+        return self.effective_radius / np.sqrt(self.axis_ratio())
 
 
 class Sersic(AbstractSersic, MassProfileMGE, MassProfileCSE):
@@ -387,7 +387,7 @@ class Sersic(AbstractSersic, MassProfileMGE, MassProfileCSE):
         def calculate_deflection_component(npow, index):
             sersic_constant = self.sersic_constant
 
-            deflection_grid = self.axis_ratio * grid.array[:, index]
+            deflection_grid = self.axis_ratio() * grid.array[:, index]
 
             for i in range(grid.shape[0]):
                 deflection_grid = deflection_grid.at[i].multiply(
@@ -401,7 +401,7 @@ class Sersic(AbstractSersic, MassProfileMGE, MassProfileCSE):
                             grid.array[i, 0],
                             grid.array[i, 1],
                             npow,
-                            self.axis_ratio,
+                            self.axis_ratio(),
                             self.sersic_index,
                             self.effective_radius,
                             sersic_constant,
