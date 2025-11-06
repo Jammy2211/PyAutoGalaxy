@@ -287,7 +287,7 @@ class NFW(gNFW, MassProfileCSE):
         # Rotation for shear
 
         shear_field = self.rotated_grid_from_reference_frame_from(
-            grid=np.vstack((g2, g1)).T, angle=self.angle(xp=xp) * 2
+            grid=np.vstack((g2, g1)).T, angle=self.angle(xp) * 2
         )
 
         return aa.VectorYX2DIrregular(values=shear_field, grid=grid)

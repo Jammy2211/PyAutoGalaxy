@@ -89,23 +89,24 @@ class Isothermal(PowerLaw):
             2.0
             * self.einstein_radius_rescaled(xp)
             * self.axis_ratio(xp)
-            / xp.sqrt(1 - self.axis_ratio()(xp)**2)
+            / xp.sqrt(1 - self.axis_ratio(xp)**2)
         )
 
-        psi = psi_from(grid=grid, axis_ratio=self.axis_ratio()(xp=xp), core_radius=0.0)
+        psi = psi_from(grid=grid, axis_ratio=self.axis_ratio(xp), core_radius=0.0, xp=xp)
 
         deflection_y = xp.arctanh(
             xp.divide(
-                xp.multiply(xp.sqrt(1 - self.axis_ratio()(xp=xp)**2), grid.array[:, 0]), psi
+                xp.multiply(xp.sqrt(1 - self.axis_ratio(xp)**2), grid.array[:, 0]), psi
             )
         )
         deflection_x = xp.arctan(
             xp.divide(
-                xp.multiply(xp.sqrt(1 - self.axis_ratio()(xp=xp)**2), grid.array[:, 1]), psi
+                xp.multiply(xp.sqrt(1 - self.axis_ratio(xp)**2), grid.array[:, 1]), psi
             )
         )
         return self.rotated_grid_from_reference_frame_from(
             grid=xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T),
+            xp=xp,
             **kwargs,
         )
 
@@ -144,7 +145,7 @@ class Isothermal(PowerLaw):
         )
 
         shear_field = self.rotated_grid_from_reference_frame_from(
-            grid=xp.vstack((gamma_2, gamma_1)).T, angle=self.angle(xp=xp) * 2
+            grid=xp.vstack((gamma_2, gamma_1)).T, xp=xp, angle=self.angle(xp) * 2
         )
 
         return aa.VectorYX2DIrregular(values=shear_field, grid=grid)
@@ -184,7 +185,7 @@ class IsothermalSph(Isothermal):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        eta = self.elliptical_radii_grid_from(grid=grid, **kwargs)
+        eta = self.elliptical_radii_grid_from(grid=grid, xp=xp, **kwargs)
         return 2.0 * self.einstein_radius_rescaled(xp) * eta
 
     @aa.grid_dec.to_vector_yx
@@ -201,5 +202,6 @@ class IsothermalSph(Isothermal):
         return self._cartesian_grid_via_radial_from(
             grid=grid,
             radius=xp.full(grid.shape[0], 2.0 * self.einstein_radius_rescaled(xp)),
+            xp=xp,
             **kwargs,
         )

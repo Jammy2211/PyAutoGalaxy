@@ -231,7 +231,7 @@ class EllProfile(SphProfile):
         The position angle in radians of the major-axis of the ellipse defined by profile, defined counter clockwise
         from the positive x-axis (0.0 > angle > 2pi).
         """
-        return xp.radians(self.angle(xp=xp))
+        return xp.radians(self.angle(xp))
 
     @property
     def _cos_angle(self) -> float:
@@ -246,7 +246,7 @@ class EllProfile(SphProfile):
         Determine the sin and cosine of the angle between the profile's ellipse and the positive x-axis,
         counter-clockwise.
         """
-        angle_radians = xp.radians(self.angle(xp=xp))
+        angle_radians = xp.radians(self.angle(xp))
         return xp.cos(angle_radians), xp.sin(angle_radians)
 
     def angle_to_profile_grid_from(self, grid_angles, xp=np, **kwargs):
@@ -288,7 +288,7 @@ class EllProfile(SphProfile):
         """
 
         if angle is None:
-            angle = self.angle(xp=xp)
+            angle = self.angle(xp)
 
         return aa.util.geometry.transform_grid_2d_from_reference_frame(
             grid_2d=grid, centre=(0.0, 0.0), angle=angle, xp=xp
@@ -352,7 +352,7 @@ class EllProfile(SphProfile):
         if self.__class__.__name__.endswith("Sph"):
             return super().transformed_to_reference_frame_grid_from(grid=grid, xp=xp)
         return aa.util.geometry.transform_grid_2d_to_reference_frame(
-            grid_2d=grid.array, centre=self.centre, angle=self.angle(xp=xp), xp=xp
+            grid_2d=grid.array, centre=self.centre, angle=self.angle(xp), xp=xp
         )
 
     @aa.grid_dec.to_grid
@@ -374,7 +374,7 @@ class EllProfile(SphProfile):
             return super().transformed_from_reference_frame_grid_from(grid=grid, xp=xp)
 
         return aa.util.geometry.transform_grid_2d_from_reference_frame(
-            grid_2d=grid.array, centre=self.centre, angle=self.angle(xp=xp), xp=xp
+            grid_2d=grid.array, centre=self.centre, angle=self.angle(xp), xp=xp
         )
 
     def _eta_u(self, u, coordinates):

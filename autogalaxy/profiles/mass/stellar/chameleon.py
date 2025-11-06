@@ -53,7 +53,7 @@ class Chameleon(MassProfile, StellarProfile):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
         Following Eq. (15) and (16), but the parameters are slightly different.
@@ -69,49 +69,49 @@ class Chameleon(MassProfile, StellarProfile):
             2.0
             * self.mass_to_light_ratio
             * self.intensity
-            / (1 + self.axis_ratio())
-            * self.axis_ratio()
-            / jnp.sqrt(1.0 - self.axis_ratio()**2.0)
+            / (1 + self.axis_ratio(xp))
+            * self.axis_ratio(xp)
+            / jnp.sqrt(1.0 - self.axis_ratio(xp)**2.0)
         )
 
         core_radius_0 = jnp.sqrt(
-            (4.0 * self.core_radius_0**2.0) / (1.0 + self.axis_ratio()) ** 2
+            (4.0 * self.core_radius_0**2.0) / (1.0 + self.axis_ratio(xp)) ** 2
         )
         core_radius_1 = jnp.sqrt(
-            (4.0 * self.core_radius_1**2.0) / (1.0 + self.axis_ratio()) ** 2
+            (4.0 * self.core_radius_1**2.0) / (1.0 + self.axis_ratio(xp)) ** 2
         )
 
         psi0 = psi_from(
-            grid=grid, axis_ratio=self.axis_ratio(), core_radius=core_radius_0
+            grid=grid, axis_ratio=self.axis_ratio(xp), core_radius=core_radius_0, xp=xp
         )
         psi1 = psi_from(
-            grid=grid, axis_ratio=self.axis_ratio(), core_radius=core_radius_1
+            grid=grid, axis_ratio=self.axis_ratio(xp), core_radius=core_radius_1, xp=xp
         )
 
         deflection_y0 = jnp.arctanh(
             jnp.divide(
-                jnp.multiply(jnp.sqrt(1.0 - self.axis_ratio()**2.0), grid.array[:, 0]),
-                jnp.add(psi0, self.axis_ratio()**2.0 * core_radius_0),
+                jnp.multiply(jnp.sqrt(1.0 - self.axis_ratio(xp)**2.0), grid.array[:, 0]),
+                jnp.add(psi0, self.axis_ratio(xp)**2.0 * core_radius_0),
             )
         )
 
         deflection_x0 = jnp.arctan(
             jnp.divide(
-                jnp.multiply(jnp.sqrt(1.0 - self.axis_ratio()**2.0), grid.array[:, 1]),
+                jnp.multiply(jnp.sqrt(1.0 - self.axis_ratio(xp)**2.0), grid.array[:, 1]),
                 jnp.add(psi0, core_radius_0),
             )
         )
 
         deflection_y1 = jnp.arctanh(
             jnp.divide(
-                jnp.multiply(jnp.sqrt(1.0 - self.axis_ratio()**2.0), grid.array[:, 0]),
-                jnp.add(psi1, self.axis_ratio()**2.0 * core_radius_1),
+                jnp.multiply(jnp.sqrt(1.0 - self.axis_ratio(xp)**2.0), grid.array[:, 0]),
+                jnp.add(psi1, self.axis_ratio(xp)**2.0 * core_radius_1),
             )
         )
 
         deflection_x1 = jnp.arctan(
             jnp.divide(
-                jnp.multiply(jnp.sqrt(1.0 - self.axis_ratio()**2.0), grid.array[:, 1]),
+                jnp.multiply(jnp.sqrt(1.0 - self.axis_ratio(xp)**2.0), grid.array[:, 1]),
                 jnp.add(psi1, core_radius_1),
             )
         )
@@ -153,10 +153,10 @@ class Chameleon(MassProfile, StellarProfile):
             The radial distance from the centre of the profile. for each coordinate on the grid.
         """
 
-        axis_ratio_factor = (1.0 + self.axis_ratio()) ** 2.0
+        axis_ratio_factor = (1.0 + self.axis_ratio(xp)) ** 2.0
 
         return jnp.multiply(
-            self.intensity / (1 + self.axis_ratio()),
+            self.intensity / (1 + self.axis_ratio(xp)),
             jnp.add(
                 jnp.divide(
                     1.0,

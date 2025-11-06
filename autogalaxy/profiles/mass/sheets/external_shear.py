@@ -43,7 +43,7 @@ class ExternalShear(MassProfile):
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         shear_angle = (
-            self.angle(xp=xp) - 90
+            self.angle(xp) - 90
         )  ##to be onsistent with autolens deflection angle calculation
         phig = xp.deg2rad(shear_angle)
         shear_amp = self.magnitude(xp=xp)

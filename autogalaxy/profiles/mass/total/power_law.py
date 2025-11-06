@@ -147,7 +147,7 @@ class PowerLawSph(PowerLaw):
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
-        eta = self.radial_grid_from(grid=grid, xp=np, **kwargs).array
+        eta = self.radial_grid_from(grid=grid, xp=xp, **kwargs).array
         deflection_r = (
             2.0
             * self.einstein_radius_rescaled(xp)
@@ -157,4 +157,4 @@ class PowerLawSph(PowerLaw):
             )
         )
 
-        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection_r, xp=np)
+        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection_r, xp=xp)
