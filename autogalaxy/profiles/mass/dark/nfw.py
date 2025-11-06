@@ -254,7 +254,7 @@ class NFW(gNFW, MassProfileCSE):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def shear_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def shear_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Analytic calculation shear from Heyrovský & Karamazov 2024
 
@@ -287,7 +287,7 @@ class NFW(gNFW, MassProfileCSE):
         # Rotation for shear
 
         shear_field = self.rotated_grid_from_reference_frame_from(
-            grid=np.vstack((g2, g1)).T, angle=self.angle * 2
+            grid=np.vstack((g2, g1)).T, angle=self.angle(xp=xp) * 2
         )
 
         return aa.VectorYX2DIrregular(values=shear_field, grid=grid)

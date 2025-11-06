@@ -213,27 +213,25 @@ class EllProfile(SphProfile):
 
         self.ell_comps = ell_comps
 
-    @property
-    def axis_ratio(self) -> float:
+    def axis_ratio(self, xp=np) -> float:
         """
         The ratio of the minor-axis to major-axis (b/a) of the ellipse defined by profile (0.0 > q > 1.0).
         """
-        return convert.axis_ratio_from(ell_comps=self.ell_comps)
+        return convert.axis_ratio_from(ell_comps=self.ell_comps, xp=xp)
 
-    @property
-    def angle(self) -> float:
+    def angle(self, xp=np) -> float:
         """
         The position angle in degrees of the major-axis of the ellipse defined by profile, defined counter clockwise
         from the positive x-axis (0.0 > angle > 180.0).
         """
-        return convert.angle_from(ell_comps=self.ell_comps)
+        return convert.angle_from(ell_comps=self.ell_comps, xp=xp)
 
     def angle_radians(self, xp=np) -> float:
         """
         The position angle in radians of the major-axis of the ellipse defined by profile, defined counter clockwise
         from the positive x-axis (0.0 > angle > 2pi).
         """
-        return xp.radians(self.angle)
+        return xp.radians(self.angle(xp=xp))
 
     @property
     def _cos_angle(self) -> float:
@@ -248,7 +246,7 @@ class EllProfile(SphProfile):
         Determine the sin and cosine of the angle between the profile's ellipse and the positive x-axis,
         counter-clockwise.
         """
-        angle_radians = xp.radians(self.angle)
+        angle_radians = xp.radians(self.angle(xp=xp))
         return xp.cos(angle_radians), xp.sin(angle_radians)
 
     def angle_to_profile_grid_from(self, grid_angles, xp=np, **kwargs):
@@ -260,7 +258,7 @@ class EllProfile(SphProfile):
         grid_angles
             The angle theta counter-clockwise from the positive x-axis to each coordinate in radians.
         """
-        theta_coordinate_to_profile = xp.add(grid_angles, - self.angle_radians)
+        theta_coordinate_to_profile = xp.add(grid_angles, - self.angle_radians(xp=xp))
         return xp.cos(theta_coordinate_to_profile), xp.sin(
             theta_coordinate_to_profile
         )
@@ -290,7 +288,7 @@ class EllProfile(SphProfile):
         """
 
         if angle is None:
-            angle = self.angle
+            angle = self.angle(xp=xp)
 
         return aa.util.geometry.transform_grid_2d_from_reference_frame(
             grid_2d=grid, centre=(0.0, 0.0), angle=angle, xp=xp
@@ -354,7 +352,7 @@ class EllProfile(SphProfile):
         if self.__class__.__name__.endswith("Sph"):
             return super().transformed_to_reference_frame_grid_from(grid=grid, xp=xp)
         return aa.util.geometry.transform_grid_2d_to_reference_frame(
-            grid_2d=grid.array, centre=self.centre, angle=self.angle, xp=xp
+            grid_2d=grid.array, centre=self.centre, angle=self.angle(xp=xp), xp=xp
         )
 
     @aa.grid_dec.to_grid
@@ -376,7 +374,7 @@ class EllProfile(SphProfile):
             return super().transformed_from_reference_frame_grid_from(grid=grid, xp=xp)
 
         return aa.util.geometry.transform_grid_2d_from_reference_frame(
-            grid_2d=grid.array, centre=self.centre, angle=self.angle, xp=xp
+            grid_2d=grid.array, centre=self.centre, angle=self.angle(xp=xp), xp=xp
         )
 
     def _eta_u(self, u, coordinates):

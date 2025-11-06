@@ -152,7 +152,7 @@ class Sersic(AbstractSersic, LightProfile):
     @check_operated_only
     @aa.grid_dec.transform
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, xp=np, **kwargs
+        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None, **kwargs
     ) -> aa.Array2D:
         """
         Returns the Sersic light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
