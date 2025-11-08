@@ -25,6 +25,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         dataset_model: Optional[aa.DatasetModel] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        xp=np
     ):
         """
         Fits an imaging dataset using a list of galaxies.
@@ -70,6 +71,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         super().__init__(
             dataset=dataset,
             dataset_model=dataset_model,
+            xp=xp,
         )
         AbstractFitInversion.__init__(
             self=self,
@@ -94,12 +96,14 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         ):
             return self.galaxies.image_2d_from(
                 grid=self.grids.lp,
+                xp=self.xp,
             )
 
         return self.galaxies.blurred_image_2d_from(
             grid=self.grids.lp,
             psf=self.dataset.psf,
             blurring_grid=self.grids.blurring,
+            xp=self.xp,
         )
 
     @property
@@ -124,6 +128,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             galaxies=self.galaxies,
             adapt_images=self.adapt_images,
             settings_inversion=self.settings_inversion,
+            xp=self.xp,
         )
 
     @cached_property

@@ -34,11 +34,13 @@ class OperateImage:
         image_2d: aa.Array2D,
         blurring_image_2d: aa.Array2D,
         psf: aa.Kernel2D,
+        xp=np,
     ) -> aa.Array2D:
 
         values = psf.convolved_image_from(
             image=image_2d,
             blurring_image=blurring_image_2d,
+            xp=xp
         )
         return Array2D(values=values, mask=image_2d.mask)
 
@@ -47,6 +49,7 @@ class OperateImage:
         grid: aa.Grid2D,
         blurring_grid: aa.Grid2D,
         psf: aa.Kernel2D = None,
+        xp=np,
     ) -> aa.Array2D:
         """
         Evaluate the light object's 2D image from a input 2D grid of coordinates and convolve it with a PSF.
@@ -71,19 +74,20 @@ class OperateImage:
             LightProfileOperated,
         )
 
-        image_2d_not_operated = self.image_2d_from(grid=grid, operated_only=False)
+        image_2d_not_operated = self.image_2d_from(grid=grid, xp=xp, operated_only=False)
         blurring_image_2d_not_operated = self.image_2d_from(
-            grid=blurring_grid, operated_only=False
+            grid=blurring_grid, xp=xp, operated_only=False
         )
 
         blurred_image_2d = self._blurred_image_2d_from(
             image_2d=image_2d_not_operated,
             blurring_image_2d=blurring_image_2d_not_operated,
             psf=psf,
+            xp=xp,
         )
 
         if self.has(cls=LightProfileOperated):
-            image_2d_operated = self.image_2d_from(grid=grid, operated_only=True)
+            image_2d_operated = self.image_2d_from(grid=grid, xp=xp, operated_only=True)
             return blurred_image_2d + image_2d_operated
 
         return blurred_image_2d
@@ -160,7 +164,7 @@ class OperateImage:
         return padded_image_2d + padded_image_2d_operated
 
     def visibilities_from(
-        self, grid: aa.Grid2D, transformer: aa.type.Transformer
+        self, grid: aa.Grid2D, transformer: aa.type.Transformer, xp=np
     ) -> aa.Visibilities:
         """
         Evaluate the light object's 2D image from a input 2D grid of coordinates and transform this to an array of
@@ -303,7 +307,7 @@ class OperateImageList(OperateImage):
         return unmasked_blurred_image_list
 
     def visibilities_list_from(
-        self, grid: aa.Grid2D, transformer: aa.type.Transformer
+        self, grid: aa.Grid2D, transformer: aa.type.Transformer, xp=np,
     ) -> List[aa.Array2D]:
         """
         Evaluate the light object's list of 2D image from a input 2D grid of coordinates and transform each image to
