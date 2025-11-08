@@ -203,29 +203,3 @@ def test__regression__centre_of_profile_in_right_place():
     assert deflections.native[2, 4, 0] < 0
     assert deflections.native[1, 4, 1] > 0
     assert deflections.native[1, 3, 1] < 0
-
-
-
-def test__decorators__convergence_1d_from__grid_1d_in__returns_1d_quantities_via_projection():
-    grid_1d = ag.Grid1D.no_mask(values=[1.0, 2.0, 3.0], pixel_scales=1.0)
-
-    sie = ag.mp.Isothermal(centre=(0.0, 0.0), ell_comps=(0.0, 0.0), einstein_radius=1.0)
-
-    convergence_1d = sie.convergence_1d_from(grid=grid_1d)
-    convergence_2d = sie.convergence_2d_from(grid=grid_1d)
-
-    assert convergence_1d[0] == pytest.approx(convergence_2d[0].array, 1.0e-4)
-    assert convergence_1d[1] == pytest.approx(convergence_2d[1].array, 1.0e-4)
-    assert convergence_1d[2] == pytest.approx(convergence_2d[2].array, 1.0e-4)
-
-    sie = ag.mp.Isothermal(centre=(0.5, 0.5), ell_comps=(0.2, 0.2), einstein_radius=1.0)
-
-    convergence_1d = sie.convergence_1d_from(grid=grid_1d)
-
-    grid_2d_radial = grid_1d.grid_2d_radial_projected_from(angle=sie.angle + 90.0)
-
-    convergence_2d = sie.convergence_2d_from(grid=grid_2d_radial)
-
-    assert convergence_1d[0] == pytest.approx(convergence_2d[0].array, 1.0e-4)
-    assert convergence_1d[1] == pytest.approx(convergence_2d[1].array, 1.0e-4)
-    assert convergence_1d[2] == pytest.approx(convergence_2d[2].array, 1.0e-4)

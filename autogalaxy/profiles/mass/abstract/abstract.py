@@ -50,16 +50,8 @@ class MassProfile(EllProfile, OperateDeflections):
     def convergence_func(self, grid_radius: float) -> float:
         raise NotImplementedError
 
-    @aa.grid_dec.project_grid
-    def convergence_1d_from(self, grid: aa.type.Grid1D2DLike, xp=np) -> aa.type.Grid1D2DLike:
-        return self.convergence_2d_from(grid=grid, xp=xp)
-
     def potential_2d_from(self, grid):
         raise NotImplementedError
-
-    @aa.grid_dec.project_grid
-    def potential_1d_from(self, grid: aa.type.Grid1D2DLike, xp=np) -> aa.type.Grid1D2DLike:
-        return self.potential_2d_from(grid=grid, xp=xp)
 
     def potential_func(self, u, y, x):
         raise NotImplementedError

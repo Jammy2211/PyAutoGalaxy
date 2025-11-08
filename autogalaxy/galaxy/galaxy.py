@@ -231,39 +231,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
             return sum(self.image_2d_list_from(grid=grid, xp=xp, operated_only=operated_only))
         return xp.zeros((grid.shape[0],))
 
-    @aa.grid_dec.to_projected
-    def image_1d_from(self, grid: aa.type.Grid2DLike, xp=np) -> np.ndarray:
-        """
-        Returns the summed 1D image of the galaxy's light profiles using a grid of Cartesian (y,x) coordinates.
-
-        If the galaxy has no light profiles, a grid of zeros is returned.
-
-        See `profiles.light` module for details of how this is performed.
-
-        The decorator `to_projected` converts the output arrays from ndarrays to an `Array1D` data
-        structure using the input `grid`'s attributes.
-
-        Parameters
-        ----------
-        grid
-            The 1D (x,) coordinates where values of the image are evaluated.
-        """
-        if self.has(cls=LightProfile):
-            image_1d_list = []
-
-            for light_profile in self.cls_list_from(
-                cls=LightProfile, cls_filtered=LightProfileLinear
-            ):
-                grid_radial = self.grid_radial_from(
-                    grid=grid, centre=light_profile.centre, angle=light_profile.angle
-                )
-
-                image_1d_list.append(light_profile.image_1d_from(grid=grid_radial))
-
-            return sum(image_1d_list)
-
-        return xp.zeros((grid.shape[0],))
-
     @aa.grid_dec.to_vector_yx
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs) -> np.ndarray:
         """
@@ -337,40 +304,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
         return grid - self.deflections_yx_2d_from(grid=grid, xp=xp)
 
-    @aa.grid_dec.to_projected
-    def convergence_1d_from(self, grid: aa.type.Grid1D2DLike, xp=np) -> np.ndarray:
-        """
-        Returns the summed 1D convergence of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
-
-        If the galaxy has no mass profiles, a grid of zeros is returned.
-
-        See `profiles.mass` module for details of how this is performed.
-
-        The decorator `to_projected` converts the output arrays from ndarrays to an `Array1D` data
-        structure using the input `grid`'s attributes.
-
-        Parameters
-        ----------
-        grid
-            The 1D (x,) coordinates where values of the convergence are evaluated.
-        """
-        if self.has(cls=MassProfile):
-            convergence_1d_list = []
-
-            for mass_profile in self.cls_list_from(cls=MassProfile):
-
-                grid_radial = self.grid_radial_from(
-                    grid=grid, centre=mass_profile.centre, angle=mass_profile.angle
-                )
-
-                convergence_1d_list.append(
-                    mass_profile.convergence_1d_from(grid=grid_radial)
-                )
-
-            return sum(convergence_1d_list)
-
-        return xp.zeros((grid.shape[0],))
-
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs) -> np.ndarray:
         """
@@ -396,39 +329,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
                     self.cls_list_from(cls=MassProfile),
                 )
             )
-        return xp.zeros((grid.shape[0],))
-
-    @aa.grid_dec.to_projected
-    def potential_1d_from(self, grid: aa.type.Grid2DLike, xp=np) -> np.ndarray:
-        """
-        Returns the summed 1D potential of the galaxy's mass profiles using a grid of Cartesian (y,x) coordinates.
-
-        If the galaxy has no mass profiles, a grid of zeros is returned.
-
-        See `profiles.mass` module for details of how this is performed.
-
-        The decorator `to_projected` converts the output arrays from ndarrays to an `Array1D` data
-        structure using the input `grid`'s attributes.
-
-        Parameters
-        ----------
-        grid
-            The 1D (x,) coordinates where values of the potential are evaluated.
-        """
-        if self.has(cls=MassProfile):
-            potential_1d_list = []
-
-            for mass_profile in self.cls_list_from(cls=MassProfile):
-                grid_radial = self.grid_radial_from(
-                    grid=grid, centre=mass_profile.centre, angle=mass_profile.angle
-                )
-
-                potential_1d_list.append(
-                    mass_profile.potential_1d_from(grid=grid_radial)
-                )
-
-            return sum(potential_1d_list)
-
         return xp.zeros((grid.shape[0],))
 
     @property

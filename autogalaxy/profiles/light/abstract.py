@@ -75,33 +75,6 @@ class LightProfile(EllProfile, OperateImage):
         """
         raise NotImplementedError()
 
-    @aa.grid_dec.project_grid
-    def image_1d_from(
-        self, grid: aa.type.Grid1D2DLike, xp=np, **kwargs
-    ) -> aa.type.Grid1D2DLike:
-        """
-        Returns the light profile's 1D image from a grid of Cartesian coordinates, which may have been
-        transformed using the light profile's geometry.
-
-        If a 1D grid is input the image is evaluated every coordinate on the grid. If a 2D grid is input, this is
-        converted to a 1D grid by aligning with the major-axis of the light profile's elliptical geometry.
-
-        Internally, this function uses a 2D grid to compute the image, which is mapped to a 1D data structure on return
-        via the `project_grid` decorator. This avoids code repetition by ensuring that light profiles only use
-        their `image_2d_from()`  function to evaluate their image.
-
-        Parameters
-        ----------
-        grid
-            A 1D or 2D grid of coordinates which are used to evaluate the light profile in 1D.
-
-        Returns
-        -------
-        image
-            The 1D image of the light profile evaluated at every (x,) coordinate on the 1D transformed grid.
-        """
-        return self.image_2d_from(grid=grid, xp=xp, **kwargs)
-
     def luminosity_within_circle_from(self, radius: float) -> float:
         """
         Integrate the light profile to compute the total luminosity within a circle of specified radius. This is

@@ -73,6 +73,13 @@ class LightProfilePlotter(Plotter):
             visuals_1d=visuals_1d,
         )
 
+    @property
+    def grid_2d_projected(self):
+        return self.grid.grid_2d_radial_projected_from(
+            centre=self.light_profile.centre,
+            angle=self.light_profile.angle()
+        )
+
     def figures_1d(self, image: bool = False):
         """
         Plots the individual attributes of the plotter's `LightProfile` object in 1D, which are computed via the
@@ -96,11 +103,12 @@ class LightProfilePlotter(Plotter):
             plot_axis_type_override = None
 
         if image:
-            image_1d = self.light_profile.image_1d_from(grid=self.grid)
+
+            image_1d = self.light_profile.image_2d_from(grid=self.grid_2d_projected)
 
             self.mat_plot_1d.plot_yx(
                 y=image_1d,
-                x=image_1d.grid_radial,
+                x=self.grid_2d_projected[:,1],
                 visuals_1d=self.visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title=r"Image ($\mathrm{e^{-}}\,\mathrm{s^{-1}}$) vs Radius (arcsec)",
@@ -223,7 +231,7 @@ class LightProfilePDFPlotter(LightProfilePlotter):
 
         if image:
             image_1d_list = [
-                light_profile.image_1d_from(grid=self.grid)
+                light_profile.image_2d_from(grid=self.grid_2d_projected)
                 for light_profile in self.light_profile_pdf_list
             ]
 
@@ -248,7 +256,7 @@ class LightProfilePDFPlotter(LightProfilePlotter):
 
             self.mat_plot_1d.plot_yx(
                 y=median_image_1d,
-                x=image_1d_list[0].grid_radial,
+                x=self.grid_2d_projected[:,1],
                 visuals_1d=visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title=r"Image ($\mathrm{e^{-}}\,\mathrm{s^{-1}}$) vs Radius (arcsec)",
