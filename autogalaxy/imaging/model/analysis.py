@@ -126,11 +126,12 @@ class AnalysisImaging(AnalysisDataset):
         float
             The log likelihood indicating how well this model instance fitted the imaging data.
         """
-        return self.fit_from(instance=instance).figure_of_merit
+        return self.fit_from(instance=instance, xp=xp).figure_of_merit
 
     def fit_from(
         self,
         instance: af.ModelInstance,
+        xp=np
     ) -> FitImaging:
         """
         Given a model instance create a `FitImaging` object.
@@ -166,6 +167,7 @@ class AnalysisImaging(AnalysisDataset):
             dataset_model=dataset_model,
             adapt_images=adapt_images,
             settings_inversion=self.settings_inversion,
+            xp=xp
         )
 
     def save_attributes(self, paths: af.DirectoryPaths):

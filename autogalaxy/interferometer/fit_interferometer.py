@@ -20,6 +20,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         dataset_model: Optional[aa.DatasetModel] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        xp=np
     ):
         """
         Fits an interferometer dataset using a list of galaxies.
@@ -72,6 +73,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             dataset=dataset,
             dataset_model=dataset_model,
             use_mask_in_fit=False,
+            xp=xp
         )
         AbstractFitInversion.__init__(
             self=self,
@@ -89,7 +91,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         a Fourier transform to the sum of light profile images.
         """
         return self.galaxies.visibilities_from(
-            grid=self.grids.lp, transformer=self.dataset.transformer
+            grid=self.grids.lp, transformer=self.dataset.transformer, xp=self.xp
         )
 
     @property
@@ -114,6 +116,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             galaxies=self.galaxies,
             adapt_images=self.adapt_images,
             settings_inversion=self.settings_inversion,
+            xp=self.xp
         )
 
     @cached_property

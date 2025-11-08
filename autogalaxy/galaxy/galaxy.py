@@ -1,6 +1,5 @@
 from typing import Dict, List, Optional, Type, Union
 
-import jax.numpy as jnp
 import numpy as np
 
 from autoconf.dictable import instance_as_dict, to_dict

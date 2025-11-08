@@ -423,7 +423,7 @@ class OperateImageGalaxies(OperateImageList):
         return galaxy_blurred_image_2d_dict
 
     def galaxy_visibilities_dict_from(
-        self, grid, transformer
+        self, grid, transformer, xp=np
     ) -> Dict[Galaxy, aa.Visibilities]:
         """
         Evaluate the light object's dictionary mapping galaixes to their corresponding 2D images and transform each

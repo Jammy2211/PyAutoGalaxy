@@ -1,4 +1,3 @@
-import jax.numpy as jnp
 
 from .jax_utils import w_f_approx
 

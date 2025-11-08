@@ -168,9 +168,9 @@ class Ellipse(EllProfile):
             np.sqrt(
                 np.add(
                     self.major_axis**2.0
-                    * np.sin(angles_from_x0 - self.angle_radians) ** 2.0,
+                    * np.sin(angles_from_x0 - self.angle_radians()) ** 2.0,
                     self.minor_axis**2.0
-                    * np.cos(angles_from_x0 - self.angle_radians) ** 2.0,
+                    * np.cos(angles_from_x0 - self.angle_radians()) ** 2.0,
                 )
             ),
         )
