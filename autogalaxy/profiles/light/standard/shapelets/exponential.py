@@ -65,7 +65,7 @@ class ShapeletExponential(AbstractShapelet):
     @check_operated_only
     @aa.grid_dec.transform
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
+        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None, **kwargs
     ) -> np.ndarray:
         """
         Returns the Exponential Shapelet light profile's 2D image from a 2D grid of Exponential (y,x) coordinates.
@@ -87,30 +87,30 @@ class ShapeletExponential(AbstractShapelet):
         from jax.scipy.special import factorial
 
         radial = (grid.array[:, 0] ** 2 + grid.array[:, 1] ** 2) / self.beta
-        theta = jnp.arctan(grid.array[:, 1] / grid.array[:, 0])
+        theta = xp.arctan(grid.array[:, 1] / grid.array[:, 0])
 
         prefactor = (
             1.0
-            / jnp.sqrt(2 * jnp.pi)
+            / xp.sqrt(2 * xp.pi)
             / self.beta
-            * (self.n + 0.5) ** (-1 - jnp.abs(self.m))
+            * (self.n + 0.5) ** (-1 - xp.abs(self.m))
             * (-1) ** (self.n + self.m)
-            * jnp.sqrt(
-                factorial(self.n - jnp.abs(self.m)) / 2 * self.n
-                + 1 / factorial(self.n + jnp.abs(self.m))
+            * xp.sqrt(
+                factorial(self.n - xp.abs(self.m)) / 2 * self.n
+                + 1 / factorial(self.n + xp.abs(self.m))
             )
         )
 
-        laguerre = genlaguerre(n=self.n - jnp.abs(self.m), alpha=2 * jnp.abs(self.m))
+        laguerre = genlaguerre(n=self.n - xp.abs(self.m), alpha=2 * xp.abs(self.m))
         shapelet = laguerre(radial / (self.n + 0.5))
 
-        return jnp.abs(
+        return xp.abs(
             prefactor
-            * jnp.exp(-radial / (2 * self.n + 1))
-            * radial ** (jnp.abs(self.m))
+            * xp.exp(-radial / (2 * self.n + 1))
+            * radial ** (xp.abs(self.m))
             * shapelet
-            * jnp.cos(self.m * theta)
-            + -1.0j * jnp.sin(self.m * theta)
+            * xp.cos(self.m * theta)
+            + -1.0j * xp.sin(self.m * theta)
         )
 
 

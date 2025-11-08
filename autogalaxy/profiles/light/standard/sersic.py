@@ -53,7 +53,7 @@ class AbstractSersic(LightProfile):
         The elliptical effective radius instead describes the major-axis radius of the ellipse containing
         half the light, and may be more appropriate for highly flattened systems like disk galaxies.
         """
-        return self.effective_radius / jnp.sqrt(self.axis_ratio())
+        return self.effective_radius / xp.sqrt(self.axis_ratio())
 
     @property
     def sersic_constant(self) -> float:
@@ -80,7 +80,7 @@ class AbstractSersic(LightProfile):
         grid_radii
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
-        return self._intensity * jnp.exp(
+        return self._intensity * xp.exp(
             -self.sersic_constant
             * (((radius / self.effective_radius) ** (1.0 / self.sersic_index)) - 1)
         )

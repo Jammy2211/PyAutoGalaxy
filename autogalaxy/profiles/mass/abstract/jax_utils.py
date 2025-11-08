@@ -26,7 +26,7 @@ def reg2(z, sqrt_pi, _):
     for s in r2_s2:
         f2 = s - f2 * mz2
 
-    return jnp.exp(mz2) + 1j * z * f1 / f2
+    return xp.exp(mz2) + 1j * z * f1 / f2
 
 
 r3_s1 = [5.9126262, 30.180142, 93.15558, 181.92853, 214.38239, 122.60793]
@@ -55,7 +55,7 @@ def w_f_approx(z):
     :return: :math:`w_\\mathrm{F}(z)`
     :rtype: ``complex``
     """
-    sqrt_pi = 1 / jnp.sqrt(jnp.pi)
+    sqrt_pi = 1 / xp.sqrt(xp.pi)
     i_sqrt_pi = 1j * sqrt_pi
 
     z_imag2 = z.imag**2
@@ -69,31 +69,31 @@ def w_f_approx(z):
     r2_1 = (abs_z2 >= 30.0) & (abs_z2 < 62.0) & (z_imag2 < 1e-13)
     r2_2 = (abs_z2 >= 2.5) & (abs_z2 < 30.0) & (z_imag2 < 0.072)
     r2 = r2_1 | r2_2
-    r3 = jnp.logical_not(r1) & jnp.logical_not(r2)
+    r3 = xp.logical_not(r1) & xp.logical_not(r2)
 
     # exploit symmetry to avoid overflow in some regions
     r_flip = z.imag < 0
-    z_adjust = jnp.where(r_flip, -z, z)
-    two_exp_zz = 2 * jnp.exp(-(z_adjust**2))
+    z_adjust = xp.where(r_flip, -z, z)
+    two_exp_zz = 2 * xp.exp(-(z_adjust**2))
 
     args = (z_adjust, sqrt_pi, i_sqrt_pi)
-    wz = jnp.empty_like(z)
-    wz = jnp.where(r1, reg1(*args), wz)
-    wz = jnp.where(r2, reg2(*args), wz)
-    wz = jnp.where(r3, reg3(*args), wz)
+    wz = xp.empty_like(z)
+    wz = xp.where(r1, reg1(*args), wz)
+    wz = xp.where(r2, reg2(*args), wz)
+    wz = xp.where(r3, reg3(*args), wz)
 
     # exploit symmetry to avoid overflow in some regions
-    wz = jnp.where(r_flip, two_exp_zz - wz, wz)
+    wz = xp.where(r_flip, two_exp_zz - wz, wz)
 
     return wz
 
 
 @w_f_approx.defjvp
 def w_f_approx_jvp(primals, tangents):
-    # define a custom jvp to avoid the issue using `jnp.where` with `jax.grad`
+    # define a custom jvp to avoid the issue using `xp.where` with `jax.grad`
     (z,) = primals
     (z_dot,) = tangents
     primal_out = w_f_approx(z)
-    i_sqrt_pi = 1j / jnp.sqrt(jnp.pi)
+    i_sqrt_pi = 1j / xp.sqrt(xp.pi)
     tangent_out = z_dot * 2 * (i_sqrt_pi - z * primal_out)
     return primal_out, tangent_out

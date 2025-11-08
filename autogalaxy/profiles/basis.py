@@ -1,4 +1,3 @@
-import jax.numpy as jnp
 import numpy as np
 from typing import Dict, List, Optional, Union
 
@@ -76,7 +75,7 @@ class Basis(LightProfile, MassProfile):
         return aa.util.misc.cls_list_from(values=self.profile_list, cls=MassProfile)
 
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
+        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None, **kwargs
     ) -> aa.Array2D:
         """
         Returns the summed image of all light profiles in the basis from a 2D grid of Cartesian (y,x) coordinates.
@@ -99,10 +98,10 @@ class Basis(LightProfile, MassProfile):
         -------
         The image of the light profiles in the basis summed together.
         """
-        return sum(self.image_2d_list_from(grid=grid, operated_only=operated_only))
+        return sum(self.image_2d_list_from(grid=grid, xp=xp, operated_only=operated_only))
 
     def image_2d_list_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None
     ) -> List[aa.Array2D]:
         """
         Returns each image of each light profiles in the basis as a list, from a 2D grid of Cartesian (y,x) coordinates.
@@ -127,14 +126,14 @@ class Basis(LightProfile, MassProfile):
         """
         return [
             (
-                light_profile.image_2d_from(grid=grid, operated_only=operated_only)
+                light_profile.image_2d_from(grid=grid, xp=xp, operated_only=operated_only)
                 if not isinstance(light_profile, lp_linear.LightProfileLinear)
-                else jnp.zeros((grid.shape[0],))
+                else xp.zeros((grid.shape[0],))
             )
             for light_profile in self.light_profile_list
         ]
 
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> aa.Array2D:
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs) -> aa.Array2D:
         """
         Returns the summed convergence of all mass profiles in the basis from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -153,11 +152,11 @@ class Basis(LightProfile, MassProfile):
         """
         if len(self.mass_profile_list) > 0:
             return sum(
-                [mass.convergence_2d_from(grid=grid) for mass in self.profile_list]
+                [mass.convergence_2d_from(grid=grid, xp=xp) for mass in self.profile_list]
             )
-        return jnp.zeros((grid.shape[0],))
+        return xp.zeros((grid.shape[0],))
 
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> aa.Array2D:
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs) -> aa.Array2D:
         """
         Returns the summed potential of all mass profiles in the basis from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -178,9 +177,9 @@ class Basis(LightProfile, MassProfile):
             return sum(
                 [mass.potential_2d_from(grid=grid) for mass in self.profile_list]
             )
-        return jnp.zeros((grid.shape[0],))
+        return xp.zeros((grid.shape[0],))
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> aa.Array2D:
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs) -> aa.Array2D:
         """
         Returns the summed deflections of all mass profiles in the basis from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -201,7 +200,7 @@ class Basis(LightProfile, MassProfile):
             return sum(
                 [mass.deflections_yx_2d_from(grid=grid) for mass in self.profile_list]
             )
-        return jnp.zeros((grid.shape[0], 2))
+        return xp.zeros((grid.shape[0], 2))
 
     def lp_instance_from(self, linear_light_profile_intensity_dict: Dict):
         light_profile_list = []

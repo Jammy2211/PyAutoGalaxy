@@ -64,7 +64,7 @@ class ShapeletCartesian(AbstractShapelet):
     @check_operated_only
     @aa.grid_dec.transform
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
+        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None, **kwargs
     ) -> np.ndarray:
         """
         Returns the Cartesian Shapelet light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
@@ -97,12 +97,12 @@ class ShapeletCartesian(AbstractShapelet):
         return (
             shapelet_y
             * shapelet_x
-            * jnp.exp(-0.5 * (y**2 + x**2) / (self.beta**2))
+            * xp.exp(-0.5 * (y**2 + x**2) / (self.beta**2))
             / self.beta
             / (
-                jnp.sqrt(
+                xp.sqrt(
                     2 ** (self.n_x + self.n_y)
-                    * (jnp.pi)
+                    * (xp.pi)
                     * factorial(self.n_y)
                     * factorial(self.n_x)
                 )

@@ -182,7 +182,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         return grid - self.deflections_yx_2d_from(grid=grid, xp=xp)
 
     @aa.grid_dec.to_array
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D convergence of all galaxies from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -203,10 +203,10 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         grid
             The 2D (y, x) coordinates where values of the convergence are evaluated.
         """
-        return sum(map(lambda g: g.convergence_2d_from(grid=grid), self))
+        return sum(map(lambda g: g.convergence_2d_from(grid=grid, xp=xp), self))
 
     @aa.grid_dec.to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs) -> np.ndarray:
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs) -> np.ndarray:
         """
         Returns the summed 2D potential of all galaxies from a 2D grid of Cartesian (y,x) coordinates.
 
@@ -227,7 +227,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         grid
             The 2D (y, x) coordinates where values of the potential are evaluated.
         """
-        return sum(map(lambda g: g.potential_2d_from(grid=grid), self))
+        return sum(map(lambda g: g.potential_2d_from(grid=grid, xp=xp), self))
 
     def has(self, cls: Union[Type, Tuple[Type]]) -> bool:
         """

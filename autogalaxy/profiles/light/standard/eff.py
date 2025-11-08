@@ -42,7 +42,7 @@ class ElsonFreeFall(LightProfile):
         self.effective_radius = effective_radius
         self.eta = eta
 
-    def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray, xp=np) -> np.ndarray:
         """
         Returns the 2D image of the Sersic light profile from a grid of coordinates which are the radial distances of
         each coordinate from the its `centre`.
@@ -62,7 +62,7 @@ class ElsonFreeFall(LightProfile):
     @check_operated_only
     @aa.grid_dec.transform
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
+        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None, **kwargs
     ) -> np.ndarray:
         """
         Returns the Eff light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
@@ -81,7 +81,7 @@ class ElsonFreeFall(LightProfile):
             The image of the Eff evaluated at every (y,x) coordinate on the transformed grid.
         """
         return self.image_2d_via_radii_from(
-            self.eccentric_radii_grid_from(grid=grid, **kwargs)
+            self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs)
         )
 
     @property

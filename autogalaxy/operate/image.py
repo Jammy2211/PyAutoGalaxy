@@ -1,6 +1,5 @@
 from __future__ import annotations
-import jax
-import jax.numpy as jnp
+import numpy as np
 from typing import TYPE_CHECKING, Dict, List, Optional
 
 from autoarray import Array2D
@@ -23,7 +22,7 @@ class OperateImage:
     """
 
     def image_2d_from(
-        self, grid: aa.Grid2D, operated_only: Optional[bool] = None
+        self, grid: aa.Grid2D, xp=np, operated_only: Optional[bool] = None
     ) -> aa.Array2D:
         raise NotImplementedError
 
@@ -334,7 +333,7 @@ class OperateImageList(OperateImage):
         visibilities_list = []
 
         for image_2d in image_2d_list:
-            if not jnp.any(image_2d.array):
+            if not xp.any(image_2d.array):
                 visibilities = aa.Visibilities.zeros(
                     shape_slim=(transformer.uv_wavelengths.shape[0],)
                 )
@@ -453,7 +452,7 @@ class OperateImageGalaxies(OperateImageList):
         for galaxy_key in galaxy_image_2d_dict.keys():
             image_2d = galaxy_image_2d_dict[galaxy_key]
 
-            if not jnp.any(image_2d.array):
+            if not xp.any(image_2d.array):
                 visibilities = aa.Visibilities.zeros(
                     shape_slim=(transformer.uv_wavelengths.shape[0],)
                 )

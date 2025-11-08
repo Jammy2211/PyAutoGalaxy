@@ -39,7 +39,7 @@ class PowerLaw(PowerLawCore):
         )
 
     @aa.grid_dec.to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         alpha = self.deflections_yx_2d_from(aa.Grid2DIrregular(grid), **kwargs)
 
         alpha_x = alpha[:, 1]
@@ -85,7 +85,7 @@ class PowerLaw(PowerLawCore):
         R = xp.sqrt(
             (self.axis_ratio() * grid.array[:, 1]) ** 2 + grid.array[:, 0] ** 2 + 1e-16
         )
-        zh = omega(z, slope, factor, n_terms=20)
+        zh = omega(z, slope, factor, n_terms=20, xp=np)
 
         complex_angle = (
             2.0 * b / (1.0 + self.axis_ratio()) * (b / R) ** (slope - 1.0) * zh

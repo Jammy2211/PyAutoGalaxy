@@ -46,7 +46,7 @@ class Moffat(LightProfile):
         self.alpha = alpha
         self.beta = beta
 
-    def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray, xp=np) -> np.ndarray:
         """
         Returns the 2D image of the Moffat light profile from a grid of coordinates which are the radial distance of
         each coordinate from the its `centre`.
@@ -58,12 +58,12 @@ class Moffat(LightProfile):
         grid_radii
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
-        return jnp.multiply(
+        return xp.multiply(
             self._intensity,
-            jnp.power(
+            xp.power(
                 1
-                + jnp.square(
-                    jnp.divide(grid_radii.array, self.alpha / jnp.sqrt(self.axis_ratio()))
+                + xp.square(
+                    xp.divide(grid_radii.array, self.alpha / xp.sqrt(self.axis_ratio()))
                 ),
                 -self.beta,
             ),
@@ -74,7 +74,7 @@ class Moffat(LightProfile):
     @check_operated_only
     @aa.grid_dec.transform
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
+        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None, **kwargs
     ) -> np.ndarray:
         """
         Returns the Moffat light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
@@ -94,7 +94,7 @@ class Moffat(LightProfile):
         """
 
         return self.image_2d_via_radii_from(
-            self.eccentric_radii_grid_from(grid=grid, **kwargs)
+            self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs)
         )
 
 

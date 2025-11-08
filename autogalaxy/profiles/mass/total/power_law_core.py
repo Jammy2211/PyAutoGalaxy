@@ -50,7 +50,7 @@ class PowerLawCore(MassProfile):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
 
@@ -221,17 +221,17 @@ class PowerLawCoreSph(PowerLawCore):
 
         """
         eta = self.radial_grid_from(grid=grid, **kwargs)
-        deflection = jnp.multiply(
+        deflection = xp.multiply(
             2.0 * self.einstein_radius_rescaled(xp),
-            jnp.divide(
-                jnp.add(
-                    jnp.power(
-                        jnp.add(self.core_radius**2, jnp.square(eta.array)),
+            xp.divide(
+                xp.add(
+                    xp.power(
+                        xp.add(self.core_radius**2, xp.square(eta.array)),
                         (3.0 - self.slope) / 2.0,
                     ),
                     -self.core_radius ** (3 - self.slope),
                 ),
-                jnp.multiply((3.0 - self.slope), eta.array),
+                xp.multiply((3.0 - self.slope), eta.array),
             ),
         )
         return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection)

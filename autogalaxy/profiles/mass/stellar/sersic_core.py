@@ -60,10 +60,10 @@ class SersicCore(Sersic):
         self.alpha = alpha
         self.gamma = gamma
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self.deflections_2d_via_mge_from(grid=grid, **kwargs)
 
-    def image_2d_via_radii_from(self, grid_radii: np.ndarray):
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray, xp=np):
         """
         Calculate the intensity of the cored-Sersic light profile on a grid of radial coordinates.
 
@@ -72,27 +72,27 @@ class SersicCore(Sersic):
         grid_radii
             The radial distance from the centre of the profile. for each coordinate on the grid.
         """
-        return jnp.multiply(
-            jnp.multiply(
-                self.intensity_prime,
-                jnp.power(
-                    jnp.add(
+        return xp.multiply(
+            xp.multiply(
+                self.intensity_prime(xp),
+                xp.power(
+                    xp.add(
                         1,
-                        jnp.power(
-                            jnp.divide(self.radius_break, grid_radii.array), self.alpha
+                        xp.power(
+                            xp.divide(self.radius_break, grid_radii.array), self.alpha
                         ),
                     ),
                     (self.gamma / self.alpha),
                 ),
             ),
-            jnp.exp(
-                jnp.multiply(
+            xp.exp(
+                xp.multiply(
                     -self.sersic_constant,
                     (
-                        jnp.power(
-                            jnp.divide(
-                                jnp.add(
-                                    jnp.power(grid_radii.array, self.alpha),
+                        xp.power(
+                            xp.divide(
+                                xp.add(
+                                    xp.power(grid_radii.array, self.alpha),
                                     (self.radius_break**self.alpha),
                                 ),
                                 (self.effective_radius**self.alpha),
@@ -111,7 +111,7 @@ class SersicCore(Sersic):
         def core_sersic_2D(r):
             return (
                 self.mass_to_light_ratio
-                * self.intensity_prime
+                * self.intensity_prime(xp)
                 * (1.0 + (self.radius_break / r) ** self.alpha)
                 ** (self.gamma / self.alpha)
                 * np.exp(
@@ -128,13 +128,12 @@ class SersicCore(Sersic):
             func=core_sersic_2D, radii_min=radii_min, radii_max=radii_max
         )
 
-    @property
-    def intensity_prime(self):
+    def intensity_prime(self, xp=np):
         """Overall intensity normalisation in the rescaled Core-Sersic light profiles (electrons per second)"""
         return (
             self.intensity
             * (2.0 ** (-self.gamma / self.alpha))
-            * jnp.exp(
+            * xp.exp(
                 self.sersic_constant
                 * (
                     ((2.0 ** (1.0 / self.alpha)) * self.radius_break)

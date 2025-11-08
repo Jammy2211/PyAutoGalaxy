@@ -51,21 +51,21 @@ class MassProfile(EllProfile, OperateDeflections):
         raise NotImplementedError
 
     @aa.grid_dec.project_grid
-    def convergence_1d_from(self, grid: aa.type.Grid1D2DLike) -> aa.type.Grid1D2DLike:
-        return self.convergence_2d_from(grid=grid)
+    def convergence_1d_from(self, grid: aa.type.Grid1D2DLike, xp=np) -> aa.type.Grid1D2DLike:
+        return self.convergence_2d_from(grid=grid, xp=xp)
 
     def potential_2d_from(self, grid):
         raise NotImplementedError
 
     @aa.grid_dec.project_grid
-    def potential_1d_from(self, grid: aa.type.Grid1D2DLike) -> aa.type.Grid1D2DLike:
-        return self.potential_2d_from(grid=grid)
+    def potential_1d_from(self, grid: aa.type.Grid1D2DLike, xp=np) -> aa.type.Grid1D2DLike:
+        return self.potential_2d_from(grid=grid, xp=xp)
 
     def potential_func(self, u, y, x):
         raise NotImplementedError
 
-    def mass_integral(self, x):
-        return 2 * jnp.pi * x * self.convergence_func(grid_radius=aa.ArrayIrregular(x))
+    def mass_integral(self, x, xp=np):
+        return 2 * xp.pi * x * self.convergence_func(grid_radius=aa.ArrayIrregular(x))
 
     @property
     def ellipticity_rescale(self):

@@ -57,7 +57,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -74,7 +74,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def convergence_2d_via_mge_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def convergence_2d_via_mge_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -130,7 +130,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         amplitude_list *= np.sqrt(2.0 * np.pi) * sigma_list
         return amplitude_list, sigma_list
 
-    def coord_func_f(self, grid_radius: jnp.ndarray) -> jnp.ndarray:
+    def coord_func_f(self, grid_radius: np.ndarray) -> np.ndarray:
         """
         Given an array `grid_radius` and a work array `f`, fill f[i] with
 
@@ -142,24 +142,24 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         any Python control flow on tracer values.
         """
         if isinstance(grid_radius, float) or isinstance(grid_radius, complex):
-            grid_radius = jnp.array([grid_radius])
+            grid_radius = xp.array([grid_radius])
 
-        f = jnp.ones(shape=grid_radius.shape[0], dtype="complex64")
+        f = xp.ones(shape=grid_radius.shape[0], dtype="complex64")
 
         # compute both branches
         r = grid_radius
         inv_r = 1.0 / r
 
         # branch for r > 1
-        out_gt = (1.0 / jnp.sqrt(r**2 - 1.0)) * jnp.arccos(inv_r)
+        out_gt = (1.0 / xp.sqrt(r**2 - 1.0)) * xp.arccos(inv_r)
 
         # branch for r < 1
-        out_lt = (1.0 / jnp.sqrt(1.0 - r**2)) * jnp.arccosh(inv_r)
+        out_lt = (1.0 / xp.sqrt(1.0 - r**2)) * xp.arccosh(inv_r)
 
         # combine: if r>1 pick out_gt, elif r<1 pick out_lt, else keep original f
-        return jnp.where(r > 1.0, out_gt, jnp.where(r < 1.0, out_lt, f))
+        return xp.where(r > 1.0, out_gt, xp.where(r < 1.0, out_lt, f))
 
-    def coord_func_g(self, grid_radius: jnp.ndarray) -> jnp.ndarray:
+    def coord_func_g(self, grid_radius: np.ndarray) -> np.ndarray:
         """
         Vectorized version of the original looped `coord_func_g_jit`.
 
@@ -170,32 +170,32 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         Parameters
         ----------
-        grid_radius : jnp.ndarray
+        grid_radius : np.ndarray
             The input grid radius values.
-        f_r : jnp.ndarray
+        f_r : np.ndarray
             Precomputed values from `coord_func_f`.
-        g : jnp.ndarray
+        g : np.ndarray
             Output array (will be overwritten).
 
         Returns
         -------
-        jnp.ndarray
+        np.ndarray
             The updated `g` array.
         """
         # Convert single values to JAX arrays
         if isinstance(grid_radius, (float, complex)):
-            grid_radius = jnp.array([grid_radius], dtype=jnp.complex64)
+            grid_radius = xp.array([grid_radius], dtype=xp.complex64)
 
         # Evaluate f_r
         f_r = self.coord_func_f(grid_radius=grid_radius)
 
-        r = jnp.real(grid_radius)
+        r = xp.real(grid_radius)
         r2 = r**2
 
-        return jnp.where(
+        return xp.where(
             r > 1.0,
             (1.0 - f_r) / (r2 - 1.0),
-            jnp.where(
+            xp.where(
                 r < 1.0,
                 (f_r - 1.0) / (1.0 - r2),
                 1.0 / 3.0,
@@ -203,7 +203,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         )
 
     def coord_func_h(self, grid_radius):
-        return jnp.log(grid_radius / 2.0) + self.coord_func_f(grid_radius=grid_radius)
+        return xp.log(grid_radius / 2.0) + self.coord_func_f(grid_radius=grid_radius)
 
     def rho_at_scale_radius_solar_mass_per_kpc3(
         self, redshift_object, redshift_source, cosmology: LensingCosmology = None
@@ -301,7 +301,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
                 concentration
                 * concentration
                 * concentration
-                / (jnp.log(1 + concentration) - concentration / (1 + concentration))
+                / (xp.log(1 + concentration) - concentration / (1 + concentration))
             )
             - delta_concentration
         )
@@ -372,7 +372,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         return (
             200.0
-            * ((4.0 / 3.0) * jnp.pi)
+            * ((4.0 / 3.0) * xp.pi)
             * cosmic_average_density
             * (radius_at_200_kpc**3.0)
         )

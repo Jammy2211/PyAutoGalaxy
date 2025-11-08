@@ -314,7 +314,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
         if self.has(cls=MassProfile):
             return sum(
                 map(
-                    lambda p: p.convergence_2d_from(grid=grid),
+                    lambda p: p.convergence_2d_from(grid=grid, xp=xp),
                     self.cls_list_from(cls=MassProfile),
                 )
             )

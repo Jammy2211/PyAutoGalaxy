@@ -13,7 +13,7 @@ from autogalaxy.profiles.light.decorators import (
 class MockLightProfile(ag.LightProfile):
     @check_operated_only
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None
     ):
         return np.ones(shape=(3, 3))
 
@@ -21,7 +21,7 @@ class MockLightProfile(ag.LightProfile):
 class MockLightProfileOperated(ag.lp_operated.LightProfileOperated):
     @check_operated_only
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None
     ):
         return np.ones(shape=(3, 3))
 

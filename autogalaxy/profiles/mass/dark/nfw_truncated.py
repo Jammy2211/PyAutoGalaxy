@@ -1,4 +1,4 @@
-import jax.numpy as jnp
+import numpy as np
 from typing import Tuple
 
 import autoarray as aa
@@ -28,7 +28,7 @@ class NFWTruncatedSph(AbstractgNFW):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -38,68 +38,68 @@ class NFWTruncatedSph(AbstractgNFW):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
-        eta = jnp.multiply(
+        eta = xp.multiply(
             1.0 / self.scale_radius, self.radial_grid_from(grid=grid, **kwargs).array
         )
 
-        deflection_grid = jnp.multiply(
+        deflection_grid = xp.multiply(
             (4.0 * self.kappa_s * self.scale_radius / eta),
             self.deflection_func_sph(grid_radius=eta),
         )
 
-        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection_grid)
+        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection_grid, xp=xp)
 
-    def deflection_func_sph(self, grid_radius):
+    def deflection_func_sph(self, grid_radius, xp=np):
         grid_radius = grid_radius + 0j
-        return jnp.real(self.coord_func_m(grid_radius=grid_radius))
+        return xp.real(self.coord_func_m(grid_radius=grid_radius, xp=xp))
 
-    def convergence_func(self, grid_radius: float) -> float:
+    def convergence_func(self, grid_radius: float, xp=np) -> float:
         grid_radius = ((1.0 / self.scale_radius) * grid_radius) + 0j
-        return jnp.real(
-            2.0 * self.kappa_s * self.coord_func_l(grid_radius=grid_radius.array)
+        return xp.real(
+            2.0 * self.kappa_s * self.coord_func_l(grid_radius=grid_radius.array, xp=xp)
         )
 
     @aa.grid_dec.to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return jnp.zeros(shape=grid.shape[0])
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        return xp.zeros(shape=grid.shape[0])
 
-    def coord_func_k(self, grid_radius):
-        return jnp.log(
-            jnp.divide(
+    def coord_func_k(self, grid_radius, xp=np):
+        return xp.log(
+            xp.divide(
                 grid_radius,
-                jnp.sqrt(jnp.square(grid_radius) + jnp.square(self.tau)) + self.tau,
+                xp.sqrt(xp.square(grid_radius) + xp.square(self.tau)) + self.tau,
             )
         )
 
-    def coord_func_l(self, grid_radius):
-        f_r = self.coord_func_f(grid_radius=grid_radius)
-        g_r = self.coord_func_g(grid_radius=grid_radius)
-        k_r = self.coord_func_k(grid_radius=grid_radius)
+    def coord_func_l(self, grid_radius, xp=np):
+        f_r = self.coord_func_f(grid_radius=grid_radius, xp=xp)
+        g_r = self.coord_func_g(grid_radius=grid_radius, xp=xp)
+        k_r = self.coord_func_k(grid_radius=grid_radius, xp=xp)
 
-        return jnp.divide(self.tau**2.0, (self.tau**2.0 + 1.0) ** 2.0) * (
+        return xp.divide(self.tau**2.0, (self.tau**2.0 + 1.0) ** 2.0) * (
             ((self.tau**2.0 + 1.0) * g_r)
             + (2 * f_r)
-            - (jnp.pi / (jnp.sqrt(self.tau**2.0 + grid_radius**2.0)))
+            - (xp.pi / (xp.sqrt(self.tau**2.0 + grid_radius**2.0)))
             + (
                 (
                     (self.tau**2.0 - 1.0)
-                    / (self.tau * (jnp.sqrt(self.tau**2.0 + grid_radius**2.0)))
+                    / (self.tau * (xp.sqrt(self.tau**2.0 + grid_radius**2.0)))
                 )
                 * k_r
             )
         )
 
-    def coord_func_m(self, grid_radius):
-        f_r = self.coord_func_f(grid_radius=grid_radius)
-        k_r = self.coord_func_k(grid_radius=grid_radius)
+    def coord_func_m(self, grid_radius, xp=np):
+        f_r = self.coord_func_f(grid_radius=grid_radius, xp=xp)
+        k_r = self.coord_func_k(grid_radius=grid_radius, xp=xp)
 
         return (self.tau**2.0 / (self.tau**2.0 + 1.0) ** 2.0) * (
             ((self.tau**2.0 + 2.0 * grid_radius**2.0 - 1.0) * f_r)
-            + (jnp.pi * self.tau)
-            + ((self.tau**2.0 - 1.0) * jnp.log(self.tau))
+            + (xp.pi * self.tau)
+            + ((self.tau**2.0 - 1.0) * xp.log(self.tau))
             + (
-                jnp.sqrt(grid_radius**2.0 + self.tau**2.0)
-                * (((self.tau**2.0 - 1.0) / self.tau) * k_r - jnp.pi)
+                xp.sqrt(grid_radius**2.0 + self.tau**2.0)
+                * (((self.tau**2.0 - 1.0) / self.tau) * k_r - xp.pi)
             )
         )
 
@@ -125,8 +125,8 @@ class NFWTruncatedSph(AbstractgNFW):
             mass_at_200
             * (self.tau**2.0 / (self.tau**2.0 + 1.0) ** 2.0)
             * (
-                ((self.tau**2.0 - 1) * jnp.log(self.tau))
-                + (self.tau * jnp.pi)
+                ((self.tau**2.0 - 1) * np.log(self.tau))
+                + (self.tau * np.pi)
                 - (self.tau**2.0 + 1)
             )
         )

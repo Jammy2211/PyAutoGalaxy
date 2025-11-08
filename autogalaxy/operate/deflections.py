@@ -47,7 +47,7 @@ def precompute_jacobian(func):
 
 
 def one_step(r, _, theta, fun, fun_dr):
-    r = jnp.abs(r - fun(r, theta) / fun_dr(r, theta))
+    r = xp.abs(r - fun(r, theta) / fun_dr(r, theta))
     return r, None
 
 
@@ -56,8 +56,8 @@ def step_r(r, theta, fun, fun_dr, N=20):
     one_step_partial = jax.tree_util.Partial(
         one_step, theta=theta, fun=fun, fun_dr=fun_dr
     )
-    new_r = jax.lax.scan(one_step_partial, r, xs=jnp.arange(N))[0]
-    return jnp.stack([new_r * jnp.sin(theta), new_r * jnp.cos(theta)]).T
+    new_r = jax.lax.scan(one_step_partial, r, xs=xp.arange(N))[0]
+    return xp.stack([new_r * xp.sin(theta), new_r * xp.cos(theta)]).T
 
 
 class OperateDeflections:
@@ -90,7 +90,7 @@ class OperateDeflections:
         )
 
         g = aa.Grid2D(
-            values=jnp.stack((y.reshape(1), x.reshape(1)), axis=-1), mask=mask
+            values=xp.stack((y.reshape(1), x.reshape(1)), axis=-1), mask=mask
         )
 
         return self.deflections_yx_2d_from(g).squeeze()
@@ -281,19 +281,19 @@ class OperateDeflections:
             grid = grid.array
 
         grid_shift_y_up = aa.Grid2DIrregular(
-            values=jnp.stack([grid[:, 0] + buffer, grid[:, 1]], axis=1)
+            values=xp.stack([grid[:, 0] + buffer, grid[:, 1]], axis=1)
         )
 
         grid_shift_y_down = aa.Grid2DIrregular(
-            values=jnp.stack([grid[:, 0] - buffer, grid[:, 1]], axis=1)
+            values=xp.stack([grid[:, 0] - buffer, grid[:, 1]], axis=1)
         )
 
         grid_shift_x_left = aa.Grid2DIrregular(
-            values=jnp.stack([grid[:, 0], grid[:, 1] - buffer], axis=1)
+            values=xp.stack([grid[:, 0], grid[:, 1] - buffer], axis=1)
         )
 
         grid_shift_x_right = aa.Grid2DIrregular(
-            values=jnp.stack([grid[:, 0], grid[:, 1] + buffer], axis=1)
+            values=xp.stack([grid[:, 0], grid[:, 1] + buffer], axis=1)
         )
 
         deflections_up = deflections_func(grid=grid_shift_y_up)
@@ -375,7 +375,7 @@ class OperateDeflections:
         gamma_1 = 0.5 * (hessian_xx - hessian_yy)
         gamma_2 = hessian_xy
 
-        shear_yx_2d = jnp.stack([gamma_2.array, gamma_1.array], axis=1)
+        shear_yx_2d = xp.stack([gamma_2.array, gamma_1.array], axis=1)
 
         return ShearYX2DIrregular(values=shear_yx_2d, grid=grid)
 
@@ -614,7 +614,7 @@ class OperateDeflections:
 
         for curve in curve_list:
             x, y = curve[:, 0], curve[:, 1]
-            area = jnp.abs(0.5 * jnp.sum(y[:-1] * jnp.diff(x) - x[:-1] * jnp.diff(y)))
+            area = xp.abs(0.5 * xp.sum(y[:-1] * xp.diff(x) - x[:-1] * xp.diff(y)))
             area_within_each_curve_list.append(area)
 
         return area_within_each_curve_list
@@ -649,7 +649,7 @@ class OperateDeflections:
         """
         try:
             area_list = self.tangential_critical_curve_area_list_from(grid=grid)
-            return [jnp.sqrt(area / jnp.pi) for area in area_list]
+            return [xp.sqrt(area / xp.pi) for area in area_list]
         except TypeError:
             raise TypeError("The grid input was unable to estimate the Einstein Radius")
 
@@ -729,7 +729,7 @@ class OperateDeflections:
             caustic to be computed more accurately using a higher resolution grid.
         """
         einstein_radius_list = self.einstein_radius_list_from(grid=grid)
-        return [jnp.pi * einstein_radius**2 for einstein_radius in einstein_radius_list]
+        return [xp.pi * einstein_radius**2 for einstein_radius in einstein_radius_list]
 
     def einstein_mass_angular_from(
         self,
@@ -775,12 +775,12 @@ class OperateDeflections:
         return einstein_mass_angular_list[0]
 
     def jacobian_stack(self, y, x, pixel_scales):
-        return jnp.stack(
+        return xp.stack(
             jax.jacfwd(self.deflections_yx_scalar, argnums=(0, 1))(y, x, pixel_scales)
         )
 
     def jacobian_stack_vector(self, y, x, pixel_scales):
-        return jnp.vectorize(
+        return xp.vectorize(
             jax.tree_util.Partial(self.jacobian_stack, pixel_scales=pixel_scales),
             signature="(),()->(i,i)",
         )(y, x)
@@ -788,7 +788,7 @@ class OperateDeflections:
     def convergence_mag_shear_yx(self, y, x):
         J = self.jacobian_stack_vector(y, x, 0.05)
         K = 0.5 * (J[..., 0, 0] + J[..., 1, 1])
-        mag_shear = 0.5 * jnp.sqrt(
+        mag_shear = 0.5 * xp.sqrt(
             (J[..., 0, 1] + J[..., 1, 0]) ** 2 + (J[..., 0, 0] - J[..., 1, 1]) ** 2
         )
         return K, mag_shear
@@ -800,15 +800,15 @@ class OperateDeflections:
 
     @partial(jit, static_argnums=(0, 3))
     def tangential_eigen_value_rt(self, r, theta, centre=(0.0, 0.0)):
-        y = r * jnp.sin(theta) + centre[0]
-        x = r * jnp.cos(theta) + centre[1]
+        y = r * xp.sin(theta) + centre[0]
+        x = r * xp.cos(theta) + centre[1]
         return self.tangential_eigen_value_yx(y, x)
 
     @partial(jit, static_argnums=(0, 3))
     def grad_r_tangential_eigen_value(self, r, theta, centre=(0.0, 0.0)):
         # ignore `self` with the `argnums` below
         tangential_eigen_part = partial(self.tangential_eigen_value_rt, centre=centre)
-        return jnp.vectorize(
+        return xp.vectorize(
             jax.jacfwd(tangential_eigen_part, argnums=(0,)), signature="(),()->()"
         )(r, theta)[0]
 
@@ -819,15 +819,15 @@ class OperateDeflections:
 
     @partial(jit, static_argnums=(0, 3))
     def radial_eigen_value_rt(self, r, theta, centre=(0.0, 0.0)):
-        y = r * jnp.sin(theta) + centre[0]
-        x = r * jnp.cos(theta) + centre[1]
+        y = r * xp.sin(theta) + centre[0]
+        x = r * xp.cos(theta) + centre[1]
         return self.radial_eigen_value_yx(y, x)
 
     @partial(jit, static_argnums=(0, 3))
     def grad_r_radial_eigen_value(self, r, theta, centre=(0.0, 0.0)):
         # ignore `self` with the `argnums` below
         radial_eigen_part = partial(self.radial_eigen_value_rt, centre=centre)
-        return jnp.vectorize(
+        return xp.vectorize(
             jax.jacfwd(radial_eigen_part, argnums=(0,)), signature="(),()->()"
         )(r, theta)[0]
 
@@ -864,8 +864,8 @@ class OperateDeflections:
         threshold : float
             Only keep points whose tangential eigen value is within this value of zero (inclusive)
         """
-        r = jnp.ones(n_points) * init_r
-        theta = jnp.linspace(0, 2 * jnp.pi, n_points + 1)[:-1]
+        r = xp.ones(n_points) * init_r
+        theta = xp.linspace(0, 2 * xp.pi, n_points + 1)[:-1]
         new_yx = step_r(
             r,
             theta,
@@ -875,12 +875,12 @@ class OperateDeflections:
             ),
             n_steps,
         )
-        new_yx = new_yx + jnp.array(init_centre)
+        new_yx = new_yx + xp.array(init_centre)
         # filter out nan values
-        fdx = jnp.isfinite(new_yx).all(axis=1)
+        fdx = xp.isfinite(new_yx).all(axis=1)
         new_yx = new_yx[fdx]
         # filter out failed points
-        value = jnp.abs(self.tangential_eigen_value_yx(new_yx[:, 0], new_yx[:, 1]))
+        value = xp.abs(self.tangential_eigen_value_yx(new_yx[:, 0], new_yx[:, 1]))
         gdx = value <= threshold
         return aa.structures.grids.irregular_2d.Grid2DIrregular(values=new_yx[gdx])
 
@@ -917,8 +917,8 @@ class OperateDeflections:
         threshold : float
             Only keep points whose radial eigen value is within this value of zero (inclusive)
         """
-        r = jnp.ones(n_points) * init_r
-        theta = jnp.linspace(0, 2 * jnp.pi, n_points + 1)[:-1]
+        r = xp.ones(n_points) * init_r
+        theta = xp.linspace(0, 2 * xp.pi, n_points + 1)[:-1]
         new_yx = step_r(
             r,
             theta,
@@ -926,12 +926,12 @@ class OperateDeflections:
             jax.tree_util.Partial(self.grad_r_radial_eigen_value, centre=init_centre),
             n_steps,
         )
-        new_yx = new_yx + jnp.array(init_centre)
+        new_yx = new_yx + xp.array(init_centre)
         # filter out nan values
-        fdx = jnp.isfinite(new_yx).all(axis=1)
+        fdx = xp.isfinite(new_yx).all(axis=1)
         new_yx = new_yx[fdx]
         # filter out failed points
-        value = jnp.abs(self.radial_eigen_value_yx(new_yx[:, 0], new_yx[:, 1]))
+        value = xp.abs(self.radial_eigen_value_yx(new_yx[:, 0], new_yx[:, 1]))
         gdx = value <= threshold
         return aa.structures.grids.irregular_2d.Grid2DIrregular(values=new_yx[gdx])
 
@@ -955,7 +955,7 @@ class OperateDeflections:
         A = self.jacobian_stack_vector(
             grid.array[:, 0], grid.array[:, 1], grid.pixel_scales
         )
-        a = jnp.eye(2).reshape(1, 2, 2) - A
+        a = xp.eye(2).reshape(1, 2, 2) - A
         return [
             [
                 aa.Array2D(values=a[..., 1, 1], mask=grid.mask),
@@ -969,7 +969,7 @@ class OperateDeflections:
 
         # transpose the result
         # use `moveaxis` as grid might not be nx2
-        # return jnp.moveaxis(jnp.moveaxis(a, -1, 0), -1, 0)
+        # return xp.moveaxis(xp.moveaxis(a, -1, 0), -1, 0)
 
     @precompute_jacobian
     def convergence_2d_via_jacobian_from(self, grid, jacobian=None) -> aa.Array2D:
@@ -1020,7 +1020,7 @@ class OperateDeflections:
         """
         shear_y = -0.5 * (jacobian[0][1] + jacobian[1][0]).array
         shear_x = 0.5 * (jacobian[1][1] - jacobian[0][0]).array
-        shear_yx_2d = jnp.stack([shear_y, shear_x]).T
+        shear_yx_2d = xp.stack([shear_y, shear_x]).T
 
         if isinstance(grid, aa.Grid2DIrregular):
             return ShearYX2DIrregular(values=shear_yx_2d, grid=grid)

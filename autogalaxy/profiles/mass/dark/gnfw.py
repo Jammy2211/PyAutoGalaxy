@@ -7,12 +7,12 @@ from autogalaxy.profiles.mass.dark.abstract import AbstractgNFW
 
 
 class gNFW(AbstractgNFW):
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self.deflections_2d_via_mge_from(grid=grid, **kwargs)
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self._deflections_2d_via_mge_from(
             grid=grid, sigmas_factor=self.axis_ratio()
         )
@@ -295,7 +295,7 @@ class gNFWSph(gNFW):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 

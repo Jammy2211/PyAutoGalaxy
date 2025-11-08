@@ -42,7 +42,7 @@ class LightProfile(EllProfile, OperateImage):
         return ""
 
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
+        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None, **kwargs
     ) -> aa.Array2D:
         """
         Returns the light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates, which may have been
@@ -63,7 +63,7 @@ class LightProfile(EllProfile, OperateImage):
         """
         raise NotImplementedError()
 
-    def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray, xp=np) -> np.ndarray:
         """
         Returns the light profile's 2D image from a 1D grid of coordinates which are the radial distance of each
         coordinate from the light profile `centre`.
@@ -77,7 +77,7 @@ class LightProfile(EllProfile, OperateImage):
 
     @aa.grid_dec.project_grid
     def image_1d_from(
-        self, grid: aa.type.Grid1D2DLike, **kwargs
+        self, grid: aa.type.Grid1D2DLike, xp=np, **kwargs
     ) -> aa.type.Grid1D2DLike:
         """
         Returns the light profile's 1D image from a grid of Cartesian coordinates, which may have been
@@ -100,7 +100,7 @@ class LightProfile(EllProfile, OperateImage):
         image
             The 1D image of the light profile evaluated at every (x,) coordinate on the 1D transformed grid.
         """
-        return self.image_2d_from(grid=grid, **kwargs)
+        return self.image_2d_from(grid=grid, xp=xp, **kwargs)
 
     def luminosity_within_circle_from(self, radius: float) -> float:
         """

@@ -48,7 +48,7 @@ class Chameleon(MassProfile, StellarProfile):
         self.core_radius_0 = core_radius_0
         self.core_radius_1 = core_radius_1
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self.deflections_2d_via_analytic_from(grid=grid, **kwargs)
 
     @aa.grid_dec.to_vector_yx
@@ -71,13 +71,13 @@ class Chameleon(MassProfile, StellarProfile):
             * self.intensity
             / (1 + self.axis_ratio(xp))
             * self.axis_ratio(xp)
-            / jnp.sqrt(1.0 - self.axis_ratio(xp)**2.0)
+            / xp.sqrt(1.0 - self.axis_ratio(xp)**2.0)
         )
 
-        core_radius_0 = jnp.sqrt(
+        core_radius_0 = xp.sqrt(
             (4.0 * self.core_radius_0**2.0) / (1.0 + self.axis_ratio(xp)) ** 2
         )
-        core_radius_1 = jnp.sqrt(
+        core_radius_1 = xp.sqrt(
             (4.0 * self.core_radius_1**2.0) / (1.0 + self.axis_ratio(xp)) ** 2
         )
 
@@ -88,45 +88,45 @@ class Chameleon(MassProfile, StellarProfile):
             grid=grid, axis_ratio=self.axis_ratio(xp), core_radius=core_radius_1, xp=xp
         )
 
-        deflection_y0 = jnp.arctanh(
-            jnp.divide(
-                jnp.multiply(jnp.sqrt(1.0 - self.axis_ratio(xp)**2.0), grid.array[:, 0]),
-                jnp.add(psi0, self.axis_ratio(xp)**2.0 * core_radius_0),
+        deflection_y0 = xp.arctanh(
+            xp.divide(
+                xp.multiply(xp.sqrt(1.0 - self.axis_ratio(xp)**2.0), grid.array[:, 0]),
+                xp.add(psi0, self.axis_ratio(xp)**2.0 * core_radius_0),
             )
         )
 
-        deflection_x0 = jnp.arctan(
-            jnp.divide(
-                jnp.multiply(jnp.sqrt(1.0 - self.axis_ratio(xp)**2.0), grid.array[:, 1]),
-                jnp.add(psi0, core_radius_0),
+        deflection_x0 = xp.arctan(
+            xp.divide(
+                xp.multiply(xp.sqrt(1.0 - self.axis_ratio(xp)**2.0), grid.array[:, 1]),
+                xp.add(psi0, core_radius_0),
             )
         )
 
-        deflection_y1 = jnp.arctanh(
-            jnp.divide(
-                jnp.multiply(jnp.sqrt(1.0 - self.axis_ratio(xp)**2.0), grid.array[:, 0]),
-                jnp.add(psi1, self.axis_ratio(xp)**2.0 * core_radius_1),
+        deflection_y1 = xp.arctanh(
+            xp.divide(
+                xp.multiply(xp.sqrt(1.0 - self.axis_ratio(xp)**2.0), grid.array[:, 0]),
+                xp.add(psi1, self.axis_ratio(xp)**2.0 * core_radius_1),
             )
         )
 
-        deflection_x1 = jnp.arctan(
-            jnp.divide(
-                jnp.multiply(jnp.sqrt(1.0 - self.axis_ratio(xp)**2.0), grid.array[:, 1]),
-                jnp.add(psi1, core_radius_1),
+        deflection_x1 = xp.arctan(
+            xp.divide(
+                xp.multiply(xp.sqrt(1.0 - self.axis_ratio(xp)**2.0), grid.array[:, 1]),
+                xp.add(psi1, core_radius_1),
             )
         )
 
-        deflection_y = jnp.subtract(deflection_y0, deflection_y1)
-        deflection_x = jnp.subtract(deflection_x0, deflection_x1)
+        deflection_y = xp.subtract(deflection_y0, deflection_y1)
+        deflection_x = xp.subtract(deflection_x0, deflection_x1)
 
         return self.rotated_grid_from_reference_frame_from(
-            jnp.multiply(factor, jnp.vstack((deflection_y, deflection_x)).T)
+            xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T)
         )
 
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
         Parameters
         ----------
@@ -141,10 +141,10 @@ class Chameleon(MassProfile, StellarProfile):
         return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
 
     @aa.grid_dec.to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return jnp.zeros(shape=grid.shape[0])
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        return xp.zeros(shape=grid.shape[0])
 
-    def image_2d_via_radii_from(self, grid_radii: np.ndarray):
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray, xp=np):
         """Calculate the intensity of the Chamelon light profile on a grid of radial coordinates.
 
         Parameters
@@ -155,23 +155,23 @@ class Chameleon(MassProfile, StellarProfile):
 
         axis_ratio_factor = (1.0 + self.axis_ratio(xp)) ** 2.0
 
-        return jnp.multiply(
+        return xp.multiply(
             self.intensity / (1 + self.axis_ratio(xp)),
-            jnp.add(
-                jnp.divide(
+            xp.add(
+                xp.divide(
                     1.0,
-                    jnp.sqrt(
-                        jnp.add(
-                            jnp.square(grid_radii.array),
+                    xp.sqrt(
+                        xp.add(
+                            xp.square(grid_radii.array),
                             (4.0 * self.core_radius_0**2.0) / axis_ratio_factor,
                         )
                     ),
                 ),
-                -jnp.divide(
+                -xp.divide(
                     1.0,
-                    jnp.sqrt(
-                        jnp.add(
-                            jnp.square(grid_radii.array),
+                    xp.sqrt(
+                        xp.add(
+                            xp.square(grid_radii.array),
                             (4.0 * self.core_radius_1**2.0) / axis_ratio_factor,
                         )
                     ),

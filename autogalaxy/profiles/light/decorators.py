@@ -27,6 +27,7 @@ def check_operated_only(func):
     def wrapper(
         obj,
         grid: aa.type.Grid1D2DLike,
+        xp=np,
         operated_only: Optional[bool] = None,
         *args,
         **kwargs,
@@ -60,13 +61,13 @@ def check_operated_only(func):
         )
 
         if operated_only is None:
-            return func(obj, grid, operated_only, *args, **kwargs)
+            return func(obj, grid, xp, operated_only, *args, **kwargs)
         elif operated_only:
             if isinstance(obj, LightProfileOperated):
-                return func(obj, grid, operated_only, *args, **kwargs)
-            return np.zeros((grid.shape[0],))
+                return func(obj, grid, xp, operated_only, *args, **kwargs)
+            return xp.zeros((grid.shape[0],))
         if not isinstance(obj, LightProfileOperated):
-            return func(obj, grid, operated_only, *args, **kwargs)
-        return np.zeros((grid.shape[0],))
+            return func(obj, grid, xp, operated_only, *args, **kwargs)
+        return xp.zeros((grid.shape[0],))
 
     return wrapper

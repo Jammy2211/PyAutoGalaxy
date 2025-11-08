@@ -309,6 +309,7 @@ class GalaxiesToInversion(AbstractToInversion):
                             psf=self.dataset.psf,
                             light_profile_list=light_profile_list,
                             regularization=light_profile.regularization,
+                            xp=self.xp
                         )
 
                         lp_linear_func_galaxy_dict[lp_linear_func] = galaxy
@@ -487,11 +488,13 @@ class GalaxiesToInversion(AbstractToInversion):
             source_plane_mesh_grid=source_plane_mesh_grid,
             image_plane_mesh_grid=image_plane_mesh_grid,
             adapt_data=adapt_galaxy_image,
+            xp=self.xp
         )
 
         return mapper_from(
             mapper_grids=mapper_grids,
             regularization=regularization,
+            xp=self.xp
         )
 
     @cached_property

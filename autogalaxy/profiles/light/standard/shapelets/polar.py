@@ -65,7 +65,7 @@ class ShapeletPolar(AbstractShapelet):
     @check_operated_only
     @aa.grid_dec.transform
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
+        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None, **kwargs
     ) -> np.ndarray:
         """
         Returns the Polar Shapelet light profile's 2D image from a 2D grid of Polar (y,x) coordinates.
@@ -87,29 +87,29 @@ class ShapeletPolar(AbstractShapelet):
         from jax.scipy.special import factorial
 
         laguerre = genlaguerre(
-            n=(self.n - jnp.abs(self.m)) / 2.0, alpha=jnp.abs(self.m)
+            n=(self.n - xp.abs(self.m)) / 2.0, alpha=xp.abs(self.m)
         )
 
         const = (
-            ((-1) ** ((self.n - jnp.abs(self.m)) // 2))
-            * jnp.sqrt(
-                factorial((self.n - jnp.abs(self.m)) // 2)
-                / factorial((self.n + jnp.abs(self.m)) // 2)
+            ((-1) ** ((self.n - xp.abs(self.m)) // 2))
+            * xp.sqrt(
+                factorial((self.n - xp.abs(self.m)) // 2)
+                / factorial((self.n + xp.abs(self.m)) // 2)
             )
             / self.beta
-            / jnp.sqrt(jnp.pi)
+            / xp.sqrt(xp.pi)
         )
 
         rsq = (grid.array[:, 0] ** 2 + grid.array[:, 1] ** 2) / self.beta**2
-        theta = jnp.arctan2(grid.array[:, 1], grid.array[:, 0])
-        radial = rsq ** (abs(self.m / 2.0)) * jnp.exp(-rsq / 2.0) * laguerre(rsq)
+        theta = xp.arctan2(grid.array[:, 1], grid.array[:, 0])
+        radial = rsq ** (abs(self.m / 2.0)) * xp.exp(-rsq / 2.0) * laguerre(rsq)
 
         if self.m == 0:
             azimuthal = 1
         elif self.m > 0:
-            azimuthal = jnp.sin((-1) * self.m * theta)
+            azimuthal = xp.sin((-1) * self.m * theta)
         else:
-            azimuthal = jnp.cos((-1) * self.m * theta)
+            azimuthal = xp.cos((-1) * self.m * theta)
 
         return const * radial * azimuthal
 

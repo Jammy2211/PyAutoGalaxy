@@ -31,7 +31,7 @@ class PowerLawBroken(MassProfile):
         super().__init__(centre=centre, ell_comps=ell_comps)
 
         self.einstein_radius = einstein_radius
-        self.einstein_radius_elliptical = jnp.sqrt(self.axis_ratio()) * einstein_radius
+        self.einstein_radius_elliptical = xp.sqrt(self.axis_ratio()) * einstein_radius
         self.break_radius = break_radius
         self.inner_slope = inner_slope
         self.outer_slope = outer_slope
@@ -52,13 +52,13 @@ class PowerLawBroken(MassProfile):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Returns the dimensionless density kappa=Sigma/Sigma_c (eq. 1)
         """
 
         # Ell radius
-        radius = jnp.hypot(grid.array[:, 1] * self.axis_ratio(), grid.array[:, 0])
+        radius = xp.hypot(grid.array[:, 1] * self.axis_ratio(), grid.array[:, 0])
 
         # Inside break radius
         kappa_inner = self.kB * (self.break_radius / radius) ** self.inner_slope
@@ -71,8 +71,8 @@ class PowerLawBroken(MassProfile):
         )
 
     @aa.grid_dec.to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return jnp.zeros(shape=grid.shape[0])
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        return xp.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
@@ -84,7 +84,7 @@ class PowerLawBroken(MassProfile):
         z = grid.array[:, 1] + 1j * grid.array[:, 0]
 
         # Ell radius
-        R = jnp.hypot(z.real * self.axis_ratio(), z.imag)
+        R = xp.hypot(z.real * self.axis_ratio(), z.imag)
 
         # Factors common to eq. 18 and 19
         factors = (
@@ -126,8 +126,8 @@ class PowerLawBroken(MassProfile):
         ).conjugate()
 
         return self.rotated_grid_from_reference_frame_from(
-            grid=jnp.multiply(
-                1.0, jnp.vstack((jnp.imag(deflections), jnp.real(deflections))).T
+            grid=xp.multiply(
+                1.0, xp.vstack((xp.imag(deflections), xp.real(deflections))).T
             )
         )
 
@@ -140,13 +140,13 @@ class PowerLawBroken(MassProfile):
 
         # u from eq. 25
         q_ = (1 - q**2) / (q**2)
-        u = 0.5 * (1 - jnp.sqrt(1 - q_ * (r / z) ** 2))
+        u = 0.5 * (1 - xp.sqrt(1 - q_ * (r / z) ** 2))
 
         # First coefficient
         a_n = 1.0
 
         # Storage for sum
-        F = jnp.zeros_like(z, dtype="complex64")
+        F = xp.zeros_like(z, dtype="complex64")
 
         for n in range(max_terms):
             F += a_n * (u**n)

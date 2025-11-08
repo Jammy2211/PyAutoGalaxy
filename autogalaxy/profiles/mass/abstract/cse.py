@@ -41,12 +41,12 @@ class MassProfileCSE(ABC):
         Parameters
         ----------
         """
-        phi = jnp.sqrt(axis_ratio_squared * core_radius**2.0 + term1)
+        phi = xp.sqrt(axis_ratio_squared * core_radius**2.0 + term1)
         Psi = (phi + core_radius) ** 2.0 + term2
         bottom = core_radius * phi * Psi
         defl_x = (term3 * (phi + axis_ratio_squared * core_radius)) / bottom
         defl_y = (term4 * (phi + core_radius)) / bottom
-        return jnp.vstack((defl_y, defl_x))
+        return xp.vstack((defl_y, defl_x))
 
     @abstractmethod
     def decompose_convergence_via_cse(self, grid_radii: np.ndarray):
