@@ -114,7 +114,7 @@ class SphProfile(GeometryProfile):
 
     @aa.grid_dec.to_grid
     def _cartesian_grid_via_radial_from(
-        self, grid: aa.type.Grid2DLike, radius: np.ndarray, xp=np, **kwargs
+        self, grid: aa.type.Grid2DLike, xp=np, radius : Optional[np.ndarray] = None,  **kwargs
     ) -> aa.type.Grid2DLike:
         """
         Convert a grid of (y,x) coordinates with their specified radial distances (e.g. :math: r = x**2 + y**2) to
@@ -309,7 +309,7 @@ class EllProfile(SphProfile):
         return xp.sqrt(
             xp.add(
                 xp.square(grid.array[:, 1]),
-                xp.square(xp.divide(grid.array[:, 0], self.axis_ratio())),
+                xp.square(xp.divide(grid.array[:, 0], self.axis_ratio(xp))),
             )
         )
 
@@ -333,7 +333,7 @@ class EllProfile(SphProfile):
 
         grid_radii = self.elliptical_radii_grid_from(grid=grid, xp=xp, **kwargs)
 
-        return xp.multiply(xp.sqrt(self.axis_ratio()), grid_radii.array)
+        return xp.multiply(xp.sqrt(self.axis_ratio(xp)), grid_radii.array)
 
     @aa.grid_dec.to_grid
     def transformed_to_reference_frame_grid_from(
@@ -383,7 +383,7 @@ class EllProfile(SphProfile):
                 u
                 * (
                     (coordinates[1] ** 2)
-                    + (coordinates[0] ** 2 / (1 - (1 - self.axis_ratio()**2) * u))
+                    + (coordinates[0] ** 2 / (1 - (1 - self.axis_ratio(xp)**2) * u))
                 )
             )
         )

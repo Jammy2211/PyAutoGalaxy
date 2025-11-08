@@ -63,7 +63,7 @@ class Moffat(LightProfile):
             xp.power(
                 1
                 + xp.square(
-                    xp.divide(grid_radii.array, self.alpha / xp.sqrt(self.axis_ratio()))
+                    xp.divide(grid_radii.array, self.alpha / xp.sqrt(self.axis_ratio(xp)))
                 ),
                 -self.beta,
             ),

@@ -120,7 +120,8 @@ class Chameleon(MassProfile, StellarProfile):
         deflection_x = xp.subtract(deflection_x0, deflection_x1)
 
         return self.rotated_grid_from_reference_frame_from(
-            xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T)
+            xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T),
+            xp=xp
         )
 
     @aa.over_sample

@@ -102,8 +102,8 @@ class SMBHBinary(MassProfile):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
         return self.smbh_0.convergence_2d_from(
-            grid=grid
-        ) + self.smbh_1.convergence_2d_from(grid=grid, **kwargs)
+            grid=grid, xp=xp, **kwargs
+        ) + self.smbh_1.convergence_2d_from(grid=grid, xp=xp, **kwargs)
 
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """

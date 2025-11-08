@@ -129,7 +129,7 @@ class Isothermal(PowerLaw):
 
         """
 
-        convergence = self.convergence_2d_from(grid=grid, **kwargs)
+        convergence = self.convergence_2d_from(grid=grid, xp=xp, **kwargs)
 
         gamma_2 = (
             -2

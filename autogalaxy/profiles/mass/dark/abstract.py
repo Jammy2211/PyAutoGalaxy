@@ -130,7 +130,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         amplitude_list *= np.sqrt(2.0 * np.pi) * sigma_list
         return amplitude_list, sigma_list
 
-    def coord_func_f(self, grid_radius: np.ndarray) -> np.ndarray:
+    def coord_func_f(self, grid_radius: np.ndarray, xp=np) -> np.ndarray:
         """
         Given an array `grid_radius` and a work array `f`, fill f[i] with
 
@@ -159,7 +159,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         # combine: if r>1 pick out_gt, elif r<1 pick out_lt, else keep original f
         return xp.where(r > 1.0, out_gt, xp.where(r < 1.0, out_lt, f))
 
-    def coord_func_g(self, grid_radius: np.ndarray) -> np.ndarray:
+    def coord_func_g(self, grid_radius: np.ndarray, xp=np) -> np.ndarray:
         """
         Vectorized version of the original looped `coord_func_g_jit`.
 
@@ -187,7 +187,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
             grid_radius = xp.array([grid_radius], dtype=xp.complex64)
 
         # Evaluate f_r
-        f_r = self.coord_func_f(grid_radius=grid_radius)
+        f_r = self.coord_func_f(grid_radius=grid_radius, xp=xp)
 
         r = xp.real(grid_radius)
         r2 = r**2
@@ -202,8 +202,8 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
             ),
         )
 
-    def coord_func_h(self, grid_radius):
-        return xp.log(grid_radius / 2.0) + self.coord_func_f(grid_radius=grid_radius)
+    def coord_func_h(self, grid_radius, xp=np):
+        return xp.log(grid_radius / 2.0) + self.coord_func_f(grid_radius=grid_radius, xp=xp)
 
     def rho_at_scale_radius_solar_mass_per_kpc3(
         self, redshift_object, redshift_source, cosmology: LensingCosmology = None
@@ -270,6 +270,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_source,
         redshift_of_cosmic_average_density="profile",
         cosmology: LensingCosmology = None,
+        xp=np,
     ):
 
         from autogalaxy.cosmology.wrap import Planck15
@@ -289,11 +290,11 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         )
 
         return fsolve(
-            func=self.concentration_func, x0=10.0, args=(delta_concentration,)
+            func=self.concentration_func, x0=10.0, args=(delta_concentration, xp),
         )[0]
 
     @staticmethod
-    def concentration_func(concentration, delta_concentration):
+    def concentration_func(concentration, delta_concentration, xp=np):
         return (
             200.0
             / 3.0
@@ -312,6 +313,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_source,
         redshift_of_cosmic_average_density="profile",
         cosmology: LensingCosmology = None,
+        xp=np
     ):
         """
         Returns `r_{200m}` for this halo in **arcseconds**
@@ -325,6 +327,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
             redshift_source=redshift_source,
             redshift_of_cosmic_average_density=redshift_of_cosmic_average_density,
             cosmology=cosmology,
+            xp=xp
         )
 
         return concentration * self.scale_radius
@@ -335,6 +338,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_source,
         redshift_of_cosmic_average_density="profile",
         cosmology: LensingCosmology = None,
+        xp=np,
     ):
         from autogalaxy.cosmology.wrap import Planck15
 
@@ -364,6 +368,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
             redshift_source=redshift_source,
             redshift_of_cosmic_average_density=redshift_of_cosmic_average_density,
             cosmology=cosmology,
+            xp=xp
         )
 
         kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_object)

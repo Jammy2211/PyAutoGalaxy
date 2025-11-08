@@ -61,7 +61,7 @@ class NFW(gNFW, MassProfileCSE):
         from scipy.integrate import quad
 
         def calculate_deflection_component(npow, index):
-            deflection_grid = np.array(self.axis_ratio() * grid.array[:, index])
+            deflection_grid = np.array(self.axis_ratio(xp) * grid.array[:, index])
 
             for i in range(grid.shape[0]):
                 deflection_grid[i] *= (
@@ -74,7 +74,7 @@ class NFW(gNFW, MassProfileCSE):
                             grid.array[i, 0],
                             grid.array[i, 1],
                             npow,
-                            self.axis_ratio(),
+                            self.axis_ratio(xp),
                             self.scale_radius,
                         ),
                     )[0]
@@ -143,7 +143,7 @@ class NFW(gNFW, MassProfileCSE):
     def convergence_func(self, grid_radius: float) -> float:
         grid_radius = (1.0 / self.scale_radius) * grid_radius.array + 0j
         return np.real(
-            2.0 * self.kappa_s * np.array(self.coord_func_g(grid_radius=grid_radius))
+            2.0 * self.kappa_s * np.array(self.coord_func_g(grid_radius=grid_radius, xp=xp))
         )
 
     @aa.over_sample
@@ -171,7 +171,7 @@ class NFW(gNFW, MassProfileCSE):
                 args=(
                     grid.array[i, 0],
                     grid.array[i, 1],
-                    self.axis_ratio(),
+                    self.axis_ratio(xp),
                     self.kappa_s,
                     self.scale_radius,
                 ),
@@ -381,12 +381,12 @@ class NFWSph(NFW):
 
         deflection_grid = xp.multiply(
             (4.0 * self.kappa_s * self.scale_radius / eta),
-            self.deflection_func_sph(grid_radius=eta),
+            self.deflection_func_sph(grid_radius=eta, xp=xp),
         )
 
-        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection_grid)
+        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection_grid, xp=xp)
 
-    def deflection_func_sph(self, grid_radius):
+    def deflection_func_sph(self, grid_radius, xp=np):
         grid_radius = grid_radius + 0j
         return xp.real(self.coord_func_h(grid_radius=grid_radius))
 
@@ -407,7 +407,7 @@ class NFWSph(NFW):
             grid=grid, **kwargs
         ) + 0j
         return np.real(
-            2.0 * self.scale_radius * self.kappa_s * self.potential_func_sph(eta)
+            2.0 * self.scale_radius * self.kappa_s * self.potential_func_sph(eta, xp=xp)
         )
 
     @staticmethod

@@ -44,7 +44,7 @@ class MassProfile(EllProfile, OperateDeflections):
             mask=grid.mask,
         )
 
-    def convergence_2d_from(self, grid):
+    def convergence_2d_from(self, grid, xp=np):
         raise NotImplementedError
 
     def convergence_func(self, grid_radius: float) -> float:

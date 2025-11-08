@@ -58,4 +58,4 @@ def test__scatter_is_nonzero():
     deflections_sph = mp.deflections_yx_2d_from(grid=grid)
     deflections_ell = nfw_ell.deflections_yx_2d_from(grid=grid)
 
-    assert deflections_sph[0] != pytest.approx(deflections_ell[0].array, 1.0e-4)
+    assert deflections_sph[0] != pytest.approx(deflections_ell[0], 1.0e-4)

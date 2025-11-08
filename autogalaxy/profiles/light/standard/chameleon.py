@@ -64,10 +64,10 @@ class Chameleon(LightProfile):
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
 
-        axis_ratio_factor = (1.0 + self.axis_ratio()) ** 2.0
+        axis_ratio_factor = (1.0 + self.axis_ratio(xp)) ** 2.0
 
         return xp.multiply(
-            self._intensity / (1 + self.axis_ratio()),
+            self._intensity / (1 + self.axis_ratio(xp)),
             xp.add(
                 xp.divide(
                     1.0,

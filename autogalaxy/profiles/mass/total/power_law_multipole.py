@@ -10,7 +10,7 @@ from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
 def radial_and_angle_grid_from(
-    grid: aa.type.Grid2DLike, centre: Tuple[float, float] = (0.0, 0.0)
+    grid: aa.type.Grid2DLike, centre: Tuple[float, float] = (0.0, 0.0), xp=np
 ) -> Tuple[np.ndarray, np.ndarray]:
     """
     Converts the input grid of Cartesian (y,x) coordinates to their correspond radial and polar grids.
@@ -129,7 +129,7 @@ class PowerLawMultipole(MassProfile):
         self.angle_m *= units.deg.to(units.rad)
 
     def jacobian(
-        self, a_r: np.ndarray, a_angle: np.ndarray, polar_angle_grid: np.ndarray
+        self, a_r: np.ndarray, a_angle: np.ndarray, polar_angle_grid: np.ndarray, xp=np
     ) -> Tuple[np.ndarray, Tuple]:
         """
         The Jacobian transformation from polar to cartesian coordinates.
@@ -151,7 +151,7 @@ class PowerLawMultipole(MassProfile):
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     def deflections_yx_2d_from(
-        self, grid: aa.type.Grid1D2DLike, **kwargs
+        self, grid: aa.type.Grid1D2DLike, xp=np, **kwargs
     ) -> np.ndarray:
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -164,7 +164,7 @@ class PowerLawMultipole(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        radial_grid, polar_angle_grid = radial_and_angle_grid_from(grid=grid)
+        radial_grid, polar_angle_grid = radial_and_angle_grid_from(grid=grid, xp=xp)
 
         a_r = (
             -(
@@ -189,14 +189,14 @@ class PowerLawMultipole(MassProfile):
         )
 
         return xp.stack(
-            self.jacobian(a_r=a_r, a_angle=a_angle, polar_angle_grid=polar_angle_grid),
+            self.jacobian(a_r=a_r, a_angle=a_angle, polar_angle_grid=polar_angle_grid, xp=xp),
             axis=-1,
         )
 
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def convergence_2d_from(self, grid: aa.type.Grid1D2DLike, **kwargs) -> np.ndarray:
+    def convergence_2d_from(self, grid: aa.type.Grid1D2DLike, xp=np, **kwargs) -> np.ndarray:
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
 
@@ -205,7 +205,7 @@ class PowerLawMultipole(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
-        r, angle = radial_and_angle_grid_from(grid=grid)
+        r, angle = radial_and_angle_grid_from(grid=grid, xp=xp)
 
         return (
             1.0

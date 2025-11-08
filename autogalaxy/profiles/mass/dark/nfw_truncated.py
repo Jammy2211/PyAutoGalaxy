@@ -109,6 +109,7 @@ class NFWTruncatedSph(AbstractgNFW):
         redshift_source,
         redshift_of_cosmic_average_density="profile",
         cosmology: LensingCosmology = None,
+        xp=np,
     ):
         from autogalaxy.cosmology.wrap import Planck15
 
@@ -119,6 +120,7 @@ class NFWTruncatedSph(AbstractgNFW):
             redshift_source=redshift_source,
             redshift_of_cosmic_average_density=redshift_of_cosmic_average_density,
             cosmology=cosmology,
+            xp=xp
         )
 
         return (

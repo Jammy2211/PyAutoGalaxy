@@ -122,7 +122,7 @@ class dPIEPotential(MassProfile):
 
         # And here we convert back to the real axes
         return self.rotated_grid_from_reference_frame_from(
-            grid=xp.multiply(1.0, xp.vstack((deflection_y, deflection_x)).T), **kwargs
+            grid=xp.multiply(1.0, xp.vstack((deflection_y, deflection_x)).T), xp=xp, **kwargs
         )
 
     @aa.grid_dec.to_vector_yx

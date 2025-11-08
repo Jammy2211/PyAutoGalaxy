@@ -90,13 +90,13 @@ class PowerLawCore(MassProfile):
                 args=(
                     grid.array[i, 0],
                     grid.array[i, 1],
-                    self.axis_ratio(),
+                    self.axis_ratio(xp),
                     self.slope,
                     self.core_radius,
                 ),
             )[0]
 
-        return self.einstein_radius_rescaled(xp) * self.axis_ratio() * potential_grid
+        return self.einstein_radius_rescaled(xp) * self.axis_ratio(xp) * potential_grid
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
@@ -115,7 +115,7 @@ class PowerLawCore(MassProfile):
         def calculate_deflection_component(npow, index):
             einstein_radius_rescaled = self.einstein_radius_rescaled(xp)
 
-            deflection_grid = np.array(self.axis_ratio() * grid.array[:, index])
+            deflection_grid = np.array(self.axis_ratio(xp) * grid.array[:, index])
 
             for i in range(grid.shape[0]):
                 deflection_grid[i] *= (
@@ -128,7 +128,7 @@ class PowerLawCore(MassProfile):
                             grid.array[i, 0],
                             grid.array[i, 1],
                             npow,
-                            self.axis_ratio(),
+                            self.axis_ratio(xp),
                             self.slope,
                             self.core_radius,
                         ),
@@ -141,7 +141,8 @@ class PowerLawCore(MassProfile):
         deflection_x = calculate_deflection_component(0.0, 1)
 
         return self.rotated_grid_from_reference_frame_from(
-            grid=np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
+            grid=np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T),
+            xp=xp
         )
 
     def convergence_func(self, grid_radius: float, xp=np) -> float:
@@ -234,4 +235,4 @@ class PowerLawCoreSph(PowerLawCore):
                 xp.multiply((3.0 - self.slope), eta.array),
             ),
         )
-        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection)
+        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection, xp=xp)

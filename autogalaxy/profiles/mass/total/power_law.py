@@ -70,25 +70,25 @@ class PowerLaw(PowerLawCore):
 
         slope = self.slope - 1.0
         einstein_radius = (
-            2.0 / (self.axis_ratio()**-0.5 + self.axis_ratio()**0.5)
+            2.0 / (self.axis_ratio(xp)**-0.5 + self.axis_ratio(xp)**0.5)
         ) * self.einstein_radius
 
-        factor = xp.divide(1.0 - self.axis_ratio(), 1.0 + self.axis_ratio())
-        b = xp.multiply(einstein_radius, xp.sqrt(self.axis_ratio()))
+        factor = xp.divide(1.0 - self.axis_ratio(xp), 1.0 + self.axis_ratio(xp))
+        b = xp.multiply(einstein_radius, xp.sqrt(self.axis_ratio(xp)))
         angle = xp.arctan2(
-            grid.array[:, 0], xp.multiply(self.axis_ratio(), grid.array[:, 1])
+            grid.array[:, 0], xp.multiply(self.axis_ratio(xp), grid.array[:, 1])
         )  # Note, this angle is not the position angle
         z = xp.add(
             xp.multiply(xp.cos(angle), 1 + 0j), xp.multiply(xp.sin(angle), 0 + 1j)
         )
 
         R = xp.sqrt(
-            (self.axis_ratio() * grid.array[:, 1]) ** 2 + grid.array[:, 0] ** 2 + 1e-16
+            (self.axis_ratio(xp) * grid.array[:, 1]) ** 2 + grid.array[:, 0] ** 2 + 1e-16
         )
         zh = omega(z, slope, factor, n_terms=20, xp=np)
 
         complex_angle = (
-            2.0 * b / (1.0 + self.axis_ratio()) * (b / R) ** (slope - 1.0) * zh
+            2.0 * b / (1.0 + self.axis_ratio(xp)) * (b / R) ** (slope - 1.0) * zh
         )
 
         deflection_y = complex_angle.imag
@@ -100,7 +100,8 @@ class PowerLaw(PowerLawCore):
         deflection_x *= rescale_factor
 
         return self.rotated_grid_from_reference_frame_from(
-            grid=xp.vstack((deflection_y, deflection_x)).T
+            grid=xp.vstack((deflection_y, deflection_x)).T,
+            xp=xp
         )
 
     def convergence_func(self, grid_radius: float, xp=np) -> float:

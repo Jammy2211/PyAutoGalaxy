@@ -143,7 +143,7 @@ class MassProfileMGE:
     def _deflections_2d_via_mge_from(
         self, grid, sigmas_factor=1.0, func_terms=28, func_gaussians=20
     ):
-        axis_ratio = xp.min(xp.array([self.axis_ratio(), 0.9999]))
+        axis_ratio = xp.min(xp.array([self.axis_ratio(xp), 0.9999]))
 
         amps, sigmas = self.decompose_convergence_via_mge(
             func_terms=func_terms, func_gaussians=func_gaussians
