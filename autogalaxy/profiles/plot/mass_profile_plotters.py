@@ -71,6 +71,13 @@ class MassProfilePlotter(Plotter):
 
         self.figures_2d = self._mass_plotter.figures_2d
 
+    @property
+    def grid_2d_projected(self):
+        return self.grid.grid_2d_radial_projected_from(
+            centre=self.mass_profile.centre,
+            angle=self.mass_profile.angle()
+        )
+
     def figures_1d(self, convergence: bool = False, potential: bool = False):
         """
         Plots the individual attributes of the plotter's `MassProfile` object in 1D, which are computed via the
@@ -96,11 +103,11 @@ class MassProfilePlotter(Plotter):
             plot_axis_type_override = None
 
         if convergence:
-            convergence_1d = self.mass_profile.convergence_1d_from(grid=self.grid)
+            convergence_1d = self.mass_profile.convergence_2d_from(grid=self.grid_2d_projected)
 
             self.mat_plot_1d.plot_yx(
                 y=convergence_1d,
-                x=convergence_1d.grid_radial,
+                x=self.grid_2d_projected[:,1],
                 visuals_1d=self.visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius (arcsec)",
@@ -112,11 +119,11 @@ class MassProfilePlotter(Plotter):
             )
 
         if potential:
-            potential_1d = self.mass_profile.potential_1d_from(grid=self.grid)
+            potential_1d = self.mass_profile.potential_2d_from(grid=self.grid_2d_projected)
 
             self.mat_plot_1d.plot_yx(
                 y=potential_1d,
-                x=potential_1d.grid_radial,
+                x=self.grid_2d_projected[:,1],
                 visuals_1d=self.visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius (arcsec)",
@@ -216,10 +223,17 @@ class MassProfilePDFPlotter(MassProfilePlotter):
             plot_axis_type_override = None
 
         if convergence:
-            convergence_1d_list = [
-                mass_profile.convergence_1d_from(grid=self.grid)
-                for mass_profile in self.mass_profile_pdf_list
-            ]
+
+            convergence_1d_list = []
+
+            for mass_profile in self.mass_profile_pdf_list:
+                
+                grid = self.grid.grid_2d_radial_projected_from(
+                    centre=mass_profile.centre,
+                    angle=mass_profile.angle()
+                )
+           
+                convergence_1d_list.append(mass_profile.convergence_2d_from(grid=grid))
 
             min_index = min(
                 [convergence_1d.shape[0] for convergence_1d in convergence_1d_list]
@@ -248,7 +262,7 @@ class MassProfilePDFPlotter(MassProfilePlotter):
 
             self.mat_plot_1d.plot_yx(
                 y=median_convergence_1d,
-                x=convergence_1d_list[0].grid_radial,
+                x=grid[0:min_index,1],
                 visuals_1d=visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Convergence vs Radius (arcsec)",
@@ -260,17 +274,15 @@ class MassProfilePDFPlotter(MassProfilePlotter):
             )
 
         if potential:
-            potential_1d_list = [
-                mass_profile.potential_1d_from(grid=self.grid)
-                for mass_profile in self.mass_profile_pdf_list
-            ]
+            potential_1d_list = []
 
-            min_index = min(
-                [potential_1d.shape[0] for potential_1d in potential_1d_list]
-            )
-            potential_1d_list = [
-                potential_1d[0:min_index] for potential_1d in potential_1d_list
-            ]
+            for mass_profile in self.mass_profile_pdf_list:
+                grid = self.grid.grid_2d_radial_projected_from(
+                    centre=mass_profile.centre,
+                    angle=mass_profile.angle()
+                )
+
+                potential_1d_list.append(mass_profile.potential_2d_from(grid=grid))
 
             (
                 median_potential_1d,
@@ -290,7 +302,7 @@ class MassProfilePDFPlotter(MassProfilePlotter):
 
             self.mat_plot_1d.plot_yx(
                 y=median_potential_1d,
-                x=potential_1d_list[0].grid_radial,
+                x=grid[0:min_index,1],
                 visuals_1d=visuals_1d,
                 auto_labels=aplt.AutoLabels(
                     title="Potential vs Radius (arcsec)",
