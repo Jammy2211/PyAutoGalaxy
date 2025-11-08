@@ -111,7 +111,7 @@ class SersicCore(Sersic):
         def core_sersic_2D(r):
             return (
                 self.mass_to_light_ratio
-                * self.intensity_prime(xp)
+                * self.intensity_prime()
                 * (1.0 + (self.radius_break / r) ** self.alpha)
                 ** (self.gamma / self.alpha)
                 * np.exp(
