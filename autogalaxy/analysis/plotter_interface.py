@@ -168,18 +168,6 @@ class PlotterInterface:
             mat_plot_1d=mat_plot_1d,
         )
 
-        try:
-            if should_plot("subplot_galaxies_1d"):
-                galaxies_plotter.subplot_galaxies_1d()
-        except OverflowError:
-            pass
-
-        try:
-            if should_plot("subplot_galaxies_1d_decomposed"):
-                galaxies_plotter.subplot_galaxies_1d_decomposed()
-        except OverflowError:
-            pass
-
         if should_plot("fits_galaxy_images"):
 
             image_list = [

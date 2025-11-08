@@ -143,10 +143,8 @@ class FitEllipsePDFPlotter(Plotter):
         super().__init__(
             mat_plot_1d=mat_plot_1d,
             visuals_1d=visuals_1d,
-            include_1d=include_1d,
             mat_plot_2d=mat_plot_2d,
             visuals_2d=visuals_2d,
-            include_2d=include_2d,
         )
 
         self.fit_pdf_list = fit_pdf_list

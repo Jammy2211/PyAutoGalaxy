@@ -29,10 +29,6 @@ def test__galaxies(masked_imaging_7x7, galaxies_7x7, plot_path, plot_patch):
 
     assert path.join(plot_path, "subplot_galaxies.png") in plot_patch.paths
     assert path.join(plot_path, "subplot_galaxy_images.png") in plot_patch.paths
-    assert path.join(plot_path, "subplot_galaxies_1d.png") in plot_patch.paths
-    assert (
-        path.join(plot_path, "subplot_galaxies_1d_decomposed.png") in plot_patch.paths
-    )
 
     image = ag.ndarray_via_fits_from(
         file_path=path.join(plot_path, "galaxy_images.fits"), hdu=1
