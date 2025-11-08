@@ -80,7 +80,6 @@ from .quantity.dataset_quantity import DatasetQuantity
 from .galaxy.galaxy import Galaxy
 from .galaxy.galaxies import Galaxies
 from .galaxy.redshift import Redshift
-from .galaxy.stellar_dark_decomp import StellarDarkDecomp
 from .galaxy.to_inversion import AbstractToInversion
 from .galaxy.to_inversion import GalaxiesToInversion
 from .profiles.geometry_profiles import EllProfile

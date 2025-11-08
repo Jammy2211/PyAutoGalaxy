@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 from typing import Optional
 
 from autoconf.dictable import to_dict
@@ -95,7 +96,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
         return self
 
-    def log_likelihood_function(self, instance: af.ModelInstance) -> float:
+    def log_likelihood_function(self, instance: af.ModelInstance, xp=np) -> float:
         """
         Given an instance of the model, where the model parameters are set via a non-linear search, fit the model
         instance to the interferometer dataset.
