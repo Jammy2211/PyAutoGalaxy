@@ -1,10 +1,12 @@
 import logging
 import numpy as np
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import Optional, Union
 
 import autoarray as aa
+
 from autoarray.dataset.abstract.dataset import AbstractDataset
+from autoarray.dataset.grids import GridsDataset
 
 logger = logging.getLogger(__name__)
 
@@ -82,6 +84,12 @@ class DatasetQuantity(AbstractDataset):
             noise_map=noise_map,
             over_sample_size_lp=over_sample_size_lp,
             over_sample_size_pixelization=over_sample_size_pixelization,
+        )
+
+        self.grids = GridsDataset(
+            mask=self.data.mask,
+            over_sample_size_lp=self.over_sample_size_lp,
+            over_sample_size_pixelization=self.over_sample_size_pixelization,
         )
 
     @classmethod
