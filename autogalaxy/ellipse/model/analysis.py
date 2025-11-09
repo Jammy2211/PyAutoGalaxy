@@ -1,6 +1,6 @@
 import logging
 import numpy as np
-from typing import  List, Optional
+from typing import List, Optional
 
 import autofit as af
 import autoarray as aa

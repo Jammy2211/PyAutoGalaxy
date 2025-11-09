@@ -102,13 +102,23 @@ class PowerLawBroken(MassProfile):
             self.inner_slope, self.axis_ratio(xp), R, z, max_terms=max_terms, xp=xp
         )
         F2 = self.hyp2f1_series(
-            self.inner_slope, self.axis_ratio(xp), self.break_radius, z, max_terms=max_terms, xp=xp
+            self.inner_slope,
+            self.axis_ratio(xp),
+            self.break_radius,
+            z,
+            max_terms=max_terms,
+            xp=xp,
         )
         F3 = self.hyp2f1_series(
             self.outer_slope, self.axis_ratio(xp), R, z, max_terms=max_terms, xp=xp
         )
         F4 = self.hyp2f1_series(
-            self.outer_slope, self.axis_ratio(xp), self.break_radius, z, max_terms=max_terms, xp=xp
+            self.outer_slope,
+            self.axis_ratio(xp),
+            self.break_radius,
+            z,
+            max_terms=max_terms,
+            xp=xp,
         )
 
         # theta < break radius (eq. 18)
@@ -129,7 +139,7 @@ class PowerLawBroken(MassProfile):
             grid=xp.multiply(
                 1.0, xp.vstack((xp.imag(deflections), xp.real(deflections))).T
             ),
-            xp=xp
+            xp=xp,
         )
 
     @staticmethod

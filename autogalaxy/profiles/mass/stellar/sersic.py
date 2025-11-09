@@ -186,7 +186,12 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
     def convergence_2d_via_mge_from(
-        self, grid: aa.type.Grid2DLike, xp=np, func_terms=28, func_gaussians=20, **kwargs
+        self,
+        grid: aa.type.Grid2DLike,
+        xp=np,
+        func_terms=28,
+        func_gaussians=20,
+        **kwargs,
     ):
         """
         Calculate the projected convergence at a given set of arc-second gridded coordinates.
@@ -370,7 +375,9 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
 class Sersic(AbstractSersic, MassProfileMGE, MassProfileCSE):
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+    def deflections_2d_via_integral_from(
+        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
+    ):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -413,8 +420,7 @@ class Sersic(AbstractSersic, MassProfileMGE, MassProfileCSE):
         deflection_x = calculate_deflection_component(0.0, 1)
 
         return self.rotated_grid_from_reference_frame_from(
-            np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T),
-            xp=xp
+            np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T), xp=xp
         )
 
     @staticmethod

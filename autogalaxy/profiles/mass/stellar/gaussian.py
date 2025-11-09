@@ -1,8 +1,4 @@
 import numpy as np
-from autoconf.jax_wrapper import use_jax
-
-if use_jax:
-    import jax
 
 from typing import Tuple
 
@@ -61,7 +57,9 @@ class Gaussian(MassProfile, StellarProfile):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+    def deflections_2d_via_analytic_from(
+        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
+    ):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -76,7 +74,7 @@ class Gaussian(MassProfile, StellarProfile):
             self.mass_to_light_ratio
             * self.intensity
             * self.sigma
-            * xp.sqrt((2 * np.pi) / (1.0 - self.axis_ratio(xp)**2.0))
+            * xp.sqrt((2 * np.pi) / (1.0 - self.axis_ratio(xp) ** 2.0))
             * self.zeta_from(grid=grid, xp=xp)
         )
 
@@ -84,12 +82,14 @@ class Gaussian(MassProfile, StellarProfile):
             xp.multiply(
                 1.0, xp.vstack((-1.0 * xp.imag(deflections), xp.real(deflections))).T
             ),
-            xp=xp
+            xp=xp,
         )
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+    def deflections_2d_via_integral_from(
+        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
+    ):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -130,8 +130,7 @@ class Gaussian(MassProfile, StellarProfile):
         deflection_x = calculate_deflection_component(0.0, 1)
 
         return self.rotated_grid_from_reference_frame_from(
-            np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T),
-            xp=xp
+            np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T), xp=xp
         )
 
     @staticmethod
@@ -182,7 +181,9 @@ class Gaussian(MassProfile, StellarProfile):
             np.exp(
                 -0.5
                 * np.square(
-                    np.divide(grid_radii.array, self.sigma / np.sqrt(self.axis_ratio(xp)))
+                    np.divide(
+                        grid_radii.array, self.sigma / np.sqrt(self.axis_ratio(xp))
+                    )
                 )
             ),
         )
@@ -195,7 +196,7 @@ class Gaussian(MassProfile, StellarProfile):
 
         from scipy.special import wofz
 
-        q2 = self.axis_ratio(xp)**2.0
+        q2 = self.axis_ratio(xp) ** 2.0
         ind_pos_y = grid.array[:, 0] >= 0
         shape_grid = np.shape(grid)
         output_grid = np.zeros((shape_grid[0]), dtype=np.complex128)

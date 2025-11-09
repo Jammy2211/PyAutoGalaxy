@@ -1,4 +1,3 @@
-from .jax_utils import omega
 import numpy as np
 from typing import Tuple
 
@@ -67,10 +66,11 @@ class PowerLaw(PowerLawCore):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
+        from .jax_utils import omega
 
         slope = self.slope - 1.0
         einstein_radius = (
-            2.0 / (self.axis_ratio(xp)**-0.5 + self.axis_ratio(xp)**0.5)
+            2.0 / (self.axis_ratio(xp) ** -0.5 + self.axis_ratio(xp) ** 0.5)
         ) * self.einstein_radius
 
         factor = xp.divide(1.0 - self.axis_ratio(xp), 1.0 + self.axis_ratio(xp))
@@ -83,7 +83,9 @@ class PowerLaw(PowerLawCore):
         )
 
         R = xp.sqrt(
-            (self.axis_ratio(xp) * grid.array[:, 1]) ** 2 + grid.array[:, 0] ** 2 + 1e-16
+            (self.axis_ratio(xp) * grid.array[:, 1]) ** 2
+            + grid.array[:, 0] ** 2
+            + 1e-16
         )
         zh = omega(z, slope, factor, n_terms=20, xp=np)
 
@@ -100,12 +102,13 @@ class PowerLaw(PowerLawCore):
         deflection_x *= rescale_factor
 
         return self.rotated_grid_from_reference_frame_from(
-            grid=xp.vstack((deflection_y, deflection_x)).T,
-            xp=xp
+            grid=xp.vstack((deflection_y, deflection_x)).T, xp=xp
         )
 
     def convergence_func(self, grid_radius: float, xp=np) -> float:
-        return self.einstein_radius_rescaled(xp) * grid_radius.array ** (-(self.slope - 1))
+        return self.einstein_radius_rescaled(xp) * grid_radius.array ** (
+            -(self.slope - 1)
+        )
 
     @staticmethod
     def potential_func(u, y, x, axis_ratio, slope, core_radius, xp=np):
@@ -158,4 +161,6 @@ class PowerLawSph(PowerLaw):
             )
         )
 
-        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection_r, xp=xp)
+        return self._cartesian_grid_via_radial_from(
+            grid=grid, radius=deflection_r, xp=xp
+        )

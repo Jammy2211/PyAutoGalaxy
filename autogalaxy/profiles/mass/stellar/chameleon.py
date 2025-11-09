@@ -52,7 +52,9 @@ class Chameleon(MassProfile, StellarProfile):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+    def deflections_2d_via_analytic_from(
+        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
+    ):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
         Following Eq. (15) and (16), but the parameters are slightly different.
@@ -70,7 +72,7 @@ class Chameleon(MassProfile, StellarProfile):
             * self.intensity
             / (1 + self.axis_ratio(xp))
             * self.axis_ratio(xp)
-            / xp.sqrt(1.0 - self.axis_ratio(xp)**2.0)
+            / xp.sqrt(1.0 - self.axis_ratio(xp) ** 2.0)
         )
 
         core_radius_0 = xp.sqrt(
@@ -89,28 +91,36 @@ class Chameleon(MassProfile, StellarProfile):
 
         deflection_y0 = xp.arctanh(
             xp.divide(
-                xp.multiply(xp.sqrt(1.0 - self.axis_ratio(xp)**2.0), grid.array[:, 0]),
-                xp.add(psi0, self.axis_ratio(xp)**2.0 * core_radius_0),
+                xp.multiply(
+                    xp.sqrt(1.0 - self.axis_ratio(xp) ** 2.0), grid.array[:, 0]
+                ),
+                xp.add(psi0, self.axis_ratio(xp) ** 2.0 * core_radius_0),
             )
         )
 
         deflection_x0 = xp.arctan(
             xp.divide(
-                xp.multiply(xp.sqrt(1.0 - self.axis_ratio(xp)**2.0), grid.array[:, 1]),
+                xp.multiply(
+                    xp.sqrt(1.0 - self.axis_ratio(xp) ** 2.0), grid.array[:, 1]
+                ),
                 xp.add(psi0, core_radius_0),
             )
         )
 
         deflection_y1 = xp.arctanh(
             xp.divide(
-                xp.multiply(xp.sqrt(1.0 - self.axis_ratio(xp)**2.0), grid.array[:, 0]),
-                xp.add(psi1, self.axis_ratio(xp)**2.0 * core_radius_1),
+                xp.multiply(
+                    xp.sqrt(1.0 - self.axis_ratio(xp) ** 2.0), grid.array[:, 0]
+                ),
+                xp.add(psi1, self.axis_ratio(xp) ** 2.0 * core_radius_1),
             )
         )
 
         deflection_x1 = xp.arctan(
             xp.divide(
-                xp.multiply(xp.sqrt(1.0 - self.axis_ratio(xp)**2.0), grid.array[:, 1]),
+                xp.multiply(
+                    xp.sqrt(1.0 - self.axis_ratio(xp) ** 2.0), grid.array[:, 1]
+                ),
                 xp.add(psi1, core_radius_1),
             )
         )
@@ -119,8 +129,7 @@ class Chameleon(MassProfile, StellarProfile):
         deflection_x = xp.subtract(deflection_x0, deflection_x1)
 
         return self.rotated_grid_from_reference_frame_from(
-            xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T),
-            xp=xp
+            xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T), xp=xp
         )
 
     @aa.over_sample

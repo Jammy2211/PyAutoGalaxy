@@ -1,5 +1,4 @@
-
-from .jax_utils import w_f_approx
+# from .jax_utils import w_f_approx
 
 
 class MassProfileMGE:
@@ -101,9 +100,7 @@ class MassProfileMGE:
 
         # sigma is sampled from logspace between these radii.
 
-        log_sigmas = xp.linspace(
-            xp.log(radii_min), xp.log(radii_max), func_gaussians
-        )
+        log_sigmas = xp.linspace(xp.log(radii_min), xp.log(radii_max), func_gaussians)
         d_log_sigma = log_sigmas[1] - log_sigmas[0]
         sigma_list = xp.exp(log_sigmas)
 

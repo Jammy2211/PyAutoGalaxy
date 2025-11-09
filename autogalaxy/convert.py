@@ -28,7 +28,9 @@ def ell_comps_from(axis_ratio: float, angle: float, xp=np) -> Tuple[float, float
     return (ellip_y, ellip_x)
 
 
-def axis_ratio_and_angle_from(ell_comps: Tuple[float, float], xp=np) -> Tuple[float, float]:
+def axis_ratio_and_angle_from(
+    ell_comps: Tuple[float, float], xp=np
+) -> Tuple[float, float]:
     """
     Returns the axis-ratio and position angle in degrees (-45 < angle < 135.0) from input elliptical components e1
     and e2 of a light or mass profile.
@@ -228,7 +230,9 @@ def shear_magnitude_from(gamma_1: float, gamma_2: float, xp=np) -> float:
     gamma_2
         The gamma 2 component of the shear.
     """
-    magnitude, angle = shear_magnitude_and_angle_from(gamma_1=gamma_1, gamma_2=gamma_2, xp=xp)
+    magnitude, angle = shear_magnitude_and_angle_from(
+        gamma_1=gamma_1, gamma_2=gamma_2, xp=xp
+    )
     return magnitude
 
 
@@ -255,7 +259,9 @@ def shear_angle_from(gamma_1: float, gamma_2: float, xp=np) -> float:
     gamma_2
         The gamma 2 component of the shear.
     """
-    magnitude, angle = shear_magnitude_and_angle_from(gamma_1=gamma_1, gamma_2=gamma_2, xp=xp)
+    magnitude, angle = shear_magnitude_and_angle_from(
+        gamma_1=gamma_1, gamma_2=gamma_2, xp=xp
+    )
     return angle
 
 
@@ -300,7 +306,9 @@ def multipole_k_m_and_phi_m_from(
     return k_m, phi_m
 
 
-def multipole_comps_from(k_m: float, phi_m: float, m: int, xp=np) -> Tuple[float, float]:
+def multipole_comps_from(
+    k_m: float, phi_m: float, m: int, xp=np
+) -> Tuple[float, float]:
     """
     Returns the multipole component parameters from their normalization value `k_m` and angle `phi`.
 

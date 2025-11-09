@@ -89,19 +89,23 @@ class Isothermal(PowerLaw):
             2.0
             * self.einstein_radius_rescaled(xp)
             * self.axis_ratio(xp)
-            / xp.sqrt(1 - self.axis_ratio(xp)**2)
+            / xp.sqrt(1 - self.axis_ratio(xp) ** 2)
         )
 
-        psi = psi_from(grid=grid, axis_ratio=self.axis_ratio(xp), core_radius=0.0, xp=xp)
+        psi = psi_from(
+            grid=grid, axis_ratio=self.axis_ratio(xp), core_radius=0.0, xp=xp
+        )
 
         deflection_y = xp.arctanh(
             xp.divide(
-                xp.multiply(xp.sqrt(1 - self.axis_ratio(xp)**2), grid.array[:, 0]), psi
+                xp.multiply(xp.sqrt(1 - self.axis_ratio(xp) ** 2), grid.array[:, 0]),
+                psi,
             )
         )
         deflection_x = xp.arctan(
             xp.divide(
-                xp.multiply(xp.sqrt(1 - self.axis_ratio(xp)**2), grid.array[:, 1]), psi
+                xp.multiply(xp.sqrt(1 - self.axis_ratio(xp) ** 2), grid.array[:, 1]),
+                psi,
             )
         )
         return self.rotated_grid_from_reference_frame_from(

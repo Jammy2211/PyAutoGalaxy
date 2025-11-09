@@ -60,8 +60,10 @@ class EllipseMultipole:
         angles = ellipse.angles_from_x0_from(pixel_scale=pixel_scale, n_i=n_i)
 
         radial = np.add(
-            self.multipole_comps[1] * np.cos(self.m * (angles - ellipse.angle_radians())),
-            self.multipole_comps[0] * np.sin(self.m * (angles - ellipse.angle_radians())),
+            self.multipole_comps[1]
+            * np.cos(self.m * (angles - ellipse.angle_radians())),
+            self.multipole_comps[0]
+            * np.sin(self.m * (angles - ellipse.angle_radians())),
         )
 
         x = points[:, 1] + (radial * np.cos(angles))

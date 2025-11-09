@@ -42,9 +42,9 @@ class PowerLawCore(MassProfile):
         Rescale the einstein radius by slope and axis_ratio, to reduce its degeneracy with other mass-profiles
         parameters.
         """
-        return ((3 - self.slope) / (1 + self.axis_ratio(xp))) * self.einstein_radius ** (
-            self.slope - 1
-        )
+        return (
+            (3 - self.slope) / (1 + self.axis_ratio(xp))
+        ) * self.einstein_radius ** (self.slope - 1)
 
     @aa.over_sample
     @aa.grid_dec.to_array
@@ -140,8 +140,7 @@ class PowerLawCore(MassProfile):
         deflection_x = calculate_deflection_component(0.0, 1)
 
         return self.rotated_grid_from_reference_frame_from(
-            grid=np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T),
-            xp=xp
+            grid=np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T), xp=xp
         )
 
     def convergence_func(self, grid_radius: float, xp=np) -> float:

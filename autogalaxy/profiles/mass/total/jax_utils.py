@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def body_fun(carry, n, factor, ei2phi, slope):
     omega_nm1, partial_sum = carry
     two_n = 2 * n
@@ -33,6 +34,7 @@ def omega(eiphi, slope, factor, n_terms=20, xp=np):
 
     from jax.tree_util import Partial as partial
     import jax
+
     scan = jax.jit(jax.lax.scan, static_argnames=("length", "reverse", "unroll"))
 
     # use modified scan with a partial'ed function to avoid re-compile

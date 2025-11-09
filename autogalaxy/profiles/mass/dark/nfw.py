@@ -47,7 +47,9 @@ class NFW(gNFW, MassProfileCSE):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+    def deflections_2d_via_integral_from(
+        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
+    ):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -142,7 +144,9 @@ class NFW(gNFW, MassProfileCSE):
     def convergence_func(self, grid_radius: float) -> float:
         grid_radius = (1.0 / self.scale_radius) * grid_radius.array + 0j
         return np.real(
-            2.0 * self.kappa_s * np.array(self.coord_func_g(grid_radius=grid_radius, xp=xp))
+            2.0
+            * self.kappa_s
+            * np.array(self.coord_func_g(grid_radius=grid_radius, xp=xp))
         )
 
     @aa.over_sample
@@ -364,7 +368,9 @@ class NFWSph(NFW):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+    def deflections_2d_via_analytic_from(
+        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
+    ):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -383,7 +389,9 @@ class NFWSph(NFW):
             self.deflection_func_sph(grid_radius=eta, xp=xp),
         )
 
-        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection_grid, xp=xp)
+        return self._cartesian_grid_via_radial_from(
+            grid=grid, radius=deflection_grid, xp=xp
+        )
 
     def deflection_func_sph(self, grid_radius, xp=np):
         grid_radius = grid_radius + 0j

@@ -50,7 +50,7 @@ class Ellipse(EllProfile):
         """
         The ellipticity of the ellipse, which is the factor by which the ellipse is offset from a circle.
         """
-        return np.sqrt(1 - self.axis_ratio()**2.0)
+        return np.sqrt(1 - self.axis_ratio() ** 2.0)
 
     @property
     def minor_axis(self):

@@ -25,10 +25,14 @@ class ExternalShear(MassProfile):
         self.gamma_2 = gamma_2
 
     def magnitude(self, xp=np):
-        return convert.shear_magnitude_from(gamma_1=self.gamma_1, gamma_2=self.gamma_2, xp=xp)
+        return convert.shear_magnitude_from(
+            gamma_1=self.gamma_1, gamma_2=self.gamma_2, xp=xp
+        )
 
     def angle(self, xp=np):
-        return convert.shear_angle_from(gamma_1=self.gamma_1, gamma_2=self.gamma_2, xp=xp)
+        return convert.shear_angle_from(
+            gamma_1=self.gamma_1, gamma_2=self.gamma_2, xp=xp
+        )
 
     def convergence_func(self, grid_radius: float) -> float:
         return 0.0

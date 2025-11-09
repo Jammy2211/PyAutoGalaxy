@@ -14,6 +14,7 @@ def make_profile_plotter_setup():
         "{}".format(path.dirname(path.realpath(__file__))), "files", "plots", "profiles"
     )
 
+
 def test__figures_2d__all_are_output(
     lp_0,
     grid_2d_7x7,

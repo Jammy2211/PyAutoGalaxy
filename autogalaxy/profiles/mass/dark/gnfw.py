@@ -162,7 +162,9 @@ class gNFW(AbstractgNFW):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, tabulate_bins=1000, **kwargs):
+    def potential_2d_from(
+        self, grid: aa.type.Grid2DLike, xp=np, tabulate_bins=1000, **kwargs
+    ):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 
@@ -295,7 +297,9 @@ class gNFWSph(gNFW):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+    def deflections_2d_via_integral_from(
+        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
+    ):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -316,7 +320,9 @@ class gNFWSph(gNFW):
                 4.0 * self.kappa_s * self.scale_radius, self.deflection_func_sph(eta[i])
             )
 
-        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection_grid, xp=xp)
+        return self._cartesian_grid_via_radial_from(
+            grid=grid, radius=deflection_grid, xp=xp
+        )
 
     @staticmethod
     def deflection_integrand(y, eta, inner_slope):

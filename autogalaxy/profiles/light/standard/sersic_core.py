@@ -72,7 +72,9 @@ class SersicCore(Sersic):
             )
         )
 
-    def image_2d_via_radii_from(self, grid_radii: np.ndarray, xp=np, **kwargs) -> np.ndarray:
+    def image_2d_via_radii_from(
+        self, grid_radii: np.ndarray, xp=np, **kwargs
+    ) -> np.ndarray:
         """
         Returns the 2D image of the Sersic light profile from a grid of coordinates which are the radial distances of
         each coordinate from the its `centre`.

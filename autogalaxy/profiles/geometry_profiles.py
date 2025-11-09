@@ -44,6 +44,7 @@ class GeometryProfile:
     def transformed_from_reference_frame_grid_from(self, grid, xp=np, **kwargs):
         raise NotImplemented()
 
+
 class SphProfile(GeometryProfile):
     """
     A spherical profile, which describes profiles with y and x centre Cartesian coordinates.
@@ -68,9 +69,7 @@ class SphProfile(GeometryProfile):
         grid
             The grid of (y, x) coordinates which are converted to radial distances.
         """
-        return xp.sqrt(
-            xp.add(xp.square(grid.array[:, 0]), xp.square(grid.array[:, 1]))
-        )
+        return xp.sqrt(xp.add(xp.square(grid.array[:, 0]), xp.square(grid.array[:, 1])))
 
     def angle_to_profile_grid_from(
         self, grid_angles: np.ndarray, xp=np, **kwargs
@@ -88,7 +87,11 @@ class SphProfile(GeometryProfile):
 
     @aa.grid_dec.to_grid
     def _cartesian_grid_via_radial_from(
-        self, grid: aa.type.Grid2DLike, xp=np, radius : Optional[np.ndarray] = None,  **kwargs
+        self,
+        grid: aa.type.Grid2DLike,
+        xp=np,
+        radius: Optional[np.ndarray] = None,
+        **kwargs,
     ) -> aa.type.Grid2DLike:
         """
         Convert a grid of (y,x) coordinates with their specified radial distances (e.g. :math: r = x**2 + y**2) to
@@ -102,7 +105,9 @@ class SphProfile(GeometryProfile):
             The circular radius of each coordinate from the profile center.
         """
         grid_angles = xp.arctan2(grid.array[:, 0], grid.array[:, 1])
-        cos_theta, sin_theta = self.angle_to_profile_grid_from(grid_angles=grid_angles, xp=xp)
+        cos_theta, sin_theta = self.angle_to_profile_grid_from(
+            grid_angles=grid_angles, xp=xp
+        )
 
         return xp.multiply(radius[:, None], xp.vstack((sin_theta, cos_theta)).T)
 
@@ -232,10 +237,8 @@ class EllProfile(SphProfile):
         grid_angles
             The angle theta counter-clockwise from the positive x-axis to each coordinate in radians.
         """
-        theta_coordinate_to_profile = xp.add(grid_angles, - self.angle_radians(xp=xp))
-        return xp.cos(theta_coordinate_to_profile), xp.sin(
-            theta_coordinate_to_profile
-        )
+        theta_coordinate_to_profile = xp.add(grid_angles, -self.angle_radians(xp=xp))
+        return xp.cos(theta_coordinate_to_profile), xp.sin(theta_coordinate_to_profile)
 
     @aa.grid_dec.to_grid
     def rotated_grid_from_reference_frame_from(
@@ -357,7 +360,7 @@ class EllProfile(SphProfile):
                 u
                 * (
                     (coordinates[1] ** 2)
-                    + (coordinates[0] ** 2 / (1 - (1 - self.axis_ratio(xp)**2) * u))
+                    + (coordinates[0] ** 2 / (1 - (1 - self.axis_ratio(xp) ** 2) * u))
                 )
             )
         )

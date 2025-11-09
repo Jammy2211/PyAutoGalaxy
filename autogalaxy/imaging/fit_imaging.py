@@ -25,7 +25,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         dataset_model: Optional[aa.DatasetModel] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
-        xp=np
+        xp=np,
     ):
         """
         Fits an imaging dataset using a list of galaxies.

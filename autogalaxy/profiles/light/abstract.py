@@ -42,7 +42,11 @@ class LightProfile(EllProfile, OperateImage):
         return ""
 
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None, **kwargs
+        self,
+        grid: aa.type.Grid2DLike,
+        xp=np,
+        operated_only: Optional[bool] = None,
+        **kwargs,
     ) -> aa.Array2D:
         """
         Returns the light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates, which may have been

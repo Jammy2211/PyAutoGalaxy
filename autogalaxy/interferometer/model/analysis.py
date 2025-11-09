@@ -134,11 +134,7 @@ class AnalysisInterferometer(AnalysisDataset):
         """
         return self.fit_from(instance=instance, xp=xp).figure_of_merit
 
-    def fit_from(
-        self,
-        instance: af.ModelInstance,
-        xp=np
-    ) -> FitInterferometer:
+    def fit_from(self, instance: af.ModelInstance, xp=np) -> FitInterferometer:
         """
         Given a model instance create a `FitInterferometer` object.
 
@@ -169,7 +165,7 @@ class AnalysisInterferometer(AnalysisDataset):
             galaxies=galaxies,
             adapt_images=adapt_images,
             settings_inversion=self.settings_inversion,
-            xp=xp
+            xp=xp,
         )
 
     def save_attributes(self, paths: af.DirectoryPaths):

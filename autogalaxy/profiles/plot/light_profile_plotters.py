@@ -72,8 +72,7 @@ class LightProfilePlotter(Plotter):
     @property
     def grid_2d_projected(self):
         return self.grid.grid_2d_radial_projected_from(
-            centre=self.light_profile.centre,
-            angle=self.light_profile.angle()
+            centre=self.light_profile.centre, angle=self.light_profile.angle()
         )
 
     def figures_2d(self, image: bool = False):

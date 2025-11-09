@@ -202,11 +202,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
                     """
                 )
 
-        super().__init__(
-            grid=grid,
-            regularization=regularization,
-            xp=xp
-        )
+        super().__init__(grid=grid, regularization=regularization, xp=xp)
 
         self.blurring_grid = blurring_grid
         self.psf = psf
@@ -314,7 +310,9 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
 
                 # blurring grid mapping for this light profile
                 blurring_mapping_matrix = blurring_mapping_matrix.at[:, pixel].set(
-                    light_profile.image_2d_from(grid=self.blurring_grid, xp=self.xp).array
+                    light_profile.image_2d_from(
+                        grid=self.blurring_grid, xp=self.xp
+                    ).array
                 )
 
             else:
@@ -331,7 +329,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
             mask=self.grid.mask,
             blurring_mapping_matrix=blurring_mapping_matrix,
             blurring_mask=self.blurring_grid.mask,
-            xp=self.xp
+            xp=self.xp,
         )
 
     @cached_property
@@ -362,7 +360,9 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         for pixel, light_profile in enumerate(self.light_profile_list):
             image_2d = light_profile.image_2d_from(grid=self.grid, xp=self.xp)
 
-            blurring_image_2d = light_profile.image_2d_from(grid=self.blurring_grid, xp=self.xp)
+            blurring_image_2d = light_profile.image_2d_from(
+                grid=self.blurring_grid, xp=self.xp
+            )
 
             blurred_image_2d = self.psf.convolved_image_from(
                 image=image_2d, blurring_image=blurring_image_2d, xp=self.xp

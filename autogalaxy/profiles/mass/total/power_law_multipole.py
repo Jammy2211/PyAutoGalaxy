@@ -188,14 +188,18 @@ class PowerLawMultipole(MassProfile):
         )
 
         return xp.stack(
-            self.jacobian(a_r=a_r, a_angle=a_angle, polar_angle_grid=polar_angle_grid, xp=xp),
+            self.jacobian(
+                a_r=a_r, a_angle=a_angle, polar_angle_grid=polar_angle_grid, xp=xp
+            ),
             axis=-1,
         )
 
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def convergence_2d_from(self, grid: aa.type.Grid1D2DLike, xp=np, **kwargs) -> np.ndarray:
+    def convergence_2d_from(
+        self, grid: aa.type.Grid1D2DLike, xp=np, **kwargs
+    ) -> np.ndarray:
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
 
@@ -215,7 +219,9 @@ class PowerLawMultipole(MassProfile):
         )
 
     @aa.grid_dec.to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs) -> np.ndarray:
+    def potential_2d_from(
+        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
+    ) -> np.ndarray:
         """
         Calculate the potential on a grid of (y,x) arc-second coordinates.
 

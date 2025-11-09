@@ -202,7 +202,9 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         )
 
     def coord_func_h(self, grid_radius, xp=np):
-        return xp.log(grid_radius / 2.0) + self.coord_func_f(grid_radius=grid_radius, xp=xp)
+        return xp.log(grid_radius / 2.0) + self.coord_func_f(
+            grid_radius=grid_radius, xp=xp
+        )
 
     def rho_at_scale_radius_solar_mass_per_kpc3(
         self, redshift_object, redshift_source, cosmology: LensingCosmology = None
@@ -289,7 +291,9 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         )
 
         return fsolve(
-            func=self.concentration_func, x0=10.0, args=(delta_concentration, xp),
+            func=self.concentration_func,
+            x0=10.0,
+            args=(delta_concentration, xp),
         )[0]
 
     @staticmethod
@@ -312,7 +316,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         redshift_source,
         redshift_of_cosmic_average_density="profile",
         cosmology: LensingCosmology = None,
-        xp=np
+        xp=np,
     ):
         """
         Returns `r_{200m}` for this halo in **arcseconds**
@@ -326,7 +330,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
             redshift_source=redshift_source,
             redshift_of_cosmic_average_density=redshift_of_cosmic_average_density,
             cosmology=cosmology,
-            xp=xp
+            xp=xp,
         )
 
         return concentration * self.scale_radius
@@ -367,7 +371,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
             redshift_source=redshift_source,
             redshift_of_cosmic_average_density=redshift_of_cosmic_average_density,
             cosmology=cosmology,
-            xp=xp
+            xp=xp,
         )
 
         kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_object)

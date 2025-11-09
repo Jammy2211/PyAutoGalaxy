@@ -324,6 +324,7 @@ def test__tangential_caustic_list_from():
     assert 0.47 < y_centre < 0.53
     assert 0.97 < x_centre < 1.03
 
+
 # TODO : Reinstate one JAX defleciton sin.
 
 # def test__tangential_caustic_list_from___compare_via_magnification():

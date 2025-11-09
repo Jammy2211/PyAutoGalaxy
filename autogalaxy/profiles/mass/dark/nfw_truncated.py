@@ -47,7 +47,9 @@ class NFWTruncatedSph(AbstractgNFW):
             self.deflection_func_sph(grid_radius=eta),
         )
 
-        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection_grid, xp=xp)
+        return self._cartesian_grid_via_radial_from(
+            grid=grid, radius=deflection_grid, xp=xp
+        )
 
     def deflection_func_sph(self, grid_radius, xp=np):
         grid_radius = grid_radius + 0j
@@ -120,7 +122,7 @@ class NFWTruncatedSph(AbstractgNFW):
             redshift_source=redshift_source,
             redshift_of_cosmic_average_density=redshift_of_cosmic_average_density,
             cosmology=cosmology,
-            xp=xp
+            xp=xp,
         )
 
         return (

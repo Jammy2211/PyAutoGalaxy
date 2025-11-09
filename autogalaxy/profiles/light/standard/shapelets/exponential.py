@@ -64,7 +64,11 @@ class ShapeletExponential(AbstractShapelet):
     @check_operated_only
     @aa.grid_dec.transform
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None, **kwargs
+        self,
+        grid: aa.type.Grid2DLike,
+        xp=np,
+        operated_only: Optional[bool] = None,
+        **kwargs,
     ) -> np.ndarray:
         """
         Returns the Exponential Shapelet light profile's 2D image from a 2D grid of Exponential (y,x) coordinates.

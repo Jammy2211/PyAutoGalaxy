@@ -293,4 +293,3 @@ class GalaxyPlotter(Plotter):
             self.subplot_of_plotters_figure(
                 plotter_list=mass_profile_plotters, name="deflections_x"
             )
-

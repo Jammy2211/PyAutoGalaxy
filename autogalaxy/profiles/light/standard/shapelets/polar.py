@@ -64,7 +64,11 @@ class ShapeletPolar(AbstractShapelet):
     @check_operated_only
     @aa.grid_dec.transform
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None, **kwargs
+        self,
+        grid: aa.type.Grid2DLike,
+        xp=np,
+        operated_only: Optional[bool] = None,
+        **kwargs,
     ) -> np.ndarray:
         """
         Returns the Polar Shapelet light profile's 2D image from a 2D grid of Polar (y,x) coordinates.
@@ -85,9 +89,7 @@ class ShapeletPolar(AbstractShapelet):
         from scipy.special import genlaguerre
         from jax.scipy.special import factorial
 
-        laguerre = genlaguerre(
-            n=(self.n - xp.abs(self.m)) / 2.0, alpha=xp.abs(self.m)
-        )
+        laguerre = genlaguerre(n=(self.n - xp.abs(self.m)) / 2.0, alpha=xp.abs(self.m))
 
         const = (
             ((-1) ** ((self.n - xp.abs(self.m)) // 2))

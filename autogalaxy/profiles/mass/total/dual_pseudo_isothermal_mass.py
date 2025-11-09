@@ -96,8 +96,7 @@ def _ci05f(x, y, eps, rcore, rcut, xp=np):
     )  # a + bi
     zden_rc = xp.complex128(x + 1j * (2.0 * rcore * sqe - y))  # c + di
     znum_rcut = xp.complex128(
-        axis_ratio * x
-        + 1j * (2.0 * sqe * xp.sqrt(rcut * rcut + rem2) - y / axis_ratio)
+        axis_ratio * x + 1j * (2.0 * sqe * xp.sqrt(rcut * rcut + rem2) - y / axis_ratio)
     )  # a + ei
     zden_rcut = xp.complex128(x + 1j * (2.0 * rcut * sqe - y))  # c + fi
 
@@ -310,7 +309,9 @@ class PIEMass(MassProfile):
 
         return hessian_yy, hessian_xy, hessian_yx, hessian_xx
 
-    def analytical_magnification_2d_from(self, grid: "aa.type.Grid2DLike", xp=np, **kwargs):
+    def analytical_magnification_2d_from(
+        self, grid: "aa.type.Grid2DLike", xp=np, **kwargs
+    ):
 
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = (
             self.analytical_hessian_2d_from(grid=grid, xp=np)
@@ -503,7 +504,9 @@ class dPIEMass(MassProfile):
 
         return hessian_yy, hessian_xy, hessian_yx, hessian_xx
 
-    def analytical_magnification_2d_from(self, grid: "aa.type.Grid2DLike", xp=np, **kwargs):
+    def analytical_magnification_2d_from(
+        self, grid: "aa.type.Grid2DLike", xp=np, **kwargs
+    ):
 
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = (
             self.analytical_hessian_2d_from(grid=grid, xp=xp)
@@ -603,7 +606,9 @@ class dPIEMassSph(dPIEMass):
 
         # And here we convert back to the real axes
         return self.rotated_grid_from_reference_frame_from(
-            grid=xp.multiply(1.0, xp.vstack((deflection_y, deflection_x)).T), xp=xp, **kwargs
+            grid=xp.multiply(1.0, xp.vstack((deflection_y, deflection_x)).T),
+            xp=xp,
+            **kwargs,
         )
 
     @aa.grid_dec.transform

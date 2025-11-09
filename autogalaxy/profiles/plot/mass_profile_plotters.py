@@ -74,7 +74,5 @@ class MassProfilePlotter(Plotter):
     @property
     def grid_2d_projected(self):
         return self.grid.grid_2d_radial_projected_from(
-            centre=self.mass_profile.centre,
-            angle=self.mass_profile.angle()
+            centre=self.mass_profile.centre, angle=self.mass_profile.angle()
         )
-

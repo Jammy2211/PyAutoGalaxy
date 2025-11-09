@@ -62,7 +62,9 @@ class Moffat(LightProfile):
             xp.power(
                 1
                 + xp.square(
-                    xp.divide(grid_radii.array, self.alpha / xp.sqrt(self.axis_ratio(xp)))
+                    xp.divide(
+                        grid_radii.array, self.alpha / xp.sqrt(self.axis_ratio(xp))
+                    )
                 ),
                 -self.beta,
             ),
@@ -73,7 +75,11 @@ class Moffat(LightProfile):
     @check_operated_only
     @aa.grid_dec.transform
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None, **kwargs
+        self,
+        grid: aa.type.Grid2DLike,
+        xp=np,
+        operated_only: Optional[bool] = None,
+        **kwargs,
     ) -> np.ndarray:
         """
         Returns the Moffat light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.

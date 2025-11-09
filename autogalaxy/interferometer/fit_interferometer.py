@@ -20,7 +20,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         dataset_model: Optional[aa.DatasetModel] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
-        xp=np
+        xp=np,
     ):
         """
         Fits an interferometer dataset using a list of galaxies.
@@ -70,10 +70,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         self.galaxies = Galaxies(galaxies=galaxies)
 
         super().__init__(
-            dataset=dataset,
-            dataset_model=dataset_model,
-            use_mask_in_fit=False,
-            xp=xp
+            dataset=dataset, dataset_model=dataset_model, use_mask_in_fit=False, xp=xp
         )
         AbstractFitInversion.__init__(
             self=self,
@@ -116,7 +113,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             galaxies=self.galaxies,
             adapt_images=self.adapt_images,
             settings_inversion=self.settings_inversion,
-            xp=self.xp
+            xp=self.xp,
         )
 
     @cached_property
