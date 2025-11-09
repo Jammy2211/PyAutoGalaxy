@@ -22,6 +22,7 @@ class AnalysisImaging(AnalysisDataset):
         adapt_image_maker: Optional[AdaptImageMaker] = None,
         cosmology: LensingCosmology = None,
         settings_inversion: aa.SettingsInversion = None,
+        preloads: aa.Preloads = None,
         title_prefix: str = None,
     ):
         """
@@ -59,6 +60,7 @@ class AnalysisImaging(AnalysisDataset):
             adapt_image_maker=adapt_image_maker,
             cosmology=cosmology,
             settings_inversion=settings_inversion,
+            preloads=preloads,
             title_prefix=title_prefix,
         )
 

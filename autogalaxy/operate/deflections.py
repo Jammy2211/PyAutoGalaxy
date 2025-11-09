@@ -112,7 +112,7 @@ class OperateDeflections:
     def __eq__(self, other):
         return self.__dict__ == other.__dict__ and self.__class__ is other.__class__
 
-    def time_delay_geometry_term_from(self, grid) -> aa.Array2D:
+    def time_delay_geometry_term_from(self, grid, xp=np) -> aa.Array2D:
         """
             Returns the geometric time delay term of the Fermat potential for a given grid of image-plane positions.
 
@@ -136,7 +136,7 @@ class OperateDeflections:
             -------
             The geometric time delay term at each grid position.
         """
-        deflections = self.deflections_yx_2d_from(grid=grid)
+        deflections = self.deflections_yx_2d_from(grid=grid, xp=xp)
 
         src_y = grid[:, 0] - deflections[:, 0]
         src_x = grid[:, 1] - deflections[:, 1]
@@ -147,7 +147,7 @@ class OperateDeflections:
             return aa.ArrayIrregular(values=delay)
         return aa.Array2D(values=delay, mask=grid.mask)
 
-    def fermat_potential_from(self, grid) -> aa.Array2D:
+    def fermat_potential_from(self, grid, xp=np) -> aa.Array2D:
         """
         Returns the Fermat potential for a given grid of image-plane positions.
 
@@ -172,8 +172,8 @@ class OperateDeflections:
         -------
         The Fermat potential at each grid position.
         """
-        time_delay_geometry_term = self.time_delay_geometry_term_from(grid=grid)
-        potential = self.potential_2d_from(grid=grid)
+        time_delay_geometry_term = self.time_delay_geometry_term_from(grid=grid, xp=xp)
+        potential = self.potential_2d_from(grid=grid, xp=xp)
 
         fermat_potential = time_delay_geometry_term - potential
 

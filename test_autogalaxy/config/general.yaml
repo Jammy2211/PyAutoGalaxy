@@ -22,8 +22,6 @@ hpc:
 adapt:
   adapt_minimum_percent: 0.01
   adapt_noise_limit: 100000000.0
-model:
-  ignore_prior_limits: true
 numba:
   cache: true
   nopython: true

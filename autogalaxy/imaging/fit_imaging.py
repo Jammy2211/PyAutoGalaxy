@@ -96,14 +96,14 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         ):
             return self.galaxies.image_2d_from(
                 grid=self.grids.lp,
-                xp=self.xp,
+                xp=self._xp,
             )
 
         return self.galaxies.blurred_image_2d_from(
             grid=self.grids.lp,
             psf=self.dataset.psf,
             blurring_grid=self.grids.blurring,
-            xp=self.xp,
+            xp=self._xp,
         )
 
     @property
@@ -128,7 +128,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             galaxies=self.galaxies,
             adapt_images=self.adapt_images,
             settings_inversion=self.settings_inversion,
-            xp=self.xp,
+            xp=self._xp,
         )
 
     @cached_property

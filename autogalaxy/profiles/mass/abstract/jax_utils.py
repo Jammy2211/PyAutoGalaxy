@@ -42,6 +42,7 @@ def reg3(z, sqrt_pi, _):
 
     return f1 / f2
 
+
 #
 # @custom_jvp
 # def w_f_approx(z):

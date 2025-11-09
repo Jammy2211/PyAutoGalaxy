@@ -88,7 +88,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         a Fourier transform to the sum of light profile images.
         """
         return self.galaxies.visibilities_from(
-            grid=self.grids.lp, transformer=self.dataset.transformer, xp=self.xp
+            grid=self.grids.lp, transformer=self.dataset.transformer, xp=self._xp
         )
 
     @property
@@ -113,7 +113,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             galaxies=self.galaxies,
             adapt_images=self.adapt_images,
             settings_inversion=self.settings_inversion,
-            xp=self.xp,
+            xp=self._xp,
         )
 
     @cached_property

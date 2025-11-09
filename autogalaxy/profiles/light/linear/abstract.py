@@ -264,11 +264,11 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
 
         for pixel, light_profile in enumerate(self.light_profile_list):
 
-            image_2d = light_profile.image_2d_from(grid=self.grid, xp=self.xp).slim
+            image_2d = light_profile.image_2d_from(grid=self.grid, xp=self._xp).slim
 
             image_2d_list.append(image_2d.array)
 
-        return self.xp.stack(image_2d_list, axis=1)
+        return self._xp.stack(image_2d_list, axis=1)
 
     @cached_property
     def operated_mapping_matrix_overrideg(self) -> Optional[np.ndarray]:
@@ -297,31 +297,31 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         n_src = len(self.light_profile_list)
 
         # allocate slim-form arrays for mapping matrices
-        mapping_matrix = self.xp.zeros((self.grid.shape_slim, n_src))
-        blurring_mapping_matrix = self.xp.zeros((self.blurring_grid.shape_slim, n_src))
+        mapping_matrix = self._xp.zeros((self.grid.shape_slim, n_src))
+        blurring_mapping_matrix = self._xp.zeros((self.blurring_grid.shape_slim, n_src))
 
         # build each column
         for pixel, light_profile in enumerate(self.light_profile_list):
-            if self.xp.__name__.startswith("jax"):
+            if self._xp.__name__.startswith("jax"):
                 # main grid mapping for this light profile
                 mapping_matrix = mapping_matrix.at[:, pixel].set(
-                    light_profile.image_2d_from(grid=self.grid, xp=self.xp).array
+                    light_profile.image_2d_from(grid=self.grid, xp=self._xp).array
                 )
 
                 # blurring grid mapping for this light profile
                 blurring_mapping_matrix = blurring_mapping_matrix.at[:, pixel].set(
                     light_profile.image_2d_from(
-                        grid=self.blurring_grid, xp=self.xp
+                        grid=self.blurring_grid, xp=self._xp
                     ).array
                 )
 
             else:
 
                 mapping_matrix[:, pixel] = light_profile.image_2d_from(
-                    grid=self.grid, xp=self.xp
+                    grid=self.grid, xp=self._xp
                 ).array
                 blurring_mapping_matrix[:, pixel] = light_profile.image_2d_from(
-                    grid=self.blurring_grid, xp=self.xp
+                    grid=self.blurring_grid, xp=self._xp
                 ).array
 
         return self.psf.convolved_mapping_matrix_from(
@@ -329,7 +329,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
             mask=self.grid.mask,
             blurring_mapping_matrix=blurring_mapping_matrix,
             blurring_mask=self.blurring_grid.mask,
-            xp=self.xp,
+            xp=self._xp,
         )
 
     @cached_property
@@ -358,16 +358,16 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         blurred_image_2d_list = []
 
         for pixel, light_profile in enumerate(self.light_profile_list):
-            image_2d = light_profile.image_2d_from(grid=self.grid, xp=self.xp)
+            image_2d = light_profile.image_2d_from(grid=self.grid, xp=self._xp)
 
             blurring_image_2d = light_profile.image_2d_from(
-                grid=self.blurring_grid, xp=self.xp
+                grid=self.blurring_grid, xp=self._xp
             )
 
             blurred_image_2d = self.psf.convolved_image_from(
-                image=image_2d, blurring_image=blurring_image_2d, xp=self.xp
+                image=image_2d, blurring_image=blurring_image_2d, xp=self._xp
             )
 
             blurred_image_2d_list.append(blurred_image_2d.array)
 
-        return self.xp.stack(blurred_image_2d_list, axis=1)
+        return self._xp.stack(blurred_image_2d_list, axis=1)
