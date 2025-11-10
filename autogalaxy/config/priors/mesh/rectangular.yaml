@@ -1,4 +1,4 @@
-Rectangular:
+RectangularMagnification:
   shape_0:
     type: Uniform
     lower_limit: 20.0
@@ -19,3 +19,34 @@ Rectangular:
     limits:
       lower: 3.0
       upper: inf
+RectangularSource:
+  shape_0:
+    type: Uniform
+    lower_limit: 20.0
+    upper_limit: 45.0
+    width_modifier:
+      type: Absolute
+      value: 8.0
+    limits:
+      lower: 3.0
+      upper: inf
+  shape_1:
+    type: Uniform
+    lower_limit: 20.0
+    upper_limit: 45.0
+    width_modifier:
+      type: Absolute
+      value: 8.0
+    limits:
+      lower: 3.0
+      upper: inf
+  weight_power:
+    type : Uniform
+    lower_limit: -5.0
+    upper_limit: 5.0
+    width_modifier:
+      type: Absolute
+      value: 2.0
+    limits:
+      lower: -100.0
+      upper: 100.0

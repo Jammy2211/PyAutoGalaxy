@@ -1,5 +1,5 @@
 {
-    "rectangular.Rectangular": {
+    "rectangular.RectangularMagnification": {
         "shape_0": {
             "type": "Uniform",
             "lower_limit": 10.0,
