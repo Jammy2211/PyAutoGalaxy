@@ -108,3 +108,13 @@ def raise_linear_light_profile_in_plot(
         `fit.galaxies_linear_light_profiles_to_light_profiles`.
         """
     )
+
+
+def invalid_linear_algebra_for_visualization_message():
+    return (
+        "Visualization of the inversion's reconstruction cannot be performed because the "
+        "inversion failed to calculate a valid solution (e.g. the linear algebra did not "
+        "find a valid solution). \n\n"
+        "This should not happen after a search has completed, so if this is seen in the final "
+        "results, please contact the developers via the PyAutoLens GitHub or SLACK."
+    )

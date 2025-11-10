@@ -1,4 +1,4 @@
-from autoconf.fitsable import hdu_list_for_output_from
+import logging
 
 import autofit as af
 
@@ -6,6 +6,7 @@ from autoarray import exc
 
 from autogalaxy.imaging.model.plotter_interface import PlotterInterfaceImaging
 
+logger = logging.getLogger(__name__)
 
 class VisualizerImaging(af.Visualizer):
     @staticmethod
@@ -94,7 +95,13 @@ class VisualizerImaging(af.Visualizer):
         plotter.galaxies(galaxies=galaxies, grid=fit.grids.lp)
 
         if fit.inversion is not None:
-            plotter.inversion(inversion=fit.inversion)
+            try:
+                plotter.inversion(inversion=fit.inversion)
+            except exc.InversionException:
+                logger(
+                    exc.invalid_linear_algebra_for_visualization_message()
+                )
+                return
 
     @staticmethod
     def visualize_before_fit_combined(

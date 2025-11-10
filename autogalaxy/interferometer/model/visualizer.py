@@ -1,3 +1,5 @@
+import logging
+
 import autofit as af
 
 from autogalaxy.interferometer.model.plotter_interface import (
@@ -5,6 +7,7 @@ from autogalaxy.interferometer.model.plotter_interface import (
 )
 from autogalaxy import exc
 
+logger = logging.getLogger(__name__)
 
 class VisualizerInterferometer(af.Visualizer):
     @staticmethod
@@ -103,5 +106,8 @@ class VisualizerInterferometer(af.Visualizer):
                 plotter_interface.inversion(
                     inversion=fit.inversion,
                 )
-            except IndexError:
-                pass
+            except (IndexError, exc.InversionException):
+                logger(
+                    exc.invalid_linear_algebra_for_visualization_message()
+                )
+                return
