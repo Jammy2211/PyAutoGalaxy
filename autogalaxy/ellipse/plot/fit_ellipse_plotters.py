@@ -116,14 +116,15 @@ class FitEllipsePlotter(Plotter):
                 for_subplot=for_subplot,
             )
 
-    def subplot_fit_ellipse(self):
+    def subplot_fit_ellipse(self, disable_data_contours: bool = False):
         """
         Standard subplot of the attributes of the plotter's `FitEllipse` object.
         """
 
         self.open_subplot_figure(number_subplots=2)
 
-        self.figures_2d(data=True)
+        self.mat_plot_2d.use_log10 = True
+        self.figures_2d(data=True, disable_data_contours=disable_data_contours)
         self.figures_2d(ellipse_residuals=True, for_subplot=True)
 
         self.mat_plot_2d.output.subplot_to_figure(auto_filename="subplot_fit_ellipse")
@@ -143,10 +144,8 @@ class FitEllipsePDFPlotter(Plotter):
         super().__init__(
             mat_plot_1d=mat_plot_1d,
             visuals_1d=visuals_1d,
-            include_1d=include_1d,
             mat_plot_2d=mat_plot_2d,
             visuals_2d=visuals_2d,
-            include_2d=include_2d,
         )
 
         self.fit_pdf_list = fit_pdf_list
@@ -227,7 +226,7 @@ class FitEllipsePDFPlotter(Plotter):
                 visuals_2d=visuals_2d,
                 auto_labels=aplt.AutoLabels(
                     title=f"Ellipse Fit",
-                    filename=f"subhplot_ellipse_errors",
+                    filename=f"subplot_ellipse_errors",
                 ),
             )
 

@@ -25,6 +25,8 @@ from autoarray.inversion.pixelization.mappers.factory import (
     mapper_from as Mapper,
 )  # noqa
 from autoarray.inversion.pixelization.border_relocator import BorderRelocator
+from autoarray.preloads import Preloads
+from autoarray.preloads import mapper_indices_from
 from autoarray.mask.mask_1d import Mask1D  # noqa
 from autoarray.mask.mask_2d import Mask2D  # noqa
 from autoarray.mask.derive.zoom_2d import Zoom2D
@@ -51,6 +53,7 @@ from autoarray.structures.arrays.kernel_2d import Kernel2D  # noqa
 from autoarray.structures.visibilities import Visibilities  # noqa
 from autoarray.structures.visibilities import VisibilitiesNoiseMap  # noqa
 
+from .analysis import model_util
 from .analysis.adapt_images.adapt_images import AdaptImages
 from .analysis.adapt_images.adapt_image_maker import AdaptImageMaker
 from . import aggregator as agg
@@ -60,6 +63,7 @@ from . import util
 from .ellipse.dataset_interp import DatasetInterp
 from .ellipse.ellipse.ellipse import Ellipse
 from .ellipse.ellipse.ellipse_multipole import EllipseMultipole
+from .ellipse.ellipse.ellipse_multipole import EllipseMultipoleScaled
 from .ellipse.fit_ellipse import FitEllipse
 from .ellipse.model.analysis import AnalysisEllipse
 from .operate.image import OperateImage
@@ -80,7 +84,6 @@ from .quantity.dataset_quantity import DatasetQuantity
 from .galaxy.galaxy import Galaxy
 from .galaxy.galaxies import Galaxies
 from .galaxy.redshift import Redshift
-from .galaxy.stellar_dark_decomp import StellarDarkDecomp
 from .galaxy.to_inversion import AbstractToInversion
 from .galaxy.to_inversion import GalaxiesToInversion
 from .profiles.geometry_profiles import EllProfile

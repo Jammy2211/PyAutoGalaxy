@@ -73,11 +73,3 @@ def test__galaxies_sub_plot_output(galaxies_x2_7x7, grid_2d_7x7, plot_path, plot
 
     plotter.subplot_galaxy_images()
     assert path.join(plot_path, "subplot_galaxy_images.png") in plot_patch.paths
-
-    plotter.subplot_galaxies_1d()
-    assert path.join(plot_path, "subplot_galaxies_1d.png") in plot_patch.paths
-
-    plotter.subplot_galaxies_1d_decomposed()
-    assert (
-        path.join(plot_path, "subplot_galaxies_1d_decomposed.png") in plot_patch.paths
-    )

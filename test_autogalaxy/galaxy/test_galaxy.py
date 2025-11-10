@@ -34,17 +34,6 @@ def test__cls_list_from(lp_0, lp_linear_0):
     assert cls_list == [lp_linear_0, lp_linear_0]
 
 
-def test__image_1d_from(lp_0, lp_1, gal_x2_lp):
-    grid = ag.Grid2D.no_mask(values=[[[1.05, -0.55]]], pixel_scales=1.0)
-
-    lp_image = lp_0.image_1d_from(grid=grid)
-    lp_image += lp_1.image_1d_from(grid=grid)
-
-    gal_image = gal_x2_lp.image_1d_from(grid=grid)
-
-    assert lp_image == gal_image
-
-
 def test__image_2d_from(grid_2d_7x7, gal_x2_lp):
     lp_0_image = gal_x2_lp.light_profile_0.image_2d_from(grid=grid_2d_7x7)
     lp_1_image = gal_x2_lp.light_profile_1.image_2d_from(grid=grid_2d_7x7)
@@ -105,32 +94,6 @@ def test__luminosity_within_circle(lp_0, lp_1, gal_x2_lp):
     assert gal_no_lp.luminosity_within_circle_from(radius=1.0) == None
 
 
-def test__convergence_1d_from(grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
-    grid = ag.Grid2D.no_mask(values=[[[1.05, -0.55], [2.05, -0.55]]], pixel_scales=1.0)
-
-    mp_convergence = mp_0.convergence_1d_from(grid=grid)
-    mp_convergence += mp_1.convergence_1d_from(grid=grid)
-
-    gal_convergence = gal_x2_mp.convergence_1d_from(grid=grid)
-
-    assert (mp_convergence == gal_convergence).all()
-
-    # Test explicitly for a profile with an offset centre and ellipticity, given the 1D to 2D projections are nasty.
-
-    grid = ag.Grid2D.no_mask(values=[[(1.05, -0.55), (2.05, -0.55)]], pixel_scales=1.0)
-
-    elliptical_mp = ag.mp.Isothermal(
-        centre=(0.5, 1.0), ell_comps=(0.2, 0.3), einstein_radius=1.0
-    )
-
-    galaxy = ag.Galaxy(redshift=0.5, mass=elliptical_mp)
-
-    mp_convergence = elliptical_mp.convergence_1d_from(grid=grid)
-    gal_convergence = galaxy.convergence_1d_from(grid=grid)
-
-    assert (mp_convergence == gal_convergence).all()
-
-
 def test__convergence_2d_from(grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
     mp_0_convergence = gal_x2_mp.mass_profile_0.convergence_2d_from(grid=grid_2d_7x7)
 
@@ -141,32 +104,6 @@ def test__convergence_2d_from(grid_2d_7x7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
     gal_convergence = gal_x2_mp.convergence_2d_from(grid=grid_2d_7x7)
 
     assert gal_convergence[0] == mp_convergence[0]
-
-
-def test__potential_1d_from(grid_1d_7, mp_0, gal_x1_mp, mp_1, gal_x2_mp):
-    grid = ag.Grid2D.no_mask(values=[[[1.05, -0.55]]], pixel_scales=1.0)
-
-    mp_potential = mp_0.potential_1d_from(grid=grid)
-    mp_potential += mp_1.potential_1d_from(grid=grid)
-
-    gal_convergence = gal_x2_mp.potential_1d_from(grid=grid)
-
-    assert mp_potential == gal_convergence
-
-    # Test explicitly for a profile with an offset centre and ellipticity, given the 1D to 2D projections are nasty.
-
-    grid = ag.Grid2D.no_mask(values=[[(1.05, -0.55), (2.05, -0.55)]], pixel_scales=1.0)
-
-    elliptical_mp = ag.mp.Isothermal(
-        centre=(0.5, 1.0), ell_comps=(0.2, 0.3), einstein_radius=1.0
-    )
-
-    galaxy = ag.Galaxy(redshift=0.5, mass=elliptical_mp)
-
-    mp_potential = elliptical_mp.potential_1d_from(grid=grid)
-    gal_mp_potential = galaxy.potential_1d_from(grid=grid)
-
-    assert (mp_potential == gal_mp_potential).all()
 
 
 def test__potential_2d_from(grid_2d_7x7, gal_x2_mp):

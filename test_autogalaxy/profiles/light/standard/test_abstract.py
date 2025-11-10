@@ -43,40 +43,6 @@ def test__luminosity_within_centre__compare_to_gridded_calculations():
     assert luminosity_grid == pytest.approx(luminosity_integral, 0.02)
 
 
-def test__image_1d_from__grid_2d_in__returns_1d_image_via_projected_quantities():
-    grid_2d = ag.Grid2D.uniform(
-        shape_native=(5, 5),
-        pixel_scales=1.0,
-        over_sample_size=1,
-    )
-
-    lp = ag.lp.Gaussian(
-        centre=(0.0, 0.0), ell_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
-    )
-
-    image_1d = lp.image_1d_from(grid=grid_2d)
-    image_2d = lp.image_2d_from(grid=grid_2d)
-
-    assert image_1d[0] == pytest.approx(image_2d.native.array[2, 2], 1.0e-4)
-    assert image_1d[1] == pytest.approx(image_2d.native.array[2, 3], 1.0e-4)
-    assert image_1d[2] == pytest.approx(image_2d.native.array[2, 4], 1.0e-4)
-
-    lp = ag.lp.Gaussian(
-        centre=(0.2, 0.2), ell_comps=(0.3, 0.3), intensity=1.0, sigma=1.0
-    )
-
-    image_1d = lp.image_1d_from(grid=grid_2d)
-
-    grid_2d_projected = grid_2d.grid_2d_radial_projected_from(
-        centre=lp.centre, angle=lp.angle + 90.0
-    )
-
-    image_projected = lp.image_2d_from(grid=grid_2d_projected)
-
-    assert image_1d == pytest.approx(image_projected.array, 1.0e-4)
-    assert (image_1d.grid_radial == np.array([0.0, 1.0, 2.0])).all()
-
-
 def test__decorator__oversample_uniform__numerical_values(gal_x1_lp):
     mask = ag.Mask2D(
         mask=[

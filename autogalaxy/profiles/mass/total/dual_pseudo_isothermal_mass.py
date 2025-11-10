@@ -1,5 +1,4 @@
 from typing import Tuple
-import jax.numpy as jnp
 import numpy as np
 
 import autoarray as aa
@@ -9,7 +8,7 @@ from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 # The dPIEPotential and dPIEPotentialSph profiles are modified from the original `dPIEPotential` and `dPIEPotentialSph`, which were implemented to PyAutoLens by Jackson O'Donnell.
 
 
-def _ci05(x, y, eps, rcore):
+def _ci05(x, y, eps, rcore, xp=np):
     """
     Returns the first derivatives of the lens potential as complex number I'* = (∂ψ/∂x + i ∂ψ/∂y) / E0 for PIEMass at any positions (x,y),
     see Kassiola & Kovner(1993) Eq. 4.1.2, which is the integral of Eq. 2.3.8.
@@ -26,7 +25,7 @@ def _ci05(x, y, eps, rcore):
     complex
         The value of the I'* term.
     """
-    sqe = jnp.sqrt(eps)
+    sqe = xp.sqrt(eps)
     axis_ratio = (1.0 - eps) / (1.0 + eps)
     cxro = (1.0 + eps) * (1.0 + eps)
     cyro = (1.0 - eps) * (1.0 - eps)
@@ -34,24 +33,24 @@ def _ci05(x, y, eps, rcore):
     ##### I'* = zres = zci * ln(zis) = zci * ln(znum / zden), see Eq. 4.1.2 #####
 
     # Define intermediate complex variables
-    zci = jnp.array(0.0 + 1j * (-0.5 * (1.0 - eps * eps) / sqe), dtype=jnp.complex128)
-    znum = jnp.complex128(
+    zci = xp.array(0.0 + 1j * (-0.5 * (1.0 - eps * eps) / sqe), dtype=xp.complex128)
+    znum = xp.complex128(
         axis_ratio * x
-        + 1j * (2.0 * sqe * jnp.sqrt(rcore * rcore + rem2) - y / axis_ratio)
+        + 1j * (2.0 * sqe * xp.sqrt(rcore * rcore + rem2) - y / axis_ratio)
     )
-    zden = jnp.complex128(x + 1j * (2.0 * rcore * sqe - y))
+    zden = xp.complex128(x + 1j * (2.0 * rcore * sqe - y))
 
     # zis = znum / zden = (a+bi)/(c+di) = [(ac+bd)+(bc-ad i)] / (c^2+d^2)
     norm = zden.real * zden.real + zden.imag * zden.imag  # |zden|^2
     zis_re = (znum.real * zden.real + znum.imag * zden.imag) / norm
     zis_im = (znum.imag * zden.real - znum.real * zden.imag) / norm
-    zis = jnp.complex128(zis_re + 1j * zis_im)
+    zis = xp.complex128(zis_re + 1j * zis_im)
 
     # ln(zis) = ln(|zis|) + i*Arg(zis)
-    zis_mag = jnp.abs(zis)
-    zis_re = jnp.log(zis_mag)
-    zis_im = jnp.angle(zis)
-    zis = jnp.complex128(zis_re + 1j * zis_im)
+    zis_mag = xp.abs(zis)
+    zis_re = xp.log(zis_mag)
+    zis_im = xp.angle(zis)
+    zis = xp.complex128(zis_re + 1j * zis_im)
 
     # I'* = zres = zci * ln(zis)
     zres = zci * zis
@@ -59,7 +58,7 @@ def _ci05(x, y, eps, rcore):
     return zres
 
 
-def _ci05f(x, y, eps, rcore, rcut):
+def _ci05f(x, y, eps, rcore, rcut, xp=np):
     """
     Returns the first derivatives of the lens potential as complex number I'* = (∂ψ/∂x + i ∂ψ/∂y) / (b0 * ra / (rs - ra)) for dPIEMass at any positions (x,y),
     which is the integral of Eq. 2.3.8 in  Kassiola & Kovner(1993).
@@ -81,7 +80,7 @@ def _ci05f(x, y, eps, rcore, rcut):
     complex
         The value of the I'* term.
     """
-    sqe = jnp.sqrt(eps)
+    sqe = xp.sqrt(eps)
     axis_ratio = (1.0 - eps) / (1.0 + eps)
     cxro = (1.0 + eps) * (1.0 + eps)
     cyro = (1.0 - eps) * (1.0 - eps)
@@ -90,17 +89,16 @@ def _ci05f(x, y, eps, rcore, rcut):
     ##### I'* = zres_rc - zres_rcut = zci * ln(zis_rc / zis_rcut) = zci * ln((znum_rc / zden_rc) / (znum_rcut / zden_rcut)) #####
 
     # Define intermediate complex variables
-    zci = jnp.array(0.0 + 1j * (-0.5 * (1.0 - eps * eps) / sqe), dtype=jnp.complex128)
-    znum_rc = jnp.complex128(
+    zci = xp.array(0.0 + 1j * (-0.5 * (1.0 - eps * eps) / sqe), dtype=xp.complex128)
+    znum_rc = xp.complex128(
         axis_ratio * x
-        + 1j * (2.0 * sqe * jnp.sqrt(rcore * rcore + rem2) - y / axis_ratio)
+        + 1j * (2.0 * sqe * xp.sqrt(rcore * rcore + rem2) - y / axis_ratio)
     )  # a + bi
-    zden_rc = jnp.complex128(x + 1j * (2.0 * rcore * sqe - y))  # c + di
-    znum_rcut = jnp.complex128(
-        axis_ratio * x
-        + 1j * (2.0 * sqe * jnp.sqrt(rcut * rcut + rem2) - y / axis_ratio)
+    zden_rc = xp.complex128(x + 1j * (2.0 * rcore * sqe - y))  # c + di
+    znum_rcut = xp.complex128(
+        axis_ratio * x + 1j * (2.0 * sqe * xp.sqrt(rcut * rcut + rem2) - y / axis_ratio)
     )  # a + ei
-    zden_rcut = jnp.complex128(x + 1j * (2.0 * rcut * sqe - y))  # c + fi
+    zden_rcut = xp.complex128(x + 1j * (2.0 * rcut * sqe - y))  # c + fi
 
     # zis_rc = znum_rc / zden_rc = (a+bi)/(c+di)
     # zis_rcut = znum_rcut / zden_rcut = (a+ei)/(c+fi)
@@ -117,13 +115,13 @@ def _ci05f(x, y, eps, rcore, rcut):
     norm = cc * cc + dd * dd
     aaa = (aa * cc + bb * dd) / norm
     bbb = (bb * cc - aa * dd) / norm
-    zis_tot = jnp.complex128(aaa + 1j * bbb)
+    zis_tot = xp.complex128(aaa + 1j * bbb)
 
     # ln(zis_tot) = ln(|zis_tot|) + i*Arg(zis_tot)
-    zis_tot_mag = jnp.abs(zis_tot)
-    zr_re = jnp.log(zis_tot_mag)
-    zr_im = jnp.angle(zis_tot)
-    zr = jnp.complex128(zr_re + 1j * zr_im)
+    zis_tot_mag = xp.abs(zis_tot)
+    zr_re = xp.log(zis_tot_mag)
+    zr_im = xp.angle(zis_tot)
+    zr = xp.complex128(zr_re + 1j * zr_im)
 
     # I'* = zci * ln(zis_tot)
     zres = zci * zr
@@ -131,7 +129,7 @@ def _ci05f(x, y, eps, rcore, rcut):
     return zres
 
 
-def _mdci05(x, y, eps, rcore, b0):
+def _mdci05(x, y, eps, rcore, b0, xp=np):
     """
     Returns the second derivatives (Hessian matrix) of the lens potential as complex number for PIEMass at any positions (x,y):
     ∂²ψ/∂x² = Re(∂I*/∂x), ∂²ψ/∂y² = Im(∂I*/∂y), ∂²ψ/∂x∂y = ∂²ψ/∂y∂x = Im(∂I*/∂x) = Re(∂I*/∂y)
@@ -153,13 +151,13 @@ def _mdci05(x, y, eps, rcore, b0):
     # I*(x,y) = b0 * ci * (-i) * (ln{ q * x + (2.0 * sqe * wrem - y * 1/q )*i} - ln{ x + (2.0 * rcore * sqe - y)*i})
     #         = b0 * ci * (-i) * (ln{ q * x + num1*i} - ln{ x + num2*i})
     #         = b0 * ci * (-i) * (ln{u(x,y)} - ln{v(x,y)})
-    sqe = jnp.sqrt(eps)
+    sqe = xp.sqrt(eps)
     axis_ratio = (1.0 - eps) / (1.0 + eps)
     axis_ratio_inv = 1.0 / axis_ratio
     cxro = (1.0 + eps) * (1.0 + eps)
     cyro = (1.0 - eps) * (1.0 - eps)
     ci = 0.5 * (1.0 - eps * eps) / sqe
-    wrem = jnp.sqrt(rcore * rcore + x * x / cxro + y * y / cyro)  # √(w(x,y))
+    wrem = xp.sqrt(rcore * rcore + x * x / cxro + y * y / cyro)  # √(w(x,y))
     num1 = 2.0 * sqe * wrem - y * axis_ratio_inv
     den1 = axis_ratio * axis_ratio * x * x + num1 * num1  # |q * x + num1*i|^2
     num2 = 2.0 * rcore * sqe - y
@@ -259,14 +257,14 @@ class PIEMass(MassProfile):
         self.ra = ra
         self.b0 = b0
 
-    def _ellip(self):
-        ellip = jnp.sqrt(self.ell_comps[0] ** 2 + self.ell_comps[1] ** 2)
+    def _ellip(self, xp=np):
+        ellip = xp.sqrt(self.ell_comps[0] ** 2 + self.ell_comps[1] ** 2)
         MAX_ELLIP = 0.99999
-        return jnp.min(jnp.array([ellip, MAX_ELLIP]))
+        return xp.min(xp.array([ellip, MAX_ELLIP]))
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
@@ -275,7 +273,7 @@ class PIEMass(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        ellip = self._ellip()
+        ellip = self._ellip(xp)
         factor = self.b0
         zis = _ci05(x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.ra)
 
@@ -285,12 +283,13 @@ class PIEMass(MassProfile):
 
         # And here we convert back to the real axes
         return self.rotated_grid_from_reference_frame_from(
-            grid=jnp.multiply(factor, jnp.vstack((deflection_y, deflection_x)).T),
+            grid=xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T),
+            xp=xp,
             **kwargs,
         )
 
     @aa.grid_dec.transform
-    def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", **kwargs):
+    def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", xp=np, **kwargs):
         """
         Calculate the hessian matrix on a grid of (y,x) arc-second coordinates.
 
@@ -299,7 +298,7 @@ class PIEMass(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        grid = jnp.asarray(grid)
+        grid = xp.asarray(grid)
         if grid.ndim != 2 or grid.shape[1] != 2:
             raise ValueError("Grid must be a 2D array with shape (n, 2)")
         ellip = self._ellip()
@@ -310,10 +309,12 @@ class PIEMass(MassProfile):
 
         return hessian_yy, hessian_xy, hessian_yx, hessian_xx
 
-    def analytical_magnification_2d_from(self, grid: "aa.type.Grid2DLike", **kwargs):
+    def analytical_magnification_2d_from(
+        self, grid: "aa.type.Grid2DLike", xp=np, **kwargs
+    ):
 
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = (
-            self.analytical_hessian_2d_from(grid=grid)
+            self.analytical_hessian_2d_from(grid=grid, xp=np)
         )
 
         det_A = (1 - hessian_xx) * (1 - hessian_yy) - hessian_xy * hessian_yx
@@ -372,14 +373,14 @@ class dPIEMass(MassProfile):
         self.rs = rs
         self.b0 = b0
 
-    def _ellip(self):
-        ellip = jnp.sqrt(self.ell_comps[0] ** 2 + self.ell_comps[1] ** 2)
+    def _ellip(self, xp=np):
+        ellip = xp.sqrt(self.ell_comps[0] ** 2 + self.ell_comps[1] ** 2)
         MAX_ELLIP = 0.99999
-        return jnp.min(jnp.array([ellip, MAX_ELLIP]))
+        return xp.min(xp.array([ellip, MAX_ELLIP]))
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
@@ -388,7 +389,7 @@ class dPIEMass(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        ellip = self._ellip()
+        ellip = self._ellip(xp)
         factor = self.b0 * self.rs / (self.rs - self.ra)
         zis = _ci05f(
             x=grid.array[:, 1],
@@ -404,18 +405,19 @@ class dPIEMass(MassProfile):
 
         # And here we convert back to the real axes
         return self.rotated_grid_from_reference_frame_from(
-            grid=jnp.multiply(factor, jnp.vstack((deflection_y, deflection_x)).T),
+            grid=xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T),
+            xp=xp,
             **kwargs,
         )
 
-    def _deflection_angle(self, radii):
+    def _deflection_angle(self, radii, xp=np):
         """
         For a circularly symmetric dPIEPotential profile, computes the magnitude of the deflection at each radius.
         """
         a, s = self.ra, self.rs
-        radii = jnp.maximum(radii, 1e-8)
-        f = radii / (a + jnp.sqrt(a**2 + radii**2)) - radii / (
-            s + jnp.sqrt(s**2 + radii**2)
+        radii = xp.maximum(radii, 1e-8)
+        f = radii / (a + xp.sqrt(a**2 + radii**2)) - radii / (
+            s + xp.sqrt(s**2 + radii**2)
         )
 
         # c.f. Eliasdottir '07 eq. A23
@@ -424,7 +426,7 @@ class dPIEMass(MassProfile):
         alpha = self.b0 * s / (s - a) * f
         return alpha
 
-    def _convergence(self, radii):
+    def _convergence(self, radii, xp=np):
 
         radsq = radii * radii
         a, s = self.ra, self.rs
@@ -434,12 +436,12 @@ class dPIEMass(MassProfile):
             / 2
             * s
             / (s - a)
-            * (1 / jnp.sqrt(a**2 + radsq) - 1 / jnp.sqrt(s**2 + radsq))
+            * (1 / xp.sqrt(a**2 + radsq) - 1 / xp.sqrt(s**2 + radsq))
         )
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
 
@@ -451,14 +453,14 @@ class dPIEMass(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
-        ellip = self._ellip()
-        grid_radii = jnp.sqrt(
+        ellip = self._ellip(xp)
+        grid_radii = xp.sqrt(
             grid.array[:, 1] ** 2 * (1 - ellip) + grid.array[:, 0] ** 2 * (1 + ellip)
         )
 
         # Compute the convergence and deflection of a *circular* profile
-        kappa_circ = self._convergence(grid_radii)
-        alpha_circ = self._deflection_angle(grid_radii)
+        kappa_circ = self._convergence(grid_radii, xp)
+        alpha_circ = self._deflection_angle(grid_radii, xp)
 
         asymm_term = (
             ellip * (1 - ellip) * grid.array[:, 1] ** 2
@@ -471,7 +473,7 @@ class dPIEMass(MassProfile):
         return kappa_circ * (1 - asymm_term) + (alpha_circ / grid_radii) * asymm_term
 
     @aa.grid_dec.transform
-    def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", **kwargs):
+    def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", xp=np, **kwargs):
         """
         Calculate the hessian matrix on a grid of (y,x) arc-second coordinates.
         Hessian_dPIEMass = rs * (rs - ra) * ( Hessian_PIEMass(ra) - Hessian_PIEMass(rs))
@@ -481,7 +483,7 @@ class dPIEMass(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        grid = jnp.asarray(grid)
+        grid = xp.asarray(grid)
         if grid.ndim != 2 or grid.shape[1] != 2:
             raise ValueError("Grid must be a 2D array with shape (n, 2)")
         ellip = self._ellip()
@@ -502,10 +504,12 @@ class dPIEMass(MassProfile):
 
         return hessian_yy, hessian_xy, hessian_yx, hessian_xx
 
-    def analytical_magnification_2d_from(self, grid: "aa.type.Grid2DLike", **kwargs):
+    def analytical_magnification_2d_from(
+        self, grid: "aa.type.Grid2DLike", xp=np, **kwargs
+    ):
 
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = (
-            self.analytical_hessian_2d_from(grid=grid)
+            self.analytical_hessian_2d_from(grid=grid, xp=xp)
         )
 
         det_A = (1 - hessian_xx) * (1 - hessian_yy) - hessian_xy * hessian_yx
@@ -513,8 +517,8 @@ class dPIEMass(MassProfile):
         return aa.Array2D(values=1.0 / det_A, mask=grid.mask)
 
     @aa.grid_dec.to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return jnp.zeros(shape=grid.shape[0])
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        return xp.zeros(shape=grid.shape[0])
 
 
 class dPIEMassSph(dPIEMass):
@@ -568,7 +572,7 @@ class dPIEMassSph(dPIEMass):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
         Faster and equivalent to Eliasdottir (2007), see Eq. A19 and Eq. A20.
@@ -593,7 +597,7 @@ class dPIEMassSph(dPIEMass):
         # radii = self.radial_grid_from(grid=grid, **kwargs)
         # R2 = radii * radii
         R2 = grid.array[:, 1] * grid.array[:, 1] + grid.array[:, 0] * grid.array[:, 0]
-        factor = jnp.sqrt(R2 + a * a) - a - jnp.sqrt(R2 + s * s) + s
+        factor = xp.sqrt(R2 + a * a) - a - xp.sqrt(R2 + s * s) + s
         factor *= self.b0 * s / (s - a) / R2
 
         # This is in axes aligned to the major/minor axis
@@ -602,11 +606,13 @@ class dPIEMassSph(dPIEMass):
 
         # And here we convert back to the real axes
         return self.rotated_grid_from_reference_frame_from(
-            grid=jnp.multiply(1.0, jnp.vstack((deflection_y, deflection_x)).T), **kwargs
+            grid=xp.multiply(1.0, xp.vstack((deflection_y, deflection_x)).T),
+            xp=xp,
+            **kwargs,
         )
 
     @aa.grid_dec.transform
-    def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", **kwargs):
+    def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", xp=np, **kwargs):
         """
         Calculate the hessian matrix on a grid of (y,x) arc-second coordinates.
         Chain rule of second derivatives:
@@ -620,7 +626,7 @@ class dPIEMassSph(dPIEMass):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        grid = jnp.asarray(grid)
+        grid = xp.asarray(grid)
         if grid.ndim != 2 or grid.shape[1] != 2:
             raise ValueError("Grid must be a 2D array with shape (n, 2)")
 
@@ -646,9 +652,9 @@ class dPIEMassSph(dPIEMass):
         #                     = {( R^2 / √(R^2 + a^2)) - ( R^2 / √(R^2 + s^2)) - z} / R^2
         #                     = p
         R2 = grid.array[:, 1] * grid.array[:, 1] + grid.array[:, 0] * grid.array[:, 0]
-        z = jnp.sqrt(R2 + a * a) - a - jnp.sqrt(R2 + s * s) + s
-        p = (1.0 - a / jnp.sqrt(a * a + R2)) * a / R2 - (
-            1.0 - s / jnp.sqrt(s * s + R2)
+        z = xp.sqrt(R2 + a * a) - a - xp.sqrt(R2 + s * s) + s
+        p = (1.0 - a / xp.sqrt(a * a + R2)) * a / R2 - (
+            1.0 - s / xp.sqrt(s * s + R2)
         ) * s / R2
         X = grid.array[:, 1] * grid.array[:, 1] / R2  # x^2 / R^2
         Y = grid.array[:, 0] * grid.array[:, 0] / R2  # y^2 / R^2

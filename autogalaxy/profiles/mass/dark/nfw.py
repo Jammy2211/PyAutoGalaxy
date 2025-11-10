@@ -1,4 +1,3 @@
-import jax.numpy as jnp
 import numpy as np
 from typing import Tuple
 
@@ -48,7 +47,9 @@ class NFW(gNFW, MassProfileCSE):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_2d_via_integral_from(
+        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
+    ):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -61,7 +62,7 @@ class NFW(gNFW, MassProfileCSE):
         from scipy.integrate import quad
 
         def calculate_deflection_component(npow, index):
-            deflection_grid = np.array(self.axis_ratio * grid.array[:, index])
+            deflection_grid = np.array(self.axis_ratio(xp) * grid.array[:, index])
 
             for i in range(grid.shape[0]):
                 deflection_grid[i] *= (
@@ -74,7 +75,7 @@ class NFW(gNFW, MassProfileCSE):
                             grid.array[i, 0],
                             grid.array[i, 1],
                             npow,
-                            self.axis_ratio,
+                            self.axis_ratio(xp),
                             self.scale_radius,
                         ),
                     )[0]
@@ -91,7 +92,7 @@ class NFW(gNFW, MassProfileCSE):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self._deflections_2d_via_cse_from(grid=grid, **kwargs)
 
     @staticmethod
@@ -121,7 +122,7 @@ class NFW(gNFW, MassProfileCSE):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def convergence_2d_via_cse_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def convergence_2d_via_cse_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the projected 2D convergence from a grid of (y,x) arc second coordinates, by computing and summing
         the convergence of each individual cse used to decompose the mass profile.
@@ -143,13 +144,15 @@ class NFW(gNFW, MassProfileCSE):
     def convergence_func(self, grid_radius: float) -> float:
         grid_radius = (1.0 / self.scale_radius) * grid_radius.array + 0j
         return np.real(
-            2.0 * self.kappa_s * np.array(self.coord_func_g(grid_radius=grid_radius))
+            2.0
+            * self.kappa_s
+            * np.array(self.coord_func_g(grid_radius=grid_radius, xp=xp))
         )
 
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 
@@ -171,7 +174,7 @@ class NFW(gNFW, MassProfileCSE):
                 args=(
                     grid.array[i, 0],
                     grid.array[i, 1],
-                    self.axis_ratio,
+                    self.axis_ratio(xp),
                     self.kappa_s,
                     self.scale_radius,
                 ),
@@ -254,7 +257,7 @@ class NFW(gNFW, MassProfileCSE):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def shear_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def shear_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Analytic calculation shear from Heyrovský & Karamazov 2024
 
@@ -287,14 +290,14 @@ class NFW(gNFW, MassProfileCSE):
         # Rotation for shear
 
         shear_field = self.rotated_grid_from_reference_frame_from(
-            grid=np.vstack((g2, g1)).T, angle=self.angle * 2
+            grid=np.vstack((g2, g1)).T, angle=self.angle(xp) * 2
         )
 
         return aa.VectorYX2DIrregular(values=shear_field, grid=grid)
 
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Analytic calculation convergence from Heyrovský & Karamazov 2024
 
@@ -360,12 +363,14 @@ class NFWSph(NFW):
             scale_radius=scale_radius,
         )
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self.deflections_2d_via_analytic_from(grid=grid, **kwargs)
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_analytic_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_2d_via_analytic_from(
+        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
+    ):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -375,25 +380,27 @@ class NFWSph(NFW):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
 
-        eta = jnp.multiply(
+        eta = xp.multiply(
             1.0 / self.scale_radius, self.radial_grid_from(grid=grid, **kwargs).array
         )
 
-        deflection_grid = jnp.multiply(
+        deflection_grid = xp.multiply(
             (4.0 * self.kappa_s * self.scale_radius / eta),
-            self.deflection_func_sph(grid_radius=eta),
+            self.deflection_func_sph(grid_radius=eta, xp=xp),
         )
 
-        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection_grid)
+        return self._cartesian_grid_via_radial_from(
+            grid=grid, radius=deflection_grid, xp=xp
+        )
 
-    def deflection_func_sph(self, grid_radius):
+    def deflection_func_sph(self, grid_radius, xp=np):
         grid_radius = grid_radius + 0j
-        return jnp.real(self.coord_func_h(grid_radius=grid_radius))
+        return xp.real(self.coord_func_h(grid_radius=grid_radius))
 
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 
@@ -407,7 +414,7 @@ class NFWSph(NFW):
             grid=grid, **kwargs
         ) + 0j
         return np.real(
-            2.0 * self.scale_radius * self.kappa_s * self.potential_func_sph(eta)
+            2.0 * self.scale_radius * self.kappa_s * self.potential_func_sph(eta, xp=xp)
         )
 
     @staticmethod

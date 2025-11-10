@@ -265,7 +265,7 @@ class MassProfileMGE:
     def _deflections_2d_via_mge_from(
         self, grid, sigmas_factor=1.0, func_terms=None, func_gaussians=None
     ):
-        axis_ratio = np.array(self.axis_ratio)
+        axis_ratio = np.array(self.axis_ratio())
 
         if axis_ratio > 0.9999:
             axis_ratio = 0.9999

@@ -1,8 +1,6 @@
 import logging
-import time
-from typing import Dict, List, Optional, Tuple
-
-from autoconf.fitsable import hdu_list_for_output_from
+import numpy as np
+from typing import List, Optional
 
 import autofit as af
 import autoarray as aa
@@ -45,7 +43,7 @@ class AnalysisEllipse(af.Analysis):
         self.dataset = dataset
         self.title_prefix = title_prefix
 
-    def log_likelihood_function(self, instance: af.ModelInstance) -> float:
+    def log_likelihood_function(self, instance: af.ModelInstance, xp=np) -> float:
         """
         Given an instance of the model, where the model parameters are set via a non-linear search, fit the model
         instance to the imaging dataset.

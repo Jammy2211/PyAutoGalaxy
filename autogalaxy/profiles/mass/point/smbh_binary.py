@@ -90,7 +90,7 @@ class SMBHBinary(MassProfile):
         """
         return self.angle_binary * np.pi / 180.0
 
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
 
@@ -102,10 +102,10 @@ class SMBHBinary(MassProfile):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
         return self.smbh_0.convergence_2d_from(
-            grid=grid
-        ) + self.smbh_1.convergence_2d_from(grid=grid, **kwargs)
+            grid=grid, xp=xp, **kwargs
+        ) + self.smbh_1.convergence_2d_from(grid=grid, xp=xp, **kwargs)
 
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Returns the two dimensional projected potential on a grid of (y,x) arc-second coordinates.
 
@@ -120,7 +120,7 @@ class SMBHBinary(MassProfile):
             grid=grid, **kwargs
         ) + self.smbh_1.potential_2d_from(grid=grid)
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Returns the two dimensional deflection angles on a grid of (y,x) arc-second coordinates.
 

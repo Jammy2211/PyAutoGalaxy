@@ -1,5 +1,4 @@
 from __future__ import annotations
-import jax.numpy as jnp
 import numpy as np
 from typing import TYPE_CHECKING, Dict, Optional, Tuple
 
@@ -132,7 +131,7 @@ class AdaptImages:
             else:
                 galaxy_image = result.subtracted_signal_to_noise_map_galaxy_dict[path]
 
-            minimum_galaxy_value = adapt_minimum_percent * jnp.max(galaxy_image.array)
+            minimum_galaxy_value = adapt_minimum_percent * np.max(galaxy_image.array)
             galaxy_image[galaxy_image < minimum_galaxy_value] = minimum_galaxy_value
 
             galaxy_name_image_dict[path] = galaxy_image

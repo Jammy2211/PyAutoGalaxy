@@ -1,4 +1,3 @@
-import jax.numpy as jnp
 import numpy as np
 from typing import Tuple
 
@@ -53,8 +52,7 @@ class SersicCore(Sersic):
         self.alpha = alpha
         self.gamma = gamma
 
-    @property
-    def intensity_prime(self) -> float:
+    def intensity_prime(self, xp=np) -> float:
         """
         Overall intensity normalisation in the rescaled cored Sersic light profile.
 
@@ -64,7 +62,7 @@ class SersicCore(Sersic):
         return (
             self._intensity
             * (2.0 ** (-self.gamma / self.alpha))
-            * jnp.exp(
+            * xp.exp(
                 self.sersic_constant
                 * (
                     ((2.0 ** (1.0 / self.alpha)) * self.radius_break)
@@ -74,7 +72,9 @@ class SersicCore(Sersic):
             )
         )
 
-    def image_2d_via_radii_from(self, grid_radii: np.ndarray, **kwargs) -> np.ndarray:
+    def image_2d_via_radii_from(
+        self, grid_radii: np.ndarray, xp=np, **kwargs
+    ) -> np.ndarray:
         """
         Returns the 2D image of the Sersic light profile from a grid of coordinates which are the radial distances of
         each coordinate from the its `centre`.
@@ -85,27 +85,27 @@ class SersicCore(Sersic):
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
 
-        return jnp.multiply(
-            jnp.multiply(
-                self.intensity_prime,
-                jnp.power(
-                    jnp.add(
+        return xp.multiply(
+            xp.multiply(
+                self.intensity_prime(xp),
+                xp.power(
+                    xp.add(
                         1,
-                        jnp.power(
-                            jnp.divide(self.radius_break, grid_radii.array), self.alpha
+                        xp.power(
+                            xp.divide(self.radius_break, grid_radii.array), self.alpha
                         ),
                     ),
                     (self.gamma / self.alpha),
                 ),
             ),
-            jnp.exp(
-                jnp.multiply(
+            xp.exp(
+                xp.multiply(
                     -self.sersic_constant,
                     (
-                        jnp.power(
-                            jnp.divide(
-                                jnp.add(
-                                    jnp.power(grid_radii.array, self.alpha),
+                        xp.power(
+                            xp.divide(
+                                xp.add(
+                                    xp.power(grid_radii.array, self.alpha),
                                     (self.radius_break**self.alpha),
                                 ),
                                 (self.effective_radius**self.alpha),

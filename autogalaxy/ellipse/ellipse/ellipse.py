@@ -41,7 +41,7 @@ class Ellipse(EllProfile):
     @property
     def circular_radius(self) -> float:
         """
-        The radius of the circle that bounds the ellipse, assuming that the `major_axis` is the radius of the circle.
+        The circumference of the circle that bounds the ellipse, assuming that the `major_axis` is the radius of the circle.
         """
         return 2.0 * np.pi * np.sqrt((2.0 * self.major_axis**2.0) / 2.0)
 
@@ -50,7 +50,7 @@ class Ellipse(EllProfile):
         """
         The ellipticity of the ellipse, which is the factor by which the ellipse is offset from a circle.
         """
-        return np.sqrt(1 - self.axis_ratio**2.0)
+        return np.sqrt(1 - self.axis_ratio() ** 2.0)
 
     @property
     def minor_axis(self):
@@ -168,9 +168,9 @@ class Ellipse(EllProfile):
             np.sqrt(
                 np.add(
                     self.major_axis**2.0
-                    * np.sin(angles_from_x0 - self.angle_radians) ** 2.0,
+                    * np.sin(angles_from_x0 - self.angle_radians()) ** 2.0,
                     self.minor_axis**2.0
-                    * np.cos(angles_from_x0 - self.angle_radians) ** 2.0,
+                    * np.cos(angles_from_x0 - self.angle_radians()) ** 2.0,
                 )
             ),
         )

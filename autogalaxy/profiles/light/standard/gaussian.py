@@ -1,4 +1,3 @@
-import jax.numpy as jnp
 import numpy as np
 from typing import Optional, Tuple
 
@@ -48,7 +47,7 @@ class Gaussian(LightProfile):
             f"sigma_{np.round(self.sigma, 2)}__ell_comps_{np.round(self.ell_comps, 2)}"
         )
 
-    def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray, xp=np) -> np.ndarray:
         """
         Returns the 2D image of the Gaussian light profile from a grid of coordinates which are the radial distance of
         each coordinate from the its `centre`.
@@ -60,12 +59,14 @@ class Gaussian(LightProfile):
         grid_radii
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
-        return jnp.multiply(
+        return xp.multiply(
             self._intensity,
-            jnp.exp(
+            xp.exp(
                 -0.5
-                * jnp.square(
-                    jnp.divide(grid_radii.array, self.sigma / jnp.sqrt(self.axis_ratio))
+                * xp.square(
+                    xp.divide(
+                        grid_radii.array, self.sigma / xp.sqrt(self.axis_ratio(xp))
+                    )
                 )
             ),
         )
@@ -75,7 +76,11 @@ class Gaussian(LightProfile):
     @check_operated_only
     @aa.grid_dec.transform
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
+        self,
+        grid: aa.type.Grid2DLike,
+        xp=np,
+        operated_only: Optional[bool] = None,
+        **kwargs,
     ) -> np.ndarray:
         """
         Returns the Gaussian light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
@@ -95,7 +100,7 @@ class Gaussian(LightProfile):
         """
 
         return self.image_2d_via_radii_from(
-            self.eccentric_radii_grid_from(grid=grid, **kwargs)
+            self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs), xp=xp
         )
 
 

@@ -1,3 +1,5 @@
+import numpy as np
+
 from autoconf.dictable import to_dict
 
 import autofit as af
@@ -60,7 +62,7 @@ class AnalysisQuantity(Analysis):
         self.func_str = func_str
         self.title_prefix = title_prefix
 
-    def log_likelihood_function(self, instance: af.ModelInstance) -> float:
+    def log_likelihood_function(self, instance: af.ModelInstance, xp=np) -> float:
         """
         Given an instance of the model, where the model parameters are set via a non-linear search, fit the model
         instance to the quantity's dataset.

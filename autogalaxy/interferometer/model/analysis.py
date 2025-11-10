@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 from typing import Optional
 
 from autoconf.dictable import to_dict
@@ -28,6 +29,7 @@ class AnalysisInterferometer(AnalysisDataset):
         adapt_image_maker: Optional[AdaptImageMaker] = None,
         cosmology: LensingCosmology = None,
         settings_inversion: aa.SettingsInversion = None,
+        preloads: aa.Preloads = None,
         title_prefix: str = None,
     ):
         """
@@ -65,6 +67,7 @@ class AnalysisInterferometer(AnalysisDataset):
             adapt_image_maker=adapt_image_maker,
             cosmology=cosmology,
             settings_inversion=settings_inversion,
+            preloads=preloads,
             title_prefix=title_prefix,
         )
 
@@ -95,7 +98,7 @@ class AnalysisInterferometer(AnalysisDataset):
 
         return self
 
-    def log_likelihood_function(self, instance: af.ModelInstance) -> float:
+    def log_likelihood_function(self, instance: af.ModelInstance, xp=np) -> float:
         """
         Given an instance of the model, where the model parameters are set via a non-linear search, fit the model
         instance to the interferometer dataset.
@@ -131,12 +134,9 @@ class AnalysisInterferometer(AnalysisDataset):
         float
             The log likelihood indicating how well this model instance fitted the interferometer data.
         """
-        return self.fit_from(instance=instance).figure_of_merit
+        return self.fit_from(instance=instance, xp=xp).figure_of_merit
 
-    def fit_from(
-        self,
-        instance: af.ModelInstance,
-    ) -> FitInterferometer:
+    def fit_from(self, instance: af.ModelInstance, xp=np) -> FitInterferometer:
         """
         Given a model instance create a `FitInterferometer` object.
 
@@ -167,6 +167,7 @@ class AnalysisInterferometer(AnalysisDataset):
             galaxies=galaxies,
             adapt_images=adapt_images,
             settings_inversion=self.settings_inversion,
+            xp=xp,
         )
 
     def save_attributes(self, paths: af.DirectoryPaths):

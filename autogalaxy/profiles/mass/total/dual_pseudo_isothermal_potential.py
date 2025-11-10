@@ -1,5 +1,5 @@
 from typing import Tuple
-import jax.numpy as jnp
+import numpy as np
 
 import autoarray as aa
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
@@ -59,19 +59,19 @@ class dPIEPotential(MassProfile):
         self.rs = rs
         self.b0 = b0
 
-    def _ellip(self):
-        ellip = jnp.sqrt(self.ell_comps[0] ** 2 + self.ell_comps[1] ** 2)
+    def _ellip(self, xp=np):
+        ellip = xp.sqrt(self.ell_comps[0] ** 2 + self.ell_comps[1] ** 2)
         MAX_ELLIP = 0.99999
-        return jnp.min(jnp.array([ellip, MAX_ELLIP]))
+        return xp.min(xp.array([ellip, MAX_ELLIP]))
 
-    def _deflection_angle(self, radii):
+    def _deflection_angle(self, radii, xp=np):
         """
         For a circularly symmetric dPIEPotential profile, computes the magnitude of the deflection at each radius.
         """
         a, s = self.ra, self.rs
-        radii = jnp.maximum(radii, 1e-8)
-        f = radii / (a + jnp.sqrt(a**2 + radii**2)) - radii / (
-            s + jnp.sqrt(s**2 + radii**2)
+        radii = xp.maximum(radii, 1e-8)
+        f = radii / (a + xp.sqrt(a**2 + radii**2)) - radii / (
+            s + xp.sqrt(s**2 + radii**2)
         )
 
         # c.f. Eliasdottir '07 eq. A23
@@ -80,7 +80,7 @@ class dPIEPotential(MassProfile):
         alpha = self.b0 * s / (s - a) * f
         return alpha
 
-    def _convergence(self, radii):
+    def _convergence(self, radii, xp=np):
 
         radsq = radii * radii
         a, s = self.ra, self.rs
@@ -90,12 +90,12 @@ class dPIEPotential(MassProfile):
             / 2
             * s
             / (s - a)
-            * (1 / jnp.sqrt(a**2 + radsq) - 1 / jnp.sqrt(s**2 + radsq))
+            * (1 / xp.sqrt(a**2 + radsq) - 1 / xp.sqrt(s**2 + radsq))
         )
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
@@ -104,30 +104,28 @@ class dPIEPotential(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        ellip = self._ellip()
-        grid_radii = jnp.sqrt(
+        ellip = self._ellip(xp)
+        grid_radii = xp.sqrt(
             grid.array[:, 1] ** 2 * (1 - ellip) + grid.array[:, 0] ** 2 * (1 + ellip)
         )
 
         # Compute the deflection magnitude of a *non-elliptical* profile
-        alpha_circ = self._deflection_angle(grid_radii)
+        alpha_circ = self._deflection_angle(grid_radii, xp)
 
         # This is in axes aligned to the major/minor axis
-        deflection_y = (
-            alpha_circ * jnp.sqrt(1 + ellip) * (grid.array[:, 0] / grid_radii)
-        )
-        deflection_x = (
-            alpha_circ * jnp.sqrt(1 - ellip) * (grid.array[:, 1] / grid_radii)
-        )
+        deflection_y = alpha_circ * xp.sqrt(1 + ellip) * (grid.array[:, 0] / grid_radii)
+        deflection_x = alpha_circ * xp.sqrt(1 - ellip) * (grid.array[:, 1] / grid_radii)
 
         # And here we convert back to the real axes
         return self.rotated_grid_from_reference_frame_from(
-            grid=jnp.multiply(1.0, jnp.vstack((deflection_y, deflection_x)).T), **kwargs
+            grid=xp.multiply(1.0, xp.vstack((deflection_y, deflection_x)).T),
+            xp=xp,
+            **kwargs,
         )
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
 
@@ -139,14 +137,14 @@ class dPIEPotential(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
-        ellip = self._ellip()
-        grid_radii = jnp.sqrt(
+        ellip = self._ellip(xp)
+        grid_radii = xp.sqrt(
             grid.array[:, 1] ** 2 * (1 - ellip) + grid.array[:, 0] ** 2 * (1 + ellip)
         )
 
         # Compute the convergence and deflection of a *circular* profile
-        kappa_circ = self._convergence(grid_radii)
-        alpha_circ = self._deflection_angle(grid_radii)
+        kappa_circ = self._convergence(grid_radii, xp)
+        alpha_circ = self._deflection_angle(grid_radii, xp)
 
         asymm_term = (
             ellip * (1 - ellip) * grid.array[:, 1] ** 2
@@ -159,8 +157,8 @@ class dPIEPotential(MassProfile):
         return kappa_circ * (1 - asymm_term) + (alpha_circ / grid_radii) * asymm_term
 
     @aa.grid_dec.to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return jnp.zeros(shape=grid.shape[0])
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        return xp.zeros(shape=grid.shape[0])
 
 
 class dPIEPotentialSph(dPIEPotential):
@@ -218,7 +216,7 @@ class dPIEPotentialSph(dPIEPotential):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
@@ -229,7 +227,7 @@ class dPIEPotentialSph(dPIEPotential):
         """
         radii = self.radial_grid_from(grid=grid, **kwargs)
 
-        alpha = self._deflection_angle(radii.array)
+        alpha = self._deflection_angle(radii.array, xp)
 
         # now we decompose the deflection into y/x components
         defl_y = alpha * grid.array[:, 0] / radii.array
@@ -239,7 +237,7 @@ class dPIEPotentialSph(dPIEPotential):
 
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
 
@@ -254,8 +252,8 @@ class dPIEPotentialSph(dPIEPotential):
         # already transformed to center on profile centre so this works
         radsq = grid.array[:, 0] ** 2 + grid.array[:, 1] ** 2
 
-        return self._convergence(jnp.sqrt(radsq))
+        return self._convergence(xp.sqrt(radsq), xp)
 
     @aa.grid_dec.to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return jnp.zeros(shape=grid.shape[0])
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        return xp.zeros(shape=grid.shape[0])

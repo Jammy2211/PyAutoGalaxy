@@ -1,4 +1,3 @@
-import jax.numpy as jnp
 import numpy as np
 from typing import Tuple
 
@@ -31,7 +30,7 @@ class PowerLawBroken(MassProfile):
         super().__init__(centre=centre, ell_comps=ell_comps)
 
         self.einstein_radius = einstein_radius
-        self.einstein_radius_elliptical = jnp.sqrt(self.axis_ratio) * einstein_radius
+        self.einstein_radius_elliptical = np.sqrt(self.axis_ratio()) * einstein_radius
         self.break_radius = break_radius
         self.inner_slope = inner_slope
         self.outer_slope = outer_slope
@@ -52,13 +51,13 @@ class PowerLawBroken(MassProfile):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Returns the dimensionless density kappa=Sigma/Sigma_c (eq. 1)
         """
 
         # Ell radius
-        radius = jnp.hypot(grid.array[:, 1] * self.axis_ratio, grid.array[:, 0])
+        radius = xp.hypot(grid.array[:, 1] * self.axis_ratio(xp), grid.array[:, 0])
 
         # Inside break radius
         kappa_inner = self.kB * (self.break_radius / radius) ** self.inner_slope
@@ -71,27 +70,28 @@ class PowerLawBroken(MassProfile):
         )
 
     @aa.grid_dec.to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        return jnp.zeros(shape=grid.shape[0])
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        return xp.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_yx_2d_from(self, grid, max_terms=20, **kwargs):
+    def deflections_yx_2d_from(self, grid, xp=np, max_terms=20, **kwargs):
         """
         Returns the complex deflection angle from eq. 18 and 19
         """
+
         # Rotate coordinates
         z = grid.array[:, 1] + 1j * grid.array[:, 0]
 
         # Ell radius
-        R = jnp.hypot(z.real * self.axis_ratio, z.imag)
+        R = xp.hypot(z.real * self.axis_ratio(xp), z.imag)
 
         # Factors common to eq. 18 and 19
         factors = (
             2
             * self.kB
             * (self.break_radius**2)
-            / (self.axis_ratio * z * (2 - self.inner_slope))
+            / (self.axis_ratio(xp) * z * (2 - self.inner_slope))
         )
 
         # Hypergeometric functions
@@ -99,16 +99,26 @@ class PowerLawBroken(MassProfile):
         # These can also be computed with scipy.special.hyp2f1(), it's
         # much slower can be a useful test
         F1 = self.hyp2f1_series(
-            self.inner_slope, self.axis_ratio, R, z, max_terms=max_terms
+            self.inner_slope, self.axis_ratio(xp), R, z, max_terms=max_terms, xp=xp
         )
         F2 = self.hyp2f1_series(
-            self.inner_slope, self.axis_ratio, self.break_radius, z, max_terms=max_terms
+            self.inner_slope,
+            self.axis_ratio(xp),
+            self.break_radius,
+            z,
+            max_terms=max_terms,
+            xp=xp,
         )
         F3 = self.hyp2f1_series(
-            self.outer_slope, self.axis_ratio, R, z, max_terms=max_terms
+            self.outer_slope, self.axis_ratio(xp), R, z, max_terms=max_terms, xp=xp
         )
         F4 = self.hyp2f1_series(
-            self.outer_slope, self.axis_ratio, self.break_radius, z, max_terms=max_terms
+            self.outer_slope,
+            self.axis_ratio(xp),
+            self.break_radius,
+            z,
+            max_terms=max_terms,
+            xp=xp,
         )
 
         # theta < break radius (eq. 18)
@@ -126,13 +136,14 @@ class PowerLawBroken(MassProfile):
         ).conjugate()
 
         return self.rotated_grid_from_reference_frame_from(
-            grid=jnp.multiply(
-                1.0, jnp.vstack((jnp.imag(deflections), jnp.real(deflections))).T
-            )
+            grid=xp.multiply(
+                1.0, xp.vstack((xp.imag(deflections), xp.real(deflections))).T
+            ),
+            xp=xp,
         )
 
     @staticmethod
-    def hyp2f1_series(t, q, r, z, max_terms=20):
+    def hyp2f1_series(t, q, r, z, max_terms=20, xp=np):
         """
         Computes eq. 26 for a radius r, slope t,
         axis ratio q, and coordinates z.
@@ -140,13 +151,13 @@ class PowerLawBroken(MassProfile):
 
         # u from eq. 25
         q_ = (1 - q**2) / (q**2)
-        u = 0.5 * (1 - jnp.sqrt(1 - q_ * (r / z) ** 2))
+        u = 0.5 * (1 - xp.sqrt(1 - q_ * (r / z) ** 2))
 
         # First coefficient
         a_n = 1.0
 
         # Storage for sum
-        F = jnp.zeros_like(z, dtype="complex64")
+        F = xp.zeros_like(z, dtype="complex64")
 
         for n in range(max_terms):
             F += a_n * (u**n)

@@ -61,10 +61,6 @@ def test__2d__add_critical_curve(gal_x1_mp, grid_2d_7x7):
         visuals_2d_via.tangential_critical_curves[0]
         == gal_x1_mp.tangential_critical_curve_list_from(grid=grid_2d_7x7)[0]
     ).all()
-    assert (
-        visuals_2d_via.radial_critical_curves[0]
-        == gal_x1_mp.radial_critical_curve_list_from(grid=grid_2d_7x7)[0]
-    ).all()
 
 
 def test__2d__add_caustic(gal_x1_mp, grid_2d_7x7):

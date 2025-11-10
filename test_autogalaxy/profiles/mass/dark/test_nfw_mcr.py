@@ -45,9 +45,9 @@ def test__mass_and_concentration_consistent_with_normal_nfw():
 
     assert mp.centre == (1.0, 2.0)
 
-    assert mp.axis_ratio == 1.0
+    assert mp.axis_ratio() == 1.0
 
-    assert mp.angle == 0.0
+    assert mp.angle() == 0.0
 
     assert mp.inner_slope == 1.0
 
@@ -93,8 +93,8 @@ def test__mass_and_concentration_consistent_with_normal_nfw__scatter_0():
     assert concentration_via_kappa_s == concentration_via_mass
 
     assert mp.centre == (1.0, 2.0)
-    assert mp.axis_ratio == 1.0
-    assert mp.angle == 0.0
+    assert mp.axis_ratio() == 1.0
+    assert mp.angle() == 0.0
     assert mp.inner_slope == 1.0
     assert mp.scale_radius == pytest.approx(0.21157, 1.0e-4)
 
@@ -148,8 +148,8 @@ def test__same_as_above_but_elliptical():
 
     axis_ratio, angle = ag.convert.axis_ratio_and_angle_from(ell_comps=(0.1, 0.2))
 
-    assert mp.axis_ratio == axis_ratio
-    assert mp.angle == angle
+    assert mp.axis_ratio() == axis_ratio
+    assert mp.angle() == angle
     assert mp.inner_slope == 1.0
 
     assert mp.scale_radius == pytest.approx(0.211578, 1.0e-4)
@@ -206,8 +206,8 @@ def test__same_as_above_but_generalized_elliptical():
 
     axis_ratio, angle = ag.convert.axis_ratio_and_angle_from(ell_comps=(0.1, 0.2))
 
-    assert mp.axis_ratio == axis_ratio
-    assert mp.angle == angle
+    assert mp.axis_ratio() == axis_ratio
+    assert mp.angle() == angle
     assert mp.inner_slope == 2.0
 
     assert mp.scale_radius == pytest.approx(0.21157, 1.0e-4)

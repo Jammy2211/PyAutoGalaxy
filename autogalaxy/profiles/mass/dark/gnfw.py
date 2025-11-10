@@ -7,20 +7,20 @@ from autogalaxy.profiles.mass.dark.abstract import AbstractgNFW
 
 
 class gNFW(AbstractgNFW):
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self.deflections_2d_via_mge_from(grid=grid, **kwargs)
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self._deflections_2d_via_mge_from(
-            grid=grid, sigmas_factor=self.axis_ratio
+            grid=grid, sigmas_factor=self.axis_ratio(xp)
         )
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     def deflections_2d_via_integral_from(
-        self, grid: aa.type.Grid2DLike, tabulate_bins=1000, **kwargs
+        self, grid: aa.type.Grid2DLike, xp=np, tabulate_bins=1000, **kwargs
     ):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -51,7 +51,7 @@ class gNFW(AbstractgNFW):
                 deflection_grid[i] = (
                     2.0
                     * self.kappa_s
-                    * self.axis_ratio
+                    * self.axis_ratio(xp)
                     * grid[i, yx_index]
                     * quad(
                         self.deflection_func,
@@ -61,7 +61,7 @@ class gNFW(AbstractgNFW):
                             grid.array[i, 0],
                             grid.array[i, 1],
                             npow,
-                            self.axis_ratio,
+                            self.axis_ratio(xp),
                             minimum_log_eta,
                             maximum_log_eta,
                             tabulate_bins,
@@ -104,7 +104,7 @@ class gNFW(AbstractgNFW):
         deflection_x = calculate_deflection_component(npow=0.0, yx_index=1)
 
         return self.rotated_grid_from_reference_frame_from(
-            np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
+            np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T),
         )
 
     @staticmethod
@@ -162,7 +162,9 @@ class gNFW(AbstractgNFW):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, tabulate_bins=1000, **kwargs):
+    def potential_2d_from(
+        self, grid: aa.type.Grid2DLike, xp=np, tabulate_bins=1000, **kwargs
+    ):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.
 
@@ -220,14 +222,14 @@ class gNFW(AbstractgNFW):
             )
 
         for i in range(grid.shape[0]):
-            potential_grid[i] = (2.0 * self.kappa_s * self.axis_ratio) * quad(
+            potential_grid[i] = (2.0 * self.kappa_s * self.axis_ratio(xp)) * quad(
                 self.potential_func,
                 a=0.0,
                 b=1.0,
                 args=(
                     grid.array[i, 0],
                     grid.array[i, 1],
-                    self.axis_ratio,
+                    self.axis_ratio(xp),
                     minimum_log_eta,
                     maximum_log_eta,
                     tabulate_bins,
@@ -295,7 +297,9 @@ class gNFWSph(gNFW):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_2d_via_integral_from(
+        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
+    ):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -316,7 +320,9 @@ class gNFWSph(gNFW):
                 4.0 * self.kappa_s * self.scale_radius, self.deflection_func_sph(eta[i])
             )
 
-        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection_grid)
+        return self._cartesian_grid_via_radial_from(
+            grid=grid, radius=deflection_grid, xp=xp
+        )
 
     @staticmethod
     def deflection_integrand(y, eta, inner_slope):

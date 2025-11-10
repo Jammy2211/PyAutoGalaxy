@@ -1,4 +1,3 @@
-import jax.numpy as jnp
 import numpy as np
 from typing import Optional, Tuple
 
@@ -45,16 +44,15 @@ class Chameleon(LightProfile):
         self.core_radius_0 = core_radius_0
         self.core_radius_1 = core_radius_1
 
-    @property
-    def axis_ratio(self) -> float:
+    def axis_ratio(self, xp=np) -> float:
         """
         The elliptical isothermal mass profile deflection angles break down for perfectly spherical systems where
         `axis_ratio=1.0`, thus we remove these solutions.
         """
-        axis_ratio = super().axis_ratio
+        axis_ratio = super().axis_ratio(xp=xp)
         return axis_ratio if axis_ratio < 0.99999 else 0.99999
 
-    def image_2d_via_radii_from(self, grid_radii: np.ndarray) -> np.ndarray:
+    def image_2d_via_radii_from(self, grid_radii: np.ndarray, xp=np) -> np.ndarray:
         """
         Returns the 2D image of the Sersic light profile from a grid of coordinates which are the radial distances of
         each coordinate from the its `centre`.
@@ -65,25 +63,25 @@ class Chameleon(LightProfile):
             The radial distances from the centre of the profile, for each coordinate on the grid.
         """
 
-        axis_ratio_factor = (1.0 + self.axis_ratio) ** 2.0
+        axis_ratio_factor = (1.0 + self.axis_ratio(xp)) ** 2.0
 
-        return jnp.multiply(
-            self._intensity / (1 + self.axis_ratio),
-            jnp.add(
-                jnp.divide(
+        return xp.multiply(
+            self._intensity / (1 + self.axis_ratio(xp)),
+            xp.add(
+                xp.divide(
                     1.0,
-                    jnp.sqrt(
-                        jnp.add(
-                            jnp.square(grid_radii.array),
+                    xp.sqrt(
+                        xp.add(
+                            xp.square(grid_radii.array),
                             (4.0 * self.core_radius_0**2.0) / axis_ratio_factor,
                         )
                     ),
                 ),
-                -jnp.divide(
+                -xp.divide(
                     1.0,
-                    jnp.sqrt(
-                        jnp.add(
-                            jnp.square(grid_radii.array),
+                    xp.sqrt(
+                        xp.add(
+                            xp.square(grid_radii.array),
                             (4.0 * self.core_radius_1**2.0) / axis_ratio_factor,
                         )
                     ),
@@ -96,7 +94,11 @@ class Chameleon(LightProfile):
     @check_operated_only
     @aa.grid_dec.transform
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
+        self,
+        grid: aa.type.Grid2DLike,
+        xp=np,
+        operated_only: Optional[bool] = None,
+        **kwargs,
     ) -> np.ndarray:
         """
         Returns the Chameleon light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.

@@ -51,7 +51,9 @@ class SersicGradient(AbstractSersic):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_integral_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_2d_via_integral_from(
+        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
+    ):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
 
@@ -66,7 +68,7 @@ class SersicGradient(AbstractSersic):
         def calculate_deflection_component(npow, index):
             sersic_constant = self.sersic_constant
 
-            deflection_grid = np.array(self.axis_ratio * grid.array[:, index])
+            deflection_grid = np.array(self.axis_ratio() * grid.array[:, index])
 
             for i in range(grid.shape[0]):
                 deflection_grid[i] *= (
@@ -80,7 +82,7 @@ class SersicGradient(AbstractSersic):
                             grid.array[i, 0],
                             grid.array[i, 1],
                             npow,
-                            self.axis_ratio,
+                            self.axis_ratio(),
                             self.sersic_index,
                             self.effective_radius,
                             self.mass_to_light_gradient,
@@ -125,7 +127,7 @@ class SersicGradient(AbstractSersic):
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
         Parameters
@@ -135,14 +137,14 @@ class SersicGradient(AbstractSersic):
 
         """
         return self.convergence_func(
-            self.eccentric_radii_grid_from(grid=grid, **kwargs)
+            self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs)
         )
 
     def convergence_func(self, grid_radius: float) -> float:
         return (
             self.mass_to_light_ratio
             * (
-                ((self.axis_ratio * grid_radius) / self.effective_radius)
+                ((self.axis_ratio() * grid_radius) / self.effective_radius)
                 ** -self.mass_to_light_gradient
             )
             * self.image_2d_via_radii_from(grid_radius)
@@ -157,7 +159,7 @@ class SersicGradient(AbstractSersic):
                 self.mass_to_light_ratio
                 * self.intensity
                 * (
-                    ((self.axis_ratio * r) / self.effective_radius)
+                    ((self.axis_ratio() * r) / self.effective_radius)
                     ** -self.mass_to_light_gradient
                 )
                 * np.exp(
@@ -205,7 +207,7 @@ class SersicGradient(AbstractSersic):
             mass_to_light_gradient=self.mass_to_light_gradient,
         )
 
-        scaled_effective_radius = self.effective_radius / np.sqrt(self.axis_ratio)
+        scaled_effective_radius = self.effective_radius / np.sqrt(self.axis_ratio())
         radii_min = scaled_effective_radius / 10.0**lower_dex
         radii_max = scaled_effective_radius * 10.0**upper_dex
 
@@ -214,7 +216,7 @@ class SersicGradient(AbstractSersic):
                 self.mass_to_light_ratio
                 * self.intensity
                 * (
-                    ((self.axis_ratio * r) / scaled_effective_radius)
+                    ((self.axis_ratio() * r) / scaled_effective_radius)
                     ** -self.mass_to_light_gradient
                 )
                 * np.exp(

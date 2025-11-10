@@ -1,6 +1,4 @@
-import jax.numpy as jnp
-from .jax_utils import omega
-
+import numpy as np
 from typing import Tuple
 
 import autoarray as aa
@@ -40,7 +38,7 @@ class PowerLaw(PowerLawCore):
         )
 
     @aa.grid_dec.to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         alpha = self.deflections_yx_2d_from(aa.Grid2DIrregular(grid), **kwargs)
 
         alpha_x = alpha[:, 1]
@@ -53,7 +51,7 @@ class PowerLaw(PowerLawCore):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
 
@@ -68,28 +66,31 @@ class PowerLaw(PowerLawCore):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
+        from .jax_utils import omega
 
         slope = self.slope - 1.0
         einstein_radius = (
-            2.0 / (self.axis_ratio**-0.5 + self.axis_ratio**0.5)
+            2.0 / (self.axis_ratio(xp) ** -0.5 + self.axis_ratio(xp) ** 0.5)
         ) * self.einstein_radius
 
-        factor = jnp.divide(1.0 - self.axis_ratio, 1.0 + self.axis_ratio)
-        b = jnp.multiply(einstein_radius, jnp.sqrt(self.axis_ratio))
-        angle = jnp.arctan2(
-            grid.array[:, 0], jnp.multiply(self.axis_ratio, grid.array[:, 1])
+        factor = xp.divide(1.0 - self.axis_ratio(xp), 1.0 + self.axis_ratio(xp))
+        b = xp.multiply(einstein_radius, xp.sqrt(self.axis_ratio(xp)))
+        angle = xp.arctan2(
+            grid.array[:, 0], xp.multiply(self.axis_ratio(xp), grid.array[:, 1])
         )  # Note, this angle is not the position angle
-        z = jnp.add(
-            jnp.multiply(jnp.cos(angle), 1 + 0j), jnp.multiply(jnp.sin(angle), 0 + 1j)
+        z = xp.add(
+            xp.multiply(xp.cos(angle), 1 + 0j), xp.multiply(xp.sin(angle), 0 + 1j)
         )
 
-        R = jnp.sqrt(
-            (self.axis_ratio * grid.array[:, 1]) ** 2 + grid.array[:, 0] ** 2 + 1e-16
+        R = xp.sqrt(
+            (self.axis_ratio(xp) * grid.array[:, 1]) ** 2
+            + grid.array[:, 0] ** 2
+            + 1e-16
         )
-        zh = omega(z, slope, factor, n_terms=20)
+        zh = omega(z, slope, factor, n_terms=20, xp=np)
 
         complex_angle = (
-            2.0 * b / (1.0 + self.axis_ratio) * (b / R) ** (slope - 1.0) * zh
+            2.0 * b / (1.0 + self.axis_ratio(xp)) * (b / R) ** (slope - 1.0) * zh
         )
 
         deflection_y = complex_angle.imag
@@ -101,15 +102,17 @@ class PowerLaw(PowerLawCore):
         deflection_x *= rescale_factor
 
         return self.rotated_grid_from_reference_frame_from(
-            grid=jnp.vstack((deflection_y, deflection_x)).T
+            grid=xp.vstack((deflection_y, deflection_x)).T, xp=xp
         )
 
-    def convergence_func(self, grid_radius: float) -> float:
-        return self.einstein_radius_rescaled * grid_radius.array ** (-(self.slope - 1))
+    def convergence_func(self, grid_radius: float, xp=np) -> float:
+        return self.einstein_radius_rescaled(xp) * grid_radius.array ** (
+            -(self.slope - 1)
+        )
 
     @staticmethod
-    def potential_func(u, y, x, axis_ratio, slope, core_radius):
-        _eta_u = jnp.sqrt((u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u)))))
+    def potential_func(u, y, x, axis_ratio, slope, core_radius, xp=np):
+        _eta_u = xp.sqrt((u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u)))))
         return (
             (_eta_u / u)
             * ((3.0 - slope) * _eta_u) ** -1.0
@@ -147,15 +150,17 @@ class PowerLawSph(PowerLaw):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        eta = self.radial_grid_from(grid=grid, **kwargs).array
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        eta = self.radial_grid_from(grid=grid, xp=xp, **kwargs).array
         deflection_r = (
             2.0
-            * self.einstein_radius_rescaled
-            * jnp.divide(
-                jnp.power(eta, (3.0 - self.slope)),
-                jnp.multiply((3.0 - self.slope), eta),
+            * self.einstein_radius_rescaled(xp)
+            * xp.divide(
+                xp.power(eta, (3.0 - self.slope)),
+                xp.multiply((3.0 - self.slope), eta),
             )
         )
 
-        return self._cartesian_grid_via_radial_from(grid=grid, radius=deflection_r)
+        return self._cartesian_grid_via_radial_from(
+            grid=grid, radius=deflection_r, xp=xp
+        )

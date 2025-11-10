@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-import jax.numpy as jnp
 import numpy as np
 from typing import Callable, List, Tuple
 
@@ -41,12 +40,12 @@ class MassProfileCSE(ABC):
         Parameters
         ----------
         """
-        phi = jnp.sqrt(axis_ratio_squared * core_radius**2.0 + term1)
+        phi = np.sqrt(axis_ratio_squared * core_radius**2.0 + term1)
         Psi = (phi + core_radius) ** 2.0 + term2
         bottom = core_radius * phi * Psi
         defl_x = (term3 * (phi + axis_ratio_squared * core_radius)) / bottom
         defl_y = (term4 * (phi + core_radius)) / bottom
-        return jnp.vstack((defl_y, defl_x))
+        return np.vstack((defl_y, defl_x))
 
     @abstractmethod
     def decompose_convergence_via_cse(self, grid_radii: np.ndarray):
@@ -166,7 +165,7 @@ class MassProfileCSE(ABC):
         amplitude_list, core_radius_list = self.decompose_convergence_via_cse(
             grid_radii=self.radial_grid_from(grid=grid, **kwargs)
         )
-        q = self.axis_ratio
+        q = self.axis_ratio()
         q2 = q**2.0
         grid_y = grid.array[:, 0]
         grid_x = grid.array[:, 1]

@@ -351,8 +351,6 @@ plots:
   galaxies:
     subplot_galaxies: true
     subplot_galaxy_images: true
-    subplot_galaxies_1d: true
-    subplot_galaxies_1d_decomposed: true
     fits_galaxy_images: true                # Output a .fits file containing images of every galaxy?
   positions:
     image_with_positions: true

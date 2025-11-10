@@ -46,8 +46,8 @@ def test__duffy__mass_and_concentration_consistent_with_normal_truncated_nfw():
     assert concentration_via_kappa_s == concentration_via_mass
 
     assert mp.centre == (1.0, 2.0)
-    assert mp.axis_ratio == 1.0
-    assert mp.angle == 0.0
+    assert mp.axis_ratio() == 1.0
+    assert mp.angle() == 0.0
     assert mp.inner_slope == 1.0
 
     assert mp.scale_radius == pytest.approx(0.273382, 1.0e-4)
@@ -93,8 +93,8 @@ def test__ludlow__mass_and_concentration_consistent_with_normal_truncated_nfw__s
     assert concentration_via_kappa_s == concentration_via_mass
 
     assert mp.centre == (1.0, 2.0)
-    assert mp.axis_ratio == 1.0
-    assert mp.angle == 0.0
+    assert mp.axis_ratio() == 1.0
+    assert mp.angle() == 0.0
     assert mp.inner_slope == 1.0
 
     assert mp.scale_radius == pytest.approx(0.21157, 1.0e-4)
