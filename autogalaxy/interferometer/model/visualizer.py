@@ -9,6 +9,7 @@ from autogalaxy import exc
 
 logger = logging.getLogger(__name__)
 
+
 class VisualizerInterferometer(af.Visualizer):
     @staticmethod
     def visualize_before_fit(
@@ -107,7 +108,5 @@ class VisualizerInterferometer(af.Visualizer):
                     inversion=fit.inversion,
                 )
             except (IndexError, exc.InversionException):
-                logger(
-                    exc.invalid_linear_algebra_for_visualization_message()
-                )
+                logger(exc.invalid_linear_algebra_for_visualization_message())
                 return

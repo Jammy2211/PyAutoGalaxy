@@ -92,7 +92,7 @@ class OperateImage:
 
         return blurred_image_2d
 
-    def padded_image_2d_from(self, grid, psf_shape_2d):
+    def padded_image_2d_from(self, grid, psf_shape_2d, xp=np):
         """
         Evaluate the light object's 2D image from a input 2D grid of padded coordinates, where this padding is
         sufficient to encapsulate all surrounding pixels that will blur light into the original image given the
@@ -114,7 +114,7 @@ class OperateImage:
         """
         padded_grid = grid.padded_grid_from(kernel_shape_native=psf_shape_2d)
 
-        return self.image_2d_from(grid=padded_grid)
+        return self.image_2d_from(grid=padded_grid, xp=xp)
 
     def unmasked_blurred_image_2d_from(self, grid, psf):
         """

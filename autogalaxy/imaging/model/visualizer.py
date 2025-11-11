@@ -8,6 +8,7 @@ from autogalaxy.imaging.model.plotter_interface import PlotterInterfaceImaging
 
 logger = logging.getLogger(__name__)
 
+
 class VisualizerImaging(af.Visualizer):
     @staticmethod
     def visualize_before_fit(
@@ -98,9 +99,7 @@ class VisualizerImaging(af.Visualizer):
             try:
                 plotter.inversion(inversion=fit.inversion)
             except exc.InversionException:
-                logger(
-                    exc.invalid_linear_algebra_for_visualization_message()
-                )
+                logger(exc.invalid_linear_algebra_for_visualization_message())
                 return
 
     @staticmethod
