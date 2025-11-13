@@ -21,7 +21,7 @@ def test__interferometer_generator_from_aggregator__analysis_has_single_dataset(
         transformer_class=ag.TransformerDFT,
     )
 
-    analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
+    analysis = ag.AnalysisInterferometer(dataset=interferometer_7, use_jax=False)
 
     agg = aggregator_from(
         database_file=database_file,

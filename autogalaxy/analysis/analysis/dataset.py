@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 from typing import Optional, Union
 
 from autoconf.dictable import to_dict, output_to_json
@@ -26,6 +27,7 @@ class AnalysisDataset(Analysis):
         settings_inversion: aa.SettingsInversion = None,
         preloads: aa.Preloads = None,
         title_prefix: str = None,
+        use_jax: bool = True,
         **kwargs,
     ):
         """
@@ -54,6 +56,7 @@ class AnalysisDataset(Analysis):
         super().__init__(
             cosmology=cosmology,
             preloads=preloads,
+            use_jax=use_jax,
             **kwargs,
         )
 

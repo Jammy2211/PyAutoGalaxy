@@ -193,8 +193,8 @@ class OperateImage:
 
         if self.has(cls=LightProfile) or isinstance(self, LightProfile):
 
-            image_2d = self.image_2d_from(grid=grid)
-            return transformer.visibilities_from(image=image_2d)
+            image_2d = self.image_2d_from(grid=grid, xp=xp)
+            return transformer.visibilities_from(image=image_2d, xp=xp)
 
         return aa.Visibilities.zeros(shape_slim=(transformer.uv_wavelengths.shape[0],))
 
@@ -345,7 +345,7 @@ class OperateImageList(OperateImage):
                     shape_slim=(transformer.uv_wavelengths.shape[0],)
                 )
             else:
-                visibilities = transformer.visibilities_from(image=image_2d)
+                visibilities = transformer.visibilities_from(image=image_2d, xp=xp)
 
             visibilities_list.append(visibilities)
 

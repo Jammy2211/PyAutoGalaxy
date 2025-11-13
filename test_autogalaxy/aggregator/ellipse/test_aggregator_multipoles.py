@@ -12,7 +12,7 @@ def test__multipoles_randomly_drawn_via_pdf_gen_from(
 ):
     clean(database_file=database_file)
 
-    analysis = ag.AnalysisEllipse(dataset=masked_imaging_7x7)
+    analysis = ag.AnalysisEllipse(dataset=masked_imaging_7x7, use_jax=False)
 
     agg = aggregator_from(
         database_file=database_file,
@@ -49,7 +49,7 @@ def test__multipoles_all_above_weight_gen(
 ):
     clean(database_file=database_file)
 
-    analysis = ag.AnalysisEllipse(dataset=masked_imaging_7x7)
+    analysis = ag.AnalysisEllipse(dataset=masked_imaging_7x7, use_jax=False)
 
     agg = aggregator_from(
         database_file=database_file,

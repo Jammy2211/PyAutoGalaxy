@@ -1,4 +1,3 @@
-import jax.numpy as jnp
 import numpy as np
 from typing import Tuple
 
@@ -249,7 +248,7 @@ class PowerLawMultipole(MassProfile):
             / 2.0
             * (self.einstein_radius / r) ** (self.slope - 1)
             * self.k_m
-            * jnp.cos(self.m * (angle - self.angle_m))
+            * xp.cos(self.m * (angle - self.angle_m))
         )
 
     @aa.grid_dec.to_array

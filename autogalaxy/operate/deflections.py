@@ -242,7 +242,7 @@ class OperateDeflections:
 
         return aa.Array2D(values=1 / det_jacobian, mask=grid.mask)
 
-    def hessian_from(self, grid, buffer: float = 0.01, deflections_func=None) -> Tuple:
+    def hessian_from(self, grid, buffer: float = 0.01, deflections_func=None, xp=np) -> Tuple:
         """
         Returns the Hessian of the lensing object, where the Hessian is the second partial derivatives of the
         potential (see equation 55 https://inspirehep.net/literature/419263):
@@ -270,26 +270,26 @@ class OperateDeflections:
         if deflections_func is None:
             deflections_func = self.deflections_yx_2d_from
 
-        grid_shift_y_up = aa.Grid2DIrregular(values=np.zeros(grid.shape))
-        grid_shift_y_up[:, 0] = grid[:, 0] + buffer
-        grid_shift_y_up[:, 1] = grid[:, 1]
+        grid_shift_y_up = aa.Grid2DIrregular(
+            values=xp.stack([grid[:, 0] + buffer, grid[:, 1]], axis=1)
+        )
 
-        grid_shift_y_down = aa.Grid2DIrregular(values=np.zeros(grid.shape))
-        grid_shift_y_down[:, 0] = grid[:, 0] - buffer
-        grid_shift_y_down[:, 1] = grid[:, 1]
+        grid_shift_y_down = aa.Grid2DIrregular(
+            values=xp.stack([grid[:, 0] - buffer, grid[:, 1]], axis=1)
+        )
 
-        grid_shift_x_left = aa.Grid2DIrregular(values=np.zeros(grid.shape))
-        grid_shift_x_left[:, 0] = grid[:, 0]
-        grid_shift_x_left[:, 1] = grid[:, 1] - buffer
+        grid_shift_x_left = aa.Grid2DIrregular(
+            values=xp.stack([grid[:, 0], grid[:, 1] - buffer], axis=1)
+        )
 
-        grid_shift_x_right = aa.Grid2DIrregular(values=np.zeros(grid.shape))
-        grid_shift_x_right[:, 0] = grid[:, 0]
-        grid_shift_x_right[:, 1] = grid[:, 1] + buffer
+        grid_shift_x_right = aa.Grid2DIrregular(
+            values=xp.stack([grid[:, 0], grid[:, 1] + buffer], axis=1)
+        )
 
-        deflections_up = deflections_func(grid=grid_shift_y_up)
-        deflections_down = deflections_func(grid=grid_shift_y_down)
-        deflections_left = deflections_func(grid=grid_shift_x_left)
-        deflections_right = deflections_func(grid=grid_shift_x_right)
+        deflections_up = deflections_func(grid=grid_shift_y_up, xp=xp)
+        deflections_down = deflections_func(grid=grid_shift_y_down, xp=xp)
+        deflections_left = deflections_func(grid=grid_shift_x_left, xp=xp)
+        deflections_right = deflections_func(grid=grid_shift_x_right, xp=xp)
 
         hessian_yy = 0.5 * (deflections_up[:, 0] - deflections_down[:, 0]) / buffer
         hessian_xy = 0.5 * (deflections_up[:, 1] - deflections_down[:, 1]) / buffer
@@ -373,7 +373,7 @@ class OperateDeflections:
         return ShearYX2DIrregular(values=shear_yx_2d, grid=grid)
 
     def magnification_2d_via_hessian_from(
-        self, grid, buffer: float = 0.01, deflections_func=None
+        self, grid, buffer: float = 0.01, deflections_func=None, xp=np
     ) -> aa.ArrayIrregular:
         """
         Returns the 2D magnification map of lensing object, which is computed from the 2D deflection angle map
@@ -395,7 +395,7 @@ class OperateDeflections:
             The 2D grid of (y,x) arc-second coordinates the deflection angles and magnification map are computed on.
         """
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
-            grid=grid, buffer=buffer, deflections_func=deflections_func
+            grid=grid, buffer=buffer, deflections_func=deflections_func, xp=xp
         )
 
         det_A = (1 - hessian_xx) * (1 - hessian_yy) - hessian_xy * hessian_yx

@@ -22,6 +22,7 @@ class AnalysisQuantity(Analysis):
         func_str: str,
         cosmology: LensingCosmology = None,
         title_prefix: str = None,
+        use_jax: bool = True,
     ):
         """
         Fits a galaxy model to a quantity dataset via a non-linear search.
@@ -56,13 +57,13 @@ class AnalysisQuantity(Analysis):
             A string that is added before the title of all figures output by visualization, for example to
             put the name of the dataset and galaxy in the title.
         """
-        super().__init__(cosmology=cosmology)
+        super().__init__(cosmology=cosmology, use_jax=use_jax)
 
         self.dataset = dataset
         self.func_str = func_str
         self.title_prefix = title_prefix
 
-    def log_likelihood_function(self, instance: af.ModelInstance, xp=np) -> float:
+    def log_likelihood_function(self, instance: af.ModelInstance) -> float:
         """
         Given an instance of the model, where the model parameters are set via a non-linear search, fit the model
         instance to the quantity's dataset.

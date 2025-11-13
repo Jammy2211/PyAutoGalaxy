@@ -18,7 +18,7 @@ def test__dataset_generator_from_aggregator__analysis_has_single_dataset(
 
     masked_imaging_7x7 = imaging.apply_mask(mask=mask_2d_7x7)
 
-    analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
+    analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7, use_jax=False)
 
     agg = aggregator_from(
         database_file=database_file,
