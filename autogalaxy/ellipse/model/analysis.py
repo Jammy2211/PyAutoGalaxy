@@ -20,7 +20,7 @@ class AnalysisEllipse(af.Analysis):
     Result = ResultEllipse
     Visualizer = VisualizerEllipse
 
-    def __init__(self, dataset: aa.Imaging, title_prefix: str = None):
+    def __init__(self, dataset: aa.Imaging, title_prefix: str = None,  use_jax : bool = False):
         """
         Fits a model made of ellipses to an imaging dataset via a non-linear search.
 
@@ -43,7 +43,9 @@ class AnalysisEllipse(af.Analysis):
         self.dataset = dataset
         self.title_prefix = title_prefix
 
-    def log_likelihood_function(self, instance: af.ModelInstance, xp=np) -> float:
+        super().__init__(use_jax=use_jax)
+
+    def log_likelihood_function(self, instance: af.ModelInstance) -> float:
         """
         Given an instance of the model, where the model parameters are set via a non-linear search, fit the model
         instance to the imaging dataset.

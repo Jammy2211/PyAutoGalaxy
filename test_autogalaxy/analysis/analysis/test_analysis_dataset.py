@@ -29,7 +29,7 @@ def test__instance_with_associated_adapt_images_from(masked_imaging_7x7):
         galaxy_name_image_dict=adapt_galaxy_name_image_dict,
     )
 
-    analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
+    analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7, use_jax=False)
     analysis._adapt_images = adapt_images
 
     adapt_images = analysis.adapt_images_via_instance_from(instance=instance)

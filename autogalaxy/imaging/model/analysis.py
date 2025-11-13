@@ -24,6 +24,7 @@ class AnalysisImaging(AnalysisDataset):
         settings_inversion: aa.SettingsInversion = None,
         preloads: aa.Preloads = None,
         title_prefix: str = None,
+        use_jax : bool = True,
     ):
         """
         Fits a galaxy model to an imaging dataset via a non-linear search.
@@ -62,6 +63,7 @@ class AnalysisImaging(AnalysisDataset):
             settings_inversion=settings_inversion,
             preloads=preloads,
             title_prefix=title_prefix,
+            use_jax=use_jax,
         )
 
     @property
@@ -91,7 +93,7 @@ class AnalysisImaging(AnalysisDataset):
 
         return self
 
-    def log_likelihood_function(self, instance: af.ModelInstance, xp=np) -> float:
+    def log_likelihood_function(self, instance: af.ModelInstance) -> float:
         """
         Given an instance of the model, where the model parameters are set via a non-linear search, fit the model
         instance to the imaging dataset.
@@ -128,9 +130,9 @@ class AnalysisImaging(AnalysisDataset):
         float
             The log likelihood indicating how well this model instance fitted the imaging data.
         """
-        return self.fit_from(instance=instance, xp=xp).figure_of_merit
+        return self.fit_from(instance=instance).figure_of_merit
 
-    def fit_from(self, instance: af.ModelInstance, xp=np) -> FitImaging:
+    def fit_from(self, instance: af.ModelInstance) -> FitImaging:
         """
         Given a model instance create a `FitImaging` object.
 
@@ -165,7 +167,7 @@ class AnalysisImaging(AnalysisDataset):
             dataset_model=dataset_model,
             adapt_images=adapt_images,
             settings_inversion=self.settings_inversion,
-            xp=xp,
+            xp=self._xp,
         )
 
     def save_attributes(self, paths: af.DirectoryPaths):

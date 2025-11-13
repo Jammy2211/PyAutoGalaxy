@@ -264,6 +264,7 @@ def make_analysis_imaging_7x7():
     analysis = ag.AnalysisImaging(
         dataset=make_masked_imaging_7x7(),
         settings_inversion=aa.SettingsInversion(use_w_tilde=False),
+        use_jax=False
     )
     analysis._adapt_images = make_adapt_images_7x7()
     return analysis
@@ -271,7 +272,7 @@ def make_analysis_imaging_7x7():
 
 def make_analysis_interferometer_7():
     analysis = ag.AnalysisInterferometer(
-        dataset=make_interferometer_7(),
+        dataset=make_interferometer_7(), use_jax=False
     )
     analysis._adapt_images = make_adapt_images_7x7()
     return analysis
@@ -279,6 +280,6 @@ def make_analysis_interferometer_7():
 
 def make_analysis_ellipse_7x7():
     analysis = ag.AnalysisEllipse(
-        dataset=make_masked_imaging_7x7(),
+        dataset=make_masked_imaging_7x7(), use_jax=False
     )
     return analysis

@@ -56,7 +56,7 @@ def test__figure_of_merit(
 
     model = af.Collection(ellipses=ellipse_list, multipoles=multipole_list)
 
-    analysis = ag.AnalysisEllipse(dataset=masked_imaging_7x7)
+    analysis = ag.AnalysisEllipse(dataset=masked_imaging_7x7, use_jax=False)
 
     instance = model.instance_from_prior_medians()
     fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)

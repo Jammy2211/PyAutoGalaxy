@@ -68,7 +68,6 @@ def axis_ratio_and_angle_from(
     fac = xp.sqrt(ell_comps[1] ** 2 + ell_comps[0] ** 2)
     if xp.__name__.startswith("jax"):
         import jax
-
         fac = jax.lax.min(fac, 0.999)
     else:  # NumPy
         fac = np.minimum(fac, 0.999)

@@ -18,7 +18,7 @@ def test__galaxies_via_instance(masked_imaging_7x7):
         extra_galaxies=af.Collection(extra_galaxy_0=extra_galaxy),
     )
 
-    analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7)
+    analysis = ag.AnalysisImaging(dataset=masked_imaging_7x7, use_jax=False)
 
     instance = model.instance_from_unit_vector([])
 

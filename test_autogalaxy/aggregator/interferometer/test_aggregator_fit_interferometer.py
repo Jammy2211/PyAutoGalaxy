@@ -11,7 +11,7 @@ def test__fit_interferometer_randomly_drawn_via_pdf_gen_from(
     model,
 ):
     analysis = ag.AnalysisInterferometer(
-        dataset=interferometer_7,
+        dataset=interferometer_7, use_jax=False
     )
 
     agg = aggregator_from(
@@ -78,7 +78,7 @@ def test__fit_interferometer_randomly_drawn_via_pdf_gen_from(
 def test__fit_interferometer_all_above_weight_gen(interferometer_7, samples, model):
     clean(database_file=database_file)
 
-    analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
+    analysis = ag.AnalysisInterferometer(dataset=interferometer_7, use_jax=False)
 
     agg = aggregator_from(
         database_file=database_file,
@@ -116,7 +116,7 @@ def test__fit_interferometer__adapt_images(
     adapt_images_7x7,
 ):
     analysis = ag.AnalysisInterferometer(
-        dataset=interferometer_7,
+        dataset=interferometer_7, use_jax=False
     )
     analysis._adapt_images = adapt_images_7x7
 

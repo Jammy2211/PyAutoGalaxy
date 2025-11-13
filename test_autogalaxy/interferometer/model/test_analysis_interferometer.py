@@ -12,7 +12,7 @@ directory = path.dirname(path.realpath(__file__))
 def test__make_result__result_interferometer_is_returned(interferometer_7):
     model = af.Collection(galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5)))
 
-    analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
+    analysis = ag.AnalysisInterferometer(dataset=interferometer_7, use_jax=False)
 
     search = ag.m.MockSearch(name="test_search")
 
@@ -28,7 +28,7 @@ def test__fit_figure_of_merit__matches_correct_fit_given_galaxy_profiles(
 
     model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
-    analysis = ag.AnalysisInterferometer(dataset=interferometer_7)
+    analysis = ag.AnalysisInterferometer(dataset=interferometer_7, use_jax=False)
 
     instance = model.instance_from_unit_vector([])
     fit_figure_of_merit = analysis.log_likelihood_function(instance=instance)

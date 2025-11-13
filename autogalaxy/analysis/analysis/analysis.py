@@ -1,4 +1,5 @@
 import logging
+import numpy as np
 from typing import List, Optional
 
 import autofit as af
@@ -15,7 +16,7 @@ logger.setLevel(level="INFO")
 
 class Analysis(af.Analysis):
     def __init__(
-        self, cosmology: LensingCosmology = None, preloads: aa.Preloads = None, **kwargs
+        self, cosmology: LensingCosmology = None, preloads: aa.Preloads = None, use_jax : bool = True, **kwargs
     ):
         """
         Fits a model to a dataset via a non-linear search.
@@ -35,7 +36,8 @@ class Analysis(af.Analysis):
 
         self.cosmology = cosmology or Planck15()
         self.preloads = preloads
-        self.kwargs = kwargs
+
+        super().__init__(use_jax=use_jax, **kwargs)
 
     def galaxies_via_instance_from(
         self,
