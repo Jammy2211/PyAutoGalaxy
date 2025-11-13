@@ -24,7 +24,7 @@ class AnalysisImaging(AnalysisDataset):
         settings_inversion: aa.SettingsInversion = None,
         preloads: aa.Preloads = None,
         title_prefix: str = None,
-        use_jax : bool = True,
+        use_jax: bool = True,
     ):
         """
         Fits a galaxy model to an imaging dataset via a non-linear search.

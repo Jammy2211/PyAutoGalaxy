@@ -15,7 +15,9 @@ class TestAnalysisQuantity:
         model = af.Collection(galaxies=af.Collection(galaxy_0=ag.Galaxy(redshift=0.5)))
 
         analysis = ag.AnalysisQuantity(
-            dataset=dataset_quantity_7x7_array_2d, func_str="convergence_2d_from", use_jax=False
+            dataset=dataset_quantity_7x7_array_2d,
+            func_str="convergence_2d_from",
+            use_jax=False,
         )
 
         search = ag.m.MockSearch(name="test_search")
@@ -32,7 +34,9 @@ class TestAnalysisQuantity:
         model = af.Collection(galaxies=af.Collection(galaxy=galaxy))
 
         analysis = ag.AnalysisQuantity(
-            dataset=dataset_quantity_7x7_array_2d, func_str="convergence_2d_from", use_jax=False
+            dataset=dataset_quantity_7x7_array_2d,
+            func_str="convergence_2d_from",
+            use_jax=False,
         )
 
         instance = model.instance_from_unit_vector([])

@@ -20,7 +20,9 @@ class AnalysisEllipse(af.Analysis):
     Result = ResultEllipse
     Visualizer = VisualizerEllipse
 
-    def __init__(self, dataset: aa.Imaging, title_prefix: str = None,  use_jax : bool = False):
+    def __init__(
+        self, dataset: aa.Imaging, title_prefix: str = None, use_jax: bool = False
+    ):
         """
         Fits a model made of ellipses to an imaging dataset via a non-linear search.
 

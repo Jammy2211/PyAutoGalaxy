@@ -31,7 +31,7 @@ class AnalysisInterferometer(AnalysisDataset):
         settings_inversion: aa.SettingsInversion = None,
         preloads: aa.Preloads = None,
         title_prefix: str = None,
-        use_jax : bool = True,
+        use_jax: bool = True,
     ):
         """
         Fits a galaxy model to an interferometer dataset via a non-linear search.
@@ -70,7 +70,7 @@ class AnalysisInterferometer(AnalysisDataset):
             settings_inversion=settings_inversion,
             preloads=preloads,
             title_prefix=title_prefix,
-            use_jax=use_jax
+            use_jax=use_jax,
         )
 
     @property

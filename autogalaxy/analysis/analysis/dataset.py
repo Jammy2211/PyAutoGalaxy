@@ -27,7 +27,7 @@ class AnalysisDataset(Analysis):
         settings_inversion: aa.SettingsInversion = None,
         preloads: aa.Preloads = None,
         title_prefix: str = None,
-        use_jax : bool = True,
+        use_jax: bool = True,
         **kwargs,
     ):
         """

@@ -22,7 +22,7 @@ class AnalysisQuantity(Analysis):
         func_str: str,
         cosmology: LensingCosmology = None,
         title_prefix: str = None,
-        use_jax : bool = True,
+        use_jax: bool = True,
     ):
         """
         Fits a galaxy model to a quantity dataset via a non-linear search.
