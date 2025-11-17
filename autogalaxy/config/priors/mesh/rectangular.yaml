@@ -50,3 +50,12 @@ RectangularSource:
     limits:
       lower: -100.0
       upper: 100.0
+  weight_floor:
+    type: LogUniform
+    lower_limit: 0.00001
+    upper_limit: 1.0
+    width_modifier:
+      type: Absolute
+    limits:
+      lower: 0.0
+      upper: inf
