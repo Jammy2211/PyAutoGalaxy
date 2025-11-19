@@ -97,7 +97,7 @@ class PowerLaw(PowerLawCore):
         deflection_y = complex_angle.imag
         deflection_x = complex_angle.real
 
-        rescale_factor = (self.ellipticity_rescale) ** (slope - 1)
+        rescale_factor = (self.ellipticity_rescale(xp)) ** (slope - 1)
 
         deflection_y *= rescale_factor
         deflection_x *= rescale_factor

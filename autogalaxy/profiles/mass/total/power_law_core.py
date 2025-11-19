@@ -168,9 +168,8 @@ class PowerLawCore(MassProfile):
             (1 - (1 - axis_ratio**2) * u) ** (npow + 0.5)
         )
 
-    @property
-    def ellipticity_rescale(self):
-        return (1.0 + self.axis_ratio()) / 2.0
+    def ellipticity_rescale(self, xp=np):
+        return (1.0 + self.axis_ratio(xp=xp)) / 2.0
 
     @property
     def unit_mass(self):

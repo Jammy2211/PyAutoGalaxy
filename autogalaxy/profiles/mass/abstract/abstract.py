@@ -123,7 +123,7 @@ class MassProfile(EllProfile, OperateDeflections):
                 - np.pi * radius**2.0
             )
 
-        return self.ellipticity_rescale * root_scalar(func, bracket=[1e-4, 1e4]).root
+        return self.ellipticity_rescale() * root_scalar(func, bracket=[1e-4, 1e4]).root
 
     def extract_attribute(self, cls, attr_name):
         """
