@@ -74,7 +74,7 @@ class AbstractFitInversion:
         -------
         The w-tilde matrix if the w-tilde formalism is being used for this inversion.
         """
-        if self.settings_inversion.use_w_tilde:
+        if self.dataset.w_tilde is not None:
             if self.total_mappers > 0:
                 return self.dataset.w_tilde
 

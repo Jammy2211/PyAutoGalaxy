@@ -158,7 +158,6 @@ def test__inversion_imaging_from(grid_2d_7x7, masked_imaging_7x7):
     to_inversion = ag.GalaxiesToInversion(
         dataset=masked_imaging_7x7,
         galaxies=[ag.Galaxy(redshift=0.5), g_linear],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     inversion = to_inversion.inversion
@@ -175,7 +174,6 @@ def test__inversion_imaging_from(grid_2d_7x7, masked_imaging_7x7):
     to_inversion = ag.GalaxiesToInversion(
         dataset=masked_imaging_7x7,
         galaxies=[ag.Galaxy(redshift=0.5), g0],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     inversion = to_inversion.inversion
@@ -193,9 +191,6 @@ def test__inversion_interferometer_from(grid_2d_7x7, interferometer_7):
     to_inversion = ag.GalaxiesToInversion(
         dataset=interferometer_7,
         galaxies=[ag.Galaxy(redshift=0.5), g_linear],
-        settings_inversion=ag.SettingsInversion(
-            use_w_tilde=False, use_linear_operators=False
-        ),
     )
 
     inversion = to_inversion.inversion
@@ -214,9 +209,6 @@ def test__inversion_interferometer_from(grid_2d_7x7, interferometer_7):
     to_inversion = ag.GalaxiesToInversion(
         dataset=interferometer_7,
         galaxies=[ag.Galaxy(redshift=0.5), g0],
-        settings_inversion=ag.SettingsInversion(
-            use_w_tilde=False, use_linear_operators=False
-        ),
     )
 
     inversion = to_inversion.inversion

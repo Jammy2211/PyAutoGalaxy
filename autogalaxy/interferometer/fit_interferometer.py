@@ -62,11 +62,6 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
         """
 
-        try:
-            from autoarray.inversion.inversion import inversion_util_secret
-        except ImportError:
-            settings_inversion.use_w_tilde = False
-
         self.galaxies = Galaxies(galaxies=galaxies)
 
         super().__init__(

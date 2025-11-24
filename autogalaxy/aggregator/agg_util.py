@@ -205,7 +205,6 @@ def preloads_from(
     preloads_cls,
     use_preloaded_grid: bool,
     mesh_grids_of_planes: List,
-    use_w_tilde: Optional[bool] = False,
 ) -> aa.Preloads:
     """
     Returns a `Preloads` object associated with a fit loaded via the database.
@@ -229,8 +228,6 @@ def preloads_from(
     mesh_grids_of_planes
         The list of image-plane mesh centres used when creating the overall fit which are associated with the
         preloads.
-    use_w_tilde
-        Whether to use the w-tilde formalism when recomputing fits.
 
     Returns
     -------
@@ -242,7 +239,6 @@ def preloads_from(
         if mesh_grids_of_planes is not None:
             preloads = preloads_cls(
                 image_plane_mesh_grid_pg_list=mesh_grids_of_planes,
-                use_w_tilde=use_w_tilde,
             )
 
             if len(preloads.image_plane_mesh_grid_pg_list) == 2:

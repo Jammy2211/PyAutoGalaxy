@@ -238,7 +238,6 @@ def make_fit_interferometer_7x7():
     return ag.FitInterferometer(
         dataset=make_interferometer_7(),
         galaxies=make_galaxies_7x7(),
-        settings_inversion=aa.SettingsInversion(use_w_tilde=False),
     )
 
 
@@ -246,7 +245,6 @@ def make_fit_interferometer_x2_galaxy_inversion_7x7():
     return ag.FitInterferometer(
         dataset=make_interferometer_7(),
         galaxies=make_galaxies_x2_inversion_7x7(),
-        settings_inversion=aa.SettingsInversion(use_w_tilde=False),
     )
 
 
@@ -263,7 +261,6 @@ def make_samples_summary_with_result():
 def make_analysis_imaging_7x7():
     analysis = ag.AnalysisImaging(
         dataset=make_masked_imaging_7x7(),
-        settings_inversion=aa.SettingsInversion(use_w_tilde=False),
         use_jax=False,
     )
     analysis._adapt_images = make_adapt_images_7x7()

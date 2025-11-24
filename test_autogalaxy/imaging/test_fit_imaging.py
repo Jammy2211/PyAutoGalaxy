@@ -334,7 +334,6 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
     fit = ag.FitImaging(
         dataset=masked_imaging_7x7,
         galaxies=[g0, g1_linear, g3, galaxy_pix_0, galaxy_pix_1],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert (fit.galaxy_model_image_dict[g3] == np.zeros(9)).all()

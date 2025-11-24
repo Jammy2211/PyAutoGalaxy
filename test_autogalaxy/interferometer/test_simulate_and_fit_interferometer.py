@@ -69,7 +69,6 @@ def test__perfect_fit__chi_squared_0():
     fit = ag.FitInterferometer(
         dataset=dataset,
         galaxies=[galaxy_0, galaxy_1],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit.chi_squared == pytest.approx(0.0)
@@ -88,7 +87,6 @@ def test__perfect_fit__chi_squared_0():
     fit = ag.FitInterferometer(
         dataset=dataset,
         galaxies=[galaxy_0, galaxy_1],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
     assert abs(fit.chi_squared) < 1.0e-4
 
@@ -133,7 +131,6 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
     fit = ag.FitInterferometer(
         dataset=dataset,
         galaxies=[galaxy_0, galaxy_1],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit.figure_of_merit == pytest.approx(-5.05513095, 1.0e-2)
@@ -178,7 +175,6 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
     fit = ag.FitInterferometer(
         dataset=dataset,
         galaxies=[galaxy],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     galaxy_linear = ag.Galaxy(
@@ -191,7 +187,7 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
         dataset=dataset,
         galaxies=[galaxy_linear],
         settings_inversion=ag.SettingsInversion(
-            use_w_tilde=False, no_regularization_add_to_curvature_diag_value=False
+           no_regularization_add_to_curvature_diag_value=False
         ),
     )
 
