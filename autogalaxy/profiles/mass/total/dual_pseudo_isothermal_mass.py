@@ -298,7 +298,7 @@ class PIEMass(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        grid = xp.asarray(grid)
+
         if grid.ndim != 2 or grid.shape[1] != 2:
             raise ValueError("Grid must be a 2D array with shape (n, 2)")
         ellip = self._ellip()
@@ -483,7 +483,7 @@ class dPIEMass(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        grid = xp.asarray(grid)
+
         if grid.ndim != 2 or grid.shape[1] != 2:
             raise ValueError("Grid must be a 2D array with shape (n, 2)")
         ellip = self._ellip()
@@ -626,7 +626,7 @@ class dPIEMassSph(dPIEMass):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        grid = xp.asarray(grid)
+
         if grid.ndim != 2 or grid.shape[1] != 2:
             raise ValueError("Grid must be a 2D array with shape (n, 2)")
 
