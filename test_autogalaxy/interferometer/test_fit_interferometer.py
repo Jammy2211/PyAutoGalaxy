@@ -48,7 +48,6 @@ def test__fit_figure_of_merit(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         galaxies=[ag.Galaxy(redshift=0.5), g0],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit.perform_inversion is True
@@ -68,7 +67,6 @@ def test__fit_figure_of_merit(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         galaxies=[galaxy_light, galaxy_pix],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit.perform_inversion is True
@@ -125,7 +123,6 @@ def test___galaxy_model_image_dict(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         galaxies=[g0, g1, g2],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     g0_image = g0.image_2d_from(grid=interferometer_7.grids.lp)
@@ -144,7 +141,6 @@ def test___galaxy_model_image_dict(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         galaxies=[g0_linear],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit.galaxy_model_image_dict[g0_linear][4] == pytest.approx(
@@ -164,7 +160,6 @@ def test___galaxy_model_image_dict(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         galaxies=[g0, galaxy_pix_0],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     mapper_grids = pixelization.mesh.mapper_grids_from(
@@ -183,7 +178,6 @@ def test___galaxy_model_image_dict(interferometer_7):
     inversion = ag.Inversion(
         dataset=interferometer_7,
         linear_obj_list=[mapper],
-        settings=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert (fit.galaxy_model_image_dict[g0].native == 0.0 + 0.0j * np.zeros((7,))).all()
@@ -204,7 +198,6 @@ def test___galaxy_model_image_dict(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         galaxies=[g0_linear, g1, galaxy_pix_0, galaxy_pix_1],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit.galaxy_model_image_dict[g0_linear][4] == pytest.approx(
@@ -243,7 +236,6 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         galaxies=[g0, g1, g2],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     g0_visibilities = g0.visibilities_from(
@@ -270,7 +262,6 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         galaxies=[g0_linear],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit.galaxy_model_visibilities_dict[g0_linear][0] == pytest.approx(
@@ -290,7 +281,6 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         galaxies=[g0, galaxy_pix_0],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     mapper_grids = pixelization.mesh.mapper_grids_from(
@@ -308,8 +298,7 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
 
     inversion = ag.Inversion(
         dataset=interferometer_7,
-        linear_obj_list=[mapper],
-        settings=ag.SettingsInversion(use_w_tilde=False),
+        linear_obj_list=[mapper]
     )
 
     assert (fit.galaxy_model_visibilities_dict[g0] == 0.0 + 0.0j * np.zeros((7,))).all()
@@ -329,7 +318,6 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         galaxies=[g0_linear, g1, galaxy_pix_0, galaxy_pix_1],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit.galaxy_model_visibilities_dict[g0_linear][0] == pytest.approx(

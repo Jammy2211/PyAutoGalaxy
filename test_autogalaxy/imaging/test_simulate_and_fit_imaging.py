@@ -184,7 +184,6 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
     fit_linear = ag.FitImaging(
         dataset=masked_dataset,
         galaxies=[galaxy_linear],
-        settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
     assert fit_linear.inversion.reconstruction == pytest.approx(

@@ -40,8 +40,8 @@ def test_no_modify_state(light_profile):
 
     fit_inversion = FitInversion(
         model_obj=model_obj,
-        settings_inversion=aa.SettingsInversion(use_linear_operators=True),
         light_profiles=[light_profile],
+        settings_inversion=aa.SettingsInversion(),
     )
     result = fit_inversion.model_obj_linear_light_profiles_to_light_profiles
 
