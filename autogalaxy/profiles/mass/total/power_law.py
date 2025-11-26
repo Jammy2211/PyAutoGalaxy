@@ -40,7 +40,9 @@ class PowerLaw(PowerLawCore):
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
 
-        alpha = self.deflections_yx_2d_from(grid=aa.Grid2DIrregular(grid), xp=xp, **kwargs)
+        alpha = self.deflections_yx_2d_from(
+            grid=aa.Grid2DIrregular(grid), xp=xp, **kwargs
+        )
 
         alpha_x = alpha[:, 1]
         alpha_y = alpha[:, 0]

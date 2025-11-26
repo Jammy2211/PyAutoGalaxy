@@ -242,7 +242,9 @@ class OperateDeflections:
 
         return aa.Array2D(values=1 / det_jacobian, mask=grid.mask)
 
-    def hessian_from(self, grid, buffer: float = 0.01, deflections_func=None, xp=np) -> Tuple:
+    def hessian_from(
+        self, grid, buffer: float = 0.01, deflections_func=None, xp=np
+    ) -> Tuple:
         """
         Returns the Hessian of the lensing object, where the Hessian is the second partial derivatives of the
         potential (see equation 55 https://inspirehep.net/literature/419263):

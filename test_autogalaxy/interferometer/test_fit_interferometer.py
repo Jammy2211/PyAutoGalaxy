@@ -296,10 +296,7 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
         regularization=pixelization.regularization,
     )
 
-    inversion = ag.Inversion(
-        dataset=interferometer_7,
-        linear_obj_list=[mapper]
-    )
+    inversion = ag.Inversion(dataset=interferometer_7, linear_obj_list=[mapper])
 
     assert (fit.galaxy_model_visibilities_dict[g0] == 0.0 + 0.0j * np.zeros((7,))).all()
 

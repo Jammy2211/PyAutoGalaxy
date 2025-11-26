@@ -100,6 +100,25 @@ class AnalysisDataset(Analysis):
             the imaging data.
         """
 
+        # Ensures preloaded in memory so repeated calls are fast
+
+        self.dataset.grids.lp
+        self.dataset.grids.lp.over_sampled
+        self.dataset.grids.lp.over_sampler
+
+        self.dataset.grids.pixelization
+        self.dataset.grids.pixelization.over_sampled
+        self.dataset.grids.pixelization.over_sampler
+
+        self.dataset.grids.blurring
+
+        if self.dataset.grids.blurring is not None:
+
+            self.dataset.grids.blurring.over_sampled
+            self.dataset.grids.blurring.over_sampler
+
+        self.dataset.grids.border_relocator
+
         if self.adapt_image_maker is not None:
             if not paths.is_complete:
                 self._adapt_images = self.adapt_image_maker.adapt_images

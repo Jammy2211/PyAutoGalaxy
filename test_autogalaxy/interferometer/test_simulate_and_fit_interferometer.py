@@ -187,7 +187,7 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
         dataset=dataset,
         galaxies=[galaxy_linear],
         settings_inversion=ag.SettingsInversion(
-           no_regularization_add_to_curvature_diag_value=False
+            no_regularization_add_to_curvature_diag_value=False
         ),
     )
 
