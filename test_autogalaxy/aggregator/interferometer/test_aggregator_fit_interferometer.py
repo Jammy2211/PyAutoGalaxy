@@ -113,7 +113,7 @@ def test__fit_interferometer__adapt_images(
     model,
     adapt_images_7x7,
 ):
-    analysis = ag.AnalysisInterferometer(dataset=interferometer_7, use_jax=False)
+    analysis = ag.AnalysisInterferometer(dataset=interferometer_7, adapt_images=adapt_images_7x7, use_jax=False)
     analysis._adapt_images = adapt_images_7x7
 
     agg = aggregator_from(

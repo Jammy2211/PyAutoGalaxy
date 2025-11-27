@@ -98,7 +98,7 @@ def test__image_plane_mesh_grid_list(masked_imaging_7x7):
 
     image_plane_mesh_grid_list = to_inversion.image_plane_mesh_grid_list
 
-    assert image_plane_mesh_grid_list[0] is None
+    assert image_plane_mesh_grid_list is None
 
 
 def test__mapper_galaxy_dict(masked_imaging_7x7):
