@@ -396,9 +396,6 @@ class GalaxiesToInversion(AbstractToInversion):
         image_plane_mesh_grid_list = []
 
         for galaxy in self.galaxies.galaxies_with_cls_list_from(cls=aa.Pixelization):
-
-            pixelization = galaxy.cls_list_from(cls=aa.Pixelization)[0]
-
             try:
                 image_plane_mesh_grid = self.adapt_images.galaxy_image_plane_mesh_grid_dict[galaxy]
             except (AttributeError, KeyError, TypeError):
