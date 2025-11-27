@@ -193,6 +193,26 @@ def test__fit_imaging__adapt_images(agg_7x7, adapt_images_7x7):
                 == list(adapt_images_7x7.galaxy_name_image_dict.values())[0]
             ).all()
 
+            print(
+                list(
+                    fit_list[0].adapt_images.galaxy_image_plane_mesh_grid_dict.values()
+                )[0]
+            )
+            print(
+                list(adapt_images_7x7.galaxy_name_image_plane_mesh_grid_dict.values())[
+                    0
+                ]
+            )
+
+            assert (
+                list(
+                    fit_list[0].adapt_images.galaxy_image_plane_mesh_grid_dict.values()
+                )[0]
+                == list(
+                    adapt_images_7x7.galaxy_name_image_plane_mesh_grid_dict.values()
+                )[0]
+            ).all()
+
     assert i == 2
 
     # clean(database_file=database_file)

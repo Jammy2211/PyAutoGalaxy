@@ -11,11 +11,68 @@ if TYPE_CHECKING:
     from autogalaxy.galaxy.galaxy import Galaxy
 
 
+def galaxy_name_image_dict_via_result_from(
+    result, use_model_images: bool = False
+) -> "AdaptImages":
+    """
+    Returns the adapt-images from a non-linear search result.
+
+    For model-fitting, the adapt-images are typically setup using the maximum log likelihood model of the
+    previous model-fit. This means the model-fitting is used to cleanly deblend the light of the different
+    galaxies in the image (e.g. separate the lens light from the source light).
+
+    This method uses attributes of a result (e.g. dictionary mapping galaxy instances to their model-images)
+    to create the adapt-images.
+
+    This can use either:
+
+    - The model image of each galaxy in the best-fit model.
+    - The subtracted image of each galaxy in the best-fit model, where the subtracted image is the dataset
+      minus the model images of all other galaxies.
+
+    Certain models produce galaxy-images with negative flux values (e.g. a pixelization), which can cause
+    numerical issues with the adaptive schemes. To prevent this, we set a minimum flux value for each
+    galaxy-image, which is a fraction of the maximum flux value of that image defined via a config file.
+
+    Parameters
+    ----------
+    result
+        The result of a previous model-fit, which contains the model-image of each galaxy.
+    use_model_images
+        If True, the model images of the galaxies are used to create the adapt images. If False, the subtracted
+        images of the galaxies are used.
+
+    Returns
+    -------
+    The adapt-images, which are the model-image of each galaxy inferred via the previous model-fit.
+    """
+    adapt_minimum_percent = conf.instance["general"]["adapt"]["adapt_minimum_percent"]
+
+    galaxy_name_image_dict = {}
+
+    for path, galaxy in result.path_galaxy_tuples:
+        if use_model_images:
+            galaxy_image = result.model_image_galaxy_dict[path]
+        else:
+            galaxy_image = result.subtracted_signal_to_noise_map_galaxy_dict[path]
+
+        minimum_galaxy_value = adapt_minimum_percent * np.max(galaxy_image.array)
+        galaxy_image[galaxy_image < minimum_galaxy_value] = minimum_galaxy_value
+
+        galaxy_name_image_dict[path] = galaxy_image
+
+    return galaxy_name_image_dict
+
+
 class AdaptImages:
     def __init__(
         self,
         galaxy_image_dict: Optional[Dict[Galaxy, aa.Array2D]] = None,
         galaxy_name_image_dict: Optional[Dict[Tuple[str, ...], aa.Array2D]] = None,
+        galaxy_image_plane_mesh_grid_dict: Optional[Dict[Galaxy, aa.Array2D]] = None,
+        galaxy_name_image_plane_mesh_grid_dict: Optional[
+            Dict[Tuple[str, ...], aa.Grid2DIrregular]
+        ] = None,
     ):
         """
         Contains the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
@@ -54,6 +111,11 @@ class AdaptImages:
         self.galaxy_image_dict = galaxy_image_dict
         self.galaxy_name_image_dict = galaxy_name_image_dict
 
+        self.galaxy_image_plane_mesh_grid_dict = galaxy_image_plane_mesh_grid_dict
+        self.galaxy_name_image_plane_mesh_grid_dict = (
+            galaxy_name_image_plane_mesh_grid_dict
+        )
+
     @property
     def mask(self) -> aa.Mask2D:
         """
@@ -85,59 +147,6 @@ class AdaptImages:
 
         return adapt_model_image
 
-    @classmethod
-    def from_result(cls, result, use_model_images: bool = False) -> "AdaptImages":
-        """
-        Returns the adapt-images from a non-linear search result.
-
-        For model-fitting, the adapt-images are typically setup using the maximum log likelihood model of the
-        previous model-fit. This means the model-fitting is used to cleanly deblend the light of the different
-        galaxies in the image (e.g. separate the lens light from the source light).
-
-        This method uses attributes of a result (e.g. dictionary mapping galaxy instances to their model-images)
-        to create the adapt-images.
-
-        This can use either:
-
-        - The model image of each galaxy in the best-fit model.
-        - The subtracted image of each galaxy in the best-fit model, where the subtracted image is the dataset
-          minus the model images of all other galaxies.
-
-        Certain models produce galaxy-images with negative flux values (e.g. a pixelization), which can cause
-        numerical issues with the adaptive schemes. To prevent this, we set a minimum flux value for each
-        galaxy-image, which is a fraction of the maximum flux value of that image defined via a config file.
-
-        Parameters
-        ----------
-        result
-            The result of a previous model-fit, which contains the model-image of each galaxy.
-        use_model_images
-            If True, the model images of the galaxies are used to create the adapt images. If False, the subtracted
-            images of the galaxies are used.
-
-        Returns
-        -------
-        The adapt-images, which are the model-image of each galaxy inferred via the previous model-fit.
-        """
-        adapt_minimum_percent = conf.instance["general"]["adapt"][
-            "adapt_minimum_percent"
-        ]
-
-        galaxy_name_image_dict = {}
-
-        for path, galaxy in result.path_galaxy_tuples:
-            if use_model_images:
-                galaxy_image = result.model_image_galaxy_dict[path]
-            else:
-                galaxy_image = result.subtracted_signal_to_noise_map_galaxy_dict[path]
-
-            minimum_galaxy_value = adapt_minimum_percent * np.max(galaxy_image.array)
-            galaxy_image[galaxy_image < minimum_galaxy_value] = minimum_galaxy_value
-
-            galaxy_name_image_dict[path] = galaxy_image
-
-        return AdaptImages(galaxy_name_image_dict=galaxy_name_image_dict)
-
     def updated_via_instance_from(self, instance, mask=None) -> "AdaptImages":
         """
         Returns adapt-images which have been updated to map galaxy instances instead of galaxy names.
@@ -168,16 +177,37 @@ class AdaptImages:
         """
         from autogalaxy.galaxy.galaxy import Galaxy
 
-        galaxy_image_dict = {}
+        galaxy_image_dict = None
 
-        for galaxy_name, galaxy in instance.path_instance_tuples_for_class(Galaxy):
-            galaxy_name = str(galaxy_name)
+        if self.galaxy_name_image_dict is not None:
 
-            if galaxy_name in self.galaxy_name_image_dict:
-                galaxy_image_dict[galaxy] = self.galaxy_name_image_dict[galaxy_name]
+            galaxy_image_dict = {}
 
-        if mask is not None:
-            for key, image in galaxy_image_dict.items():
-                galaxy_image_dict[key] = aa.Array2D(values=image, mask=mask)
+            for galaxy_name, galaxy in instance.path_instance_tuples_for_class(Galaxy):
+                galaxy_name = str(galaxy_name)
 
-        return AdaptImages(galaxy_image_dict=galaxy_image_dict)
+                if galaxy_name in self.galaxy_name_image_dict:
+                    galaxy_image_dict[galaxy] = self.galaxy_name_image_dict[galaxy_name]
+
+            if mask is not None:
+                for key, image in galaxy_image_dict.items():
+                    galaxy_image_dict[key] = aa.Array2D(values=image, mask=mask)
+
+        galaxy_image_plane_mesh_grid_dict = None
+
+        if self.galaxy_name_image_plane_mesh_grid_dict is not None:
+
+            galaxy_image_plane_mesh_grid_dict = {}
+
+            for galaxy_name, galaxy in instance.path_instance_tuples_for_class(Galaxy):
+                galaxy_name = str(galaxy_name)
+
+                if galaxy_name in self.galaxy_name_image_plane_mesh_grid_dict:
+                    galaxy_image_plane_mesh_grid_dict[galaxy] = (
+                        self.galaxy_name_image_plane_mesh_grid_dict[galaxy_name]
+                    )
+
+        return AdaptImages(
+            galaxy_image_dict=galaxy_image_dict,
+            galaxy_image_plane_mesh_grid_dict=galaxy_image_plane_mesh_grid_dict,
+        )

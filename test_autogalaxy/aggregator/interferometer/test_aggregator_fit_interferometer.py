@@ -113,7 +113,9 @@ def test__fit_interferometer__adapt_images(
     model,
     adapt_images_7x7,
 ):
-    analysis = ag.AnalysisInterferometer(dataset=interferometer_7, use_jax=False)
+    analysis = ag.AnalysisInterferometer(
+        dataset=interferometer_7, adapt_images=adapt_images_7x7, use_jax=False
+    )
     analysis._adapt_images = adapt_images_7x7
 
     agg = aggregator_from(
@@ -135,6 +137,15 @@ def test__fit_interferometer__adapt_images(
             assert (
                 list(fit_list[0].adapt_images.galaxy_image_dict.values())[0]
                 == list(adapt_images_7x7.galaxy_name_image_dict.values())[0]
+            ).all()
+
+            assert (
+                list(
+                    fit_list[0].adapt_images.galaxy_image_plane_mesh_grid_dict.values()
+                )[0]
+                == list(
+                    adapt_images_7x7.galaxy_name_image_plane_mesh_grid_dict.values()
+                )[0]
             ).all()
 
     assert i == 2

@@ -638,7 +638,6 @@ def test__output_to_and_load_from_json():
         light=ag.lp.Sersic(intensity=1.0),
         mass=ag.mp.Isothermal(einstein_radius=1.0),
         pixelization=ag.Pixelization(
-            image_mesh=ag.image_mesh.Overlay(shape=(3, 3)),
             mesh=ag.mesh.Voronoi(),
             regularization=ag.reg.Constant(),
         ),
@@ -651,4 +650,3 @@ def test__output_to_and_load_from_json():
     assert galaxy_from_json.redshift == 1.0
     assert galaxy_from_json.light.intensity == 1.0
     assert galaxy_from_json.mass.einstein_radius == 1.0
-    assert galaxy_from_json.pixelization.image_mesh.shape == (3, 3)
