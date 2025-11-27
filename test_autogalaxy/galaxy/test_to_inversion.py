@@ -56,9 +56,17 @@ def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
 
 
 def test__image_plane_mesh_grid_list(masked_imaging_7x7):
-    pixelization = ag.m.MockPixelization(
-        image_mesh=ag.m.MockImageMesh(image_plane_mesh_grid=np.array([1.0, 1.0]))
+
+    image_mesh = ag.m.MockImageMesh(
+        image_plane_mesh_grid=np.array([1.0, 1.0])
     )
+
+    adapt_images = ag.AdaptImages(
+        galaxy_image_dict={galaxy_pix: 2},
+        galaxy_name_image_plane_mesh_grid_dict={galaxy_pix: np.array([2.0, 2.0])},
+    )
+
+    pixelization = ag.m.MockPixelization()
 
     galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
@@ -75,8 +83,6 @@ def test__image_plane_mesh_grid_list(masked_imaging_7x7):
         redshift=0.5,
         pixelization=pixelization,
     )
-
-    adapt_images = ag.AdaptImages(galaxy_image_dict={galaxy_pix: 2})
 
     to_inversion = ag.GalaxiesToInversion(
         galaxies=[galaxy_pix], dataset=masked_imaging_7x7, adapt_images=adapt_images

@@ -7,7 +7,7 @@ from autoconf.dictable import to_dict
 import autofit as af
 import autoarray as aa
 
-from autogalaxy.analysis.adapt_images.adapt_image_maker import AdaptImageMaker
+from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.analysis.analysis.dataset import AnalysisDataset
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.interferometer.model.result import ResultInterferometer
@@ -26,7 +26,7 @@ class AnalysisInterferometer(AnalysisDataset):
     def __init__(
         self,
         dataset: aa.Interferometer,
-        adapt_image_maker: Optional[AdaptImageMaker] = None,
+        adapt_images: Optional[AdaptImages] = None,
         cosmology: LensingCosmology = None,
         settings_inversion: aa.SettingsInversion = None,
         preloads: aa.Preloads = None,
@@ -52,8 +52,8 @@ class AnalysisInterferometer(AnalysisDataset):
         ----------
         dataset
             The interferometer dataset that the model is fitted too.
-        adapt_image_maker
-            Makes the adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
+        adapt_images
+            The adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
@@ -65,7 +65,7 @@ class AnalysisInterferometer(AnalysisDataset):
         """
         super().__init__(
             dataset=dataset,
-            adapt_image_maker=adapt_image_maker,
+            adapt_images=adapt_images,
             cosmology=cosmology,
             settings_inversion=settings_inversion,
             preloads=preloads,

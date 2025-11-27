@@ -279,25 +279,28 @@ class PlotterInterface:
             mat_plot_2d=mat_plot_2d,
         )
 
-        if should_plot("subplot_adapt_images"):
-            adapt_plotter.subplot_adapt_images(
-                adapt_galaxy_name_image_dict=adapt_images.galaxy_name_image_dict
-            )
+        if adapt_images.galaxy_name_image_dict is not None:
 
-        if should_plot("fits_adapt_images"):
-            image_list = [
-                adapt_images.galaxy_name_image_dict[name].native_for_fits
-                for name in adapt_images.galaxy_name_image_dict.keys()
-            ]
+            if should_plot("subplot_adapt_images"):
+                adapt_plotter.subplot_adapt_images(
+                    adapt_galaxy_name_image_dict=adapt_images.galaxy_name_image_dict
+                )
 
-            hdu_list = hdu_list_for_output_from(
-                values_list=[
-                    image_list[0].mask.astype("float"),
+            if should_plot("fits_adapt_images"):
+
+                image_list = [
+                    adapt_images.galaxy_name_image_dict[name].native_for_fits
+                    for name in adapt_images.galaxy_name_image_dict.keys()
                 ]
-                + image_list,
-                ext_name_list=["mask"]
-                + list(adapt_images.galaxy_name_image_dict.keys()),
-                header_dict=adapt_images.mask.header_dict,
-            )
 
-            hdu_list.writeto(self.image_path / "adapt_images.fits", overwrite=True)
+                hdu_list = hdu_list_for_output_from(
+                    values_list=[
+                        image_list[0].mask.astype("float"),
+                    ]
+                    + image_list,
+                    ext_name_list=["mask"]
+                    + list(adapt_images.galaxy_name_image_dict.keys()),
+                    header_dict=adapt_images.mask.header_dict,
+                )
+
+                hdu_list.writeto(self.image_path / "adapt_images.fits", overwrite=True)

@@ -56,7 +56,7 @@ from autoarray.structures.visibilities import VisibilitiesNoiseMap  # noqa
 
 from .analysis import model_util
 from .analysis.adapt_images.adapt_images import AdaptImages
-from .analysis.adapt_images.adapt_image_maker import AdaptImageMaker
+from .analysis.adapt_images.adapt_images import galaxy_name_image_dict_via_result_from
 from . import aggregator as agg
 from . import exc
 from . import plot

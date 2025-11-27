@@ -396,34 +396,12 @@ class GalaxiesToInversion(AbstractToInversion):
         image_plane_mesh_grid_list = []
 
         for galaxy in self.galaxies.galaxies_with_cls_list_from(cls=aa.Pixelization):
+
             pixelization = galaxy.cls_list_from(cls=aa.Pixelization)[0]
 
-            if pixelization.image_mesh is not None:
-                try:
-                    adapt_data = self.adapt_images.galaxy_image_dict[galaxy]
-                except (AttributeError, KeyError):
-                    adapt_data = None
-
-                    if pixelization.image_mesh.uses_adapt_images:
-                        raise aa.exc.PixelizationException(
-                            """
-                            Attempted to perform fit using a pixelization which requires an 
-                            image-mesh (E.g. KMeans, Hilbert).
-                            
-                            However, the adapt-images passed to the fit (E.g. FitImaging, FitInterferometer) 
-                            is None. Without an adapt image, an image-mesh cannot be used.
-                            """
-                        )
-
-                image_plane_mesh_grid = (
-                    pixelization.image_mesh.image_plane_mesh_grid_from(
-                        mask=self.dataset.mask,
-                        adapt_data=adapt_data,
-                        settings=self.settings_inversion,
-                    )
-                )
-
-            else:
+            try:
+                image_plane_mesh_grid = self.adapt_images.galaxy_image_plane_mesh_grid_dict[galaxy]
+            except (AttributeError, KeyError, TypeError):
                 image_plane_mesh_grid = None
 
             image_plane_mesh_grid_list.append(image_plane_mesh_grid)

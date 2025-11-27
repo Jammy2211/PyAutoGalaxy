@@ -109,7 +109,6 @@ def source_custom_model_from(result: Result, source_is_model: bool = False) -> a
     if source_is_model:
         pixelization = af.Model(
             aa.Pixelization,
-            image_mesh=result.instance.galaxies.source.pixelization.image_mesh,
             mesh=result.instance.galaxies.source.pixelization.mesh,
             regularization=result.model.galaxies.source.pixelization.regularization,
         )
@@ -122,7 +121,6 @@ def source_custom_model_from(result: Result, source_is_model: bool = False) -> a
 
     pixelization = af.Model(
         aa.Pixelization,
-        image_mesh=result.instance.galaxies.source.pixelization.image_mesh,
         mesh=result.instance.galaxies.source.pixelization.mesh,
         regularization=result.instance.galaxies.source.pixelization.regularization,
     )

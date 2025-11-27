@@ -7,7 +7,6 @@ from autoconf.dictable import to_dict, output_to_json
 import autofit as af
 import autoarray as aa
 
-from autogalaxy.analysis.adapt_images.adapt_image_maker import AdaptImageMaker
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.cosmology.lensing import LensingCosmology
 from autogalaxy.analysis.analysis.analysis import Analysis
@@ -22,7 +21,7 @@ class AnalysisDataset(Analysis):
     def __init__(
         self,
         dataset: Union[aa.Imaging, aa.Interferometer],
-        adapt_image_maker: Optional[AdaptImageMaker] = None,
+        adapt_images: Optional[AdaptImages] = None,
         cosmology: LensingCosmology = None,
         settings_inversion: aa.SettingsInversion = None,
         preloads: aa.Preloads = None,
@@ -41,8 +40,8 @@ class AnalysisDataset(Analysis):
         ----------
         dataset
             The dataset that is the model is fitted too.
-        adapt_image_maker
-            Makes the adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
+        adapt_images
+            The adapt-model image and galaxies images of a previous result in a model-fitting pipeline, which are
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
@@ -61,25 +60,11 @@ class AnalysisDataset(Analysis):
         )
 
         self.dataset = dataset
-        self.adapt_image_maker = adapt_image_maker
-        self._adapt_images = None
+        self.adapt_images = adapt_images
 
         self.settings_inversion = settings_inversion or aa.SettingsInversion()
 
         self.title_prefix = title_prefix
-
-    @property
-    def adapt_images(self):
-
-        if self._adapt_images is not None:
-            return self._adapt_images
-
-        if self.adapt_image_maker is None:
-            return None
-
-        self._adapt_images = self.adapt_image_maker.adapt_images
-
-        return self._adapt_images
 
     def modify_before_fit(self, paths: af.DirectoryPaths, model: af.Collection):
         """
@@ -118,10 +103,6 @@ class AnalysisDataset(Analysis):
             self.dataset.grids.blurring.over_sampler
 
         self.dataset.grids.border_relocator
-
-        if self.adapt_image_maker is not None:
-            if not paths.is_complete:
-                self._adapt_images = self.adapt_image_maker.adapt_images
 
         super().modify_before_fit(paths=paths, model=model)
 

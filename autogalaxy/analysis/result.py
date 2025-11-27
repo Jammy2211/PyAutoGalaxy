@@ -120,33 +120,3 @@ class ResultDataset(Result):
             galaxy_path: galaxy_subtracted_signal_to_noise_map_dict[galaxy]
             for galaxy_path, galaxy in self.path_galaxy_tuples
         }
-
-    def adapt_images_from(self, use_model_images: bool = False) -> AdaptImages:
-        """
-        Returns the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
-        reconstructed galaxy's morphology.
-
-        This can use either:
-
-        - The model image of each galaxy in the best-fit model.
-        - The subtracted image of each galaxy in the best-fit model, where the subtracted image is the dataset
-          minus the model images of all other galaxies.
-
-        In **PyAutoLens** these adapt images have had lensing calculations performed on them and therefore for source
-        galaxies are their lensed model images in the image-plane.
-
-        Parameters
-        ----------
-        use_model_images
-            If True, the model images of the galaxies are used to create the adapt images. If False, the subtracted
-            images of the galaxies are used.
-        """
-
-        return AdaptImages.from_result(
-            result=self,
-            use_model_images=use_model_images,
-        )
-
-    @property
-    def adapt_image_maker(self):
-        return self.analysis.adapt_image_maker
