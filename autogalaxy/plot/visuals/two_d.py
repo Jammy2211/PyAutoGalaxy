@@ -86,9 +86,7 @@ class Visuals2D(aplt.Visuals2D):
                     grid=self.multiple_images.array
                 )
             except (AttributeError, ValueError):
-                plotter.multiple_images_scatter.scatter_grid(
-                    grid=self.multiple_images
-                )
+                plotter.multiple_images_scatter.scatter_grid(grid=self.multiple_images)
 
         if self.tangential_critical_curves is not None:
             try:

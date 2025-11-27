@@ -1,5 +1,6 @@
 from __future__ import annotations
 import csv
+import numpy as np
 import os
 from typing import List, Union, TYPE_CHECKING
 
@@ -286,7 +287,9 @@ class PlotterInterface:
                     adapt_galaxy_name_image_dict=adapt_images.galaxy_name_image_dict
                 )
 
-            if should_plot("fits_adapt_images"):
+        if should_plot("fits_adapt_images"):
+
+            if adapt_images.galaxy_name_image_dict is not None:
 
                 image_list = [
                     adapt_images.galaxy_name_image_dict[name].native_for_fits
@@ -304,3 +307,23 @@ class PlotterInterface:
                 )
 
                 hdu_list.writeto(self.image_path / "adapt_images.fits", overwrite=True)
+
+            if adapt_images.galaxy_name_image_plane_mesh_grid_dict is not None:
+
+                image_plane_mesh_grid_list = [
+                    adapt_images.galaxy_name_image_plane_mesh_grid_dict[name].native
+                    for name in adapt_images.galaxy_name_image_plane_mesh_grid_dict.keys()
+                ]
+
+                print(list(adapt_images.galaxy_name_image_plane_mesh_grid_dict.keys()))
+
+                hdu_list = hdu_list_for_output_from(
+                    values_list=[np.array([1])] + image_plane_mesh_grid_list,
+                    ext_name_list=[""]
+                    + list(adapt_images.galaxy_name_image_plane_mesh_grid_dict.keys()),
+                )
+
+                hdu_list.writeto(
+                    self.image_path / "adapt_image_plane_mesh_grids.fits",
+                    overwrite=True,
+                )

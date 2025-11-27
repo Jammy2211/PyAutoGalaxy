@@ -66,7 +66,7 @@ def test__image_plane_mesh_grid_list(masked_imaging_7x7):
 
     adapt_images = ag.AdaptImages(
         galaxy_image_dict={galaxy_pix: 2},
-        galaxy_image_plane_mesh_grid_dict={galaxy_pix: 3}
+        galaxy_image_plane_mesh_grid_dict={galaxy_pix: 3},
     )
 
     to_inversion = ag.GalaxiesToInversion(

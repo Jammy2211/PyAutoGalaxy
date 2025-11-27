@@ -11,7 +11,9 @@ if TYPE_CHECKING:
     from autogalaxy.galaxy.galaxy import Galaxy
 
 
-def galaxy_name_image_dict_via_result_from(result, use_model_images: bool = False) -> "AdaptImages":
+def galaxy_name_image_dict_via_result_from(
+    result, use_model_images: bool = False
+) -> "AdaptImages":
     """
     Returns the adapt-images from a non-linear search result.
 
@@ -44,9 +46,7 @@ def galaxy_name_image_dict_via_result_from(result, use_model_images: bool = Fals
     -------
     The adapt-images, which are the model-image of each galaxy inferred via the previous model-fit.
     """
-    adapt_minimum_percent = conf.instance["general"]["adapt"][
-        "adapt_minimum_percent"
-    ]
+    adapt_minimum_percent = conf.instance["general"]["adapt"]["adapt_minimum_percent"]
 
     galaxy_name_image_dict = {}
 
@@ -70,7 +70,9 @@ class AdaptImages:
         galaxy_image_dict: Optional[Dict[Galaxy, aa.Array2D]] = None,
         galaxy_name_image_dict: Optional[Dict[Tuple[str, ...], aa.Array2D]] = None,
         galaxy_image_plane_mesh_grid_dict: Optional[Dict[Galaxy, aa.Array2D]] = None,
-        galaxy_name_image_plane_mesh_grid_dict: Optional[Dict[Tuple[str, ...], aa.Grid2DIrregular]] = None,
+        galaxy_name_image_plane_mesh_grid_dict: Optional[
+            Dict[Tuple[str, ...], aa.Grid2DIrregular]
+        ] = None,
     ):
         """
         Contains the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
@@ -201,7 +203,9 @@ class AdaptImages:
                 galaxy_name = str(galaxy_name)
 
                 if galaxy_name in self.galaxy_name_image_plane_mesh_grid_dict:
-                    galaxy_image_plane_mesh_grid_dict[galaxy] = self.galaxy_name_image_plane_mesh_grid_dict[galaxy_name]
+                    galaxy_image_plane_mesh_grid_dict[galaxy] = (
+                        self.galaxy_name_image_plane_mesh_grid_dict[galaxy_name]
+                    )
 
         return AdaptImages(
             galaxy_image_dict=galaxy_image_dict,

@@ -8,7 +8,9 @@ import autogalaxy as ag
 directory = path.dirname(path.realpath(__file__))
 
 
-def test__instance_with_associated_adapt_images_from__galaxy_name_image_dict(masked_imaging_7x7):
+def test__instance_with_associated_adapt_images_from__galaxy_name_image_dict(
+    masked_imaging_7x7,
+):
     galaxies = af.ModelInstance()
     galaxies.galaxy = ag.Galaxy(redshift=0.5)
     galaxies.source = ag.Galaxy(redshift=1.0)
@@ -30,9 +32,7 @@ def test__instance_with_associated_adapt_images_from__galaxy_name_image_dict(mas
     )
 
     analysis = ag.AnalysisImaging(
-        dataset=masked_imaging_7x7,
-        adapt_images=adapt_images,
-        use_jax=False
+        dataset=masked_imaging_7x7, adapt_images=adapt_images, use_jax=False
     )
 
     adapt_images = analysis.adapt_images_via_instance_from(instance=instance)
@@ -45,7 +45,9 @@ def test__instance_with_associated_adapt_images_from__galaxy_name_image_dict(mas
     )
 
 
-def test__instance_with_associated_adapt_images_from__galaxy_name_image_plane_mesh_grid_dict(masked_imaging_7x7):
+def test__instance_with_associated_adapt_images_from__galaxy_name_image_plane_mesh_grid_dict(
+    masked_imaging_7x7,
+):
     galaxies = af.ModelInstance()
     galaxies.galaxy = ag.Galaxy(redshift=0.5)
     galaxies.source = ag.Galaxy(redshift=1.0)
@@ -67,16 +69,14 @@ def test__instance_with_associated_adapt_images_from__galaxy_name_image_plane_me
     )
 
     analysis = ag.AnalysisImaging(
-        dataset=masked_imaging_7x7,
-        adapt_images=adapt_images,
-        use_jax=False
+        dataset=masked_imaging_7x7, adapt_images=adapt_images, use_jax=False
     )
 
     adapt_images = analysis.adapt_images_via_instance_from(instance=instance)
 
-    assert adapt_images.galaxy_image_plane_mesh_grid_dict[galaxies.galaxy].native == pytest.approx(
-        3.0 * np.ones((2, 2)), 1.0e-4
-    )
-    assert adapt_images.galaxy_image_plane_mesh_grid_dict[galaxies.source].native == pytest.approx(
-        4.0 * np.ones((2, 2)), 1.0e-4
-    )
+    assert adapt_images.galaxy_image_plane_mesh_grid_dict[
+        galaxies.galaxy
+    ].native == pytest.approx(3.0 * np.ones((2, 2)), 1.0e-4)
+    assert adapt_images.galaxy_image_plane_mesh_grid_dict[
+        galaxies.source
+    ].native == pytest.approx(4.0 * np.ones((2, 2)), 1.0e-4)
