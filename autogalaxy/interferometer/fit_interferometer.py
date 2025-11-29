@@ -20,6 +20,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         dataset_model: Optional[aa.DatasetModel] = None,
         adapt_images: Optional[AdaptImages] = None,
         settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        preloads: aa.Preloads = None,
         xp=np,
     ):
         """
@@ -76,6 +77,8 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         self.adapt_images = adapt_images
         self.settings_inversion = settings_inversion
 
+        self.preloads = preloads
+
     @property
     def profile_visibilities(self) -> aa.Visibilities:
         """
@@ -108,6 +111,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             galaxies=self.galaxies,
             adapt_images=self.adapt_images,
             settings_inversion=self.settings_inversion,
+            preloads=self.preloads,
             xp=self._xp,
         )
 

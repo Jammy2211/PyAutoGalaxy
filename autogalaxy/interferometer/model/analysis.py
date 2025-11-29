@@ -146,6 +146,7 @@ class AnalysisInterferometer(AnalysisDataset):
             galaxies=galaxies,
             adapt_images=adapt_images,
             settings_inversion=self.settings_inversion,
+            preloads=self.preloads,
             xp=self._xp,
         )
 
