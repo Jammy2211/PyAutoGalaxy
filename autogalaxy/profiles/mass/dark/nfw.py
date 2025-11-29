@@ -137,7 +137,7 @@ class NFW(gNFW, MassProfileCSE):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
 
-        elliptical_radii = self.elliptical_radii_grid_from(grid=grid, **kwargs)
+        elliptical_radii = self.elliptical_radii_grid_from(grid=grid, xp=xp, **kwargs)
 
         return self._convergence_2d_via_cse_from(grid_radii=elliptical_radii)
 
@@ -364,7 +364,7 @@ class NFWSph(NFW):
         )
 
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
-        return self.deflections_2d_via_analytic_from(grid=grid, **kwargs)
+        return self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
@@ -381,7 +381,7 @@ class NFWSph(NFW):
         """
 
         eta = xp.multiply(
-            1.0 / self.scale_radius, self.radial_grid_from(grid=grid, **kwargs).array
+            1.0 / self.scale_radius, self.radial_grid_from(grid=grid, xp=xp, **kwargs).array
         )
 
         deflection_grid = xp.multiply(
@@ -395,7 +395,7 @@ class NFWSph(NFW):
 
     def deflection_func_sph(self, grid_radius, xp=np):
         grid_radius = grid_radius + 0j
-        return xp.real(self.coord_func_h(grid_radius=grid_radius))
+        return xp.real(self.coord_func_h(grid_radius=grid_radius, xp=xp))
 
     @aa.over_sample
     @aa.grid_dec.to_array

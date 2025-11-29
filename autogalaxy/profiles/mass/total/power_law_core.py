@@ -61,7 +61,7 @@ class PowerLawCore(MassProfile):
         grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
-        grid_eta = self.elliptical_radii_grid_from(grid=grid, **kwargs)
+        grid_eta = self.elliptical_radii_grid_from(grid=grid, xp=xp, **kwargs)
 
         return self.convergence_func(grid_radius=grid_eta)
 
@@ -218,7 +218,7 @@ class PowerLawCoreSph(PowerLawCore):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
-        eta = self.radial_grid_from(grid=grid, **kwargs)
+        eta = self.radial_grid_from(grid=grid, xp=xp, **kwargs)
         deflection = xp.multiply(
             2.0 * self.einstein_radius_rescaled(xp),
             xp.divide(

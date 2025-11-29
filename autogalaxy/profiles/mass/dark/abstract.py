@@ -66,7 +66,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         """
 
-        grid_eta = self.elliptical_radii_grid_from(grid=grid, **kwargs)
+        grid_eta = self.elliptical_radii_grid_from(grid=grid, xp=xp, **kwargs)
 
         return self.convergence_func(grid_radius=grid_eta)
 
@@ -83,7 +83,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         """
 
-        elliptical_radii = self.elliptical_radii_grid_from(grid=grid, **kwargs)
+        elliptical_radii = self.elliptical_radii_grid_from(grid=grid, xp=xp, **kwargs)
 
         return self._convergence_2d_via_mge_from(grid_radii=elliptical_radii)
 

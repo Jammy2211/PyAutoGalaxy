@@ -594,7 +594,7 @@ class dPIEMassSph(dPIEMass):
         """
         a = self.ra
         s = self.rs
-        # radii = self.radial_grid_from(grid=grid, **kwargs)
+        # radii = self.radial_grid_from(grid=grid, xp=xp, **kwargs)
         # R2 = radii * radii
         R2 = grid.array[:, 1] * grid.array[:, 1] + grid.array[:, 0] * grid.array[:, 0]
         factor = xp.sqrt(R2 + a * a) - a - xp.sqrt(R2 + s * s) + s

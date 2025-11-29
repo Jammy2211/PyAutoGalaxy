@@ -225,7 +225,7 @@ class dPIEPotentialSph(dPIEPotential):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        radii = self.radial_grid_from(grid=grid, **kwargs)
+        radii = self.radial_grid_from(grid=grid, xp=xp, **kwargs)
 
         alpha = self._deflection_angle(radii.array, xp)
 

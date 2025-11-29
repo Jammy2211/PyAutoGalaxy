@@ -117,7 +117,7 @@ class Chameleon(LightProfile):
             The image of the Chameleon evaluated at every (y,x) coordinate on the transformed grid.
         """
         return self.image_2d_via_radii_from(
-            self.elliptical_radii_grid_from(grid=grid, **kwargs)
+            self.elliptical_radii_grid_from(grid=grid, xp=xp, **kwargs)
         )
 
 

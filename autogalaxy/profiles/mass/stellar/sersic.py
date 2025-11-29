@@ -121,7 +121,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         self.sersic_index = sersic_index
 
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
-        return self.deflections_2d_via_cse_from(grid=grid, **kwargs)
+        return self.deflections_2d_via_cse_from(grid=grid, xp=xp, **kwargs)
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
@@ -164,7 +164,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         grid
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
-        return self._deflections_2d_via_cse_from(grid=grid, **kwargs)
+        return self._deflections_2d_via_cse_from(grid=grid, xp=xp, **kwargs)
 
     @aa.over_sample
     @aa.grid_dec.to_array
@@ -229,7 +229,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
 
-        elliptical_radii = self.elliptical_radii_grid_from(grid=grid, **kwargs)
+        elliptical_radii = self.elliptical_radii_grid_from(grid=grid, xp=xp, **kwargs)
 
         return self._convergence_2d_via_cse_from(grid_radii=elliptical_radii)
 

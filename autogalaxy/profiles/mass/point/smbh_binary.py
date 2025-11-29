@@ -134,4 +134,4 @@ class SMBHBinary(MassProfile):
         """
         return self.smbh_0.deflections_yx_2d_from(
             grid=grid
-        ) + self.smbh_1.deflections_yx_2d_from(grid=grid, **kwargs)
+        ) + self.smbh_1.deflections_yx_2d_from(grid=grid, xp=xp, **kwargs)

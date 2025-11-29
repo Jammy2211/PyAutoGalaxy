@@ -48,7 +48,7 @@ class Chameleon(MassProfile, StellarProfile):
         self.core_radius_1 = core_radius_1
 
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
-        return self.deflections_2d_via_analytic_from(grid=grid, **kwargs)
+        return self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
@@ -143,7 +143,7 @@ class Chameleon(MassProfile, StellarProfile):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
         return self.convergence_func(
-            self.elliptical_radii_grid_from(grid=grid, **kwargs)
+            self.elliptical_radii_grid_from(grid=grid, xp=xp, **kwargs)
         )
 
     def convergence_func(self, grid_radius: float) -> float:
