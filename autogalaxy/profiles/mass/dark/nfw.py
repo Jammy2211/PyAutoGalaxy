@@ -381,7 +381,8 @@ class NFWSph(NFW):
         """
 
         eta = xp.multiply(
-            1.0 / self.scale_radius, self.radial_grid_from(grid=grid, xp=xp, **kwargs).array
+            1.0 / self.scale_radius,
+            self.radial_grid_from(grid=grid, xp=xp, **kwargs).array,
         )
 
         deflection_grid = xp.multiply(
