@@ -275,7 +275,7 @@ class PIEMass(MassProfile):
         """
         ellip = self._ellip(xp)
         factor = self.b0
-        zis = _ci05(x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.ra)
+        zis = _ci05(x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.ra, xp=xp)
 
         # This is in axes aligned to the major/minor axis
         deflection_x = zis.real
@@ -340,7 +340,7 @@ class PIEMass(MassProfile):
         ellip = self._ellip()
 
         hessian_xx, hessian_xy, hessian_yx, hessian_yy = _mdci05(
-            x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.ra, b0=self.b0
+            x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.ra, b0=self.b0, xp=xp
         )
 
         return hessian_yy, hessian_xy, hessian_yx, hessian_xx
@@ -433,6 +433,7 @@ class dPIEMass(MassProfile):
             eps=ellip,
             rcore=self.ra,
             rcut=self.rs,
+            xp=xp
         )
 
         # This is in axes aligned to the major/minor axis
@@ -498,10 +499,10 @@ class dPIEMass(MassProfile):
 
         t05 = self.rs / (self.rs - self.ra)
         g05c_a, g05c_b, g05c_c, g05c_d = _mdci05(
-            x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.ra, b0=self.b0
+            x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.ra, b0=self.b0, xp=xp
         )
         g05cut_a, g05cut_b, g05cut_c, g05cut_d = _mdci05(
-            x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.rs, b0=self.b0
+            x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.rs, b0=self.b0, xp=xp
         )
 
         # Compute Hessian matrix components
