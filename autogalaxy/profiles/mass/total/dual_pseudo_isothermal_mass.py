@@ -619,6 +619,25 @@ class dPIEMassSph(dPIEMass):
             xp=xp,
             **kwargs,
         )
+    
+    @aa.grid_dec.to_array
+    @aa.grid_dec.transform
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        """
+        Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
+
+        The `grid_2d_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See
+        *aa.grid_2d_to_structure* for a description of the output.
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+        """
+        # already transformed to center on profile centre so this works
+        radsq = grid.array[:, 0] ** 2 + grid.array[:, 1] ** 2
+
+        return self._convergence(xp.sqrt(radsq), xp)
 
     @aa.grid_dec.transform
     def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", xp=np, **kwargs):
