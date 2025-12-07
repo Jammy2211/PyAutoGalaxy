@@ -2,6 +2,7 @@ import numpy as np
 from typing import Optional, Tuple
 
 import autoarray as aa
+import autolens as al
 
 
 from autogalaxy.profiles.light.decorators import (
@@ -126,7 +127,8 @@ class ShapeletPolar(AbstractShapelet):
         n: int,
         m: int,
         centre: Tuple[float, float] = (0.0, 0.0),
-        ell_comps: Tuple[float, float] = (0.0, 0.0),
+        q: float = 1.0,
+        phi: float = 0.0,
         intensity: float = 1.0,
         beta: float = 1.0,
     ):
@@ -149,8 +151,11 @@ class ShapeletPolar(AbstractShapelet):
             The m order of the shapelets basis function in the x-direction.
         centre
             The (y,x) arc-second coordinates of the profile (shapelet) centre.
-        ell_comps
-            The first and second ellipticity components of the elliptical coordinate system.
+        q
+            The axis-ratio of the elliptical coordinate system, where a perfect circle has q=1.0.
+        phi
+            The position angle (in degrees) of the elliptical coordinate system, measured counter-clockwise from the 
+            positive x-axis.
         intensity
             Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
             the light profile's image is compared too, which is expected to be electrons per second).
@@ -160,9 +165,11 @@ class ShapeletPolar(AbstractShapelet):
 
         self.n = int(n)
         self.m = int(m)
+        self.phi = float(phi)
+        self.q = float(q)
 
         super().__init__(
-            centre=centre, ell_comps=ell_comps, beta=beta, intensity=intensity
+            centre=centre, beta=beta, ell_comps=al.convert.ell_comps_from(q,phi,np), intensity=intensity
         )
 
     @property
@@ -172,7 +179,7 @@ class ShapeletPolar(AbstractShapelet):
     @aa.over_sample
     @aa.grid_dec.to_array
     @check_operated_only
-    @aa.grid_dec.transform
+    # @aa.grid_dec.transform
     def image_2d_from(
         self,
         grid: aa.type.Grid2DLike,
@@ -200,7 +207,9 @@ class ShapeletPolar(AbstractShapelet):
         from jax.scipy.special import factorial
 
         # laguerre = genlaguerre(n=(self.n - xp.abs(self.m)) / 2.0, alpha=xp.abs(self.m))
-
+        grid = aa.util.geometry.transform_grid_2d_to_reference_frame(
+            grid_2d=grid.array, centre=self.centre, angle=self.phi, xp=xp
+        )
         const = (
             ((-1) ** ((self.n - xp.abs(self.m)) // 2))
             * xp.sqrt(
@@ -210,8 +219,8 @@ class ShapeletPolar(AbstractShapelet):
             / self.beta
             / xp.sqrt(xp.pi)
         )
-        rsq = (grid.array[:, 0] ** 2 + (grid.array[:, 1]/self.axis_ratio(xp)) ** 2) / self.beta**2
-        theta = xp.arctan2(grid.array[:, 1], grid.array[:, 0])
+        rsq = (grid[:, 0] ** 2 + (grid[:, 1]/self.q) ** 2) / self.beta**2
+        theta = xp.arctan2(grid[:, 1], grid[:, 0])
 
         m_abs = abs(self.m)
         n_laguerre = (self.n - m_abs) // 2
@@ -235,6 +244,7 @@ class ShapeletPolarSph(ShapeletPolar):
         n: int,
         m: int,
         centre: Tuple[float, float] = (0.0, 0.0),
+        phi: float = 0.0,
         intensity: float = 1.0,
         beta: float = 1.0,
     ):
@@ -257,6 +267,9 @@ class ShapeletPolarSph(ShapeletPolar):
             The order of the shapelets basis function in the x-direction.
         centre
             The (y,x) arc-second coordinates of the profile (shapelet) centre.
+        phi
+            The position angle (in degrees) of the elliptical coordinate system, measured counter-clockwise from the 
+            positive x-axis.
         intensity
             Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
             the light profile's image is compared too, which is expected to be electrons per second).
@@ -268,7 +281,8 @@ class ShapeletPolarSph(ShapeletPolar):
             n=n,
             m=m,
             centre=centre,
-            ell_comps=(0.0, 0.0),
+            q=1.0,
+            phi=phi,
             intensity=intensity,
             beta=beta,
         )
