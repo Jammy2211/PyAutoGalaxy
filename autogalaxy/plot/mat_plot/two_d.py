@@ -31,7 +31,6 @@ class MatPlot2D(aplt.MatPlot2D):
         patch_overlay: Optional[aplt.PatchOverlay] = None,
         interpolated_reconstruction: Optional[aplt.InterpolatedReconstruction] = None,
         delaunay_drawer: Optional[aplt.DelaunayDrawer] = None,
-        voronoi_drawer: Optional[aplt.VoronoiDrawer] = None,
         origin_scatter: Optional[aplt.OriginScatter] = None,
         mask_scatter: Optional[aplt.MaskScatter] = None,
         border_scatter: Optional[aplt.BorderScatter] = None,
@@ -123,9 +122,6 @@ class MatPlot2D(aplt.MatPlot2D):
             Plots a `VectorField` object using the matplotlib function `plt.quiver`.
         patch_overlay
             Overlays matplotlib `patches.Patch` objects over the figure, such as an `Ellipse`.
-        voronoi_drawer
-            Interpolations the reconstruction of a `Mapper` object from its irregular grid (e.g. Delaunay, Voronoi) to a
-            uniform 2D array and plots it via `plt.imshow()`.
         delaunay_drawer
             Draws a colored Delaunay mesh of pixels using `plt.tripcolor`.
         voronoi_drawer
@@ -212,7 +208,6 @@ class MatPlot2D(aplt.MatPlot2D):
             grid_plot=grid_plot,
             interpolated_reconstruction=interpolated_reconstruction,
             delaunay_drawer=delaunay_drawer,
-            voronoi_drawer=voronoi_drawer,
             use_log10=use_log10,
             quick_update=quick_update,
         )
