@@ -471,11 +471,12 @@ class GalaxiesToInversion(AbstractToInversion):
             source_plane_mesh_grid=source_plane_mesh_grid,
             image_plane_mesh_grid=image_plane_mesh_grid,
             adapt_data=adapt_galaxy_image,
+            preloads=self.preloads,
             xp=self._xp,
         )
 
         return mapper_from(
-            mapper_grids=mapper_grids, regularization=regularization, xp=self._xp
+            mapper_grids=mapper_grids, regularization=regularization, preloads=self.preloads, xp=self._xp
         )
 
     @cached_property
