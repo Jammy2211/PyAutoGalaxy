@@ -169,7 +169,7 @@ class ShapeletPolar(AbstractShapelet):
         self.q = float(q)
 
         super().__init__(
-            centre=centre, beta=beta, ell_comps=al.convert.ell_comps_from(q,phi,np), intensity=intensity
+            centre=centre, beta=beta, intensity=intensity
         )
 
     @property
@@ -235,7 +235,7 @@ class ShapeletPolar(AbstractShapelet):
         else:
             azimuthal = xp.cos((-1) * self.m * theta)
 
-        return const * radial * azimuthal
+        return self._intensity * const * radial * azimuthal
 
 
 class ShapeletPolarSph(ShapeletPolar):
