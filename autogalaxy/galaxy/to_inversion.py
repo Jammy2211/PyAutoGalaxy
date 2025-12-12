@@ -476,7 +476,10 @@ class GalaxiesToInversion(AbstractToInversion):
         )
 
         return mapper_from(
-            mapper_grids=mapper_grids, regularization=regularization, preloads=self.preloads, xp=self._xp
+            mapper_grids=mapper_grids,
+            regularization=regularization,
+            preloads=self.preloads,
+            xp=self._xp,
         )
 
     @cached_property
