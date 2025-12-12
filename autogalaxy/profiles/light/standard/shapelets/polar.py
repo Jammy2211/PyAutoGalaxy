@@ -2,8 +2,6 @@ import numpy as np
 from typing import Optional, Tuple
 
 import autoarray as aa
-import autolens as al
-
 
 from autogalaxy.profiles.light.decorators import (
     check_operated_only,
@@ -11,66 +9,9 @@ from autogalaxy.profiles.light.decorators import (
 from autogalaxy.profiles.light.standard.shapelets.abstract import AbstractShapelet
 
 import jax.numpy as jnp
-from jax import lax
 from jax.scipy.special import gammaln
 
-def genlaguerre_jax_recurrence(n, alpha, x):
-    """
-    Generalized (associated) Laguerre polynomial $L_n^{(\alpha)}(x)$ 
-    calculated using the three-term recurrence relation in pure JAX.
-
-    Optimized for JAX via `lax.fori_loop` for loop unrolling.
-
-    .. math::
-        (k+1) L_{k+1}^{(\alpha)}(x) = (2k + 1 + \alpha - x) L_k^{(\alpha)}(x) - (k + \alpha) L_{k-1}^{(\alpha)}(x)
-
-    Parameters
-    ----------
-    n : int
-        Degree of the polynomial. MUST be a non-negative static Python integer 
-        for optimal JAX compilation.
-    alpha : Union[float, JAXArray]
-        Parameter $\alpha > -1$.
-    x : JAXArray
-        Input array (points at which to evaluate).
-
-    Returns
-    -------
-    L : JAXArray
-        Generalized Laguerre polynomial evaluated at x.
-    """
-    
-    # --- 0. Input Validation (Requires static Python int n) ---
-    if not isinstance(n, int) or n < 0:
-         raise ValueError(f"Degree n must be a non-negative Python integer (static), got {n}.")
-
-    # --- 1. Base Cases ---
-    L0 = jnp.ones_like(x)
-    if n == 0:
-        return L0
-
-    L1 = 1 + alpha - x
-    if n == 1:
-        return L1
-    
-    # --- 2. JAX Recurrence Calculation ---
-    
-    def body(k, state):
-        # state = (L_{k-1}, L_k)
-        L_nm1, L_n = state
-        
-        # Recurrence relation:
-        # L_{k+1} = ((2k + 1 + alpha - x) * L_k - (k + alpha) * L_{k-1}) / (k + 1)
-        L_np1 = ((2 * k + 1 + alpha - x) * L_n - (k + alpha) * L_nm1) / (k + 1)
-        
-        # Return new state: (L_k, L_{k+1})
-        return (L_n, L_np1)
-
-    # fori_loop(start, stop, body, init_state)
-    _, res_Ln = lax.fori_loop(1, n, body, (L0, L1))
-    return res_Ln
-
-def genlaguerre_jax_summation(n, alpha, x):
+def genlaguerre_jax(n, alpha, x):
     """
     Generalized (associated) Laguerre polynomial L_n^alpha(x) 
     calculated using the explicit summation formula, optimized for JAX vectorization.
@@ -202,10 +143,8 @@ class ShapeletPolar(AbstractShapelet):
         image
             The image of the Polar Shapelet evaluated at every (y,x) coordinate on the transformed grid.
         """
-        # from scipy.special import genlaguerre
         from jax.scipy.special import factorial
 
-        # laguerre = genlaguerre(n=(self.n - xp.abs(self.m)) / 2.0, alpha=xp.abs(self.m))
         grid = aa.util.geometry.transform_grid_2d_to_reference_frame(
             grid_2d=grid.array, centre=self.centre, angle=self.phi, xp=xp
         )
@@ -223,7 +162,7 @@ class ShapeletPolar(AbstractShapelet):
 
         m_abs = abs(self.m)
         n_laguerre = (self.n - m_abs) // 2
-        laguerre_vals = genlaguerre_jax_summation(n=n_laguerre, alpha=m_abs, x=rsq)
+        laguerre_vals = genlaguerre_jax(n=n_laguerre, alpha=m_abs, x=rsq)
 
         radial = rsq ** (xp.abs(self.m) / 2.0) * xp.exp(-rsq / 2.0) * laguerre_vals
 
