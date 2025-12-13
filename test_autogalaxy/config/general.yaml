@@ -34,8 +34,6 @@ output:
   model_results_decimal_places: 3
   remove_files: false
   samples_to_csv: false
-pixelization:
-  voronoi_nn_max_interpolation_neighbors: 300
 structures:
   native_binned_only: false           # If True, data structures are only stored in their native and binned format. This is used to reduce memory usage in autocti.
 test:
