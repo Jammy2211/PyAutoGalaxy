@@ -119,4 +119,4 @@ from autoconf.fitsable import header_obj_from
 from autoconf.fitsable import output_to_fits
 from autoconf.fitsable import hdu_list_for_output_from
 
-__version__ = "2025.11.29.3"
+__version__ = "2025.12.15.1"
