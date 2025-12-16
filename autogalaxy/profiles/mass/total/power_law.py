@@ -69,8 +69,6 @@ class PowerLaw(PowerLawCore):
         grid
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
         """
-        from .jax_utils import omega
-
         slope = self.slope - 1.0
         einstein_radius = (
             2.0 / (self.axis_ratio(xp) ** -0.5 + self.axis_ratio(xp) ** 0.5)
@@ -90,11 +88,28 @@ class PowerLaw(PowerLawCore):
             + grid.array[:, 0] ** 2
             + 1e-16
         )
-        zh = omega(z, slope, factor, n_terms=20, xp=xp)
 
-        complex_angle = (
-            2.0 * b / (1.0 + self.axis_ratio(xp)) * (b / R) ** (slope - 1.0) * zh
-        )
+        if xp.__name__.startswith("jax"):
+
+            from .jax_utils import omega
+
+            zh = omega(z, slope, factor, n_terms=20, xp=xp)
+
+            complex_angle = (
+                2.0 * b / (1.0 + self.axis_ratio(xp)) * (b / R) ** (slope - 1.0) * zh
+            )
+        else:
+
+            from scipy import special
+
+            complex_angle = (
+                    2.0
+                    * b
+                    / (1.0 + self.axis_ratio(xp))
+                    * (b / R) ** (slope - 1.0)
+                    * z
+                    * special.hyp2f1(1.0, 0.5 * slope, 2.0 - 0.5 * slope, -factor * z ** 2)
+            )
 
         deflection_y = complex_angle.imag
         deflection_x = complex_angle.real
