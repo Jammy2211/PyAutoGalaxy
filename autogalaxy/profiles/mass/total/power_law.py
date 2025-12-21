@@ -103,12 +103,12 @@ class PowerLaw(PowerLawCore):
             from scipy import special
 
             complex_angle = (
-                    2.0
-                    * b
-                    / (1.0 + self.axis_ratio(xp))
-                    * (b / R) ** (slope - 1.0)
-                    * z
-                    * special.hyp2f1(1.0, 0.5 * slope, 2.0 - 0.5 * slope, -factor * z ** 2)
+                2.0
+                * b
+                / (1.0 + self.axis_ratio(xp))
+                * (b / R) ** (slope - 1.0)
+                * z
+                * special.hyp2f1(1.0, 0.5 * slope, 2.0 - 0.5 * slope, -factor * z**2)
             )
 
         deflection_y = complex_angle.imag
