@@ -30,7 +30,6 @@ from autoarray.plot.wrap.two_d import (
     PatchOverlay,
     InterpolatedReconstruction,
     DelaunayDrawer,
-    VoronoiDrawer,
     OriginScatter,
     MaskScatter,
     BorderScatter,

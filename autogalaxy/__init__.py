@@ -44,7 +44,6 @@ from autoarray.structures.grids.uniform_2d import Grid2D  # noqa
 from autoarray.structures.grids.irregular_2d import Grid2DIrregular  # noqa
 from autoarray.operators.over_sampling.over_sampler import OverSampler  # noqa
 from autoarray.structures.mesh.rectangular_2d import Mesh2DRectangular  # noqa
-from autoarray.structures.mesh.voronoi_2d import Mesh2DVoronoi  # noqa
 from autoarray.structures.mesh.delaunay_2d import Mesh2DDelaunay  # noqa
 from autoarray.structures.vectors.uniform import VectorYX2D  # noqa
 from autoarray.structures.vectors.irregular import VectorYX2DIrregular  # noqa
@@ -120,4 +119,4 @@ from autoconf.fitsable import header_obj_from
 from autoconf.fitsable import output_to_fits
 from autoconf.fitsable import hdu_list_for_output_from
 
-__version__ = "2025.11.29.3"
+__version__ = "2025.12.15.2"
