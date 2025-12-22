@@ -3,12 +3,64 @@ from typing import Optional, Tuple
 
 import autoarray as aa
 
-
 from autogalaxy.profiles.light.decorators import (
     check_operated_only,
 )
 from autogalaxy.profiles.light.standard.shapelets.abstract import AbstractShapelet
 
+import jax.numpy as jnp
+from jax.scipy.special import gammaln
+
+def genlaguerre_jax(n, alpha, x):
+    """
+    Generalized (associated) Laguerre polynomial L_n^alpha(x) 
+    calculated using the explicit summation formula, optimized for JAX vectorization.
+
+    Parameters:
+        n (int): Degree of the polynomial (static Python integer).
+        alpha (Numeric): Parameter alpha > -1.
+        x (Array): Input array (evaluation points).
+    """
+    # 0. Input Validation (Requires static Python int n)
+    if not isinstance(n, int) or n < 0:
+         # Use Python's math.isnan/isinf check if n is float, otherwise type error
+         raise ValueError(f"Degree n must be a non-negative Python integer (static), got {n}.")
+    
+    # Base Case L0
+    if n == 0:
+        return jnp.ones_like(x)
+
+    # 1. Generate k values for summation range [0, 1, 2, ..., n]
+    k_values = jnp.arange(n + 1) # (n+1,)
+
+    # 2. Reshape inputs for broadcasting (x: (M, 1), k: (1, n+1))
+    x_expanded = jnp.expand_dims(x, axis=-1) 
+    k_values_expanded = jnp.expand_dims(k_values, axis=0)
+
+    # --- A. Binomial Factor (BF) Calculation ---
+    # BF = exp( log( (n+alpha)! / ((n-k)! * (alpha+k)!) ) )
+    
+    log_N_plus_alpha_fact = gammaln(n + alpha + 1)
+    
+    log_BF_k = (
+        log_N_plus_alpha_fact
+        - gammaln(n - k_values + 1)      # log( (n-k)! )
+        - gammaln(alpha + k_values + 1)  # log( (alpha+k)! )
+    )
+    
+    BF_k = jnp.exp(log_BF_k) # Shape: (n+1,)
+
+    # --- B. Term Factor (TF) Calculation ---
+    # TF = (-x)^k / k!
+    
+    # Note: jnp.math.gamma(k_values + 1) is equivalent to k! in log-gamma space
+    TF_k = jnp.power(-x_expanded, k_values_expanded) / jnp.exp(gammaln(k_values_expanded + 1)) 
+    # TF_k Shape: (M, n+1)
+
+    # --- C. Final Summation ---
+    # Sum over the last axis (axis=1), which corresponds to k
+    # BF_k broadcasts over the M dimension of TF_k
+    return jnp.sum(BF_k * TF_k, axis=1)
 
 class ShapeletPolar(AbstractShapelet):
     def __init__(
@@ -16,7 +68,8 @@ class ShapeletPolar(AbstractShapelet):
         n: int,
         m: int,
         centre: Tuple[float, float] = (0.0, 0.0),
-        ell_comps: Tuple[float, float] = (0.0, 0.0),
+        q: float = 1.0,
+        phi: float = 0.0,
         intensity: float = 1.0,
         beta: float = 1.0,
     ):
@@ -39,8 +92,11 @@ class ShapeletPolar(AbstractShapelet):
             The m order of the shapelets basis function in the x-direction.
         centre
             The (y,x) arc-second coordinates of the profile (shapelet) centre.
-        ell_comps
-            The first and second ellipticity components of the elliptical coordinate system.
+        q
+            The axis-ratio of the elliptical coordinate system, where a perfect circle has q=1.0.
+        phi
+            The position angle (in degrees) of the elliptical coordinate system, measured counter-clockwise from the 
+            positive x-axis.
         intensity
             Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
             the light profile's image is compared too, which is expected to be electrons per second).
@@ -48,11 +104,13 @@ class ShapeletPolar(AbstractShapelet):
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.
         """
 
-        self.n = n
-        self.m = m
+        self.n = int(n)
+        self.m = int(m)
+        self.phi = float(phi)
+        self.q = float(q)
 
         super().__init__(
-            centre=centre, ell_comps=ell_comps, beta=beta, intensity=intensity
+            centre=centre, beta=beta, intensity=intensity
         )
 
     @property
@@ -62,7 +120,6 @@ class ShapeletPolar(AbstractShapelet):
     @aa.over_sample
     @aa.grid_dec.to_array
     @check_operated_only
-    @aa.grid_dec.transform
     def image_2d_from(
         self,
         grid: aa.type.Grid2DLike,
@@ -86,11 +143,11 @@ class ShapeletPolar(AbstractShapelet):
         image
             The image of the Polar Shapelet evaluated at every (y,x) coordinate on the transformed grid.
         """
-        from scipy.special import genlaguerre
         from jax.scipy.special import factorial
 
-        laguerre = genlaguerre(n=(self.n - xp.abs(self.m)) / 2.0, alpha=xp.abs(self.m))
-
+        grid = aa.util.geometry.transform_grid_2d_to_reference_frame(
+            grid_2d=grid.array, centre=self.centre, angle=self.phi, xp=xp
+        )
         const = (
             ((-1) ** ((self.n - xp.abs(self.m)) // 2))
             * xp.sqrt(
@@ -100,10 +157,14 @@ class ShapeletPolar(AbstractShapelet):
             / self.beta
             / xp.sqrt(xp.pi)
         )
+        rsq = (grid[:, 0] ** 2 + (grid[:, 1]/self.q) ** 2) / self.beta**2
+        theta = xp.arctan2(grid[:, 1], grid[:, 0])
 
-        rsq = (grid.array[:, 0] ** 2 + grid.array[:, 1] ** 2) / self.beta**2
-        theta = xp.arctan2(grid.array[:, 1], grid.array[:, 0])
-        radial = rsq ** (abs(self.m / 2.0)) * xp.exp(-rsq / 2.0) * laguerre(rsq)
+        m_abs = abs(self.m)
+        n_laguerre = (self.n - m_abs) // 2
+        laguerre_vals = genlaguerre_jax(n=n_laguerre, alpha=m_abs, x=rsq)
+
+        radial = rsq ** (xp.abs(self.m) / 2.0) * xp.exp(-rsq / 2.0) * laguerre_vals
 
         if self.m == 0:
             azimuthal = 1
@@ -112,7 +173,7 @@ class ShapeletPolar(AbstractShapelet):
         else:
             azimuthal = xp.cos((-1) * self.m * theta)
 
-        return const * radial * azimuthal
+        return self._intensity * const * radial * azimuthal
 
 
 class ShapeletPolarSph(ShapeletPolar):
@@ -121,6 +182,7 @@ class ShapeletPolarSph(ShapeletPolar):
         n: int,
         m: int,
         centre: Tuple[float, float] = (0.0, 0.0),
+        phi: float = 0.0,
         intensity: float = 1.0,
         beta: float = 1.0,
     ):
@@ -143,6 +205,9 @@ class ShapeletPolarSph(ShapeletPolar):
             The order of the shapelets basis function in the x-direction.
         centre
             The (y,x) arc-second coordinates of the profile (shapelet) centre.
+        phi
+            The position angle (in degrees) of the elliptical coordinate system, measured counter-clockwise from the 
+            positive x-axis.
         intensity
             Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
             the light profile's image is compared too, which is expected to be electrons per second).
@@ -154,7 +219,8 @@ class ShapeletPolarSph(ShapeletPolar):
             n=n,
             m=m,
             centre=centre,
-            ell_comps=(0.0, 0.0),
+            q=1.0,
+            phi=phi,
             intensity=intensity,
             beta=beta,
         )
