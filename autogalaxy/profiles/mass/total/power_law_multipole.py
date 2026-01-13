@@ -113,8 +113,6 @@ class PowerLawMultipole(MassProfile):
             grid=grid
         )
         """
-        from astropy import units
-
         super().__init__(centre=centre, ell_comps=(0.0, 0.0))
 
         self.m = int(m)
@@ -123,10 +121,17 @@ class PowerLawMultipole(MassProfile):
         self.slope = slope
 
         self.multipole_comps = multipole_comps
-        self.k_m, self.angle_m = convert.multipole_k_m_and_phi_m_from(
-            multipole_comps=multipole_comps, m=m
+
+    def k_m_and_angle_m_from(self, xp=np) -> Tuple[float, float]:
+
+        from astropy import units
+
+        k_m, angle_m = convert.multipole_k_m_and_phi_m_from(
+            multipole_comps=self.multipole_comps, m=self.m, xp=xp
         )
-        self.angle_m *= units.deg.to(units.rad)
+        angle_m *= units.deg.to(units.rad)
+
+        return k_m, angle_m
 
     def get_shape_angle(
         self,
