@@ -123,7 +123,30 @@ class PowerLawMultipole(MassProfile):
         self.multipole_comps = multipole_comps
 
     def k_m_and_angle_m_from(self, xp=np) -> Tuple[float, float]:
+        """
+        Return the multipole normalization ``k_m`` and orientation angle ``angle_m``.
 
+        The multipole normalization and angle are computed from the multipole component
+        parameters ``(epsilon_1, epsilon_2)`` using
+        :func:`convert.multipole_k_m_and_phi_m_from`. The returned angle is converted
+        from degrees to radians.
+
+        The numerical backend can be selected via the ``xp`` argument, allowing this
+        method to be used with both NumPy and JAX (e.g. inside ``jax.jit``-compiled
+        code).
+
+        Parameters
+        ----------
+        xp
+            Numerical backend module, typically ``numpy`` or ``jax.numpy``.
+
+        Returns
+        -------
+        k_m
+            The multipole normalization.
+        angle_m
+            The multipole orientation angle in radians.
+        """
         from astropy import units
 
         k_m, angle_m = convert.multipole_k_m_and_phi_m_from(
