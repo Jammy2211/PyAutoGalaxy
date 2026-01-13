@@ -203,6 +203,8 @@ class PowerLawMultipole(MassProfile):
         """
         radial_grid, polar_angle_grid = radial_and_angle_grid_from(grid=grid, xp=xp)
 
+        k_m, angle_m = self.k_m_and_angle_m_from(xp=xp)
+
         a_r = (
             -(
                 (3.0 - self.slope)
@@ -210,8 +212,8 @@ class PowerLawMultipole(MassProfile):
                 * radial_grid ** (2.0 - self.slope)
             )
             / (self.m**2.0 - (3.0 - self.slope) ** 2.0)
-            * self.k_m
-            * xp.cos(self.m * (polar_angle_grid - self.angle_m))
+            * k_m
+            * xp.cos(self.m * (polar_angle_grid - angle_m))
         )
 
         a_angle = (
@@ -221,8 +223,8 @@ class PowerLawMultipole(MassProfile):
                 * radial_grid ** (2.0 - self.slope)
             )
             / (self.m**2.0 - (3.0 - self.slope) ** 2.0)
-            * self.k_m
-            * xp.sin(self.m * (polar_angle_grid - self.angle_m))
+            * k_m
+            * xp.sin(self.m * (polar_angle_grid - angle_m))
         )
 
         return xp.stack(
@@ -247,13 +249,14 @@ class PowerLawMultipole(MassProfile):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
         r, angle = radial_and_angle_grid_from(grid=grid, xp=xp)
+        k_m, angle_m = self.k_m_and_angle_m_from(xp=xp)
 
         return (
             1.0
             / 2.0
             * (self.einstein_radius / r) ** (self.slope - 1)
-            * self.k_m
-            * xp.cos(self.m * (angle - self.angle_m))
+            * k_m
+            * xp.cos(self.m * (angle - angle_m))
         )
 
     @aa.grid_dec.to_array
