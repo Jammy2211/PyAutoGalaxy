@@ -84,31 +84,122 @@ class cNFW(MassProfile):
         )
 
     def F_func(self, theta, radius, xp=np):
-        if theta == 0:
-            F = 0
-        elif theta < radius:
-            F = (radius / 2 * xp.log(2 * radius / theta) - xp.sqrt(radius ** 2 - theta ** 2)
-                 * xp.arctanh(xp.sqrt((radius - theta) / (radius + theta)))
-                 )
-        else:
-            F = (radius / 2 * xp.log(2 * radius / theta) + xp.sqrt(theta ** 2 - radius ** 2)
-                 * xp.arctan(xp.sqrt((theta - radius) / (theta + radius)))
-                 )
+
+        theta = xp.asarray(theta)
+
+        F = xp.zeros_like(theta)
+
+        # theta == 0
+        mask0 = theta == 0
+
+        # theta < radius
+        mask1 = (theta > 0) & (theta < radius)
+
+        # theta > radius
+        mask2 = theta > radius
+
+        F = xp.where(
+            mask0,
+            (
+                0.0
+            ),
+            F,
+        )
+
+        F = xp.where(
+            mask1,
+            (
+                    radius / 2 * xp.log(2 * radius / theta)
+                    - xp.sqrt(radius ** 2 - theta ** 2)
+                    * xp.arctanh(xp.sqrt((radius - theta) / (radius + theta)))
+            ),
+            F,
+        )
+
+        F = xp.where(
+            mask2,
+            (
+                    radius / 2 * xp.log(2 * radius / theta)
+                    + xp.sqrt(theta ** 2 - radius ** 2)
+                    * xp.arctan(xp.sqrt((theta - radius) / (theta + radius)))
+            ),
+            F,
+        )
+
         return 2 * radius * F
 
     def dev_F_func(self, theta, radius, xp=np):
-        if theta == 0:
-            dev_F = 0
-        elif theta < radius:
-            dev_F = (radius * xp.log(2 * radius / theta)
-                     - (2 * radius ** 2 - theta ** 2) / xp.sqrt(radius ** 2 - theta ** 2)
-                     * xp.arctanh(xp.sqrt((radius - theta) / (radius + theta)))
-                     )
-        elif theta == radius:
-            dev_F = (radius * (xp.log(2) - 1 / 2))
-        else:
-            dev_F = (radius * xp.log(2 * radius / theta)
-                     + (theta ** 2 - 2 * radius ** 2) / xp.sqrt(theta ** 2 - radius ** 2)
-                     * xp.arctan(xp.sqrt((theta - radius) / (theta + radius)))
-                     )
+        theta = xp.asarray(theta)
+
+        dev_F = xp.zeros_like(theta)
+
+        mask0 = theta == 0
+        mask1 = (theta > 0) & (theta < radius)
+        mask2 = theta == radius
+        mask3 = theta > radius
+
+        dev_F = xp.where(
+            mask0,
+            (
+                0.0
+            ),
+            dev_F,
+        )
+
+        dev_F = xp.where(
+            mask1,
+            (
+                    radius * xp.log(2 * radius / theta)
+                    - (2 * radius ** 2 - theta ** 2) / xp.sqrt(radius ** 2 - theta ** 2)
+                    * xp.arctanh(xp.sqrt((radius - theta) / (radius + theta)))
+            ),
+            dev_F,
+        )
+
+        dev_F = xp.where(
+            mask2,
+            radius * (xp.log(2) - 1 / 2),
+            dev_F,
+        )
+
+        dev_F = xp.where(
+            mask3,
+            (
+                    radius * xp.log(2 * radius / theta)
+                    + (theta ** 2 - 2 * radius ** 2) / xp.sqrt(theta ** 2 - radius ** 2)
+                    * xp.arctan(xp.sqrt((theta - radius) / (theta + radius)))
+            ),
+            dev_F,
+        )
+
         return 2 * dev_F
+
+    # def F_func(self, theta, radius, xp=np):
+    #     if theta == 0:
+    #         F = 0
+    #     elif theta < radius:
+    #         F = (radius / 2 * xp.log(2 * radius / theta) - xp.sqrt(radius ** 2 - theta ** 2)
+    #              * xp.arctanh(xp.sqrt((radius - theta) / (radius + theta)))
+    #              )
+    #     else:
+    #         F = (radius / 2 * xp.log(2 * radius / theta) + xp.sqrt(theta ** 2 - radius ** 2)
+    #              * xp.arctan(xp.sqrt((theta - radius) / (theta + radius)))
+    #              )
+    #     return 2 * radius * F
+
+    # def dev_F_func(self, theta, radius, xp=np):
+    #     if theta == 0:
+    #         dev_F = 0
+    #     elif theta < radius:
+    #         dev_F = (radius * xp.log(2 * radius / theta)
+    #                  - (2 * radius ** 2 - theta ** 2) / xp.sqrt(radius ** 2 - theta ** 2)
+    #                  * xp.arctanh(xp.sqrt((radius - theta) / (radius + theta)))
+    #                  )
+    #     elif theta == radius:
+    #         dev_F = (radius * (xp.log(2) - 1 / 2))
+    #     else:
+    #         dev_F = (radius * xp.log(2 * radius / theta)
+    #                  + (theta ** 2 - 2 * radius ** 2) / xp.sqrt(theta ** 2 - radius ** 2)
+    #                  * xp.arctan(xp.sqrt((theta - radius) / (theta + radius)))
+    #                  )
+    #     return 2 * dev_F
