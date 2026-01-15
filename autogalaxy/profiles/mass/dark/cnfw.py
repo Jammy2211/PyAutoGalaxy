@@ -152,6 +152,14 @@ class cNFW(MassProfile):
 
         return 2 * dev_F
 
+    @aa.grid_dec.to_array
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        return xp.zeros(shape=grid.shape[0])
+
+    @aa.grid_dec.to_array
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        return xp.zeros(shape=grid.shape[0])
+
     # def F_func(self, theta, radius, xp=np):
     #     if theta == 0:
     #         F = 0
