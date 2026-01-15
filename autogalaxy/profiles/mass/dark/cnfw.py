@@ -61,7 +61,7 @@ class cNFW(MassProfile):
         """
         theta = self.radial_grid_from(grid=grid, xp=xp, **kwargs).array
         theta = xp.maximum(theta, 1e-8)
-        
+
         factor = (
             4.0
             * self.kappa_s
@@ -88,22 +88,11 @@ class cNFW(MassProfile):
 
         F = theta * 0.0
 
-        # theta == 0
-        mask0 = theta == 0
-
         # theta < radius
         mask1 = (theta > 0) & (theta < radius)
 
         # theta > radius
         mask2 = theta > radius
-
-        F = xp.where(
-            mask0,
-            (
-                0.0
-            ),
-            F,
-        )
 
         F = xp.where(
             mask1,
@@ -131,18 +120,9 @@ class cNFW(MassProfile):
 
         dev_F = theta * 0.0
 
-        mask0 = theta == 0
         mask1 = (theta > 0) & (theta < radius)
         mask2 = theta == radius
         mask3 = theta > radius
-
-        dev_F = xp.where(
-            mask0,
-            (
-                0.0
-            ),
-            dev_F,
-        )
 
         dev_F = xp.where(
             mask1,
