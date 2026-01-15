@@ -60,7 +60,8 @@ class cNFW(MassProfile):
             The numerical backend to use, either `numpy` or `jax.numpy`.
         """
         theta = self.radial_grid_from(grid=grid, xp=xp, **kwargs).array
-
+        theta = xp.maximum(theta, 1e-8)
+        
         factor = (
             4.0
             * self.kappa_s
