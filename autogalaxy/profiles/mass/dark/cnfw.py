@@ -69,8 +69,8 @@ class cNFW(MassProfile):
 
         deflection_r = (
             factor
-            * (self.F_func(theta, self.scale_radius) - self.F_func(theta, self.core_radius)
-               - (self.scale_radius - self.core_radius) * self.dev_F_func(theta, self.scale_radius)
+            * (self.F_func(theta, self.scale_radius, xp=xp) - self.F_func(theta, self.core_radius, xp=xp)
+               - (self.scale_radius - self.core_radius) * self.dev_F_func(theta, self.scale_radius, xp=xp)
             )
             / (theta * (self.scale_radius - self.core_radius)**2)
         )
