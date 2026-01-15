@@ -85,8 +85,6 @@ class cNFW(MassProfile):
 
     def F_func(self, theta, radius, xp=np):
 
-        theta = xp.asarray(theta)
-
         F = xp.zeros_like(theta)
 
         # theta == 0
@@ -129,7 +127,6 @@ class cNFW(MassProfile):
         return 2 * radius * F
 
     def dev_F_func(self, theta, radius, xp=np):
-        theta = xp.asarray(theta)
 
         dev_F = xp.zeros_like(theta)
 
