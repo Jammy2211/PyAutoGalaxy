@@ -23,7 +23,7 @@ class cNFW(MassProfile):
                     The (y,x) arc-second coordinates of the profile centre.
                 kappa_s
                     The overall normalization of the dark matter halo \|
-                    (kappa_s = (rho_0 * scale_radius)/lensing_critical_density)
+                    (kappa_s = (rho_0 * D_d * scale_radius)/lensing_critical_density)
                 scale_radius
                     The cored NFW scale radius `theta_s`, as an angle on the sky in arcseconds.
                 core_radius
