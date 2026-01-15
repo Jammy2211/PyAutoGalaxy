@@ -85,7 +85,7 @@ class cNFW(MassProfile):
 
     def F_func(self, theta, radius, xp=np):
 
-        F = xp.zeros_like(theta)
+        F = theta * 0.0
 
         # theta == 0
         mask0 = theta == 0
@@ -128,7 +128,7 @@ class cNFW(MassProfile):
 
     def dev_F_func(self, theta, radius, xp=np):
 
-        dev_F = xp.zeros_like(theta)
+        dev_F = theta * 0.0
 
         mask0 = theta == 0
         mask1 = (theta > 0) & (theta < radius)
