@@ -185,5 +185,5 @@ class AnalysisInterferometer(AnalysisDataset):
         super().save_attributes(paths=paths)
 
         paths.save_json(
-            "transformer_class", to_dict(self.dataset.transformer.__class__), "dataset"
+            "transformer_class", to_dict(self.dataset.transformer.__class__),
         )
