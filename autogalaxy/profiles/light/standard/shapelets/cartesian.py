@@ -8,6 +8,7 @@ from autogalaxy.profiles.light.decorators import (
 )
 from autogalaxy.profiles.light.standard.shapelets.abstract import AbstractShapelet
 
+
 def hermite_phys(n: int, x, xp=np):
     """
     Physicists' Hermite polynomial H_n(x), compatible with NumPy and JAX via `xp`.
@@ -34,6 +35,7 @@ def hermite_phys(n: int, x, xp=np):
         Hnp1 = 2.0 * x * Hn - 2.0 * float(k) * Hnm1
         Hnm1, Hn = Hn, Hnp1
     return Hn
+
 
 class ShapeletCartesian(AbstractShapelet):
     def __init__(
@@ -89,11 +91,11 @@ class ShapeletCartesian(AbstractShapelet):
     @check_operated_only
     @aa.grid_dec.transform
     def image_2d_from(
-            self,
-            grid: aa.type.Grid2DLike,
-            xp=np,
-            operated_only: Optional[bool] = None,
-            **kwargs,
+        self,
+        grid: aa.type.Grid2DLike,
+        xp=np,
+        operated_only: Optional[bool] = None,
+        **kwargs,
     ) -> np.ndarray:
         """
         Returns the Cartesian Shapelet light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
@@ -117,19 +119,16 @@ class ShapeletCartesian(AbstractShapelet):
         shapelet_y = hermite_phys(self.n_y, y_ell / self.beta, xp=xp)
         shapelet_x = hermite_phys(self.n_x, x_ell / self.beta, xp=xp)
 
-        gaussian = xp.exp(-0.5 * (x_ell ** 2 + y_ell ** 2) / (self.beta ** 2))
+        gaussian = xp.exp(-0.5 * (x_ell**2 + y_ell**2) / (self.beta**2))
 
-        norm = (
-                self.beta
-                * xp.sqrt(
+        norm = self.beta * xp.sqrt(
             (2.0 ** (self.n_x + self.n_y))
             * xp.pi
             * factorial(self.n_y)
             * factorial(self.n_x)
         )
-        )
 
-        return (shapelet_y * shapelet_x * gaussian) / norm
+        return self._intensity * (shapelet_y * shapelet_x * gaussian) / norm
 
 
 class ShapeletCartesianSph(ShapeletCartesian):

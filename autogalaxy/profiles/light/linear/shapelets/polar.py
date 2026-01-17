@@ -36,7 +36,7 @@ class ShapeletPolar(lp.ShapeletPolar, LightProfileLinear):
         q
             The axis-ratio of the elliptical coordinate system, where a perfect circle has q=1.0.
         phi
-            The position angle (in degrees) of the elliptical coordinate system, measured counter-clockwise from the 
+            The position angle (in degrees) of the elliptical coordinate system, measured counter-clockwise from the
             positive x-axis.
         intensity
             Overall intensity normalisation of the light profile (units are dimensionless and derived from the data
@@ -79,7 +79,7 @@ class ShapeletPolarSph(ShapeletPolar):
         centre
             The (y,x) arc-second coordinates of the profile (shapelet) centre.
         phi
-            The position angle (in degrees) of the elliptical coordinate system, measured counter-clockwise from the 
+            The position angle (in degrees) of the elliptical coordinate system, measured counter-clockwise from the
             positive x-axis.
         beta
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.

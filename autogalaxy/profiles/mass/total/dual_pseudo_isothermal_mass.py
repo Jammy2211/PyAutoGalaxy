@@ -275,7 +275,9 @@ class PIEMass(MassProfile):
         """
         ellip = self._ellip(xp)
         factor = self.b0
-        zis = _ci05(x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.ra, xp=xp)
+        zis = _ci05(
+            x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.ra, xp=xp
+        )
 
         # This is in axes aligned to the major/minor axis
         deflection_x = zis.real
@@ -287,17 +289,13 @@ class PIEMass(MassProfile):
             xp=xp,
             **kwargs,
         )
-    
+
     def _convergence(self, radii, xp=np):
 
         radsq = radii * radii
         a = self.ra
 
-        return (
-            self.b0
-            / 2
-            * (1 / xp.sqrt(a**2 + radsq))
-        )
+        return self.b0 / 2 * (1 / xp.sqrt(a**2 + radsq))
 
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
@@ -316,13 +314,13 @@ class PIEMass(MassProfile):
         """
         ellip = self._ellip(xp)
         grid_radii = xp.sqrt(
-            grid.array[:, 1] ** 2 / (1 + ellip) ** 2 + grid.array[:, 0] ** 2 / (1 - ellip) ** 2
+            grid.array[:, 1] ** 2 / (1 + ellip) ** 2
+            + grid.array[:, 0] ** 2 / (1 - ellip) ** 2
         )
         # Compute the convergence and deflection of a *circular* profile
-        kappa = self._convergence(grid_radii,xp)
+        kappa = self._convergence(grid_radii, xp)
 
         return kappa
-
 
     @aa.grid_dec.transform
     def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", xp=np, **kwargs):
@@ -340,7 +338,12 @@ class PIEMass(MassProfile):
         ellip = self._ellip()
 
         hessian_xx, hessian_xy, hessian_yx, hessian_yy = _mdci05(
-            x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.ra, b0=self.b0, xp=xp
+            x=grid.array[:, 1],
+            y=grid.array[:, 0],
+            eps=ellip,
+            rcore=self.ra,
+            b0=self.b0,
+            xp=xp,
         )
 
         return hessian_yy, hessian_xy, hessian_yx, hessian_xx
@@ -433,7 +436,7 @@ class dPIEMass(MassProfile):
             eps=ellip,
             rcore=self.ra,
             rcut=self.rs,
-            xp=xp
+            xp=xp,
         )
 
         # This is in axes aligned to the major/minor axis
@@ -476,11 +479,12 @@ class dPIEMass(MassProfile):
         """
         ellip = self._ellip(xp)
         grid_radii = xp.sqrt(
-            grid.array[:, 1] ** 2 / (1 + ellip) ** 2 + grid.array[:, 0] ** 2 / (1 - ellip) ** 2
+            grid.array[:, 1] ** 2 / (1 + ellip) ** 2
+            + grid.array[:, 0] ** 2 / (1 - ellip) ** 2
         )
-        kappa = self._convergence(grid_radii,xp)
+        kappa = self._convergence(grid_radii, xp)
         return kappa
-    
+
     @aa.grid_dec.transform
     def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", xp=np, **kwargs):
         """
@@ -499,10 +503,20 @@ class dPIEMass(MassProfile):
 
         t05 = self.rs / (self.rs - self.ra)
         g05c_a, g05c_b, g05c_c, g05c_d = _mdci05(
-            x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.ra, b0=self.b0, xp=xp
+            x=grid.array[:, 1],
+            y=grid.array[:, 0],
+            eps=ellip,
+            rcore=self.ra,
+            b0=self.b0,
+            xp=xp,
         )
         g05cut_a, g05cut_b, g05cut_c, g05cut_d = _mdci05(
-            x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.rs, b0=self.b0, xp=xp
+            x=grid.array[:, 1],
+            y=grid.array[:, 0],
+            eps=ellip,
+            rcore=self.rs,
+            b0=self.b0,
+            xp=xp,
         )
 
         # Compute Hessian matrix components
@@ -619,7 +633,7 @@ class dPIEMassSph(dPIEMass):
             xp=xp,
             **kwargs,
         )
-    
+
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):

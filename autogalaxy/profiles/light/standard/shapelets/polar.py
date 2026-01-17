@@ -26,7 +26,9 @@ def genlaguerre_jax(n, alpha, x):
     # 0. Input Validation (Requires static Python int n)
     if not isinstance(n, int) or n < 0:
         # Use Python's math.isnan/isinf check if n is float, otherwise type error
-        raise ValueError(f"Degree n must be a non-negative Python integer (static), got {n}.")
+        raise ValueError(
+            f"Degree n must be a non-negative Python integer (static), got {n}."
+        )
 
     # Base Case L0
     if n == 0:
@@ -45,9 +47,9 @@ def genlaguerre_jax(n, alpha, x):
     log_N_plus_alpha_fact = gammaln(n + alpha + 1)
 
     log_BF_k = (
-            log_N_plus_alpha_fact
-            - gammaln(n - k_values + 1)  # log( (n-k)! )
-            - gammaln(alpha + k_values + 1)  # log( (alpha+k)! )
+        log_N_plus_alpha_fact
+        - gammaln(n - k_values + 1)  # log( (n-k)! )
+        - gammaln(alpha + k_values + 1)  # log( (alpha+k)! )
     )
 
     BF_k = jnp.exp(log_BF_k)  # Shape: (n+1,)
@@ -56,7 +58,9 @@ def genlaguerre_jax(n, alpha, x):
     # TF = (-x)^k / k!
 
     # Note: jnp.math.gamma(k_values + 1) is equivalent to k! in log-gamma space
-    TF_k = jnp.power(-x_expanded, k_values_expanded) / jnp.exp(gammaln(k_values_expanded + 1))
+    TF_k = jnp.power(-x_expanded, k_values_expanded) / jnp.exp(
+        gammaln(k_values_expanded + 1)
+    )
     # TF_k Shape: (M, n+1)
 
     # --- C. Final Summation ---
@@ -67,13 +71,13 @@ def genlaguerre_jax(n, alpha, x):
 
 class ShapeletPolar(AbstractShapelet):
     def __init__(
-            self,
-            n: int,
-            m: int,
-            centre: Tuple[float, float] = (0.0, 0.0),
-            ell_comps: Tuple[float, float] = (0.0, 0.0),
-            intensity: float = 1.0,
-            beta: float = 1.0,
+        self,
+        n: int,
+        m: int,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 1.0,
+        beta: float = 1.0,
     ):
         """
         Shapelets where the basis function is defined according to a Polar (r,theta) grid of coordinates.
@@ -153,18 +157,18 @@ class ShapeletPolar(AbstractShapelet):
             from jax.scipy.special import factorial
 
         const = (
-                ((-1) ** ((self.n - xp.abs(self.m)) // 2))
-                * xp.sqrt(
+            ((-1) ** ((self.n - xp.abs(self.m)) // 2))
+            * xp.sqrt(
                 factorial((self.n - xp.abs(self.m)) // 2)
                 / factorial((self.n + xp.abs(self.m)) // 2)
-        )
-                / self.beta
-                / xp.sqrt(xp.pi)
+            )
+            / self.beta
+            / xp.sqrt(xp.pi)
         )
         y = grid.array[:, 0]
         x = grid.array[:, 1]
 
-        rsq = (x ** 2 + (y / self.axis_ratio(xp)) ** 2) / self.beta ** 2
+        rsq = (x**2 + (y / self.axis_ratio(xp)) ** 2) / self.beta**2
         theta = xp.arctan2(y, x)
 
         m_abs = abs(self.m)
@@ -174,7 +178,9 @@ class ShapeletPolar(AbstractShapelet):
 
             from scipy.special import genlaguerre
 
-            laguerre = genlaguerre(n=(self.n - xp.abs(self.m)) / 2.0, alpha=xp.abs(self.m))
+            laguerre = genlaguerre(
+                n=(self.n - xp.abs(self.m)) / 2.0, alpha=xp.abs(self.m)
+            )
             laguerre_vals = laguerre(rsq)
 
         else:
@@ -200,12 +206,12 @@ class ShapeletPolar(AbstractShapelet):
 
 class ShapeletPolarSph(ShapeletPolar):
     def __init__(
-            self,
-            n: int,
-            m: int,
-            centre: Tuple[float, float] = (0.0, 0.0),
-            intensity: float = 1.0,
-            beta: float = 1.0,
+        self,
+        n: int,
+        m: int,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        intensity: float = 1.0,
+        beta: float = 1.0,
     ):
         """
         Shapelets where the basis function is defined according to a Polar (r,theta) grid of coordinates.
