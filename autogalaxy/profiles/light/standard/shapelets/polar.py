@@ -8,9 +8,6 @@ from autogalaxy.profiles.light.decorators import (
 )
 from autogalaxy.profiles.light.standard.shapelets.abstract import AbstractShapelet
 
-import jax.numpy as jnp
-from jax.scipy.special import gammaln
-
 def genlaguerre_jax(n, alpha, x):
     """
     Generalized (associated) Laguerre polynomial L_n^alpha(x) 
@@ -21,6 +18,9 @@ def genlaguerre_jax(n, alpha, x):
         alpha (Numeric): Parameter alpha > -1.
         x (Array): Input array (evaluation points).
     """
+    import jax.numpy as jnp
+    from jax.scipy.special import gammaln
+
     # 0. Input Validation (Requires static Python int n)
     if not isinstance(n, int) or n < 0:
          # Use Python's math.isnan/isinf check if n is float, otherwise type error
@@ -157,12 +157,21 @@ class ShapeletPolar(AbstractShapelet):
             / self.beta
             / xp.sqrt(xp.pi)
         )
-        rsq = (grid[:, 0] ** 2 + (grid[:, 1]/self.q) ** 2) / self.beta**2
-        theta = xp.arctan2(grid[:, 1], grid[:, 0])
+        rsq = (grid.array[:, 0] ** 2 + (grid.array[:, 1]/self.q) ** 2) / self.beta**2
+        theta = xp.arctan2(grid.array[:, 1], grid.array[:, 0])
 
         m_abs = abs(self.m)
         n_laguerre = (self.n - m_abs) // 2
-        laguerre_vals = genlaguerre_jax(n=n_laguerre, alpha=m_abs, x=rsq)
+
+        if xp is np:
+
+            from scipy.special import genlaguerre
+
+            laguerre_vals = genlaguerre(n=(self.n - xp.abs(self.m)) / 2.0, alpha=xp.abs(self.m))
+
+        else:
+
+            laguerre_vals = genlaguerre_jax(n=n_laguerre, alpha=m_abs, x=rsq)
 
         radial = rsq ** (xp.abs(self.m) / 2.0) * xp.exp(-rsq / 2.0) * laguerre_vals
 
