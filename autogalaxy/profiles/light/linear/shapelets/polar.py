@@ -11,8 +11,6 @@ class ShapeletPolar(lp.ShapeletPolar, LightProfileLinear):
         n: int,
         m: int,
         centre: Tuple[float, float] = (0.0, 0.0),
-        q: float = 1.0,
-        phi: float = 0.0,
         ell_comps: Tuple[float, float] = (0.0, 0.0),
         beta: float = 1.0,
     ):
@@ -48,7 +46,7 @@ class ShapeletPolar(lp.ShapeletPolar, LightProfileLinear):
         """
 
         super().__init__(
-            n=n, m=m, centre=centre, q=q, phi=phi, beta=beta, intensity=1.0
+            n=n, m=m, centre=centre, ell_comps=ell_comps, beta=beta, intensity=1.0
         )
 
 
@@ -87,4 +85,4 @@ class ShapeletPolarSph(ShapeletPolar):
             The characteristic length scale of the shapelet basis function, defined in arc-seconds.
         """
 
-        super().__init__(n=n, m=m, centre=centre, q=1.0, phi=phi, beta=beta)
+        super().__init__(n=n, m=m, centre=centre, beta=beta)
