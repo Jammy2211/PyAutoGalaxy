@@ -143,11 +143,19 @@ class ShapeletPolar(AbstractShapelet):
         image
             The image of the Polar Shapelet evaluated at every (y,x) coordinate on the transformed grid.
         """
-        from jax.scipy.special import factorial
+        if xp is np:
+
+            from scipy.special import factorial
+
+        else:
+
+            from jax.scipy.special import factorial
 
         grid = aa.util.geometry.transform_grid_2d_to_reference_frame(
             grid_2d=grid.array, centre=self.centre, angle=self.phi, xp=xp
         )
+        grid = aa.Grid2DIrregular(values=grid)
+
         const = (
             ((-1) ** ((self.n - xp.abs(self.m)) // 2))
             * xp.sqrt(
@@ -167,7 +175,8 @@ class ShapeletPolar(AbstractShapelet):
 
             from scipy.special import genlaguerre
 
-            laguerre_vals = genlaguerre(n=(self.n - xp.abs(self.m)) / 2.0, alpha=xp.abs(self.m))
+            laguerre = genlaguerre(n=(self.n - xp.abs(self.m)) / 2.0, alpha=xp.abs(self.m))
+            laguerre_vals = laguerre(rsq)
 
         else:
 
@@ -175,15 +184,19 @@ class ShapeletPolar(AbstractShapelet):
 
         radial = rsq ** (xp.abs(self.m) / 2.0) * xp.exp(-rsq / 2.0) * laguerre_vals
 
-        if self.m == 0:
-            azimuthal = 1
-        elif self.m > 0:
-            azimuthal = xp.sin((-1) * self.m * theta)
-        else:
-            azimuthal = xp.cos((-1) * self.m * theta)
+        m = self.m
+
+        azimuthal = xp.where(
+            m == 0,
+            xp.ones_like(theta),
+            xp.where(
+                m > 0,
+                xp.sin(-m * theta),
+                xp.cos(-m * theta),
+            ),
+        )
 
         return self._intensity * const * radial * azimuthal
-
 
 class ShapeletPolarSph(ShapeletPolar):
     def __init__(
