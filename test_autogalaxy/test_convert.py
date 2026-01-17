@@ -175,4 +175,29 @@ def test__multipole_comps_from():
 def test__shapelet_axis_ratio_and_phi_from():
 
     axis_ratio, phi = ag.convert.shapelet_axis_ratio_and_phi_from(
-        
+        ell_comps=(0.0, 0.5)
+    )
+
+    assert axis_ratio == pytest.approx(0.3333333, abs=1e-4)
+    assert phi == pytest.approx(0.0, abs=1e-4)
+
+    axis_ratio, phi = ag.convert.shapelet_axis_ratio_and_phi_from(
+        ell_comps=(0.5, 0.0)
+    )
+
+    assert axis_ratio == pytest.approx(0.3333333, abs=1e-4)
+    assert phi == pytest.approx(45.0, abs=1e-4)
+
+    axis_ratio, phi = ag.convert.shapelet_axis_ratio_and_phi_from(
+        ell_comps=(0.0, -0.5)
+    )
+
+    assert axis_ratio == pytest.approx(0.3333333, abs=1e-4)
+    assert phi == pytest.approx(90.0, abs=1e-4)
+
+    axis_ratio, phi = ag.convert.shapelet_axis_ratio_and_phi_from(
+        ell_comps=(-0.5, 0.0)
+    )
+
+    assert axis_ratio == pytest.approx(0.3333333, abs=1e-4)
+    assert phi == pytest.approx(-45.0, abs=1e-4)

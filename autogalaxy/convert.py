@@ -339,12 +339,12 @@ def multipole_comps_from(
     return (multipole_comp_0, multipole_comp_1)
 
 def shapelet_axis_ratio_and_phi_from(
-    shapelet_comps: Tuple[float, float],
+    ell_comps: Tuple[float, float],
     xp=np,
 ) -> Tuple[float, float]:
     """
     Returns the elliptical axis-ratio `q` and position angle `phi` (in degrees) from the shapelet
-    elliptical component parameters `shapelet_comps`.
+    elliptical component parameters `ell_comps`.
 
     This conversion is intentionally identical in *spirit* to the `ell_comps` parameterization used
     throughout PyAutoGalaxy: the circular case corresponds to (0.0, 0.0) at the centre of parameter space,
@@ -377,7 +377,7 @@ def shapelet_axis_ratio_and_phi_from(
 
     Parameters
     ----------
-    shapelet_comps
+    ell_comps
         The first and second components of the shapelet ellipticity. The circular limit is (0.0, 0.0).
         These are unconstrained and can span (-inf, inf) during sampling.
     xp
@@ -390,7 +390,7 @@ def shapelet_axis_ratio_and_phi_from(
     phi
         The position angle in degrees, measured counter-clockwise from the positive x-axis.
     """
-    eps_1, eps_2 = shapelet_comps
+    eps_1, eps_2 = ell_comps
 
     # Ellipticity-like amplitude (0 at circular). Clip to keep q well-defined in (0, 1].
     e = xp.sqrt(eps_1 * eps_1 + eps_2 * eps_2)
@@ -408,13 +408,13 @@ def shapelet_axis_ratio_and_phi_from(
     return axis_ratio, phi
 
 
-def shapelet_comps_from_axis_ratio_and_phi(
+def ell_comps_from_axis_ratio_and_phi(
     axis_ratio: float,
     phi: float,
     xp=np,
 ) -> Tuple[float, float]:
     """
-    Returns the shapelet elliptical component parameters `shapelet_comps` from an axis-ratio `q`
+    Returns the shapelet elliptical component parameters `ell_comps` from an axis-ratio `q`
     and position angle `phi` (in degrees).
 
     This is the inverse of `shapelet_axis_ratio_and_phi_from` and uses the same fixed ellipse symmetry
@@ -449,7 +449,7 @@ def shapelet_comps_from_axis_ratio_and_phi(
 
     Returns
     -------
-    shapelet_comps
+    ell_comps
         The first and second components of the shapelet ellipticity, where the circular limit is (0.0, 0.0).
     """
     axis_ratio = xp.clip(axis_ratio, 1e-12, 1.0)
