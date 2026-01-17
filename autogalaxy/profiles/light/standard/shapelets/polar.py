@@ -70,6 +70,7 @@ class ShapeletPolar(AbstractShapelet):
         centre: Tuple[float, float] = (0.0, 0.0),
         q: float = 1.0,
         phi: float = 0.0,
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
         intensity: float = 1.0,
         beta: float = 1.0,
     ):

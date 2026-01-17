@@ -170,3 +170,9 @@ def test__multipole_comps_from():
     multipole_comps = ag.convert.multipole_comps_from(k_m=0.14142135, phi_m=112.5, m=2)
 
     assert multipole_comps == pytest.approx((-0.1, -0.1), abs=1e-3)
+
+
+def test__shapelet_axis_ratio_and_phi_from():
+
+    axis_ratio, phi = ag.convert.shapelet_axis_ratio_and_phi_from(
+        
