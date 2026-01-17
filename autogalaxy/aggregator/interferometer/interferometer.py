@@ -53,7 +53,7 @@ def _interferometer_from(
         )
         uv_wavelengths = fit.value(name="dataset")[3].data
 
-        transformer_class = fit.value(name="dataset.transformer_class")
+        transformer_class = fit.value(name="transformer_class")
 
         dataset = aa.Interferometer(
             data=data,
