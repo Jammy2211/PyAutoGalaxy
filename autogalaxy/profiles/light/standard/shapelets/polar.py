@@ -155,8 +155,8 @@ class ShapeletPolar(AbstractShapelet):
         const = (
                 ((-1) ** ((self.n - xp.abs(self.m)) // 2))
                 * xp.sqrt(
-            factorial((self.n - xp.abs(self.m)) // 2)
-            / factorial((self.n + xp.abs(self.m)) // 2)
+                factorial((self.n - xp.abs(self.m)) // 2)
+                / factorial((self.n + xp.abs(self.m)) // 2)
         )
                 / self.beta
                 / xp.sqrt(xp.pi)

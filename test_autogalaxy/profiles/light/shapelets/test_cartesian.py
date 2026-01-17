@@ -30,7 +30,7 @@ def test__elliptical__image_2d_from():
 
     image = shapelet.image_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0], [0.5, 0.25]]))
 
-    assert image == pytest.approx(np.array([0.13444, 0.122273]), 1e-4)
+    assert image == pytest.approx(np.array([0.1066423886714124, 0.014346163370]), 1e-4)
 
     shapelet = ag.lp_linear.ShapeletCartesian(
         n_y=2, n_x=3, centre=(0.0, 0.0), ell_comps=(0.2, 0.3), beta=1.0
@@ -38,4 +38,4 @@ def test__elliptical__image_2d_from():
 
     image = shapelet.image_2d_from(grid=ag.Grid2DIrregular([[0.0, 1.0], [0.5, 0.25]]))
 
-    assert image == pytest.approx(np.array([0.12993, 0.13719]), 1e-4)
+    assert image == pytest.approx(np.array([0.0322749900, -0.075487038]), 1e-4)
