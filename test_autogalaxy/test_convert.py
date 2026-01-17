@@ -201,3 +201,30 @@ def test__shapelet_axis_ratio_and_phi_from():
 
     assert axis_ratio == pytest.approx(0.3333333, abs=1e-4)
     assert phi == pytest.approx(-45.0, abs=1e-4)
+
+
+def test__shapelet_ell_comps_from_axis_ratio_and_phi():
+
+    ell_comps = ag.convert.shapelet_ell_comps_from_axis_ratio_and_phi(
+        axis_ratio=0.3333333, phi=0.0
+    )
+
+    assert ell_comps == pytest.approx((0.0, 0.5), abs=1e-4)
+
+    ell_comps = ag.convert.shapelet_ell_comps_from_axis_ratio_and_phi(
+        axis_ratio=0.3333333, phi=45.0
+    )
+
+    assert ell_comps == pytest.approx((0.5, 0.0), abs=1e-4)
+
+    ell_comps = ag.convert.shapelet_ell_comps_from_axis_ratio_and_phi(
+        axis_ratio=0.3333333, phi=90.0
+    )
+
+    assert ell_comps == pytest.approx((0.0, -0.5), abs=1e-4)
+
+    ell_comps = ag.convert.shapelet_ell_comps_from_axis_ratio_and_phi(
+        axis_ratio=0.3333333, phi=-45.0
+    )
+
+    assert ell_comps == pytest.approx((-0.5, 0.0), abs=1e-4)

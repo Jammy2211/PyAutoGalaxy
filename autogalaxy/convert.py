@@ -408,7 +408,7 @@ def shapelet_axis_ratio_and_phi_from(
     return axis_ratio, phi
 
 
-def ell_comps_from_axis_ratio_and_phi(
+def shapelet_ell_comps_from_axis_ratio_and_phi(
     axis_ratio: float,
     phi: float,
     xp=np,
