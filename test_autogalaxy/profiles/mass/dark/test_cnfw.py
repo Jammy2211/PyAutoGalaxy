@@ -19,7 +19,7 @@ def test_convergence_2d_from():
     assert convergence == pytest.approx(0.0, 1.0e-4)
 
 def test_potential_2d_from():
-    cnfw = ag.mp.cNFWshp(centre=(0.0, 0.0), kappa_s=0.01591814312464436, scale_radius=0.36, core_radius=0.036)
+    cnfw = ag.mp.cNFWsph(centre=(0.0, 0.0), kappa_s=0.01591814312464436, scale_radius=0.36, core_radius=0.036)
 
     potential = cnfw.potential_2d_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]))
 
