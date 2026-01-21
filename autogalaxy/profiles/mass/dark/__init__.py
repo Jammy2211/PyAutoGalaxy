@@ -10,4 +10,4 @@ from .nfw_truncated_mcr import NFWTruncatedMCRLudlowSph, NFWTruncatedMCRDuffySph
 from .nfw_truncated_mcr_scatter import NFWTruncatedMCRScatterLudlowSph
 from .nfw_virial_mass_conc import NFWVirialMassConcSph
 from .cnfw import cNFWSph
-from .cnfw_mcr import cNFWMCRDuffySph
+from .cnfw_mcr import cNFWMCRLudlowSph

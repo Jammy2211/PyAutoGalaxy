@@ -4,7 +4,7 @@ from autogalaxy.profiles.mass.dark.cnfw import cNFWSph
 
 from autogalaxy.profiles.mass.dark import mcr_util
 
-class cNFWMCRDuffySph(cNFWSph):
+class cNFWMCRLudlowSph(cNFWSph):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -23,7 +23,7 @@ class cNFWMCRDuffySph(cNFWSph):
             scale_radius,
             core_radius,
             radius_at_200,
-        ) = mcr_util.kappa_s_scale_radius_and_core_radius_for_duffy(
+        ) = mcr_util.kappa_s_scale_radius_and_core_radius_for_ludlow(
             mass_at_200=mass_at_200,
             f_c=f_c,
             redshift_object=redshift_object,
