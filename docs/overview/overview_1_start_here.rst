@@ -17,7 +17,7 @@ Start Here
 
 - **Data Variety**: Support for many data types (e.g. CCD imaging, interferometry, multi-band imaging) which can be fitted independently or simultaneously.
 
-This notebook gives an overview of **PyAutoGalaxy**'s API, core features and details of the autogalaxy_workspace.
+This overview gives an overview of **PyAutoGalaxy**'s API, core features and details of the autogalaxy_workspace.
 
 Imports
 -------
