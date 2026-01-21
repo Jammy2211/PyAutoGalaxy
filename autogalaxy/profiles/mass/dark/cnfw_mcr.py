@@ -25,6 +25,7 @@ class cNFWMCRLudlowSph(cNFWSph):
             radius_at_200,
         ) = mcr_util.kappa_s_scale_radius_and_core_radius_for_ludlow(
             mass_at_200=mass_at_200,
+            scatter_sigma=0.0,
             f_c=f_c,
             redshift_object=redshift_object,
             redshift_source=redshift_source,
