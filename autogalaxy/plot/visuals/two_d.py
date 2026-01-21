@@ -93,7 +93,7 @@ class Visuals2D(aplt.Visuals2D):
                 plotter.tangential_critical_curves_plot.plot_grid(
                     grid=self.tangential_critical_curves
                 )
-            except TypeError:
+            except (AttributeError, TypeError):
                 pass
 
         if self.radial_critical_curves is not None:
@@ -101,7 +101,7 @@ class Visuals2D(aplt.Visuals2D):
                 plotter.radial_critical_curves_plot.plot_grid(
                     grid=self.radial_critical_curves
                 )
-            except TypeError:
+            except (AttributeError, TypeError):
                 pass
 
         if self.tangential_caustics is not None:
@@ -111,16 +111,19 @@ class Visuals2D(aplt.Visuals2D):
                         grid=self.tangential_caustics
                     )
                 except (AttributeError, ValueError):
-                    plotter.tangential_caustics_plot.plot_grid(
-                        grid=self.tangential_caustics.array
-                    )
-            except TypeError:
+                    try:
+                        plotter.tangential_caustics_plot.plot_grid(
+                            grid=self.tangential_caustics.array
+                        )
+                    except (AttributeError, TypeError):
+                        pass
+            except (AttributeError, TypeError):
                 pass
 
         if self.radial_caustics is not None:
             try:
                 plotter.radial_caustics_plot.plot_grid(grid=self.radial_caustics)
-            except TypeError:
+            except (AttributeError, TypeError):
                 pass
 
     def add_critical_curves_or_caustics(

@@ -92,7 +92,7 @@ an image of the Sersic light profile.
 Plotting
 --------
 
-The **PyAutoGalaxy** in-built plot module provides methods for plotting objects and their properties, like the image of
+In-built plotting methods are provided for plotting objects and their properties, like the image of
 a light profile we just created.
 
 By using a ``LightProfilePlotter`` to plot the light profile's image, the figured is improved. 
