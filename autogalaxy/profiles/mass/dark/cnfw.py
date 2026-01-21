@@ -12,7 +12,7 @@ class cNFWSph(MassProfile):
         centre: Tuple[float, float] = (0.0, 0.0),
         kappa_s: float = 0.05,
         scale_radius: float = 1.0,
-        core_radius: float = 0.5,
+        core_radius: float = 0.01,
     ):
         """
                 Represents a spherical cored NFW density distribution
