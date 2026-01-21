@@ -58,7 +58,7 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
 
     return kappa_s, scale_radius, radius_at_200
 
-def kappa_s_and_scale_radius_and_core_radius(mass_at_200, f_c, redshift_object, redshift_source):
+def kappa_s_scale_radius_and_core_radius_for_duffy(mass_at_200, f_c, redshift_object, redshift_source):
     """
     Computes the AutoGalaxy cNFW parameters (kappa_s, scale_radius, core_radius) for an NFW halo of the given
     mass, enforcing the Penarrubia '12 mass-concentration relation.
