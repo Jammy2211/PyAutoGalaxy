@@ -6,7 +6,7 @@ import autoarray as aa
 
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
-class cNFW(MassProfile):
+class cNFWsph(MassProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

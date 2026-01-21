@@ -36,7 +36,7 @@ from .dark import (
     NFWMCRLudlow,
     gNFWMCRLudlow,
     NFWVirialMassConcSph,
-    cNFW,
+    cNFWsph,
 )
 from .stellar import (
     Gaussian,
