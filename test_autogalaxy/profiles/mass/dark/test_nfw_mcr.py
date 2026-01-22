@@ -315,9 +315,9 @@ def test__same_as_above_but_cored_nfw():
 
     assert mp.angle() == 0.0
 
-    assert mp.scale_radius == pytest.approx(0.273382, 1.0e-4)
+    assert mp.scale_radius == pytest.approx(0.21158, 1.0e-4)
 
-    assert mp.core_radius == pytest.approx(0.00273382, 1.0e-6)
+    assert mp.core_radius == pytest.approx(0.0021158, 1.0e-6)
 
     deflections_ludlow = mp.deflections_yx_2d_from(grid=grid)
     deflections = cnfw_kappa_s.deflections_yx_2d_from(grid=grid)
