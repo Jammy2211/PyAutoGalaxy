@@ -2,11 +2,13 @@ import numpy as np
 
 from typing import Tuple
 
+from build.lib.autogalaxy.profiles.mass.dark.abstract import AbstractgNFW
+
 import autoarray as aa
 
-from autogalaxy.profiles.mass.abstract.abstract import MassProfile
+#from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
-class cNFWSph(MassProfile):
+class cNFWSph(AbstractgNFW):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),

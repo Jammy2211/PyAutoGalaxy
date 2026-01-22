@@ -268,3 +268,58 @@ def test__same_as_above_but_generalized_elliptical():
     deflections = nfw_kappa_s.deflections_yx_2d_from(grid=grid)
 
     assert (deflections_ludlow == deflections).all()
+
+def test__same_as_above_but_cored_nfw():
+
+    from autogalaxy.cosmology.model import FlatLambdaCDMWrap
+
+    cosmology = FlatLambdaCDMWrap(H0=70.0, Om0=0.3)
+
+    mp = ag.mp.cNFWMCRLudlowSph(
+                 centre=(1.0, 2.0),
+                 mass_at_200=1.0e9,
+                 f_c=0.01,
+                 redshift_object=0.6,
+                 redshift_source=2.5,
+             )
+
+    mass_at_200_via_mass = mp.mass_at_200_solar_masses(
+        redshift_object=0.6, redshift_source=2.5, cosmology=cosmology
+    )
+    concentration_via_mass = mp.concentration(
+        redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
+    )
+
+    cnfw_kappa_s = ag.mp.cNFWSph(
+            centre=(1.0, 2.0),
+            kappa_s=mp.kappa_s,
+            scale_radius=mp.scale_radius,
+            core_radius=mp.core_radius,
+            )
+
+    mass_at_200_via_kappa_s = cnfw_kappa_s.mass_at_200_solar_masses(
+                redshift_object=0.6, redshift_source=2.5, cosmology=cosmology
+    )
+    concentration_via_kappa_s = cnfw_kappa_s.concentration(
+                redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
+    )
+
+    # We are using the NFWTruncatedSph to check the mass gives a consistnt kappa_s, given certain radii.
+
+    assert mass_at_200_via_kappa_s == mass_at_200_via_mass
+    assert concentration_via_kappa_s == concentration_via_mass
+
+    assert mp.centre == (1.0, 2.0)
+
+    assert mp.axis_ratio() == 1.0
+
+    assert mp.angle() == 0.0
+
+    assert mp.scale_radius == pytest.approx(0.273382, 1.0e-4)
+
+    assert mp.core_radius == pytest.approx(0.00273382, 1.0e-6)
+
+    deflections_ludlow = mp.deflections_yx_2d_from(grid=grid)
+    deflections = cnfw_kappa_s.deflections_yx_2d_from(grid=grid)
+
+    assert (deflections_ludlow == deflections).all()
