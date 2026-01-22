@@ -1,4 +1,4 @@
-## Community Guidelines
+# Community Guidelines
 
 We strive to maintain a welcoming, respectful, and inclusive community. All contributors—whether opening issues, submitting pull requests, reviewing code, or participating in discussions—are expected to follow these guidelines.
 
