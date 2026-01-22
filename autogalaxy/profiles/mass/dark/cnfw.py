@@ -2,7 +2,7 @@ import numpy as np
 
 from typing import Tuple
 
-from build.lib.autogalaxy.profiles.mass.dark.abstract import AbstractgNFW
+from autogalaxy.profiles.mass.dark.abstract import AbstractgNFW
 
 import autoarray as aa
 
