@@ -237,7 +237,7 @@ class Gaussian(MassProfile, StellarProfile):
         # x = grid.array[:, 1]
         # z = x + 1j * y
 
-        z = xp.asarray(z, dtype=xp.complex64)
+        z = xp.asarray(z, dtype=xp.complex128)
         x = xp.real(z)
         y = xp.imag(z)
 
@@ -259,9 +259,9 @@ class Gaussian(MassProfile, StellarProfile):
         w4 = 1j * z * (z2 - 2.5) / (sqrt_pi * (z2 * (z2 - 3.0) + 0.75))
 
         # --- Region 5: special small-imaginary case ---
-        U5 = xp.array([1.320522, 35.7668, 219.031, 1540.787, 3321.990, 36183.31])
+        U5 = xp.array([1.320522, 35.7668, 219.031, 1540.787, 3321.990, 36183.31], dtype=xp.float64)
         V5 = xp.array([1.841439, 61.57037, 364.2191, 2186.181,
-                        9022.228, 24322.84, 32066.6])
+                        9022.228, 24322.84, 32066.6], dtype=xp.float64)
 
         # Horner form in z^2
         num5 = (U5[5] + z2 * (U5[4] + z2 * (U5[3] + z2 * (U5[2] + z2 * (U5[1] + z2 * (U5[0] + z2 * sqrt_pi))))))
@@ -272,9 +272,9 @@ class Gaussian(MassProfile, StellarProfile):
 
         # --- Region 6: remaining small-|z| region ---
         U6 = xp.array([5.9126262, 30.180142, 93.15558,
-                        181.92853, 214.38239, 122.60793])
+                        181.92853, 214.38239, 122.60793], dtype=xp.float64)
         V6 = xp.array([10.479857, 53.992907, 170.35400,
-                        348.70392, 457.33448, 352.73063, 122.60793])
+                        348.70392, 457.33448, 352.73063, 122.60793], dtype=xp.float64)
 
         num6 = (U6[5] - 1j * z * (U6[4] - 1j * z * (U6[3] - 1j * z * (U6[2] - 1j * z * (U6[1] - 1j * z *
                                                                                         (U6[0] - 1j * z * sqrt_pi))))))
