@@ -51,7 +51,7 @@ class Gaussian(MassProfile, StellarProfile):
         """
 
         if self.intensity == 0.0:
-            return np.zeros((grid.shape[0], 2))
+            return xp.zeros((grid.shape[0], 2))
 
         return self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
 
@@ -74,7 +74,7 @@ class Gaussian(MassProfile, StellarProfile):
             self.mass_to_light_ratio
             * self.intensity
             * self.sigma
-            * xp.sqrt((2 * np.pi) / (1.0 - self.axis_ratio(xp) ** 2.0))
+            * xp.sqrt((2 * xp.pi) / (1.0 - self.axis_ratio(xp) ** 2.0))
             * self.zeta_from(grid=grid, xp=xp)
         )
 
@@ -194,13 +194,14 @@ class Gaussian(MassProfile, StellarProfile):
 
     def zeta_from(self, grid: aa.type.Grid2DLike, xp=np):
 
-        from scipy.special import wofz
+        #from scipy.special import wofz
 
-        q2 = self.axis_ratio(xp) ** 2.0
+        q = self.axis_ratio(xp)
+        q2 = q ** 2.0
         ind_pos_y = grid.array[:, 0] >= 0
-        shape_grid = np.shape(grid)
-        output_grid = np.zeros((shape_grid[0]), dtype=np.complex128)
-        scale_factor = self.axis_ratio(xp) / (self.sigma * np.sqrt(2.0 * (1.0 - q2)))
+        shape_grid = xp.shape(grid)
+        output_grid = xp.zeros((shape_grid[0]), dtype=xp.complex128)
+        scale_factor = q / (self.sigma * xp.sqrt(2.0 * (1.0 - q2)))
 
         xs_0 = grid.array[:, 1][ind_pos_y] * scale_factor
         ys_0 = grid.array[:, 0][ind_pos_y] * scale_factor
@@ -208,18 +209,89 @@ class Gaussian(MassProfile, StellarProfile):
         ys_1 = -grid.array[:, 0][~ind_pos_y] * scale_factor
 
         output_grid[ind_pos_y] = -1j * (
-            wofz(xs_0 + 1j * ys_0)
-            - np.exp(-(xs_0**2.0) * (1.0 - q2) - ys_0 * ys_0 * (1.0 / q2 - 1.0))
-            * wofz(self.axis_ratio(xp) * xs_0 + 1j * ys_0 / self.axis_ratio(xp))
+            self.wofz(xs_0 + 1j * ys_0, xp=xp)
+            - xp.exp(-(xs_0**2.0) * (1.0 - q2) - ys_0 * ys_0 * (1.0 / q2 - 1.0))
+            * self.wofz(q * xs_0 + 1j * ys_0 / q, xp=xp)
         )
 
-        output_grid[~ind_pos_y] = np.conj(
+        output_grid[~ind_pos_y] = xp.conj(
             -1j
             * (
-                wofz(xs_1 + 1j * ys_1)
-                - np.exp(-(xs_1**2.0) * (1.0 - q2) - ys_1 * ys_1 * (1.0 / q2 - 1.0))
-                * wofz(self.axis_ratio(xp) * xs_1 + 1j * ys_1 / self.axis_ratio(xp))
+                self.wofz(xs_1 + 1j * ys_1, xp=xp)
+                - xp.exp(-(xs_1**2.0) * (1.0 - q2) - ys_1 * ys_1 * (1.0 / q2 - 1.0))
+                * self.wofz(q * xs_1 + 1j * ys_1 / q, xp=xp)
             )
         )
 
         return output_grid
+
+
+    def wofz(self, z, xp=np):
+        """
+        JAX-compatible Faddeeva function w(z) = exp(-z^2) * erfc(-i z)
+        Based on the Poppe–Wijers / Zaghloul–Ali rational approximations.
+        Valid for all complex z. JIT + autodiff safe.
+        """
+
+        # y = grid.array[:, 0]
+        # x = grid.array[:, 1]
+        # z = x + 1j * y
+
+        z = xp.asarray(z, dtype=xp.complex64)
+        x = xp.real(z)
+        y = xp.imag(z)
+
+        r2 = x * x + y * y
+        y2 = y * y
+        z2 = z * z
+        sqrt_pi = xp.sqrt(xp.pi)
+
+        # --- Region 1: |z|^2 >= 3.8e4 ---
+        w1 = 1j / (z * sqrt_pi)
+
+        # --- Region 2: 3.8e4 > |z|^2 >= 256 ---
+        w2 = 1j * z / (sqrt_pi * (z2 - 0.5))
+
+        # --- Region 3: 256 > |z|^2 >= 62 ---
+        w3 = 1j * (z2 - 1.0) / (z * sqrt_pi * (z2 - 1.5))
+
+        # --- Region 4: 62 > |z|^2 >= 30 and y^2 >= 1e-13 ---
+        w4 = 1j * z * (z2 - 2.5) / (sqrt_pi * (z2 * (z2 - 3.0) + 0.75))
+
+        # --- Region 5: special small-imaginary case ---
+        U5 = xp.array([1.320522, 35.7668, 219.031, 1540.787, 3321.990, 36183.31])
+        V5 = xp.array([1.841439, 61.57037, 364.2191, 2186.181,
+                        9022.228, 24322.84, 32066.6])
+
+        # Horner form in z^2
+        num5 = (U5[5] + z2 * (U5[4] + z2 * (U5[3] + z2 * (U5[2] + z2 * (U5[1] + z2 * (U5[0] + z2 * sqrt_pi))))))
+
+        den5 = (V5[6] + z2 * (V5[5] + z2 * (V5[4] + z2 * (V5[3] + z2 * (V5[2] + z2 * (V5[1] + z2 * (V5[0] + z2)))))))
+
+        w5 = xp.exp(-z2) + 1j * z * num5 / den5
+
+        # --- Region 6: remaining small-|z| region ---
+        U6 = xp.array([5.9126262, 30.180142, 93.15558,
+                        181.92853, 214.38239, 122.60793])
+        V6 = xp.array([10.479857, 53.992907, 170.35400,
+                        348.70392, 457.33448, 352.73063, 122.60793])
+
+        num6 = (U6[5] - 1j * z * (U6[4] - 1j * z * (U6[3] - 1j * z * (U6[2] - 1j * z * (U6[1] - 1j * z *
+                                                                                        (U6[0] - 1j * z * sqrt_pi))))))
+
+        den6 = (V6[6] - 1j * z *(V6[5] - 1j * z * (V6[4] - 1j * z * (V6[3] - 1j * z * (V6[2] - 1j * z * (V6[1] - 1j * z *
+                                                                                        (V6[0] - 1j * z)))))))
+
+
+        w6 = num6 / den6
+
+        # --- Combine regions using pure array logic ---
+        w = w6
+        w = xp.where((r2 >= 2.5) & (y2 < 0.072) & (r2 < 30), w5, w)
+        w = xp.where((r2 >= 30) & (r2 < 62) & (y2 < 1e-13), w5, w)
+        w = xp.where((r2 >= 30) & (r2 < 62) & (y2 >= 1e-13), w4, w)
+        w = xp.where((r2 >= 62) & (r2 < 256), w3, w)
+        w = xp.where((r2 >= 256) & (r2 < 3.8e4), w2, w)
+        w = xp.where(r2 >= 3.8e4, w1, w)
+
+        return w
