@@ -217,85 +217,129 @@ class Gaussian(MassProfile, StellarProfile):
             core = -1j * (wofz(z1) - exp_term * wofz(z2))
 
         if xp == jnp:
-            import jax.scipy.special as jsp
+            #import jax.scipy.special as jsp
 
-            core = -1j * (xp.exp(- z1 * z1) * jsp.erfc(- 1j * z1) - exp_term * xp.exp(- z2 * z2) * jsp.erfc(- 1j * z2))
+            core = -1j * (self.wofz(z1, xp=xp) - exp_term * self.wofz(z2, xp=xp))
 
         # symmetry: zeta(x, -y) = conj(zeta(x, y))
         return xp.where(y >= 0, core, xp.conj(core))
 
 
-    # def wofz(self, z, xp=np):
-    #     """
-    #     JAX-compatible Faddeeva function w(z) = exp(-z^2) * erfc(-i z)
-    #     Based on the Poppe–Wijers / Zaghloul–Ali rational approximations.
-    #     Valid for all complex z. JIT + autodiff safe.
-    #     """
-    #
-    #     # y = grid.array[:, 0]
-    #     # x = grid.array[:, 1]
-    #     # z = x + 1j * y
-    #
-    #     z = xp.asarray(z, dtype=xp.complex128)
-    #     x = xp.real(z)
-    #     y = xp.imag(z)
-    #
-    #     r2 = x * x + y * y
-    #     y2 = y * y
-    #     z2 = z * z
-    #     sqrt_pi = xp.sqrt(xp.pi)
-    #
-    #     # --- Region 1: |z|^2 >= 3.8e4 ---
-    #     w1 = 1j / (z * sqrt_pi)
-    #
-    #     # --- Region 2: 3.8e4 > |z|^2 >= 256 ---
-    #     w2 = 1j * z / (sqrt_pi * (z2 - 0.5))
-    #
-    #     # --- Region 3: 256 > |z|^2 >= 62 ---
-    #     w3 = 1j * (z2 - 1.0) / (z * sqrt_pi * (z2 - 1.5))
-    #
-    #     # --- Region 4: 62 > |z|^2 >= 30 and y^2 >= 1e-13 ---
-    #     w4 = 1j * z * (z2 - 2.5) / (sqrt_pi * (z2 * (z2 - 3.0) + 0.75))
-    #
-    #     # --- Region 5: special small-imaginary case ---
-    #     U5 = xp.array([1.320522, 35.7668, 219.031, 1540.787, 3321.990, 36183.31], dtype=xp.float64)
-    #     V5 = xp.array([1.841439, 61.57037, 364.2191, 2186.181,
-    #                     9022.228, 24322.84, 32066.6], dtype=xp.float64)
-    #
-    #     # Horner form in z^2
-    #     num5 = sqrt_pi
-    #     for k in range(0, 6):
-    #         num5 = num5 * z2 + U5[k]
-    #
-    #     den5 = 1.0
-    #     for k in range(0, 7):
-    #         den5 = den5 * z2 + V5[k]
-    #
-    #     w5 = xp.exp(-z2) + 1j * z * num5 / den5
-    #
-    #     # --- Region 6: remaining small-|z| region ---
-    #     U6 = xp.array([5.9126262, 30.180142, 93.15558,
-    #                     181.92853, 214.38239, 122.60793], dtype=xp.float64)
-    #     V6 = xp.array([10.479857, 53.992907, 170.35400,
-    #                     348.70392, 457.33448, 352.73063, 122.60793], dtype=xp.float64)
-    #
-    #     num6 = sqrt_pi
-    #     for k in range(0, 6):
-    #         num6 = num6 * (-1j * z) + U6[k]
-    #
-    #     den6 = 1
-    #     for k in range(1, 7):
-    #         den6 = den6 * (-1j * z) + V6[k]
-    #
-    #     w6 = num6 / den6
-    #
-    #     # --- Combine regions using pure array logic ---
-    #     w = w6
-    #     w = xp.where((r2 >= 2.5) & (y2 < 0.072) & (r2 < 30), w5, w)
-    #     w = xp.where((r2 >= 30) & (r2 < 62) & (y2 < 1e-13), w5, w)
-    #     w = xp.where((r2 >= 30) & (r2 < 62) & (y2 >= 1e-13), w4, w)
-    #     w = xp.where((r2 >= 62) & (r2 < 256), w3, w)
-    #     w = xp.where((r2 >= 256) & (r2 < 3.8e4), w2, w)
-    #     w = xp.where(r2 >= 3.8e4, w1, w)
-    #
-    #     return w
+    def wofz(self, z, xp=np):
+        """
+        JAX-compatible Faddeeva function w(z) = exp(-z^2) * erfc(-i z)
+        Based on the Poppe–Wijers / Zaghloul–Ali rational approximations.
+        Valid for all complex z. JIT + autodiff safe.
+        """
+
+        # y = grid.array[:, 0]
+        # x = grid.array[:, 1]
+        # z = x + 1j * y
+
+        z = xp.complex128(xp.asarray(z))
+        x = xp.real(z)
+        y = xp.imag(z)
+
+        r2 = x * x + y * y
+        y2 = y * y
+        z2 = z * z
+        sqrt_pi = xp.sqrt(xp.pi)
+
+        # --- Region 1: |z|^2 >= 3.8e4 ---
+        w1 = 1j / (z * sqrt_pi)
+
+        # --- Region 2: 3.8e4 > |z|^2 >= 256 ---
+        w2 = 1j * z / (sqrt_pi * (z2 - 0.5))
+
+        # --- Region 3: 256 > |z|^2 >= 62 ---
+        w3 = 1j * (z2 - 1.0) / (z * sqrt_pi * (z2 - 1.5))
+
+        # --- Region 4: 62 > |z|^2 >= 30 and y^2 >= 1e-13 ---
+        w4 = 1j * z * (z2 - 2.5) / (sqrt_pi * (z2 * (z2 - 3.0) + 0.75))
+
+        # --- Region 5: special small-imaginary case ---
+        U5 = xp.float64(xp.array([1.320522, 35.7668, 219.031, 1540.787, 3321.990, 36183.31]))
+        V5 = xp.float64(xp.array([1.841439, 61.57037, 364.2191, 2186.181,
+                        9022.228, 24322.84, 32066.6]))
+
+        t = sqrt_pi
+        t = U5[0] + z2 * t
+        t = U5[1] + z2 * t
+        t = U5[2] + z2 * t
+        t = U5[3] + z2 * t
+        t = U5[4] + z2 * t
+        num5 = U5[5] + z2 * t
+
+        s = 1.0
+        s = V5[0] + z2 * s
+        s = V5[1] + z2 * s
+        s = V5[2] + z2 * s
+        s = V5[3] + z2 * s
+        s = V5[4] + z2 * s
+        s = V5[5] + z2 * s
+        den5 = V5[6] + z2 * s
+
+        #num5 = (U5[5] + z2 * (U5[4] + z2 * (U5[3] + z2 * (U5[2] + z2 * (U5[1] + z2 * (U5[0] + z2 * sqrt_pi))))))
+
+        #den5 = (V5[6] + z2 * (V5[5] + z2 * (V5[4] + z2 * (V5[3] + z2 * (V5[2] + z2 * (V5[1] + z2 * (V5[0] + z2)))))))
+
+        # Horner form in z^2
+        # num5 = sqrt_pi
+        # for k in range(0, 6):
+        #     num5 = num5 * z2 + U5[k]
+        #
+        # den5 = 1.0
+        # for k in range(0, 7):
+        #     den5 = den5 * z2 + V5[k]
+
+        w5 = xp.exp(-z2) + 1j * z * num5 / den5
+
+        # --- Region 6: remaining small-|z| region ---
+        U6 = xp.float64(xp.array([5.9126262, 30.180142, 93.15558,
+                        181.92853, 214.38239, 122.60793]))
+        V6 = xp.float64(xp.array([10.479857, 53.992907, 170.35400,
+                        348.70392, 457.33448, 352.73063, 122.60793]))
+
+        t = sqrt_pi
+        t = U6[0] - 1j * z * t
+        t = U6[1] - 1j * z * t
+        t = U6[2] - 1j * z * t
+        t = U6[3] - 1j * z * t
+        t = U6[4] - 1j * z * t
+        num6 = U6[5] - 1j * z * t
+
+        s = 1.0
+        s = V6[0] - 1j * z * s
+        s = V6[1] - 1j * z * s
+        s = V6[2] - 1j * z * s
+        s = V6[3] - 1j * z * s
+        s = V6[4] - 1j * z * s
+        s = V6[5] - 1j * z * s
+        den6 = V6[6] - 1j * z * s
+
+        # num6 = (U6[5] - 1j * z * (U6[4] - 1j * z * (U6[3] - 1j * z * (U6[2] - 1j * z * (U6[1] - 1j * z *
+        #                                                                                 (U6[0] - 1j * z * sqrt_pi))))))
+        #
+        # den6 = (V6[6] - 1j * z * (V6[5] - 1j * z * (V6[4] - 1j * z * (V6[3] - 1j * z * (V6[2] - 1j * z * (V6[1] - 1j * z *
+        #                                                                                                   (V6[0] - 1j * z)))))))
+
+        #num6 = sqrt_pi
+        # for k in range(0, 6):
+        #     num6 = num6 * (-1j * z) + U6[k]
+        #
+        # den6 = 1
+        # for k in range(1, 7):
+        #     den6 = den6 * (-1j * z) + V6[k]
+
+        w6 = num6 / den6
+
+        # --- Combine regions using pure array logic ---
+        w = w6
+        w = xp.where((r2 >= 2.5) & (y2 < 0.072) & (r2 < 30), w5, w)
+        w = xp.where((r2 >= 30) & (r2 < 62) & (y2 < 1e-13), w5, w)
+        w = xp.where((r2 >= 30) & (r2 < 62) & (y2 >= 1e-13), w4, w)
+        w = xp.where((r2 >= 62) & (r2 < 256), w3, w)
+        w = xp.where((r2 >= 256) & (r2 < 3.8e4), w2, w)
+        w = xp.where(r2 >= 3.8e4, w1, w)
+
+        return w
