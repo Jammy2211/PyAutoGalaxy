@@ -1,6 +1,6 @@
 import numpy as np
 import jax.numpy as jnp
-import jax.scipy.special as jsp
+
 
 from typing import Tuple
 
@@ -195,9 +195,6 @@ class Gaussian(MassProfile, StellarProfile):
         return xp.where(axis_ratio < 0.9999, axis_ratio, 0.9999)
 
     def zeta_from(self, grid: aa.type.Grid2DLike, xp=np):
-
-        from scipy.special import wofz
-
         q = self.axis_ratio(xp)
         q2 = q ** 2.0
 
@@ -214,65 +211,19 @@ class Gaussian(MassProfile, StellarProfile):
 
         exp_term = xp.exp(-(xs ** 2) * (1.0 - q2) - ys ** 2 * (1.0 / q2 - 1.0))
 
-        core = -1j * (wofz(z1) - exp_term * wofz(z2))
+        if xp == np:
+            from scipy.special import wofz
+
+            core = -1j * (wofz(z1) - exp_term * wofz(z2))
+
+        if xp == jnp:
+            import jax.scipy.special as jsp
+
+            core = -1j * (xp.exp(- z1 * z1) * jsp.erfc(- 1j * z1) - exp_term * xp.exp(- z2 * z2) * jsp.erfc(- 1j * z2))
 
         # symmetry: zeta(x, -y) = conj(zeta(x, y))
         return xp.where(y >= 0, core, xp.conj(core))
 
-        # q = self.axis_ratio(xp)
-        # q2 = q ** 2.0
-        # ind_pos_y = grid.array[:, 0] >= 0
-        # shape_grid = xp.shape(grid)
-        # output_grid = xp.zeros((shape_grid[0]), dtype=xp.complex128)
-        # scale_factor = q / (self.sigma * xp.sqrt(2.0 * (1.0 - q2)))
-        #
-        # xs_0 = grid.array[:, 1][ind_pos_y] * scale_factor
-        # ys_0 = grid.array[:, 0][ind_pos_y] * scale_factor
-        # xs_1 = grid.array[:, 1][~ind_pos_y] * scale_factor
-        # ys_1 = -grid.array[:, 0][~ind_pos_y] * scale_factor
-        #
-        # if xp == np:
-        #     from scipy.special import wofz
-        #
-        #     output_grid[ind_pos_y] = -1j * (
-        #             wofz(xs_0 + 1j * ys_0)
-        #             - np.exp(-(xs_0 ** 2.0) * (1.0 - q2) - ys_0 * ys_0 * (1.0 / q2 - 1.0))
-        #             * wofz(q * xs_0 + 1j * ys_0 / q)
-        #     )
-        #
-        #     output_grid[~ind_pos_y] = np.conj(
-        #         -1j
-        #         * (
-        #                 wofz(xs_1 + 1j * ys_1)
-        #                 - np.exp(-(xs_1 ** 2.0) * (1.0 - q2) - ys_1 * ys_1 * (1.0 / q2 - 1.0))
-        #                 * wofz(q * xs_1 + 1j * ys_1 / q)
-        #         )
-        #     )
-        #
-        # if xp == jnp:
-        #     z1 = xs_0 + 1j * ys_0
-        #     z2 = q * xs_0 + 1j * ys_0 / q
-        #     output_grid[ind_pos_y] = -1j * (
-        #             xp.exp(- z1 * z1) * jsp.erfc(- 1j * z1)
-        #             - xp.exp(-(xs_0**2.0) * (1.0 - q2) - ys_0 * ys_0 * (1.0 / q2 - 1.0))
-        #             * xp.exp(- z2 * z2) * jsp.erfc(- 1j * z2)
-        #     )
-        #
-        #     z1 = xs_1 + 1j * ys_1
-        #     z2 = q * xs_1 + 1j * ys_1 / q
-        #     output_grid[~ind_pos_y] = xp.conj(
-        #         -1j
-        #         * (
-        #                 xp.exp(- z1 * z1) * jsp.erfc(- 1j * z1)
-        #                 - xp.exp(-(xs_1**2.0) * (1.0 - q2) - ys_1 * ys_1 * (1.0 / q2 - 1.0))
-        #                 * xp.exp(- z2 * z2) * jsp.erfc(- 1j * z2)
-        #         )
-        #     )
-        #
-        # return output_grid
-
-    # def wofz(self, z, xp=np):
-    #     return xp.exp(- z * z) * jsp.erfc(- 1j * z)
 
     # def wofz(self, z, xp=np):
     #     """
