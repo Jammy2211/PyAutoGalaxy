@@ -264,15 +264,13 @@ class Gaussian(MassProfile, StellarProfile):
                         9022.228, 24322.84, 32066.6], dtype=xp.float64)
 
         # Horner form in z^2
-        num5 = U5[0]
-        for k in range(1, 6):
+        num5 = sqrt_pi
+        for k in range(0, 6):
             num5 = num5 * z2 + U5[k]
-        num5 = num5 * z2 + sqrt_pi
 
-        den5 = V5[0]
-        for k in range(1, 7):
+        den5 = 1.0
+        for k in range(0, 7):
             den5 = den5 * z2 + V5[k]
-        den5 = den5 * z2 + z2
 
         w5 = xp.exp(-z2) + 1j * z * num5 / den5
 
@@ -282,15 +280,13 @@ class Gaussian(MassProfile, StellarProfile):
         V6 = xp.array([10.479857, 53.992907, 170.35400,
                         348.70392, 457.33448, 352.73063, 122.60793], dtype=xp.float64)
 
-        num6 = U6[0]
-        for k in range(1, 6):
+        num6 = sqrt_pi
+        for k in range(0, 6):
             num6 = num6 * (-1j * z) + U6[k]
-        num6 = num6 * (-1j * z) + sqrt_pi
 
-        den6 = V6[0]
+        den6 = 1
         for k in range(1, 7):
             den6 = den6 * (-1j * z) + V6[k]
-        den6 = den6 * (-1j * z) + (-1j * z)
 
         w6 = num6 / den6
 
