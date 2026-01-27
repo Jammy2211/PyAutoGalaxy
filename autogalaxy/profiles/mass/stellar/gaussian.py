@@ -41,6 +41,7 @@ class Gaussian(MassProfile, StellarProfile):
         self.intensity = intensity
         self.sigma = sigma
 
+
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -52,13 +53,14 @@ class Gaussian(MassProfile, StellarProfile):
 
         """
 
-        if self.intensity == 0.0:
-            return xp.zeros((grid.shape[0], 2))
+        # if self.intensity == 0.0:
+        #     return xp.zeros((grid.shape[0], 2))
 
         return self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
+
     def deflections_2d_via_analytic_from(
         self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ):
