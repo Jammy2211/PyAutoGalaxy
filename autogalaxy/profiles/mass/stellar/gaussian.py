@@ -208,7 +208,7 @@ class Gaussian(MassProfile, StellarProfile):
 
         exp_term = xp.exp(-(xs ** 2) * (1.0 - q2) - ys ** 2 * (1.0 / q2 - 1.0))
 
-        if xp == np:
+        if xp is np:
             from scipy.special import wofz
 
             core = -1j * (wofz(z1) - exp_term * wofz(z2))
