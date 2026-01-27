@@ -279,10 +279,6 @@ class Gaussian(MassProfile, StellarProfile):
         s = V5[5] + z2 * s
         den5 = V5[6] + z2 * s
 
-        #num5 = (U5[5] + z2 * (U5[4] + z2 * (U5[3] + z2 * (U5[2] + z2 * (U5[1] + z2 * (U5[0] + z2 * sqrt_pi))))))
-
-        #den5 = (V5[6] + z2 * (V5[5] + z2 * (V5[4] + z2 * (V5[3] + z2 * (V5[2] + z2 * (V5[1] + z2 * (V5[0] + z2)))))))
-
         # Horner form in z^2
         # num5 = sqrt_pi
         # for k in range(0, 6):
@@ -316,12 +312,6 @@ class Gaussian(MassProfile, StellarProfile):
         s = V6[4] - 1j * z * s
         s = V6[5] - 1j * z * s
         den6 = V6[6] - 1j * z * s
-
-        # num6 = (U6[5] - 1j * z * (U6[4] - 1j * z * (U6[3] - 1j * z * (U6[2] - 1j * z * (U6[1] - 1j * z *
-        #                                                                                 (U6[0] - 1j * z * sqrt_pi))))))
-        #
-        # den6 = (V6[6] - 1j * z * (V6[5] - 1j * z * (V6[4] - 1j * z * (V6[3] - 1j * z * (V6[2] - 1j * z * (V6[1] - 1j * z *
-        #                                                                                                   (V6[0] - 1j * z)))))))
 
         #num6 = sqrt_pi
         # for k in range(0, 6):
