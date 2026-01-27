@@ -60,7 +60,6 @@ class Gaussian(MassProfile, StellarProfile):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-
     def deflections_2d_via_analytic_from(
         self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ):
