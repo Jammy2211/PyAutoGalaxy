@@ -51,8 +51,9 @@ class Gaussian(MassProfile, StellarProfile):
 
         """
 
-        defl = self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
-        return xp.where(self.intensity == 0.0, xp.zeros_like(defl), defl)
+        # defl = self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
+        # return xp.where(self.intensity == 0.0, xp.zeros_like(defl), defl)
+        return self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
