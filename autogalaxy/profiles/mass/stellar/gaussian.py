@@ -1,6 +1,4 @@
 import numpy as np
-import jax.numpy as jnp
-
 
 from typing import Tuple
 
@@ -53,10 +51,8 @@ class Gaussian(MassProfile, StellarProfile):
 
         """
 
-        # if self.intensity == 0.0:
-        #     return xp.zeros((grid.shape[0], 2))
-
-        return self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
+        defl = self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
+        return xp.where(self.intensity == 0.0, xp.zeros_like(defl), defl)
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
@@ -217,9 +213,7 @@ class Gaussian(MassProfile, StellarProfile):
 
             core = -1j * (wofz(z1) - exp_term * wofz(z2))
 
-        if xp == jnp:
-            #import jax.scipy.special as jsp
-
+        else:
             core = -1j * (self.wofz(z1, xp=xp) - exp_term * self.wofz(z2, xp=xp))
 
         # symmetry: zeta(x, -y) = conj(zeta(x, y))
@@ -232,10 +226,6 @@ class Gaussian(MassProfile, StellarProfile):
         Based on the Poppe–Wijers / Zaghloul–Ali rational approximations.
         Valid for all complex z. JIT + autodiff safe.
         """
-
-        # y = grid.array[:, 0]
-        # x = grid.array[:, 1]
-        # z = x + 1j * y
 
         z = xp.complex128(xp.asarray(z))
         x = xp.real(z)
@@ -280,15 +270,6 @@ class Gaussian(MassProfile, StellarProfile):
         s = V5[5] + z2 * s
         den5 = V5[6] + z2 * s
 
-        # Horner form in z^2
-        # num5 = sqrt_pi
-        # for k in range(0, 6):
-        #     num5 = num5 * z2 + U5[k]
-        #
-        # den5 = 1.0
-        # for k in range(0, 7):
-        #     den5 = den5 * z2 + V5[k]
-
         w5 = xp.exp(-z2) + 1j * z * num5 / den5
 
         # --- Region 6: remaining small-|z| region ---
@@ -313,14 +294,6 @@ class Gaussian(MassProfile, StellarProfile):
         s = V6[4] - 1j * z * s
         s = V6[5] - 1j * z * s
         den6 = V6[6] - 1j * z * s
-
-        #num6 = sqrt_pi
-        # for k in range(0, 6):
-        #     num6 = num6 * (-1j * z) + U6[k]
-        #
-        # den6 = 1
-        # for k in range(1, 7):
-        #     den6 = den6 * (-1j * z) + V6[k]
 
         w6 = num6 / den6
 
