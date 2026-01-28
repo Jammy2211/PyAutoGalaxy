@@ -39,6 +39,7 @@ class Gaussian(MassProfile, StellarProfile):
         self.intensity = intensity
         self.sigma = sigma
 
+
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -49,10 +50,6 @@ class Gaussian(MassProfile, StellarProfile):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
-
-        if self.intensity == 0.0:
-            return np.zeros((grid.shape[0], 2))
-
         return self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
 
     @aa.grid_dec.to_vector_yx
@@ -74,7 +71,7 @@ class Gaussian(MassProfile, StellarProfile):
             self.mass_to_light_ratio
             * self.intensity
             * self.sigma
-            * xp.sqrt((2 * np.pi) / (1.0 - self.axis_ratio(xp) ** 2.0))
+            * xp.sqrt((2 * xp.pi) / (1.0 - self.axis_ratio(xp) ** 2.0))
             * self.zeta_from(grid=grid, xp=xp)
         )
 
@@ -134,12 +131,12 @@ class Gaussian(MassProfile, StellarProfile):
         )
 
     @staticmethod
-    def deflection_func(u, y, x, npow, axis_ratio, sigma):
-        _eta_u = np.sqrt(axis_ratio) * np.sqrt(
+    def deflection_func(u, y, x, npow, axis_ratio, sigma, xp=np):
+        _eta_u = xp.sqrt(axis_ratio) * xp.sqrt(
             (u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u))))
         )
 
-        return np.exp(-0.5 * np.square(np.divide(_eta_u, sigma))) / (
+        return xp.exp(-0.5 * xp.square(xp.divide(_eta_u, sigma))) / (
             (1 - (1 - axis_ratio**2) * u) ** (npow + 0.5)
         )
 
@@ -164,7 +161,7 @@ class Gaussian(MassProfile, StellarProfile):
 
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
-        return np.zeros(shape=grid.shape[0])
+        return xp.zeros(shape=grid.shape[0])
 
     def image_2d_via_radii_from(self, grid_radii: np.ndarray, xp=np):
         """Calculate the intensity of the Gaussian light profile on a grid of radial coordinates.
@@ -176,13 +173,13 @@ class Gaussian(MassProfile, StellarProfile):
 
         Note: sigma is divided by sqrt(q) here.
         """
-        return np.multiply(
+        return xp.multiply(
             self.intensity,
-            np.exp(
+            xp.exp(
                 -0.5
-                * np.square(
-                    np.divide(
-                        grid_radii.array, self.sigma / np.sqrt(self.axis_ratio(xp))
+                * xp.square(
+                    xp.divide(
+                        grid_radii.array, self.sigma / xp.sqrt(self.axis_ratio(xp))
                     )
                 )
             ),
@@ -193,33 +190,96 @@ class Gaussian(MassProfile, StellarProfile):
         return xp.where(axis_ratio < 0.9999, axis_ratio, 0.9999)
 
     def zeta_from(self, grid: aa.type.Grid2DLike, xp=np):
+        q = self.axis_ratio(xp)
+        q2 = q ** 2.0
 
-        from scipy.special import wofz
+        y = grid.array[:, 0]
+        x = grid.array[:, 1]
 
-        q2 = self.axis_ratio(xp) ** 2.0
-        ind_pos_y = grid.array[:, 0] >= 0
-        shape_grid = np.shape(grid)
-        output_grid = np.zeros((shape_grid[0]), dtype=np.complex128)
-        scale_factor = self.axis_ratio(xp) / (self.sigma * np.sqrt(2.0 * (1.0 - q2)))
+        scale = q / (self.sigma * xp.sqrt(2.0 * (1.0 - q2)))
 
-        xs_0 = grid.array[:, 1][ind_pos_y] * scale_factor
-        ys_0 = grid.array[:, 0][ind_pos_y] * scale_factor
-        xs_1 = grid.array[:, 1][~ind_pos_y] * scale_factor
-        ys_1 = -grid.array[:, 0][~ind_pos_y] * scale_factor
+        xs = x * scale
+        ys = y * scale
 
-        output_grid[ind_pos_y] = -1j * (
-            wofz(xs_0 + 1j * ys_0)
-            - np.exp(-(xs_0**2.0) * (1.0 - q2) - ys_0 * ys_0 * (1.0 / q2 - 1.0))
-            * wofz(self.axis_ratio(xp) * xs_0 + 1j * ys_0 / self.axis_ratio(xp))
-        )
+        z1 = xs + 1j * ys
+        z2 = q * xs + 1j * ys / q
 
-        output_grid[~ind_pos_y] = np.conj(
-            -1j
-            * (
-                wofz(xs_1 + 1j * ys_1)
-                - np.exp(-(xs_1**2.0) * (1.0 - q2) - ys_1 * ys_1 * (1.0 / q2 - 1.0))
-                * wofz(self.axis_ratio(xp) * xs_1 + 1j * ys_1 / self.axis_ratio(xp))
-            )
-        )
+        exp_term = xp.exp(-(xs ** 2) * (1.0 - q2) - ys ** 2 * (1.0 / q2 - 1.0))
 
-        return output_grid
+        if xp is np:
+            from scipy.special import wofz
+
+            core = -1j * (wofz(z1) - exp_term * wofz(z2))
+
+        else:
+            core = -1j * (self.wofz(z1, xp=xp) - exp_term * self.wofz(z2, xp=xp))
+
+        # symmetry: zeta(x, -y) = conj(zeta(x, y))
+        return xp.where(y >= 0, core, xp.conj(core))
+
+    def wofz(self, z, xp=np):
+        """
+        JAX-compatible Faddeeva function w(z) = exp(-z^2) * erfc(-i z)
+        Based on the Poppe–Wijers / Zaghloul–Ali rational approximations.
+        Valid for all complex z. JIT + autodiff safe.
+        """
+
+        z = xp.asarray(z)
+        x = xp.real(z)
+        y = xp.imag(z)
+
+        r2 = x * x + y * y
+        y2 = y * y
+        z2 = z * z
+        sqrt_pi = xp.sqrt(xp.pi)
+
+        # --- Regions 1 to 4 ---
+        r1_s1 = xp.array([2.5, 2.0, 1.5, 1.0, 0.5])
+
+        t = z
+        for coef in r1_s1:
+            t = z - coef / t
+
+        w_large = 1j / (t * sqrt_pi)
+
+        # --- Region 5: special small-imaginary case ---
+        U5 = xp.array([1.320522, 35.7668, 219.031, 1540.787, 3321.990, 36183.31])
+        V5 = xp.array([1.841439, 61.57037, 364.2191, 2186.181,
+                       9022.228, 24322.84, 32066.6])
+
+        t = 1 / sqrt_pi
+        for u in U5:
+            t = u + z2 * t
+
+        s = 1.0
+        for v in V5:
+            s = v + z2 * s
+
+        w5 = xp.exp(-z2) + 1j * z * t / s
+
+        # --- Region 6: remaining small-|z| region ---
+        U6 = xp.array([5.9126262, 30.180142, 93.15558,
+                       181.92853, 214.38239, 122.60793])
+        V6 = xp.array([10.479857, 53.992907, 170.35400,
+                       348.70392, 457.33448, 352.73063, 122.60793])
+
+        t = 1 / sqrt_pi
+        for u in U6:
+            t = u - 1j * z * t
+
+        s = 1.0
+        for v in V6:
+            s = v - 1j * z * s
+
+        w6 = t / s
+
+        # --- Regions ---
+        reg1 = (r2 >= 62.0) | ((r2 >= 30.0) & (r2 < 62.0) & (y2 >= 1e-13))
+        reg2 = ((r2 >= 30) & (r2 < 62) & (y2 < 1e-13)) | ((r2 >= 2.5) & (r2 < 30) & (y2 < 0.072))
+
+        # --- Combine regions using pure array logic ---
+        w = w6
+        w = xp.where(reg2, w5, w)
+        w = xp.where(reg1, w_large, w)
+
+        return w
