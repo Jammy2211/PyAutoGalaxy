@@ -28,7 +28,6 @@ from autoarray.plot.wrap.two_d import (
     GridPlot,
     VectorYXQuiver,
     PatchOverlay,
-    InterpolatedReconstruction,
     DelaunayDrawer,
     OriginScatter,
     MaskScatter,

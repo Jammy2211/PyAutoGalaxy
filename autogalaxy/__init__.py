@@ -12,7 +12,6 @@ from autoarray.dataset.interferometer.w_tilde import (
 from autoarray.dataset.imaging.dataset import Imaging  # noqa
 from autoarray.dataset.interferometer.dataset import Interferometer  # noqa
 from autoarray.dataset.dataset_model import DatasetModel
-from autoarray.inversion.inversion.mapper_valued import MapperValued
 from autoarray.inversion.pixelization import mesh  # noqa
 from autoarray.inversion import regularization as reg  # noqa
 from autoarray.inversion.pixelization import image_mesh
