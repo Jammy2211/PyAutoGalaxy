@@ -159,33 +159,3 @@ class cNFWSph(AbstractgNFW):
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return xp.zeros(shape=grid.shape[0])
-
-    # def F_func(self, theta, radius, xp=np):
-    #     if theta == 0:
-    #         F = 0
-    #     elif theta < radius:
-    #         F = (radius / 2 * xp.log(2 * radius / theta) - xp.sqrt(radius ** 2 - theta ** 2)
-    #              * xp.arctanh(xp.sqrt((radius - theta) / (radius + theta)))
-    #              )
-    #     else:
-    #         F = (radius / 2 * xp.log(2 * radius / theta) + xp.sqrt(theta ** 2 - radius ** 2)
-    #              * xp.arctan(xp.sqrt((theta - radius) / (theta + radius)))
-    #              )
-    #     return 2 * radius * F
-
-    # def dev_F_func(self, theta, radius, xp=np):
-    #     if theta == 0:
-    #         dev_F = 0
-    #     elif theta < radius:
-    #         dev_F = (radius * xp.log(2 * radius / theta)
-    #                  - (2 * radius ** 2 - theta ** 2) / xp.sqrt(radius ** 2 - theta ** 2)
-    #                  * xp.arctanh(xp.sqrt((radius - theta) / (radius + theta)))
-    #                  )
-    #     elif theta == radius:
-    #         dev_F = (radius * (xp.log(2) - 1 / 2))
-    #     else:
-    #         dev_F = (radius * xp.log(2 * radius / theta)
-    #                  + (theta ** 2 - 2 * radius ** 2) / xp.sqrt(theta ** 2 - radius ** 2)
-    #                  * xp.arctan(xp.sqrt((theta - radius) / (theta + radius)))
-    #                  )
-    #     return 2 * dev_F
