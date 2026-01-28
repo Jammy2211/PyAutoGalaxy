@@ -26,19 +26,14 @@ def test__arcsec_to_kpc_conversion():
 
 def test__angular_diameter_distance_z1z2():
 
-    from astropy import cosmology as cosmo_ap
-
-    cosmology_ap = cosmo_ap.FlatLambdaCDM(H0=70, Om0=0.3, Tcmb0=2.725)
-
-    angular_diameter_distance_ap = cosmology_ap.angular_diameter_distance_z1z2(0.1, 1.0).to("kpc").value
-
     cosmology = ag.cosmology.FlatLambdaCDM(H0=70, Om0=0.3, Tcmb0=2.725)
 
     angular_diameter_distance = (
         cosmology.angular_diameter_distance_kpc_z1z2(0.1, 1.0)
     )
 
-    assert angular_diameter_distance == pytest.approx(angular_diameter_distance_ap, 1.0e-4)
+
+    assert angular_diameter_distance == pytest.approx(1442537.80833, 1.0e-4)
 
 
 def test__angular_diameter_distances():
