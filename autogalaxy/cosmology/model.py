@@ -443,18 +443,20 @@ class FlatLambdaCDM(LensingCosmology):
         self,
         z1: float,
         z2: float,
-        n_steps: int = 8193,   # odd by default
+        n_steps: int = 8193,  # odd by default
         xp=np,
     ):
         """
         D_A(z1,z2) in kpc for flat wCDM using Simpson's rule.
-        Includes radiation (photons + massless neutrinos) to better match astropy when Tcmb0 is set.
 
-        Assumes:
+        Includes:
+        - photons via Tcmb0
+        - *massive neutrinos* via m_nu (matter-like, Omega_nu h^2 = sum(m_nu)/93.14 eV)
+
+        Notes:
         - Flat universe: Omega_k = 0
         - Dark energy equation of state constant w0
-        - Neutrinos treated as radiation via Neff (massless approximation)
-        - H0 in km/s/Mpc
+        - This is designed to better match astropy's Planck15-style backgrounds.
         """
         # Ensure odd number of samples for Simpson (safe: n_steps is a Python int)
         if (n_steps % 2) == 0:
@@ -472,27 +474,37 @@ class FlatLambdaCDM(LensingCosmology):
         Om0 = xp.asarray(self.Om0)
         w0 = xp.asarray(self.w0)
 
-        # ---- Radiation density today (photons + massless neutrinos) ----
+        # ---- Photon radiation density today ----
         # Omega_gamma * h^2 ≈ 2.469e-5 * (Tcmb/2.7255)^4
         Tcmb = xp.asarray(self.Tcmb0)
         Ogamma_h2 = xp.asarray(2.469e-5) * (Tcmb / xp.asarray(2.7255)) ** 4
         Ogamma0 = Ogamma_h2 / (h * h)
 
-        Neff = xp.asarray(self.Neff)
-        # Omega_nu (massless) = Omega_gamma * 0.2271 * Neff
-        Onu0 = Ogamma0 * xp.asarray(0.2271) * Neff
+        # ---- Massive neutrinos (matter-like approximation) ----
+        # Omega_nu h^2 ≈ sum(m_nu)/93.14 eV
+        m_nu = getattr(self, "m_nu", 0.0)
+        m_nu_sum = xp.sum(xp.asarray(m_nu))  # works if m_nu is float or array-like
+        Onu_h2 = m_nu_sum / xp.asarray(93.14)
+        Onu0 = Onu_h2 / (h * h)
 
-        Or0 = Ogamma0 + Onu0
+        # ---- (Optional) massless neutrino radiation via Neff ----
+        # If you want to include *massless* neutrinos as radiation, uncomment:
+        # Neff = xp.asarray(self.Neff)
+        # Onu_rad0 = Ogamma0 * xp.asarray(0.2271) * Neff
+        # Or0 = Ogamma0 + Onu_rad0
+        #
+        # To avoid double-counting with the massive term above, we keep radiation as photons only by default:
+        Or0 = Ogamma0
 
-        # Flatness: Omega_de = 1 - Omega_m - Omega_r
-        Ode0 = xp.asarray(1.0) - Om0 - Or0
+        # Flatness: Omega_de = 1 - Omega_m - Omega_r - Omega_nu
+        Ode0 = xp.asarray(1.0) - Om0 - Or0 - Onu0
 
         def E(z):
             zp1 = xp.asarray(1.0) + z
-            # E^2 = Om(1+z)^3 + Or(1+z)^4 + Ode(1+z)^{3(1+w)}
+            # E^2 = (Om+Onu_m)(1+z)^3 + Or(1+z)^4 + Ode(1+z)^{3(1+w)}
             return xp.sqrt(
-                Om0 * zp1**3
-                + Or0 * zp1**4
+                (Om0 + Onu0) * zp1 ** 3
+                + Or0 * zp1 ** 4
                 + Ode0 * zp1 ** (xp.asarray(3.0) * (xp.asarray(1.0) + w0))
             )
 

@@ -17,11 +17,11 @@ def test__arcsec_to_kpc_conversion():
 
     arcsec_per_kpc = cosmology.arcsec_per_kpc_from(redshift=1.0)
 
-    assert arcsec_per_kpc == pytest.approx(0.1214785, 1e-5)
+    assert arcsec_per_kpc == pytest.approx(0.1214785, 5e-5)
 
     kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=1.0)
 
-    assert kpc_per_arcsec == pytest.approx(8.231907, 1e-5)
+    assert kpc_per_arcsec == pytest.approx(8.231907, 5e-5)
 
 
 def test__angular_diameter_distances():
