@@ -6,8 +6,6 @@ from autogalaxy.profiles.mass.dark.abstract import AbstractgNFW
 
 import autoarray as aa
 
-#from autogalaxy.profiles.mass.abstract.abstract import MassProfile
-
 class cNFWSph(AbstractgNFW):
     def __init__(
         self,
