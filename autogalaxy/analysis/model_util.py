@@ -127,3 +127,28 @@ def mge_model_from(
         Basis,
         profile_list=bulge_gaussian_list,
     )
+
+
+def simulator_start_here_model_from():
+
+    from autogalaxy.profiles.light.snr import Sersic
+    from autogalaxy.galaxy.galaxy import Galaxy
+
+    bulge = af.Model(Sersic)
+
+    bulge.centre = (0.0, 0.0)
+    bulge.ell_comps.ell_comps_0 = af.TruncatedGaussianPrior(
+        mean=0.0, sigma=0.2, lower_limit=-1.0, upper_limit=1.0
+    )
+    bulge.ell_comps.ell_comps_1 = af.TruncatedGaussianPrior(
+        mean=0.0, sigma=0.2, lower_limit=-1.0, upper_limit=1.0
+    )
+    bulge.signal_to_noise_ratio = af.UniformPrior(lower_limit=20.0, upper_limit=60.0)
+    bulge.effective_radius = af.UniformPrior(lower_limit=1.0, upper_limit=5.0)
+    bulge.sersic_index = af.TruncatedGaussianPrior(
+        mean=4.0, sigma=0.5, lower_limit=0.8, upper_limit=5.0
+    )
+
+    galaxy = af.Model(Galaxy, redshift=0.5, bulge=bulge)
+
+    return galaxy

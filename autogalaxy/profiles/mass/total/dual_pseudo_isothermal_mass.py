@@ -275,7 +275,9 @@ class PIEMass(MassProfile):
         """
         ellip = self._ellip(xp)
         factor = self.b0
-        zis = _ci05(x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.ra)
+        zis = _ci05(
+            x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.ra, xp=xp
+        )
 
         # This is in axes aligned to the major/minor axis
         deflection_x = zis.real
@@ -287,6 +289,38 @@ class PIEMass(MassProfile):
             xp=xp,
             **kwargs,
         )
+
+    def _convergence(self, radii, xp=np):
+
+        radsq = radii * radii
+        a = self.ra
+
+        return self.b0 / 2 * (1 / xp.sqrt(a**2 + radsq))
+
+    @aa.grid_dec.to_array
+    @aa.grid_dec.transform
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        """
+        Returns the two-dimensional projected convergence on a grid of (y,x)
+        arc-second coordinates.
+
+        The `grid_2d_to_structure` decorator reshapes the ndarrays the convergence
+        is outputted on. See *aa.grid_2d_to_structure* for details.
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates on which the convergence is computed.
+        """
+        ellip = self._ellip(xp)
+        grid_radii = xp.sqrt(
+            grid.array[:, 1] ** 2 / (1 + ellip) ** 2
+            + grid.array[:, 0] ** 2 / (1 - ellip) ** 2
+        )
+        # Compute the convergence and deflection of a *circular* profile
+        kappa = self._convergence(grid_radii, xp)
+
+        return kappa
 
     @aa.grid_dec.transform
     def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", xp=np, **kwargs):
@@ -304,7 +338,12 @@ class PIEMass(MassProfile):
         ellip = self._ellip()
 
         hessian_xx, hessian_xy, hessian_yx, hessian_yy = _mdci05(
-            x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.ra, b0=self.b0
+            x=grid.array[:, 1],
+            y=grid.array[:, 0],
+            eps=ellip,
+            rcore=self.ra,
+            b0=self.b0,
+            xp=xp,
         )
 
         return hessian_yy, hessian_xy, hessian_yx, hessian_xx
@@ -397,6 +436,7 @@ class dPIEMass(MassProfile):
             eps=ellip,
             rcore=self.ra,
             rcut=self.rs,
+            xp=xp,
         )
 
         # This is in axes aligned to the major/minor axis
@@ -409,22 +449,6 @@ class dPIEMass(MassProfile):
             xp=xp,
             **kwargs,
         )
-
-    def _deflection_angle(self, radii, xp=np):
-        """
-        For a circularly symmetric dPIEPotential profile, computes the magnitude of the deflection at each radius.
-        """
-        a, s = self.ra, self.rs
-        radii = xp.maximum(radii, 1e-8)
-        f = radii / (a + xp.sqrt(a**2 + radii**2)) - radii / (
-            s + xp.sqrt(s**2 + radii**2)
-        )
-
-        # c.f. Eliasdottir '07 eq. A23
-        # magnitude of deflection
-        # alpha = self.E0 * (s + a) / s * f
-        alpha = self.b0 * s / (s - a) * f
-        return alpha
 
     def _convergence(self, radii, xp=np):
 
@@ -439,7 +463,7 @@ class dPIEMass(MassProfile):
             * (1 / xp.sqrt(a**2 + radsq) - 1 / xp.sqrt(s**2 + radsq))
         )
 
-    @aa.grid_dec.to_vector_yx
+    @aa.grid_dec.to_array
     @aa.grid_dec.transform
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
@@ -455,22 +479,11 @@ class dPIEMass(MassProfile):
         """
         ellip = self._ellip(xp)
         grid_radii = xp.sqrt(
-            grid.array[:, 1] ** 2 * (1 - ellip) + grid.array[:, 0] ** 2 * (1 + ellip)
+            grid.array[:, 1] ** 2 / (1 + ellip) ** 2
+            + grid.array[:, 0] ** 2 / (1 - ellip) ** 2
         )
-
-        # Compute the convergence and deflection of a *circular* profile
-        kappa_circ = self._convergence(grid_radii, xp)
-        alpha_circ = self._deflection_angle(grid_radii, xp)
-
-        asymm_term = (
-            ellip * (1 - ellip) * grid.array[:, 1] ** 2
-            - ellip * (1 + ellip) * grid.array[:, 0] ** 2
-        ) / grid_radii**2
-
-        # convergence = 1/2 \nabla \alpha = 1/2 \nabla^2 potential
-        # The "asymm_term" is asymmetric on x and y, so averages out to
-        # zero over all space
-        return kappa_circ * (1 - asymm_term) + (alpha_circ / grid_radii) * asymm_term
+        kappa = self._convergence(grid_radii, xp)
+        return kappa
 
     @aa.grid_dec.transform
     def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", xp=np, **kwargs):
@@ -490,10 +503,20 @@ class dPIEMass(MassProfile):
 
         t05 = self.rs / (self.rs - self.ra)
         g05c_a, g05c_b, g05c_c, g05c_d = _mdci05(
-            x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.ra, b0=self.b0
+            x=grid.array[:, 1],
+            y=grid.array[:, 0],
+            eps=ellip,
+            rcore=self.ra,
+            b0=self.b0,
+            xp=xp,
         )
         g05cut_a, g05cut_b, g05cut_c, g05cut_d = _mdci05(
-            x=grid.array[:, 1], y=grid.array[:, 0], eps=ellip, rcore=self.rs, b0=self.b0
+            x=grid.array[:, 1],
+            y=grid.array[:, 0],
+            eps=ellip,
+            rcore=self.rs,
+            b0=self.b0,
+            xp=xp,
         )
 
         # Compute Hessian matrix components
@@ -610,6 +633,25 @@ class dPIEMassSph(dPIEMass):
             xp=xp,
             **kwargs,
         )
+
+    @aa.grid_dec.to_array
+    @aa.grid_dec.transform
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        """
+        Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
+
+        The `grid_2d_to_structure` decorator reshapes the ndarrays the convergence is outputted on. See
+        *aa.grid_2d_to_structure* for a description of the output.
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+        """
+        # already transformed to center on profile centre so this works
+        radsq = grid.array[:, 0] ** 2 + grid.array[:, 1] ** 2
+
+        return self._convergence(xp.sqrt(radsq), xp)
 
     @aa.grid_dec.transform
     def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", xp=np, **kwargs):

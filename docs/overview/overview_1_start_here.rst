@@ -11,13 +11,13 @@ Start Here
 
 **PyAutoGalaxy** has three core aims:
 
-- **Model Complexity**: Fitting complex galaxy morphology models (e.g. Multi Gaussian Expansion, Shapelets, Ellipse Fitting, Irregular Meshes) that go beyond just simple Sersic fitting (which is supported too!).
+- **Big Data**: Scaling automated Sérsic fitting to extremely large datasets, *accelerated with JAX on GPUs and using tools like an SQL database to **build a scalable scientific workflow***.
+
+- **Model Complexity**: Fitting complex galaxy morphology models (e.g. Multi Gaussian Expansion, Shapelets, Ellipse Fitting, Irregular Meshes) that go beyond just simple Sérsic fitting.
 
 - **Data Variety**: Support for many data types (e.g. CCD imaging, interferometry, multi-band imaging) which can be fitted independently or simultaneously.
 
-- **Big Data**: Scaling automated analysis to extremely large datasets, using tools like an SQL database to build a scalable scientific workflow.
-
-This page gives an overview of **PyAutoGalaxy**'s API, with follow up overview pages describing how to navigate the autogalaxy workspace and the advanced features of the software.
+This overview gives an overview of **PyAutoGalaxy**'s API, core features and details of the autogalaxy_workspace.
 
 Imports
 -------
@@ -92,7 +92,7 @@ an image of the Sersic light profile.
 Plotting
 --------
 
-The **PyAutoGalaxy** in-built plot module provides methods for plotting objects and their properties, like the image of
+In-built plotting methods are provided for plotting objects and their properties, like the image of
 a light profile we just created.
 
 By using a ``LightProfilePlotter`` to plot the light profile's image, the figured is improved. 
@@ -193,6 +193,20 @@ the galaxy is used below where the ``Sersic`` is passed directly to the ``Galaxy
   :width: 600
   :alt: Alternative text
 
+Units
+-----
+
+The units used throughout the galaxy structure literature vary, therefore lets quickly describe the units used in
+**PyAutoGalaxy**.
+
+Most distance quantities, like an ``effective_radius`` are quantities in terms of angles, which are defined in units
+of arc-seconds. To convert these to physical units (e.g. kiloparsecs), we use the redshift of the galaxy and an
+input cosmology. A run through of all normal unit conversions is given in guides in the workspace outlined below.
+
+The use of angles in arc-seconds has an important property, it means that calculations are independent of
+the galaxy's redshifts and the input cosmology. This has a number of benefits, for example it makes it straight
+forward to compare the properties of different galaxies even when the redshifts of the galaxies are unknown.
+
 Extensibility
 -------------
 
@@ -247,352 +261,51 @@ The image of the merging galaxy system appears as follows:
   :width: 600
   :alt: Alternative text
 
-Simulating Data
+Galaxy Modeling
 ---------------
 
-The galaxy images above are **not** what we would observe if we looked at the sky through a telescope.
+Galaxy modeling is the process of fitting a physical model to imaging data in order to infer the structural
+and photometric properties of galaxies, such as their light distribution, size, shape, and orientation.
 
-In reality, images of galaxies are observed using a telescope and detector, for example a CCD Imaging device attached
-to the Hubble Space Telescope.
+The primary goal of **PyAutoGalaxy** is to make galaxy modeling **simple, scalable to large datasets, and fast**,
+with GPU acceleration provided via JAX.
 
-To make images that look like realistic Astronomy data, we must account for the effects like how the length of the
-exposure time change the signal-to-noise, how the optics of the telescope blur the galaxy's light and that
-there is a background sky which also contributes light to the image and adds noise.
+The animation below illustrates the galaxy modeling workflow. Many models are fitted to the data iteratively,
+progressively improving the quality of the fit until the model closely reproduces the observed image.
 
-The ``SimulatorImaging`` object simulates this process, creating realistic CCD images of galaxies using the ``Imaging``
-object.
-
-.. code:: python
-
-    simulator = ag.SimulatorImaging(
-        exposure_time=300.0,
-        background_sky_level=1.0,
-        psf=ag.Kernel2D.from_gaussian(shape_native=(11, 11), sigma=0.1, pixel_scales=0.05),
-        add_poisson_noise_to_data=True,
-    )
-
-
-Once we have a simulator, we can use it to create an imaging dataset which consists of an image, noise-map and 
-Point Spread Function (PSF) by passing it a galaxies and grid.
-
-This uses the galaxies above to create the image of the galaxy and then add the effects that occur during data
-acquisition.
-
-This data is used below to illustrate model-fitting, so lets simulate a very simple image of a galaxy using
-just a single Sersic light profile.
-
-.. code:: python
-
-    galaxies = ag.Galaxies(
-        galaxies=[
-            ag.Galaxy(
-                redshift=0.5,
-                bulge=ag.lp.Sersic(
-                    centre=(0.0, 0.0),
-                    ell_comps=(0.1, 0.2),
-                    intensity=1.0,
-                    effective_radius=0.8,
-                    sersic_index=2.0,
-                ),
-            )
-        ]
-    )
-
-    dataset = simulator.via_galaxies_from(galaxies=galaxies, grid=grid)
-
-
-Observed Dataset
-----------------
-
-We now have an ``Imaging`` object, which is a realistic representation of the data we observe with a telescope.
-
-We use the ``ImagingPlotter`` to plot the dataset, showing that it contains the observed image, but also other
-import dataset attributes like the noise-map and PSF.
-
-.. code:: python
-
-    dataset_plotter = aplt.ImagingPlotter(dataset=dataset)
-    dataset_plotter.figures_2d(data=True)
-
-The observed dataset appears as follows:
-
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/6_data.png
-  :width: 600
-  :alt: Alternative text
-
-If you have come to **PyAutoGalaxy** to perform interferometry, the API above is easily adapted to use
-a ``SimulatorInterferometer`` object to simulate an ``Interferometer`` dataset instead.
-
-However, you should finish reading this notebook before moving on to the interferometry examples, to get a full
-overview of the core **PyAutoGalaxy** API.
-
-Masking
--------
-
-We are about to fit the data with a model, but first must define a mask, which defines the regions of the image that 
-are used to fit the data and which regions are not.
-
-We create a ``Mask2D`` object which is a 3.0" circle, whereby all pixels within this 3.0" circle are used in the 
-model-fit and all pixels outside are omitted. 
-
-Inspection of the dataset above shows that no signal from the galaxy is observed outside of this radius, so this is a 
-sensible mask.
-
-.. code:: python
-
-    mask = ag.Mask2D.circular(
-        shape_native=dataset.shape_native,  # The mask's shape must match the dataset's to be applied to it.
-        pixel_scales=dataset.pixel_scales,  # It must also have the same pixel scales.
-        radius=3.0,  # The mask's circular radius [units of arc-seconds].
-    )
-
-Combine the imaging dataset with the mask.
-
-.. code:: python
-
-    dataset = dataset.apply_mask(mask=mask)
-
-When we plot a masked dataset, the removed regions of the image (e.g. outside the 3.0") are automatically set to zero
-and the plot axis automatically zooms in around the mask.
-
-.. code:: python
-
-    dataset_plotter = aplt.ImagingPlotter(dataset=dataset)
-    dataset_plotter.figures_2d(data=True)
-
-Here is the masked dataset:
-
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/7_data.png
-  :width: 600
-  :alt: Alternative text
-
-Fitting
--------
-
-We are now at the point a scientist would be after observing a galaxy - we have an image of it, have used to a mask to 
-determine where we observe signal from the galaxy, but cannot make any quantitative statements about its morphology.
-
-We therefore must now fit a model to the data. This model is a representation of the galaxy's light, and we seek a way
-to determine whether a given model provides a good fit to the data.
-
-A fit is performing using a ``FitImaging`` object, which takes a dataset and galaxies object as input and determine if 
-the galaxies are a good fit to the data.
-
-.. code:: python
-
-    fit = ag.FitImaging(dataset=dataset, galaxies=galaxies)
-
-The fit creates ``model_data``, which is the image of the galaxy including effects which change its appearance
-during data acquisition.
-
-For example, by plotting the fit's ``model_data`` and comparing it to the image of the galaxies obtained via
-the ``GalaxiesPlotter``, we can see the model data has been blurred by the dataset's PSF.
-
-.. code:: python
-
-    galaxies_plotter = aplt.GalaxiesPlotter(galaxies=fit.galaxies, grid=grid)
-    galaxies_plotter.figures_2d(image=True)
-
-    fit_plotter = aplt.FitImagingPlotter(fit=fit)
-    fit_plotter.figures_2d(model_image=True)
-
-The image and model image appear as follows:
-
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/8_image_2d.png
-  :width: 400
-  :alt: Alternative text
-
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/9_model_image.png
-  :width: 400
-  :alt: Alternative text
-
-The fit also creates the following:
-
- - The ``residual_map``: The ``model_image`` subtracted from the observed dataset``s ``image``.
- - The ``normalized_residual_map``: The ``residual_map ``divided by the observed dataset's ``noise_map``.
- - The ``chi_squared_map``: The ``normalized_residual_map`` squared.
- 
-We can plot all 3 of these on a subplot that also includes the data, signal-to-noise map and model data.
-
-.. code:: python
-
-    fit_plotter.subplot_fit()
-
-In this example, the galaxies used to simulate the data are used to fit it, thus the fit is good and residuals are minimized,
-as shown by the subplots below:
-
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/10_subplot_fit.png
-  :width: 600
-  :alt: Alternative text
-
-The overall quality of the fit is quantified with the ``log_likelihood``.
-
-.. code:: python
-
-    print(fit.log_likelihood)
-
-If you are familiar with statistical analysis, this quick run-through of the fitting tools will make sense and you
-will be familiar with concepts like model data, residuals and a likelihood. 
-
-If you are less familiar with these concepts, I recommend you finish this notebook and then go to the fitting API
-guide, which explains the concepts in more detail and provides a more thorough overview of the fitting tools.
-
-The take home point is that **PyAutoGalaxy**'s API has extensive tools for fitting models to data and visualizing the
-results, which is what makes it a powerful tool for studying the morphologies of galaxies.
-
-Modeling
---------
-
-The fitting tools above are used to fit a model to the data given an input set of galaxies. Above, we used the true
-galaxies used to simulate the data to fit the data, but we do not know what this "truth" is in the real world and 
-is therefore not something a real scientist can do.
-
-Modeling is the processing of taking a dataset and inferring the model that best fits the data, for example
-the galaxy light profile(s) that best fits the light observed in the data or equivalently the combination
-of Sersic profile parameters that maximize the likelihood of the fit.
-
-Galaxy modeling uses the probabilistic programming language **PyAutoFit**, an open-source project that allows complex 
-model fitting techniques to be straightforwardly integrated into scientific modeling software. Check it out if you 
-are interested in developing your own software to perform advanced model-fitting:
-
-https://github.com/rhayes777/PyAutoFit
-
-We import **PyAutoFit** separately to **PyAutoGalaxy**:
-
-.. code:: python
-
-    import autofit as af
-
-We now compose the galaxy model using ``af.Model`` objects. 
-
-These behave analogously to the ``Galaxy``, ``Galaxies`` and ``LightProfile`` objects above, however when using a ``Model`` 
-their parameter values are not specified and are instead determined by a fitting procedure.
-
-We will fit our galaxy data with a model which has one galaxy where:
-
- - The galaxy's bulge is a ``Sersic`` light profile. 
- - The galaxy's disk is a ``Exponential`` light profile.
- - The redshift of the galaxy is fixed to 0.5.
- 
-The light profiles below are linear light profiles, input via the ``lp_linear`` module. These solve for the intensity of
-the light profiles via linear algebra, making the modeling more efficient and accurate. They are explained in more
-detail in other workspace examples, but are a key reason why modeling with **PyAutoGalaxy** performs well and
-can scale to complex models.
-
-.. code:: python
-
-    galaxy_model = af.Model(
-        ag.Galaxy,
-        redshift=0.5,
-        bulge=ag.lp_linear.Sersic,  # Note the use of ``lp_linear`` instead of ``lp``.
-        disk=ag.lp_linear.Exponential,  # This uses linear light profiles explained in the modeling ``start_here`` example.
-    )
-
-
-By printing the ``Model``'s we see that each parameters has a prior associated with it, which is used by the
-model-fitting procedure to fit the model.
-
-.. code:: python
-
-    print(galaxy_model)
-
-
-We input the galaxy model above into a ``Collection``, which is the model we will fit. 
-
-Note how we could easily extend this object to compose more complex models containing many galaxies.
-
-.. code:: python
-
-    model = af.Collection(galaxies=af.Collection(galaxy=galaxy_model))
-
-The ``info`` attribute shows the model information in a more readable format:
-
-.. code:: python
-
-    print(model.info)
-
-
-We now choose the 'non-linear search', which is the fitting method used to determine the light profile parameters that 
-best-fit the data.
-
-In this example we use [nautilus](https://nautilus-sampler.readthedocs.io/en/stable/), a nested sampling algorithm 
-that in our experience has proven very effective at galaxy modeling.
-
-.. code:: python
-
-    search = af.Nautilus(name="start_here")
-
-
-To perform the model-fit, we create an ``AnalysisImaging`` object which contains the ``log_likelihood_function`` that the
-non-linear search calls to fit the galaxy model to the data.
-
-The ``AnalysisImaging`` object is expanded on in the modeling ``start_here`` example, but in brief performs many useful
-associated with modeling, including outputting results to hard-disk and visualizing the results of the fit.
-
-.. code:: python
-
-    analysis = ag.AnalysisImaging(dataset=dataset)
-
-
-To perform the model-fit we pass the model and analysis to the search's fit method. This will output results (e.g.,
-Nautilus samples, model parameters, visualization) to your computer's storage device.
-
-Once a model-fit is running, **PyAutoGalaxy** outputs the results of the search to storage device on-the-fly. This
-includes galaxy model parameter estimates with errors non-linear samples and the visualization of the best-fit galaxy
-model inferred by the search so far.
-
-.. code:: python
-
-    result = search.fit(model=model, analysis=analysis)
-
-
-The animation below shows a slide-show of the galaxy modeling procedure. Many galaxy models are fitted to the data over
-and over, gradually improving the quality of the fit to the data and looking more and more like the observed image.
-
-NOTE, the animation of a non-linear search shown below is for a strong gravitational lens using **PyAutoGalaxy**'s 
-child project **PyAutoLens**. Updating the animation to show a galaxy model-fit is on the **PyAutoGalaxy** to-do list!
-
-We can see that initial models give a poor fit to the data but gradually improve (increasing the likelihood) as more
-iterations are performed.
+NOTE: Placeholder showing strong lens modeling animation used currently.
 
 .. image:: https://github.com/Jammy2211/auto_files/blob/main/lensmodel.gif?raw=true
   :width: 600
 
-![Lens Modeling Animation](https://github.com/Jammy2211/auto_files/blob/main/lensmodel.gif?raw=true "model")
-
 **Credit: Amy Etherington**
 
-Results
--------
+The next documentation page guides you through galaxy modeling for a variety of data types (e.g. CCD imaging at
+different resolutions) and scientific use-cases (e.g. galaxy morphology studies, bulge–disk decomposition).
 
+Simulations
+-----------
 
-The fit returns a ``Result`` object, which contains the best-fit galaxies and the full posterior information of the 
-non-linear search, including all parameter samples, log likelihood values and tools to compute the errors on the 
-galaxy model.
+Simulating galaxy images is often essential, for example to:
 
-Using results is explained in full in the ``guides/results`` section of the workspace, but for a quick illustration
-the code below shows how easy it is to plot the fit and posterior of the model.
+- Practice galaxy modeling before working with real data.
+- Generate large training sets (e.g. for machine learning).
+- Test galaxy formation and structural models in a fully controlled environment.
 
-.. code:: python
+The next documentation page guides you through how to simulate galaxies for different types of data
+(e.g. CCD imaging) and different modeling goals (e.g. single-component galaxies, multi-component systems).
 
-    fit_plotter = aplt.FitImagingPlotter(fit=result.max_log_likelihood_fit)
-    fit_plotter.subplot_fit()
-
-    plotter = aplt.NestPlotter(samples=result.samples)
-    plotter.corner_cornerpy()
-
-Here is an example corner plot of the model-fit, which shows the probability density function of every parameter in the
-model:
-
-.. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/cornerplot.png
-  :width: 600
-  :alt: Alternative text
 
 Wrap Up
 -------
 
-We have now completed the API overview of **PyAutoGalaxy**, including a brief introduction to the core API for
-creating galaxies, simulating data, fitting data and performing galaxy modeling.
+This completes the introduction to **PyAutoGalaxy**, including a brief overview of the core API for galaxy
+light profile calculations, galaxy modeling, and data simulation.
 
-The next overview describes how a new user should navigate the **PyAutoGalaxy** workspace, which contains many examples
-and tutorials, in order to get up and running with the software.
+Different users will be interested in galaxies across a range of physical scales and scientific applications
+(e.g. detailed structural studies, population analyses, or multi-wavelength modeling) and using different
+types of data (e.g. CCD imaging or interferometer observations).
+
+The autogalaxy_workspace repository contains a wide range of examples and tutorials covering these use cases.
+The next documentation page helps new users identify the most appropriate starting point based on their
+scientific goals.

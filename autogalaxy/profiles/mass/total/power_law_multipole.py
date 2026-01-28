@@ -113,8 +113,6 @@ class PowerLawMultipole(MassProfile):
             grid=grid
         )
         """
-        from astropy import units
-
         super().__init__(centre=centre, ell_comps=(0.0, 0.0))
 
         self.m = int(m)
@@ -123,10 +121,40 @@ class PowerLawMultipole(MassProfile):
         self.slope = slope
 
         self.multipole_comps = multipole_comps
-        self.k_m, self.angle_m = convert.multipole_k_m_and_phi_m_from(
-            multipole_comps=multipole_comps, m=m
+
+    def k_m_and_angle_m_from(self, xp=np) -> Tuple[float, float]:
+        """
+        Return the multipole normalization ``k_m`` and orientation angle ``angle_m``.
+
+        The multipole normalization and angle are computed from the multipole component
+        parameters ``(epsilon_1, epsilon_2)`` using
+        :func:`convert.multipole_k_m_and_phi_m_from`. The returned angle is converted
+        from degrees to radians.
+
+        The numerical backend can be selected via the ``xp`` argument, allowing this
+        method to be used with both NumPy and JAX (e.g. inside ``jax.jit``-compiled
+        code).
+
+        Parameters
+        ----------
+        xp
+            Numerical backend module, typically ``numpy`` or ``jax.numpy``.
+
+        Returns
+        -------
+        k_m
+            The multipole normalization.
+        angle_m
+            The multipole orientation angle in radians.
+        """
+        from astropy import units
+
+        k_m, angle_m = convert.multipole_k_m_and_phi_m_from(
+            multipole_comps=self.multipole_comps, m=self.m, xp=xp
         )
-        self.angle_m *= units.deg.to(units.rad)
+        angle_m *= units.deg.to(units.rad)
+
+        return k_m, angle_m
 
     def get_shape_angle(
         self,
@@ -198,6 +226,8 @@ class PowerLawMultipole(MassProfile):
         """
         radial_grid, polar_angle_grid = radial_and_angle_grid_from(grid=grid, xp=xp)
 
+        k_m, angle_m = self.k_m_and_angle_m_from(xp=xp)
+
         a_r = (
             -(
                 (3.0 - self.slope)
@@ -205,8 +235,8 @@ class PowerLawMultipole(MassProfile):
                 * radial_grid ** (2.0 - self.slope)
             )
             / (self.m**2.0 - (3.0 - self.slope) ** 2.0)
-            * self.k_m
-            * xp.cos(self.m * (polar_angle_grid - self.angle_m))
+            * k_m
+            * xp.cos(self.m * (polar_angle_grid - angle_m))
         )
 
         a_angle = (
@@ -216,8 +246,8 @@ class PowerLawMultipole(MassProfile):
                 * radial_grid ** (2.0 - self.slope)
             )
             / (self.m**2.0 - (3.0 - self.slope) ** 2.0)
-            * self.k_m
-            * xp.sin(self.m * (polar_angle_grid - self.angle_m))
+            * k_m
+            * xp.sin(self.m * (polar_angle_grid - angle_m))
         )
 
         return xp.stack(
@@ -242,13 +272,14 @@ class PowerLawMultipole(MassProfile):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
         r, angle = radial_and_angle_grid_from(grid=grid, xp=xp)
+        k_m, angle_m = self.k_m_and_angle_m_from(xp=xp)
 
         return (
             1.0
             / 2.0
             * (self.einstein_radius / r) ** (self.slope - 1)
-            * self.k_m
-            * xp.cos(self.m * (angle - self.angle_m))
+            * k_m
+            * xp.cos(self.m * (angle - angle_m))
         )
 
     @aa.grid_dec.to_array

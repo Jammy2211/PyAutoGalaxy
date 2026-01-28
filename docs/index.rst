@@ -30,11 +30,11 @@ Core Aims
 
 **PyAutoGalaxy** has three core aims:
 
-- **Model Complexity**: Fitting complex galaxy morphology models (e.g. Multi Gaussian Expansion, Shapelets, Ellipse Fitting, Irregular Meshes) that go beyond just simple Sersic fitting (which is supported too!).
+- **Big Data**: Scaling automated Sérsic fitting to extremely large datasets, *accelerated with JAX on GPUs and using tools like an SQL database to **build a scalable scientific workflow***.
+
+- **Model Complexity**: Fitting complex galaxy morphology models (e.g. Multi Gaussian Expansion, Shapelets, Ellipse Fitting, Irregular Meshes) that go beyond just simple Sérsic fitting.
 
 - **Data Variety**: Support for many data types (e.g. CCD imaging, interferometry, multi-band imaging) which can be fitted independently or simultaneously.
-
-- **Big Data**: Scaling automated analysis to extremely large datasets, using tools like an SQL database to build a scalable scientific workflow.
 
 Features
 ========

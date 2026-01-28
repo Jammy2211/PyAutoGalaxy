@@ -89,7 +89,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
     def tabulate_integral(self, grid, tabulate_bins, **kwargs):
         """Tabulate an integral over the convergence of deflection potential of a mass profile. This is used in \
-        the GeneralizedNFW profile classes to speed up the integration procedure.
+        the gNFW profile classes to speed up the integration procedure.
 
         Parameters
         ----------
