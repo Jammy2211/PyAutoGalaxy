@@ -220,48 +220,6 @@ class Gaussian(MassProfile, StellarProfile):
         # symmetry: zeta(x, -y) = conj(zeta(x, y))
         return xp.where(y >= 0, core, xp.conj(core))
 
-    # t = sqrt_pi
-    # t = U5[0] + z2 * t
-    # t = U5[1] + z2 * t
-    # t = U5[2] + z2 * t
-    # t = U5[3] + z2 * t
-    # t = U5[4] + z2 * t
-    # num5 = U5[5] + z2 * t
-    #
-    # s = 1.0
-    # s = V5[0] + z2 * s
-    # s = V5[1] + z2 * s
-    # s = V5[2] + z2 * s
-    # s = V5[3] + z2 * s
-    # s = V5[4] + z2 * s
-    # s = V5[5] + z2 * s
-    # den5 = V5[6] + z2 * s
-    #
-    # w5 = xp.exp(-z2) + 1j * z * num5 / den5
-    #
-    # # --- Region 6: remaining small-|z| region ---
-    # U6 = xp.float64(xp.array([5.9126262, 30.180142, 93.15558,
-    #                           181.92853, 214.38239, 122.60793]))
-    # V6 = xp.float64(xp.array([10.479857, 53.992907, 170.35400,
-    #                           348.70392, 457.33448, 352.73063, 122.60793]))
-    #
-    # t = sqrt_pi
-    # t = U6[0] - 1j * z * t
-    # t = U6[1] - 1j * z * t
-    # t = U6[2] - 1j * z * t
-    # t = U6[3] - 1j * z * t
-    # t = U6[4] - 1j * z * t
-    # num6 = U6[5] - 1j * z * t
-    #
-    # s = 1.0
-    # s = V6[0] - 1j * z * s
-    # s = V6[1] - 1j * z * s
-    # s = V6[2] - 1j * z * s
-    # s = V6[3] - 1j * z * s
-    # s = V6[4] - 1j * z * s
-    # s = V6[5] - 1j * z * s
-    # den6 = V6[6] - 1j * z * s
-
     def wofz(self, z, xp=np):
         """
         JAX-compatible Faddeeva function w(z) = exp(-z^2) * erfc(-i z)
