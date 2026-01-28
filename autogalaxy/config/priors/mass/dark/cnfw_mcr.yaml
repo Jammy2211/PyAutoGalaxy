@@ -31,13 +31,13 @@ cNFWMCRLudlowSph:
       upper: inf
   f_c:
     type: Uniform
-    lower_limit: 0.0
+    lower_limit: 0.0001
     upper_limit: 0.5
     width_modifier:
       type: Relative
       value: 0.2
     limits:
-      lower: 0.0
+      lower: 0.0001
       upper: inf
   redshift_object:
     type: Uniform

@@ -38,7 +38,7 @@ def test__mass_and_concentration_consistent_with_normal_nfw():
         redshift_profile=0.6, redshift_source=2.5, cosmology=cosmology
     )
 
-    # We are using the NFWTruncatedSph to check the mass gives a consistnt kappa_s, given certain radii.
+    # We are using the NFWTruncatedSph to check that the mass gives a consistent kappa_s, given certain radii.
 
     assert mass_at_200_via_kappa_s == mass_at_200_via_mass
     assert concentration_via_kappa_s == concentration_via_mass
