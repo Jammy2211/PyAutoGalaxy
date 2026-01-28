@@ -3,6 +3,7 @@ from autogalaxy.cosmology.lensing import LensingCosmology
 
 
 class Planck15(cosmo.FlatLambdaCDM, LensingCosmology):
+
     def __init__(self):
         Planck15_astropy = cosmo.Planck15
 
