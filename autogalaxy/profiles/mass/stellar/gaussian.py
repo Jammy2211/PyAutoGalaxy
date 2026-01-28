@@ -50,9 +50,6 @@ class Gaussian(MassProfile, StellarProfile):
             The grid of (y,x) arc-second coordinates the deflection angles are computed on.
 
         """
-
-        # defl = self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
-        # return xp.where(self.intensity == 0.0, xp.zeros_like(defl), defl)
         return self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
 
     @aa.grid_dec.to_vector_yx
@@ -236,14 +233,14 @@ class Gaussian(MassProfile, StellarProfile):
         z2 = z * z
         sqrt_pi = xp.sqrt(xp.pi)
 
-        # --- Regions 1 to 4 ___
+        # --- Regions 1 to 4 ---
         r1_s1 = xp.array([2.5, 2.0, 1.5, 1.0, 0.5])
 
-        v = z
+        t = z
         for coef in r1_s1:
-            v = z - coef / v
+            t = z - coef / t
 
-        w_large = 1j / (v * sqrt_pi)
+        w_large = 1j / (t * sqrt_pi)
 
         # --- Region 5: special small-imaginary case ---
         U5 = xp.array([1.320522, 35.7668, 219.031, 1540.787, 3321.990, 36183.31])

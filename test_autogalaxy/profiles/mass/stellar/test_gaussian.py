@@ -67,86 +67,86 @@ def test__deflections_2d_via_analytic_from():
     assert deflections[0, 0] == pytest.approx(1.10812, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.35467, 1.0e-4)
 
+@pytest.mark.skip(reason="Not JAX compatible")
+def test__deflections_2d_via_integral_from():
+    mp = ag.mp.Gaussian(
+        centre=(0.0, 0.0),
+        ell_comps=(0.0, 0.05263),
+        intensity=1.0,
+        sigma=3.0,
+        mass_to_light_ratio=1.0,
+    )
 
-# def test__deflections_2d_via_integral_from():
-#     mp = ag.mp.Gaussian(
-#         centre=(0.0, 0.0),
-#         ell_comps=(0.0, 0.05263),
-#         intensity=1.0,
-#         sigma=3.0,
-#         mass_to_light_ratio=1.0,
-#     )
-#
-#     deflections = mp.deflections_2d_via_integral_from(
-#         grid=ag.Grid2DIrregular([[1.0, 0.0]])
-#     )
-#     deflections_via_analytic = mp.deflections_2d_via_analytic_from(
-#         grid=ag.Grid2DIrregular([[1.0, 0.0]])
-#     )
-#
-#     assert deflections == pytest.approx(deflections_via_analytic.array, 1.0e-3)
-#
-#     mp = ag.mp.Gaussian(
-#         centre=(0.0, 0.0),
-#         ell_comps=(0.0, 0.111111),
-#         intensity=1.0,
-#         sigma=5.0,
-#         mass_to_light_ratio=1.0,
-#     )
-#
-#     deflections = mp.deflections_2d_via_integral_from(
-#         grid=ag.Grid2DIrregular([[0.5, 0.2]])
-#     )
-#     deflections_via_analytic = mp.deflections_2d_via_analytic_from(
-#         grid=ag.Grid2DIrregular([[0.5, 0.2]])
-#     )
-#
-#     assert deflections == pytest.approx(deflections_via_analytic.array, 1.0e-3)
-#
-#     mp = ag.mp.Gaussian(
-#         centre=(0.0, 0.0),
-#         ell_comps=(0.0, 0.111111),
-#         intensity=1.0,
-#         sigma=5.0,
-#         mass_to_light_ratio=2.0,
-#     )
-#
-#     deflections = mp.deflections_2d_via_integral_from(
-#         grid=ag.Grid2DIrregular([[0.5, 0.2]])
-#     )
-#     deflections_via_analytic = mp.deflections_2d_via_analytic_from(
-#         grid=ag.Grid2DIrregular([[0.5, 0.2]])
-#     )
-#
-#     assert deflections == pytest.approx(deflections_via_analytic.array, 1.0e-3)
-#
-#     mp = ag.mp.Gaussian(
-#         centre=(0.0, 0.0),
-#         ell_comps=(0.0, 0.111111),
-#         intensity=2.0,
-#         sigma=5.0,
-#         mass_to_light_ratio=1.0,
-#     )
-#
-#     deflections = mp.deflections_2d_via_integral_from(
-#         grid=ag.Grid2DIrregular([[0.5, 0.2]])
-#     )
-#     deflections_via_analytic = mp.deflections_2d_via_analytic_from(
-#         grid=ag.Grid2DIrregular([[0.5, 0.2]])
-#     )
-#
-#     assert deflections == pytest.approx(deflections_via_analytic.array, 1.0e-3)
+    deflections = mp.deflections_2d_via_integral_from(
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
+    )
+    deflections_via_analytic = mp.deflections_2d_via_analytic_from(
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
+    )
 
+    assert deflections == pytest.approx(deflections_via_analytic.array, 1.0e-3)
 
-# def test__deflections_yx_2d_from():
-#     mp = ag.mp.Gaussian()
-#
-#     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]))
-#     deflections_via_integral = mp.deflections_2d_via_analytic_from(
-#         grid=ag.Grid2DIrregular([[1.0, 0.0]])
-#     )
-#
-#     assert deflections == pytest.approx(deflections_via_integral.array, 1.0e-4)
+    mp = ag.mp.Gaussian(
+        centre=(0.0, 0.0),
+        ell_comps=(0.0, 0.111111),
+        intensity=1.0,
+        sigma=5.0,
+        mass_to_light_ratio=1.0,
+    )
+
+    deflections = mp.deflections_2d_via_integral_from(
+        grid=ag.Grid2DIrregular([[0.5, 0.2]])
+    )
+    deflections_via_analytic = mp.deflections_2d_via_analytic_from(
+        grid=ag.Grid2DIrregular([[0.5, 0.2]])
+    )
+
+    assert deflections == pytest.approx(deflections_via_analytic.array, 1.0e-3)
+
+    mp = ag.mp.Gaussian(
+        centre=(0.0, 0.0),
+        ell_comps=(0.0, 0.111111),
+        intensity=1.0,
+        sigma=5.0,
+        mass_to_light_ratio=2.0,
+    )
+
+    deflections = mp.deflections_2d_via_integral_from(
+        grid=ag.Grid2DIrregular([[0.5, 0.2]])
+    )
+    deflections_via_analytic = mp.deflections_2d_via_analytic_from(
+        grid=ag.Grid2DIrregular([[0.5, 0.2]])
+    )
+
+    assert deflections == pytest.approx(deflections_via_analytic.array, 1.0e-3)
+
+    mp = ag.mp.Gaussian(
+        centre=(0.0, 0.0),
+        ell_comps=(0.0, 0.111111),
+        intensity=2.0,
+        sigma=5.0,
+        mass_to_light_ratio=1.0,
+    )
+
+    deflections = mp.deflections_2d_via_integral_from(
+        grid=ag.Grid2DIrregular([[0.5, 0.2]])
+    )
+    deflections_via_analytic = mp.deflections_2d_via_analytic_from(
+        grid=ag.Grid2DIrregular([[0.5, 0.2]])
+    )
+
+    assert deflections == pytest.approx(deflections_via_analytic.array, 1.0e-3)
+
+@pytest.mark.skip(reason="Not JAX compatible")
+def test__deflections_yx_2d_from():
+    mp = ag.mp.Gaussian()
+
+    deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]))
+    deflections_via_integral = mp.deflections_2d_via_analytic_from(
+        grid=ag.Grid2DIrregular([[1.0, 0.0]])
+    )
+
+    assert deflections == pytest.approx(deflections_via_integral.array, 1.0e-4)
 
 
 def test__convergence_2d_from():
