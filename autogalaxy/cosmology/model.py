@@ -366,7 +366,7 @@ class FlatLambdaCDM(LensingCosmology):
         Om0: float = 0.30966,
         Tcmb0: float = 2.7255,
         Neff: float = 3.046,
-        m_nu: float = 0.06,
+        m_nu: float = 0.0,
         Ob0: float = 0.04897,
     ):
         """
@@ -481,14 +481,9 @@ class FlatLambdaCDM(LensingCosmology):
         Onu_h2 = m_nu_sum / xp.asarray(93.14)
         Onu0 = Onu_h2 / (h * h)
 
-        # ---- (Optional) massless neutrino radiation via Neff ----
-        # If you want to include *massless* neutrinos as radiation, uncomment:
-        # Neff = xp.asarray(self.Neff)
-        # Onu_rad0 = Ogamma0 * xp.asarray(0.2271) * Neff
-        # Or0 = Ogamma0 + Onu_rad0
-        #
-        # To avoid double-counting with the massive term above, we keep radiation as photons only by default:
-        Or0 = Ogamma0
+        Neff = xp.asarray(self.Neff)
+        Onu_rad0 = Ogamma0 * xp.asarray(0.2271) * Neff
+        Or0 = Ogamma0 + Onu_rad0
 
         # Flatness: Omega_de = 1 - Omega_m - Omega_r - Omega_nu
         Ode0 = xp.asarray(1.0) - Om0 - Or0 - Onu0
