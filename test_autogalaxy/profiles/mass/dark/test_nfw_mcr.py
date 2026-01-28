@@ -7,9 +7,9 @@ grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 def test__mass_and_concentration_consistent_with_normal_nfw():
 
-    from autogalaxy.cosmology.model import FlatLambdaCDMWrap
+    from autogalaxy.cosmology.model import FlatLambdaCDM
 
-    cosmology = FlatLambdaCDMWrap(H0=70.0, Om0=0.3)
+    cosmology = FlatLambdaCDM(H0=70.0, Om0=0.3)
 
     mp = ag.mp.NFWMCRDuffySph(
         centre=(1.0, 2.0),
@@ -56,9 +56,9 @@ def test__mass_and_concentration_consistent_with_normal_nfw():
 
 def test__mass_and_concentration_consistent_with_normal_nfw__scatter_0():
 
-    from autogalaxy.cosmology.model import FlatLambdaCDMWrap
+    from autogalaxy.cosmology.model import FlatLambdaCDM
 
-    cosmology = FlatLambdaCDMWrap(H0=70.0, Om0=0.3)
+    cosmology = FlatLambdaCDM(H0=70.0, Om0=0.3)
 
     mp = ag.mp.NFWMCRLudlowSph(
         centre=(1.0, 2.0),
@@ -106,9 +106,9 @@ def test__mass_and_concentration_consistent_with_normal_nfw__scatter_0():
 
 def test__same_as_above_but_elliptical():
 
-    from autogalaxy.cosmology.model import FlatLambdaCDMWrap
+    from autogalaxy.cosmology.model import FlatLambdaCDM
 
-    cosmology = FlatLambdaCDMWrap(H0=70.0, Om0=0.3)
+    cosmology = FlatLambdaCDM(H0=70.0, Om0=0.3)
 
     mp = ag.mp.NFWMCRLudlow(
         centre=(1.0, 2.0),
@@ -162,9 +162,9 @@ def test__same_as_above_but_elliptical():
 
 def test__same_as_above_but_generalized_elliptical():
 
-    from autogalaxy.cosmology.model import FlatLambdaCDMWrap
+    from autogalaxy.cosmology.model import FlatLambdaCDM
 
-    cosmology = FlatLambdaCDMWrap(H0=70.0, Om0=0.3)
+    cosmology = FlatLambdaCDM(H0=70.0, Om0=0.3)
 
     mp = ag.mp.gNFWMCRLudlow(
         centre=(1.0, 2.0),
@@ -219,9 +219,9 @@ def test__same_as_above_but_generalized_elliptical():
 
 def test__same_as_above_but_cored_nfw():
 
-    from autogalaxy.cosmology.model import FlatLambdaCDMWrap
+    from autogalaxy.cosmology.model import FlatLambdaCDM
 
-    cosmology = FlatLambdaCDMWrap(H0=70.0, Om0=0.3)
+    cosmology = FlatLambdaCDM(H0=70.0, Om0=0.3)
 
     mp = ag.mp.cNFWMCRLudlowSph(
                  centre=(1.0, 2.0),

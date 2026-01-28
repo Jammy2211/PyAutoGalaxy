@@ -302,11 +302,6 @@ def make_galaxies_x2_7x7():
     return fixtures.make_galaxies_x2_7x7()
 
 
-@pytest.fixture(name="Planck15")
-def make_Planck15():
-    return fixtures.make_Planck15()
-
-
 @pytest.fixture(name="adapt_galaxy_name_image_dict_7x7")
 def make_adapt_galaxy_name_image_dict_7x7():
     return fixtures.make_adapt_galaxy_name_image_dict_7x7()

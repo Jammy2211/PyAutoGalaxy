@@ -7,7 +7,7 @@ import autoarray as aa
 
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
-from autogalaxy.cosmology.lensing import LensingCosmology
+from autogalaxy.cosmology.model import LensingCosmology
 
 logger = logging.getLogger(__name__)
 

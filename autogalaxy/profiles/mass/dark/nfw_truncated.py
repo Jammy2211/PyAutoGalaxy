@@ -3,7 +3,7 @@ from typing import Tuple
 
 import autoarray as aa
 
-from autogalaxy.cosmology.lensing import LensingCosmology
+from autogalaxy.cosmology.model import LensingCosmology
 from autogalaxy.profiles.mass.dark.abstract import AbstractgNFW
 
 

@@ -6,7 +6,7 @@ import autoarray as aa
 
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.analysis.analysis.dataset import AnalysisDataset
-from autogalaxy.cosmology.lensing import LensingCosmology
+from autogalaxy.cosmology.model import LensingCosmology
 from autogalaxy.imaging.model.result import ResultImaging
 from autogalaxy.imaging.model.visualizer import VisualizerImaging
 from autogalaxy.imaging.fit_imaging import FitImaging

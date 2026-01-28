@@ -4,7 +4,7 @@ from typing import Tuple
 import autoarray as aa
 
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
-from autogalaxy.cosmology.lensing import LensingCosmology
+from autogalaxy.cosmology.model import LensingCosmology
 from autogalaxy.profiles.mass.abstract.mge_numpy import (
     MassProfileMGE,
 )

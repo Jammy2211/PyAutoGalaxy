@@ -1,44 +1,67 @@
-from astropy import cosmology as cosmo
 import numpy as np
-
 import math
-import numpy as np
 
 
 class LensingCosmology:
     """
     Class containing specific functions for performing gravitational lensing cosmology calculations.
 
-    By inheriting from the astropy `cosmo.FLRW` class this provides many additional methods for performing cosmological
-    calculations.
+    This version is JAX-compatible by using an explicit `xp` backend (NumPy or jax.numpy).
     """
-    def arcsec_per_kpc_from(self, redshift: float) -> float:
+
+    def arcsec_per_kpc_proper(self, z: float, xp=np) -> float:
+        """
+        Angular separation in arcsec corresponding to 1 proper kpc at redshift z.
+
+        This matches astropy.cosmology.arcsec_per_kpc_proper.
+
+        Proper transverse distance uses the angular diameter distance D_A(z):
+
+            arcsec_per_kpc_proper = 206265 / D_A(z)
+
+        where D_A(z) is in kpc.
+        """
+
+        angular_diameter_distance_kpc = self.angular_diameter_distance_kpc_z1z2(
+            0.0, z, xp=xp
+        )
+
+        return xp.asarray(206265.0) / angular_diameter_distance_kpc
+
+    def kpc_proper_per_arcsec(self, z: float, xp=np) -> float:
+        """
+        Proper transverse separation in kpc corresponding to 1 arcsec at redshift z.
+
+        This matches the inverse of astropy.cosmology.arcsec_per_kpc_proper:
+
+            kpc_proper_per_arcsec = D_A(z) / 206265
+        """
+
+        angular_diameter_distance_kpc = self.angular_diameter_distance_kpc_z1z2(
+            0.0, z, xp=xp
+        )
+
+        return angular_diameter_distance_kpc / xp.asarray(206265.0)
+
+    def arcsec_per_kpc_from(self, redshift: float, xp=np) -> float:
         """
         Angular separation in arcsec corresponding to a proper kpc at redshift `z`.
 
         For simplicity, **PyAutoLens** internally uses only certain units to perform lensing cosmology calculations.
-        This function therefore returns only the value of the astropy function it wraps, omitting the units instance.
 
-        Parameters
-        ----------
-        redshift
-            Input redshift from which the angular separation is calculated at.
+        This is a thin convenience wrapper around `arcsec_per_kpc_proper`.
         """
-        return self.arcsec_per_kpc_proper(z=redshift).value
+        return self.arcsec_per_kpc_proper(z=redshift, xp=xp)
 
-    def kpc_per_arcsec_from(self, redshift: float) -> float:
+    def kpc_per_arcsec_from(self, redshift: float, xp=np) -> float:
         """
-        Separation in transverse proper kpc corresponding to an arcminute at redshift `z`.
+        Separation in transverse proper kpc corresponding to an arcsec at redshift `z`.
 
         For simplicity, **PyAutoLens** internally uses only certain units to perform lensing cosmology calculations.
-        This function therefore returns only the value of the astropy function it wraps, omitting the units instance.
 
-        Parameters
-        ----------
-        redshift
-            Input redshift from which the transverse proper kpc value is calculated at.
+        This is a thin convenience wrapper around `kpc_proper_per_arcsec`.
         """
-        return 1.0 / self.arcsec_per_kpc_proper(z=redshift).value
+        return self.kpc_proper_per_arcsec(z=redshift, xp=xp)
 
     def angular_diameter_distance_to_earth_in_kpc_from(self, redshift: float) -> float:
         """
@@ -342,7 +365,7 @@ class LensingCosmology:
         return velocity_dispersion_kpc.to("km/s").value
 
 
-class FlatLambdaCDMWrap(cosmo.FlatLambdaCDM, LensingCosmology):
+class FlatLambdaCDM(LensingCosmology):
     def __init__(
         self,
         H0: float = 67.66,
@@ -378,15 +401,15 @@ class FlatLambdaCDMWrap(cosmo.FlatLambdaCDM, LensingCosmology):
         Ob0
             The baryon density at z=0.
         """
-        super().__init__(
-            H0=H0,
-            Om0=Om0,
-            Tcmb0=Tcmb0,
-            Neff=Neff,
-            m_nu=m_nu,
-            Ob0=Ob0,
-            name="FlatLambdaCDM",
-        )
+        self.H0 = H0
+        self.Om0 = Om0
+        self.Tcmb0 = Tcmb0
+        self.Neff = Neff
+        self.m_nu = m_nu
+        self.Ob0 = Ob0
+
+        # Make ΛCDM a special case of wCDM
+        self.w0 = -1.0
 
     @staticmethod
     def _simpson_1d(y, x, xp=np):
@@ -485,3 +508,15 @@ class FlatLambdaCDMWrap(cosmo.FlatLambdaCDM, LensingCosmology):
         return xp.where(same, xp.asarray(0.0), Da_kpc)
 
 
+class Planck15(FlatLambdaCDM):
+
+    def __init__(self):
+
+        super().__init__(
+            H0=67.74,
+            Om0=0.3075,
+            Tcmb0=2.7255,
+            Neff=3.046,
+            m_nu=0.06,
+            Ob0=0.0486,
+        )

@@ -9,7 +9,7 @@ import autoarray as aa
 
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.analysis.analysis.dataset import AnalysisDataset
-from autogalaxy.cosmology.lensing import LensingCosmology
+from autogalaxy.cosmology.model import LensingCosmology
 from autogalaxy.interferometer.model.result import ResultInterferometer
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.interferometer.model.visualizer import VisualizerInterferometer
