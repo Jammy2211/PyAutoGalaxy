@@ -9,6 +9,34 @@ from autogalaxy.profiles.light.decorators import (
 from autogalaxy.profiles.light.standard.shapelets.abstract import AbstractShapelet
 
 
+def hermite_phys(n: int, x, xp=np):
+    """
+    Physicists' Hermite polynomial H_n(x), compatible with NumPy and JAX via `xp`.
+
+    Recurrence:
+      H_0(x) = 1
+      H_1(x) = 2x
+      H_{n+1}(x) = 2x H_n(x) - 2n H_{n-1}(x)
+    """
+    if n < 0:
+        raise ValueError("n must be >= 0")
+
+    H0 = xp.ones_like(x)
+    if n == 0:
+        return H0
+
+    H1 = 2.0 * x
+    if n == 1:
+        return H1
+
+    Hnm1 = H0
+    Hn = H1
+    for k in range(1, n):
+        Hnp1 = 2.0 * x * Hn - 2.0 * float(k) * Hnm1
+        Hnm1, Hn = Hn, Hnp1
+    return Hn
+
+
 class ShapeletCartesian(AbstractShapelet):
     def __init__(
         self,
@@ -71,46 +99,36 @@ class ShapeletCartesian(AbstractShapelet):
     ) -> np.ndarray:
         """
         Returns the Cartesian Shapelet light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
-
-        If the coordinates have not been transformed to the profile's geometry (e.g. translated to the
-        profile `centre`), this is performed automatically.
-
-        Parameters
-        ----------
-        grid
-            The 2D (y, x) coordinates in the original reference frame of the grid.
-
-        Returns
-        -------
-        image
-            The image of the Cartesian Shapelet evaluated at every (y,x) coordinate on the transformed grid.
         """
-        from jax.scipy.special import factorial
-        from scipy.special import hermite
 
-        hermite_y = hermite(n=self.n_y)
-        hermite_x = hermite(n=self.n_x)
+        # factorial backend switch
+        if xp is np:
+            from scipy.special import factorial
+        else:
+            from jax.scipy.special import factorial
 
         y = grid.array[:, 0]
         x = grid.array[:, 1]
 
-        shapelet_y = hermite_y(y / self.beta)
-        shapelet_x = hermite_x(x / self.beta)
+        # Apply axis-ratio stretching (minor axis)
+        q = self.axis_ratio(xp)
+        y_ell = y / q
+        x_ell = x
 
-        return (
-            shapelet_y
-            * shapelet_x
-            * xp.exp(-0.5 * (y**2 + x**2) / (self.beta**2))
-            / self.beta
-            / (
-                xp.sqrt(
-                    2 ** (self.n_x + self.n_y)
-                    * (xp.pi)
-                    * factorial(self.n_y)
-                    * factorial(self.n_x)
-                )
-            )
+        # Evaluate Hermite polynomials (JAX-safe)
+        shapelet_y = hermite_phys(self.n_y, y_ell / self.beta, xp=xp)
+        shapelet_x = hermite_phys(self.n_x, x_ell / self.beta, xp=xp)
+
+        gaussian = xp.exp(-0.5 * (x_ell**2 + y_ell**2) / (self.beta**2))
+
+        norm = self.beta * xp.sqrt(
+            (2.0 ** (self.n_x + self.n_y))
+            * xp.pi
+            * factorial(self.n_y)
+            * factorial(self.n_x)
         )
+
+        return self._intensity * (shapelet_y * shapelet_x * gaussian) / norm
 
 
 class ShapeletCartesianSph(ShapeletCartesian):

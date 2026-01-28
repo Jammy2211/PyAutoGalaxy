@@ -6,7 +6,7 @@ Overview
 **PyAutoGalaxy** requires Python 3.9 - 3.12 and support the Linux, MacOS and Windows operating systems.
 
 **PyAutoGalaxy** can be installed via the Python distribution `Anaconda <https://www.anaconda.com/>`_ or using
-`PyPI <https://pypi.org/>`_ to ``pip install`` **PyAutoGalaxy** into your Python distribution.
+`PyPI <https://pypi.org/>`_ to ``pip install autogalaxy`` into your Python distribution.
 
 We recommend Anaconda as it manages the installation of many major libraries (e.g. numpy, scipy,
 matplotlib, etc.) making installation more straight forward. Windows users must use Anaconda.

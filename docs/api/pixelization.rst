@@ -49,7 +49,7 @@ Mesh [ag.mesh]
    :template: custom-class-template.rst
    :recursive:
 
-   RectangularMagnification
+   RectangularAdaptDensity
    Delaunay
    Voronoi
 

@@ -80,7 +80,15 @@ class AbstractToInversion:
 
         self.preloads = preloads
 
-        self._xp = xp
+        self.use_jax = xp is not np
+
+    @property
+    def _xp(self):
+        if self.use_jax:
+            import jax.numpy as jnp
+
+            return jnp
+        return np
 
     @property
     def psf(self) -> Optional[aa.Kernel2D]:
