@@ -24,27 +24,7 @@ def test__arcsec_to_kpc_conversion():
     assert kpc_per_arcsec == pytest.approx(8.231907, 5e-5)
 
 
-def test__angular_diameter_distances():
-    
-    cosmology = ag.cosmology.Planck15()
-    
-    angular_diameter_distance_to_earth_kpc = (
-        cosmology.angular_diameter_distance_to_earth_in_kpc_from(redshift=0.1)
-    )
-
-    assert angular_diameter_distance_to_earth_kpc == pytest.approx(392840, 1e-5)
-
-    angular_diameter_distance_between_redshifts_kpc = (
-        cosmology.angular_diameter_distance_between_redshifts_in_kpc_from(
-            redshift_0=0.1, redshift_1=1.0
-        )
-    )
-
-    assert angular_diameter_distance_between_redshifts_kpc == pytest.approx(
-        1481890.4, 1e-5
-    )
-
-def test__angular_diameter_distance():
+def test__angular_diameter_distance_z1z2():
 
     from astropy import cosmology as cosmo_ap
 
@@ -58,12 +38,35 @@ def test__angular_diameter_distance():
         cosmology.angular_diameter_distance_kpc_z1z2(0.1, 1.0)
     )
 
+    print(angular_diameter_distance)
+
     assert angular_diameter_distance == pytest.approx(angular_diameter_distance_ap, 1.0e-4)
 
-def test__cosmic_average_densities_solar_mass_per_kpc3():
-    
+
+def test__angular_diameter_distances():
+
     cosmology = ag.cosmology.Planck15()
-    
+
+    angular_diameter_distance_to_earth_kpc = (
+        cosmology.angular_diameter_distance_to_earth_in_kpc_from(redshift=0.1)
+    )
+
+    assert angular_diameter_distance_to_earth_kpc == pytest.approx(392840, 1e-5)
+
+    angular_diameter_distance_between_redshifts_kpc = (
+        cosmology.angular_diameter_distance_between_redshifts_in_kpc_from(
+            redshift_0=0.1, redshift_1=1.0
+        )
+    )
+
+    assert angular_diameter_distance_between_redshifts_kpc == pytest.approx(
+        1481890.4, 5e-5
+    )
+
+def test__cosmic_average_densities_solar_mass_per_kpc3():
+
+    cosmology = ag.cosmology.Planck15()
+
     cosmic_average_density = cosmology.cosmic_average_density_from(redshift=0.6)
 
     assert cosmic_average_density == pytest.approx(81280.09116133313, 1.0e-4)
@@ -76,9 +79,9 @@ def test__cosmic_average_densities_solar_mass_per_kpc3():
 
 
 def test__critical_surface_mass_densities():
-    
+
     cosmology = ag.cosmology.Planck15()
-    
+
     critical_surface_density = cosmology.critical_surface_density_between_redshifts_from(
         redshift_0=0.1, redshift_1=1.0
     )
@@ -95,9 +98,9 @@ def test__critical_surface_mass_densities():
 
 
 def test__velocity_dispersion_from():
-    
+
     cosmology = ag.cosmology.Planck15()
-    
+
     velocity_dispersion = cosmology.velocity_dispersion_from(
         redshift_0=0.5, redshift_1=1.0, einstein_radius=1.0
     )

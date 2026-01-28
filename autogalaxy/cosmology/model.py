@@ -63,7 +63,7 @@ class LensingCosmology:
         """
         return self.kpc_proper_per_arcsec(z=redshift, xp=xp)
 
-    def angular_diameter_distance_to_earth_in_kpc_from(self, redshift: float) -> float:
+    def angular_diameter_distance_to_earth_in_kpc_from(self, redshift: float, xp=np) -> float:
         """
         Angular diameter distance from the input `redshift` to redshift zero (e.g. us, the observer on earth) in
         kiloparsecs.
@@ -81,14 +81,10 @@ class LensingCosmology:
         redshift
             Input redshift from which the angular diameter distance to Earth is calculated.
         """
-        angular_diameter_distance_kpc = self.angular_diameter_distance(z=redshift).to(
-            "kpc"
-        )
-
-        return angular_diameter_distance_kpc.value
+        return self.angular_diameter_distance_kpc_z1z2(0.0, redshift, xp=xp)
 
     def angular_diameter_distance_between_redshifts_in_kpc_from(
-        self, redshift_0: float, redshift_1: float
+        self, redshift_0: float, redshift_1: float, xp=np
     ) -> float:
         """
         Angular diameter distance from an input `redshift_0` to another input `redshift_1`.
@@ -103,11 +99,9 @@ class LensingCosmology:
         redshift_1
             Redshift from which the angular diameter distance to the other redshift is calculated.
         """
-        angular_diameter_distance_between_redshifts_kpc = (
-            self.angular_diameter_distance_z1z2(redshift_0, redshift_1).to("kpc")
+        return self.angular_diameter_distance_kpc_z1z2(
+            redshift_0, redshift_1, xp=xp
         )
-
-        return angular_diameter_distance_between_redshifts_kpc.value
 
     def cosmic_average_density_from(self, redshift: float) -> float:
         """
