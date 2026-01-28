@@ -1,6 +1,3 @@
-import jax
-import jax.numpy as jnp
-from jax import ShapeDtypeStruct
 import numpy as np
 import warnings
 
@@ -124,6 +121,9 @@ def ludlow16_cosmology_jax(
     """
     JAX-safe wrapper around Colossus + Astropy cosmology.
     """
+    import jax
+    import jax.numpy as jnp
+    from jax import ShapeDtypeStruct
 
     return jax.pure_callback(
         _ludlow16_cosmology_callback,
