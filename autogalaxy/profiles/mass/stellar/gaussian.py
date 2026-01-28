@@ -220,6 +220,47 @@ class Gaussian(MassProfile, StellarProfile):
         # symmetry: zeta(x, -y) = conj(zeta(x, y))
         return xp.where(y >= 0, core, xp.conj(core))
 
+    # t = sqrt_pi
+    # t = U5[0] + z2 * t
+    # t = U5[1] + z2 * t
+    # t = U5[2] + z2 * t
+    # t = U5[3] + z2 * t
+    # t = U5[4] + z2 * t
+    # num5 = U5[5] + z2 * t
+    #
+    # s = 1.0
+    # s = V5[0] + z2 * s
+    # s = V5[1] + z2 * s
+    # s = V5[2] + z2 * s
+    # s = V5[3] + z2 * s
+    # s = V5[4] + z2 * s
+    # s = V5[5] + z2 * s
+    # den5 = V5[6] + z2 * s
+    #
+    # w5 = xp.exp(-z2) + 1j * z * num5 / den5
+    #
+    # # --- Region 6: remaining small-|z| region ---
+    # U6 = xp.float64(xp.array([5.9126262, 30.180142, 93.15558,
+    #                           181.92853, 214.38239, 122.60793]))
+    # V6 = xp.float64(xp.array([10.479857, 53.992907, 170.35400,
+    #                           348.70392, 457.33448, 352.73063, 122.60793]))
+    #
+    # t = sqrt_pi
+    # t = U6[0] - 1j * z * t
+    # t = U6[1] - 1j * z * t
+    # t = U6[2] - 1j * z * t
+    # t = U6[3] - 1j * z * t
+    # t = U6[4] - 1j * z * t
+    # num6 = U6[5] - 1j * z * t
+    #
+    # s = 1.0
+    # s = V6[0] - 1j * z * s
+    # s = V6[1] - 1j * z * s
+    # s = V6[2] - 1j * z * s
+    # s = V6[3] - 1j * z * s
+    # s = V6[4] - 1j * z * s
+    # s = V6[5] - 1j * z * s
+    # den6 = V6[6] - 1j * z * s
 
     def wofz(self, z, xp=np):
         """
@@ -228,7 +269,7 @@ class Gaussian(MassProfile, StellarProfile):
         Valid for all complex z. JIT + autodiff safe.
         """
 
-        z = xp.complex128(xp.asarray(z))
+        z = xp.asarray(z)
         x = xp.real(z)
         y = xp.imag(z)
 
@@ -237,74 +278,53 @@ class Gaussian(MassProfile, StellarProfile):
         z2 = z * z
         sqrt_pi = xp.sqrt(xp.pi)
 
-        # --- Region 1: |z|^2 >= 3.8e4 ---
-        w1 = 1j / (z * sqrt_pi)
+        # --- Regions 1 to 4 ___
+        r1_s1 = xp.array([2.5, 2.0, 1.5, 1.0, 0.5])
 
-        # --- Region 2: 3.8e4 > |z|^2 >= 256 ---
-        w2 = 1j * z / (sqrt_pi * (z2 - 0.5))
+        v = z
+        for coef in r1_s1:
+            v = z - coef / v
 
-        # --- Region 3: 256 > |z|^2 >= 62 ---
-        w3 = 1j * (z2 - 1.0) / (z * sqrt_pi * (z2 - 1.5))
-
-        # --- Region 4: 62 > |z|^2 >= 30 and y^2 >= 1e-13 ---
-        w4 = 1j * z * (z2 - 2.5) / (sqrt_pi * (z2 * (z2 - 3.0) + 0.75))
+        w_large = 1j / (v * sqrt_pi)
 
         # --- Region 5: special small-imaginary case ---
-        U5 = xp.float64(xp.array([1.320522, 35.7668, 219.031, 1540.787, 3321.990, 36183.31]))
-        V5 = xp.float64(xp.array([1.841439, 61.57037, 364.2191, 2186.181,
-                        9022.228, 24322.84, 32066.6]))
+        U5 = xp.array([1.320522, 35.7668, 219.031, 1540.787, 3321.990, 36183.31])
+        V5 = xp.array([1.841439, 61.57037, 364.2191, 2186.181,
+                       9022.228, 24322.84, 32066.6])
 
-        t = sqrt_pi
-        t = U5[0] + z2 * t
-        t = U5[1] + z2 * t
-        t = U5[2] + z2 * t
-        t = U5[3] + z2 * t
-        t = U5[4] + z2 * t
-        num5 = U5[5] + z2 * t
+        t = 1 / sqrt_pi
+        for u in U5:
+            t = u + z2 * t
 
         s = 1.0
-        s = V5[0] + z2 * s
-        s = V5[1] + z2 * s
-        s = V5[2] + z2 * s
-        s = V5[3] + z2 * s
-        s = V5[4] + z2 * s
-        s = V5[5] + z2 * s
-        den5 = V5[6] + z2 * s
+        for v in V5:
+            s = v + z2 * s
 
-        w5 = xp.exp(-z2) + 1j * z * num5 / den5
+        w5 = xp.exp(-z2) + 1j * z * t / s
 
         # --- Region 6: remaining small-|z| region ---
-        U6 = xp.float64(xp.array([5.9126262, 30.180142, 93.15558,
-                        181.92853, 214.38239, 122.60793]))
-        V6 = xp.float64(xp.array([10.479857, 53.992907, 170.35400,
-                        348.70392, 457.33448, 352.73063, 122.60793]))
+        U6 = xp.array([5.9126262, 30.180142, 93.15558,
+                       181.92853, 214.38239, 122.60793])
+        V6 = xp.array([10.479857, 53.992907, 170.35400,
+                       348.70392, 457.33448, 352.73063, 122.60793])
 
-        t = sqrt_pi
-        t = U6[0] - 1j * z * t
-        t = U6[1] - 1j * z * t
-        t = U6[2] - 1j * z * t
-        t = U6[3] - 1j * z * t
-        t = U6[4] - 1j * z * t
-        num6 = U6[5] - 1j * z * t
+        t = 1 / sqrt_pi
+        for u in U6:
+            t = u - 1j * z * t
 
         s = 1.0
-        s = V6[0] - 1j * z * s
-        s = V6[1] - 1j * z * s
-        s = V6[2] - 1j * z * s
-        s = V6[3] - 1j * z * s
-        s = V6[4] - 1j * z * s
-        s = V6[5] - 1j * z * s
-        den6 = V6[6] - 1j * z * s
+        for v in V6:
+            s = v - 1j * z * s
 
-        w6 = num6 / den6
+        w6 = t / s
+
+        # --- Regions ---
+        reg1 = (r2 >= 62.0) | ((r2 >= 30.0) & (r2 < 62.0) & (y2 >= 1e-13))
+        reg2 = ((r2 >= 30) & (r2 < 62) & (y2 < 1e-13)) | ((r2 >= 2.5) & (r2 < 30) & (y2 < 0.072))
 
         # --- Combine regions using pure array logic ---
         w = w6
-        w = xp.where((r2 >= 2.5) & (y2 < 0.072) & (r2 < 30), w5, w)
-        w = xp.where((r2 >= 30) & (r2 < 62) & (y2 < 1e-13), w5, w)
-        w = xp.where((r2 >= 30) & (r2 < 62) & (y2 >= 1e-13), w4, w)
-        w = xp.where((r2 >= 62) & (r2 < 256), w3, w)
-        w = xp.where((r2 >= 256) & (r2 < 3.8e4), w2, w)
-        w = xp.where(r2 >= 3.8e4, w1, w)
+        w = xp.where(reg2, w5, w)
+        w = xp.where(reg1, w_large, w)
 
         return w
