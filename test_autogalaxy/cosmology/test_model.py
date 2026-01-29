@@ -89,6 +89,27 @@ def test__critical_surface_mass_densities():
 
     assert critical_surface_density == pytest.approx(4.85e9, 1e-2)
 
+def test__critical_surface_density():
+
+    cosmology = ag.cosmology.FlatLambdaCDM()
+
+    critical_surface_density = (
+        cosmology.critical_surface_density_between_redshifts_from(
+            redshift_0=0.1, redshift_1=1.0
+        )
+    )
+
+    assert critical_surface_density == pytest.approx(17613991217.945473, 1.0e-4)
+
+def test__scaling_factor_between_redshifts_from():
+
+    cosmology = ag.cosmology.FlatLambdaCDM()
+
+    scaling_factor = cosmology.scaling_factor_between_redshifts_from(
+        redshift_0=0.5, redshift_1=1.0, redshift_final=2.0
+    )
+
+    assert scaling_factor == pytest.approx(0.6739452581456, 1e-4)
 
 def test__velocity_dispersion_from():
 
@@ -106,15 +127,3 @@ def test__velocity_dispersion_from():
 
     assert velocity_dispersion == pytest.approx(np.sqrt(2) * 249.03449, 1.0e-4)
 
-
-def test__critical_surface_density():
-
-    cosmology = ag.cosmology.FlatLambdaCDM()
-
-    critical_surface_density = (
-        cosmology.critical_surface_density_between_redshifts_from(
-            redshift_0=0.1, redshift_1=1.0
-        )
-    )
-
-    assert critical_surface_density == pytest.approx(17613991217.945473, 1.0e-4)
