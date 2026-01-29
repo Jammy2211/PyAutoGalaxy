@@ -119,9 +119,9 @@ class LensingCosmology:
         return rho_kpc3 * kpc_per_arcsec ** 3
 
     def cosmic_average_density_solar_mass_per_kpc3_from(
-            self,
-            redshift: float,
-            xp=np,
+        self,
+        redshift: float,
+        xp=np,
     ):
         """
         Critical density of the Universe at redshift z in units of Msun / kpc^3.
@@ -162,97 +162,68 @@ class LensingCosmology:
         return rho_crit
 
     def critical_surface_density_between_redshifts_from(
-        self, redshift_0: float, redshift_1: float
-    ) -> float:
+        self,
+        redshift_0: float,
+        redshift_1: float,
+        xp=np,
+    ):
         """
-        The critical surface density for lensing, often written as $\sigma_{cr}$, is given by:
+        Critical surface density scaled into AutoLens angular units (Msun / arcsec^2).
 
-        critical_surface_density = (c^2 * D_s) / (4 * pi * G * D_ls * D_l)
-
-        c = speed of light
-        G = Newton's gravity constant
-        D_s = angular_diameter_distance_of_source_redshift_to_earth
-        D_ls = angular_diameter_distance_of_lens_redshift_to_source_redshift
-        D_l = angular_diameter_distance_of_lens_redshift_to_earth
-
-        This function returns the critical surface density in units of solar masses, which are convenient units for
-        converting the inferred masses of a model from angular units (e.g. dimensionless units inferred from
-        data in arcseconds) to solar masses.
-
-        Parameters
-        ----------
-        redshift_0
-            The redshift of the first strong lens galaxy (E.g. the lens galaxy) for which the critical surface
-            density is calculated.
-        redshift_1
-            The redshift of the second strong lens galaxy (E.g. the lens galaxy) for which the critical surface
-            density is calculated.
+        This is:
+            Sigma_crit_arcsec2 = Sigma_crit_kpc2 * (kpc_per_arcsec(z_l))^2
         """
-        critical_surface_density_kpc = (
-            self.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
-                redshift_0=redshift_0, redshift_1=redshift_1
-            )
+        sigma_crit_kpc2 = self.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+            redshift_0=redshift_0, redshift_1=redshift_1, xp=xp
         )
 
-        kpc_per_arcsec = self.kpc_per_arcsec_from(redshift=redshift_0)
+        kpc_per_arcsec = self.kpc_per_arcsec_from(redshift=redshift_0, xp=xp)
 
-        return critical_surface_density_kpc * kpc_per_arcsec**2.0
+        return sigma_crit_kpc2 * kpc_per_arcsec**2.0
 
     def critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
-        self, redshift_0: float, redshift_1: float
-    ) -> float:
+        self,
+        redshift_0: float,
+        redshift_1: float,
+        xp=np,
+    ):
         """
-        The critical surface density for lensing, often written as $\sigma_{cr}$, is given by:
+        Critical surface density in physical units (Msun / kpc^2):
 
-        critical_surface_density = (c^2 * D_s) / (4 * pi * G * D_ls * D_l)
+            Sigma_crit = (c^2 / (4*pi*G)) * D_s / (D_l * D_ls)
 
-        c = speed of light
-        G = Newton's gravity constant
-        D_s = Angular diameter distance of source redshift to earth
-        D_ls = Angular diameter distance of lens redshift to source redshift
-        D_l = Angular diameter distance of lens redshift to earth
+        Distances must be angular diameter distances in kpc.
 
-        This function returns the critical surface density in units of solar masses / kpc^2, which are convenient
-        units for converting the inferred masses of a model from angular units (e.g. dimensionless units inferred
-        from data in arcseconds) to solar masses.
-
-        Parameters
-        ----------
-        redshift_0
-            The redshift of the first strong lens galaxy (E.g. the lens galaxy) for which the critical surface
-            density is calculated.
-        redshift_1
-            The redshift of the second strong lens galaxy (E.g. the lens galaxy) for which the critical surface
-            density is calculated.
+        JAX/NumPy compatible via `xp` (pass `jax.numpy` as xp).
         """
-        from astropy import constants
 
-        const = constants.c.to("kpc / s") ** 2.0 / (
-            4 * math.pi * constants.G.to("kpc3 / (solMass s2)")
+        # Speed of light in kpc / s
+        # c = 299792.458 km/s, 1 kpc = 3.085677581e16 km
+        c_kpc_s = xp.asarray(299792.458) / xp.asarray(3.085677581e16)
+
+        # Gravitational constant in kpc^3 / (Msun s^2)
+        # Start from G = 4.30091e-6 kpc (km/s)^2 / Msun and convert (km/s)^2 -> (kpc/s)^2
+        G_kpc3_Msun_s2 = (xp.asarray(4.30091e-6) / xp.asarray((3.085677581e16) ** 2))
+
+        const = (c_kpc_s**2) / (xp.asarray(4.0) * xp.pi * G_kpc3_Msun_s2)
+
+        D_l = self.angular_diameter_distance_to_earth_in_kpc_from(
+            redshift=redshift_0, xp=xp
+        )
+        D_s = self.angular_diameter_distance_to_earth_in_kpc_from(
+            redshift=redshift_1, xp=xp
+        )
+        D_ls = self.angular_diameter_distance_between_redshifts_in_kpc_from(
+            redshift_0=redshift_0, redshift_1=redshift_1, xp=xp
         )
 
-        angular_diameter_distance_of_redshift_0_to_earth_kpc = (
-            self.angular_diameter_distance_to_earth_in_kpc_from(redshift=redshift_0)
+        # Handle z_s == z_l (or any case D_ls=0) safely for JAX:
+        # In lensing usage, caller should ensure z_s > z_l, but this avoids NaNs in edge cases.
+        return xp.where(
+            D_ls == xp.asarray(0.0),
+            xp.asarray(np.inf),
+            const * D_s / (D_l * D_ls),
         )
-
-        angular_diameter_distance_of_redshift_1_to_earth_kpc = (
-            self.angular_diameter_distance_to_earth_in_kpc_from(redshift=redshift_1)
-        )
-
-        angular_diameter_distance_between_redshifts_kpc = (
-            self.angular_diameter_distance_between_redshifts_in_kpc_from(
-                redshift_0=redshift_0, redshift_1=redshift_1
-            )
-        )
-
-        return (
-            const
-            * angular_diameter_distance_of_redshift_1_to_earth_kpc
-            / (
-                angular_diameter_distance_between_redshifts_kpc
-                * angular_diameter_distance_of_redshift_0_to_earth_kpc
-            )
-        ).value
 
     def scaling_factor_between_redshifts_from(
         self, redshift_0: float, redshift_1: float, redshift_final: float
