@@ -4,12 +4,13 @@ from autogalaxy.profiles.mass.dark.cnfw import cNFWSph
 
 from autogalaxy.profiles.mass.dark import mcr_util
 
+
 class cNFWMCRLudlowSph(cNFWSph):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
         mass_at_200: float = 1e9,
-        f_c = 0.01,
+        f_c=0.01,
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
     ):
@@ -31,4 +32,9 @@ class cNFWMCRLudlowSph(cNFWSph):
             redshift_source=redshift_source,
         )
 
-        super().__init__(centre=centre, kappa_s=kappa_s, scale_radius=scale_radius, core_radius=core_radius)
+        super().__init__(
+            centre=centre,
+            kappa_s=kappa_s,
+            scale_radius=scale_radius,
+            core_radius=core_radius,
+        )

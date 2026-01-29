@@ -63,7 +63,9 @@ class LensingCosmology:
         """
         return self.kpc_proper_per_arcsec(z=redshift, xp=xp)
 
-    def angular_diameter_distance_to_earth_in_kpc_from(self, redshift: float, xp=np) -> float:
+    def angular_diameter_distance_to_earth_in_kpc_from(
+        self, redshift: float, xp=np
+    ) -> float:
         """
         Angular diameter distance from the input `redshift` to redshift zero (e.g. us, the observer on earth) in
         kiloparsecs.
@@ -99,9 +101,7 @@ class LensingCosmology:
         redshift_1
             Redshift from which the angular diameter distance to the other redshift is calculated.
         """
-        return self.angular_diameter_distance_kpc_z1z2(
-            redshift_0, redshift_1, xp=xp
-        )
+        return self.angular_diameter_distance_kpc_z1z2(redshift_0, redshift_1, xp=xp)
 
     def cosmic_average_density_from(self, redshift: float, xp=np):
         """
@@ -116,7 +116,7 @@ class LensingCosmology:
 
         rho_kpc3 = self.cosmic_average_density_solar_mass_per_kpc3_from(redshift, xp=xp)
         kpc_per_arcsec = self.kpc_per_arcsec_from(redshift, xp=xp)
-        return rho_kpc3 * kpc_per_arcsec ** 3
+        return rho_kpc3 * kpc_per_arcsec**3
 
     def cosmic_average_density_solar_mass_per_kpc3_from(
         self,
@@ -157,7 +157,7 @@ class LensingCosmology:
         # Critical density in Msun/kpc^3
         # -----------------------------
 
-        rho_crit = (3.0 * Hz ** 2) / (8.0 * xp.pi * G)
+        rho_crit = (3.0 * Hz**2) / (8.0 * xp.pi * G)
 
         return rho_crit
 
@@ -173,8 +173,10 @@ class LensingCosmology:
         This is:
             Sigma_crit_arcsec2 = Sigma_crit_kpc2 * (kpc_per_arcsec(z_l))^2
         """
-        sigma_crit_kpc2 = self.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
-            redshift_0=redshift_0, redshift_1=redshift_1, xp=xp
+        sigma_crit_kpc2 = (
+            self.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+                redshift_0=redshift_0, redshift_1=redshift_1, xp=xp
+            )
         )
 
         kpc_per_arcsec = self.kpc_per_arcsec_from(redshift=redshift_0, xp=xp)
@@ -203,7 +205,7 @@ class LensingCosmology:
 
         # Gravitational constant in kpc^3 / (Msun s^2)
         # Start from G = 4.30091e-6 kpc (km/s)^2 / Msun and convert (km/s)^2 -> (kpc/s)^2
-        G_kpc3_Msun_s2 = (xp.asarray(4.30091e-6) / xp.asarray((3.085677581e16) ** 2))
+        G_kpc3_Msun_s2 = xp.asarray(4.30091e-6) / xp.asarray((3.085677581e16) ** 2)
 
         const = (c_kpc_s**2) / (xp.asarray(4.0) * xp.pi * G_kpc3_Msun_s2)
 
@@ -297,7 +299,7 @@ class LensingCosmology:
         return (D_l0l1 * D_s) / (D_l1 * D_l0s)
 
     def velocity_dispersion_from(
-        self, redshift_0: float, redshift_1: float, einstein_radius: float
+        self, redshift_0: float, redshift_1: float, einstein_radius: float, xp=np
     ) -> float:
         """
         For a strong lens galaxy with an Einstien radius in arcseconds, the corresponding velocity dispersion of the
@@ -319,39 +321,33 @@ class LensingCosmology:
         redshift_1
             The redshift of the second strong lens galaxy (the source).
         """
-        from astropy import constants
 
-        const = constants.c.to("kpc / s")
+        # Speed of light in km / s
+        c_km_s = xp.asarray(299792.458)
 
-        angular_diameter_distance_to_redshift_0_kpc = (
-            self.angular_diameter_distance_to_earth_in_kpc_from(redshift=redshift_1)
+        # Angular diameter distances in kpc
+        D_l = self.angular_diameter_distance_to_earth_in_kpc_from(
+            redshift=redshift_0, xp=xp
         )
 
-        angular_diameter_distance_to_redshift_1_kpc = (
-            self.angular_diameter_distance_to_earth_in_kpc_from(redshift=redshift_1)
+        D_s = self.angular_diameter_distance_to_earth_in_kpc_from(
+            redshift=redshift_1, xp=xp
         )
 
-        angular_diameter_distance_between_redshifts_kpc = (
-            self.angular_diameter_distance_between_redshifts_in_kpc_from(
-                redshift_0=redshift_0, redshift_1=redshift_1
-            )
+        D_ls = self.angular_diameter_distance_between_redshifts_in_kpc_from(
+            redshift_0=redshift_0, redshift_1=redshift_1, xp=xp
         )
 
-        kpc_per_arcsec = self.kpc_per_arcsec_from(redshift=redshift_0)
+        # Convert Einstein radius to kpc
+        kpc_per_arcsec = self.kpc_per_arcsec_from(redshift=redshift_0, xp=xp)
+        R_ein_kpc = xp.asarray(einstein_radius) * kpc_per_arcsec
 
-        einstein_radius_kpc = einstein_radius * kpc_per_arcsec
-
-        velocity_dispersion_kpc = const * np.sqrt(
-            (einstein_radius_kpc * angular_diameter_distance_to_redshift_1_kpc)
-            / (
-                4
-                * np.pi
-                * angular_diameter_distance_to_redshift_0_kpc
-                * angular_diameter_distance_between_redshifts_kpc
-            )
+        # Velocity dispersion (km/s)
+        sigma_v = c_km_s * xp.sqrt(
+            (R_ein_kpc * D_s) / (xp.asarray(4.0) * xp.pi * D_l * D_ls)
         )
 
-        return velocity_dispersion_kpc.to("km/s").value
+        return sigma_v
 
 
 class FlatLambdaCDM(LensingCosmology):
@@ -413,7 +409,9 @@ class FlatLambdaCDM(LensingCosmology):
         """
         n = x.shape[0]
         if (n % 2) == 0:
-            raise ValueError("Simpson's rule requires an odd number of samples (even number of intervals).")
+            raise ValueError(
+                "Simpson's rule requires an odd number of samples (even number of intervals)."
+            )
 
         h = (x[-1] - x[0]) / (n - 1)
 
@@ -487,8 +485,8 @@ class FlatLambdaCDM(LensingCosmology):
             zp1 = xp.asarray(1.0) + z
             # E^2 = (Om+Onu_m)(1+z)^3 + Or(1+z)^4 + Ode(1+z)^{3(1+w)}
             return xp.sqrt(
-                (Om0 + Onu0) * zp1 ** 3
-                + Or0 * zp1 ** 4
+                (Om0 + Onu0) * zp1**3
+                + Or0 * zp1**4
                 + Ode0 * zp1 ** (xp.asarray(3.0) * (xp.asarray(1.0) + w0))
             )
 
@@ -522,7 +520,9 @@ class FlatLambdaCDM(LensingCosmology):
         h = H0 / xp.asarray(100.0)
 
         Om0 = xp.asarray(self.Om0)
-        w0 = xp.asarray(getattr(self, "w0", -1.0))  # allow FlatLambdaCDM with w0=-1 set on the class
+        w0 = xp.asarray(
+            getattr(self, "w0", -1.0)
+        )  # allow FlatLambdaCDM with w0=-1 set on the class
 
         # ---- photons ----
         Tcmb = xp.asarray(getattr(self, "Tcmb0", 0.0))

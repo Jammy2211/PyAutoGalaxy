@@ -67,6 +67,7 @@ def test__deflections_2d_via_analytic_from():
     assert deflections[0, 0] == pytest.approx(1.10812, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.35467, 1.0e-4)
 
+
 @pytest.mark.skip(reason="Not JAX compatible")
 def test__deflections_2d_via_integral_from():
     mp = ag.mp.Gaussian(
@@ -136,6 +137,7 @@ def test__deflections_2d_via_integral_from():
     )
 
     assert deflections == pytest.approx(deflections_via_analytic.array, 1.0e-3)
+
 
 @pytest.mark.skip(reason="Not JAX compatible")
 def test__deflections_yx_2d_from():

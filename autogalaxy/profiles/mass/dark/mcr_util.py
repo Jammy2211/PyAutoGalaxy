@@ -204,7 +204,10 @@ def kappa_s_and_scale_radius_for_ludlow(
 
     return kappa_s, scale_radius, radius_at_200
 
-def kappa_s_scale_radius_and_core_radius_for_ludlow(mass_at_200, scatter_sigma, f_c, redshift_object, redshift_source):
+
+def kappa_s_scale_radius_and_core_radius_for_ludlow(
+    mass_at_200, scatter_sigma, f_c, redshift_object, redshift_source
+):
     """
     Computes the AutoGalaxy cNFW parameters (kappa_s, scale_radius, core_radius) for a cored NFW halo of the given
     mass, enforcing the Penarrubia '12 mass-concentration relation.
@@ -258,13 +261,17 @@ def kappa_s_scale_radius_and_core_radius_for_ludlow(mass_at_200, scatter_sigma, 
         1.0 / 3.0
     )  # r200
 
-    mcr_penarrubia = ((f_c**2 * xp.log(1 + concentration / f_c) + (1 - 2 * f_c) * xp.log(1 + concentration)) / (1 + f_c)**2
-                                   - concentration / ((1+concentration) * (1-f_c))) #mass concentration relation (Penarrubia+2012)
+    mcr_penarrubia = (
+        f_c**2 * xp.log(1 + concentration / f_c)
+        + (1 - 2 * f_c) * xp.log(1 + concentration)
+    ) / (1 + f_c) ** 2 - concentration / (
+        (1 + concentration) * (1 - f_c)
+    )  # mass concentration relation (Penarrubia+2012)
 
     scale_radius_kpc = radius_at_200 / concentration  # scale radius in kpc
     rho_0 = mass_at_200 / (4 * xp.pi * scale_radius_kpc**3 * mcr_penarrubia)
     kappa_s = rho_0 * scale_radius_kpc / critical_surface_density  # kappa_s
     scale_radius = scale_radius_kpc / kpc_per_arcsec  # scale radius in arcsec
-    core_radius = f_c * scale_radius # core radius in arcsec
+    core_radius = f_c * scale_radius  # core radius in arcsec
 
     return kappa_s, scale_radius, core_radius, radius_at_200
