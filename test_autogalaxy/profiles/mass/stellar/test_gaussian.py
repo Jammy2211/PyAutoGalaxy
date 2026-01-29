@@ -240,3 +240,27 @@ def test__image_2d_via_radii_from__correct_value():
     intensity = mp.image_2d_via_radii_from(grid_radii=ag.ArrayIrregular(3.0))
 
     assert intensity == pytest.approx(0.32465, 1e-2)
+
+def test__wofz():
+    from scipy.special import wofz
+
+    mp = ag.mp.Gaussian(
+        centre=(0.0, 0.0), ell_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
+    )
+
+    wofz_approx_reg_1 = mp.wofz(20.0 + 1j * 0.001)
+    wofz_approx_reg_2 = mp.wofz(2.0 + 1j * 0.001)
+    wofz_approx_reg_3 = mp.wofz(1.0 + 1j * 0.001)
+
+    assert wofz_approx_reg_1 == pytest.approx(wofz(20.0 + 1j * 0.001), 1e-4)
+    assert wofz_approx_reg_2 == pytest.approx(wofz(2.0 + 1j * 0.001), 1e-4)
+    assert wofz_approx_reg_3 == pytest.approx(wofz(1.0 + 1j * 0.001), 1e-4)
+
+    wofz_approx_reg_1 = mp.wofz(7.0 + 1j * 0.1)
+    wofz_approx_reg_2 = mp.wofz(7.0 + 1j * 1e-11)
+    wofz_approx_reg_3 = mp.wofz(2.0 + 1j * 1.0)
+
+    assert wofz_approx_reg_1 == pytest.approx(wofz(7.0 + 1j * 0.1), 1e-4)
+    assert wofz_approx_reg_2 == pytest.approx(wofz(7.0 + 1j * 1e-11), 1e-4)
+    assert wofz_approx_reg_3 == pytest.approx(wofz(2.0 + 1j * 1.0), 1e-4)
+
