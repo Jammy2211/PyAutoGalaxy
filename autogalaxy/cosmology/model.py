@@ -103,12 +103,10 @@ class LensingCosmology:
             redshift_0, redshift_1, xp=xp
         )
 
-    def cosmic_average_density_from(self, redshift: float) -> float:
+    def cosmic_average_density_from(self, redshift: float, xp=np):
         """
-        Critical density of the Universe at an input `redshift` in units of solar masses.
-
-        For simplicity, **PyAutoLens** internally uses only certain units to perform lensing cosmology calculations.
-        This function therefore returns only the value of the astropy function it wraps, omitting the units instance.
+        Critical density of the Universe at redshift z in units of solar masses,
+        scaled into arcsec-based internal lensing units.
 
         Parameters
         ----------
@@ -116,31 +114,52 @@ class LensingCosmology:
             Redshift at which the critiical density in solMass of the Universe is calculated.
         """
 
-        cosmic_average_density_kpc = (
-            self.critical_density(z=redshift).to("solMass / kpc^3").value
-        )
+        rho_kpc3 = self.cosmic_average_density_solar_mass_per_kpc3_from(redshift, xp=xp)
+        kpc_per_arcsec = self.kpc_per_arcsec_from(redshift, xp=xp)
+        return rho_kpc3 * kpc_per_arcsec ** 3
 
-        kpc_per_arcsec = self.kpc_per_arcsec_from(redshift=redshift)
-
-        return cosmic_average_density_kpc * kpc_per_arcsec**3.0
-
-    def cosmic_average_density_solar_mass_per_kpc3_from(self, redshift: float) -> float:
+    def cosmic_average_density_solar_mass_per_kpc3_from(
+            self,
+            redshift: float,
+            xp=np,
+    ):
         """
-        Critical density of the Universe at an input `redshift` in units of solar masses per kiloparsecs**3.
+        Critical density of the Universe at redshift z in units of Msun / kpc^3.
 
-        For simplicity, **PyAutoLens** internally uses only certain units to perform lensing cosmology calculations.
-        This function therefore returns only the value of the astropy function it wraps, omitting the units instance.
+        JAX / NumPy compatible via `xp`.
 
-        Parameters
-        ----------
-        redshift
-            Redshift at which the critiical density in solMass/kpc^3 of the Universe is calculated.
+        Computes:
+
+            rho_c(z) = 3 H(z)^2 / (8 pi G)
+
+        Returns physical density (not scaled into arcsec units).
         """
-        cosmic_average_density_kpc = (
-            self.critical_density(z=redshift).to("solMass / kpc^3").value
-        )
 
-        return cosmic_average_density_kpc
+        # -----------------------------
+        # Physical constants
+        # -----------------------------
+
+        # Gravitational constant in kpc^3 / (Msun s^2)
+        G = xp.asarray(4.30091e-6)  # kpc (km/s)^2 / Msun
+        G = G / xp.asarray((3.085677581e16) ** 2)
+
+        # H0 in km/s/Mpc → convert to 1/s
+        H0_km_s_Mpc = xp.asarray(self.H0)
+        H0_s = H0_km_s_Mpc / xp.asarray(3.085677581e19)
+
+        # Dimensionless expansion factor
+        Ez = self.E(redshift, xp=xp)
+
+        # H(z) in 1/s
+        Hz = H0_s * Ez
+
+        # -----------------------------
+        # Critical density in Msun/kpc^3
+        # -----------------------------
+
+        rho_crit = (3.0 * Hz ** 2) / (8.0 * xp.pi * G)
+
+        return rho_crit
 
     def critical_surface_density_between_redshifts_from(
         self, redshift_0: float, redshift_1: float
@@ -507,6 +526,57 @@ class FlatLambdaCDM(LensingCosmology):
         Da_kpc = Da_Mpc * xp.asarray(1.0e3)
 
         return xp.where(same, xp.asarray(0.0), Da_kpc)
+
+    def E(self, z: float, xp=np):
+        """
+        Dimensionless Hubble parameter E(z) = H(z) / H0.
+
+        JAX/NumPy compatible via `xp` (pass `jax.numpy` as xp).
+
+        Notes on components:
+        - Photons: Omega_gamma from Tcmb0
+        - Massless neutrinos: Omega_nu_rad = Omega_gamma * 0.2271 * Neff  (standard)
+        - Massive neutrinos (approx): Omega_nu_m h^2 = sum(m_nu)/93.14 eV, treated as matter-like (1+z)^3
+          (If you want to exactly match astropy for massive neutrinos, that’s more complex.)
+        """
+
+        z = xp.asarray(z)
+
+        H0 = xp.asarray(self.H0)
+        h = H0 / xp.asarray(100.0)
+
+        Om0 = xp.asarray(self.Om0)
+        w0 = xp.asarray(getattr(self, "w0", -1.0))  # allow FlatLambdaCDM with w0=-1 set on the class
+
+        # ---- photons ----
+        Tcmb = xp.asarray(getattr(self, "Tcmb0", 0.0))
+        Ogamma_h2 = xp.asarray(2.469e-5) * (Tcmb / xp.asarray(2.7255)) ** 4
+        Ogamma0 = Ogamma_h2 / (h * h)
+
+        # ---- massless neutrino radiation via Neff ----
+        Neff = xp.asarray(getattr(self, "Neff", 0.0))
+        Onu_rad0 = Ogamma0 * xp.asarray(0.2271) * Neff
+
+        Or0 = Ogamma0 + Onu_rad0
+
+        # ---- massive neutrinos (approx matter-like) ----
+        m_nu = getattr(self, "m_nu", 0.0)
+        m_nu_sum = xp.sum(xp.asarray(m_nu))  # float or array-like
+        Onu_m_h2 = m_nu_sum / xp.asarray(93.14)
+        Onu_m0 = Onu_m_h2 / (h * h)
+
+        # ---- flatness: Omega_de ----
+        Ode0 = xp.asarray(1.0) - Om0 - Or0 - Onu_m0
+
+        zp1 = xp.asarray(1.0) + z
+
+        Ez2 = (
+            (Om0 + Onu_m0) * zp1**3
+            + Or0 * zp1**4
+            + Ode0 * zp1 ** (xp.asarray(3.0) * (xp.asarray(1.0) + w0))
+        )
+
+        return xp.sqrt(Ez2)
 
 
 class Planck15(FlatLambdaCDM):
