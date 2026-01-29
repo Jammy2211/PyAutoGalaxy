@@ -226,8 +226,12 @@ class LensingCosmology:
         )
 
     def scaling_factor_between_redshifts_from(
-        self, redshift_0: float, redshift_1: float, redshift_final: float
-    ) -> float:
+        self,
+        redshift_0: float,
+        redshift_1: float,
+        redshift_final: float,
+        xp=np,
+    ):
         """
         For strong lens systems with more than 2 planes, the deflection angles between different planes must be scaled
         by the angular diameter distances between the planes in order to properly perform multi-plane ray-tracing. This
@@ -257,39 +261,40 @@ class LensingCosmology:
         Parameters
         ----------
         redshift_0
-            The redshift of the first strong lens galaxy.
+            The redshift of the first strong lens galaxy (the first lens plane).
         redshift_1
-            The redshift of the second strong lens galaxy.
+            The redshift of the second strong lens galaxy (the second lens plane).
         redshift_final
-            The redshift of the source galaxy.
+            The redshift of the final source galaxy (the final source plane).
         """
-        angular_diameter_distance_between_redshifts_0_and_1 = (
-            self.angular_diameter_distance_z1z2(z1=redshift_0, z2=redshift_1)
-            .to("kpc")
-            .value
+
+        # D_l0l1 : between lens plane 0 and lens plane 1
+        D_l0l1 = self.angular_diameter_distance_between_redshifts_in_kpc_from(
+            redshift_0=redshift_0,
+            redshift_1=redshift_1,
+            xp=xp,
         )
 
-        angular_diameter_distance_to_redshift_final = (
-            self.angular_diameter_distance(z=redshift_final).to("kpc").value
+        # D_s : observer to final source plane
+        D_s = self.angular_diameter_distance_to_earth_in_kpc_from(
+            redshift=redshift_final,
+            xp=xp,
         )
 
-        angular_diameter_distance_of_redshift_1_to_earth = (
-            self.angular_diameter_distance(z=redshift_1).to("kpc").value
+        # D_l1 : observer to lens plane 1
+        D_l1 = self.angular_diameter_distance_to_earth_in_kpc_from(
+            redshift=redshift_1,
+            xp=xp,
         )
 
-        angular_diameter_distance_between_redshift_0_and_final = (
-            self.angular_diameter_distance_z1z2(z1=redshift_0, z2=redshift_final)
-            .to("kpc")
-            .value
+        # D_l0s : between lens plane 0 and final source plane
+        D_l0s = self.angular_diameter_distance_between_redshifts_in_kpc_from(
+            redshift_0=redshift_0,
+            redshift_1=redshift_final,
+            xp=xp,
         )
 
-        return (
-            angular_diameter_distance_between_redshifts_0_and_1
-            * angular_diameter_distance_to_redshift_final
-        ) / (
-            angular_diameter_distance_of_redshift_1_to_earth
-            * angular_diameter_distance_between_redshift_0_and_final
-        )
+        return (D_l0l1 * D_s) / (D_l1 * D_l0s)
 
     def velocity_dispersion_from(
         self, redshift_0: float, redshift_1: float, einstein_radius: float
