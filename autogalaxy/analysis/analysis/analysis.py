@@ -36,7 +36,7 @@ class Analysis(af.Analysis):
             The Cosmology assumed for this analysis.
         """
 
-        from autogalaxy.cosmology.wrap import Planck15
+        from autogalaxy.cosmology.model import Planck15
 
         self.cosmology = cosmology or Planck15()
         self.preloads = preloads

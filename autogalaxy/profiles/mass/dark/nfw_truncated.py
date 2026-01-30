@@ -114,7 +114,7 @@ class NFWTruncatedSph(AbstractgNFW):
         cosmology: LensingCosmology = None,
         xp=np,
     ):
-        from autogalaxy.cosmology.wrap import Planck15
+        from autogalaxy.cosmology.model import Planck15
 
         cosmology = cosmology or Planck15()
 

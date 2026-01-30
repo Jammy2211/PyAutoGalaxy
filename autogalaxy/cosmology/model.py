@@ -161,6 +161,41 @@ class LensingCosmology:
 
         return rho_crit
 
+    def critical_density(self, z: float, xp=np):
+        """
+        Critical density of the Universe at redshift z, returned in Msun / kpc^3.
+
+        This is an xp (NumPy / JAX) drop-in for the Astropy method:
+            astropy.cosmology.FLRW.critical_density(z)
+
+        Astropy returns g/cm^3, but in AutoLens you were immediately converting to:
+            solMass / kpc^3
+
+        So this function returns Msun / kpc^3 directly.
+
+        Requires:
+            self.H0  (km/s/Mpc)
+            self.E(z, xp=xp)  where E(z) = H(z)/H0
+        """
+
+        z = xp.asarray(z)
+
+        # H0 in km/s/Mpc -> 1/s
+        # 1 Mpc = 3.085677581e19 km
+        H0_s = xp.asarray(self.H0) / xp.asarray(3.085677581e19)
+
+        # H(z) in 1/s
+        Hz = H0_s * self.E(z, xp=xp)
+
+        # Gravitational constant G in kpc^3 / (Msun s^2)
+        # Start from: G = 4.30091e-6 kpc (km/s)^2 / Msun
+        # Convert (km/s)^2 -> (kpc/s)^2 by dividing by (km per kpc)^2
+        km_per_kpc = xp.asarray(3.085677581e16)
+        G = xp.asarray(4.30091e-6) / (km_per_kpc**2)
+
+        # rho_c = 3 H(z)^2 / (8 pi G)  [Msun / kpc^3]
+        return (xp.asarray(3.0) * Hz**2) / (xp.asarray(8.0) * xp.pi * G)
+
     def critical_surface_density_between_redshifts_from(
         self,
         redshift_0: float,

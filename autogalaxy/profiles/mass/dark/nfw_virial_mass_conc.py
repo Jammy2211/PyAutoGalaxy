@@ -10,7 +10,7 @@ def kappa_s_and_scale_radius(
 ):
 
     from astropy import units
-    from autogalaxy.cosmology.wrap import Planck15
+    from autogalaxy.cosmology.model import Planck15
 
     cosmology = Planck15()
 

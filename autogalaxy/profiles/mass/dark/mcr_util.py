@@ -12,7 +12,7 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
 
     from astropy import units
 
-    from autogalaxy.cosmology.wrap import Planck15
+    from autogalaxy.cosmology.model import Planck15
 
     cosmology = Planck15()
 
@@ -70,7 +70,7 @@ def _ludlow16_cosmology_callback(
     from astropy import units
     from colossus.cosmology import cosmology as col_cosmology
     from colossus.halo.concentration import concentration as col_concentration
-    from autogalaxy.cosmology.wrap import Planck15
+    from autogalaxy.cosmology.model import Planck15
 
     # -----------------------
     # Colossus cosmology
