@@ -16,29 +16,30 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
 
     cosmology = Planck15()
 
-    cosmic_average_density = (
-        cosmology.critical_density(redshift_object).to(units.solMass / units.kpc**3)
-    ).value
+    # Msun / kpc^3  (no units conversion needed)
+    cosmic_average_density = cosmology.critical_density(redshift_object, xp=np)
 
+    # Msun / kpc^2
     critical_surface_density = (
         cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
-            redshift_0=redshift_object, redshift_1=redshift_source
+            redshift_0=redshift_object,
+            redshift_1=redshift_source,
+            xp=np,
         )
     )
 
-    kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_object)
+    # kpc / arcsec
+    kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_object, xp=np)
 
+    # r200 in kpc
     radius_at_200 = (
         mass_at_200 / (200.0 * cosmic_average_density * (4.0 * np.pi / 3.0))
-    ) ** (
-        1.0 / 3.0
-    )  # r200
-    coefficient = 5.71 * (1.0 + redshift_object) ** (
-        -0.47
-    )  # The coefficient of Duffy mass-concentration (Duffy+2008)
-    concentration = coefficient * (mass_at_200 / 2.952465309e12) ** (
-        -0.084
-    )  # mass-concentration relation. (Duffy+2008)
+    ) ** (1.0 / 3.0)
+
+    # Duffy+2008 mass–concentration (as in your code)
+    coefficient = 5.71 * (1.0 + redshift_object) ** (-0.47)
+    concentration = coefficient * (mass_at_200 / 2.952465309e12) ** (-0.084)
+
     de_c = (
         200.0
         / 3.0
@@ -46,12 +47,12 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
             concentration**3
             / (np.log(1.0 + concentration) - concentration / (1.0 + concentration))
         )
-    )  # rho_c
+    )
 
-    scale_radius_kpc = radius_at_200 / concentration  # scale radius in kpc
-    rho_s = cosmic_average_density * de_c  # rho_s
-    kappa_s = rho_s * scale_radius_kpc / critical_surface_density  # kappa_s
-    scale_radius = scale_radius_kpc / kpc_per_arcsec  # scale radius in arcsec
+    scale_radius_kpc = radius_at_200 / concentration
+    rho_s = cosmic_average_density * de_c                     # Msun / kpc^3
+    kappa_s = rho_s * scale_radius_kpc / critical_surface_density  # dimensionless
+    scale_radius = scale_radius_kpc / kpc_per_arcsec          # arcsec
 
     return kappa_s, scale_radius, radius_at_200
 
@@ -67,7 +68,6 @@ def _ludlow16_cosmology_callback(
     """
 
     import numpy as np
-    from astropy import units
     from colossus.cosmology import cosmology as col_cosmology
     from colossus.halo.concentration import concentration as col_concentration
     from autogalaxy.cosmology.model import Planck15
@@ -86,24 +86,24 @@ def _ludlow16_cosmology_callback(
     )
 
     # -----------------------
-    # Astropy cosmology
+    # AutoGalaxy cosmology (no astropy.units)
     # -----------------------
     cosmology = Planck15()
 
-    cosmic_average_density = (
-        cosmology.critical_density(redshift_object)
-        .to(units.solMass / units.kpc**3)
-        .value
-    )
+    # Msun / kpc^3 (your xp drop-in should return this directly)
+    cosmic_average_density = cosmology.critical_density(redshift_object, xp=np)
 
+    # Msun / kpc^2
     critical_surface_density = (
         cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
             redshift_0=redshift_object,
             redshift_1=redshift_source,
+            xp=np,
         )
     )
 
-    kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_object)
+    # kpc / arcsec
+    kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_object, xp=np)
 
     return (
         np.float64(concentration),
