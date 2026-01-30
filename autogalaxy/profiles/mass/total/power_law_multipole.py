@@ -147,12 +147,10 @@ class PowerLawMultipole(MassProfile):
         angle_m
             The multipole orientation angle in radians.
         """
-        from astropy import units
-
         k_m, angle_m = convert.multipole_k_m_and_phi_m_from(
             multipole_comps=self.multipole_comps, m=self.m, xp=xp
         )
-        angle_m *= units.deg.to(units.rad)
+        angle_m *= xp.asarray(np.pi / 180.0)
 
         return k_m, angle_m
 

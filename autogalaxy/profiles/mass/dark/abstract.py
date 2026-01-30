@@ -4,7 +4,7 @@ from typing import Tuple
 import autoarray as aa
 
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
-from autogalaxy.cosmology.lensing import LensingCosmology
+from autogalaxy.cosmology.model import LensingCosmology
 from autogalaxy.profiles.mass.abstract.mge_numpy import (
     MassProfileMGE,
 )
@@ -213,7 +213,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         The Cosmic average density is defined at the redshift of the profile.
         """
 
-        from autogalaxy.cosmology.wrap import Planck15
+        from autogalaxy.cosmology.model import Planck15
 
         cosmology = cosmology or Planck15()
 
@@ -237,7 +237,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         cosmology: LensingCosmology = None,
     ):
 
-        from autogalaxy.cosmology.wrap import Planck15
+        from autogalaxy.cosmology.model import Planck15
 
         cosmology = cosmology or Planck15()
 
@@ -274,7 +274,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         xp=np,
     ):
 
-        from autogalaxy.cosmology.wrap import Planck15
+        from autogalaxy.cosmology.model import Planck15
 
         cosmology = cosmology or Planck15()
 
@@ -321,7 +321,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         """
         Returns `r_{200m}` for this halo in **arcseconds**
         """
-        from autogalaxy.cosmology.wrap import Planck15
+        from autogalaxy.cosmology.model import Planck15
 
         cosmology = cosmology or Planck15()
 
@@ -343,7 +343,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         cosmology: LensingCosmology = None,
         xp=np,
     ):
-        from autogalaxy.cosmology.wrap import Planck15
+        from autogalaxy.cosmology.model import Planck15
 
         cosmology = cosmology or Planck15()
 

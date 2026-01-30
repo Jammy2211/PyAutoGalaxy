@@ -39,7 +39,6 @@ class Gaussian(MassProfile, StellarProfile):
         self.intensity = intensity
         self.sigma = sigma
 
-
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -191,7 +190,7 @@ class Gaussian(MassProfile, StellarProfile):
 
     def zeta_from(self, grid: aa.type.Grid2DLike, xp=np):
         q = self.axis_ratio(xp)
-        q2 = q ** 2.0
+        q2 = q**2.0
 
         ind_pos_y = grid.array[:, 0] >=0
         shape_grid = np.shape(grid)
@@ -251,8 +250,9 @@ class Gaussian(MassProfile, StellarProfile):
 
         # --- Region 5: special small-imaginary case ---
         U5 = xp.array([1.320522, 35.7668, 219.031, 1540.787, 3321.990, 36183.31])
-        V5 = xp.array([1.841439, 61.57037, 364.2191, 2186.181,
-                       9022.228, 24322.84, 32066.6])
+        V5 = xp.array(
+            [1.841439, 61.57037, 364.2191, 2186.181, 9022.228, 24322.84, 32066.6]
+        )
 
         t = 1 / sqrt_pi
         for u in U5:
@@ -265,10 +265,18 @@ class Gaussian(MassProfile, StellarProfile):
         w5 = xp.exp(-z2) + 1j * z * t / s
 
         # --- Region 6: remaining small-|z| region ---
-        U6 = xp.array([5.9126262, 30.180142, 93.15558,
-                       181.92853, 214.38239, 122.60793])
-        V6 = xp.array([10.479857, 53.992907, 170.35400,
-                       348.70392, 457.33448, 352.73063, 122.60793])
+        U6 = xp.array([5.9126262, 30.180142, 93.15558, 181.92853, 214.38239, 122.60793])
+        V6 = xp.array(
+            [
+                10.479857,
+                53.992907,
+                170.35400,
+                348.70392,
+                457.33448,
+                352.73063,
+                122.60793,
+            ]
+        )
 
         t = 1 / sqrt_pi
         for u in U6:
@@ -282,7 +290,9 @@ class Gaussian(MassProfile, StellarProfile):
 
         # --- Regions ---
         reg1 = (r2 >= 62.0) | ((r2 >= 30.0) & (r2 < 62.0) & (y2 >= 1e-13))
-        reg2 = ((r2 >= 30) & (r2 < 62) & (y2 < 1e-13)) | ((r2 >= 2.5) & (r2 < 30) & (y2 < 0.072))
+        reg2 = ((r2 >= 30) & (r2 < 62) & (y2 < 1e-13)) | (
+            (r2 >= 2.5) & (r2 < 30) & (y2 < 0.072)
+        )
 
         # --- Combine regions using pure array logic ---
         w = w6

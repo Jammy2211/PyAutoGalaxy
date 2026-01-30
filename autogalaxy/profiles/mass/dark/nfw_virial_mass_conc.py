@@ -1,36 +1,56 @@
 from typing import Tuple
-
-from autogalaxy.profiles.mass.dark.nfw import NFWSph
-
 import numpy as np
 
 
-def kappa_s_and_scale_radius(
-    virial_mass, concentration, virial_overdens, redshift_object, redshift_source
-):
+from autogalaxy.profiles.mass.dark.nfw import NFWSph
+from autogalaxy.cosmology.model import Planck15
 
-    from astropy import units
-    from autogalaxy.cosmology.wrap import Planck15
+
+def kappa_s_and_scale_radius(
+    virial_mass,
+    concentration,
+    virial_overdens,
+    redshift_object,
+    redshift_source,
+):
+    """
+    Computes kappa_s and scale radius for an NFW halo given virial mass and concentration.
+
+    No astropy.units required.
+
+    Assumes:
+    - virial_mass in Msun
+    - critical_density in Msun / kpc^3
+    - critical_surface_density in Msun / kpc^2
+    - kpc_per_arcsec in kpc / arcsec
+    """
 
     cosmology = Planck15()
 
-    cosmic_average_density = (
-        cosmology.critical_density(redshift_object).to(units.solMass / units.kpc**3)
-    ).value
+    # Msun / kpc^3
+    cosmic_average_density = cosmology.critical_density(redshift_object, xp=np)
 
+    # Msun / kpc^2
     critical_surface_density = (
         cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
-            redshift_0=redshift_object, redshift_1=redshift_source
+            redshift_0=redshift_object,
+            redshift_1=redshift_source,
+            xp=np,
         )
     )
 
-    kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_object)
+    # kpc / arcsec
+    kpc_per_arcsec = cosmology.kpc_per_arcsec_from(
+        redshift=redshift_object,
+        xp=np,
+    )
 
+    # Virial radius r_vir in kpc
     virial_radius = (
         virial_mass / (virial_overdens * cosmic_average_density * (4.0 * np.pi / 3.0))
-    ) ** (
-        1.0 / 3.0
-    )  # r_vir
+    ) ** (1.0 / 3.0)
+
+    # Characteristic overdensity factor
     de_c = (
         virial_overdens
         / 3.0
@@ -38,12 +58,19 @@ def kappa_s_and_scale_radius(
             concentration**3
             / (np.log(1.0 + concentration) - concentration / (1.0 + concentration))
         )
-    )  # rho_c
+    )
 
-    scale_radius_kpc = virial_radius / concentration  # scale radius in kpc
-    rho_s = cosmic_average_density * de_c  # rho_s
-    kappa_s = rho_s * scale_radius_kpc / critical_surface_density  # kappa_s
-    scale_radius = scale_radius_kpc / kpc_per_arcsec  # scale radius in arcsec
+    # Scale radius in kpc
+    scale_radius_kpc = virial_radius / concentration
+
+    # Characteristic density rho_s in Msun / kpc^3
+    rho_s = cosmic_average_density * de_c
+
+    # Dimensionless lensing normalization
+    kappa_s = rho_s * scale_radius_kpc / critical_surface_density
+
+    # Scale radius in arcsec
+    scale_radius = scale_radius_kpc / kpc_per_arcsec
 
     return kappa_s, scale_radius, virial_radius
 

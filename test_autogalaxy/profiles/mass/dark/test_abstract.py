@@ -253,24 +253,12 @@ def test__mass_at_200__unit_conversions_work():
     )
     assert mass_at_200 == pytest.approx(mass_calc, 1.0e-5)
 
-    # cosmology = ag.m.MockCosmology(arcsec_per_kpc=0.5, kpc_per_arcsec=2.0, critical_surface_density=2.0,
-    #                           cosmic_average_density=1.0)
-    #
-    # radius_at_200 = mp.radius_at_200_for_units(unit_length='arcsec', redshift_galaxy=0.5, redshift_source=1.0,
-    #                                             cosmology=cosmology)
-    #
-    # mass_at_200 = mp.mass_at_200(cosmology=cosmology, redshift_galaxy=0.5, redshift_source=1.0, unit_length='arcsec',
-    #                               unit_mass='solMass')
-    #
-    # mass_calc = 200.0 * ((4.0 / 3.0) * np.pi) * cosmology.cosmic_average_density * (radius_at_200 ** 3.0)
-    # assert mass_at_200 == pytest.approx(mass_calc, 1.0e-5)
-
 
 def test__values_of_quantities_for_real_cosmology():
 
-    from autogalaxy.cosmology.model import LambdaCDMWrap
+    from autogalaxy.cosmology.model import FlatLambdaCDM
 
-    cosmology = LambdaCDMWrap(H0=70.0, Om0=0.3, Ode0=0.7)
+    cosmology = FlatLambdaCDM(H0=70.0, Om0=0.3, m_nu=0.06)
 
     mp = ag.mp.NFWTruncatedSph(kappa_s=0.5, scale_radius=5.0, truncation_radius=10.0)
 
@@ -313,12 +301,12 @@ def test__values_of_quantities_for_real_cosmology():
         cosmology=cosmology,
     )
 
-    assert rho == pytest.approx(29086405.474155396, 1.0e-4)
-    assert delta_concentration == pytest.approx(213881.71990418772, 1.0e-4)
-    assert concentration == pytest.approx(18.67527773217461, 1.0e-4)
-    assert radius_at_200 == pytest.approx(93.37638866087305, 1.0e-4)
-    assert mass_at_200 == pytest.approx(27641476612470.0, 1.0e-4)
-    assert mass_at_truncation_radius == pytest.approx(14871675423873.854, 1.0e-4)
+    assert rho == pytest.approx(29161077.6138, rel=1e-4)
+    assert delta_concentration == pytest.approx(214430.445767, 1.0e-4)
+    assert concentration == pytest.approx(18.694005966122, 1.0e-4)
+    assert radius_at_200 == pytest.approx(93.4700298306, 1.0e-4)
+    assert mass_at_200 == pytest.approx(27664107754813.824, 1.0e-4)
+    assert mass_at_truncation_radius == pytest.approx(14883851437772.34, 1.0e-4)
 
     rho = mp.rho_at_scale_radius_solar_mass_per_kpc3(
         redshift_object=0.6, redshift_source=2.5, cosmology=cosmology
@@ -359,9 +347,9 @@ def test__values_of_quantities_for_real_cosmology():
         cosmology=cosmology,
     )
 
-    assert rho == pytest.approx(29086405.474155396, 1.0e-4)
-    assert delta_concentration == pytest.approx(110527.8022275522, 1.0e-4)
-    assert concentration == pytest.approx(14.394455391541, 1.0e-4)
-    assert radius_at_200 == pytest.approx(71.97227695770, 1.0e-4)
-    assert mass_at_200 == pytest.approx(24493332582335.38, 1.0e-4)
-    assert mass_at_truncation_radius == pytest.approx(13177910041504.6, 1.0e-4)
+    assert rho == pytest.approx(29161077.6138651, 1.0e-4)
+    assert delta_concentration == pytest.approx(110450.279912950, 1.0e-4)
+    assert concentration == pytest.approx(14.3904385787937, 1.0e-4)
+    assert radius_at_200 == pytest.approx(71.9521928939688, 1.0e-4)
+    assert mass_at_200 == pytest.approx(24499163428482.89, 1.0e-4)
+    assert mass_at_truncation_radius == pytest.approx(13181047155073.828, 1.0e-4)

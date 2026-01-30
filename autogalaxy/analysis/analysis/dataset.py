@@ -8,7 +8,7 @@ import autofit as af
 import autoarray as aa
 
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
-from autogalaxy.cosmology.lensing import LensingCosmology
+from autogalaxy.cosmology.model import LensingCosmology
 from autogalaxy.analysis.analysis.analysis import Analysis
 from autogalaxy.analysis.result import ResultDataset
 

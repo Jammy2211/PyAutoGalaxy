@@ -1,4 +1,3 @@
-from astropy.io import fits
 import numpy as np
 import os
 from os import path
@@ -9,6 +8,9 @@ import autogalaxy as ag
 
 
 def create_fits(fits_path, array):
+
+    from astropy.io import fits
+
     file_dir = os.path.split(fits_path)[0]
 
     if not os.path.exists(file_dir):
@@ -60,6 +62,8 @@ def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
         psf_path=psf_path,
         overwrite=True,
     )
+
+    from astropy.io import fits
 
     hdu_list = fits.open(image_path)
     image = np.array(hdu_list[0].data).astype("float64")

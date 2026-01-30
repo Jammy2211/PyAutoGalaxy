@@ -140,13 +140,6 @@ def make_galaxies_x2_inversion_7x7():
     return [make_gal_x1_lp(), source_gal_inversion]
 
 
-# COSMOLOGY #
-
-
-def make_Planck15():
-    return ag.cosmo.Planck15()
-
-
 # ELLIPSE FITING
 
 
