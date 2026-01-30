@@ -340,7 +340,7 @@ class LensingCosmology:
         self, redshift_0: float, redshift_1: float, einstein_radius: float, xp=np
     ) -> float:
         """
-        For a strong lens galaxy with an Einstien radius in arcseconds, the corresponding velocity dispersion of the
+        For a strong lens galaxy with an Einstein radius in arcseconds, the corresponding velocity dispersion of the
         lens galaxy can be computed (assuming an isothermal mass distribution).
 
         The velocity dispersion is given by:
