@@ -399,14 +399,14 @@ class FlatLambdaCDM(LensingCosmology):
         Ob0: float = 0.04897,
     ):
         """
-        A JAX-compatible implementation of the FlatLambdaCDM cosmology model, which allows it to be used for 
+        A JAX-compatible implementation of the FlatLambdaCDM cosmology model, which allows it to be used for
         modeling such that the cosmological parameters are free parameters which can be fitted for.
 
-        This is a custom implementation designed to work with both NumPy and JAX backends, enabling automatic 
-        differentiation and GPU acceleration when needed. The interface and parameter naming conventions follow 
+        This is a custom implementation designed to work with both NumPy and JAX backends, enabling automatic
+        differentiation and GPU acceleration when needed. The interface and parameter naming conventions follow
         the astropy `FlatLambdaCDM` class for compatibility.
 
-        The class inherits from `LensingCosmology`, which provides additional functionality for calculating 
+        The class inherits from `LensingCosmology`, which provides additional functionality for calculating
         lensing specific quantities in the cosmology.
 
         Parameters
