@@ -472,8 +472,6 @@ class FlatLambdaCDM(LensingCosmology):
             return m * xp.asarray(float(n))
         return xp.sum(m)
 
-    import numpy as np
-
     def _radiation_and_massive_nu_densities(self, h, xp=np):
         """
         Returns (Or0, Onu_m0) where:
