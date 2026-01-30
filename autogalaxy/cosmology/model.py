@@ -17,7 +17,7 @@ class LensingCosmology:
 
         Proper transverse distance uses the angular diameter distance D_A(z):
 
-            arcsec_per_kpc_proper = 206265 / D_A(z)
+            arcsec_per_kpc_proper = 206264.806247 / D_A(z)
 
         where D_A(z) is in kpc.
         """
@@ -26,7 +26,7 @@ class LensingCosmology:
             0.0, z, xp=xp
         )
 
-        return xp.asarray(206265.0) / angular_diameter_distance_kpc
+        return xp.asarray(206264.806247) / angular_diameter_distance_kpc
 
     def kpc_proper_per_arcsec(self, z: float, xp=np) -> float:
         """
@@ -34,14 +34,14 @@ class LensingCosmology:
 
         This matches the inverse of astropy.cosmology.arcsec_per_kpc_proper:
 
-            kpc_proper_per_arcsec = D_A(z) / 206265
+            kpc_proper_per_arcsec = D_A(z) / 206264.806247
         """
 
         angular_diameter_distance_kpc = self.angular_diameter_distance_kpc_z1z2(
             0.0, z, xp=xp
         )
 
-        return angular_diameter_distance_kpc / xp.asarray(206265.0)
+        return angular_diameter_distance_kpc / xp.asarray(206264.806247)
 
     def arcsec_per_kpc_from(self, redshift: float, xp=np) -> float:
         """
@@ -234,34 +234,32 @@ class LensingCosmology:
         JAX/NumPy compatible via `xp` (pass `jax.numpy` as xp).
         """
 
-        # Speed of light in kpc / s
-        # c = 299792.458 km/s, 1 kpc = 3.085677581e16 km
-        c_kpc_s = xp.asarray(299792.458) / xp.asarray(3.085677581e16)
-
-        # Gravitational constant in kpc^3 / (Msun s^2)
-        # Start from G = 4.30091e-6 kpc (km/s)^2 / Msun and convert (km/s)^2 -> (kpc/s)^2
-        G_kpc3_Msun_s2 = xp.asarray(4.30091e-6) / xp.asarray((3.085677581e16) ** 2)
-
-        const = (c_kpc_s**2) / (xp.asarray(4.0) * xp.pi * G_kpc3_Msun_s2)
-
-        D_l = self.angular_diameter_distance_to_earth_in_kpc_from(
-            redshift=redshift_0, xp=xp
-        )
-        D_s = self.angular_diameter_distance_to_earth_in_kpc_from(
-            redshift=redshift_1, xp=xp
-        )
-        D_ls = self.angular_diameter_distance_between_redshifts_in_kpc_from(
+        # Distances in kpc
+        D_l_kpc = self.angular_diameter_distance_to_earth_in_kpc_from(redshift=redshift_0, xp=xp)
+        D_s_kpc = self.angular_diameter_distance_to_earth_in_kpc_from(redshift=redshift_1, xp=xp)
+        D_ls_kpc = self.angular_diameter_distance_between_redshifts_in_kpc_from(
             redshift_0=redshift_0, redshift_1=redshift_1, xp=xp
         )
 
-        # Handle z_s == z_l (or any case D_ls=0) safely for JAX:
-        # In lensing usage, caller should ensure z_s > z_l, but this avoids NaNs in edge cases.
-        return xp.where(
-            D_ls == xp.asarray(0.0),
-            xp.asarray(np.inf),
-            const * D_s / (D_l * D_ls),
-        )
+        # kpc -> m
+        kpc_to_m = xp.asarray(3.085677581491367e19)
+        D_l = D_l_kpc * kpc_to_m
+        D_s = D_s_kpc * kpc_to_m
+        D_ls = D_ls_kpc * kpc_to_m
 
+        # SI constants
+        c = xp.asarray(299792458.0)  # m/s
+        G = xp.asarray(6.67430e-11)  # m^3/(kg s^2)
+        Msun = xp.asarray(1.98847e30)  # kg
+
+        # Sigma_crit in kg / m^2
+        prefac = (c * c) / (xp.asarray(4.0) * xp.pi * G)
+        sigma_SI = prefac * D_s / (D_l * D_ls)
+
+        # kg/m^2 -> Msun/kpc^2
+        sigma = sigma_SI * (kpc_to_m * kpc_to_m) / Msun
+
+        return xp.where(D_ls_kpc == xp.asarray(0.0), xp.asarray(np.inf), sigma)
     def scaling_factor_between_redshifts_from(
         self,
         redshift_0: float,
@@ -461,24 +459,69 @@ class FlatLambdaCDM(LensingCosmology):
 
         return (h / 3.0) * s
 
+    def _m_nu_sum_eV(self, xp=np):
+        m = xp.asarray(getattr(self, "m_nu", 0.0))
+        if getattr(m, "ndim", 0) == 0:
+            # scalar means per-species mass (astropy convention)
+            n = int(np.floor(float(getattr(self, "Neff", 3.046))))
+            return m * xp.asarray(float(n))
+        return xp.sum(m)
+
+    import numpy as np
+
+    def _radiation_and_massive_nu_densities(self, h, xp=np):
+        """
+        Returns (Or0, Onu_m0) where:
+        - Or0 is photons + *massless* neutrino radiation (dimensionless today)
+        - Onu_m0 is massive neutrino density today treated as matter-like (dimensionless today)
+
+        Uses a simple split: N_eff_massless = Neff - n_massive.
+        """
+        Tcmb = xp.asarray(self.Tcmb0)
+        Ogamma_h2 = xp.asarray(2.469e-5) * (Tcmb / xp.asarray(2.7255)) ** 4
+        Ogamma0 = Ogamma_h2 / (h * h)
+
+        # Massive neutrinos: Omega_nu h^2 ≈ sum(m_nu)/93.14 eV
+        m_nu = getattr(self, "m_nu", 0.0)
+        m_arr = xp.asarray(m_nu)
+        if getattr(m_arr, "ndim", 0) == 0:
+            # interpret scalar as total sum (your current convention)
+            m_sum = m_arr
+            n_massive = xp.asarray(1.0) if m_arr > 0 else xp.asarray(0.0)
+        else:
+            m_sum = xp.sum(m_arr)
+            n_massive = xp.sum(m_arr > xp.asarray(0.0))
+
+        Onu_m_h2 = m_sum / xp.asarray(93.14)
+        Onu_m0 = Onu_m_h2 / (h * h)
+
+        # Only the *massless* share of Neff contributes as radiation if we're separately adding massive nu matter
+        Neff = xp.asarray(self.Neff)
+        Neff_massless = xp.maximum(Neff - n_massive, xp.asarray(0.0))
+        Onu_rad0 = Ogamma0 * xp.asarray(0.2271) * Neff_massless
+
+        Or0 = Ogamma0 + Onu_rad0
+        return Or0, Onu_m0
+
     def angular_diameter_distance_kpc_z1z2(
-        self,
-        z1: float,
-        z2: float,
-        n_steps: int = 8193,  # odd by default
-        xp=np,
+            self,
+            z1: float,
+            z2: float,
+            n_steps: int = 8193,  # odd by default
+            xp=np,
     ):
         """
         D_A(z1,z2) in kpc for flat wCDM using Simpson's rule.
 
         Includes:
         - photons via Tcmb0
-        - *massive neutrinos* via m_nu (matter-like, Omega_nu h^2 = sum(m_nu)/93.14 eV)
+        - neutrinos split into:
+            * massive part from m_nu (approx matter-like today)
+            * massless part from Neff, with the number of massive species subtracted to avoid double-counting
 
         Notes:
         - Flat universe: Omega_k = 0
         - Dark energy equation of state constant w0
-        - This is designed to better match astropy's Planck15-style backgrounds.
         """
         # Ensure odd number of samples for Simpson (safe: n_steps is a Python int)
         if (n_steps % 2) == 0:
@@ -496,37 +539,45 @@ class FlatLambdaCDM(LensingCosmology):
         Om0 = xp.asarray(self.Om0)
         w0 = xp.asarray(self.w0)
 
-        # ---- Photon radiation density today ----
-        # Omega_gamma * h^2 ≈ 2.469e-5 * (Tcmb/2.7255)^4
-        Tcmb = xp.asarray(self.Tcmb0)
+        # ---- photons ----
+        Tcmb = xp.asarray(getattr(self, "Tcmb0", 0.0))
         Ogamma_h2 = xp.asarray(2.469e-5) * (Tcmb / xp.asarray(2.7255)) ** 4
         Ogamma0 = Ogamma_h2 / (h * h)
 
-        # ---- Massive neutrinos (matter-like approximation) ----
-        # Omega_nu h^2 ≈ sum(m_nu)/93.14 eV
-        m_nu = getattr(self, "m_nu", 0.0)
-        m_nu_sum = xp.sum(xp.asarray(m_nu))  # works if m_nu is float or array-like
-        Onu_h2 = m_nu_sum / xp.asarray(93.14)
-        Onu0 = Onu_h2 / (h * h)
+        # ---- massive neutrinos (approx matter-like today) ----
+        m_nu_sum = self._m_nu_sum_eV(xp=xp)
+        Onu_m_h2 = m_nu_sum / xp.asarray(93.14)
+        Onu_m0 = Onu_m_h2 / (h * h)
 
-        Neff = xp.asarray(self.Neff)
-        Onu_rad0 = Ogamma0 * xp.asarray(0.2271) * Neff
+        # ---- massless neutrino radiation via Neff (avoid double-counting) ----
+        Neff = xp.asarray(getattr(self, "Neff", 0.0))
+
+        m_nu = getattr(self, "m_nu", 0.0)
+        m_arr = xp.asarray(m_nu)
+
+        if getattr(m_arr, "ndim", 0) == 0:
+            n_massive = xp.where(m_arr > xp.asarray(0.0), xp.asarray(1.0), xp.asarray(0.0))
+        else:
+            n_massive = xp.sum(m_arr > xp.asarray(0.0))
+
+        Neff_massless = xp.maximum(Neff - n_massive, xp.asarray(0.0))
+
+        Onu_rad0 = Ogamma0 * xp.asarray(0.2271) * Neff_massless
         Or0 = Ogamma0 + Onu_rad0
 
-        # Flatness: Omega_de = 1 - Omega_m - Omega_r - Omega_nu
-        Ode0 = xp.asarray(1.0) - Om0 - Or0 - Onu0
+        # ---- flatness: Omega_de ----
+        Ode0 = xp.asarray(1.0) - Om0 - Or0 - Onu_m0
 
-        def E(z):
+        def E_local(z):
             zp1 = xp.asarray(1.0) + z
-            # E^2 = (Om+Onu_m)(1+z)^3 + Or(1+z)^4 + Ode(1+z)^{3(1+w)}
             return xp.sqrt(
-                (Om0 + Onu0) * zp1**3
-                + Or0 * zp1**4
+                (Om0 + Onu_m0) * zp1 ** 3
+                + Or0 * zp1 ** 4
                 + Ode0 * zp1 ** (xp.asarray(3.0) * (xp.asarray(1.0) + w0))
             )
 
         z_grid = xp.linspace(z1a, z2a, n_steps)
-        integrand = 1.0 / E(z_grid)
+        integrand = xp.asarray(1.0) / E_local(z_grid)
 
         integral = self._simpson_1d(integrand, z_grid, xp=xp)
 
@@ -542,11 +593,12 @@ class FlatLambdaCDM(LensingCosmology):
 
         JAX/NumPy compatible via `xp` (pass `jax.numpy` as xp).
 
-        Notes on components:
+        Components:
         - Photons: Omega_gamma from Tcmb0
-        - Massless neutrinos: Omega_nu_rad = Omega_gamma * 0.2271 * Neff  (standard)
-        - Massive neutrinos (approx): Omega_nu_m h^2 = sum(m_nu)/93.14 eV, treated as matter-like (1+z)^3
-          (If you want to exactly match astropy for massive neutrinos, that’s more complex.)
+        - Neutrinos:
+            * massive part from m_nu (approx matter-like today)
+            * massless part from Neff, but we subtract the number of massive species to avoid double-counting
+        - Dark energy: constant w0, with Omega_de set by flatness
         """
 
         z = xp.asarray(z)
@@ -555,26 +607,35 @@ class FlatLambdaCDM(LensingCosmology):
         h = H0 / xp.asarray(100.0)
 
         Om0 = xp.asarray(self.Om0)
-        w0 = xp.asarray(
-            getattr(self, "w0", -1.0)
-        )  # allow FlatLambdaCDM with w0=-1 set on the class
+        w0 = xp.asarray(getattr(self, "w0", -1.0))
 
         # ---- photons ----
         Tcmb = xp.asarray(getattr(self, "Tcmb0", 0.0))
         Ogamma_h2 = xp.asarray(2.469e-5) * (Tcmb / xp.asarray(2.7255)) ** 4
         Ogamma0 = Ogamma_h2 / (h * h)
 
-        # ---- massless neutrino radiation via Neff ----
-        Neff = xp.asarray(getattr(self, "Neff", 0.0))
-        Onu_rad0 = Ogamma0 * xp.asarray(0.2271) * Neff
-
-        Or0 = Ogamma0 + Onu_rad0
-
-        # ---- massive neutrinos (approx matter-like) ----
-        m_nu = getattr(self, "m_nu", 0.0)
-        m_nu_sum = xp.sum(xp.asarray(m_nu))  # float or array-like
+        # ---- massive neutrinos (approx matter-like today) ----
+        # NOTE: _m_nu_sum_eV should follow YOUR convention (scalar=total, list=sum, etc.)
+        m_nu_sum = self._m_nu_sum_eV(xp=xp)
         Onu_m_h2 = m_nu_sum / xp.asarray(93.14)
         Onu_m0 = Onu_m_h2 / (h * h)
+
+        # ---- massless neutrino radiation via Neff (avoid double-counting) ----
+        # Approx: subtract number of massive species from Neff
+        Neff = xp.asarray(getattr(self, "Neff", 0.0))
+
+        m_nu = getattr(self, "m_nu", 0.0)
+        m_arr = xp.asarray(m_nu)
+
+        if getattr(m_arr, "ndim", 0) == 0:
+            n_massive = xp.where(m_arr > xp.asarray(0.0), xp.asarray(1.0), xp.asarray(0.0))
+        else:
+            n_massive = xp.sum(m_arr > xp.asarray(0.0))
+
+        Neff_massless = xp.maximum(Neff - n_massive, xp.asarray(0.0))
+
+        Onu_rad0 = Ogamma0 * xp.asarray(0.2271) * Neff_massless
+        Or0 = Ogamma0 + Onu_rad0
 
         # ---- flatness: Omega_de ----
         Ode0 = xp.asarray(1.0) - Om0 - Or0 - Onu_m0
@@ -582,12 +643,27 @@ class FlatLambdaCDM(LensingCosmology):
         zp1 = xp.asarray(1.0) + z
 
         Ez2 = (
-            (Om0 + Onu_m0) * zp1**3
-            + Or0 * zp1**4
-            + Ode0 * zp1 ** (xp.asarray(3.0) * (xp.asarray(1.0) + w0))
+                (Om0 + Onu_m0) * zp1 ** 3
+                + Or0 * zp1 ** 4
+                + Ode0 * zp1 ** (xp.asarray(3.0) * (xp.asarray(1.0) + w0))
         )
 
         return xp.sqrt(Ez2)
+
+    def Om(self, z: float, xp=np):
+        """
+        Matter density parameter at redshift z: Omega_m(z).
+
+        JAX / NumPy compatible via `xp`.
+
+        For flat models using your E(z):
+            Om(z) = Om0 (1+z)^3 / E(z)^2
+        """
+        z = xp.asarray(z)
+        zp1 = xp.asarray(1.0) + z
+
+        Ez = self.E(z, xp=xp)
+        return xp.asarray(self.Om0) * zp1**3 / (Ez * Ez)
 
 
 class Planck15(FlatLambdaCDM):
@@ -599,6 +675,6 @@ class Planck15(FlatLambdaCDM):
             Om0=0.3075,
             Tcmb0=2.7255,
             Neff=3.046,
-            m_nu=0.06,
+            m_nu=[0.0, 0.0, 0.06],
             Ob0=0.0486,
         )
