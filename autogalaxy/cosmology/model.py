@@ -399,15 +399,15 @@ class FlatLambdaCDM(LensingCosmology):
         Ob0: float = 0.04897,
     ):
         """
-        A wrapper for the astropy `FlatLambdaCDM` cosmology class, which allows it to be used for modeling such
-        that the cosmological parameters are free parameters which can be fitted for.
+        A JAX-compatible implementation of the FlatLambdaCDM cosmology model, which allows it to be used for 
+        modeling such that the cosmological parameters are free parameters which can be fitted for.
 
-        The interface of this class is the same as the astropy `FlatLambdaCDM` class, it simply overwrites the
-        __init__ method and inherits from it in a way that ensures **PyAutoFit** can compose a model from it
-        without issue.
+        This is a custom implementation designed to work with both NumPy and JAX backends, enabling automatic 
+        differentiation and GPU acceleration when needed. The interface and parameter naming conventions follow 
+        the astropy `FlatLambdaCDM` class for compatibility.
 
-        The class also inherits from `LensingCosmology`, which is a class that provides additional functionality
-        for calculating lensing specific quantities in the cosmology.
+        The class inherits from `LensingCosmology`, which provides additional functionality for calculating 
+        lensing specific quantities in the cosmology.
 
         Parameters
         ----------
