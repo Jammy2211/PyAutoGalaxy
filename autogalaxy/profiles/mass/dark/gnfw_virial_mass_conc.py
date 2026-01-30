@@ -13,7 +13,9 @@ def kappa_s_and_scale_radius(
 
     concentration = (2.0 - inner_slope) * c_2  # gNFW concentration
 
-    critical_density = cosmology.critical_density(redshift_object, xp=np)  # Msun / kpc^3
+    critical_density = cosmology.critical_density(
+        redshift_object, xp=np
+    )  # Msun / kpc^3
 
     critical_surface_density = (
         cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
@@ -23,7 +25,9 @@ def kappa_s_and_scale_radius(
         )
     )  # Msun / kpc^2
 
-    kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_object, xp=np)  # kpc / arcsec
+    kpc_per_arcsec = cosmology.kpc_per_arcsec_from(
+        redshift=redshift_object, xp=np
+    )  # kpc / arcsec
 
     if overdens == 0:
         x = cosmology.Om(redshift_object, xp=np) - 1.0
@@ -39,7 +43,9 @@ def kappa_s_and_scale_radius(
 
     # Normalization integral for gNFW
     def integrand(r):
-        return (r**2 / r**inner_slope) * (1.0 + r / scale_radius_kpc) ** (inner_slope - 3.0)
+        return (r**2 / r**inner_slope) * (1.0 + r / scale_radius_kpc) ** (
+            inner_slope - 3.0
+        )
 
     de_c = (
         (overdens / 3.0)

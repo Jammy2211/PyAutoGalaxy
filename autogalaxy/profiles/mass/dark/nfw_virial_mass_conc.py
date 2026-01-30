@@ -47,8 +47,7 @@ def kappa_s_and_scale_radius(
 
     # Virial radius r_vir in kpc
     virial_radius = (
-        virial_mass
-        / (virial_overdens * cosmic_average_density * (4.0 * np.pi / 3.0))
+        virial_mass / (virial_overdens * cosmic_average_density * (4.0 * np.pi / 3.0))
     ) ** (1.0 / 3.0)
 
     # Characteristic overdensity factor
@@ -74,7 +73,6 @@ def kappa_s_and_scale_radius(
     scale_radius = scale_radius_kpc / kpc_per_arcsec
 
     return kappa_s, scale_radius, virial_radius
-
 
 
 class NFWVirialMassConcSph(NFWSph):

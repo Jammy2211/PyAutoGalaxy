@@ -47,9 +47,9 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
     )
 
     scale_radius_kpc = radius_at_200 / concentration
-    rho_s = cosmic_average_density * de_c                     # Msun / kpc^3
+    rho_s = cosmic_average_density * de_c  # Msun / kpc^3
     kappa_s = rho_s * scale_radius_kpc / critical_surface_density  # dimensionless
-    scale_radius = scale_radius_kpc / kpc_per_arcsec          # arcsec
+    scale_radius = scale_radius_kpc / kpc_per_arcsec  # arcsec
 
     return kappa_s, scale_radius, radius_at_200
 

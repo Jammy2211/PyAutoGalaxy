@@ -235,8 +235,12 @@ class LensingCosmology:
         """
 
         # Distances in kpc
-        D_l_kpc = self.angular_diameter_distance_to_earth_in_kpc_from(redshift=redshift_0, xp=xp)
-        D_s_kpc = self.angular_diameter_distance_to_earth_in_kpc_from(redshift=redshift_1, xp=xp)
+        D_l_kpc = self.angular_diameter_distance_to_earth_in_kpc_from(
+            redshift=redshift_0, xp=xp
+        )
+        D_s_kpc = self.angular_diameter_distance_to_earth_in_kpc_from(
+            redshift=redshift_1, xp=xp
+        )
         D_ls_kpc = self.angular_diameter_distance_between_redshifts_in_kpc_from(
             redshift_0=redshift_0, redshift_1=redshift_1, xp=xp
         )
@@ -260,6 +264,7 @@ class LensingCosmology:
         sigma = sigma_SI * (kpc_to_m * kpc_to_m) / Msun
 
         return xp.where(D_ls_kpc == xp.asarray(0.0), xp.asarray(np.inf), sigma)
+
     def scaling_factor_between_redshifts_from(
         self,
         redshift_0: float,
@@ -504,11 +509,11 @@ class FlatLambdaCDM(LensingCosmology):
         return Or0, Onu_m0
 
     def angular_diameter_distance_kpc_z1z2(
-            self,
-            z1: float,
-            z2: float,
-            n_steps: int = 8193,  # odd by default
-            xp=np,
+        self,
+        z1: float,
+        z2: float,
+        n_steps: int = 8193,  # odd by default
+        xp=np,
     ):
         """
         D_A(z1,z2) in kpc for flat wCDM using Simpson's rule.
@@ -556,7 +561,9 @@ class FlatLambdaCDM(LensingCosmology):
         m_arr = xp.asarray(m_nu)
 
         if getattr(m_arr, "ndim", 0) == 0:
-            n_massive = xp.where(m_arr > xp.asarray(0.0), xp.asarray(1.0), xp.asarray(0.0))
+            n_massive = xp.where(
+                m_arr > xp.asarray(0.0), xp.asarray(1.0), xp.asarray(0.0)
+            )
         else:
             n_massive = xp.sum(m_arr > xp.asarray(0.0))
 
@@ -571,8 +578,8 @@ class FlatLambdaCDM(LensingCosmology):
         def E_local(z):
             zp1 = xp.asarray(1.0) + z
             return xp.sqrt(
-                (Om0 + Onu_m0) * zp1 ** 3
-                + Or0 * zp1 ** 4
+                (Om0 + Onu_m0) * zp1**3
+                + Or0 * zp1**4
                 + Ode0 * zp1 ** (xp.asarray(3.0) * (xp.asarray(1.0) + w0))
             )
 
@@ -628,7 +635,9 @@ class FlatLambdaCDM(LensingCosmology):
         m_arr = xp.asarray(m_nu)
 
         if getattr(m_arr, "ndim", 0) == 0:
-            n_massive = xp.where(m_arr > xp.asarray(0.0), xp.asarray(1.0), xp.asarray(0.0))
+            n_massive = xp.where(
+                m_arr > xp.asarray(0.0), xp.asarray(1.0), xp.asarray(0.0)
+            )
         else:
             n_massive = xp.sum(m_arr > xp.asarray(0.0))
 
@@ -643,9 +652,9 @@ class FlatLambdaCDM(LensingCosmology):
         zp1 = xp.asarray(1.0) + z
 
         Ez2 = (
-                (Om0 + Onu_m0) * zp1 ** 3
-                + Or0 * zp1 ** 4
-                + Ode0 * zp1 ** (xp.asarray(3.0) * (xp.asarray(1.0) + w0))
+            (Om0 + Onu_m0) * zp1**3
+            + Or0 * zp1**4
+            + Ode0 * zp1 ** (xp.asarray(3.0) * (xp.asarray(1.0) + w0))
         )
 
         return xp.sqrt(Ez2)

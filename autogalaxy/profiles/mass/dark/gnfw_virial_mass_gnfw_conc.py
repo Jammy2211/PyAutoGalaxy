@@ -34,24 +34,26 @@ def kappa_s_and_scale_radius(
 
     if overdens == 0:
         x = cosmology.Om(redshift_object, xp=np) - 1.0
-        overdens = 18.0 * np.pi ** 2 + 82.0 * x - 39.0 * x ** 2  # Bryan & Norman (1998)
+        overdens = 18.0 * np.pi**2 + 82.0 * x - 39.0 * x**2  # Bryan & Norman (1998)
 
     # r_vir in kpc
     virial_radius = (
-                            virial_mass / (overdens * critical_density * (4.0 * np.pi / 3.0))
-                    ) ** (1.0 / 3.0)
+        virial_mass / (overdens * critical_density * (4.0 * np.pi / 3.0))
+    ) ** (1.0 / 3.0)
 
     # scale radius of gNFW in kpc
     scale_radius_kpc = virial_radius / concentration
 
     ##############################
     def integrand(r):
-        return (r ** 2 / r ** inner_slope) * (1.0 + r / scale_radius_kpc) ** (inner_slope - 3.0)
+        return (r**2 / r**inner_slope) * (1.0 + r / scale_radius_kpc) ** (
+            inner_slope - 3.0
+        )
 
     de_c = (
-            (overdens / 3.0)
-            * (virial_radius ** 3 / scale_radius_kpc ** inner_slope)
-            / quad(integrand, 0.0, virial_radius)[0]
+        (overdens / 3.0)
+        * (virial_radius**3 / scale_radius_kpc**inner_slope)
+        / quad(integrand, 0.0, virial_radius)[0]
     )
     ##############################
 

@@ -1,4 +1,5 @@
 import math
+import numpy as np
 
 # Mock Cosmology #
 
@@ -53,7 +54,7 @@ class MockCosmology:
         # Gravitational constant in kpc^3 / (Msun s^2)
         G_kpc3_Msun_s2 = xp.asarray(4.30091e-6) / xp.asarray((3.085677581e16) ** 2)
 
-        const = (c_kpc_s ** 2) / (xp.asarray(4.0) * xp.pi * G_kpc3_Msun_s2)
+        const = (c_kpc_s**2) / (xp.asarray(4.0) * xp.pi * G_kpc3_Msun_s2)
 
         return Value(value=self.critical_surface_density * const)
 
