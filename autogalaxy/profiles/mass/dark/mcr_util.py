@@ -9,9 +9,6 @@ def kappa_s_and_scale_radius_for_duffy(mass_at_200, redshift_object, redshift_so
 
     Interprets mass as *`M_{200c}`*, not `M_{200m}`.
     """
-
-    from astropy import units
-
     from autogalaxy.cosmology.model import Planck15
 
     cosmology = Planck15()

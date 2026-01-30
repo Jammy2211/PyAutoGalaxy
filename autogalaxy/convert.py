@@ -331,9 +331,12 @@ def multipole_comps_from(
     -------
     The multipole component parameters.
     """
-    from astropy import units
+    # Degrees -> radians conversion
+    deg_to_rad = xp.asarray(np.pi / 180.0)
 
-    multipole_comp_0 = k_m * xp.sin(phi_m * float(m) * units.deg.to(units.rad))
-    multipole_comp_1 = k_m * xp.cos(phi_m * float(m) * units.deg.to(units.rad))
+    angle = phi_m * float(m) * deg_to_rad
 
-    return (multipole_comp_0, multipole_comp_1)
+    multipole_comp_0 = k_m * xp.sin(angle)
+    multipole_comp_1 = k_m * xp.cos(angle)
+
+    return multipole_comp_0, multipole_comp_1

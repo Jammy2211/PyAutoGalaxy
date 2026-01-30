@@ -1,10 +1,11 @@
-from astropy import units
 import itertools
 import matplotlib.pyplot as plt
 import numpy as np
 
 
 def plot_ellipse_residuals(array, fit_list, colors, output, for_subplot: bool = False):
+
+    from astropy import units
 
     color = itertools.cycle(colors)
 
