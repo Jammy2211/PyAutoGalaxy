@@ -345,7 +345,7 @@ class LensingCosmology:
 
         The velocity dispersion is given by:
 
-        velocity dispersion = (c * R_Ein * D_s) / (4 * pi * D_l * D_ls)
+        sigma_v = c * sqrt((R_Ein * D_s) / (4 * pi * D_l * D_ls))
 
         c = speed of light
         D_s = Angular diameter distance of source redshift to earth
