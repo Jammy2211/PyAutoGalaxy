@@ -34,13 +34,28 @@ class MockCosmology:
     def angular_diameter_distance(self, z):
         return Value(value=1.0)
 
-    def angular_diameter_distance_z1z2(self, z1, z2):
-        from astropy import constants
+    def angular_diameter_distance_z1z2(self, z1, z2, xp=np):
+        """
+        Replacement for the astropy-constants version.
 
-        const = constants.c.to("kpc / s") ** 2.0 / (
-            4 * math.pi * constants.G.to("kpc3 / (solMass s2)")
-        )
-        return Value(value=self.critical_surface_density * const.value)
+        Computes the factor:
+
+            const = c^2 / (4*pi*G)
+
+        in units of Msun / kpc.
+
+        No astropy.constants required.
+        """
+
+        # Speed of light in kpc/s
+        c_kpc_s = xp.asarray(299792.458) / xp.asarray(3.085677581e16)
+
+        # Gravitational constant in kpc^3 / (Msun s^2)
+        G_kpc3_Msun_s2 = xp.asarray(4.30091e-6) / xp.asarray((3.085677581e16) ** 2)
+
+        const = (c_kpc_s ** 2) / (xp.asarray(4.0) * xp.pi * G_kpc3_Msun_s2)
+
+        return Value(value=self.critical_surface_density * const)
 
     def critical_density(self, z):
         return Value(value=self.cosmic_average_density)
