@@ -79,7 +79,7 @@ galaxy modeling and analysis, and helps troubleshoot problems.
 
 Slack is invitation-only. If you’d like to join, please send an email requesting an invite.
 
-For installation issues, bug reports, or feature requests, please raise an issue on the [GitHub issues page](https://github.com/Jammy2211/PyAutoGalaxy/issues).
+For installation issues, bug reports, or feature requests, please raise an issue on the `GitHub issues page <https://github.com/Jammy2211/PyAutoGalaxy/issues>`_.
 
 Here’s a clean, **AutoGalaxy**-appropriate rewrite, keeping the same structure and tone but removing lensing-specific language:
 
@@ -90,7 +90,7 @@ For users less familiar with galaxy analysis, Bayesian inference, and scientific
 the **HowToGalaxy** lectures. These introduce the basic principles of galaxy modeling and Bayesian inference, with
 the material pitched at undergraduate level and above.
 
-A complete overview of the lectures is provided on the `HowToGalaxy readthedocs page <https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/howtogalaxy.html`_
+A complete overview of the lectures is provided on the `HowToGalaxy readthedocs page <https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/howtogalaxy.html>`_
 
 Citations
 ---------
