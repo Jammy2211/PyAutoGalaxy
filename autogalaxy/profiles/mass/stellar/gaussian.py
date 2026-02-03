@@ -192,7 +192,7 @@ class Gaussian(MassProfile, StellarProfile):
         q = self.axis_ratio(xp)
         q2 = q**2.0
 
-        ind_pos_y = grid.array[:, 0] >=0
+        ind_pos_y = grid.array[:, 0] >= 0
         shape_grid = np.shape(grid)
         output_grid = np.zeros((shape_grid[0]), dtype=np.complex128)
 
@@ -208,18 +208,24 @@ class Gaussian(MassProfile, StellarProfile):
         z1_1 = xs_1 + 1j * ys_1
         z2_1 = q * xs_1 + 1j * ys_1 / q
 
-        exp_term_0 = xp.exp(-(xs_0 ** 2) * (1.0 - q2) - ys_0 ** 2 * (1.0 / q2 - 1.0))
-        exp_term_1 = xp.exp(-(xs_1 ** 2) * (1.0 - q2) - ys_1 ** 2 * (1.0 / q2 - 1.0))
+        exp_term_0 = xp.exp(-(xs_0**2) * (1.0 - q2) - ys_0**2 * (1.0 / q2 - 1.0))
+        exp_term_1 = xp.exp(-(xs_1**2) * (1.0 - q2) - ys_1**2 * (1.0 / q2 - 1.0))
 
         if xp == np:
             from scipy.special import wofz
 
             output_grid[ind_pos_y] = -1j * (wofz(z1_0) - exp_term_0 * wofz(z2_0))
-            output_grid[~ind_pos_y] = xp.conj(-1j * (wofz(z1_1) - exp_term_1 * wofz(z2_1)))
+            output_grid[~ind_pos_y] = xp.conj(
+                -1j * (wofz(z1_1) - exp_term_1 * wofz(z2_1))
+            )
 
         else:
-            output_grid[ind_pos_y] = -1j * (self.wofz(z1_0, xp=xp) - exp_term_0 * self.wofz(z2_0, xp=xp))
-            output_grid[~ind_pos_y] = xp.conj(-1j * (self.wofz(z1_1, xp=xp) - exp_term_1 * self.wofz(z2_1, xp=xp)))
+            output_grid[ind_pos_y] = -1j * (
+                self.wofz(z1_0, xp=xp) - exp_term_0 * self.wofz(z2_0, xp=xp)
+            )
+            output_grid[~ind_pos_y] = xp.conj(
+                -1j * (self.wofz(z1_1, xp=xp) - exp_term_1 * self.wofz(z2_1, xp=xp))
+            )
 
         return output_grid
 

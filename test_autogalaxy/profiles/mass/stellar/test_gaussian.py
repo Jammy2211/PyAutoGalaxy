@@ -241,6 +241,7 @@ def test__image_2d_via_radii_from__correct_value():
 
     assert intensity == pytest.approx(0.32465, 1e-2)
 
+
 def test__wofz():
     from scipy.special import wofz
 
@@ -263,4 +264,3 @@ def test__wofz():
     assert wofz_approx_reg_1 == pytest.approx(wofz(7.0 + 1j * 0.1), 1e-4)
     assert wofz_approx_reg_2 == pytest.approx(wofz(7.0 + 1j * 1e-11), 1e-4)
     assert wofz_approx_reg_3 == pytest.approx(wofz(2.0 + 1j * 1.0), 1e-4)
-

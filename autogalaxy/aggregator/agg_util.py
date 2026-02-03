@@ -230,9 +230,6 @@ def preloads_from(
     in order to perform the fit. The main purpose is to use the same image-plane mesh centres for pixelization where
     the mesh is computed in the image-plane (see `agg_util.mesh_grids_of_planes_list_from`).
 
-    The preloads may also switch off `w_tilde` so fits are computed faster locally as they do not need to recompute
-    w_tilde.
-
     Parameters
     ----------
     preloads_cls

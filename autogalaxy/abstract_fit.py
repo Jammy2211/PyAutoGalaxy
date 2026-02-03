@@ -65,18 +65,18 @@ class AbstractFitInversion:
         return self.model_obj.perform_inversion
 
     @property
-    def w_tilde(self) -> Optional[aa.WTildeImaging]:
+    def sparse_operator(self) -> Optional[aa.ImagingSparseOperator]:
         """
-        Only call the `w_tilde` property of a dataset used to perform efficient linear algebra calcualtions if
-        the SettingsInversion()` object has `use_w_tilde=True`, to avoid unnecessary computation.
+        Only call the `sparse_operator` property of a dataset used to perform efficient linear algebra calculations if
+        the SettingsInversion()` object has `use_sparse_operator=True`, to avoid unnecessary computation.
 
         Returns
         -------
-        The w-tilde matrix if the w-tilde formalism is being used for this inversion.
+        The sparse operator used for efficient linear algebra calculations for this inversion, if enabled.
         """
-        if self.dataset.w_tilde is not None:
+        if self.dataset.sparse_operator is not None:
             if self.total_mappers > 0:
-                return self.dataset.w_tilde
+                return self.dataset.sparse_operator
 
     @property
     def inversion(self) -> Optional[aa.Inversion]:

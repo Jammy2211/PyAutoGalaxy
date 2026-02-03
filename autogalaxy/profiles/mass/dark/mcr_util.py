@@ -146,6 +146,8 @@ def kappa_s_and_scale_radius_for_ludlow(
     if isinstance(mass_at_200, (float, np.ndarray, np.float64)):
         xp = np
     else:
+        import jax.numpy as jnp
+
         xp = jnp
 
     # ------------------------------------
@@ -217,6 +219,8 @@ def kappa_s_scale_radius_and_core_radius_for_ludlow(
     if isinstance(mass_at_200, (float, np.ndarray, np.float64)):
         xp = np
     else:
+        import jax.numpy as jnp
+
         xp = jnp
 
         # ------------------------------------
