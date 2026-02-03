@@ -67,7 +67,7 @@ class AbstractFitInversion:
     @property
     def sparse_operator(self) -> Optional[aa.ImagingSparseOperator]:
         """
-        Only call the `sparse_operator` property of a dataset used to perform efficient linear algebra calcualtions if
+        Only call the `sparse_operator` property of a dataset used to perform efficient linear algebra calculations if
         the SettingsInversion()` object has `use_sparse_operator=True`, to avoid unnecessary computation.
 
         Returns
