@@ -72,7 +72,7 @@ class AbstractFitInversion:
 
         Returns
         -------
-        The w-tilde matrix if the w-tilde formalism is being used for this inversion.
+        The sparse operator used for efficient linear algebra calculations for this inversion, if enabled.
         """
         if self.dataset.sparse_operator is not None:
             if self.total_mappers > 0:
