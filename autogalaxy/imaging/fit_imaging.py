@@ -123,7 +123,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             noise_map=self.noise_map,
             grids=self.grids,
             psf=self.dataset.psf,
-            sparse_linalg=self.dataset.sparse_linalg,
+            sparse_operator=self.dataset.sparse_operator,
         )
 
         return GalaxiesToInversion(
