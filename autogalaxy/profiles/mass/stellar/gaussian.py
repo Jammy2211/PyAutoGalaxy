@@ -189,45 +189,31 @@ class Gaussian(MassProfile, StellarProfile):
         return xp.where(axis_ratio < 0.9999, axis_ratio, 0.9999)
 
     def zeta_from(self, grid: aa.type.Grid2DLike, xp=np):
-        q = self.axis_ratio(xp)
-        q2 = q**2.0
+        q = xp.asarray(self.axis_ratio(xp), dtype=xp.float64)
+        q2 = q * q
 
-        ind_pos_y = grid.array[:, 0] >= 0
-        shape_grid = np.shape(grid)
-        output_grid = np.zeros((shape_grid[0]), dtype=np.complex128)
+        y = xp.asarray(grid.array[:, 0], dtype=xp.float64)
+        x = xp.asarray(grid.array[:, 1], dtype=xp.float64)
 
-        scale_factor = q / (self.sigma * xp.sqrt(2.0 * (1.0 - q2)))
+        ind_pos_y = y >= 0
 
-        xs_0 = grid.array[:, 1][ind_pos_y] * scale_factor
-        ys_0 = grid.array[:, 0][ind_pos_y] * scale_factor
-        xs_1 = grid.array[:, 1][~ind_pos_y] * scale_factor
-        ys_1 = -grid.array[:, 0][~ind_pos_y] * scale_factor
+        scale = q / (xp.asarray(self.sigma, dtype=xp.float64)
+                     * xp.sqrt(xp.asarray(2.0, dtype=xp.float64) * (1.0 - q2)))
 
-        z1_0 = xs_0 + 1j * ys_0
-        z2_0 = q * xs_0 + 1j * ys_0 / q
-        z1_1 = xs_1 + 1j * ys_1
-        z2_1 = q * xs_1 + 1j * ys_1 / q
+        xs = x * scale
+        ys = xp.abs(y) * scale
 
-        exp_term_0 = xp.exp(-(xs_0**2) * (1.0 - q2) - ys_0**2 * (1.0 / q2 - 1.0))
-        exp_term_1 = xp.exp(-(xs_1**2) * (1.0 - q2) - ys_1**2 * (1.0 / q2 - 1.0))
+        z1 = xs + 1j * ys
+        z2 = q * xs + 1j * ys / q
 
-        if xp == np:
-            from scipy.special import wofz
+        exp_term = xp.exp(
+            -(xs * xs) * (1.0 - q2)
+            - (ys * ys) * (1.0 / q2 - 1.0)
+        )
 
-            output_grid[ind_pos_y] = -1j * (wofz(z1_0) - exp_term_0 * wofz(z2_0))
-            output_grid[~ind_pos_y] = xp.conj(
-                -1j * (wofz(z1_1) - exp_term_1 * wofz(z2_1))
-            )
+        core = -1j * (self.wofz(z1, xp=xp) - exp_term * self.wofz(z2, xp=xp))
 
-        else:
-            output_grid[ind_pos_y] = -1j * (
-                self.wofz(z1_0, xp=xp) - exp_term_0 * self.wofz(z2_0, xp=xp)
-            )
-            output_grid[~ind_pos_y] = xp.conj(
-                -1j * (self.wofz(z1_1, xp=xp) - exp_term_1 * self.wofz(z2_1, xp=xp))
-            )
-
-        return output_grid
+        return xp.where(ind_pos_y, core, xp.conj(core))
 
     def wofz(self, z, xp=np):
         """
@@ -236,71 +222,64 @@ class Gaussian(MassProfile, StellarProfile):
         Valid for all complex z. JIT + autodiff safe.
         """
 
-        z = xp.asarray(z)
+        z = xp.asarray(z, dtype=xp.complex128)
         x = xp.real(z)
         y = xp.imag(z)
 
         r2 = x * x + y * y
         y2 = y * y
         z2 = z * z
-        sqrt_pi = xp.sqrt(xp.pi)
 
-        # --- Regions 1 to 4 ---
-        r1_s1 = xp.array([2.5, 2.0, 1.5, 1.0, 0.5])
+        sqrt_pi = xp.asarray(xp.sqrt(xp.pi), dtype=xp.float64)
+        inv_sqrt_pi = xp.asarray(1.0 / sqrt_pi, dtype=xp.float64)
+
+        # ---------- Large-|z| continued fraction ----------
+        r1_s1 = xp.asarray([2.5, 2.0, 1.5, 1.0, 0.5], dtype=xp.float64)
 
         t = z
-        for coef in r1_s1:
-            t = z - coef / t
+        for c in r1_s1:
+            t = z - c / t
 
-        w_large = 1j / (t * sqrt_pi)
+        w_large = 1j * inv_sqrt_pi / t
 
-        # --- Region 5: special small-imaginary case ---
-        U5 = xp.array([1.320522, 35.7668, 219.031, 1540.787, 3321.990, 36183.31])
-        V5 = xp.array(
-            [1.841439, 61.57037, 364.2191, 2186.181, 9022.228, 24322.84, 32066.6]
-        )
+        # ---------- Region 5 ----------
+        U5 = xp.asarray([1.320522, 35.7668, 219.031,
+                         1540.787, 3321.990, 36183.31], dtype=xp.float64)
+        V5 = xp.asarray([1.841439, 61.57037, 364.2191,
+                         2186.181, 9022.228, 24322.84, 32066.6], dtype=xp.float64)
 
-        t = 1 / sqrt_pi
+        t = inv_sqrt_pi
         for u in U5:
             t = u + z2 * t
 
-        s = 1.0
+        s = xp.asarray(1.0, dtype=xp.float64)
         for v in V5:
             s = v + z2 * s
 
         w5 = xp.exp(-z2) + 1j * z * t / s
 
-        # --- Region 6: remaining small-|z| region ---
-        U6 = xp.array([5.9126262, 30.180142, 93.15558, 181.92853, 214.38239, 122.60793])
-        V6 = xp.array(
-            [
-                10.479857,
-                53.992907,
-                170.35400,
-                348.70392,
-                457.33448,
-                352.73063,
-                122.60793,
-            ]
-        )
+        # ---------- Region 6 ----------
+        U6 = xp.asarray([5.9126262, 30.180142, 93.15558,
+                         181.92853, 214.38239, 122.60793], dtype=xp.float64)
+        V6 = xp.asarray([10.479857, 53.992907, 170.35400,
+                         348.70392, 457.33448, 352.73063, 122.60793], dtype=xp.float64)
 
-        t = 1 / sqrt_pi
+        t = inv_sqrt_pi
         for u in U6:
             t = u - 1j * z * t
 
-        s = 1.0
+        s = xp.asarray(1.0, dtype=xp.float64)
         for v in V6:
             s = v - 1j * z * s
 
         w6 = t / s
 
-        # --- Regions ---
+        # ---------- Region logic ----------
         reg1 = (r2 >= 62.0) | ((r2 >= 30.0) & (r2 < 62.0) & (y2 >= 1e-13))
         reg2 = ((r2 >= 30) & (r2 < 62) & (y2 < 1e-13)) | (
             (r2 >= 2.5) & (r2 < 30) & (y2 < 0.072)
         )
 
-        # --- Combine regions using pure array logic ---
         w = w6
         w = xp.where(reg2, w5, w)
         w = xp.where(reg1, w_large, w)
