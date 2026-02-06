@@ -201,7 +201,7 @@ class Gaussian(MassProfile, StellarProfile):
                      * xp.sqrt(xp.asarray(2.0, dtype=xp.float64) * (1.0 - q2)))
 
         xs = x * scale
-        ys = y * scale
+        ys = xp.abs(y) * scale
 
         z1 = xs + 1j * ys
         z2 = q * xs + 1j * ys / q
