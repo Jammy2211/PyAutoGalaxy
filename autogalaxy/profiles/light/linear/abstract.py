@@ -145,6 +145,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         psf: Optional[aa.Kernel2D],
         light_profile_list: List[LightProfileLinear],
         regularization=Optional[aa.reg.Regularization],
+        settings=aa.SettingsInversion(),
         xp=np,
     ):
         """
@@ -202,7 +203,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
                     """
                 )
 
-        super().__init__(grid=grid, regularization=regularization, xp=xp)
+        super().__init__(grid=grid, regularization=regularization, settings=settings, xp=xp)
 
         self.blurring_grid = blurring_grid
         self.psf = psf
@@ -303,7 +304,10 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
             )
 
             blurred_image_2d = self.psf.convolved_image_from(
-                image=image_2d, blurring_image=blurring_image_2d, xp=self._xp
+                image=image_2d,
+                blurring_image=blurring_image_2d,
+                use_mixed_precision=self.settings.use_mixed_precision,
+                xp=self._xp
             )
 
             blurred_image_2d_list.append(blurred_image_2d.array)
