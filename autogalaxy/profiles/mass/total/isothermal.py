@@ -202,7 +202,7 @@ class IsothermalSph(Isothermal):
         """
         return self._cartesian_grid_via_radial_from(
             grid=grid,
-            radius=xp.full(grid.shape[0], 2.0 * self.einstein_radius_rescaled(xp)),
             xp=xp,
+            radius=xp.full(grid.shape[0], 2.0 * self.einstein_radius_rescaled(xp)),
             **kwargs,
         )
