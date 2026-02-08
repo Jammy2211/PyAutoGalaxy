@@ -215,7 +215,10 @@ class Basis(LightProfile, MassProfile):
         """
         if len(self.mass_profile_list) > 0:
             return sum(
-                [mass.deflections_yx_2d_from(grid=grid, xp=xp) for mass in self.profile_list]
+                [
+                    mass.deflections_yx_2d_from(grid=grid, xp=xp)
+                    for mass in self.profile_list
+                ]
             )
         return xp.zeros((grid.shape[0], 2))
 

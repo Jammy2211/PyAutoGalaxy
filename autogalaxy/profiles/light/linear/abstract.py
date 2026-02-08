@@ -203,7 +203,9 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
                     """
                 )
 
-        super().__init__(grid=grid, regularization=regularization, settings=settings, xp=xp)
+        super().__init__(
+            grid=grid, regularization=regularization, settings=settings, xp=xp
+        )
 
         self.blurring_grid = blurring_grid
         self.psf = psf
@@ -307,7 +309,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
                 image=image_2d,
                 blurring_image=blurring_image_2d,
                 use_mixed_precision=self.settings.use_mixed_precision,
-                xp=self._xp
+                xp=self._xp,
             )
 
             blurred_image_2d_list.append(blurred_image_2d.array)
