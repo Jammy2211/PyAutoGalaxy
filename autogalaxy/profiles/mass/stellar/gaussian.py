@@ -197,8 +197,10 @@ class Gaussian(MassProfile, StellarProfile):
 
         ind_pos_y = y >= 0
 
-        scale = q / (xp.asarray(self.sigma, dtype=xp.float64)
-                     * xp.sqrt(xp.asarray(2.0, dtype=xp.float64) * (1.0 - q2)))
+        scale = q / (
+            xp.asarray(self.sigma, dtype=xp.float64)
+            * xp.sqrt(xp.asarray(2.0, dtype=xp.float64) * (1.0 - q2))
+        )
 
         xs = x * scale
         ys = xp.abs(y) * scale
@@ -206,10 +208,7 @@ class Gaussian(MassProfile, StellarProfile):
         z1 = xs + 1j * ys
         z2 = q * xs + 1j * ys / q
 
-        exp_term = xp.exp(
-            -(xs * xs) * (1.0 - q2)
-            - (ys * ys) * (1.0 / q2 - 1.0)
-        )
+        exp_term = xp.exp(-(xs * xs) * (1.0 - q2) - (ys * ys) * (1.0 / q2 - 1.0))
 
         core = -1j * (self.wofz(z1, xp=xp) - exp_term * self.wofz(z2, xp=xp))
 
@@ -243,10 +242,13 @@ class Gaussian(MassProfile, StellarProfile):
         w_large = 1j * inv_sqrt_pi / t
 
         # ---------- Region 5 ----------
-        U5 = xp.asarray([1.320522, 35.7668, 219.031,
-                         1540.787, 3321.990, 36183.31], dtype=xp.float64)
-        V5 = xp.asarray([1.841439, 61.57037, 364.2191,
-                         2186.181, 9022.228, 24322.84, 32066.6], dtype=xp.float64)
+        U5 = xp.asarray(
+            [1.320522, 35.7668, 219.031, 1540.787, 3321.990, 36183.31], dtype=xp.float64
+        )
+        V5 = xp.asarray(
+            [1.841439, 61.57037, 364.2191, 2186.181, 9022.228, 24322.84, 32066.6],
+            dtype=xp.float64,
+        )
 
         t = inv_sqrt_pi
         for u in U5:
@@ -259,10 +261,22 @@ class Gaussian(MassProfile, StellarProfile):
         w5 = xp.exp(-z2) + 1j * z * t / s
 
         # ---------- Region 6 ----------
-        U6 = xp.asarray([5.9126262, 30.180142, 93.15558,
-                         181.92853, 214.38239, 122.60793], dtype=xp.float64)
-        V6 = xp.asarray([10.479857, 53.992907, 170.35400,
-                         348.70392, 457.33448, 352.73063, 122.60793], dtype=xp.float64)
+        U6 = xp.asarray(
+            [5.9126262, 30.180142, 93.15558, 181.92853, 214.38239, 122.60793],
+            dtype=xp.float64,
+        )
+        V6 = xp.asarray(
+            [
+                10.479857,
+                53.992907,
+                170.35400,
+                348.70392,
+                457.33448,
+                352.73063,
+                122.60793,
+            ],
+            dtype=xp.float64,
+        )
 
         t = inv_sqrt_pi
         for u in U6:

@@ -323,6 +323,7 @@ class GalaxiesToInversion(AbstractToInversion):
                             psf=self.dataset.psf,
                             light_profile_list=light_profile_list,
                             regularization=light_profile.regularization,
+                            settings=self.settings_inversion,
                             xp=self._xp,
                         )
 
@@ -486,6 +487,7 @@ class GalaxiesToInversion(AbstractToInversion):
         return mapper_from(
             mapper_grids=mapper_grids,
             regularization=regularization,
+            settings=self.settings_inversion,
             preloads=self.preloads,
             xp=self._xp,
         )

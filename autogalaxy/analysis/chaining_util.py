@@ -500,7 +500,6 @@ def mass_light_dark_basis_from(
         lmp_model.centre = light_profile.centre
         lmp_model.ell_comps = light_profile.ell_comps
 
-
         print(light_profile.intensity)
         print(type(light_profile.intensity))
 
