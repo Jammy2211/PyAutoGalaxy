@@ -160,6 +160,7 @@ def test___galaxy_model_image_dict(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         galaxies=[g0, galaxy_pix_0],
+        settings_inversion=ag.SettingsInversion(use_border_relocator=True),
     )
 
     mapper_grids = pixelization.mesh.mapper_grids_from(
@@ -281,6 +282,7 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         galaxies=[g0, galaxy_pix_0],
+        settings_inversion=ag.SettingsInversion(use_border_relocator=True),
     )
 
     mapper_grids = pixelization.mesh.mapper_grids_from(
@@ -296,7 +298,10 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
         regularization=pixelization.regularization,
     )
 
-    inversion = ag.Inversion(dataset=interferometer_7, linear_obj_list=[mapper])
+    inversion = ag.Inversion(
+        dataset=interferometer_7,
+        linear_obj_list=[mapper],
+    )
 
     assert (fit.galaxy_model_visibilities_dict[g0] == 0.0 + 0.0j * np.zeros((7,))).all()
 
