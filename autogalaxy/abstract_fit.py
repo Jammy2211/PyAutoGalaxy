@@ -117,7 +117,7 @@ class AbstractFitInversion:
         return linear_light_profile_intensity_dict
 
     def galaxy_linear_obj_data_dict_from(
-        self, use_image: bool = False
+        self, use_operated : bool = True, use_image: bool = False
     ) -> Dict[Galaxy, aa.Array2D]:
         """
         Returns a dictionary mapping every galaxy containing a linear
@@ -137,6 +137,9 @@ class AbstractFitInversion:
 
         Parameters
         ----------
+        use_operated
+            Whether to use the operated (e.g PSF convolved) images of the linear objects in the dictionary, or
+            the unoperated images.
         use_image
             Whether to put the reconstructed data or images in the dictionary.
 
@@ -157,9 +160,14 @@ class AbstractFitInversion:
                 continue
 
             if not use_image:
-                mapped_reconstructed = self.inversion.mapped_reconstructed_data_dict[
-                    linear_obj
-                ]
+                if use_operated:
+                    mapped_reconstructed = self.inversion.mapped_reconstructed_operated_data_dict_from[
+                        linear_obj
+                    ]
+                else:
+                    mapped_reconstructed = self.inversion.mapped_reconstructed_data_dict_from[
+                        linear_obj
+                    ]
 
             else:
                 mapped_reconstructed = self.inversion.mapped_reconstructed_image_dict[
