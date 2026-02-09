@@ -117,7 +117,8 @@ class AbstractFitInversion:
         return linear_light_profile_intensity_dict
 
     def galaxy_linear_obj_data_dict_from(
-        self, use_operated : bool = True, use_image: bool = False
+        self,
+        use_operated: bool = True,
     ) -> Dict[Galaxy, aa.Array2D]:
         """
         Returns a dictionary mapping every galaxy containing a linear
@@ -129,10 +130,10 @@ class AbstractFitInversion:
         This is used to create the overall `galaxy_model_image_dict`, which maps every galaxy to its
         overall `model_data` (e.g. including the `model_data` of orindary light profiles too).
 
-        If `use_image=False`, the `reconstructed_data` of the inversion (e.g. an image for dataset data,
+        If `use_operated=False`, the `reconstructed_data` of the inversion (e.g. an image for dataset data,
         visibilities for  interferometer data) is input in the dictionary.
 
-        if `use_image=True`, the `reconstructed_image` of the inversion (e.g. the image for dataset data, the
+        if `use_operated=True`, the `reconstructed_operated_data` of the inversion (e.g. the image for dataset data, the
         real-space image for interferometer data) is input in the dictionary.
 
         Parameters
@@ -140,8 +141,6 @@ class AbstractFitInversion:
         use_operated
             Whether to use the operated (e.g PSF convolved) images of the linear objects in the dictionary, or
             the unoperated images.
-        use_image
-            Whether to put the reconstructed data or images in the dictionary.
 
         Returns
         -------
@@ -159,18 +158,12 @@ class AbstractFitInversion:
             except KeyError:
                 continue
 
-            if not use_image:
-                if use_operated:
-                    mapped_reconstructed = self.inversion.mapped_reconstructed_operated_data_dict_from[
-                        linear_obj
-                    ]
-                else:
-                    mapped_reconstructed = self.inversion.mapped_reconstructed_data_dict_from[
-                        linear_obj
-                    ]
-
+            if use_operated:
+                mapped_reconstructed = (
+                    self.inversion.mapped_reconstructed_operated_data_dict[linear_obj]
+                )
             else:
-                mapped_reconstructed = self.inversion.mapped_reconstructed_image_dict[
+                mapped_reconstructed = self.inversion.mapped_reconstructed_data_dict[
                     linear_obj
                 ]
 

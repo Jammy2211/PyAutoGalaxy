@@ -60,6 +60,22 @@ def fits_to_fits(
 
         hdu_list.writeto(image_path / "fit.fits", overwrite=True)
 
+    if should_plot("fits_galaxy_images"):
+        number_plots = len(fit.galaxy_image_dict.keys()) + 1
+
+        image_list = [image.native_for_fits for image in fit.galaxy_image_dict.values()]
+
+        hdu_list = hdu_list_for_output_from(
+            values_list=[image_list[0].mask.astype("float")] + image_list,
+            ext_name_list=[
+                "mask",
+            ]
+            + [f"galaxy_{i}" for i in range(number_plots)],
+            header_dict=fit.mask.header_dict,
+        )
+
+        hdu_list.writeto(image_path / "galaxy_images.fits", overwrite=True)
+
     if should_plot("fits_model_galaxy_images"):
         number_plots = len(fit.galaxy_model_image_dict.keys()) + 1
 

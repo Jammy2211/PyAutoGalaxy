@@ -233,6 +233,7 @@ def test__fit__model_dataset__grid_offset__handles_special_behaviour(
 
     assert fit.figure_of_merit == pytest.approx(-22.914118686169, 1.0e-4)
 
+
 def test__galaxy_image_dict(masked_imaging_7x7):
     # Normal Light Profiles Only
 
@@ -255,12 +256,8 @@ def test__galaxy_image_dict(masked_imaging_7x7):
         grid=masked_imaging_7x7.grids.lp,
     )
 
-    assert fit.galaxy_image_dict[g0] == pytest.approx(
-        g0_image_2d.array, 1.0e-4
-    )
-    assert fit.galaxy_image_dict[g1] == pytest.approx(
-        g1_image_2d.array, 1.0e-4
-    )
+    assert fit.galaxy_image_dict[g0] == pytest.approx(g0_image_2d.array, 1.0e-4)
+    assert fit.galaxy_image_dict[g1] == pytest.approx(g1_image_2d.array, 1.0e-4)
     assert fit.galaxy_image_dict[g2] == pytest.approx(
         g0_image_2d.array + g1_image_2d.array, 1.0e-4
     )
@@ -289,25 +286,20 @@ def test__galaxy_image_dict(masked_imaging_7x7):
     assert (fit.galaxy_image_dict[g3] == np.zeros(9)).all()
 
     assert fit.galaxy_image_dict[g0][4] == pytest.approx(23.944378406, 1.0e-4)
-    assert fit.galaxy_image_dict[g1_linear][4] == pytest.approx(
-        -9.658085312, 1.0e-4
-    )
-    assert fit.galaxy_image_dict[galaxy_pix_0][4] == pytest.approx(
-        1.10780906, 1.0e-4
-    )
-    assert fit.galaxy_image_dict[galaxy_pix_1][4] == pytest.approx(
-        1.10780906, 1.0e-4
-    )
+    assert fit.galaxy_image_dict[g1_linear][4] == pytest.approx(-28.1424200, 1.0e-4)
+    assert fit.galaxy_image_dict[galaxy_pix_0][4] == pytest.approx(1.107972830, 1.0e-4)
+    assert fit.galaxy_image_dict[galaxy_pix_1][4] == pytest.approx(1.1079728213, 1.0e-4)
 
-    mapped_reconstructed_image = (
+    mapped_reconstructed_data = (
         fit.galaxy_image_dict[g1_linear]
         + fit.galaxy_image_dict[galaxy_pix_0]
         + fit.galaxy_image_dict[galaxy_pix_1]
     )
 
-    assert mapped_reconstructed_image == pytest.approx(
-        fit.inversion.mapped_reconstructed_image.array, 1.0e-4
+    assert mapped_reconstructed_data == pytest.approx(
+        fit.inversion.mapped_reconstructed_data.array, 1.0e-4
     )
+
 
 def test__galaxy_model_image_dict(masked_imaging_7x7):
     # Normal Light Profiles Only
@@ -384,7 +376,7 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
 
     assert fit.galaxy_model_image_dict[g1][4] == pytest.approx(1.25795063, 1.0e-4)
     assert fit.galaxy_model_image_dict[g1].native.array == pytest.approx(
-        fit.inversion.mapped_reconstructed_image.native.array, 1.0e-4
+        fit.inversion.mapped_reconstructed_operated_data.native.array, 1.0e-4
     )
 
     assert fit.model_data.native.array == pytest.approx(
@@ -424,19 +416,19 @@ def test__galaxy_model_image_dict(masked_imaging_7x7):
         1.10780906, 1.0e-4
     )
 
-    mapped_reconstructed_image = (
+    mapped_reconstructed_operated_data = (
         fit.galaxy_model_image_dict[g1_linear]
         + fit.galaxy_model_image_dict[galaxy_pix_0]
         + fit.galaxy_model_image_dict[galaxy_pix_1]
     )
 
-    assert mapped_reconstructed_image == pytest.approx(
-        fit.inversion.mapped_reconstructed_image.array, 1.0e-4
+    assert mapped_reconstructed_operated_data == pytest.approx(
+        fit.inversion.mapped_reconstructed_operated_data.array, 1.0e-4
     )
 
     assert fit.model_data == pytest.approx(
         fit.galaxy_model_image_dict[g0].array
-        + fit.inversion.mapped_reconstructed_image.array,
+        + fit.inversion.mapped_reconstructed_operated_data.array,
         1.0e-4,
     )
 
