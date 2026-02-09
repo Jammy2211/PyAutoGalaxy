@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, Optional
 
+import numpy as np
+
 from autofit import ModelInstance
 
 if TYPE_CHECKING:
@@ -17,6 +19,7 @@ class AbstractFitInversion:
         self,
         model_obj,
         settings_inversion: aa.SettingsInversion,
+        xp=np
     ):
         """
         An abstract fit object which fits to datasets (e.g. imaging, interferometer) inherit from.
@@ -35,6 +38,15 @@ class AbstractFitInversion:
         """
         self.model_obj = model_obj
         self.settings_inversion = settings_inversion
+        self.use_jax = xp is not np
+
+    @property
+    def _xp(self):
+        if self.use_jax:
+            import jax.numpy as jnp
+
+            return jnp
+        return np
 
     @property
     def total_mappers(self) -> int:
@@ -95,6 +107,14 @@ class AbstractFitInversion:
 
         This function returns a dictionary which maps every linear light profile instance to its solved for
         `intensity` value in the inversion, so that the intensity value of every light profile can be accessed.
+
+        Type casting is complicated by JAX. When this function is used in a JAX.jit (e.g. computed latent varialbes)
+        it requires the reconstruction values to be JAX arrays, but when it is used outside of JAX certain taks
+        requires the reconstruction values to be floats.
+
+        An example of the latter is using a tracer inferred in one search to pass the solved for intensity values of
+        linear light profiles to a subsequent search, for example setting up the intensities of the mass components
+        of a light dark model.
         """
 
         if self.inversion is None:
@@ -110,9 +130,12 @@ class AbstractFitInversion:
             reconstruction = self.inversion.reconstruction_dict[linear_obj_func]
 
             for i, light_profile in enumerate(linear_obj_func.light_profile_list):
-                linear_light_profile_intensity_dict[light_profile] = float(
-                    reconstruction[i]
-                )
+                if self.use_jax:
+                    linear_light_profile_intensity_dict[light_profile] = reconstruction[i]
+                else:
+                    linear_light_profile_intensity_dict[light_profile] = float(
+                        reconstruction[i]
+                    )
 
         return linear_light_profile_intensity_dict
 
