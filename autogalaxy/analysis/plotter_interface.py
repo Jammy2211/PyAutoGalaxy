@@ -315,8 +315,6 @@ class PlotterInterface:
                     for name in adapt_images.galaxy_name_image_plane_mesh_grid_dict.keys()
                 ]
 
-                print(list(adapt_images.galaxy_name_image_plane_mesh_grid_dict.keys()))
-
                 hdu_list = hdu_list_for_output_from(
                     values_list=[np.array([1])] + image_plane_mesh_grid_list,
                     ext_name_list=[""]
