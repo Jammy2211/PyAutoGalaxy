@@ -63,7 +63,7 @@ class NFW(gNFW, MassProfileCSE):
         # from q = (1-e)/(1+e) to q = sqrt(1-e**2)
 
         e_autolens = xp.sqrt(self.ell_comps[1] ** 2 + self.ell_comps[0] ** 2)
-        e_hk24 = 2 * xp.sqrt(e_autolens) / xp.sqrt(1 + 2 * e_autolens + e_autolens ** 2)
+        e_hk24 = 2 * xp.sqrt(e_autolens) / (1 + e_autolens)
 
         # Define dimensionless length coords
 
@@ -325,7 +325,7 @@ class NFW(gNFW, MassProfileCSE):
         # from q = (1-e)/(1+e) to q = sqrt(1-e**2)
 
         e_autolens = xp.sqrt(self.ell_comps[1] ** 2 + self.ell_comps[0] ** 2)
-        e_hk24 = 2 * xp.sqrt(e_autolens) / xp.sqrt(1 + 2 * e_autolens + e_autolens**2)
+        e_hk24 = 2 * xp.sqrt(e_autolens) / (1 + e_autolens)
 
         # Define dimensionless length coords
 
@@ -369,7 +369,7 @@ class NFW(gNFW, MassProfileCSE):
         # from q = (1-e)/(1+e) to q = sqrt(1-e**2)
 
         e_autolens = xp.sqrt(self.ell_comps[1] ** 2 + self.ell_comps[0] ** 2)
-        e_hk24 = 2 * xp.sqrt(e_autolens) / xp.sqrt(1 + 2 * e_autolens + e_autolens**2)
+        e_hk24 = 2 * xp.sqrt(e_autolens) / (1 + e_autolens)
 
         # Define dimensionless length coords
 
