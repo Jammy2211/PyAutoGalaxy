@@ -78,7 +78,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             self=self,
             model_obj=self.galaxies,
             settings_inversion=settings_inversion,
-            xp=xp
+            xp=xp,
         )
 
         self.adapt_images = adapt_images
@@ -184,8 +184,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         """
 
         galaxy_image_2d_dict = self.galaxies.galaxy_image_2d_dict_from(
-            grid=self.grids.lp,
-            xp=self._xp
+            grid=self.grids.lp, xp=self._xp
         )
 
         galaxy_linear_obj_image_dict = self.galaxy_linear_obj_data_dict_from(
@@ -213,7 +212,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             grid=self.grids.lp,
             psf=self.dataset.psf,
             blurring_grid=self.grids.blurring,
-            xp=self._xp
+            xp=self._xp,
         )
 
         galaxy_linear_obj_image_dict = self.galaxy_linear_obj_data_dict_from(

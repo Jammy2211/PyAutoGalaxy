@@ -15,12 +15,7 @@ from autogalaxy.profiles.basis import Basis
 
 
 class AbstractFitInversion:
-    def __init__(
-        self,
-        model_obj,
-        settings_inversion: aa.SettingsInversion,
-        xp=np
-    ):
+    def __init__(self, model_obj, settings_inversion: aa.SettingsInversion, xp=np):
         """
         An abstract fit object which fits to datasets (e.g. imaging, interferometer) inherit from.
 
@@ -131,7 +126,9 @@ class AbstractFitInversion:
 
             for i, light_profile in enumerate(linear_obj_func.light_profile_list):
                 if self.use_jax:
-                    linear_light_profile_intensity_dict[light_profile] = reconstruction[i]
+                    linear_light_profile_intensity_dict[light_profile] = reconstruction[
+                        i
+                    ]
                 else:
                     linear_light_profile_intensity_dict[light_profile] = float(
                         reconstruction[i]

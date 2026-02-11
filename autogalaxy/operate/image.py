@@ -414,7 +414,7 @@ class OperateImageGalaxies(OperateImageList):
             blurred_image_2d = psf.convolved_image_from(
                 image=image_2d_not_operated,
                 blurring_image=blurring_image_2d_not_operated,
-                xp=xp
+                xp=xp,
             )
 
             image_2d_operated = galaxy_image_2d_operated_dict[galaxy_key]
