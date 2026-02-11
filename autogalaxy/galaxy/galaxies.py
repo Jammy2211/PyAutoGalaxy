@@ -119,7 +119,7 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
         )
 
     def galaxy_image_2d_dict_from(
-        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None
+        self, grid: aa.type.Grid2DLike, xp=np, operated_only: Optional[bool] = None,
     ) -> {Galaxy: np.ndarray}:
         """
         Returns a dictionary associating every `Galaxy` object with its corresponding 2D image, using the instance

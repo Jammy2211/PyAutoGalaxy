@@ -161,7 +161,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         For modeling, this dictionary is used to set up the `adapt_images` that adapt certain pixelizations to the
         data being fitted.
         """
-        galaxy_image_dict = self.galaxies.galaxy_image_2d_dict_from(grid=self.grids.lp)
+        galaxy_image_dict = self.galaxies.galaxy_image_2d_dict_from(grid=self.grids.lp, xp=self._xp)
 
         galaxy_linear_obj_image_dict = self.galaxy_linear_obj_data_dict_from(
             use_operated=False
@@ -184,7 +184,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         data being fitted.
         """
         galaxy_model_visibilities_dict = self.galaxies.galaxy_visibilities_dict_from(
-            grid=self.grids.lp, transformer=self.dataset.transformer
+            grid=self.grids.lp, transformer=self.dataset.transformer, xp=self._xp
         )
 
         galaxy_linear_obj_data_dict = self.galaxy_linear_obj_data_dict_from(
