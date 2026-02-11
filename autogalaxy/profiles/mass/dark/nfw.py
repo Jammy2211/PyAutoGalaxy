@@ -78,25 +78,19 @@ class NFW(gNFW, MassProfileCSE):
             ((x1 - e_hk24)**2 + x2**2) * ((x1 + e_hk24)**2 + x2**2)
         )
 
-        deflection_x = ((x1 * ((x1**2 - e_hk24**2) * (1 - e_hk24**2) + x2**2 * (1 + e_hk24**2)) * nfw_hk24_util.small_f_1(x1, x2, e_hk24, xp=xp)
-                        + x1 * (x1**2 + x2**2 - e_hk24**2) * nfw_hk24_util.small_f_2(x1, x2, e_hk24, xp=xp))
+        deflection_x = (x1 * ((x1**2 - e_hk24**2) * (1 - e_hk24**2) + x2**2 * (1 + e_hk24**2)) * nfw_hk24_util.small_f_1(x1, x2, e_hk24, xp=xp)
+                        + x1 * (x1**2 + x2**2 - e_hk24**2) * nfw_hk24_util.small_f_2(x1, x2, e_hk24, xp=xp)
                         - x2 * (x1**2 + x2**2 + e_hk24**2) * nfw_hk24_util.small_f_3(x1, x2, e_hk24, xp=xp))
 
-        deflection_y = ((x2 * (x1**2 * (1 - 2 * e_hk24**2) + x2**2 + e_hk24**2) * nfw_hk24_util.small_f_1(x1, x2, e_hk24, xp=xp)
-                        + x2 * (x1**2 + x2**2 + e_hk24**2) * nfw_hk24_util.small_f_2(x1, x2, e_hk24, xp=xp))
+        deflection_y = (x2 * (x1**2 * (1 - 2 * e_hk24**2) + x2**2 + e_hk24**2) * nfw_hk24_util.small_f_1(x1, x2, e_hk24, xp=xp)
+                        + x2 * (x1**2 + x2**2 + e_hk24**2) * nfw_hk24_util.small_f_2(x1, x2, e_hk24, xp=xp)
                         + x1 * (x1**2 + x2**2 - e_hk24**2) * nfw_hk24_util.small_f_3(x1, x2, e_hk24, xp=xp))
 
         return self.rotated_grid_from_reference_frame_from(
-            grid=xp.multiply(prefactor, xp.vstack((deflection_y, deflection_x)).T),
+            grid=xp.multiply(self.scale_radius, xp.multiply(prefactor, xp.vstack((deflection_y, deflection_x)).T)),
             xp=xp,
             **kwargs,
         )
-        # return self.transformed_from_reference_frame_grid_from(
-        #     grid=xp.multiply(prefactor, xp.vstack((deflection_y, deflection_x)).T),
-        #     centre=self.centre,
-        #     angle=self.angle(xp),
-        #     xp=xp
-        # )
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
