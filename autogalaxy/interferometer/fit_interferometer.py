@@ -72,6 +72,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             self=self,
             model_obj=self.galaxies,
             settings_inversion=settings_inversion,
+            xp=xp,
         )
 
         self.adapt_images = adapt_images
@@ -139,12 +140,15 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         """
 
         if self.perform_inversion:
-            return self.profile_visibilities + self.inversion.mapped_reconstructed_data
+            return (
+                self.profile_visibilities
+                + self.inversion.mapped_reconstructed_operated_data
+            )
 
         return self.profile_visibilities
 
     @property
-    def galaxy_model_image_dict(self) -> Dict[Galaxy, np.ndarray]:
+    def galaxy_image_dict(self) -> Dict[Galaxy, np.ndarray]:
         """
         A dictionary which associates every galaxy with its `image`.
 
@@ -157,15 +161,15 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         For modeling, this dictionary is used to set up the `adapt_images` that adapt certain pixelizations to the
         data being fitted.
         """
-        galaxy_model_image_dict = self.galaxies.galaxy_image_2d_dict_from(
-            grid=self.grids.lp
+        galaxy_image_dict = self.galaxies.galaxy_image_2d_dict_from(
+            grid=self.grids.lp, xp=self._xp
         )
 
         galaxy_linear_obj_image_dict = self.galaxy_linear_obj_data_dict_from(
-            use_image=True
+            use_operated=False
         )
 
-        return {**galaxy_model_image_dict, **galaxy_linear_obj_image_dict}
+        return {**galaxy_image_dict, **galaxy_linear_obj_image_dict}
 
     @property
     def galaxy_model_visibilities_dict(self) -> Dict[Galaxy, np.ndarray]:
@@ -182,11 +186,11 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         data being fitted.
         """
         galaxy_model_visibilities_dict = self.galaxies.galaxy_visibilities_dict_from(
-            grid=self.grids.lp, transformer=self.dataset.transformer
+            grid=self.grids.lp, transformer=self.dataset.transformer, xp=self._xp
         )
 
         galaxy_linear_obj_data_dict = self.galaxy_linear_obj_data_dict_from(
-            use_image=False
+            use_operated=True
         )
 
         return {**galaxy_model_visibilities_dict, **galaxy_linear_obj_data_dict}

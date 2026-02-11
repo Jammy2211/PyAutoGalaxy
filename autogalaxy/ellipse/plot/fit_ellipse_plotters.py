@@ -193,10 +193,6 @@ class FitEllipsePDFPlotter(Plotter):
 
                 fit_ellipse_list[i].append(aa.Grid2DIrregular.from_yx_1d(y=y, x=x))
 
-                print(i, len(x))
-
-            print()
-
         self.open_subplot_figure(number_subplots=len(fit_ellipse_list))
 
         for i in range(len(fit_ellipse_list)):

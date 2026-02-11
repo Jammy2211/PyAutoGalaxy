@@ -35,20 +35,18 @@ def fits_to_fits(
         The fit to output to a .fits file.
     """
 
-    if should_plot("fits_model_galaxy_images"):
+    if should_plot("fits_galaxy_images"):
 
-        image_list = [
-            image.native_for_fits for image in fit.galaxy_model_image_dict.values()
-        ]
+        image_list = [image.native_for_fits for image in fit.galaxy_image_dict.values()]
 
         hdu_list = hdu_list_for_output_from(
             values_list=[image_list[0].mask.astype("float")] + image_list,
             ext_name_list=["mask"]
-            + [f"galaxy_{i}" for i in range(len(fit.galaxy_model_image_dict.values()))],
+            + [f"galaxy_{i}" for i in range(len(fit.galaxy_image_dict.values()))],
             header_dict=fit.dataset.real_space_mask.header_dict,
         )
 
-        hdu_list.writeto(image_path / "model_galaxy_images.fits", overwrite=True)
+        hdu_list.writeto(image_path / "galaxy_images.fits", overwrite=True)
 
     if should_plot("fits_dirty_images"):
 

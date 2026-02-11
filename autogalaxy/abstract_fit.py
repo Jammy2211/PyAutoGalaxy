@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING, Dict, Optional
 
+import numpy as np
+
 from autofit import ModelInstance
 
 if TYPE_CHECKING:
@@ -13,11 +15,7 @@ from autogalaxy.profiles.basis import Basis
 
 
 class AbstractFitInversion:
-    def __init__(
-        self,
-        model_obj,
-        settings_inversion: aa.SettingsInversion,
-    ):
+    def __init__(self, model_obj, settings_inversion: aa.SettingsInversion, xp=np):
         """
         An abstract fit object which fits to datasets (e.g. imaging, interferometer) inherit from.
 
@@ -35,6 +33,15 @@ class AbstractFitInversion:
         """
         self.model_obj = model_obj
         self.settings_inversion = settings_inversion
+        self.use_jax = xp is not np
+
+    @property
+    def _xp(self):
+        if self.use_jax:
+            import jax.numpy as jnp
+
+            return jnp
+        return np
 
     @property
     def total_mappers(self) -> int:
@@ -95,6 +102,14 @@ class AbstractFitInversion:
 
         This function returns a dictionary which maps every linear light profile instance to its solved for
         `intensity` value in the inversion, so that the intensity value of every light profile can be accessed.
+
+        Type casting is complicated by JAX. When this function is used in a JAX.jit (e.g. computed latent varialbes)
+        it requires the reconstruction values to be JAX arrays, but when it is used outside of JAX certain taks
+        requires the reconstruction values to be floats.
+
+        An example of the latter is using a tracer inferred in one search to pass the solved for intensity values of
+        linear light profiles to a subsequent search, for example setting up the intensities of the mass components
+        of a light dark model.
         """
 
         if self.inversion is None:
@@ -110,14 +125,20 @@ class AbstractFitInversion:
             reconstruction = self.inversion.reconstruction_dict[linear_obj_func]
 
             for i, light_profile in enumerate(linear_obj_func.light_profile_list):
-                linear_light_profile_intensity_dict[light_profile] = float(
-                    reconstruction[i]
-                )
+                if self.use_jax:
+                    linear_light_profile_intensity_dict[light_profile] = reconstruction[
+                        i
+                    ]
+                else:
+                    linear_light_profile_intensity_dict[light_profile] = float(
+                        reconstruction[i]
+                    )
 
         return linear_light_profile_intensity_dict
 
     def galaxy_linear_obj_data_dict_from(
-        self, use_image: bool = False
+        self,
+        use_operated: bool = True,
     ) -> Dict[Galaxy, aa.Array2D]:
         """
         Returns a dictionary mapping every galaxy containing a linear
@@ -129,16 +150,17 @@ class AbstractFitInversion:
         This is used to create the overall `galaxy_model_image_dict`, which maps every galaxy to its
         overall `model_data` (e.g. including the `model_data` of orindary light profiles too).
 
-        If `use_image=False`, the `reconstructed_data` of the inversion (e.g. an image for dataset data,
+        If `use_operated=False`, the `reconstructed_data` of the inversion (e.g. an image for dataset data,
         visibilities for  interferometer data) is input in the dictionary.
 
-        if `use_image=True`, the `reconstructed_image` of the inversion (e.g. the image for dataset data, the
+        if `use_operated=True`, the `reconstructed_operated_data` of the inversion (e.g. the image for dataset data, the
         real-space image for interferometer data) is input in the dictionary.
 
         Parameters
         ----------
-        use_image
-            Whether to put the reconstructed data or images in the dictionary.
+        use_operated
+            Whether to use the operated (e.g PSF convolved) images of the linear objects in the dictionary, or
+            the unoperated images.
 
         Returns
         -------
@@ -156,13 +178,12 @@ class AbstractFitInversion:
             except KeyError:
                 continue
 
-            if not use_image:
-                mapped_reconstructed = self.inversion.mapped_reconstructed_data_dict[
-                    linear_obj
-                ]
-
+            if use_operated:
+                mapped_reconstructed = (
+                    self.inversion.mapped_reconstructed_operated_data_dict[linear_obj]
+                )
             else:
-                mapped_reconstructed = self.inversion.mapped_reconstructed_image_dict[
+                mapped_reconstructed = self.inversion.mapped_reconstructed_data_dict[
                     linear_obj
                 ]
 

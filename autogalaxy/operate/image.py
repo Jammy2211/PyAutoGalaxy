@@ -363,12 +363,12 @@ class OperateImageGalaxies(OperateImageList):
     """
 
     def galaxy_image_2d_dict_from(
-        self, grid: aa.Grid2D, operated_only: Optional[bool] = None
+        self, grid: aa.Grid2D, xp=np, operated_only: Optional[bool] = None
     ) -> Dict[Galaxy, aa.Array2D]:
         raise NotImplementedError
 
     def galaxy_blurred_image_2d_dict_from(
-        self, grid, psf, blurring_grid
+        self, grid, psf, blurring_grid, xp=np
     ) -> Dict[Galaxy, aa.Array2D]:
         """
         Evaluate the light object's dictionary mapping galaixes to their corresponding 2D images and convolve each
@@ -392,15 +392,15 @@ class OperateImageGalaxies(OperateImageList):
         """
 
         galaxy_image_2d_not_operated_dict = self.galaxy_image_2d_dict_from(
-            grid=grid, operated_only=False
+            grid=grid, operated_only=False, xp=xp
         )
 
         galaxy_blurring_image_2d_not_operated_dict = self.galaxy_image_2d_dict_from(
-            grid=blurring_grid, operated_only=False
+            grid=blurring_grid, operated_only=False, xp=xp
         )
 
         galaxy_image_2d_operated_dict = self.galaxy_image_2d_dict_from(
-            grid=grid, operated_only=True
+            grid=grid, operated_only=True, xp=xp
         )
 
         galaxy_blurred_image_2d_dict = {}
@@ -414,6 +414,7 @@ class OperateImageGalaxies(OperateImageList):
             blurred_image_2d = psf.convolved_image_from(
                 image=image_2d_not_operated,
                 blurring_image=blurring_image_2d_not_operated,
+                xp=xp,
             )
 
             image_2d_operated = galaxy_image_2d_operated_dict[galaxy_key]
@@ -451,7 +452,7 @@ class OperateImageGalaxies(OperateImageList):
             in the uv-plane.
         """
 
-        galaxy_image_2d_dict = self.galaxy_image_2d_dict_from(grid=grid)
+        galaxy_image_2d_dict = self.galaxy_image_2d_dict_from(grid=grid, xp=xp)
 
         galaxy_visibilities_dict = {}
 

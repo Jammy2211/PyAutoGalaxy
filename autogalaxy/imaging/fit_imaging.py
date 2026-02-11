@@ -78,6 +78,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             self=self,
             model_obj=self.galaxies,
             settings_inversion=settings_inversion,
+            xp=xp,
         )
 
         self.adapt_images = adapt_images
@@ -161,9 +162,36 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         """
 
         if self.perform_inversion:
-            return self.blurred_image + self.inversion.mapped_reconstructed_data
+            return (
+                self.blurred_image + self.inversion.mapped_reconstructed_operated_data
+            )
 
         return self.blurred_image
+
+    @property
+    def galaxy_image_dict(self) -> Dict[Galaxy, np.ndarray]:
+        """
+        A dictionary which associates every galaxy in the fit with its image before operation (e.g. no PSF convolution
+        or NUFFT performed).
+
+        This image is the image of the sum of:
+
+        - The images of all ordinary light profiles summed before any operation is performed on them.
+        - The images of all linear objects (e.g. linear light profiles / pixelizations), where the images are solved
+          for first via the inversion.
+
+        This dictionary is used to output to .fits file the galaxy images.
+        """
+
+        galaxy_image_2d_dict = self.galaxies.galaxy_image_2d_dict_from(
+            grid=self.grids.lp, xp=self._xp
+        )
+
+        galaxy_linear_obj_image_dict = self.galaxy_linear_obj_data_dict_from(
+            use_operated=False,
+        )
+
+        return {**galaxy_image_2d_dict, **galaxy_linear_obj_image_dict}
 
     @property
     def galaxy_model_image_dict(self) -> Dict[Galaxy, np.ndarray]:
@@ -184,10 +212,11 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             grid=self.grids.lp,
             psf=self.dataset.psf,
             blurring_grid=self.grids.blurring,
+            xp=self._xp,
         )
 
         galaxy_linear_obj_image_dict = self.galaxy_linear_obj_data_dict_from(
-            use_image=True
+            use_operated=True,
         )
 
         return {**galaxy_blurred_image_2d_dict, **galaxy_linear_obj_image_dict}

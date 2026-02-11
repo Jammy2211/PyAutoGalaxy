@@ -179,7 +179,7 @@ class FitInterferometerPlotter(Plotter):
             mapper_index = 0
 
             self.inversion_plotter.figures_2d_of_pixelization(
-                pixelization_index=mapper_index, reconstructed_image=True
+                pixelization_index=mapper_index, reconstructed_operated_data=True
             )
             self.inversion_plotter.figures_2d_of_pixelization(
                 pixelization_index=mapper_index, reconstruction=True
