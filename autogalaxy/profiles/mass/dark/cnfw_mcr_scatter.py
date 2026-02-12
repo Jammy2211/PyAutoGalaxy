@@ -5,7 +5,7 @@ from autogalaxy.profiles.mass.dark.cnfw import cNFWSph
 from autogalaxy.profiles.mass.dark import mcr_util
 
 
-class cNFWMCRLudlowSph(cNFWSph):
+class cNFWMCRScatterLudlowSph(cNFWSph):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
