@@ -93,6 +93,12 @@ class NFW(gNFW, MassProfileCSE):
                         + x1 * (x1**2 + x2**2 - e_hk24**2) * f3)
         deflection_y *= prefactor
 
+        # prevent nans at the centre
+        r2 = x1 ** 2 + x2 ** 2
+        mask0 = r2 < 1e-24
+        deflection_x = xp.where(mask0, 0.0, deflection_x)
+        deflection_y = xp.where(mask0, 0.0, deflection_y)
+
         return self.rotated_grid_from_reference_frame_from(
             xp.multiply(self.scale_radius, xp.vstack((deflection_y, deflection_x)).T),
             xp=xp,
