@@ -28,6 +28,7 @@ def ell_comps_from(axis_ratio: float, angle: float, xp=np) -> Tuple[float, float
     return (ellip_y, ellip_x)
 
 
+
 def axis_ratio_and_angle_from(
     ell_comps: Tuple[float, float], xp=np
 ) -> Tuple[float, float]:
@@ -60,7 +61,7 @@ def axis_ratio_and_angle_from(
     ell_comps
         The elliptical components of the light or mass profile which are converted to an angle.
     """
-    angle = xp.arctan2(ell_comps[0], ell_comps[1]) / 2
+    angle = 0.5 * xp.arctan2(ell_comps[0], xp.where((ell_comps[0] == 0) & (ell_comps[1] == 0), 1.0, ell_comps[1]))
     angle *= 180.0 / xp.pi
 
     angle = xp.where(angle < -45, angle + 180, angle)

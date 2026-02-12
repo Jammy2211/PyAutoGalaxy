@@ -106,8 +106,7 @@ class SphProfile(GeometryProfile):
         """
         grid_angles = xp.arctan2(grid.array[:, 0], grid.array[:, 1])
 
-        cos_theta = xp.cos(grid_angles)
-        sin_theta = xp.sin(grid_angles)
+        cos_theta, sin_theta = self.angle_to_profile_grid_from(grid_angles=grid_angles, xp=xp, **kwargs)
 
         return xp.multiply(radius[:, None], xp.vstack((sin_theta, cos_theta)).T)
 
