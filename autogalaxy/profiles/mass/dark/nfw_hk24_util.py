@@ -70,7 +70,7 @@ def kappa_from(k_s, a, xp=np):
     return xp.where(xp.abs(a - 1) < 1e-12, 2/3 * k_s, kappa)
 
 
-def small_f_1(x1: np.ndarray, x2: np.ndarray, e: float, xp=np) -> np.ndarray:
+def small_f_1(x1, x2, e, xp=np):
     """
     Equation 32 HK+24
 
@@ -93,7 +93,7 @@ def small_f_1(x1: np.ndarray, x2: np.ndarray, e: float, xp=np) -> np.ndarray:
     return f1
 
 
-def small_f_2(x1: np.ndarray, x2: np.ndarray, e: float, xp=np) -> np.ndarray:
+def small_f_2(x1, x2, e, xp=np):
     """
     Equation 32 HK+24
 
@@ -116,7 +116,7 @@ def small_f_2(x1: np.ndarray, x2: np.ndarray, e: float, xp=np) -> np.ndarray:
     return f2
 
 
-def small_f_3(x1: np.ndarray, x2: np.ndarray, e: float, xp=np) -> np.ndarray:
+def small_f_3(x1, x2, e, xp=np):
     """
     Equation 32 HK+24
 
@@ -139,7 +139,7 @@ def small_f_3(x1: np.ndarray, x2: np.ndarray, e: float, xp=np) -> np.ndarray:
     return f3
 
 
-def small_f_0(x1: np.ndarray, x2: np.ndarray, e: float, xp=np) -> np.ndarray:
+def small_f_0(x1, x2, e, xp=np):
     """
     Equation 37 HK+24
 
