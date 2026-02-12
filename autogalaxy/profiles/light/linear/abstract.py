@@ -308,6 +308,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
             blurred_image_2d = self.psf.convolved_image_from(
                 image=image_2d,
                 blurring_image=blurring_image_2d,
+                use_mixed_precision=self.settings.use_mixed_precision,
                 xp=self._xp,
             )
 
