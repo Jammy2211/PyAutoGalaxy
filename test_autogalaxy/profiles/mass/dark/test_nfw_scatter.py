@@ -59,3 +59,27 @@ def test__scatter_is_nonzero():
     deflections_ell = nfw_ell.deflections_yx_2d_from(grid=grid)
 
     assert deflections_sph[0] != pytest.approx(deflections_ell[0], 1.0e-4)
+
+    # Testing the cored NFW
+
+    cnfw_sph = ag.mp.cNFWMCRScatterLudlowSph(
+        ell_comps=(0.5, 0.5),
+        mass_at_200=1.0e9,
+        scatter_sigma=1.0,
+        f_c=0.01,
+        redshift_object=0.6,
+        redshift_source=2.5,
+    )
+
+    assert cnfw_sph.scale_radius == pytest.approx(0.14978, 1.0e-4)
+
+    cnfw_sph = ag.mp.cNFWMCRScatterLudlowSph(
+        ell_comps=(0.5, 0.5),
+        mass_at_200=1.0e9,
+        scatter_sigma=-1.0,
+        f_c=0.01,
+        redshift_object=0.6,
+        redshift_source=2.5,
+    )
+
+    assert cnfw_sph.scale_radius == pytest.approx(0.29886, 1.0e-4)
