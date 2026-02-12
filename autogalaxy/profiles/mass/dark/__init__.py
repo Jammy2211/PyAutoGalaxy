@@ -11,3 +11,4 @@ from .nfw_truncated_mcr_scatter import NFWTruncatedMCRScatterLudlowSph
 from .nfw_virial_mass_conc import NFWVirialMassConcSph
 from .cnfw import cNFWSph
 from .cnfw_mcr import cNFWMCRLudlowSph
+from .cnfw_mcr_scatter import cNFWMCRScatterLudlowSph
