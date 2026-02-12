@@ -71,21 +71,26 @@ class NFW(gNFW, MassProfileCSE):
         x2 = grid.array[:, 0] / self.scale_radius
 
         # Avoid nans due to x=0
-        x1 = xp.where(np.abs(x1) < 1e-6, 1e-6, x1)
-        x2 = xp.where(np.abs(x2) < 1e-6, 1e-6, x2)
+        eps = xp.array(1e-12)
+        x1 = xp.where(xp.abs(x1) < eps, xp.sign(x1) * eps, x1)
+        x2 = xp.where(xp.abs(x2) < eps, xp.sign(x2) * eps, x2)
 
         prefactor = 4 * self.kappa_s * xp.sqrt(1 - e_hk24**2) / (
             ((x1 - e_hk24)**2 + x2**2) * ((x1 + e_hk24)**2 + x2**2)
         )
 
-        deflection_x = (x1 * ((x1**2 - e_hk24**2) * (1 - e_hk24**2) + x2**2 * (1 + e_hk24**2)) * nfw_hk24_util.small_f_1(x1, x2, e_hk24, xp=xp)
-                        + x1 * (x1**2 + x2**2 - e_hk24**2) * nfw_hk24_util.small_f_2(x1, x2, e_hk24, xp=xp)
-                        - x2 * (x1**2 + x2**2 + e_hk24**2) * nfw_hk24_util.small_f_3(x1, x2, e_hk24, xp=xp))
+        f1 = nfw_hk24_util.small_f_1(x1, x2, e_hk24, xp=xp)
+        f2 = nfw_hk24_util.small_f_2(x1, x2, e_hk24, xp=xp)
+        f3 = nfw_hk24_util.small_f_3(x1, x2, e_hk24, xp=xp)
+
+        deflection_x = (x1 * ((x1**2 - e_hk24**2) * (1 - e_hk24**2) + x2**2 * (1 + e_hk24**2)) * f1
+                        + x1 * (x1**2 + x2**2 - e_hk24**2) * f2
+                        - x2 * (x1**2 + x2**2 + e_hk24**2) * f3)
         deflection_x *= prefactor
 
-        deflection_y = (x2 * (x1**2 * (1 - 2 * e_hk24**2) + x2**2 + e_hk24**2) * nfw_hk24_util.small_f_1(x1, x2, e_hk24, xp=xp)
-                        + x2 * (x1**2 + x2**2 + e_hk24**2) * nfw_hk24_util.small_f_2(x1, x2, e_hk24, xp=xp)
-                        + x1 * (x1**2 + x2**2 - e_hk24**2) * nfw_hk24_util.small_f_3(x1, x2, e_hk24, xp=xp))
+        deflection_y = (x2 * (x1**2 * (1 - 2 * e_hk24**2) + x2**2 + e_hk24**2) * f1
+                        + x2 * (x1**2 + x2**2 + e_hk24**2) * f2
+                        + x1 * (x1**2 + x2**2 - e_hk24**2) * f3)
         deflection_y *= prefactor
 
         return self.rotated_grid_from_reference_frame_from(
