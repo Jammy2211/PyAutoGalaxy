@@ -70,20 +70,19 @@ class NFW(gNFW, MassProfileCSE):
         x1 = grid.array[:, 1] / self.scale_radius
         x2 = grid.array[:, 0] / self.scale_radius
 
-        # Avoid nans due to x=0 by perturbing very small coordinates away from exactly zero
-        eps = xp.array(1e-12)
-        sign_x1_safe = xp.where(xp.sign(x1) == 0, 1.0, xp.sign(x1))
-        sign_x2_safe = xp.where(xp.sign(x2) == 0, 1.0, xp.sign(x2))
-        x1 = xp.where(xp.abs(x1) < eps, sign_x1_safe * eps, x1)
-        x2 = xp.where(xp.abs(x2) < eps, sign_x2_safe * eps, x2)
+        r2 = x1 ** 2 + x2 ** 2
 
-        prefactor = 4 * self.kappa_s * xp.sqrt(1 - e_hk24**2) / (
-            ((x1 - e_hk24)**2 + x2**2) * ((x1 + e_hk24)**2 + x2**2)
-        )
+        # Avoid nans
 
-        f1 = nfw_hk24_util.small_f_1(x1, x2, e_hk24, xp=xp)
-        f2 = nfw_hk24_util.small_f_2(x1, x2, e_hk24, xp=xp)
-        f3 = nfw_hk24_util.small_f_3(x1, x2, e_hk24, xp=xp)
+        mask = r2 > 1e-24
+
+        prefactor = xp.where(mask, 4 * self.kappa_s * xp.sqrt(1 - e_hk24 ** 2) / (
+                ((x1 - e_hk24) ** 2 + x2 ** 2) * ((x1 + e_hk24) ** 2 + x2 ** 2)
+        ), 0.0)
+
+        f1 = xp.where(mask, nfw_hk24_util.small_f_1(x1, x2, e_hk24, xp=xp), 0.0)
+        f2 = xp.where(mask, nfw_hk24_util.small_f_2(x1, x2, e_hk24, xp=xp), 0.0)
+        f3 = xp.where(mask, nfw_hk24_util.small_f_3(x1, x2, e_hk24, xp=xp), 0.0)
 
         deflection_x = (x1 * ((x1**2 - e_hk24**2) * (1 - e_hk24**2) + x2**2 * (1 + e_hk24**2)) * f1
                         + x1 * (x1**2 + x2**2 - e_hk24**2) * f2
@@ -94,12 +93,6 @@ class NFW(gNFW, MassProfileCSE):
                         + x2 * (x1**2 + x2**2 + e_hk24**2) * f2
                         + x1 * (x1**2 + x2**2 - e_hk24**2) * f3)
         deflection_y *= prefactor
-
-        # prevent nans at the centre
-        r2 = x1 ** 2 + x2 ** 2
-        mask0 = r2 < 1e-24
-        deflection_x = xp.where(mask0, 0.0, deflection_x)
-        deflection_y = xp.where(mask0, 0.0, deflection_y)
 
         return self.rotated_grid_from_reference_frame_from(
             xp.multiply(self.scale_radius, xp.vstack((deflection_y, deflection_x)).T),
