@@ -41,11 +41,16 @@ def capital_F_from(chi, xp=np):
     less = chi < 1 - eps
     greater = chi > 1 + eps
 
-    root_min = xp.sqrt(1 - chi**2)
-    root_plus = xp.sqrt(chi**2 - 1)
+    root_min_arg = xp.where(less, 1 - chi ** 2, 0.0)
+    root_min = xp.sqrt(root_min_arg)
+    root_min_safe = xp.where(less, root_min, 1.0)
+    F_less = xp.where(less, xp.arctanh(root_min) / root_min_safe, 0.0)
 
-    F_less = xp.arctanh(root_min) / root_min
-    F_greater = xp.arctan(root_plus) / root_plus
+    root_plus_arg = xp.where(greater, chi ** 2 - 1, 0.0)
+    root_plus = xp.sqrt(root_plus_arg)
+    root_plus_safe = xp.where(greater, root_plus, 1.0)
+    F_greater = xp.where(greater, xp.arctan(root_plus) / root_plus_safe, 0.0)
+
     F_equal = xp.ones_like(chi)
 
     return xp.where(less, F_less, xp.where(greater, F_greater, F_equal))
