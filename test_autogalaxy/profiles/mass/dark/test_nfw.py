@@ -42,14 +42,14 @@ def test__deflections_via_analytical_from():
         scale_radius=1.0,
     )
 
-    deflections_via_analytical = nfw.deflections_2d_via_analytical_from(
+    deflections_via_analytic = nfw.deflections_2d_via_analytic_from(
         grid=ag.Grid2DIrregular([[0.0, 0.0]])
     )
     deflections_via_cse = nfw.deflections_2d_via_cse_from(
         grid=ag.Grid2DIrregular([[0.0, 0.0]])
     )
 
-    assert deflections_via_analytical == pytest.approx(deflections_via_cse.array, 1.0e-4)
+    assert deflections_via_analytic == pytest.approx(deflections_via_cse.array, 1.0e-4)
 
     nfw = ag.mp.NFW(
         centre=(0.3, -0.2),
@@ -58,14 +58,14 @@ def test__deflections_via_analytical_from():
         scale_radius=4.0,
     )
 
-    deflections_via_analytical = nfw.deflections_2d_via_analytic_from(
+    deflections_via_analytic = nfw.deflections_2d_via_analytic_from(
         grid=ag.Grid2DIrregular([[0.1625, -0.1625]])
     )
     deflections_via_cse = nfw.deflections_2d_via_cse_from(
         grid=ag.Grid2DIrregular([[0.1625, -0.1625]])
     )
 
-    assert deflections_via_analytical == pytest.approx(deflections_via_cse.array, 1.0e-4)
+    assert deflections_via_analytic == pytest.approx(deflections_via_cse.array, 1.0e-4)
 
 
 def test__deflections_via_integral_from():
