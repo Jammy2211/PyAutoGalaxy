@@ -184,14 +184,14 @@ def test__deflections_2d__numerical_precision_of_csv_compared_to_integral():
 
 
 def test__deflections_yx_2d_from():
-    nfw = ag.mp.NFW(centre=(0.1, -0.1), ell_comps=(0.3, 0.1), kappa_s=1.0, scale_radius=1.0)
+    nfw = ag.mp.NFW(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
     deflections = nfw.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]))
-    deflections_via_analytical = nfw.deflections_2d_via_analytic_from(
+    deflections_via_integral = nfw.deflections_2d_via_cse_from(
         grid=ag.Grid2DIrregular([[1.0, 0.0]])
     )
 
-    assert deflections == pytest.approx(deflections_via_analytical.array, 1.0e-4)
+    assert deflections == pytest.approx(deflections_via_integral.array, 1.0e-4)
 
 
 def test__convergence_2d_via_mge_from():
