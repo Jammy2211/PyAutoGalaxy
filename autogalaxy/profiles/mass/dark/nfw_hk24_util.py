@@ -22,6 +22,7 @@ def semi_major_axis_from(x1, x2, e, xp=np):
     """
     return xp.sqrt(x1**2 + x2**2 / (1 - e**2))
 
+
 def capital_F_from(chi, xp=np):
     """
     Equation 16 from Heyrovský & Karamazov.
@@ -55,6 +56,7 @@ def capital_F_from(chi, xp=np):
 
     return xp.where(less, F_less, xp.where(greater, F_greater, F_equal))
 
+
 def kappa_from(k_s, a, xp=np):
     """
     Equation 21 from Heyrovský & Karamazov.
@@ -71,8 +73,8 @@ def kappa_from(k_s, a, xp=np):
     Convergence as a function of a
     """
     F = capital_F_from(a, xp=xp)
-    kappa = 2 * k_s * (1 - F) / (a**2 - 1)
-    return xp.where(xp.abs(a - 1) < 1e-12, 2/3 * k_s, kappa)
+    kappa = xp.where(xp.abs(a - 1) < 1e-12, 2/3 * k_s, 2 * k_s * (1 - F) / (a**2 - 1))
+    return kappa
 
 
 def small_f_1(x1, x2, e, xp=np):
