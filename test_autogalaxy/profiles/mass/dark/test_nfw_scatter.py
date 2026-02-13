@@ -61,7 +61,6 @@ def test__scatter_is_nonzero():
     assert deflections_sph[0] != pytest.approx(deflections_ell[0], 1.0e-4)
 
 
-
 def test__scatter_is_nonzero_cored():
     cnfw_sph = ag.mp.cNFWMCRScatterLudlowSph(
         mass_at_200=1.0e9,
