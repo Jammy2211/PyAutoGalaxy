@@ -42,8 +42,63 @@ class NFW(gNFW, MassProfileCSE):
         )
         super(MassProfileCSE, self).__init__()
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
-        return self.deflections_2d_via_cse_from(grid=grid)
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        return self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
+
+    @aa.grid_dec.to_vector_yx
+    @aa.grid_dec.transform
+    def deflections_2d_via_analytic_from(
+            self, grid: aa.type.Grid2DLike, xp=np, **kwargs
+    ):
+        """
+        Analytic calculation deflection angles from Heyrovský & Karamazov 2024 via Eq. 30 & 31
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
+        """
+
+        # Convert e definitions:
+        # from q = (1-e)/(1+e) to q = sqrt(1-e**2)
+
+        e_autolens = xp.sqrt(self.ell_comps[1] ** 2 + self.ell_comps[0] ** 2)
+        e_hk24 = 2 * xp.sqrt(e_autolens) / (1 + e_autolens)
+
+        # Define dimensionless length coords
+
+        x1 = grid.array[:, 1] / self.scale_radius
+        x2 = grid.array[:, 0] / self.scale_radius
+
+        r2 = x1 ** 2 + x2 ** 2
+
+        # Avoid nans
+
+        mask = r2 > 1e-24
+
+        prefactor = xp.where(mask, 4 * self.kappa_s * xp.sqrt(1 - e_hk24 ** 2) / (
+                ((x1 - e_hk24) ** 2 + x2 ** 2) * ((x1 + e_hk24) ** 2 + x2 ** 2)
+        ), 0.0)
+
+        f1 = xp.where(mask, nfw_hk24_util.small_f_1(x1, x2, e_hk24, xp=xp), 0.0)
+        f2 = xp.where(mask, nfw_hk24_util.small_f_2(x1, x2, e_hk24, xp=xp), 0.0)
+        f3 = xp.where(mask, nfw_hk24_util.small_f_3(x1, x2, e_hk24, xp=xp), 0.0)
+
+        deflection_x = (x1 * ((x1**2 - e_hk24**2) * (1 - e_hk24**2) + x2**2 * (1 + e_hk24**2)) * f1
+                        + x1 * (x1**2 + x2**2 - e_hk24**2) * f2
+                        - x2 * (x1**2 + x2**2 + e_hk24**2) * f3)
+        deflection_x *= prefactor
+
+        deflection_y = (x2 * (x1**2 * (1 - 2 * e_hk24**2) + x2**2 + e_hk24**2) * f1
+                        + x2 * (x1**2 + x2**2 + e_hk24**2) * f2
+                        + x1 * (x1**2 + x2**2 - e_hk24**2) * f3)
+        deflection_y *= prefactor
+
+        return self.rotated_grid_from_reference_frame_from(
+            xp.multiply(self.scale_radius, xp.vstack((deflection_y, deflection_x)).T),
+            xp=xp,
+            **kwargs,
+        )
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
@@ -146,7 +201,7 @@ class NFW(gNFW, MassProfileCSE):
         return np.real(
             2.0
             * self.kappa_s
-            * np.array(self.coord_func_g(grid_radius=grid_radius, xp=xp))
+            * np.array(self.coord_func_g(grid_radius=grid_radius))
         )
 
     @aa.over_sample
@@ -271,8 +326,8 @@ class NFW(gNFW, MassProfileCSE):
         # Convert e definitions:
         # from q = (1-e)/(1+e) to q = sqrt(1-e**2)
 
-        e_autolens = np.sqrt(self.ell_comps[1] ** 2 + self.ell_comps[0] ** 2)
-        e_hk24 = 2 * np.sqrt(e_autolens) / np.sqrt(1 + 2 * e_autolens + e_autolens**2)
+        e_autolens = xp.sqrt(self.ell_comps[1] ** 2 + self.ell_comps[0] ** 2)
+        e_hk24 = 2 * xp.sqrt(e_autolens) / (1 + e_autolens)
 
         # Define dimensionless length coords
 
@@ -280,17 +335,17 @@ class NFW(gNFW, MassProfileCSE):
         x2 = grid.array[:, 0] / self.scale_radius
 
         # Avoid nans due to x=0
-        x1 = np.where(np.abs(x1) < 1e-6, 1e-6, x1)
-        x2 = np.where(np.abs(x2) < 1e-6, 1e-6, x2)
+        x1 = xp.where(xp.abs(x1) < 1e-6, 1e-6, x1)
+        x2 = xp.where(xp.abs(x2) < 1e-6, 1e-6, x2)
 
         # Calculate shear from nfw_HK24.py
 
-        g1, g2 = nfw_hk24_util.g1_g2_from(x1=x1, x2=x2, e=e_hk24, k_s=self.kappa_s)
+        g1, g2 = nfw_hk24_util.g1_g2_from(x1=x1, x2=x2, e=e_hk24, k_s=self.kappa_s, xp=xp)
 
         # Rotation for shear
 
         shear_field = self.rotated_grid_from_reference_frame_from(
-            grid=np.vstack((g2, g1)).T, angle=self.angle(xp) * 2
+            grid=xp.vstack((g2, g1)).T, angle=self.angle(xp) * 2, xp=xp
         )
 
         return aa.VectorYX2DIrregular(values=shear_field, grid=grid)
@@ -315,8 +370,8 @@ class NFW(gNFW, MassProfileCSE):
         # Convert e definitions:
         # from q = (1-e)/(1+e) to q = sqrt(1-e**2)
 
-        e_autolens = np.sqrt(self.ell_comps[1] ** 2 + self.ell_comps[0] ** 2)
-        e_hk24 = 2 * np.sqrt(e_autolens) / np.sqrt(1 + 2 * e_autolens + e_autolens**2)
+        e_autolens = xp.sqrt(self.ell_comps[1] ** 2 + self.ell_comps[0] ** 2)
+        e_hk24 = 2 * xp.sqrt(e_autolens) / (1 + e_autolens)
 
         # Define dimensionless length coords
 
@@ -325,13 +380,13 @@ class NFW(gNFW, MassProfileCSE):
 
         # Avoid nans due to x=0
 
-        x1 = np.where(np.abs(x1) < 1e-6, 1e-6, x1)
-        x2 = np.where(np.abs(x2) < 1e-6, 1e-6, x2)
+        x1 = xp.where(xp.abs(x1) < 1e-6, 1e-6, x1)
+        x2 = xp.where(xp.abs(x2) < 1e-6, 1e-6, x2)
 
         # Calculate convergence from nfw_HK24.py
-        a = nfw_hk24_util.semi_major_axis_from(x1, x2, e_hk24)
+        a = nfw_hk24_util.semi_major_axis_from(x1, x2, e_hk24, xp=xp)
 
-        return nfw_hk24_util.kappa_from(k_s=self.kappa_s, a=a)
+        return nfw_hk24_util.kappa_from(k_s=self.kappa_s, a=a, xp=xp)
 
 
 class NFWSph(NFW):
