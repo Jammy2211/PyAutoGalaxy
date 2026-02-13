@@ -42,8 +42,8 @@ class NFW(gNFW, MassProfileCSE):
         )
         super(MassProfileCSE, self).__init__()
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np):
-        return self.deflections_2d_via_analytic_from(grid=grid, xp=xp)
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        return self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
