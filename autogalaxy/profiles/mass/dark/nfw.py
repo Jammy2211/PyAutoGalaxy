@@ -70,10 +70,12 @@ class NFW(gNFW, MassProfileCSE):
         x1 = grid.array[:, 1] / self.scale_radius
         x2 = grid.array[:, 0] / self.scale_radius
 
-        # Avoid nans due to x=0
+        # Avoid nans due to x=0 by perturbing very small coordinates away from exactly zero
         eps = xp.array(1e-12)
-        x1 = xp.where(xp.abs(x1) < eps, xp.sign(x1) * eps, x1)
-        x2 = xp.where(xp.abs(x2) < eps, xp.sign(x2) * eps, x2)
+        sign_x1_safe = xp.where(xp.sign(x1) == 0, 1.0, xp.sign(x1))
+        sign_x2_safe = xp.where(xp.sign(x2) == 0, 1.0, xp.sign(x2))
+        x1 = xp.where(xp.abs(x1) < eps, sign_x1_safe * eps, x1)
+        x2 = xp.where(xp.abs(x2) < eps, sign_x2_safe * eps, x2)
 
         prefactor = 4 * self.kappa_s * xp.sqrt(1 - e_hk24**2) / (
             ((x1 - e_hk24)**2 + x2**2) * ((x1 + e_hk24)**2 + x2**2)
