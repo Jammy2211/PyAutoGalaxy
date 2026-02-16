@@ -10,7 +10,7 @@ class cNFWMCRLudlowSph(cNFWSph):
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
         mass_at_200: float = 1e9,
-        f_c=0.01,
+        f_c: float = 0.01,
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
     ):
