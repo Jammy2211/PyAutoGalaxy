@@ -1,4 +1,4 @@
-MaternAdaptKernel:
+MaternAdaptKernelRho:
   coefficient:
     type: LogUniform
     lower_limit: 1.0e-06
