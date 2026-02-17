@@ -65,8 +65,8 @@ Regularization [ag.reg]
 
    Constant
    ConstantSplit
-   AdaptiveBrightness
-   AdaptiveBrightnessSplit
+   Adapt
+   AdaptSplit
 
 Settings
 --------
