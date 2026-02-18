@@ -148,7 +148,7 @@ class NFW(gNFW, MassProfileCSE):
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
-        return self._deflections_2d_via_cse_from(grid=grid, **kwargs)
+        return self._deflections_2d_via_cse_from(grid=grid, xp=xp, **kwargs)
 
     @staticmethod
     def deflection_func(u, y, x, npow, axis_ratio, scale_radius):
