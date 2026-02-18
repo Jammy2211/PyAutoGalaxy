@@ -43,11 +43,8 @@ from autoarray.structures.grids.uniform_1d import Grid1D  # noqa
 from autoarray.structures.grids.uniform_2d import Grid2D  # noqa
 from autoarray.structures.grids.irregular_2d import Grid2DIrregular  # noqa
 from autoarray.operators.over_sampling.over_sampler import OverSampler  # noqa
-from autoarray.structures.mesh.rectangular_2d import Mesh2DRectangular  # noqa
-from autoarray.structures.mesh.rectangular_2d_uniform import (
-    Mesh2DRectangularUniform,
-)  # noqa
-from autoarray.structures.mesh.delaunay_2d import Mesh2DDelaunay  # noqa
+from autoarray.inversion.pixelization.mesh_grid.rectangular_2d import Mesh2DRectangular  # noqa
+from autoarray.inversion.pixelization.mesh_grid.delaunay_2d import Mesh2DDelaunay  # noqa
 from autoarray.structures.vectors.uniform import VectorYX2D  # noqa
 from autoarray.structures.vectors.irregular import VectorYX2DIrregular  # noqa
 from autoarray.layout.region import Region1D  # noqa
