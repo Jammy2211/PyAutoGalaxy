@@ -511,7 +511,7 @@ def mass_light_dark_basis_from(
             lmp_model.mass_to_light_ratio_base = lmp_model_list[
                 0
             ].mass_to_light_ratio_base
-            lmp_model.mass_to_light_gradient = lmp_model_list[0].mass_to_light_gradient
+            lmp_model.mass_to_light_gradient = -10.0
 
     return af.Model(Basis, profile_list=lmp_model_list)
 
