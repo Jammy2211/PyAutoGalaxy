@@ -515,6 +515,87 @@ def mass_light_dark_basis_from(
 
     return af.Model(Basis, profile_list=lmp_model_list)
 
+def mass_light_dark_basis_two_from(
+    name: str,
+    lp_chain_tracer,
+    linear_lp_to_standard: bool = False,
+    use_gradient: bool = False,
+) -> af.Model:
+    """
+    Returns a basis containing light and mass profiles from a basis (e.g. an MGE) in the LIGHT PIPELINE result, for the
+    LIGHT DARK MASS PIPELINE.
+
+    For example, if the light pipeline fits a basis of Gaussians, this function will return a basis of Gaussians for the
+    LIGHT DARK MASS PIPELINE where each Gaussian has been converted to a light and mass profile.
+
+    These profiles will have been converted from standard light profiles / linear light profiles to light and mass
+    profiles, where their light profile parameters (e.g. their `centre`, `ell_comps`) are used to set up the parameters
+    of the light and mass profile.
+
+    For the light profile, it will by default use a linear light and mass profile, which therefore continues to solve
+    for the intensity of the linear light profile via linear algebra. This means that during the fit the `intensity`
+    used to compute deflection angles is not the same as the `intensity` parameter solved for in the linear light
+    profile. If the input `linear_lp_to_standard` is `True`, the function will instead use a standard light profile.
+
+    The light and mass profiles can also be switched to variants which have a radial gradient in their mass-to-light
+    conversion, by setting the `include_mass_to_light_gradient` parameter to `True`.
+
+    Parameters
+    ----------
+    light_result
+        The result of the light pipeline, which determines the light and mass profiles used in the LIGHT DARK
+        MASS PIPELINE.
+    name
+        The name of the light profile in the light pipeline's galaxy model that the model is being created for
+        (e.g. `bulge`).
+
+    Returns
+    -------
+    The light and mass profile for a basis (e.g. an MGE) whose priors are initialized from a previous result.
+    """
+
+    try:
+        lp_instance = getattr(
+            lp_chain_tracer.galaxies[1],
+            name,
+        )
+    except AttributeError:
+        return None
+
+    profile_list = lp_instance.profile_list
+
+    lmp_model_list = []
+
+    for i, light_profile in enumerate(profile_list):
+        if not linear_lp_to_standard:
+            if not use_gradient:
+                lmp_model = af.Model(lmp_linear.Gaussian)
+            else:
+                lmp_model = af.Model(lmp_linear.GaussianGradient)
+        else:
+            if not use_gradient:
+                lmp_model = af.Model(lmp.Gaussian)
+            else:
+                lmp_model = af.Model(lmp.GaussianGradient)
+
+        lmp_model.centre = light_profile.centre
+        lmp_model.ell_comps = light_profile.ell_comps
+
+        lmp_model.intensity = float(light_profile.intensity)
+        lmp_model.sigma = light_profile.sigma
+
+        lmp_model_list += [lmp_model]
+
+        if not use_gradient:
+            lmp_model.mass_to_light_ratio = lmp_model_list[0].mass_to_light_ratio
+        else:
+            lmp_model.mass_to_light_ratio_base = lmp_model_list[
+                0
+            ].mass_to_light_ratio_base
+            lmp_model.mass_to_light_gradient = lmp_model_list[0].mass_to_light_gradient
+
+    return af.Model(Basis, profile_list=lmp_model_list)
+
 
 def mass_light_dark_from(
     light_result: Result,
@@ -628,6 +709,59 @@ def link_ratios(link_mass_to_light_ratios: bool, light_result, bulge, disk):
         return bulge, disk
 
     bulge_instance = getattr(light_result.instance.galaxies.lens, "bulge")
+
+    if not isinstance(bulge_instance, Basis):
+        bulge.mass_to_light_ratio = disk.mass_to_light_ratio
+
+        return bulge, disk
+
+    for bulge_lp in bulge.profile_list:
+        try:
+            bulge_lp.mass_to_light_ratio = disk.profile_list[0].mass_to_light_ratio
+        except AttributeError:
+            bulge_lp.mass_to_light_ratio_base = disk.profile_list[
+                0
+            ].mass_to_light_ratio_base
+            bulge_lp.mass_to_light_gradient = disk.profile_list[
+                0
+            ].mass_to_light_gradient
+
+    return bulge, disk
+
+def link_ratios_two(link_mass_to_light_ratios: bool, light_result, bulge, disk):
+    """
+    Links the mass to light ratios and gradients of the bulge and disk profiles in the MASS LIGHT DARK PIPELINE.
+
+    The following use cases are supported:
+
+    1) Link the mass to light ratios of the bulge and diskwhen they are both sersic light and mass profile.
+    2) Link the mass to light ratios of the bulge and disk when for a basis (e.g. an MGE).
+    3) Does approrpiate linking with the gradient of the mass-to-light ratio for the basis profiles.
+
+    Parameters
+    ----------
+    link_mass_to_light_ratios
+        Whether the mass-to-light ratios of the bulge and disk profiles are linked.
+    light_result
+        The result of the light pipeline, which determines the light and mass profiles used in the MASS LIGHT DARK
+        PIPELINE.
+    bulge
+        The bulge model light profile.
+    disk
+        The disk model light profile.
+
+    Returns
+    -------
+    The bulge and disk profiles with the mass-to-light ratios linked.
+    """
+
+    if bulge is None or disk is None:
+        return bulge, disk
+
+    if not link_mass_to_light_ratios:
+        return bulge, disk
+
+    bulge_instance = getattr(light_result.instance.extra_galaxies[0], "bulge")
 
     if not isinstance(bulge_instance, Basis):
         bulge.mass_to_light_ratio = disk.mass_to_light_ratio
