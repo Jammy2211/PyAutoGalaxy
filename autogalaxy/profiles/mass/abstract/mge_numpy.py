@@ -151,12 +151,12 @@ class MassProfileMGE:
         return output_grid_final
 
     @staticmethod
-    def kesi(p):
+    def kesi(p, xp=np):
         """
         see Eq.(6) of 1906.08263
         """
-        n_list = np.arange(0, 2 * p + 1, 1)
-        return (2.0 * p * np.log(10) / 3.0 + 2.0 * np.pi * n_list * 1j) ** (0.5)
+        n_list = xp.arange(0, 2 * p + 1, 1)
+        return (2.0 * p * xp.log(10) / 3.0 + 2.0 * xp.pi * n_list * 1j) ** (0.5)
 
     @staticmethod
     def eta(p):
