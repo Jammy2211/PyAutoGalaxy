@@ -5,7 +5,7 @@ import autoarray as aa
 
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 from autogalaxy.cosmology.model import LensingCosmology
-from autogalaxy.profiles.mass.abstract.mge_numpy import (
+from autogalaxy.profiles.mass.abstract.mge import (
     MassProfileMGE,
 )
 
