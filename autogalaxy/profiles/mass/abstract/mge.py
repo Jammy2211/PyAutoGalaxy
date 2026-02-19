@@ -88,7 +88,7 @@ class MassProfileMGE:
         raise NotImplementedError()
 
     def _decompose_convergence_via_mge(
-        self, func, radii_min, radii_max, func_terms=28, func_gaussians=20
+        self, func, radii_min, radii_max, func_terms=28, func_gaussians=20, xp=np
     ):
         """
 
@@ -106,28 +106,26 @@ class MassProfileMGE:
         Returns
         -------
         """
-
-        kesis = self.kesi(func_terms)  # kesi in Eq.(6) of 1906.08263
-        etas = self.eta(func_terms)  # eta in Eqr.(6) of 1906.08263
-
-        def f(sigma):
-            """Eq.(5) of 1906.08263"""
-            return np.sum(etas * np.real(target_function(sigma * kesis)))
+        kesis = self.kesi(func_terms, xp=xp)  # kesi in Eq.(6) of 1906.08263
+        etas = self.eta(func_terms, xp=xp)  # eta in Eqr.(6) of 1906.08263
 
         # sigma is sampled from logspace between these radii.
 
-        log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), func_gaussians)
+        log_sigmas = xp.linspace(xp.log(radii_min), xp.log(radii_max), func_gaussians)
         d_log_sigma = log_sigmas[1] - log_sigmas[0]
-        sigma_list = np.exp(log_sigmas)
+        sigma_list = xp.exp(log_sigmas)
 
-        amplitude_list = np.zeros(func_gaussians)
+        f_sigma = xp.sum(
+            etas * xp.real(func(sigma_list.reshape(-1, 1) * kesis)), axis=1
+        )
 
-        for i in range(func_gaussians):
-            f_sigma = np.sum(etas * np.real(func(sigma_list[i] * kesis)))
-            if (i == -1) or (i == (func_gaussians - 1)):
-                amplitude_list[i] = 0.5 * f_sigma * d_log_sigma / np.sqrt(2.0 * np.pi)
-            else:
-                amplitude_list[i] = f_sigma * d_log_sigma / np.sqrt(2.0 * np.pi)
+        amplitude_list = f_sigma * d_log_sigma / xp.sqrt(2.0 * xp.pi)
+        if xp==np:
+            amplitude_list[0] *= 0.5
+            amplitude_list[-1] *= 0.5
+        else:
+            amplitude_list = amplitude_list.at[0].multiply(0.5)
+            amplitude_list = amplitude_list.at[-1].multiply(0.5)
 
         return amplitude_list, sigma_list
 
