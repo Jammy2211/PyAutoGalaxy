@@ -207,9 +207,9 @@ class MassProfileMGE:
         kesis = self.kesi(func_terms)  # kesi in Eq.(6) of 1906.08263
         etas = self.eta(func_terms)  # eta in Eqr.(6) of 1906.08263
 
-        def f(sigma):
-            """Eq.(5) of 1906.08263"""
-            return np.sum(etas * np.real(target_function(sigma * kesis)))
+        # def f(sigma):
+        #     """Eq.(5) of 1906.08263"""
+        #     return np.sum(etas * np.real(target_function(sigma * kesis)))
 
         # sigma is sampled from logspace between these radii.
 
@@ -221,7 +221,7 @@ class MassProfileMGE:
 
         for i in range(func_gaussians):
             f_sigma = np.sum(etas * np.real(func(sigma_list[i] * kesis)))
-            if (i == -1) or (i == (func_gaussians - 1)):
+            if (i == 0) or (i == (func_gaussians - 1)):
                 amplitude_list[i] = 0.5 * f_sigma * d_log_sigma / np.sqrt(2.0 * np.pi)
             else:
                 amplitude_list[i] = f_sigma * d_log_sigma / np.sqrt(2.0 * np.pi)
