@@ -6,7 +6,6 @@ from autoconf import cached_property
 
 import autoarray as aa
 
-from autoarray.inversion.pixelization.mappers.factory import mapper_from
 from autoarray.inversion.inversion.factory import inversion_from
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.profiles.light.linear import (
@@ -23,7 +22,7 @@ class AbstractToInversion:
         self,
         dataset: Optional[Union[aa.Imaging, aa.Interferometer, aa.DatasetInterface]],
         adapt_images: Optional[AdaptImages] = None,
-        settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        settings: aa.Settings = None,
         preloads: aa.Preloads = None,
         xp=np,
     ):
@@ -57,7 +56,7 @@ class AbstractToInversion:
         adapt_images
             Images which certain pixelizations use to adapt their properties to the dataset, for example congregating
             the pixelization's pixels to the brightest regions of the image.
-        settings_inversion
+        settings
             The settings of the inversion, which controls how the linear algebra calculation is performed.
         """
         if dataset is not None:
@@ -76,7 +75,7 @@ class AbstractToInversion:
 
         self.adapt_images = adapt_images
 
-        self.settings_inversion = settings_inversion
+        self.settings = settings or aa.Settings()
 
         self.preloads = preloads
 
@@ -135,9 +134,9 @@ class AbstractToInversion:
 
         A full description of the border relocator is given in the `BorderRelocator` class in PyAutoArray.
 
-        Border relocation is only used if the `use_border_relocator` attribute is True in the `SettingsInversion` object.
+        Border relocation is only used if the `use_border_relocator` attribute is True in the `Settings` object.
         """
-        if self.settings_inversion.use_border_relocator:
+        if self.settings.use_border_relocator:
             return self.dataset.grids.border_relocator
 
     def cls_light_profile_func_list_galaxy_dict_from(
@@ -202,7 +201,7 @@ class GalaxiesToInversion(AbstractToInversion):
         dataset: Optional[Union[aa.Imaging, aa.Interferometer, aa.DatasetInterface]],
         galaxies: List[Galaxy],
         adapt_images: Optional[AdaptImages] = None,
-        settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        settings: aa.Settings = None,
         preloads: aa.Preloads = None,
         xp=np,
     ):
@@ -237,7 +236,7 @@ class GalaxiesToInversion(AbstractToInversion):
         adapt_images
             Images which certain pixelizations use to adapt their properties to the dataset, for example congregating
             the pixelization's pixels to the brightest regions of the image.
-        settings_inversion
+        settings
             The settings of the inversion, which controls how the linear algebra calculation is performed.
         """
         self.galaxies = Galaxies(galaxies)
@@ -245,7 +244,7 @@ class GalaxiesToInversion(AbstractToInversion):
         super().__init__(
             dataset=dataset,
             adapt_images=adapt_images,
-            settings_inversion=settings_inversion,
+            settings=settings,
             preloads=preloads,
             xp=xp,
         )
@@ -323,7 +322,7 @@ class GalaxiesToInversion(AbstractToInversion):
                             psf=self.dataset.psf,
                             light_profile_list=light_profile_list,
                             regularization=light_profile.regularization,
-                            settings=self.settings_inversion,
+                            settings=self.settings,
                             xp=self._xp,
                         )
 
@@ -473,21 +472,15 @@ class GalaxiesToInversion(AbstractToInversion):
         -------
         A `Mapper` object which maps the dataset's data to the pixelization's mesh.
         """
-        mapper_grids = mesh.mapper_grids_from(
+        return mesh.mapper_from(
             mask=self.dataset.mask,
             border_relocator=self.border_relocator,
             source_plane_data_grid=source_plane_data_grid,
             source_plane_mesh_grid=source_plane_mesh_grid,
             image_plane_mesh_grid=image_plane_mesh_grid,
             adapt_data=adapt_galaxy_image,
-            preloads=self.preloads,
-            xp=self._xp,
-        )
-
-        return mapper_from(
-            mapper_grids=mapper_grids,
             regularization=regularization,
-            settings=self.settings_inversion,
+            settings=self.settings,
             preloads=self.preloads,
             xp=self._xp,
         )
@@ -570,7 +563,7 @@ class GalaxiesToInversion(AbstractToInversion):
         inversion = inversion_from(
             dataset=self.dataset,
             linear_obj_list=self.linear_obj_list,
-            settings=self.settings_inversion,
+            settings=self.settings,
             preloads=self.preloads,
             xp=self._xp,
         )

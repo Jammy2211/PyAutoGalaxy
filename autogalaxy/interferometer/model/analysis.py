@@ -28,7 +28,7 @@ class AnalysisInterferometer(AnalysisDataset):
         dataset: aa.Interferometer,
         adapt_images: Optional[AdaptImages] = None,
         cosmology: LensingCosmology = None,
-        settings_inversion: aa.SettingsInversion = None,
+        settings: aa.Settings = None,
         preloads: aa.Preloads = None,
         title_prefix: str = None,
         use_jax: bool = True,
@@ -57,7 +57,7 @@ class AnalysisInterferometer(AnalysisDataset):
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
-        settings_inversion
+        settings
             Settings controlling how an inversion is fitted, for example which linear algebra formalism is used.
         title_prefix
             A string that is added before the title of all figures output by visualization, for example to
@@ -67,7 +67,7 @@ class AnalysisInterferometer(AnalysisDataset):
             dataset=dataset,
             adapt_images=adapt_images,
             cosmology=cosmology,
-            settings_inversion=settings_inversion,
+            settings=settings,
             preloads=preloads,
             title_prefix=title_prefix,
             use_jax=use_jax,
@@ -145,7 +145,7 @@ class AnalysisInterferometer(AnalysisDataset):
             dataset=self.dataset,
             galaxies=galaxies,
             adapt_images=adapt_images,
-            settings_inversion=self.settings_inversion,
+            settings=self.settings,
             preloads=self.preloads,
             xp=self._xp,
         )

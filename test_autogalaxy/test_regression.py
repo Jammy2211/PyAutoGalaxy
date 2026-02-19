@@ -9,9 +9,9 @@ from autogalaxy.profiles.light.linear import LightProfileLinear, Sersic
 
 class FitInversion(AbstractFitInversion):
     def __init__(
-        self, model_obj, settings_inversion: aa.SettingsInversion, light_profiles
+        self, model_obj, settings: aa.Settings, light_profiles
     ):
-        super().__init__(model_obj=model_obj, settings_inversion=settings_inversion)
+        super().__init__(model_obj=model_obj, settings=settings)
         self.light_profiles = light_profiles
 
     @property
@@ -41,7 +41,7 @@ def test_no_modify_state(light_profile):
     fit_inversion = FitInversion(
         model_obj=model_obj,
         light_profiles=[light_profile],
-        settings_inversion=aa.SettingsInversion(),
+        settings=aa.Settings(),
     )
     result = fit_inversion.model_obj_linear_light_profiles_to_light_profiles
 

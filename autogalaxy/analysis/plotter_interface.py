@@ -227,8 +227,8 @@ class PlotterInterface:
             mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
 
             for i, mapper in enumerate(mapper_list):
-                y = mapper.mapper_grids.source_plane_mesh_grid[:, 0]
-                x = mapper.mapper_grids.source_plane_mesh_grid[:, 1]
+                y = mapper.source_plane_mesh_grid[:, 0]
+                x = mapper.source_plane_mesh_grid[:, 1]
                 reconstruction = inversion.reconstruction_dict[mapper]
                 noise_map = inversion.reconstruction_noise_map_dict[mapper]
 

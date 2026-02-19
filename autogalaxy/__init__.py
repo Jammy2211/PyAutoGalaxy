@@ -14,17 +14,13 @@ from autoarray.inversion.pixelization import mesh  # noqa
 from autoarray.inversion import regularization as reg  # noqa
 from autoarray.inversion.pixelization import image_mesh
 from autoarray.inversion.pixelization.mappers.abstract import AbstractMapper  # noqa
-from autoarray.inversion.inversion.settings import SettingsInversion  # noqa
+from autoarray.settings import Settings  # noqa
 from autoarray.inversion.inversion.factory import inversion_from as Inversion  # noqa
 from autoarray.inversion.pixelization.image_mesh.abstract import AbstractImageMesh
 from autoarray.inversion.pixelization.mesh.abstract import AbstractMesh
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 from autoarray.inversion.pixelization.pixelization import Pixelization  # noqa
 from autoarray.inversion.pixelization.mappers.abstract import AbstractMapper
-from autoarray.inversion.pixelization.mappers.mapper_grids import MapperGrids  # noqa
-from autoarray.inversion.pixelization.mappers.factory import (
-    mapper_from as Mapper,
-)  # noqa
 from autoarray.inversion.pixelization.border_relocator import BorderRelocator
 from autoarray.preloads import Preloads
 from autoarray.preloads import mapper_indices_from
@@ -43,8 +39,8 @@ from autoarray.structures.grids.uniform_1d import Grid1D  # noqa
 from autoarray.structures.grids.uniform_2d import Grid2D  # noqa
 from autoarray.structures.grids.irregular_2d import Grid2DIrregular  # noqa
 from autoarray.operators.over_sampling.over_sampler import OverSampler  # noqa
-from autoarray.inversion.pixelization.mesh_grid.rectangular_2d import Mesh2DRectangular  # noqa
-from autoarray.inversion.pixelization.mesh_grid.delaunay_2d import Mesh2DDelaunay  # noqa
+from autoarray.inversion.pixelization.mesh_grid.rectangular import Mesh2DRectangular  # noqa
+from autoarray.inversion.pixelization.mesh_grid.delaunay import Mesh2DDelaunay  # noqa
 from autoarray.structures.vectors.uniform import VectorYX2D  # noqa
 from autoarray.structures.vectors.irregular import VectorYX2DIrregular  # noqa
 from autoarray.layout.region import Region1D  # noqa

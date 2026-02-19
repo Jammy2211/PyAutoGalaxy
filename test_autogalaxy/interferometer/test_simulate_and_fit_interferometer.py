@@ -186,7 +186,7 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
     fit_linear = ag.FitInterferometer(
         dataset=dataset,
         galaxies=[galaxy_linear],
-        settings_inversion=ag.SettingsInversion(
+        settings=ag.Settings(
             no_regularization_add_to_curvature_diag_value=False
         ),
     )
