@@ -84,10 +84,8 @@ class MassProfileMGE:
 
         return eta_list
 
-    def decompose_convergence_via_mge(self):
-        raise NotImplementedError()
 
-    def _decompose_convergence_via_mge(
+    def decompose_convergence_via_mge(
         self, func, radii_min, radii_max, func_terms=28, func_gaussians=20, xp=np
     ):
         """
