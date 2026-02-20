@@ -17,15 +17,13 @@ class MassProfileMGE(EllProfile):
     def __init__(
             self,
             func: Callable,
-            sigmas: Sequence[float],
-            func_terms: int = 28,
+            sigma_list: Sequence[float],
             centre: Tuple[float, float] = (0.0, 0.0),
             ell_comps: Tuple[float, float] = (0.0, 0.0),
     ):
         super().__init__(centre=centre, ell_comps=ell_comps)
         self.func = func
-        self.sigmas = sigmas
-        self.func_terms = func_terms
+        self.sigma_list = sigma_list
 
 
     @staticmethod
@@ -145,7 +143,7 @@ class MassProfileMGE(EllProfile):
 
 
     def decompose_convergence_via_mge(
-        self, xp=np
+        self, func_terms: int = 28, xp=np
     ):
         """
 
@@ -163,10 +161,10 @@ class MassProfileMGE(EllProfile):
         Returns
         -------
         """
-        kesis = self.kesi(self.func_terms, xp=xp)  # kesi in Eq.(6) of 1906.08263
-        etas = self.eta(self.func_terms, xp=xp)  # eta in Eqr.(6) of 1906.08263
+        kesis = self.kesi(func_terms, xp=xp)  # kesi in Eq.(6) of 1906.08263
+        etas = self.eta(func_terms, xp=xp)  # eta in Eqr.(6) of 1906.08263
 
-        sigmas = xp.array(self.sigmas)
+        sigmas = xp.array(self.sigma_list)
 
         #log_sigmas = xp.linspace(xp.log(radii_min), xp.log(radii_max), func_gaussians)
         log_sigmas = xp.log(sigmas)
@@ -191,10 +189,10 @@ class MassProfileMGE(EllProfile):
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     def _deflections_2d_via_mge_from(
-        self, grid: aa.type.Grid2DLike, sigmas_factor=1.0, xp=np, **kwargs,
+        self, grid: aa.type.Grid2DLike, xp=np, sigmas_factor=1.0, func_terms: int = 28, **kwargs,
     ):
-        amps, sigmas = self.decompose_convergence_via_mge(xp=xp)
-        sigmas *= sigmas_factor
+        amps, sigmas = self.decompose_convergence_via_mge(func_terms=func_terms, xp=xp)
+        sigmas = sigmas * sigmas_factor
 
         deflection_angles = (
                 amps[:, None]
@@ -227,7 +225,7 @@ class MassProfileMGE(EllProfile):
 
         ind_pos_y = y >= 0
 
-        sigmas = xp.asarray(self.sigmas, dtype=xp.float64)[:, None]  # (S,1)
+        sigmas = xp.asarray(self.sigma_list, dtype=xp.float64)[:, None]  # (S,1)
 
         scale = q / (
                 sigmas * xp.sqrt(xp.asarray(2.0, dtype=xp.float64) * (1.0 - q2))
