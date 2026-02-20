@@ -1,7 +1,12 @@
 import numpy as np
 
+from typing import Tuple, Sequence, Callable
 
-class MassProfileMGE:
+import autoarray as aa
+from autogalaxy.profiles.geometry_profiles import EllProfile
+
+
+class MassProfileMGE(EllProfile):
     """
     This class speeds up deflection angle calculations of certain mass profiles by decompositing them into many
     Gaussians.
@@ -9,54 +14,19 @@ class MassProfileMGE:
     This follows the method of Shajib 2019 - https://academic.oup.com/mnras/article/488/1/1387/5526256
     """
 
-    def __init__(self):
-        self.count = 0
-        self.sigma_calc = 0
-        self.z = 0
-        self.zq = 0
-        self.expv = 0
+    def __init__(
+            self,
+            func: Callable,
+            sigmas: Sequence[float],
+            func_terms: int = 28,
+            centre: Tuple[float, float] = (0.0, 0.0),
+            ell_comps: Tuple[float, float] = (0.0, 0.0),
+    ):
+        super().__init__(centre=centre, ell_comps=ell_comps)
+        self.func = func
+        self.sigmas = sigmas
+        self.func_terms = func_terms
 
-    @staticmethod
-    def zeta_from(grid, amps, sigmas, axis_ratio):
-        """
-        The key part to compute the deflection angle of each Gaussian.
-        Because of my optimization, there are blocks looking weird and indirect. What I'm doing here
-        is trying to avoid big matrix operation to save time.
-        I think there are still spaces we can optimize.
-
-        It seems when using w_f_approx, it gives some errors if y < 0. So when computing for places
-        where y < 0, we first compute the value at - y, and then change its sign.
-        """
-
-        output_grid_final = np.zeros(grid.shape[0], dtype="complex128")
-
-        q2 = axis_ratio**2.0
-
-        scale_factor = axis_ratio / (sigmas[0] * np.sqrt(2.0 * (1.0 - q2)))
-
-        xs = np.array((grid.array[:, 1] * scale_factor).copy())
-        ys = np.array((grid.array[:, 0] * scale_factor).copy())
-
-        ys_minus = ys < 0.0
-        ys[ys_minus] *= -1
-        z = xs + 1j * ys
-        zq = axis_ratio * xs + 1j * ys / axis_ratio
-
-        expv = -(xs**2.0) * (1.0 - q2) - ys**2.0 * (1.0 / q2 - 1.0)
-
-        for i in range(len(sigmas)):
-            if i > 0:
-                z /= sigmas[i] / sigmas[i - 1]
-                zq /= sigmas[i] / sigmas[i - 1]
-                expv /= (sigmas[i] / sigmas[i - 1]) ** 2.0
-
-            output_grid = -1j * (w_f_approx(z) - np.exp(expv) * w_f_approx(zq))
-
-            output_grid[ys_minus] = np.conj(output_grid[ys_minus])
-
-            output_grid_final += (amps[i] * sigmas[i]) * output_grid
-
-        return output_grid_final
 
     @staticmethod
     def kesi(p, xp=np):
@@ -65,6 +35,7 @@ class MassProfileMGE:
         """
         n_list = xp.arange(0, 2 * p + 1, 1)
         return (2.0 * p * xp.log(10) / 3.0 + 2.0 * xp.pi * n_list * 1j) ** (0.5)
+
 
     @staticmethod
     def eta(p, xp=np):
@@ -85,8 +56,96 @@ class MassProfileMGE:
         return eta_list
 
 
+    @staticmethod
+    def wofz(z, xp=np):
+        """
+        JAX-compatible Faddeeva function w(z) = exp(-z^2) * erfc(-i z)
+        Based on the Poppe–Wijers / Zaghloul–Ali rational approximations.
+        Valid for all complex z. JIT + autodiff safe.
+        """
+
+        z = xp.asarray(z, dtype=xp.complex128)
+        x = xp.real(z)
+        y = xp.imag(z)
+
+        r2 = x * x + y * y
+        y2 = y * y
+        z2 = z * z
+
+        sqrt_pi = xp.asarray(xp.sqrt(xp.pi), dtype=xp.float64)
+        inv_sqrt_pi = xp.asarray(1.0 / sqrt_pi, dtype=xp.float64)
+
+        # ---------- Large-|z| continued fraction ----------
+        r1_s1 = xp.asarray([2.5, 2.0, 1.5, 1.0, 0.5], dtype=xp.float64)
+
+        t = z
+        for c in r1_s1:
+            t = z - c / t
+
+        w_large = 1j * inv_sqrt_pi / t
+
+        # ---------- Region 5 ----------
+        U5 = xp.asarray(
+            [1.320522, 35.7668, 219.031, 1540.787, 3321.990, 36183.31], dtype=xp.float64
+        )
+        V5 = xp.asarray(
+            [1.841439, 61.57037, 364.2191, 2186.181, 9022.228, 24322.84, 32066.6],
+            dtype=xp.float64,
+        )
+
+        t = inv_sqrt_pi
+        for u in U5:
+            t = u + z2 * t
+
+        s = xp.asarray(1.0, dtype=xp.float64)
+        for v in V5:
+            s = v + z2 * s
+
+        w5 = xp.exp(-z2) + 1j * z * t / s
+
+        # ---------- Region 6 ----------
+        U6 = xp.asarray(
+            [5.9126262, 30.180142, 93.15558, 181.92853, 214.38239, 122.60793],
+            dtype=xp.float64,
+        )
+        V6 = xp.asarray(
+            [
+                10.479857,
+                53.992907,
+                170.35400,
+                348.70392,
+                457.33448,
+                352.73063,
+                122.60793,
+            ],
+            dtype=xp.float64,
+        )
+
+        t = inv_sqrt_pi
+        for u in U6:
+            t = u - 1j * z * t
+
+        s = xp.asarray(1.0, dtype=xp.float64)
+        for v in V6:
+            s = v - 1j * z * s
+
+        w6 = t / s
+
+        # ---------- Region logic ----------
+        reg1 = (r2 >= 62.0) | ((r2 >= 30.0) & (r2 < 62.0) & (y2 >= 1e-13))
+        reg2 = ((r2 >= 30) & (r2 < 62) & (y2 < 1e-13)) | (
+                (r2 >= 2.5) & (r2 < 30) & (y2 < 0.072)
+        )
+
+        w = w6
+        w = xp.where(reg2, w5, w)
+        w = xp.where(reg1, w_large, w)
+
+        return w
+
+
     def decompose_convergence_via_mge(
-        self, func, radii_min, radii_max, func_terms=28, func_gaussians=20, xp=np
+        self, xp=np
     ):
         """
 
@@ -104,17 +163,18 @@ class MassProfileMGE:
         Returns
         -------
         """
-        kesis = self.kesi(func_terms, xp=xp)  # kesi in Eq.(6) of 1906.08263
-        etas = self.eta(func_terms, xp=xp)  # eta in Eqr.(6) of 1906.08263
+        kesis = self.kesi(self.func_terms, xp=xp)  # kesi in Eq.(6) of 1906.08263
+        etas = self.eta(self.func_terms, xp=xp)  # eta in Eqr.(6) of 1906.08263
 
-        # sigma is sampled from logspace between these radii.
+        sigmas = xp.array(self.sigmas)
 
-        log_sigmas = xp.linspace(xp.log(radii_min), xp.log(radii_max), func_gaussians)
+        #log_sigmas = xp.linspace(xp.log(radii_min), xp.log(radii_max), func_gaussians)
+        log_sigmas = xp.log(sigmas)
         d_log_sigma = log_sigmas[1] - log_sigmas[0]
-        sigma_list = xp.exp(log_sigmas)
+        #sigma_list = xp.exp(log_sigmas)
 
         f_sigma = xp.sum(
-            etas * xp.real(func(sigma_list.reshape(-1, 1) * kesis)), axis=1
+            etas * xp.real(self.func(sigmas.reshape(-1, 1) * kesis)), axis=1
         )
 
         amplitude_list = f_sigma * d_log_sigma / xp.sqrt(2.0 * xp.pi)
@@ -125,59 +185,67 @@ class MassProfileMGE:
             amplitude_list = amplitude_list.at[0].multiply(0.5)
             amplitude_list = amplitude_list.at[-1].multiply(0.5)
 
-        return amplitude_list, sigma_list
+        return amplitude_list, sigmas
 
-    def convergence_2d_via_mge_from(self, grid_radii):
-        raise NotImplementedError()
 
-    def _convergence_2d_via_mge_from(self, grid_radii, **kwargs):
-        """Calculate the projected convergence at a given set of arc-second gridded coordinates.
-
-        Parameters
-        ----------
-        grid
-            The grid of (y,x) arc-second coordinates the convergence is computed on.
-
-        """
-
-        self.count = 0
-        self.sigma_calc = 0
-        self.z = 0
-        self.zq = 0
-        self.expv = 0
-
-        amps, sigmas = self.decompose_convergence_via_mge()
-
-        convergence = 0.0
-
-        for i in range(len(sigmas)):
-            convergence += self.convergence_func_gaussian(
-                grid_radii=grid_radii.array, sigma=sigmas[i], intensity=amps[i]
-            )
-        return convergence
-
-    def convergence_func_gaussian(self, grid_radii, sigma, intensity):
-        return np.multiply(
-            intensity, np.exp(-0.5 * np.square(np.divide(grid_radii, sigma)))
-        )
-
+    @aa.grid_dec.to_vector_yx
+    @aa.grid_dec.transform
     def _deflections_2d_via_mge_from(
-        self, grid, sigmas_factor=1.0, func_terms=None, func_gaussians=None
+        self, grid: aa.type.Grid2DLike, xp=np, **kwargs,
     ):
-        axis_ratio = np.array(self.axis_ratio())
+        amps, sigmas = self.decompose_convergence_via_mge(xp=xp)
 
-        if axis_ratio > 0.9999:
-            axis_ratio = 0.9999
-
-        amps, sigmas = self.decompose_convergence_via_mge()
-        sigmas *= sigmas_factor
-
-        angle = self.zeta_from(
-            grid=grid, amps=amps, sigmas=sigmas, axis_ratio=axis_ratio
+        deflection_angles = (
+                amps[:, None]
+                * sigmas[:, None]
+                * xp.sqrt((2.0 * xp.pi) / (1.0 - self.axis_ratio(xp)**2.0))
+                * self.zeta_from(grid=grid, xp=xp)
         )
 
-        angle *= np.sqrt((2.0 * np.pi) / (1.0 - axis_ratio**2.0))
+        # Add Gaussian profiles
+        deflections = xp.sum(deflection_angles, axis=0)
 
         return self.rotated_grid_from_reference_frame_from(
-            np.vstack((-angle.imag, angle.real)).T
+            xp.multiply(
+                1.0, xp.vstack((-1.0 * xp.imag(deflections), xp.real(deflections))).T
+            ),
+            xp=xp,
         )
+
+    def axis_ratio(self, xp=np):
+        axis_ratio = super().axis_ratio(xp=xp)
+        return xp.where(axis_ratio < 0.9999, axis_ratio, 0.9999)
+
+
+    def zeta_from(self, grid: aa.type.Grid2DLike, xp=np):
+        q = xp.asarray(self.axis_ratio(xp), dtype=xp.float64)
+        q2 = q * q
+
+        y = xp.asarray(grid.array[:, 0], dtype=xp.float64)
+        x = xp.asarray(grid.array[:, 1], dtype=xp.float64)
+
+        ind_pos_y = y >= 0
+
+        sigmas = xp.asarray(self.sigmas, dtype=xp.float64)[:, None]  # (S,1)
+
+        scale = q / (
+                sigmas * xp.sqrt(xp.asarray(2.0, dtype=xp.float64) * (1.0 - q2))
+        )
+
+        xs = x[None, :] * scale
+        ys = xp.abs(y)[None, :] * scale
+
+        z1 = xs + 1j * ys
+        z2 = q * xs + 1j * ys / q
+
+        exp_term = xp.exp(
+            -(xs * xs) * (1.0 - q2)
+            - (ys * ys) * (1.0 / q2 - 1.0)
+        )
+
+        core = -1j * (
+                self.wofz(z1, xp=xp)
+                - exp_term * self.wofz(z2, xp=xp)
+        )
+
+        return xp.where(ind_pos_y[None, :], core, xp.conj(core))
