@@ -39,8 +39,8 @@ from autoarray.structures.grids.uniform_1d import Grid1D  # noqa
 from autoarray.structures.grids.uniform_2d import Grid2D  # noqa
 from autoarray.structures.grids.irregular_2d import Grid2DIrregular  # noqa
 from autoarray.operators.over_sampling.over_sampler import OverSampler  # noqa
-from autoarray.inversion.pixelization.mesh_grid.rectangular import Mesh2DRectangular  # noqa
-from autoarray.inversion.pixelization.mesh_grid.delaunay import Mesh2DDelaunay  # noqa
+from autoarray.inversion.pixelization.interpolator.rectangular import InterpolatorRectangular  # noqa
+from autoarray.inversion.pixelization.interpolator.delaunay import InterpolatorDelaunay  # noqa
 from autoarray.structures.vectors.uniform import VectorYX2D  # noqa
 from autoarray.structures.vectors.irregular import VectorYX2DIrregular  # noqa
 from autoarray.layout.region import Region1D  # noqa
@@ -48,6 +48,7 @@ from autoarray.layout.region import Region2D  # noqa
 from autoarray.structures.arrays.kernel_2d import Kernel2D  # noqa
 from autoarray.structures.visibilities import Visibilities  # noqa
 from autoarray.structures.visibilities import VisibilitiesNoiseMap  # noqa
+from autoarray.inversion.pixelization.mesh_geometry.rectangular import rectangular_edge_pixel_list_from
 
 from .analysis import model_util
 from .analysis.adapt_images.adapt_images import AdaptImages
