@@ -157,7 +157,7 @@ class AbstractToInversion:
     @cached_property
     def linear_obj_galaxy_dict(
         self,
-    ) -> Dict[Union[LightProfileLinearObjFuncList, aa.AbstractMapper], Galaxy]:
+    ) -> Dict[Union[LightProfileLinearObjFuncList, aa.Mapper], Galaxy]:
         """
         Returns a dictionary associating every linear object (e.g. a linear light profile or mapper) with the galaxy
         it belongs to.
@@ -429,7 +429,7 @@ class GalaxiesToInversion(AbstractToInversion):
         source_plane_data_grid: aa.Grid2D,
         adapt_galaxy_image: aa.Array2D,
         image_plane_mesh_grid: Optional[aa.Grid2DIrregular] = None,
-    ) -> aa.AbstractMapper:
+    ) -> aa.Mapper:
         """
         Returns a `Mapper` object from the attributes required to create one, which are extracted and computed
         from the dataset and galaxies.
@@ -472,13 +472,18 @@ class GalaxiesToInversion(AbstractToInversion):
         -------
         A `Mapper` object which maps the dataset's data to the pixelization's mesh.
         """
-        return mesh.mapper_from(
-            mask=self.dataset.mask,
+        interpolator = mesh.interpolator_from(
             border_relocator=self.border_relocator,
             source_plane_data_grid=source_plane_data_grid,
             source_plane_mesh_grid=source_plane_mesh_grid,
-            image_plane_mesh_grid=image_plane_mesh_grid,
             adapt_data=adapt_galaxy_image,
+            preloads=self.preloads,
+            xp=self._xp,
+        )
+
+        return aa.Mapper(
+            interpolator=interpolator,
+            image_plane_mesh_grid=image_plane_mesh_grid,
             regularization=regularization,
             settings=self.settings,
             preloads=self.preloads,
@@ -486,7 +491,7 @@ class GalaxiesToInversion(AbstractToInversion):
         )
 
     @cached_property
-    def mapper_galaxy_dict(self) -> Dict[aa.AbstractMapper, Galaxy]:
+    def mapper_galaxy_dict(self) -> Dict[aa.Mapper, Galaxy]:
         """
         Returns a dictionary associating each `Mapper` object with the galaxy it belongs to.
 

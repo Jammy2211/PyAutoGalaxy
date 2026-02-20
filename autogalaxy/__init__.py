@@ -10,18 +10,17 @@ from autoarray.dataset import preprocess  # noqa
 from autoarray.dataset.imaging.dataset import Imaging  # noqa
 from autoarray.dataset.interferometer.dataset import Interferometer  # noqa
 from autoarray.dataset.dataset_model import DatasetModel
-from autoarray.inversion.pixelization import mesh  # noqa
+from autoarray.inversion.mesh import mesh  # noqa
 from autoarray.inversion import regularization as reg  # noqa
-from autoarray.inversion.pixelization import image_mesh
-from autoarray.inversion.pixelization.mappers.abstract import AbstractMapper  # noqa
+from autoarray.inversion.mesh import image_mesh
+from autoarray.inversion.mappers.abstract import Mapper  # noqa
 from autoarray.settings import Settings  # noqa
 from autoarray.inversion.inversion.factory import inversion_from as Inversion  # noqa
-from autoarray.inversion.pixelization.image_mesh.abstract import AbstractImageMesh
-from autoarray.inversion.pixelization.mesh.abstract import AbstractMesh
+from autoarray.inversion.mesh.image_mesh.abstract import AbstractImageMesh
+from autoarray.inversion.mesh.mesh.abstract import AbstractMesh
 from autoarray.inversion.regularization.abstract import AbstractRegularization
-from autoarray.inversion.pixelization.pixelization import Pixelization  # noqa
-from autoarray.inversion.pixelization.mappers.abstract import AbstractMapper
-from autoarray.inversion.pixelization.border_relocator import BorderRelocator
+from autoarray.inversion.pixelization import Pixelization  # noqa
+from autoarray.inversion.mesh.border_relocator import BorderRelocator
 from autoarray.preloads import Preloads
 from autoarray.preloads import mapper_indices_from
 from autoarray.mask.mask_1d import Mask1D  # noqa
@@ -39,10 +38,10 @@ from autoarray.structures.grids.uniform_1d import Grid1D  # noqa
 from autoarray.structures.grids.uniform_2d import Grid2D  # noqa
 from autoarray.structures.grids.irregular_2d import Grid2DIrregular  # noqa
 from autoarray.operators.over_sampling.over_sampler import OverSampler  # noqa
-from autoarray.inversion.pixelization.interpolator.rectangular import (
+from autoarray.inversion.mesh.interpolator.rectangular import (
     InterpolatorRectangular,
 )  # noqa
-from autoarray.inversion.pixelization.interpolator.delaunay import (
+from autoarray.inversion.mesh.interpolator.delaunay import (
     InterpolatorDelaunay,
 )  # noqa
 from autoarray.structures.vectors.uniform import VectorYX2D  # noqa
@@ -52,7 +51,7 @@ from autoarray.layout.region import Region2D  # noqa
 from autoarray.structures.arrays.kernel_2d import Kernel2D  # noqa
 from autoarray.structures.visibilities import Visibilities  # noqa
 from autoarray.structures.visibilities import VisibilitiesNoiseMap  # noqa
-from autoarray.inversion.pixelization.mesh_geometry.rectangular import (
+from autoarray.inversion.mesh.mesh_geometry.rectangular import (
     rectangular_edge_pixel_list_from,
 )
 

@@ -214,7 +214,7 @@ class PlotterInterface:
         )
 
         if should_plot("subplot_inversion"):
-            mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
+            mapper_list = inversion.cls_list_from(cls=aa.Mapper)
 
             for i in range(len(mapper_list)):
                 suffix = "" if len(mapper_list) == 1 else f"_{i}"
@@ -224,7 +224,7 @@ class PlotterInterface:
                 )
 
         if should_plot("csv_reconstruction"):
-            mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
+            mapper_list = inversion.cls_list_from(cls=aa.Mapper)
 
             for i, mapper in enumerate(mapper_list):
                 y = mapper.source_plane_mesh_grid[:, 0]

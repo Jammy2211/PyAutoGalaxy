@@ -162,11 +162,14 @@ def test___galaxy_image_dict(interferometer_7):
         settings=ag.Settings(use_border_relocator=True),
     )
 
-    mapper = mesh.mapper_from(
-        mask=interferometer_7.real_space_mask,
+    interpolator = mesh.interpolator_from(
         source_plane_data_grid=interferometer_7.grids.lp,
         border_relocator=interferometer_7.grids.border_relocator,
         source_plane_mesh_grid=None,
+    )
+
+    mapper = ag.Mapper(
+        interpolator=interpolator,
         regularization=pixelization.regularization,
     )
 
@@ -275,11 +278,14 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
         settings=ag.Settings(use_border_relocator=True),
     )
 
-    mapper = mesh.mapper_from(
-        mask=interferometer_7.real_space_mask,
+    interpolator = mesh.interpolator_from(
         source_plane_data_grid=interferometer_7.grids.lp,
         border_relocator=interferometer_7.grids.border_relocator,
         source_plane_mesh_grid=None,
+    )
+
+    mapper = ag.Mapper(
+        interpolator=interpolator,
         regularization=pixelization.regularization,
     )
 
