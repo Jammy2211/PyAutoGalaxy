@@ -8,9 +8,7 @@ from autogalaxy.profiles.light.linear import LightProfileLinear, Sersic
 
 
 class FitInversion(AbstractFitInversion):
-    def __init__(
-        self, model_obj, settings: aa.Settings, light_profiles
-    ):
+    def __init__(self, model_obj, settings: aa.Settings, light_profiles):
         super().__init__(model_obj=model_obj, settings=settings)
         self.light_profiles = light_profiles
 
