@@ -15,11 +15,11 @@ class MassProfileMGE(EllProfile):
     """
 
     def __init__(
-            self,
-            func: Callable,
-            sigma_list: Sequence[float],
-            centre: Tuple[float, float] = (0.0, 0.0),
-            ell_comps: Tuple[float, float] = (0.0, 0.0),
+        self,
+        func: Callable,
+        sigma_list: Sequence[float],
+        centre: Tuple[float, float] = (0.0, 0.0),
+        ell_comps: Tuple[float, float] = (0.0, 0.0),
     ):
         super().__init__(centre=centre, ell_comps=ell_comps)
         self.func = func
@@ -141,6 +141,15 @@ class MassProfileMGE(EllProfile):
 
         return w
 
+    def deflections_2d_via_mge_from(
+        self, grid: aa.type.Grid2DLike, xp=np, func_terms: int = 28, **kwargs,
+    ):
+        if super().axis_ratio(xp=xp)<0.9999:
+            return self.deflections_2d_ell_via_mge_from(grid=grid, xp=np, func_terms=func_terms, **kwargs)
+
+        else:
+            return self.deflections_2d_sph_via_mge_from(grid=grid, xp=np, func_terms=func_terms, **kwargs)
+
 
     def decompose_convergence_via_mge(
         self, func_terms: int = 28, xp=np
@@ -235,7 +244,7 @@ class MassProfileMGE(EllProfile):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def _deflections_2d_via_mge_from(
+    def _deflections_2d_ell_via_mge_from(
         self, grid: aa.type.Grid2DLike, xp=np, func_terms: int = 28, **kwargs,
     ):
         amps, sigmas = self.decompose_convergence_ell_via_mge(func_terms=func_terms, xp=xp)
@@ -271,7 +280,7 @@ class MassProfileMGE(EllProfile):
 
         ind_pos_y = y >= 0
 
-        sigmas = xp.asarray(self.sigma_list, dtype=xp.float64)[:, None]  # (S,1)
+        sigmas = xp.asarray(self.sigma_list, dtype=xp.float64)[:, None]
 
         scale = q / (
                 sigmas * xp.sqrt(xp.asarray(2.0, dtype=xp.float64) * (1.0 - q2))
