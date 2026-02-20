@@ -185,14 +185,60 @@ class MassProfileMGE(EllProfile):
 
         return amplitude_list, sigmas
 
+    def decompose_convergence_ell_via_mge(
+        self, func_terms: int = 28, xp=np
+    ):
+        """
+
+        Parameters
+        ----------
+        func : func
+            The function representing the profile that is decomposed into Gaussians.
+        normalization
+            A normalization factor tyh
+        func_terms
+            The number of terms used to approximate the input func.
+        func_gaussians
+            The number of Gaussians used to represent the input func.
+
+        Returns
+        -------
+        """
+        kesis = self.kesi(func_terms, xp=xp)  # kesi in Eq.(6) of 1906.08263
+        etas = self.eta(func_terms, xp=xp)  # eta in Eqr.(6) of 1906.08263
+
+        q = xp.asarray(self.axis_ratio(xp), dtype=xp.float64)
+
+        sigmas = xp.array(self.sigma_list)
+
+        #log_sigmas = xp.linspace(xp.log(radii_min), xp.log(radii_max), func_gaussians)
+        log_sigmas = xp.log(sigmas)
+        d_log_sigma = log_sigmas[1] - log_sigmas[0]
+        #sigma_list = xp.exp(log_sigmas)
+
+        f_y = xp.sum(
+            etas * xp.real(self.func(sigmas.reshape(-1, 1) * kesis, 0.0)), axis=1
+        )
+
+        f_sigma = q * f_y # times xp.sqrt(2.0 * xp.pi) ????
+
+        amplitude_list = f_sigma * d_log_sigma / xp.sqrt(2.0 * xp.pi)
+        if xp==np:
+            amplitude_list[0] *= 0.5
+            amplitude_list[-1] *= 0.5
+        else:
+            amplitude_list = amplitude_list.at[0].multiply(0.5)
+            amplitude_list = amplitude_list.at[-1].multiply(0.5)
+
+        return amplitude_list, sigmas
+
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     def _deflections_2d_via_mge_from(
-        self, grid: aa.type.Grid2DLike, xp=np, sigmas_factor=1.0, func_terms: int = 28, **kwargs,
+        self, grid: aa.type.Grid2DLike, xp=np, func_terms: int = 28, **kwargs,
     ):
-        amps, sigmas = self.decompose_convergence_via_mge(func_terms=func_terms, xp=xp)
-        sigmas = sigmas * sigmas_factor
+        amps, sigmas = self.decompose_convergence_ell_via_mge(func_terms=func_terms, xp=xp)
 
         deflection_angles = (
                 amps[:, None]
