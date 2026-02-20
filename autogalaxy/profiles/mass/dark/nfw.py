@@ -48,7 +48,7 @@ class NFW(gNFW, MassProfileCSE):
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     def deflections_2d_via_analytic_from(
-            self, grid: aa.type.Grid2DLike, xp=np, **kwargs
+        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ):
         """
         Analytic calculation deflection angles from Heyrovský & Karamazov 2024 via Eq. 30 & 31
@@ -70,28 +70,37 @@ class NFW(gNFW, MassProfileCSE):
         x1 = grid.array[:, 1] / self.scale_radius
         x2 = grid.array[:, 0] / self.scale_radius
 
-        r2 = x1 ** 2 + x2 ** 2
+        r2 = x1**2 + x2**2
 
         # Avoid nans
 
         mask = r2 > 1e-24
 
-        prefactor = xp.where(mask, 4 * self.kappa_s * xp.sqrt(1 - e_hk24 ** 2) / (
-                ((x1 - e_hk24) ** 2 + x2 ** 2) * ((x1 + e_hk24) ** 2 + x2 ** 2)
-        ), 0.0)
+        prefactor = xp.where(
+            mask,
+            4
+            * self.kappa_s
+            * xp.sqrt(1 - e_hk24**2)
+            / (((x1 - e_hk24) ** 2 + x2**2) * ((x1 + e_hk24) ** 2 + x2**2)),
+            0.0,
+        )
 
         f1 = xp.where(mask, nfw_hk24_util.small_f_1(x1, x2, e_hk24, xp=xp), 0.0)
         f2 = xp.where(mask, nfw_hk24_util.small_f_2(x1, x2, e_hk24, xp=xp), 0.0)
         f3 = xp.where(mask, nfw_hk24_util.small_f_3(x1, x2, e_hk24, xp=xp), 0.0)
 
-        deflection_x = (x1 * ((x1**2 - e_hk24**2) * (1 - e_hk24**2) + x2**2 * (1 + e_hk24**2)) * f1
-                        + x1 * (x1**2 + x2**2 - e_hk24**2) * f2
-                        - x2 * (x1**2 + x2**2 + e_hk24**2) * f3)
+        deflection_x = (
+            x1 * ((x1**2 - e_hk24**2) * (1 - e_hk24**2) + x2**2 * (1 + e_hk24**2)) * f1
+            + x1 * (x1**2 + x2**2 - e_hk24**2) * f2
+            - x2 * (x1**2 + x2**2 + e_hk24**2) * f3
+        )
         deflection_x *= prefactor
 
-        deflection_y = (x2 * (x1**2 * (1 - 2 * e_hk24**2) + x2**2 + e_hk24**2) * f1
-                        + x2 * (x1**2 + x2**2 + e_hk24**2) * f2
-                        + x1 * (x1**2 + x2**2 - e_hk24**2) * f3)
+        deflection_y = (
+            x2 * (x1**2 * (1 - 2 * e_hk24**2) + x2**2 + e_hk24**2) * f1
+            + x2 * (x1**2 + x2**2 + e_hk24**2) * f2
+            + x1 * (x1**2 + x2**2 - e_hk24**2) * f3
+        )
         deflection_y *= prefactor
 
         return self.rotated_grid_from_reference_frame_from(
@@ -199,9 +208,7 @@ class NFW(gNFW, MassProfileCSE):
     def convergence_func(self, grid_radius: float) -> float:
         grid_radius = (1.0 / self.scale_radius) * grid_radius.array + 0j
         return np.real(
-            2.0
-            * self.kappa_s
-            * np.array(self.coord_func_g(grid_radius=grid_radius))
+            2.0 * self.kappa_s * np.array(self.coord_func_g(grid_radius=grid_radius))
         )
 
     @aa.over_sample
@@ -340,7 +347,9 @@ class NFW(gNFW, MassProfileCSE):
 
         # Calculate shear from nfw_HK24.py
 
-        g1, g2 = nfw_hk24_util.g1_g2_from(x1=x1, x2=x2, e=e_hk24, k_s=self.kappa_s, xp=xp)
+        g1, g2 = nfw_hk24_util.g1_g2_from(
+            x1=x1, x2=x2, e=e_hk24, k_s=self.kappa_s, xp=xp
+        )
 
         # Rotation for shear
 

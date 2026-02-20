@@ -145,7 +145,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         psf: Optional[aa.Kernel2D],
         light_profile_list: List[LightProfileLinear],
         regularization=Optional[aa.reg.Regularization],
-        settings=aa.SettingsInversion(),
+        settings=aa.Settings(),
         xp=np,
     ):
         """
