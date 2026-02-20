@@ -191,9 +191,10 @@ class MassProfileMGE(EllProfile):
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     def _deflections_2d_via_mge_from(
-        self, grid: aa.type.Grid2DLike, xp=np, **kwargs,
+        self, grid: aa.type.Grid2DLike, sigmas_factor=1.0, xp=np, **kwargs,
     ):
         amps, sigmas = self.decompose_convergence_via_mge(xp=xp)
+        sigmas *= sigmas_factor
 
         deflection_angles = (
                 amps[:, None]
