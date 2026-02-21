@@ -16,14 +16,10 @@ class MassProfileMGE(EllProfile):
 
     def __init__(
         self,
-        func: Callable,
-        sigma_list: Sequence[float],
         centre: Tuple[float, float] = (0.0, 0.0),
         ell_comps: Tuple[float, float] = (0.0, 0.0),
     ):
         super().__init__(centre=centre, ell_comps=ell_comps)
-        self.func = func
-        self.sigma_list = sigma_list
 
 
     @staticmethod
@@ -142,17 +138,36 @@ class MassProfileMGE(EllProfile):
         return w
 
     def deflections_2d_via_mge_from(
-        self, grid: aa.type.Grid2DLike, xp=np, func_terms: int = 28, **kwargs,
+        self,
+        grid: aa.type.Grid2DLike,
+        xp=np,
+        *,
+        profile_func,
+        sigma_log_list,
+        func_terms: int = 28,
+        **kwargs,
     ):
         if super().axis_ratio(xp=xp)<0.9999:
-            return self.deflections_2d_ell_via_mge_from(grid=grid, xp=np, func_terms=func_terms, **kwargs)
+            return self._deflections_2d_ell_via_mge_from(
+                grid=grid,
+                xp=xp,
+                profile_func=profile_func,
+                sigma_log_list=sigma_log_list,
+                func_terms=func_terms,
+                **kwargs)
 
         else:
-            return self.deflections_2d_sph_via_mge_from(grid=grid, xp=np, func_terms=func_terms, **kwargs)
+            return self._deflections_2d_sph_via_mge_from(
+                grid=grid,
+                xp=xp,
+                profile_func=profile_func,
+                sigma_log_list=sigma_log_list,
+                func_terms=func_terms,
+                **kwargs)
 
 
-    def decompose_convergence_via_mge(
-        self, func_terms: int = 28, xp=np
+    def decompose_convergence_sph_via_mge(
+        self, profile_func, sigma_log_list, func_terms: int = 28, xp=np
     ):
         """
 
@@ -173,7 +188,7 @@ class MassProfileMGE(EllProfile):
         kesis = self.kesi(func_terms, xp=xp)  # kesi in Eq.(6) of 1906.08263
         etas = self.eta(func_terms, xp=xp)  # eta in Eqr.(6) of 1906.08263
 
-        sigmas = xp.array(self.sigma_list)
+        sigmas = xp.array(sigma_log_list)
 
         #log_sigmas = xp.linspace(xp.log(radii_min), xp.log(radii_max), func_gaussians)
         log_sigmas = xp.log(sigmas)
@@ -181,7 +196,7 @@ class MassProfileMGE(EllProfile):
         #sigma_list = xp.exp(log_sigmas)
 
         f_sigma = xp.sum(
-            etas * xp.real(self.func(sigmas.reshape(-1, 1) * kesis)), axis=1
+            etas * xp.real(profile_func(sigmas.reshape(-1, 1) * kesis)), axis=1
         )
 
         amplitude_list = f_sigma * d_log_sigma / xp.sqrt(2.0 * xp.pi)
@@ -195,7 +210,7 @@ class MassProfileMGE(EllProfile):
         return amplitude_list, sigmas
 
     def decompose_convergence_ell_via_mge(
-        self, func_terms: int = 28, xp=np
+        self, profile_func, sigma_log_list, func_terms: int = 28, xp=np
     ):
         """
 
@@ -218,7 +233,7 @@ class MassProfileMGE(EllProfile):
 
         q = xp.asarray(self.axis_ratio(xp), dtype=xp.float64)
 
-        sigmas = xp.array(self.sigma_list)
+        sigmas = xp.array(sigma_log_list)
 
         #log_sigmas = xp.linspace(xp.log(radii_min), xp.log(radii_max), func_gaussians)
         log_sigmas = xp.log(sigmas)
@@ -226,7 +241,7 @@ class MassProfileMGE(EllProfile):
         #sigma_list = xp.exp(log_sigmas)
 
         f_y = xp.sum(
-            etas * xp.real(self.func(sigmas.reshape(-1, 1) * kesis, 0.0)), axis=1
+            etas * xp.real(profile_func(sigmas.reshape(-1, 1) * kesis, 0.0)), axis=1
         )
 
         f_sigma = q * f_y # times xp.sqrt(2.0 * xp.pi) ????
@@ -245,15 +260,16 @@ class MassProfileMGE(EllProfile):
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     def _deflections_2d_ell_via_mge_from(
-        self, grid: aa.type.Grid2DLike, xp=np, func_terms: int = 28, **kwargs,
+        self, grid: aa.type.Grid2DLike, xp=np, *, profile_func, sigma_log_list, func_terms: int = 28, **kwargs,
     ):
-        amps, sigmas = self.decompose_convergence_ell_via_mge(func_terms=func_terms, xp=xp)
+        amps, sigmas = self.decompose_convergence_ell_via_mge(
+            profile_func=profile_func, sigma_log_list=sigma_log_list, func_terms=func_terms, xp=xp)
 
         deflection_angles = (
                 amps[:, None]
                 * sigmas[:, None]
                 * xp.sqrt((2.0 * xp.pi) / (1.0 - self.axis_ratio(xp)**2.0))
-                * self.zeta_from(grid=grid, xp=xp)
+                * self.zeta_from(grid=grid, sigma_log_list=sigma_log_list, xp=xp)
         )
 
         # Add Gaussian profiles
@@ -271,7 +287,7 @@ class MassProfileMGE(EllProfile):
         return xp.where(axis_ratio < 0.9999, axis_ratio, 0.9999)
 
 
-    def zeta_from(self, grid: aa.type.Grid2DLike, xp=np):
+    def zeta_from(self, grid: aa.type.Grid2DLike, sigma_log_list, xp=np):
         q = xp.asarray(self.axis_ratio(xp), dtype=xp.float64)
         q2 = q * q
 
@@ -280,7 +296,7 @@ class MassProfileMGE(EllProfile):
 
         ind_pos_y = y >= 0
 
-        sigmas = xp.asarray(self.sigma_list, dtype=xp.float64)[:, None]
+        sigmas = xp.asarray(sigma_log_list, dtype=xp.float64)[:, None]
 
         scale = q / (
                 sigmas * xp.sqrt(xp.asarray(2.0, dtype=xp.float64) * (1.0 - q2))
