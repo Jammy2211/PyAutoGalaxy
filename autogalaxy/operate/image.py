@@ -216,7 +216,7 @@ class OperateImageList(OperateImage):
         self,
         grid: aa.Grid2D,
         blurring_grid: aa.Grid2D,
-        psf: aa.Convolver = None,
+        psf: aa.Convolver,
     ) -> List[aa.Array2D]:
         """
         Evaluate the light object's list of 2D images from a input 2D grid of coordinates and convolve each image with
