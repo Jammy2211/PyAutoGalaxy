@@ -1,5 +1,8 @@
 import numpy as np
-from typing import Tuple
+from typing import Tuple, Optional
+
+from astropy.modeling import InputParameterError
+from docutils.io import InputError
 
 
 def ell_comps_from(axis_ratio: float, angle: float, xp=np) -> Tuple[float, float]:
@@ -51,7 +54,7 @@ def axis_ratio_and_angle_from(
 
     An additional check is performed which requires the angle is between -45 and 135 degrees. This ensures that
     for certain values of `ell_comps` the angle does not jump from one boundary to another (e.g. without this check
-    certain values of `ell_comps` return -1.0 degrees and others 179.0 degrees). This ensures that when error
+    certain values of `ell_comps` return -46.0 degrees and others 134.0 degrees). This ensures that when error
     estimates are computed from samples of a lens model via marginalization, the calculation is not biased by the
     angle jumping between these two values.
 
@@ -123,7 +126,7 @@ def angle_from(ell_comps: Tuple[float, float], xp=np) -> float:
 
     An additional check is performed which requires the angle is between -45 and 135 degrees. This ensures that
     for certain values of `ell_comps` the angle does not jump from one boundary to another (e.g. without this check
-    certain values of `ell_comps` return -1.0 degrees and others 179.0 degrees).
+    certain values of `ell_comps` return -46.0 degrees and others 134.0 degrees).
 
     This ensures that when error estimates are computed from samples of a lens model via marginalization, the
     calculation is not biased by the angle jumping between these two values.
@@ -183,7 +186,7 @@ def shear_magnitude_and_angle_from(
 
     Which are the values this function returns.
 
-    Additional checks are performed which requires the angle is between -45 and 135 degrees. This ensures that
+    Additional checks are performed which requires the angle is between 0 and 180 degrees. This ensures that
     for certain values of `gamma_1` and `gamma_2` the angle does not jump from one boundary to another (e.g. without
     this check certain values of `gamma_1` and `gamma_2` return -1.0 degrees and others 179.0 degrees).
 
@@ -283,7 +286,7 @@ def multipole_k_m_and_phi_m_from(
 
     Additional checks are performed which requires the angle `phi_m` is between -45 and 135 degrees. This ensures that
     for certain multipole component values the angle does not jump from one boundary to another (e.g. without
-    this check certain values of `gamma_1` and `gamma_2` return -1.0 degrees and others 179.0 degrees).
+    this check certain values of the multipole components return -46.0 degrees and others 134.0 degrees).
 
     This ensures that when error estimates are computed from samples of a lens model via marginalization, the
     calculation is not biased by the angle jumping between these two values.
@@ -307,8 +310,83 @@ def multipole_k_m_and_phi_m_from(
     return k_m, phi_m
 
 
+def multipole_k_m_phi_m_and_shape_angle_from(
+        multipole_comps: Tuple[float, float],
+        m: int,
+        ell_comps: Optional[Tuple[float, float]],
+        ellipse_angle: Optional[float],
+        xp=np
+) -> Tuple[float, float, float]:
+    """
+    Returns the multipole normalization value `k_m`, angle `phi` and shape_angle `s` from the multipole
+    component parameters. The shape angle is the difference between the angle of the underlying elliptical profile and
+    the multipole `phi_m` and is what defines the shape of the perturbation around the ellipse oriented towards the
+    direction of the underlying position angle. You must supply either the ell_comps or position angle of the
+    underlying elliptical profile.
+
+    The normalization and angle are given by:
+
+    .. math::
+        \phi^{\rm mass}_m = \frac{1}{m} \arctan{\frac{\epsilon_{\rm 2}^{\rm mp}}{\epsilon_{\rm 1}^{\rm mp}}}, \, \,
+        k^{\rm mass}_m = \sqrt{{\epsilon_{\rm 1}^{\rm mp}}^2 + {\epsilon_{\rm 2}^{\rm mp}}^2} \, .
+
+    The shape angle is then given as (where \phi_{\rm ell} is the position angle of the underlying elliptical profile):
+    .. math::
+        s^{\rm mass}_m = \phi_{\rm ell} - \phi_m \, .
+
+
+    The conversion depends on the multipole order `m`, to ensure that all possible rotationally symmetric
+    multiple mass profiles are available in the conversion for multiple components spanning -inf to inf.
+
+    Additional checks are performed which requires the angle `phi_m` is between -45 and 135 degrees. This ensures that
+    for certain multipole component values the angle does not jump from one boundary to another (e.g. without
+    this check certain values of the multipole components return -46.0 degrees and others 134.0 degrees). The shape angle
+    is then also checked and required to be in the range +- 360/m.
+
+    This ensures that when error estimates are computed from samples of a lens model via marginalization, the
+    calculation is not biased by the angle jumping between these two values.
+
+    Parameters
+    ----------
+    multipole_comps
+        The first and second components of the multipole.
+    m
+        The multipole order.
+    ell_comps
+        The elliptical components of the underlying elliptical distribution that the multipole is perturbing.
+        Note either ell_comps or galaxy_angle must be passed.
+    ellipse_angle
+        Alternative to supplying the ell_comps of the underlying profile, the position angle of the underlying profile.
+
+    Returns
+    -------
+    The normalization and angle parameters of the multipole.
+    """
+    if ellipse_angle is None:
+        if ell_comps is None:
+            raise AssertionError('You must pass either the ell_comps or the position angle of the underlying distribution.')
+        else:
+            angle = ellipse_angle
+    else:
+        angle = angle_from(ell_comps, xp=xp)
+
+
+    k_m, phi_m = multipole_k_m_and_phi_m_from(multipole_comps, m, xp=xp)
+
+    shape_angle = angle - phi_m
+
+    while angle < -180 / m:
+        angle += 360 / m
+    while angle > 180 / m:
+        angle -= 360 / m
+
+    return k_m, phi_m, shape_angle
+
+
 def multipole_comps_from(
-    k_m: float, phi_m: float, m: int, xp=np
+    k_m: float, phi_m: Optional[float], m: int,
+    shape_angle: Optional[float]=None, ellipse_angle: Optional[float]=None,
+    xp=np
 ) -> Tuple[float, float]:
     """
     Returns the multipole component parameters from their normalization value `k_m` and angle `phi`.
@@ -325,7 +403,13 @@ def multipole_comps_from(
     k_m
         The magnitude of the multipole.
     phi_m
-        The angle of the multipole.
+        The angle of the multipole. You can supply either phi_m or shape_angle and ellipse_angle.
+    shape_angle
+        The shape angle of the multipole, defined as the difference between the underlying position angle and the
+        multipole phi_m.
+    ellipse_angle
+        The position_angle of the underlying elliptical profile. Must be supplied alongside shape_angle as an
+        alternative to phi_m.
 
     Returns
     -------
@@ -334,7 +418,13 @@ def multipole_comps_from(
     # Degrees -> radians conversion
     deg_to_rad = xp.asarray(np.pi / 180.0)
 
-    angle = phi_m * float(m) * deg_to_rad
+    if phi_m is not None:
+        angle = phi_m * float(m) * deg_to_rad
+    elif (shape_angle is None) or (ellipse_angle is None):
+        raise AssertionError('You must provide EITHER phi_m OR shape_angle and ellipse_angle.')
+    else:
+        multipole_angle = ellipse_angle-shape_angle
+        angle = multipole_angle * float(m) * deg_to_rad
 
     multipole_comp_0 = k_m * xp.sin(angle)
     multipole_comp_1 = k_m * xp.cos(angle)
