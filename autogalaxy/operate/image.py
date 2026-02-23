@@ -138,7 +138,7 @@ class OperateImage:
         psf
             The PSF the light object 2D image is convolved with.
         """
-        padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
+        padded_grid = grid.padded_grid_from(kernel_shape_native=psf.kernel.shape_native)
 
         padded_image_2d_not_operated = self.image_2d_from(
             grid=padded_grid, operated_only=False
@@ -290,7 +290,7 @@ class OperateImageList(OperateImage):
         psf
             The PSF the light object 2D image is convolved with.
         """
-        padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
+        padded_grid = grid.padded_grid_from(kernel_shape_native=psf.kernel.shape_native)
 
         padded_image_2d_list = self.image_2d_list_from(grid=padded_grid)
 

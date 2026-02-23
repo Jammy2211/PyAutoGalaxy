@@ -130,7 +130,7 @@ def test__unmasked_blurred_image_2d_from():
     light_not_operated = ag.lp.Gaussian(intensity=1.0)
     light_operated = ag.lp_operated.Gaussian(intensity=1.0)
 
-    padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
+    padded_grid = grid.padded_grid_from(kernel_shape_native=psf.kernel.shape_native)
 
     image_2d_not_operated = light_not_operated.image_2d_from(grid=padded_grid)
 
@@ -259,7 +259,7 @@ def test__unmasked_blurred_image_2d_list_from():
     lp_0 = ag.lp.Sersic(intensity=1.0)
     lp_1 = ag.lp.Sersic(intensity=2.0)
 
-    padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
+    padded_grid = grid.padded_grid_from(kernel_shape_native=psf.kernel.shape_native)
 
     manual_blurred_image_0 = lp_0.image_2d_from(grid=padded_grid)
     manual_blurred_image_0 = psf.convolved_image_from(
