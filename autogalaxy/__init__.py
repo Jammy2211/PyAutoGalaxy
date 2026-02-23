@@ -38,6 +38,7 @@ from autoarray.structures.grids.uniform_1d import Grid1D  # noqa
 from autoarray.structures.grids.uniform_2d import Grid2D  # noqa
 from autoarray.structures.grids.irregular_2d import Grid2DIrregular  # noqa
 from autoarray.operators.over_sampling.over_sampler import OverSampler  # noqa
+from autoarray.operators.convolver import Convolver
 from autoarray.inversion.mesh.interpolator.rectangular import (
     InterpolatorRectangular,
 )  # noqa
@@ -48,7 +49,6 @@ from autoarray.structures.vectors.uniform import VectorYX2D  # noqa
 from autoarray.structures.vectors.irregular import VectorYX2DIrregular  # noqa
 from autoarray.layout.region import Region1D  # noqa
 from autoarray.layout.region import Region2D  # noqa
-from autoarray.structures.arrays.kernel_2d import Kernel2D  # noqa
 from autoarray.structures.visibilities import Visibilities  # noqa
 from autoarray.structures.visibilities import VisibilitiesNoiseMap  # noqa
 from autoarray.inversion.mesh.mesh_geometry.rectangular import (

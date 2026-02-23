@@ -142,7 +142,7 @@ class LightProfileLinearObjFuncList(aa.AbstractLinearObjFuncList):
         self,
         grid: aa.type.Grid1D2DLike,
         blurring_grid: aa.type.Grid1D2DLike,
-        psf: Optional[aa.Kernel2D],
+        psf: Optional[aa.Convolver],
         light_profile_list: List[LightProfileLinear],
         regularization=Optional[aa.reg.Regularization],
         settings=aa.Settings(),

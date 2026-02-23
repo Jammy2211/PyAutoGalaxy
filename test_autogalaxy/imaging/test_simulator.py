@@ -83,7 +83,7 @@ def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
 
 
 def test__simulator__via_galaxies_from():
-    psf = ag.Kernel2D.from_gaussian(shape_native=(7, 7), sigma=0.5, pixel_scales=0.05)
+    psf = ag.Convolver.from_gaussian(shape_native=(7, 7), sigma=0.5, pixel_scales=0.05)
 
     grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05)
 
