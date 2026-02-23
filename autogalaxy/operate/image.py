@@ -33,7 +33,7 @@ class OperateImage:
         self,
         image_2d: aa.Array2D,
         blurring_image_2d: aa.Array2D,
-        psf: aa.Kernel2D,
+        psf: aa.Convolver,
         xp=np,
     ) -> aa.Array2D:
 
@@ -46,7 +46,7 @@ class OperateImage:
         self,
         grid: aa.Grid2D,
         blurring_grid: aa.Grid2D,
-        psf: aa.Kernel2D = None,
+        psf: aa.Convolver = None,
         xp=np,
     ) -> aa.Array2D:
         """
@@ -138,7 +138,7 @@ class OperateImage:
         psf
             The PSF the light object 2D image is convolved with.
         """
-        padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
+        padded_grid = grid.padded_grid_from(kernel_shape_native=psf.kernel.shape_native)
 
         padded_image_2d_not_operated = self.image_2d_from(
             grid=padded_grid, operated_only=False
@@ -216,7 +216,7 @@ class OperateImageList(OperateImage):
         self,
         grid: aa.Grid2D,
         blurring_grid: aa.Grid2D,
-        psf: aa.Kernel2D = None,
+        psf: aa.Convolver,
     ) -> List[aa.Array2D]:
         """
         Evaluate the light object's list of 2D images from a input 2D grid of coordinates and convolve each image with
@@ -267,7 +267,7 @@ class OperateImageList(OperateImage):
         return blurred_image_2d_list
 
     def unmasked_blurred_image_2d_list_from(
-        self, grid: aa.Grid2D, psf: aa.Kernel2D
+        self, grid: aa.Grid2D, psf: aa.Convolver
     ) -> List[aa.Array2D]:
         """
         Evaluate the light object's list of 2D images from a input 2D grid of coordinates and convolve it with a PSF,
@@ -290,7 +290,7 @@ class OperateImageList(OperateImage):
         psf
             The PSF the light object 2D image is convolved with.
         """
-        padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
+        padded_grid = grid.padded_grid_from(kernel_shape_native=psf.kernel.shape_native)
 
         padded_image_2d_list = self.image_2d_list_from(grid=padded_grid)
 

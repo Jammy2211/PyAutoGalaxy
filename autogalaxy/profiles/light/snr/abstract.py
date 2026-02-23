@@ -54,7 +54,7 @@ class LightProfileSNR:
         grid: aa.type.Grid2DLike,
         exposure_time: float,
         background_sky_level: float = 0.0,
-        psf: Optional[aa.Kernel2D] = None,
+        psf: Optional[aa.Convolver] = None,
     ):
         """
         Set the `intensity` of the light profile as follows:

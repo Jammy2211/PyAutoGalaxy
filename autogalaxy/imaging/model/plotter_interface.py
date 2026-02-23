@@ -132,7 +132,7 @@ class PlotterInterfaceImaging(PlotterInterface):
             image_list = [
                 dataset.data.native_for_fits,
                 dataset.noise_map.native_for_fits,
-                dataset.psf.native_for_fits,
+                dataset.psf.kernel.native_for_fits,
                 dataset.grids.lp.over_sample_size.native_for_fits.astype("float"),
                 dataset.grids.pixelization.over_sample_size.native_for_fits.astype(
                     "float"
