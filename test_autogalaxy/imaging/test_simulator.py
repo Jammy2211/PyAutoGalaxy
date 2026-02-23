@@ -137,7 +137,8 @@ def test__simulator__simulate_imaging_from_galaxy__source_galaxy__compare_to_ima
 
     grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.2)
 
-    psf = ag.Kernel2D.no_mask(values=[[1.0]], pixel_scales=0.2)
+    kernel = ag.Array2D.no_mask(values=[[1.0]], pixel_scales=0.2)
+    psf = ag.Convolver(kernel=kernel)
 
     simulator = ag.SimulatorImaging(
         psf=psf,

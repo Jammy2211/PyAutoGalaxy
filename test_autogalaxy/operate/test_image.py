@@ -95,10 +95,14 @@ def test__x1_galaxies__padded_image__compare_to_galaxy_images_using_padded_grid_
 
 
 def test__unmasked_blurred_image_2d_from():
-    psf = ag.Kernel2D.no_mask(
+
+
+    kernel = ag.Array2D.no_mask(
         values=(np.array([[0.0, 3.0, 0.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0]])),
         pixel_scales=1.0,
     )
+
+    psf = ag.Convolver(kernel=kernel)
 
     mask = ag.Mask2D(
         mask=[[True, True, True], [True, False, True], [True, True, True]],
@@ -138,7 +142,7 @@ def test__unmasked_blurred_image_2d_from():
 
     image_2d_operated = padded_grid.mask.unmasked_blurred_array_from(
         padded_array=image_2d_operated,
-        psf=ag.Kernel2D.no_blur(pixel_scales=1.0),
+        psf=ag.Convolver.no_blur(pixel_scales=1.0),
         image_shape=grid.mask.shape,
     )
 
@@ -239,10 +243,11 @@ def test__blurred_image_2d_list_from(
 
 
 def test__unmasked_blurred_image_2d_list_from():
-    psf = ag.Kernel2D.no_mask(
+    kernel = ag.Array2D.no_mask(
         values=(np.array([[0.0, 3.0, 0.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0]])),
         pixel_scales=1.0,
     )
+    psf = ag.Convolver(kernel=kernel)
 
     mask = ag.Mask2D(
         mask=[[True, True, True], [True, False, True], [True, True, True]],
