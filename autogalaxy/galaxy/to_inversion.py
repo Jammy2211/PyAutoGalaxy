@@ -90,7 +90,7 @@ class AbstractToInversion:
         return np
 
     @property
-    def psf(self) -> Optional[aa.Kernel2D]:
+    def psf(self) -> Optional[aa.Convolver]:
         """
         Returns the PSF of the imaging dataset, if the inversion is performed on an imaging dataset.
 

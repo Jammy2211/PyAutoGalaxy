@@ -52,7 +52,7 @@ def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
 
     assert (dataset.data.native == np.array([[0.0, 0.0], [1.0, 0.0]])).all()
     assert (dataset.noise_map.native == np.array([[1.0, 1.0], [2.0, 1.0]])).all()
-    assert dataset.psf.native == pytest.approx(
+    assert dataset.psf.kernel.native == pytest.approx(
         np.array([[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.5, 0.5, 0.0]]), 1.0e-4
     )
 

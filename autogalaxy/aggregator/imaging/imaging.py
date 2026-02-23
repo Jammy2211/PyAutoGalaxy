@@ -59,9 +59,10 @@ def _imaging_from(
         noise_map = values_from(hdu=2, cls=aa.Array2D)
 
         try:
-            psf = values_from(hdu=3, cls=aa.Kernel2D)
+            kernel = values_from(hdu=3, cls=aa.Array2D)
+            psf = aa.Convolver(kernel=kernel)
         except (TypeError, IndexError):
-            psf = None
+            kernel = None
 
         dataset = aa.Imaging(
             data=data,
