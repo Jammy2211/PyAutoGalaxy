@@ -24,7 +24,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         galaxies: List[Galaxy],
         dataset_model: Optional[aa.DatasetModel] = None,
         adapt_images: Optional[AdaptImages] = None,
-        settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        settings: aa.Settings = None,
         preloads: aa.Preloads = None,
         xp=np,
     ):
@@ -63,7 +63,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         adapt_images
             Contains the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
             reconstructed galaxy's morphology.
-        settings_inversion
+        settings
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
         """
 
@@ -77,11 +77,12 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         AbstractFitInversion.__init__(
             self=self,
             model_obj=self.galaxies,
-            settings_inversion=settings_inversion,
+            settings=settings,
+            xp=xp,
         )
 
         self.adapt_images = adapt_images
-        self.settings_inversion = settings_inversion
+        self.settings = settings or aa.Settings()
 
         self.preloads = preloads
 
@@ -130,7 +131,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             dataset=dataset,
             galaxies=self.galaxies,
             adapt_images=self.adapt_images,
-            settings_inversion=self.settings_inversion,
+            settings=self.settings,
             preloads=self.preloads,
             xp=self._xp,
         )
@@ -161,9 +162,36 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         """
 
         if self.perform_inversion:
-            return self.blurred_image + self.inversion.mapped_reconstructed_data
+            return (
+                self.blurred_image + self.inversion.mapped_reconstructed_operated_data
+            )
 
         return self.blurred_image
+
+    @property
+    def galaxy_image_dict(self) -> Dict[Galaxy, np.ndarray]:
+        """
+        A dictionary which associates every galaxy in the fit with its image before operation (e.g. no PSF convolution
+        or NUFFT performed).
+
+        This image is the image of the sum of:
+
+        - The images of all ordinary light profiles summed before any operation is performed on them.
+        - The images of all linear objects (e.g. linear light profiles / pixelizations), where the images are solved
+          for first via the inversion.
+
+        This dictionary is used to output to .fits file the galaxy images.
+        """
+
+        galaxy_image_2d_dict = self.galaxies.galaxy_image_2d_dict_from(
+            grid=self.grids.lp, xp=self._xp
+        )
+
+        galaxy_linear_obj_image_dict = self.galaxy_linear_obj_data_dict_from(
+            use_operated=False,
+        )
+
+        return {**galaxy_image_2d_dict, **galaxy_linear_obj_image_dict}
 
     @property
     def galaxy_model_image_dict(self) -> Dict[Galaxy, np.ndarray]:
@@ -184,10 +212,11 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             grid=self.grids.lp,
             psf=self.dataset.psf,
             blurring_grid=self.grids.blurring,
+            xp=self._xp,
         )
 
         galaxy_linear_obj_image_dict = self.galaxy_linear_obj_data_dict_from(
-            use_image=True
+            use_operated=True,
         )
 
         return {**galaxy_blurred_image_2d_dict, **galaxy_linear_obj_image_dict}

@@ -19,7 +19,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         galaxies: List[Galaxy],
         dataset_model: Optional[aa.DatasetModel] = None,
         adapt_images: Optional[AdaptImages] = None,
-        settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
+        settings: aa.Settings = None,
         preloads: aa.Preloads = None,
         xp=np,
     ):
@@ -59,7 +59,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         adapt_images
             Contains the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
             reconstructed galaxy's morphology.
-        settings_inversion
+        settings
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
         """
 
@@ -71,11 +71,12 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         AbstractFitInversion.__init__(
             self=self,
             model_obj=self.galaxies,
-            settings_inversion=settings_inversion,
+            settings=settings,
+            xp=xp,
         )
 
         self.adapt_images = adapt_images
-        self.settings_inversion = settings_inversion
+        self.settings = settings or aa.Settings()
 
         self.preloads = preloads
 
@@ -110,7 +111,7 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
             dataset=dataset,
             galaxies=self.galaxies,
             adapt_images=self.adapt_images,
-            settings_inversion=self.settings_inversion,
+            settings=self.settings,
             preloads=self.preloads,
             xp=self._xp,
         )
@@ -139,12 +140,15 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         """
 
         if self.perform_inversion:
-            return self.profile_visibilities + self.inversion.mapped_reconstructed_data
+            return (
+                self.profile_visibilities
+                + self.inversion.mapped_reconstructed_operated_data
+            )
 
         return self.profile_visibilities
 
     @property
-    def galaxy_model_image_dict(self) -> Dict[Galaxy, np.ndarray]:
+    def galaxy_image_dict(self) -> Dict[Galaxy, np.ndarray]:
         """
         A dictionary which associates every galaxy with its `image`.
 
@@ -157,15 +161,15 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         For modeling, this dictionary is used to set up the `adapt_images` that adapt certain pixelizations to the
         data being fitted.
         """
-        galaxy_model_image_dict = self.galaxies.galaxy_image_2d_dict_from(
-            grid=self.grids.lp
+        galaxy_image_dict = self.galaxies.galaxy_image_2d_dict_from(
+            grid=self.grids.lp, xp=self._xp
         )
 
         galaxy_linear_obj_image_dict = self.galaxy_linear_obj_data_dict_from(
-            use_image=True
+            use_operated=False
         )
 
-        return {**galaxy_model_image_dict, **galaxy_linear_obj_image_dict}
+        return {**galaxy_image_dict, **galaxy_linear_obj_image_dict}
 
     @property
     def galaxy_model_visibilities_dict(self) -> Dict[Galaxy, np.ndarray]:
@@ -182,11 +186,11 @@ class FitInterferometer(aa.FitInterferometer, AbstractFitInversion):
         data being fitted.
         """
         galaxy_model_visibilities_dict = self.galaxies.galaxy_visibilities_dict_from(
-            grid=self.grids.lp, transformer=self.dataset.transformer
+            grid=self.grids.lp, transformer=self.dataset.transformer, xp=self._xp
         )
 
         galaxy_linear_obj_data_dict = self.galaxy_linear_obj_data_dict_from(
-            use_image=False
+            use_operated=True
         )
 
         return {**galaxy_model_visibilities_dict, **galaxy_linear_obj_data_dict}

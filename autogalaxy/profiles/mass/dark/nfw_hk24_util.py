@@ -7,7 +7,7 @@ Created on Wed Apr  3 15:07:27 2024
 import numpy as np
 
 
-def semi_major_axis_from(x1: np.ndarray, x2: np.ndarray, e: np.ndarray) -> np.ndarray:
+def semi_major_axis_from(x1, x2, e, xp=np):
     """
     Returns the semi-major axis of the ellipse at a given point.
 
@@ -20,10 +20,10 @@ def semi_major_axis_from(x1: np.ndarray, x2: np.ndarray, e: np.ndarray) -> np.nd
     e
         Eccentricity.
     """
-    return np.sqrt(x1**2 + x2**2 / (1 - e**2))
+    return xp.sqrt(x1**2 + x2**2 / (1 - e**2))
 
 
-def capital_F_from(chi: np.ndarray) -> np.ndarray:
+def capital_F_from(chi, xp=np):
     """
     Equation 16 from Heyrovský & Karamazov.
 
@@ -36,19 +36,30 @@ def capital_F_from(chi: np.ndarray) -> np.ndarray:
     -------
     F(chi)
     """
-    F = np.zeros(chi.shape)
+    chi = xp.asarray(chi)
+    eps = 1e-12
 
-    root_min = np.sqrt(1 - chi[chi < 1] ** 2)
-    F[chi < 1] = np.arctanh(root_min) / root_min
-    F[chi == 1] = 1
-    root_plus = np.sqrt(chi[chi > 1] ** 2 - 1)
-    F[chi > 1] = np.arctan(root_plus) / root_plus
-    return F
+    less = chi < 1 - eps
+    greater = chi > 1 + eps
+
+    root_min_arg = xp.where(less, 1 - chi**2, 0.0)
+    root_min = xp.sqrt(root_min_arg)
+    root_min_safe = xp.where(less, root_min, 1.0)
+    F_less = xp.where(less, xp.arctanh(root_min) / root_min_safe, 0.0)
+
+    root_plus_arg = xp.where(greater, chi**2 - 1, 0.0)
+    root_plus = xp.sqrt(root_plus_arg)
+    root_plus_safe = xp.where(greater, root_plus, 1.0)
+    F_greater = xp.where(greater, xp.arctan(root_plus) / root_plus_safe, 0.0)
+
+    F_equal = xp.ones_like(chi)
+
+    return xp.where(less, F_less, xp.where(greater, F_greater, F_equal))
 
 
-def kappa_from(k_s: float, a: np.ndarray) -> np.ndarray:
+def kappa_from(k_s, a, xp=np):
     """
-    Equation 16 from Heyrovský & Karamazov.
+    Equation 21 from Heyrovský & Karamazov.
 
     Parameters
     ----------
@@ -61,13 +72,12 @@ def kappa_from(k_s: float, a: np.ndarray) -> np.ndarray:
     -------
     Convergence as a function of a
     """
-    F = capital_F_from(a)
-    kappa = 2 * k_s * (1 - F) / (a**2 - 1)
-    kappa[a == 1] = 2 / 3 * k_s
+    F = capital_F_from(a, xp=xp)
+    kappa = xp.where(xp.abs(a - 1) < 1e-12, 2 / 3 * k_s, 2 * k_s * (1 - F) / (a**2 - 1))
     return kappa
 
 
-def small_f_1(x1: np.ndarray, x2: np.ndarray, e: float) -> np.ndarray:
+def small_f_1(x1, x2, e, xp=np):
     """
     Equation 32 HK+24
 
@@ -84,13 +94,13 @@ def small_f_1(x1: np.ndarray, x2: np.ndarray, e: float) -> np.ndarray:
     -------
     f_1
     """
-    a = semi_major_axis_from(x1, x2, e)
-    F = capital_F_from(a)
+    a = semi_major_axis_from(x1, x2, e, xp=xp)
+    F = capital_F_from(a, xp=xp)
     f1 = (1 - e**2) ** (-1 / 2) * F
     return f1
 
 
-def small_f_2(x1: np.ndarray, x2: np.ndarray, e: float) -> np.ndarray:
+def small_f_2(x1, x2, e, xp=np):
     """
     Equation 32 HK+24
 
@@ -108,12 +118,12 @@ def small_f_2(x1: np.ndarray, x2: np.ndarray, e: float) -> np.ndarray:
     f_3
 
     """
-    norm = np.sqrt(x1**2 + x2**2)
-    f2 = np.log(norm / (1 + np.sqrt(1 - e**2)))
+    norm = xp.sqrt(x1**2 + x2**2)
+    f2 = xp.log(norm / (1 + xp.sqrt(1 - e**2)))
     return f2
 
 
-def small_f_3(x1: np.ndarray, x2: np.ndarray, e: float) -> np.ndarray:
+def small_f_3(x1, x2, e, xp=np):
     """
     Equation 32 HK+24
 
@@ -131,12 +141,12 @@ def small_f_3(x1: np.ndarray, x2: np.ndarray, e: float) -> np.ndarray:
     f_3
 
     """
-    root = np.sqrt(1 - e**2)
-    f3 = np.arctan(x1 * x2 * (1 - root) / (x1**2 * root + x2**2))
+    root = xp.sqrt(1 - e**2)
+    f3 = xp.arctan(x1 * x2 * (1 - root) / (x1**2 * root + x2**2))
     return f3
 
 
-def small_f_0(x1: np.ndarray, x2: np.ndarray, e: float) -> np.ndarray:
+def small_f_0(x1, x2, e, xp=np):
     """
     Equation 37 HK+24
 
@@ -154,9 +164,9 @@ def small_f_0(x1: np.ndarray, x2: np.ndarray, e: float) -> np.ndarray:
     f_0
 
     """
-    a = semi_major_axis_from(x1, x2, e)
-    F = capital_F_from(a)
-    pre_factor = 1 / (2 * np.sqrt(1 - e**2))
+    a = semi_major_axis_from(x1, x2, e, xp=xp)
+    F = capital_F_from(a, xp=xp)
+    pre_factor = 1 / (2 * xp.sqrt(1 - e**2))
     nominator = x1**2 + x2**2 + e**2 - 2 + (1 - e**2 * x1**2) * F
     denominator = 1 - x1**2 - x2**2 / (1 - e**2)
 
@@ -165,7 +175,7 @@ def small_f_0(x1: np.ndarray, x2: np.ndarray, e: float) -> np.ndarray:
     return f0
 
 
-def g1_g2_from(x1, x2, e, k_s):
+def g1_g2_from(x1, x2, e, k_s, xp=np):
     """
     Both components of the shear
 
@@ -189,16 +199,16 @@ def g1_g2_from(x1, x2, e, k_s):
     """
 
     # Factorized functions g1 and g2
-    f0 = small_f_0(x1, x2, e)
-    f1 = small_f_1(x1, x2, e)
-    f2 = small_f_2(x1, x2, e)
-    f3 = small_f_3(x1, x2, e)
+    f0 = small_f_0(x1, x2, e, xp=xp)
+    f1 = small_f_1(x1, x2, e, xp=xp)
+    f2 = small_f_2(x1, x2, e, xp=xp)
+    f3 = small_f_3(x1, x2, e, xp=xp)
 
     # Prefactor for both g1 and g2
     full_pre_factor = (
         4
         * k_s
-        * np.sqrt(1 - e**2)
+        * xp.sqrt(1 - e**2)
         / (((x1 - e) ** 2 + x2**2) ** 2 * ((x1 + e) ** 2 + x2**2) ** 2)
     )
 

@@ -499,7 +499,8 @@ def mass_light_dark_basis_from(
 
         lmp_model.centre = light_profile.centre
         lmp_model.ell_comps = light_profile.ell_comps
-        lmp_model.intensity = light_profile.intensity
+
+        lmp_model.intensity = float(light_profile.intensity)
         lmp_model.sigma = light_profile.sigma
 
         lmp_model_list += [lmp_model]

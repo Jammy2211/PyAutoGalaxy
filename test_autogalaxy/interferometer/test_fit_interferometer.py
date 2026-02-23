@@ -109,7 +109,7 @@ def test__fit_figure_of_merit(interferometer_7):
     assert fit.figure_of_merit == pytest.approx(-37.4081355120388, 1.0e-4)
 
 
-def test___galaxy_model_image_dict(interferometer_7):
+def test___galaxy_image_dict(interferometer_7):
     # Normal Light Profiles Only
 
     g0 = ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=1.0, centre=(0.05, 0.05)))
@@ -128,9 +128,9 @@ def test___galaxy_model_image_dict(interferometer_7):
     g0_image = g0.image_2d_from(grid=interferometer_7.grids.lp)
     g1_image = g1.image_2d_from(grid=interferometer_7.grids.lp)
 
-    assert fit.galaxy_model_image_dict[g0] == pytest.approx(g0_image.array, 1.0e-4)
-    assert fit.galaxy_model_image_dict[g1] == pytest.approx(g1_image.array, 1.0e-4)
-    assert fit.galaxy_model_image_dict[g2] == pytest.approx(
+    assert fit.galaxy_image_dict[g0] == pytest.approx(g0_image.array, 1.0e-4)
+    assert fit.galaxy_image_dict[g1] == pytest.approx(g1_image.array, 1.0e-4)
+    assert fit.galaxy_image_dict[g2] == pytest.approx(
         g0_image.array + g1_image.array, 1.0e-4
     )
 
@@ -143,14 +143,13 @@ def test___galaxy_model_image_dict(interferometer_7):
         galaxies=[g0_linear],
     )
 
-    assert fit.galaxy_model_image_dict[g0_linear][4] == pytest.approx(
-        0.9876689631, 1.0e-4
-    )
+    assert fit.galaxy_image_dict[g0_linear][4] == pytest.approx(0.9876689631, 1.0e-4)
 
     # Pixelization + Regularizaiton only
+    mesh = ag.mesh.RectangularUniform(shape=(3, 3))
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
+        mesh=mesh,
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 
@@ -160,18 +159,17 @@ def test___galaxy_model_image_dict(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         galaxies=[g0, galaxy_pix_0],
+        settings=ag.Settings(use_border_relocator=True),
     )
 
-    mapper_grids = pixelization.mesh.mapper_grids_from(
-        mask=interferometer_7.real_space_mask,
+    interpolator = mesh.interpolator_from(
         source_plane_data_grid=interferometer_7.grids.lp,
         border_relocator=interferometer_7.grids.border_relocator,
         source_plane_mesh_grid=None,
     )
 
     mapper = ag.Mapper(
-        mapper_grids=mapper_grids,
-        border_relocator=interferometer_7.grids.border_relocator,
+        interpolator=interpolator,
         regularization=pixelization.regularization,
     )
 
@@ -180,10 +178,10 @@ def test___galaxy_model_image_dict(interferometer_7):
         linear_obj_list=[mapper],
     )
 
-    assert (fit.galaxy_model_image_dict[g0].native == 0.0 + 0.0j * np.zeros((7,))).all()
+    assert (fit.galaxy_image_dict[g0].native == 0.0 + 0.0j * np.zeros((7,))).all()
 
-    assert fit.galaxy_model_image_dict[galaxy_pix_0].array == pytest.approx(
-        inversion.mapped_reconstructed_image.slim.array, 1.0e-4
+    assert fit.galaxy_image_dict[galaxy_pix_0].array == pytest.approx(
+        inversion.mapped_reconstructed_data.slim.array, 1.0e-4
     )
 
     # Linear Light PRofiles + Pixelization + Regularizaiton
@@ -200,25 +198,19 @@ def test___galaxy_model_image_dict(interferometer_7):
         galaxies=[g0_linear, g1, galaxy_pix_0, galaxy_pix_1],
     )
 
-    assert fit.galaxy_model_image_dict[g0_linear][4] == pytest.approx(
-        -46.8820117, 1.0e-2
-    )
-    assert fit.galaxy_model_image_dict[g1] == pytest.approx(g1_image.array, 1.0e-4)
-    assert fit.galaxy_model_image_dict[galaxy_pix_0][4] == pytest.approx(
-        -0.00541699, 1.0e-2
-    )
-    assert fit.galaxy_model_image_dict[galaxy_pix_1][4] == pytest.approx(
-        -0.00563034, 1.0e-2
+    assert fit.galaxy_image_dict[g0_linear][4] == pytest.approx(-46.8820117, 1.0e-2)
+    assert fit.galaxy_image_dict[g1] == pytest.approx(g1_image.array, 1.0e-4)
+    assert fit.galaxy_image_dict[galaxy_pix_0][4] == pytest.approx(-0.00541699, 1.0e-2)
+    assert fit.galaxy_image_dict[galaxy_pix_1][4] == pytest.approx(-0.00563034, 1.0e-2)
+
+    mapped_reconstructed_data = (
+        fit.galaxy_image_dict[g0_linear]
+        + fit.galaxy_image_dict[galaxy_pix_0]
+        + fit.galaxy_image_dict[galaxy_pix_1]
     )
 
-    mapped_reconstructed_image = (
-        fit.galaxy_model_image_dict[g0_linear]
-        + fit.galaxy_model_image_dict[galaxy_pix_0]
-        + fit.galaxy_model_image_dict[galaxy_pix_1]
-    )
-
-    assert mapped_reconstructed_image.array == pytest.approx(
-        fit.inversion.mapped_reconstructed_image.array, 1.0e-4
+    assert mapped_reconstructed_data.array == pytest.approx(
+        fit.inversion.mapped_reconstructed_data.array, 1.0e-4
     )
 
 
@@ -270,8 +262,10 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
 
     # Pixelization + Regularizaiton only
 
+    mesh = ag.mesh.RectangularUniform(shape=(3, 3))
+
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
+        mesh=mesh,
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 
@@ -281,27 +275,29 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         galaxies=[g0, galaxy_pix_0],
+        settings=ag.Settings(use_border_relocator=True),
     )
 
-    mapper_grids = pixelization.mesh.mapper_grids_from(
-        mask=interferometer_7.real_space_mask,
+    interpolator = mesh.interpolator_from(
         source_plane_data_grid=interferometer_7.grids.lp,
         border_relocator=interferometer_7.grids.border_relocator,
         source_plane_mesh_grid=None,
     )
 
     mapper = ag.Mapper(
-        mapper_grids=mapper_grids,
-        border_relocator=interferometer_7.grids.border_relocator,
+        interpolator=interpolator,
         regularization=pixelization.regularization,
     )
 
-    inversion = ag.Inversion(dataset=interferometer_7, linear_obj_list=[mapper])
+    inversion = ag.Inversion(
+        dataset=interferometer_7,
+        linear_obj_list=[mapper],
+    )
 
     assert (fit.galaxy_model_visibilities_dict[g0] == 0.0 + 0.0j * np.zeros((7,))).all()
 
     assert fit.galaxy_model_visibilities_dict[galaxy_pix_0].array == pytest.approx(
-        inversion.mapped_reconstructed_data.array, 1.0e-4
+        inversion.mapped_reconstructed_operated_data.array, 1.0e-4
     )
 
     # Linear Light PRofiles + Pixelization + Regularizaiton
@@ -338,7 +334,7 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     )
 
     assert mapped_reconstructed_visibilities.array == pytest.approx(
-        fit.inversion.mapped_reconstructed_data.array, 1.0e-4
+        fit.inversion.mapped_reconstructed_operated_data.array, 1.0e-4
     )
 
 

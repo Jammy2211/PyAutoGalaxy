@@ -1,8 +1,8 @@
 ExternalShear:
   gamma_1:
     type: Uniform
-    lower_limit: -0.2
-    upper_limit: 0.2
+    lower_limit: -0.3
+    upper_limit: 0.3
     width_modifier:
       type: Absolute
       value: 0.05
@@ -11,8 +11,8 @@ ExternalShear:
       upper: inf
   gamma_2:
     type: Uniform
-    lower_limit: -0.2
-    upper_limit: 0.2
+    lower_limit: -0.3
+    upper_limit: 0.3
     width_modifier:
       type: Absolute
       value: 0.05

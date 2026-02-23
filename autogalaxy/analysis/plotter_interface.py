@@ -214,7 +214,7 @@ class PlotterInterface:
         )
 
         if should_plot("subplot_inversion"):
-            mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
+            mapper_list = inversion.cls_list_from(cls=aa.Mapper)
 
             for i in range(len(mapper_list)):
                 suffix = "" if len(mapper_list) == 1 else f"_{i}"
@@ -224,11 +224,11 @@ class PlotterInterface:
                 )
 
         if should_plot("csv_reconstruction"):
-            mapper_list = inversion.cls_list_from(cls=aa.AbstractMapper)
+            mapper_list = inversion.cls_list_from(cls=aa.Mapper)
 
             for i, mapper in enumerate(mapper_list):
-                y = mapper.mapper_grids.source_plane_mesh_grid[:, 0]
-                x = mapper.mapper_grids.source_plane_mesh_grid[:, 1]
+                y = mapper.source_plane_mesh_grid[:, 0]
+                x = mapper.source_plane_mesh_grid[:, 1]
                 reconstruction = inversion.reconstruction_dict[mapper]
                 noise_map = inversion.reconstruction_noise_map_dict[mapper]
 
@@ -314,8 +314,6 @@ class PlotterInterface:
                     adapt_images.galaxy_name_image_plane_mesh_grid_dict[name].native
                     for name in adapt_images.galaxy_name_image_plane_mesh_grid_dict.keys()
                 ]
-
-                print(list(adapt_images.galaxy_name_image_plane_mesh_grid_dict.keys()))
 
                 hdu_list = hdu_list_for_output_from(
                     values_list=[np.array([1])] + image_plane_mesh_grid_list,

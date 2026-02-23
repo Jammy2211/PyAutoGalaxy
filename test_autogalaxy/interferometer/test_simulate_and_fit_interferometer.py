@@ -186,9 +186,7 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
     fit_linear = ag.FitInterferometer(
         dataset=dataset,
         galaxies=[galaxy_linear],
-        settings_inversion=ag.SettingsInversion(
-            no_regularization_add_to_curvature_diag_value=False
-        ),
+        settings=ag.Settings(no_regularization_add_to_curvature_diag_value=False),
     )
 
     assert fit_linear.inversion.reconstruction == pytest.approx(
@@ -204,7 +202,7 @@ def test__linear_light_profiles_agree_with_standard_light_profiles():
 
     galaxy_image = galaxy.image_2d_from(grid=dataset.grids.lp)
 
-    assert fit_linear.galaxy_model_image_dict[galaxy_linear] == pytest.approx(
+    assert fit_linear.galaxy_image_dict[galaxy_linear] == pytest.approx(
         galaxy_image.array, 1.0e-4
     )
 

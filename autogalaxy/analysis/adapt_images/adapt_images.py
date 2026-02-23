@@ -81,7 +81,7 @@ class AdaptImages:
         Pixelization image-mesh objects (e.g. `KMeans`, `Hilbert`) adapt the distribution of pixels to the observed
         image's brightness and therefore to the reconstructed source's morphology.
 
-        Certain regularization schemes (e.g. `AdaptiveBrightness`) adapt their regularization coefficients to the
+        Certain regularization schemes (e.g. `Adapt`) adapt their regularization coefficients to the
         reconstructed source's morphology.
 
         These adaptive schemes use "adapt-images", which are images of each galaxy (e.g. the lens and source of a

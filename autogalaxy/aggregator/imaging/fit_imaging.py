@@ -16,7 +16,7 @@ from autogalaxy.aggregator import agg_util
 def _fit_imaging_from(
     fit: af.Fit,
     instance: Optional[af.ModelInstance] = None,
-    settings_inversion: aa.SettingsInversion = None,
+    settings: aa.Settings = None,
 ) -> List[FitImaging]:
     """
     Returns a list of `FitImaging` objects from a `PyAutoFit` loaded directory `Fit` or sqlite database `Fit` object.
@@ -26,7 +26,7 @@ def _fit_imaging_from(
 
     - The imaging data, noise-map, PSF and settings as .fits files (e.g. `dataset/data.fits`).
     - The mask used to mask the `Imaging` data structure in the fit (`dataset.fits[hdu=0]`).
-    - The settings of inversions used by the fit (`dataset/settings_inversion.json`).
+    - The settings of inversions used by the fit (`dataset/settings.json`).
 
     Each individual attribute can be loaded from the database via the `fit.value()` method.
 
@@ -37,7 +37,7 @@ def _fit_imaging_from(
     is instead used to load lists of the data, noise-map, PSF and mask and combine them into a list of
     `FitImaging` objects.
 
-    The settings of an inversion can be overwritten by inputting a `settings_inversion` object, for example
+    The settings of an inversion can be overwritten by inputting a `settings` object, for example
     if you want to use a grid with a different inversion solver.
 
     Parameters
@@ -48,8 +48,8 @@ def _fit_imaging_from(
     instance
         A manual instance that overwrites the max log likelihood instance in fit (e.g. for drawing the instance
         randomly from the PDF).
-    settings_inversion
-        Optionally overwrite the `SettingsInversion` of the `Inversion` object that is created from the fit.
+    settings
+        Optionally overwrite the `Settings` of the `Inversion` object that is created from the fit.
     """
 
     from autogalaxy.imaging.fit_imaging import FitImaging
@@ -62,7 +62,7 @@ def _fit_imaging_from(
 
     adapt_images_list = agg_util.adapt_images_from(fit=fit)
 
-    settings_inversion = settings_inversion or fit.value(name="settings_inversion")
+    settings = settings or fit.value(name="settings")
 
     fit_dataset_list = []
 
@@ -79,7 +79,7 @@ def _fit_imaging_from(
                 galaxies=galaxies,
                 dataset_model=dataset_model,
                 adapt_images=adapt_images,
-                settings_inversion=settings_inversion,
+                settings=settings,
             )
         )
 
@@ -90,7 +90,7 @@ class FitImagingAgg(af.AggBase):
     def __init__(
         self,
         aggregator: af.Aggregator,
-        settings_inversion: Optional[aa.SettingsInversion] = None,
+        settings: Optional[aa.Settings] = None,
     ):
         """
             Interfaces with an `PyAutoFit` aggregator object to create instances of `FitImaging` objects from the results
@@ -101,7 +101,7 @@ class FitImagingAgg(af.AggBase):
 
             - The imaging data, noise-map, PSF and settings as .fits files (e.g. `dataset/data.fits`).
             - The mask used to mask the `Imaging` data structure in the fit (`dataset.fits[hdu=0]`).
-            - The settings of inversions used by the fit (`dataset/settings_inversion.json`).
+            - The settings of inversions used by the fit (`dataset/settings.json`).
 
             The `aggregator` contains the path to each of these files, and they can be loaded individually. This class
             can load them all at once and create an `FitImaging` object via the `_fit_imaging_from` method.
@@ -123,19 +123,19 @@ class FitImagingAgg(af.AggBase):
             ----------
             aggregator
                 A `PyAutoFit` aggregator object which can load the results of model-fits.
-            settings_inversion
-                Optionally overwrite the `SettingsInversion` of the `Inversion` object that is created from the fit.
+            settings
+                Optionally overwrite the `Settings` of the `Inversion` object that is created from the fit.
 
         Parameters
         ----------
         aggregator
             A `PyAutoFit` aggregator object which can load the results of model-fits.
-        settings_inversion
-            Optionally overwrite the `SettingsInversion` of the `Inversion` object that is created from the fit.
+        settings
+            Optionally overwrite the `Settings` of the `Inversion` object that is created from the fit.
         """
         super().__init__(aggregator=aggregator)
 
-        self.settings_inversion = settings_inversion
+        self.settings = settings
 
     def object_via_gen_from(
         self, fit, instance: Optional[af.ModelInstance] = None
@@ -157,5 +157,5 @@ class FitImagingAgg(af.AggBase):
         return _fit_imaging_from(
             fit=fit,
             instance=instance,
-            settings_inversion=self.settings_inversion,
+            settings=self.settings,
         )

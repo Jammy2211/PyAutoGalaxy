@@ -22,6 +22,13 @@ def test__deflections_2d_via_analytic_from():
     assert deflections[0, 0] == pytest.approx(1.024423, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.0, abs=1.0e-4)
 
+    deflections = mp.deflections_2d_via_analytic_from(
+        grid=ag.Grid2DIrregular([[-1.0, 0.0]])
+    )
+
+    assert deflections[0, 0] == pytest.approx(-1.024423, 1.0e-4)
+    assert deflections[0, 1] == pytest.approx(0.0, abs=1.0e-4)
+
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.111111),
@@ -36,6 +43,13 @@ def test__deflections_2d_via_analytic_from():
 
     assert deflections[0, 0] == pytest.approx(0.554062, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.177336, 1.0e-4)
+
+    deflections = mp.deflections_2d_via_analytic_from(
+        grid=ag.Grid2DIrregular([[-0.5, -0.2]])
+    )
+
+    assert deflections[0, 0] == pytest.approx(-0.554062, 1.0e-4)
+    assert deflections[0, 1] == pytest.approx(-0.177336, 1.0e-4)
 
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0),

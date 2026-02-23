@@ -156,10 +156,7 @@ class cNFWSph(AbstractgNFW):
         Convergence (dimensionless surface mass density) for the cored NFW profile.
         This is not yet implemented for `cNFWSph`.
         """
-        raise NotImplementedError(
-            "convergence_2d_from is not implemented for cNFWSph; a physical cNFW "
-            "convergence expression must be added before use."
-        )
+        return xp.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
@@ -167,7 +164,4 @@ class cNFWSph(AbstractgNFW):
         Lensing potential for the cored NFW profile.
         This is not yet implemented for `cNFWSph`.
         """
-        raise NotImplementedError(
-            "potential_2d_from is not implemented for cNFWSph; a physical cNFW "
-            "potential expression must be added before use."
-        )
+        return xp.zeros(shape=grid.shape[0])

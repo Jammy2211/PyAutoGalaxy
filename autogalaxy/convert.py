@@ -63,7 +63,10 @@ def axis_ratio_and_angle_from(
     ell_comps
         The elliptical components of the light or mass profile which are converted to an angle.
     """
-    angle = xp.arctan2(ell_comps[0], ell_comps[1]) / 2
+    angle = 0.5 * xp.arctan2(
+        ell_comps[0],
+        xp.where((ell_comps[0] == 0) & (ell_comps[1] == 0), 1.0, ell_comps[1]),
+    )
     angle *= 180.0 / xp.pi
 
     angle = xp.where(angle < -45, angle + 180, angle)
@@ -200,7 +203,12 @@ def shear_magnitude_and_angle_from(
     gamma_2
         The gamma 2 component of the shear.
     """
-    angle = xp.arctan2(gamma_2, gamma_1) / 2 * 180.0 / xp.pi
+    angle = (
+        0.5
+        * xp.arctan2(gamma_2, xp.where((gamma_1 == 0) & (gamma_2 == 0), 1.0, gamma_1))
+        * 180.0
+        / xp.pi
+    )
     magnitude = xp.sqrt(gamma_1**2 + gamma_2**2)
 
     angle = xp.where(angle < 0, angle + 180.0, angle)
@@ -301,8 +309,19 @@ def multipole_k_m_and_phi_m_from(
     The normalization and angle parameters of the multipole.
     """
     phi_m = (
-        xp.arctan2(multipole_comps[0], multipole_comps[1]) * 180.0 / xp.pi / float(m)
+        xp.arctan2(
+            multipole_comps[0],
+            xp.where(
+                (multipole_comps[0] == 0) & (multipole_comps[1] == 0),
+                1.0,
+                multipole_comps[1],
+            ),
+        )
+        * 180.0
+        / xp.pi
+        / float(m)
     )
+
     k_m = xp.sqrt(multipole_comps[1] ** 2 + multipole_comps[0] ** 2)
 
     phi_m = xp.where(phi_m < -90.0 / m, phi_m + 360.0 / m, phi_m)
