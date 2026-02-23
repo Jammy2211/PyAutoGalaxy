@@ -112,7 +112,7 @@ def test__simulator__via_galaxies_from():
     assert dataset.data.native[10, 10] == pytest.approx(
         imaging_via_image.data.native[10, 10], 1.0e-4
     )
-    assert dataset.psf == pytest.approx(imaging_via_image.psf, 1.0e-4)
+    assert dataset.psf.kernel == pytest.approx(imaging_via_image.psf.kernel, 1.0e-4)
     assert dataset.noise_map == pytest.approx(imaging_via_image.noise_map, 1.0e-4)
 
 
@@ -158,5 +158,5 @@ def test__simulator__simulate_imaging_from_galaxy__source_galaxy__compare_to_ima
 
     assert dataset.shape_native == (11, 11)
     assert dataset.data.array == pytest.approx(imaging_via_image.data.array, 1.0e-4)
-    assert (dataset.psf == imaging_via_image.psf).all()
+    assert (dataset.psf.kernel == imaging_via_image.psf.kernel).all()
     assert dataset.noise_map == pytest.approx(imaging_via_image.noise_map, 1.0e-4)

@@ -63,6 +63,7 @@ def _imaging_from(
             psf = aa.Convolver(kernel=kernel)
         except (TypeError, IndexError):
             kernel = None
+            psf = None
 
         dataset = aa.Imaging(
             data=data,

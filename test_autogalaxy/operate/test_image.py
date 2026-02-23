@@ -96,7 +96,6 @@ def test__x1_galaxies__padded_image__compare_to_galaxy_images_using_padded_grid_
 
 def test__unmasked_blurred_image_2d_from():
 
-
     kernel = ag.Array2D.no_mask(
         values=(np.array([[0.0, 3.0, 0.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0]])),
         pixel_scales=1.0,
