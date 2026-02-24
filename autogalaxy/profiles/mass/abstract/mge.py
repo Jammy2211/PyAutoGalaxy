@@ -1,12 +1,10 @@
 import numpy as np
 
-from typing import Tuple, Sequence, Callable
-
 import autoarray as aa
-from autogalaxy.profiles.geometry_profiles import EllProfile
+from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
-class MassProfileMGE(EllProfile):
+class MGEDecomposer:
     """
     This class speeds up deflection angle calculations of certain mass profiles by decompositing them into many
     Gaussians.
@@ -16,10 +14,19 @@ class MassProfileMGE(EllProfile):
 
     def __init__(
         self,
-        centre: Tuple[float, float] = (0.0, 0.0),
-        ell_comps: Tuple[float, float] = (0.0, 0.0),
+        mass_profile: MassProfile,
     ):
-        super().__init__(centre=centre, ell_comps=ell_comps)
+        self.mass_profile = mass_profile
+
+
+    @property
+    def centre(self):
+        return self.mass_profile.centre
+
+
+    @property
+    def ell_comps(self):
+        return self.mass_profile.ell_comps
 
 
     @staticmethod
@@ -137,21 +144,58 @@ class MassProfileMGE(EllProfile):
 
         return w
 
+
+    # def deflection_2d_gaussian_via_mge(
+    #     self,
+    #     grid: aa.Grid2DIrregular,
+    #     xp=np,
+    #     *,
+    #     sigma_log_list,
+    #     intensity: float = 0.1,
+    #     sigma: float = 1.0,
+    #     mass_to_light_ratio: float = 1.0,
+    #     ):
+    #     profile_func = lambda y, x: self.deflections_2d_gaussian_via_analytic(
+    #         y,
+    #         x,
+    #         intensity=intensity,
+    #         sigma=sigma,
+    #         mass_to_light_ratio=mass_to_light_ratio,
+    #         xp=xp
+    #     )
+    #
+    #     return self.deflections_2d_via_mge_from(grid=grid, profile_func=profile_func, sigma_log_list=sigma_log_list, xp=xp)
+    #
+    # def deflections_2d_gaussian_via_analytic(
+    #     self,
+    #     y: float,
+    #     x: float,
+    #     intensity: float = 0.1,
+    #     sigma: float = 1.0,
+    #     mass_to_light_ratio: float = 1.0,
+    #     xp=np,
+    # ):
+    #     q = xp.asarray(self.axis_ratio(xp), dtype=xp.float64)
+    #
+    #     surface_mass = (mass_to_light_ratio * intensity
+    #                     * xp.exp(-(q**2 *x**2 + y**2) / (2 * sigma**2)))
+    #
+    #     return surface_mass
+
+
     def deflections_2d_via_mge_from(
         self,
         grid: aa.type.Grid2DLike,
         xp=np,
         *,
-        profile_func,
         sigma_log_list,
         func_terms: int = 28,
         **kwargs,
     ):
-        if super().axis_ratio(xp=xp)<0.9999:
+        if self.axis_ratio(xp=xp)<0.9999:
             return self._deflections_2d_ell_via_mge_from(
                 grid=grid,
                 xp=xp,
-                profile_func=profile_func,
                 sigma_log_list=sigma_log_list,
                 func_terms=func_terms,
                 **kwargs)
@@ -160,14 +204,88 @@ class MassProfileMGE(EllProfile):
             return self._deflections_2d_sph_via_mge_from(
                 grid=grid,
                 xp=xp,
-                profile_func=profile_func,
                 sigma_log_list=sigma_log_list,
                 func_terms=func_terms,
                 **kwargs)
 
 
+    @aa.grid_dec.to_vector_yx
+    @aa.grid_dec.transform
+    def _deflections_2d_ell_via_mge_from(
+            self, grid: aa.type.Grid2DLike, xp=np, *, sigma_log_list, func_terms: int = 28, **kwargs,
+    ):
+        amps, sigmas = self.decompose_convergence_ell_via_mge(
+            sigma_log_list=sigma_log_list, func_terms=func_terms, xp=xp)
+
+        deflection_angles = (
+                amps[:, None]
+                * sigmas[:, None]
+                * xp.sqrt((2.0 * xp.pi) / (1.0 - self.axis_ratio(xp) ** 2.0))
+                * self.zeta_from(grid=grid, sigma_log_list=sigma_log_list, xp=xp)
+        )
+
+        # Add Gaussian profiles
+        deflections = xp.sum(deflection_angles, axis=0)
+
+        return self.mass_profile.rotated_grid_from_reference_frame_from(
+            xp.multiply(
+                1.0, xp.vstack((-1.0 * xp.imag(deflections), xp.real(deflections))).T
+            ),
+            xp=xp,
+        )
+
+
+    def decompose_convergence_ell_via_mge(
+        self, sigma_log_list, func_terms: int = 28, xp=np
+    ):
+        """
+
+        Parameters
+        ----------
+        func : func
+            The function representing the profile that is decomposed into Gaussians.
+        normalization
+            A normalization factor tyh
+        func_terms
+            The number of terms used to approximate the input func.
+        func_gaussians
+            The number of Gaussians used to represent the input func.
+
+        Returns
+        -------
+        """
+        kesis = self.kesi(func_terms, xp=xp)  # kesi in Eq.(6) of 1906.08263
+        etas = self.eta(func_terms, xp=xp)  # eta in Eqr.(6) of 1906.08263
+
+        q = xp.asarray(self.axis_ratio(xp), dtype=xp.float64)
+
+        sigmas = xp.array(sigma_log_list)
+
+        log_sigmas = xp.log(sigmas)
+        d_log_sigma = log_sigmas[1] - log_sigmas[0]
+
+        f_y = xp.sum(
+            etas * xp.real(self.mass_profile.convergence_func(sigmas.reshape(-1, 1) * kesis, xp=xp)), axis=1
+        )
+        # f_y = xp.sum(
+        #     etas * xp.real(profile_func(sigmas.reshape(-1, 1) * kesis, 0.0, xp=xp)), axis=1
+        # )
+
+        f_sigma = q * f_y # times xp.sqrt(2.0 * xp.pi) ????
+
+        amplitude_list = f_sigma * d_log_sigma / xp.sqrt(2.0 * xp.pi)
+        if xp==np:
+            amplitude_list[0] *= 0.5
+            amplitude_list[-1] *= 0.5
+        else:
+            amplitude_list = amplitude_list.at[0].multiply(0.5)
+            amplitude_list = amplitude_list.at[-1].multiply(0.5)
+
+        return amplitude_list, sigmas
+
+
     def decompose_convergence_sph_via_mge(
-        self, profile_func, sigma_log_list, func_terms: int = 28, xp=np
+        self, sigma_log_list, func_terms: int = 28, xp=np
     ):
         """
 
@@ -196,7 +314,7 @@ class MassProfileMGE(EllProfile):
         #sigma_list = xp.exp(log_sigmas)
 
         f_sigma = xp.sum(
-            etas * xp.real(profile_func(sigmas.reshape(-1, 1) * kesis)), axis=1
+            etas * xp.real(self.mass_profile.convergence_func(sigmas.reshape(-1, 1) * kesis, xp=xp)), axis=1
         )
 
         amplitude_list = f_sigma * d_log_sigma / xp.sqrt(2.0 * xp.pi)
@@ -209,81 +327,9 @@ class MassProfileMGE(EllProfile):
 
         return amplitude_list, sigmas
 
-    def decompose_convergence_ell_via_mge(
-        self, profile_func, sigma_log_list, func_terms: int = 28, xp=np
-    ):
-        """
-
-        Parameters
-        ----------
-        func : func
-            The function representing the profile that is decomposed into Gaussians.
-        normalization
-            A normalization factor tyh
-        func_terms
-            The number of terms used to approximate the input func.
-        func_gaussians
-            The number of Gaussians used to represent the input func.
-
-        Returns
-        -------
-        """
-        kesis = self.kesi(func_terms, xp=xp)  # kesi in Eq.(6) of 1906.08263
-        etas = self.eta(func_terms, xp=xp)  # eta in Eqr.(6) of 1906.08263
-
-        q = xp.asarray(self.axis_ratio(xp), dtype=xp.float64)
-
-        sigmas = xp.array(sigma_log_list)
-
-        #log_sigmas = xp.linspace(xp.log(radii_min), xp.log(radii_max), func_gaussians)
-        log_sigmas = xp.log(sigmas)
-        d_log_sigma = log_sigmas[1] - log_sigmas[0]
-        #sigma_list = xp.exp(log_sigmas)
-
-        f_y = xp.sum(
-            etas * xp.real(profile_func(sigmas.reshape(-1, 1) * kesis, 0.0)), axis=1
-        )
-
-        f_sigma = q * f_y # times xp.sqrt(2.0 * xp.pi) ????
-
-        amplitude_list = f_sigma * d_log_sigma / xp.sqrt(2.0 * xp.pi)
-        if xp==np:
-            amplitude_list[0] *= 0.5
-            amplitude_list[-1] *= 0.5
-        else:
-            amplitude_list = amplitude_list.at[0].multiply(0.5)
-            amplitude_list = amplitude_list.at[-1].multiply(0.5)
-
-        return amplitude_list, sigmas
-
-
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
-    def _deflections_2d_ell_via_mge_from(
-        self, grid: aa.type.Grid2DLike, xp=np, *, profile_func, sigma_log_list, func_terms: int = 28, **kwargs,
-    ):
-        amps, sigmas = self.decompose_convergence_ell_via_mge(
-            profile_func=profile_func, sigma_log_list=sigma_log_list, func_terms=func_terms, xp=xp)
-
-        deflection_angles = (
-                amps[:, None]
-                * sigmas[:, None]
-                * xp.sqrt((2.0 * xp.pi) / (1.0 - self.axis_ratio(xp)**2.0))
-                * self.zeta_from(grid=grid, sigma_log_list=sigma_log_list, xp=xp)
-        )
-
-        # Add Gaussian profiles
-        deflections = xp.sum(deflection_angles, axis=0)
-
-        return self.rotated_grid_from_reference_frame_from(
-            xp.multiply(
-                1.0, xp.vstack((-1.0 * xp.imag(deflections), xp.real(deflections))).T
-            ),
-            xp=xp,
-        )
 
     def axis_ratio(self, xp=np):
-        axis_ratio = super().axis_ratio(xp=xp)
+        axis_ratio = self.mass_profile.axis_ratio(xp=xp)
         return xp.where(axis_ratio < 0.9999, axis_ratio, 0.9999)
 
 
