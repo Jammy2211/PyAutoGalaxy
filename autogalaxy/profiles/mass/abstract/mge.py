@@ -29,6 +29,11 @@ class MGEDecomposer:
         return self.mass_profile.ell_comps
 
 
+    @property
+    def transformed_to_reference_frame_grid_from(self):
+        return self.mass_profile.transformed_to_reference_frame_grid_from
+
+
     @staticmethod
     def kesi(p, xp=np):
         """
@@ -184,13 +189,7 @@ class MGEDecomposer:
 
 
     def deflections_2d_via_mge_from(
-        self,
-        grid: aa.type.Grid2DLike,
-        xp=np,
-        *,
-        sigma_log_list,
-        func_terms: int = 28,
-        **kwargs,
+        self, grid: aa.type.Grid2DLike, xp=np, *, sigma_log_list, func_terms: int = 28, **kwargs,
     ):
         if self.axis_ratio(xp=xp)<0.9999:
             return self._deflections_2d_ell_via_mge_from(
@@ -212,7 +211,7 @@ class MGEDecomposer:
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     def _deflections_2d_ell_via_mge_from(
-            self, grid: aa.type.Grid2DLike, xp=np, *, sigma_log_list, func_terms: int = 28, **kwargs,
+        self, grid: aa.type.Grid2DLike, xp=np, *, sigma_log_list, func_terms: int = 28, **kwargs,
     ):
         amps, sigmas = self.decompose_convergence_ell_via_mge(
             sigma_log_list=sigma_log_list, func_terms=func_terms, xp=xp)
@@ -265,7 +264,7 @@ class MGEDecomposer:
         d_log_sigma = log_sigmas[1] - log_sigmas[0]
 
         f_y = xp.sum(
-            etas * xp.real(self.mass_profile.convergence_func(sigmas.reshape(-1, 1) * kesis, xp=xp)), axis=1
+            etas * xp.real(self.mass_profile.gnfw_3d(sigmas.reshape(-1, 1) * kesis)), axis=1
         )
         # f_y = xp.sum(
         #     etas * xp.real(profile_func(sigmas.reshape(-1, 1) * kesis, 0.0, xp=xp)), axis=1
