@@ -21,8 +21,6 @@ from autoarray.inversion.mesh.mesh.abstract import AbstractMesh
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 from autoarray.inversion.pixelization import Pixelization  # noqa
 from autoarray.inversion.mesh.border_relocator import BorderRelocator
-from autoarray.preloads import Preloads
-from autoarray.preloads import mapper_indices_from
 from autoarray.mask.mask_1d import Mask1D  # noqa
 from autoarray.mask.mask_2d import Mask2D  # noqa
 from autoarray.mask.derive.zoom_2d import Zoom2D
