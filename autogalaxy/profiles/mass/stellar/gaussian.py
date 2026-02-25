@@ -214,7 +214,8 @@ class Gaussian(MassProfile, StellarProfile):
 
         return xp.where(ind_pos_y, core, xp.conj(core))
 
-    def wofz(self, z, xp=np):
+    @staticmethod
+    def wofz(z, xp=np):
         """
         JAX-compatible Faddeeva function w(z) = exp(-z^2) * erfc(-i z)
         Based on the Poppe–Wijers / Zaghloul–Ali rational approximations.
