@@ -107,6 +107,19 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         return eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size
 
+    def gnfw_3d(self, r):
+        x = r / self.scale_radius
+
+        rho_at_scale_radius = (
+                self.kappa_s / self.scale_radius
+        )  # density parameter of 3D gNFW
+
+        return (
+                rho_at_scale_radius
+                * x ** (-self.inner_slope)
+                * (1.0 + x) ** (self.inner_slope - 3.0)
+        )
+
     def decompose_convergence_via_mge(self, xp=np, **kwargs):
         rho_at_scale_radius = (
             self.kappa_s / self.scale_radius
