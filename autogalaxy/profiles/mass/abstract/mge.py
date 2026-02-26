@@ -222,10 +222,10 @@ class MGEDecomposer:
             sigmas = xp.sqrt(q) * sigmas
 
         if xp==np:
-            amplitude_list[0] *= 0.5
+            #amplitude_list[0] *= 0.5
             amplitude_list[-1] *= 0.5
         else:
-            amplitude_list = amplitude_list.at[0].multiply(0.5)
+            #amplitude_list = amplitude_list.at[0].multiply(0.5)
             amplitude_list = amplitude_list.at[-1].multiply(0.5)
 
         return amplitude_list, sigmas
