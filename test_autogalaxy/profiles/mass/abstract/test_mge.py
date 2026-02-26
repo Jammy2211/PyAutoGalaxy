@@ -2,9 +2,8 @@ import numpy as np
 import pytest
 
 import autogalaxy as ag
-import autolens as al
 
-grid = al.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.2,
+grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.2,
                              over_sample_size=8)
 
 def test__gnfw_deflections_yx_2d_via_mge():
@@ -108,10 +107,6 @@ def test__sersic_deflections_yx_2d_via_mge():
     )
 
     mge_decomp = ag.mp.MGEDecomposer(mass_profile=mp)
-
-    deflections_via_mge_np = mp.deflections_2d_via_mge_from(
-        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
-    )
 
     deflections_via_mge = mge_decomp.deflections_2d_via_mge_from(
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]]),
