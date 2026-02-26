@@ -15,7 +15,7 @@ from autogalaxy.profiles.basis import Basis
 
 
 class AbstractFitInversion:
-    def __init__(self, model_obj, settings_inversion: aa.SettingsInversion, xp=np):
+    def __init__(self, model_obj, settings: aa.Settings, xp=np):
         """
         An abstract fit object which fits to datasets (e.g. imaging, interferometer) inherit from.
 
@@ -28,11 +28,11 @@ class AbstractFitInversion:
             The object which contains the model components (e.g. light profiles, galaxies, etc) which are used to
             create the model-data that fits the data. In PyAutoGalaxy this is a list of galaxies and PyAutoLens
             it is a `Tracer`.
-        settings_inversion
+        settings
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
         """
         self.model_obj = model_obj
-        self.settings_inversion = settings_inversion
+        self.settings = settings or aa.Settings()
         self.use_jax = xp is not np
 
     @property
@@ -75,7 +75,7 @@ class AbstractFitInversion:
     def sparse_operator(self) -> Optional[aa.ImagingSparseOperator]:
         """
         Only call the `sparse_operator` property of a dataset used to perform efficient linear algebra calculations if
-        the SettingsInversion()` object has `use_sparse_operator=True`, to avoid unnecessary computation.
+        the Settings()` object has `use_sparse_operator=True`, to avoid unnecessary computation.
 
         Returns
         -------

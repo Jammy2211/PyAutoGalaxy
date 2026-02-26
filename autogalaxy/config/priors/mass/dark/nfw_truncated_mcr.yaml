@@ -151,7 +151,7 @@ NFWTruncatedMCRScatterLudlowSph:
     limits:
       lower: 0.0
       upper: inf
-  scatter:
+  scatter_sigma:
     type: Gaussian
     mean: 0.0
     sigma: 3.0

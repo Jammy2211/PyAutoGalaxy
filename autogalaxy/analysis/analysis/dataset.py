@@ -23,8 +23,7 @@ class AnalysisDataset(Analysis):
         dataset: Union[aa.Imaging, aa.Interferometer],
         adapt_images: Optional[AdaptImages] = None,
         cosmology: LensingCosmology = None,
-        settings_inversion: aa.SettingsInversion = None,
-        preloads: aa.Preloads = None,
+        settings: aa.Settings = None,
         title_prefix: str = None,
         use_jax: bool = True,
         **kwargs,
@@ -45,7 +44,7 @@ class AnalysisDataset(Analysis):
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
-        settings_inversion
+        settings
             Settings controlling how an inversion is fitted during the model-fit, for example which linear algebra
             formalism is used.
         title_prefix
@@ -54,7 +53,6 @@ class AnalysisDataset(Analysis):
         """
         super().__init__(
             cosmology=cosmology,
-            preloads=preloads,
             use_jax=use_jax,
             **kwargs,
         )
@@ -62,7 +60,7 @@ class AnalysisDataset(Analysis):
         self.dataset = dataset
         self.adapt_images = adapt_images
 
-        self.settings_inversion = settings_inversion or aa.SettingsInversion()
+        self.settings = settings or aa.Settings()
 
         self.title_prefix = title_prefix
 
@@ -138,8 +136,8 @@ class AnalysisDataset(Analysis):
             visualization, and the pickled objects used by the aggregator output by this function.
         """
         paths.save_json(
-            name="settings_inversion",
-            object_dict=to_dict(self.settings_inversion),
+            name="settings",
+            object_dict=to_dict(self.settings),
         )
         paths.save_json(
             name="cosmology",

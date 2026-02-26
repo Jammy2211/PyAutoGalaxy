@@ -146,9 +146,10 @@ def test___galaxy_image_dict(interferometer_7):
     assert fit.galaxy_image_dict[g0_linear][4] == pytest.approx(0.9876689631, 1.0e-4)
 
     # Pixelization + Regularizaiton only
+    mesh = ag.mesh.RectangularUniform(shape=(3, 3))
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
+        mesh=mesh,
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 
@@ -158,19 +159,17 @@ def test___galaxy_image_dict(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         galaxies=[g0, galaxy_pix_0],
-        settings_inversion=ag.SettingsInversion(use_border_relocator=True),
+        settings=ag.Settings(use_border_relocator=True),
     )
 
-    mapper_grids = pixelization.mesh.mapper_grids_from(
-        mask=interferometer_7.real_space_mask,
+    interpolator = mesh.interpolator_from(
         source_plane_data_grid=interferometer_7.grids.lp,
         border_relocator=interferometer_7.grids.border_relocator,
         source_plane_mesh_grid=None,
     )
 
     mapper = ag.Mapper(
-        mapper_grids=mapper_grids,
-        border_relocator=interferometer_7.grids.border_relocator,
+        interpolator=interpolator,
         regularization=pixelization.regularization,
     )
 
@@ -263,8 +262,10 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
 
     # Pixelization + Regularizaiton only
 
+    mesh = ag.mesh.RectangularUniform(shape=(3, 3))
+
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
+        mesh=mesh,
         regularization=ag.reg.Constant(coefficient=1.0),
     )
 
@@ -274,19 +275,17 @@ def test___galaxy_model_visibilities_dict(interferometer_7):
     fit = ag.FitInterferometer(
         dataset=interferometer_7,
         galaxies=[g0, galaxy_pix_0],
-        settings_inversion=ag.SettingsInversion(use_border_relocator=True),
+        settings=ag.Settings(use_border_relocator=True),
     )
 
-    mapper_grids = pixelization.mesh.mapper_grids_from(
-        mask=interferometer_7.real_space_mask,
+    interpolator = mesh.interpolator_from(
         source_plane_data_grid=interferometer_7.grids.lp,
         border_relocator=interferometer_7.grids.border_relocator,
         source_plane_mesh_grid=None,
     )
 
     mapper = ag.Mapper(
-        mapper_grids=mapper_grids,
-        border_relocator=interferometer_7.grids.border_relocator,
+        interpolator=interpolator,
         regularization=pixelization.regularization,
     )
 

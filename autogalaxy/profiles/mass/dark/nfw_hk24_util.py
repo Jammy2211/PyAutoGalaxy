@@ -42,12 +42,12 @@ def capital_F_from(chi, xp=np):
     less = chi < 1 - eps
     greater = chi > 1 + eps
 
-    root_min_arg = xp.where(less, 1 - chi ** 2, 0.0)
+    root_min_arg = xp.where(less, 1 - chi**2, 0.0)
     root_min = xp.sqrt(root_min_arg)
     root_min_safe = xp.where(less, root_min, 1.0)
     F_less = xp.where(less, xp.arctanh(root_min) / root_min_safe, 0.0)
 
-    root_plus_arg = xp.where(greater, chi ** 2 - 1, 0.0)
+    root_plus_arg = xp.where(greater, chi**2 - 1, 0.0)
     root_plus = xp.sqrt(root_plus_arg)
     root_plus_safe = xp.where(greater, root_plus, 1.0)
     F_greater = xp.where(greater, xp.arctan(root_plus) / root_plus_safe, 0.0)
@@ -73,7 +73,7 @@ def kappa_from(k_s, a, xp=np):
     Convergence as a function of a
     """
     F = capital_F_from(a, xp=xp)
-    kappa = xp.where(xp.abs(a - 1) < 1e-12, 2/3 * k_s, 2 * k_s * (1 - F) / (a**2 - 1))
+    kappa = xp.where(xp.abs(a - 1) < 1e-12, 2 / 3 * k_s, 2 * k_s * (1 - F) / (a**2 - 1))
     return kappa
 
 
