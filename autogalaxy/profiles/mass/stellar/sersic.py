@@ -233,14 +233,14 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
 
         return self._convergence_2d_via_cse_from(grid_radii=elliptical_radii)
 
-    def convergence_func(self, grid_radius: float) -> float:
-        return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
+    def convergence_func(self, grid_radius: float, xp=np) -> float:
+        return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius, xp=xp)
 
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return np.zeros(shape=grid.shape[0])
 
-    def image_2d_via_radii_from(self, radius: np.ndarray):
+    def image_2d_via_radii_from(self, radius: np.ndarray, xp=np):
         """
         Returns the intensity of the profile at a given radius.
 
@@ -249,13 +249,14 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
             radius
                 The distance from the centre of the profile.
         """
-        return self.intensity * np.exp(
+        return self.intensity * xp.exp(
             -self.sersic_constant
             * (
-                ((radius.array / self.effective_radius) ** (1.0 / self.sersic_index))
+                ((radius / self.effective_radius) ** (1.0 / self.sersic_index))
                 - 1
             )
         )
+
 
     def decompose_convergence_via_mge(
         self, func_terms=28, func_gaussians=20
@@ -332,6 +333,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
                     )
                 )
             )
+
 
         return self._decompose_convergence_via_cse_from(
             func=sersic_2d,
