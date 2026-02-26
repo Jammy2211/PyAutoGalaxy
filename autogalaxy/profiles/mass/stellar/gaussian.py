@@ -33,7 +33,6 @@ class Gaussian(MassProfile, StellarProfile):
             The sigma value of the Gaussian.
         """
 
-        super(Gaussian, self).__init__(centre=centre, ell_comps=ell_comps)
         super(MassProfile, self).__init__(centre=centre, ell_comps=ell_comps)
         self.mass_to_light_ratio = mass_to_light_ratio
         self.intensity = intensity
