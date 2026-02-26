@@ -258,7 +258,7 @@ class Gaussian(MassProfile, StellarProfile):
         for v in V5:
             s = v + z2 * s
 
-        w5 = xp.exp(-z2) + 1j * z * t / s
+        w5 = xp.exp(xp.clip(-z2, None, 700.0)) + 1j * z * t / s #clip prevents overflow error
 
         # ---------- Region 6 ----------
         U6 = xp.asarray(
