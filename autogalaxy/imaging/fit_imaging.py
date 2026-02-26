@@ -24,8 +24,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         galaxies: List[Galaxy],
         dataset_model: Optional[aa.DatasetModel] = None,
         adapt_images: Optional[AdaptImages] = None,
-        settings_inversion: aa.SettingsInversion = aa.SettingsInversion(),
-        preloads: aa.Preloads = None,
+        settings: aa.Settings = None,
         xp=np,
     ):
         """
@@ -63,7 +62,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         adapt_images
             Contains the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
             reconstructed galaxy's morphology.
-        settings_inversion
+        settings
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
         """
 
@@ -77,14 +76,12 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
         AbstractFitInversion.__init__(
             self=self,
             model_obj=self.galaxies,
-            settings_inversion=settings_inversion,
+            settings=settings,
             xp=xp,
         )
 
         self.adapt_images = adapt_images
-        self.settings_inversion = settings_inversion
-
-        self.preloads = preloads
+        self.settings = settings or aa.Settings()
 
     @property
     def blurred_image(self) -> aa.Array2D:
@@ -131,8 +128,7 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
             dataset=dataset,
             galaxies=self.galaxies,
             adapt_images=self.adapt_images,
-            settings_inversion=self.settings_inversion,
-            preloads=self.preloads,
+            settings=self.settings,
             xp=self._xp,
         )
 

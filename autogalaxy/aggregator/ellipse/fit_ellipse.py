@@ -33,7 +33,7 @@ def _fit_ellipse_from(
     is instead used to load lists of the data, noise-map, PSF and mask and combine them into a list of
     `FitEllipse` objects.
 
-    The settings of an inversion can be overwritten by inputting a `settings_inversion` object, for example
+    The settings of an inversion can be overwritten by inputting a `settings` object, for example
     if you want to use a grid with a different inversion solver.
 
     Parameters

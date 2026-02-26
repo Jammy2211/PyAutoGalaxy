@@ -52,7 +52,7 @@ def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
 
     assert (dataset.data.native == np.array([[0.0, 0.0], [1.0, 0.0]])).all()
     assert (dataset.noise_map.native == np.array([[1.0, 1.0], [2.0, 1.0]])).all()
-    assert dataset.psf.native == pytest.approx(
+    assert dataset.psf.kernel.native == pytest.approx(
         np.array([[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.5, 0.5, 0.0]]), 1.0e-4
     )
 
@@ -83,7 +83,7 @@ def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
 
 
 def test__simulator__via_galaxies_from():
-    psf = ag.Kernel2D.from_gaussian(shape_native=(7, 7), sigma=0.5, pixel_scales=0.05)
+    psf = ag.Convolver.from_gaussian(shape_native=(7, 7), sigma=0.5, pixel_scales=0.05)
 
     grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05)
 
@@ -112,7 +112,7 @@ def test__simulator__via_galaxies_from():
     assert dataset.data.native[10, 10] == pytest.approx(
         imaging_via_image.data.native[10, 10], 1.0e-4
     )
-    assert dataset.psf == pytest.approx(imaging_via_image.psf, 1.0e-4)
+    assert dataset.psf.kernel == pytest.approx(imaging_via_image.psf.kernel, 1.0e-4)
     assert dataset.noise_map == pytest.approx(imaging_via_image.noise_map, 1.0e-4)
 
 
@@ -137,7 +137,8 @@ def test__simulator__simulate_imaging_from_galaxy__source_galaxy__compare_to_ima
 
     grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.2)
 
-    psf = ag.Kernel2D.no_mask(values=[[1.0]], pixel_scales=0.2)
+    kernel = ag.Array2D.no_mask(values=[[1.0]], pixel_scales=0.2)
+    psf = ag.Convolver(kernel=kernel)
 
     simulator = ag.SimulatorImaging(
         psf=psf,
@@ -157,5 +158,5 @@ def test__simulator__simulate_imaging_from_galaxy__source_galaxy__compare_to_ima
 
     assert dataset.shape_native == (11, 11)
     assert dataset.data.array == pytest.approx(imaging_via_image.data.array, 1.0e-4)
-    assert (dataset.psf == imaging_via_image.psf).all()
+    assert (dataset.psf.kernel == imaging_via_image.psf.kernel).all()
     assert dataset.noise_map == pytest.approx(imaging_via_image.noise_map, 1.0e-4)

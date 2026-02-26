@@ -21,7 +21,7 @@ def test__signal_to_noise_via_simulator_correct():
 
     assert 8.0 < dataset.signal_to_noise_max < 11.5
 
-    psf = ag.Kernel2D.from_gaussian(
+    psf = ag.Convolver.from_gaussian(
         shape_native=(3, 3), sigma=2.0, pixel_scales=0.2, normalize=True
     )
 

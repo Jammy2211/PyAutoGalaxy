@@ -21,8 +21,7 @@ class AnalysisImaging(AnalysisDataset):
         dataset: aa.Imaging,
         adapt_images: Optional[AdaptImages] = None,
         cosmology: LensingCosmology = None,
-        settings_inversion: aa.SettingsInversion = None,
-        preloads: aa.Preloads = None,
+        settings: aa.Settings = None,
         title_prefix: str = None,
         use_jax: bool = True,
     ):
@@ -50,7 +49,7 @@ class AnalysisImaging(AnalysisDataset):
             used by certain classes for adapting the analysis to the properties of the dataset.
         cosmology
             The Cosmology assumed for this analysis.
-        settings_inversion
+        settings
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
         title_prefix
             A string that is added before the title of all figures output by visualization, for example to
@@ -60,8 +59,7 @@ class AnalysisImaging(AnalysisDataset):
             dataset=dataset,
             adapt_images=adapt_images,
             cosmology=cosmology,
-            settings_inversion=settings_inversion,
-            preloads=preloads,
+            settings=settings,
             title_prefix=title_prefix,
             use_jax=use_jax,
         )
@@ -121,8 +119,6 @@ class AnalysisImaging(AnalysisDataset):
         instance
             An instance of the model that is being fitted to the data by this analysis (whose parameters have been set
             via a non-linear search).
-        preload_overwrite
-            If a `Preload` object is input this is used instead of the preloads stored as an attribute in the analysis.
 
         Returns
         -------
@@ -143,8 +139,7 @@ class AnalysisImaging(AnalysisDataset):
             galaxies=galaxies,
             dataset_model=dataset_model,
             adapt_images=adapt_images,
-            settings_inversion=self.settings_inversion,
-            preloads=self.preloads,
+            settings=self.settings,
             xp=self._xp,
         )
 
