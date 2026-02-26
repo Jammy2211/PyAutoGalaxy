@@ -139,7 +139,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         amplitude_list, sigma_list = self._decompose_convergence_via_mge(
             func=gnfw_3d, radii_min=radii_min, radii_max=radii_max
         )
-        amplitude_list *= xp.sqrt(2.0 * xp.pi) * sigma_list #???
+        amplitude_list *= xp.sqrt(2.0 * xp.pi) * sigma_list
         return amplitude_list, sigma_list
 
     def coord_func_f(self, grid_radius: np.ndarray, xp=np) -> np.ndarray:

@@ -221,7 +221,7 @@ class MassProfileMGE:
 
         for i in range(func_gaussians):
             f_sigma = np.sum(etas * np.real(func(sigma_list[i] * kesis)))
-            if (i == 0) or (i == (func_gaussians - 1)):
+            if (i == -1) or (i == (func_gaussians - 1)):
                 amplitude_list[i] = 0.5 * f_sigma * d_log_sigma / np.sqrt(2.0 * np.pi)
             else:
                 amplitude_list[i] = f_sigma * d_log_sigma / np.sqrt(2.0 * np.pi)
