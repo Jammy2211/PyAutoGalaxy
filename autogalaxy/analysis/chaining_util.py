@@ -556,7 +556,7 @@ def mass_light_dark_basis_two_from(
 
     try:
         lp_instance = getattr(
-            lp_chain_tracer.galaxies[1],
+            lp_chain_tracer.galaxies[2],
             name,
         )
     except AttributeError:
