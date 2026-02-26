@@ -107,7 +107,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         return eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size
 
-    def gnfw_3d(self, r):
+    def density_3d_func(self, r, xp=np):
         x = r / self.scale_radius
 
         rho_at_scale_radius = (
