@@ -1,5 +1,6 @@
 import numpy as np
 import pytest
+from autogalaxy.profiles.mass.abstract.mge_numpy import MassProfileMGE
 
 import autogalaxy as ag
 
@@ -30,6 +31,7 @@ def test__gnfw_deflections_yx_2d_via_mge():
         grid=ag.Grid2DIrregular([[0.1875, 0.1625]]),
         xp=np,
         sigma_log_list=sigmas,
+        sigmas_factor=nfw.axis_ratio(np),
         three_D=True
     )
 
@@ -57,6 +59,7 @@ def test__gnfw_deflections_yx_2d_via_mge():
         grid=ag.Grid2DIrregular([[0.1875, 0.1625]]),
         xp=np,
         sigma_log_list=sigmas,
+        sigmas_factor=nfw.axis_ratio(np),
         three_D=True
     )
 
@@ -88,6 +91,7 @@ def test__sersic_deflections_yx_2d_via_mge():
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]]),
         xp=np,
         sigma_log_list=sigmas,
+        sigmas_factor=mp.axis_ratio(np),
         three_D=False,
     )
 
@@ -112,6 +116,7 @@ def test__sersic_deflections_yx_2d_via_mge():
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]]),
         xp=np,
         sigma_log_list=sigmas,
+        sigmas_factor=mp.axis_ratio(np),
         three_D=False,
     )
 
@@ -141,6 +146,61 @@ def test__cnfw_deflections_yx_2d_via_mge():
         xp=np,
         sigma_log_list=sigmas,
         three_D=True
+    )
+
+    assert deflections_analytic == pytest.approx(deflections_via_mge, 1.0e-3)
+
+def test__powerlaw_deflections_yx_2d_via_mge():
+    mp = ag.mp.PowerLaw(
+        centre=(-0.4, -0.2),
+        ell_comps=(0.17142, -0.285116),
+        einstein_radius=0.2,
+        slope=1.8,
+    )
+
+    radii_min = mp.einstein_radius / 10000.0
+    radii_max = mp.einstein_radius * 1000.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 30)
+    sigmas = np.exp(log_sigmas)
+
+    deflections_analytic = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[0.1875, 0.1625]]),
+                                                     xp=np)
+
+    mge_decomp = ag.mp.MGEDecomposer(mass_profile=mp)
+
+    deflections_via_mge = mge_decomp.deflections_2d_via_mge_from(
+        grid=ag.Grid2DIrregular([[0.1875, 0.1625]]),
+        xp=np,
+        sigma_log_list=sigmas,
+        sigmas_factor=mp.axis_ratio(np),
+        three_D=False
+    )
+
+    assert deflections_analytic == pytest.approx(deflections_via_mge, 1.0e-2)
+
+def test__chameleon_deflections_yx_2d_via_mge():
+    mp = ag.mp.Chameleon(
+        centre=(-0.4, -0.2),
+        ell_comps=(0.17142, -0.285116),
+        intensity=2.8
+    )
+
+    radii_min = mp.core_radius_0 / 10000.0
+    radii_max = mp.core_radius_0 * 10000.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 30)
+    sigmas = np.exp(log_sigmas)
+
+    deflections_analytic = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[-0.1875, 0.1625]]),
+                                                     xp=np)
+
+    mge_decomp = ag.mp.MGEDecomposer(mass_profile=mp)
+
+    deflections_via_mge = mge_decomp.deflections_2d_via_mge_from(
+        grid=ag.Grid2DIrregular([[-0.1875, 0.1625]]),
+        xp=np,
+        sigma_log_list=sigmas,
+        sigmas_factor=mp.axis_ratio(np),
+        three_D=False
     )
 
     assert deflections_analytic == pytest.approx(deflections_via_mge, 1.0e-3)
