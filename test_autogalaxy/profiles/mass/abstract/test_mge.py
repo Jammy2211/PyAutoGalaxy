@@ -91,7 +91,7 @@ def test__sersic_deflections_yx_2d_via_mge():
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]]),
         xp=np,
         sigma_log_list=sigmas,
-        sigmas_factor=mp.axis_ratio(np),
+        sigmas_factor=np.sqrt(mp.axis_ratio(np)),
         three_D=False,
     )
 
@@ -116,7 +116,7 @@ def test__sersic_deflections_yx_2d_via_mge():
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]]),
         xp=np,
         sigma_log_list=sigmas,
-        sigmas_factor=mp.axis_ratio(np),
+        sigmas_factor=np.sqrt(mp.axis_ratio(np)),
         three_D=False,
     )
 

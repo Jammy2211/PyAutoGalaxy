@@ -143,7 +143,7 @@ class Chameleon(MassProfile, StellarProfile):
             The grid of (y,x) arc-second coordinates the convergence is computed on.
         """
         return self.convergence_func(
-            self.elliptical_radii_grid_from(grid=grid, xp=xp, **kwargs).array
+            self.elliptical_radii_grid_from(grid=grid, xp=xp, **kwargs)
         )
 
     def convergence_func(self, grid_radius: float, xp=np) -> float:
@@ -171,7 +171,7 @@ class Chameleon(MassProfile, StellarProfile):
                     1.0,
                     xp.sqrt(
                         xp.add(
-                            xp.square(grid_radii),
+                            xp.square(grid_radii.array),
                             (4.0 * self.core_radius_0**2.0) / axis_ratio_factor,
                         )
                     ),
@@ -180,7 +180,7 @@ class Chameleon(MassProfile, StellarProfile):
                     1.0,
                     xp.sqrt(
                         xp.add(
-                            xp.square(grid_radii),
+                            xp.square(grid_radii.array),
                             (4.0 * self.core_radius_1**2.0) / axis_ratio_factor,
                         )
                     ),

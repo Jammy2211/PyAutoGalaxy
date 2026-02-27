@@ -208,13 +208,13 @@ class MGEDecomposer:
 
         if three_D == True:
             f_sigma = xp.sum(
-                etas * xp.real(self.mass_profile.density_3d_func(sigmas.reshape(-1, 1) * kesis, xp=xp)), axis=1
+                etas * xp.real(self.mass_profile.density_3d_func(aa.ArrayIrregular(sigmas.reshape(-1, 1) * kesis), xp=xp)), axis=1
             )
             amplitude_list = f_sigma * d_log_sigma * sigmas
 
         else:
             f_sigma = xp.sum(
-                etas * xp.real(self.mass_profile.convergence_func(sigmas.reshape(-1, 1) * kesis, xp=xp)), axis=1
+                etas * xp.real(self.mass_profile.convergence_func(aa.ArrayIrregular(sigmas.reshape(-1, 1) * kesis), xp=xp)), axis=1
             )
             amplitude_list = f_sigma * d_log_sigma / xp.sqrt(2.0 * xp.pi)
 

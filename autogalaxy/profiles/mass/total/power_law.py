@@ -124,7 +124,7 @@ class PowerLaw(PowerLawCore):
         )
 
     def convergence_func(self, grid_radius: float, xp=np) -> float:
-        return self.einstein_radius_rescaled(xp) * grid_radius ** (
+        return self.einstein_radius_rescaled(xp) * grid_radius.array ** (
             -(self.slope - 1)
         )
 

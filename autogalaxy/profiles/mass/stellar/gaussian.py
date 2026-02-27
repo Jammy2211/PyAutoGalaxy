@@ -151,7 +151,7 @@ class Gaussian(MassProfile, StellarProfile):
 
         """
         return self.convergence_func(
-            self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs).array
+            self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs)
         )
 
     def convergence_func(self, grid_radius: float, xp=np) -> float:
@@ -177,7 +177,7 @@ class Gaussian(MassProfile, StellarProfile):
                 -0.5
                 * xp.square(
                     xp.divide(
-                        grid_radii, self.sigma / xp.sqrt(self.axis_ratio(xp))
+                        grid_radii.array, self.sigma / xp.sqrt(self.axis_ratio(xp))
                     )
                 )
             ),

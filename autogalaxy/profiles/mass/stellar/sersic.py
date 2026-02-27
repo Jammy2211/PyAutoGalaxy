@@ -2,6 +2,8 @@ import numpy as np
 
 from typing import List, Tuple
 
+from autoarray import Grid2D
+
 import autoarray as aa
 
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
@@ -252,8 +254,8 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         return self.intensity * xp.exp(
             -self.sersic_constant
             * (
-                ((radius / self.effective_radius) ** (1.0 / self.sersic_index))
-                - 1
+                    ((radius.array / self.effective_radius) ** (1.0 / self.sersic_index))
+                    - 1
             )
         )
 
