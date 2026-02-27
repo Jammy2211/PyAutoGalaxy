@@ -228,7 +228,7 @@ def test__image_2d_via_radii_from__correct_value():
         centre=(0.0, 0.0), ell_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
     )
 
-    intensity = mp.image_2d_via_radii_from(grid_radii=ag.ArrayIrregular(1.0))
+    intensity = mp.image_2d_via_radii_from(grid_radii=ag.ArrayIrregular(1.0).array)
 
     assert intensity == pytest.approx(0.60653, 1e-2)
 
@@ -236,14 +236,14 @@ def test__image_2d_via_radii_from__correct_value():
         centre=(0.0, 0.0), ell_comps=(0.0, 0.0), intensity=2.0, sigma=1.0
     )
 
-    intensity = mp.image_2d_via_radii_from(grid_radii=ag.ArrayIrregular(1.0))
+    intensity = mp.image_2d_via_radii_from(grid_radii=ag.ArrayIrregular(1.0).array)
 
     assert intensity == pytest.approx(2.0 * 0.60653, 1e-2)
 
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0), ell_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
     )
-    intensity = mp.image_2d_via_radii_from(grid_radii=ag.ArrayIrregular(1.0))
+    intensity = mp.image_2d_via_radii_from(grid_radii=ag.ArrayIrregular(1.0).array)
 
     assert intensity == pytest.approx(0.882496, 1e-2)
 
@@ -251,7 +251,7 @@ def test__image_2d_via_radii_from__correct_value():
         centre=(0.0, 0.0), ell_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
     )
 
-    intensity = mp.image_2d_via_radii_from(grid_radii=ag.ArrayIrregular(3.0))
+    intensity = mp.image_2d_via_radii_from(grid_radii=ag.ArrayIrregular(3.0).array)
 
     assert intensity == pytest.approx(0.32465, 1e-2)
 
