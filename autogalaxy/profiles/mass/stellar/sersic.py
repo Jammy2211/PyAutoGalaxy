@@ -179,7 +179,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
 
         """
         return self.convergence_func(
-            self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs)
+            self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs).array
         )
 
     @aa.over_sample
