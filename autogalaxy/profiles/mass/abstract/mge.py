@@ -156,6 +156,23 @@ class MGEDecomposer:
         self, grid: aa.type.Grid2DLike, xp=np, *, sigma_log_list, three_D: bool,
             sigmas_factor: float = 1.0, func_terms: int = 28, **kwargs,
     ):
+        """
+        Calculates the deflection angle of an arbitrary elliptical convergence / 3d density
+        profile via a summation of Gaussian convergences
+        ----------
+        sigma_log_list : list
+            A log spaced list of Gaussian sigmas
+        three_D : bool
+            if input function is a three-dimensional density profile, yes
+        sigmas_factor : float
+            depending on the ellipticity convention, different profiles need different multiplications
+            of the sigmas. Most profiles need a sigmas factor of axis_ratio(), some sqrt(axis_ratio())
+        func_terms
+            The number of terms used to approximate the input func, 28 is sufficient for 64bits
+
+        Returns
+        -------
+        """
         amps, sigmas = self.decompose_convergence_via_mge(
             sigma_log_list=sigma_log_list, func_terms=func_terms, three_D=three_D, xp=xp)
 
@@ -183,17 +200,16 @@ class MGEDecomposer:
         self, sigma_log_list, three_D: bool, func_terms: int = 28, xp=np
     ):
         """
-
+        Decomposes the convergence profile of an arbitrary elliptical function into a sum of
+        Gaussian convergence profiles
         Parameters
         ----------
-        func : func
-            The function representing the profile that is decomposed into Gaussians.
-        normalization
-            A normalization factor tyh
+        sigma_log_list : list
+            A log spaced list of Gaussian sigmas
+        three_D : bool
+            if input function is a three-dimensional density profile, yes
         func_terms
-            The number of terms used to approximate the input func.
-        func_gaussians
-            The number of Gaussians used to represent the input func.
+            The number of terms used to approximate the input func, 28 is sufficient for 64bits
 
         Returns
         -------
@@ -226,50 +242,6 @@ class MGEDecomposer:
             amplitude_list = amplitude_list.at[-1].multiply(0.5)
 
         return amplitude_list, sigmas
-
-
-    # def decompose_convergence_sph_via_mge(
-    #     self, sigma_log_list, func_terms: int = 28, xp=np
-    # ):
-    #     """
-    #
-    #     Parameters
-    #     ----------
-    #     func : func
-    #         The function representing the profile that is decomposed into Gaussians.
-    #     normalization
-    #         A normalization factor tyh
-    #     func_terms
-    #         The number of terms used to approximate the input func.
-    #     func_gaussians
-    #         The number of Gaussians used to represent the input func.
-    #
-    #     Returns
-    #     -------
-    #     """
-    #     kesis = self.kesi(func_terms, xp=xp)  # kesi in Eq.(6) of 1906.08263
-    #     etas = self.eta(func_terms, xp=xp)  # eta in Eqr.(6) of 1906.08263
-    #
-    #     sigmas = xp.array(sigma_log_list)
-    #
-    #     #log_sigmas = xp.linspace(xp.log(radii_min), xp.log(radii_max), func_gaussians)
-    #     log_sigmas = xp.log(sigmas)
-    #     d_log_sigma = log_sigmas[1] - log_sigmas[0]
-    #     #sigma_list = xp.exp(log_sigmas)
-    #
-    #     f_sigma = xp.sum(
-    #         etas * xp.real(self.mass_profile.convergence_func(sigmas.reshape(-1, 1) * kesis, xp=xp)), axis=1
-    #     )
-    #
-    #     amplitude_list = f_sigma * d_log_sigma / xp.sqrt(2.0 * xp.pi)
-    #     if xp==np:
-    #         amplitude_list[0] *= 0.5
-    #         amplitude_list[-1] *= 0.5
-    #     else:
-    #         amplitude_list = amplitude_list.at[0].multiply(0.5)
-    #         amplitude_list = amplitude_list.at[-1].multiply(0.5)
-    #
-    #     return amplitude_list, sigmas
 
 
     def axis_ratio(self, xp=np):
