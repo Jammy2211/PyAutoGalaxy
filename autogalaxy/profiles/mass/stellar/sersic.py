@@ -181,7 +181,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
 
         """
         return self.convergence_func(
-            self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs).array
+            self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs)
         )
 
     @aa.over_sample
@@ -254,7 +254,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         return self.intensity * xp.exp(
             -self.sersic_constant
             * (
-                    ((radius.array / self.effective_radius) ** (1.0 / self.sersic_index))
+                    ((radius / self.effective_radius) ** (1.0 / self.sersic_index))
                     - 1
             )
         )
