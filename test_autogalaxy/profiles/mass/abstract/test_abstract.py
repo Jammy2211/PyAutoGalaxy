@@ -120,6 +120,7 @@ def test__average_convergence_of_1_radius():
     assert sie.average_convergence_of_1_radius == pytest.approx(8.0, 1e-4)
 
 
+
 def test__density_between_circular_annuli():
     einstein_radius = 1.0
 
