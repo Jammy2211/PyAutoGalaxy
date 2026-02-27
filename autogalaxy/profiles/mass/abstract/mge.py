@@ -153,14 +153,15 @@ class MGEDecomposer:
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     def deflections_2d_via_mge_from(
-        self, grid: aa.type.Grid2DLike, xp=np, *, sigma_log_list, func_terms: int = 28, three_D: bool = True, **kwargs,
+        self, grid: aa.type.Grid2DLike, xp=np, *, sigma_log_list, three_D: bool,
+            sigmas_factor: float = 1.0, func_terms: int = 28, **kwargs,
     ):
         amps, sigmas = self.decompose_convergence_via_mge(
             sigma_log_list=sigma_log_list, func_terms=func_terms, three_D=three_D, xp=xp)
 
         q = xp.asarray(self.axis_ratio(xp), dtype=xp.float64)
 
-        #sigmas = xp.sqrt(q) * sigma_log_list
+        sigmas = sigmas_factor * sigma_log_list
 
         deflection_angles = (
                 amps[:, None]
@@ -179,7 +180,7 @@ class MGEDecomposer:
 
 
     def decompose_convergence_via_mge(
-        self, sigma_log_list, func_terms: int = 28, three_D: bool = True, xp=np
+        self, sigma_log_list, three_D: bool, func_terms: int = 28, xp=np
     ):
         """
 
@@ -205,27 +206,23 @@ class MGEDecomposer:
         log_sigmas = xp.log(sigmas)
         d_log_sigma = log_sigmas[1] - log_sigmas[0]
 
-        q = xp.asarray(self.axis_ratio(xp), dtype=xp.float64)
-
         if three_D == True:
             f_sigma = xp.sum(
                 etas * xp.real(self.mass_profile.density_3d_func(sigmas.reshape(-1, 1) * kesis, xp=xp)), axis=1
             )
             amplitude_list = f_sigma * d_log_sigma * sigmas
-            sigmas = q * sigmas
 
         else:
             f_sigma = xp.sum(
                 etas * xp.real(self.mass_profile.convergence_func(sigmas.reshape(-1, 1) * kesis, xp=xp)), axis=1
             )
             amplitude_list = f_sigma * d_log_sigma / xp.sqrt(2.0 * xp.pi)
-            sigmas = xp.sqrt(q) * sigmas
 
         if xp==np:
-            #amplitude_list[0] *= 0.5
+            amplitude_list[0] *= 0.5
             amplitude_list[-1] *= 0.5
         else:
-            #amplitude_list = amplitude_list.at[0].multiply(0.5)
+            amplitude_list = amplitude_list.at[0].multiply(0.5)
             amplitude_list = amplitude_list.at[-1].multiply(0.5)
 
         return amplitude_list, sigmas
