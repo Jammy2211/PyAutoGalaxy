@@ -165,3 +165,16 @@ class cNFWSph(AbstractgNFW):
         This is not yet implemented for `cNFWSph`.
         """
         return xp.zeros(shape=grid.shape[0])
+
+    def density_3d_func(self, theta, xp=np):
+
+        rho_at_scale_radius = (
+                self.kappa_s / self.scale_radius
+        )  # density parameter of 3D gNFW
+
+        return (
+                rho_at_scale_radius * self.scale_radius **3.0
+                * (theta + self.core_radius) ** (-1.0)
+                * (theta + self.scale_radius) ** (-2.0)
+        )
+

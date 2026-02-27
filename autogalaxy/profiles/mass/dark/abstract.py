@@ -107,7 +107,20 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
 
         return eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size
 
-    def decompose_convergence_via_mge(self, **kwargs):
+    def density_3d_func(self, r, xp=np):
+        x = r / self.scale_radius
+
+        rho_at_scale_radius = (
+                self.kappa_s / self.scale_radius
+        )  # density parameter of 3D gNFW
+
+        return (
+                rho_at_scale_radius
+                * x ** (-self.inner_slope)
+                * (1.0 + x) ** (self.inner_slope - 3.0)
+        )
+
+    def decompose_convergence_via_mge(self, xp=np, **kwargs):
         rho_at_scale_radius = (
             self.kappa_s / self.scale_radius
         )  # density parameter of 3D gNFW
@@ -126,7 +139,7 @@ class AbstractgNFW(MassProfile, DarkProfile, MassProfileMGE):
         amplitude_list, sigma_list = self._decompose_convergence_via_mge(
             func=gnfw_3d, radii_min=radii_min, radii_max=radii_max
         )
-        amplitude_list *= np.sqrt(2.0 * np.pi) * sigma_list
+        amplitude_list *= xp.sqrt(2.0 * xp.pi) * sigma_list
         return amplitude_list, sigma_list
 
     def coord_func_f(self, grid_radius: np.ndarray, xp=np) -> np.ndarray:

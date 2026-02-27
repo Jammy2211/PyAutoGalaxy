@@ -146,8 +146,8 @@ class Chameleon(MassProfile, StellarProfile):
             self.elliptical_radii_grid_from(grid=grid, xp=xp, **kwargs)
         )
 
-    def convergence_func(self, grid_radius: float) -> float:
-        return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius)
+    def convergence_func(self, grid_radius: float, xp=np) -> float:
+        return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius, xp=xp)
 
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
