@@ -151,6 +151,9 @@ class Isothermal(PowerLaw):
 
         return aa.VectorYX2DIrregular(values=shear_field, grid=grid)
 
+    def convergence_func(self, r, xp=np):
+        return self.einstein_radius / (2.0 * r)
+
 
 class IsothermalSph(Isothermal):
     def __init__(
