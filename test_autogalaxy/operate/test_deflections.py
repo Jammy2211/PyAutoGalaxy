@@ -111,7 +111,6 @@ def test__hessian_from():
 
 
 def test__convergence_2d_via_hessian_from():
-    buffer = 0.0001
     grid = ag.Grid2DIrregular(
         values=[(1.075, -0.125), (-0.875, -0.075), (-0.925, -0.075), (0.075, 0.925)]
     )
@@ -120,7 +119,7 @@ def test__convergence_2d_via_hessian_from():
         centre=(0.0, 0.0), ell_comps=(0.001, 0.001), einstein_radius=1.0
     )
 
-    convergence = mp.convergence_2d_via_hessian_from(grid=grid, buffer=buffer)
+    convergence = mp.convergence_2d_via_hessian_from(grid=grid)
 
     assert convergence.in_list[0] == pytest.approx(0.46208, 1.0e-1)
     assert convergence.in_list[1] == pytest.approx(0.56840, 1.0e-1)
