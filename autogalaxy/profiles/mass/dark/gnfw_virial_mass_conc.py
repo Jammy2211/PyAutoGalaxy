@@ -14,49 +14,6 @@ def is_jax(x):
     except Exception:
         return False
 
-def _hyp2f1_jax(xp, *, max_terms: int = 256):
-    """
-    Returns a callable hyp2f1(a,b,c,z) compatible with the backend xp.
-
-    - NumPy: scipy.special.hyp2f1
-    - JAX (if available): jax.scipy.special.hyp2f1
-    - JAX (fallback): series approximation for 2F1 (sufficient for this gNFW use-case)
-    """
-    import jax
-    import jax.numpy as jnp
-
-    # Fallback: truncated series for 2F1(a,a;a+1;z) and general 2F1(a,b;c;z)
-    # We implement general 2F1 series:
-    #   2F1(a,b;c;z) = sum_{n=0}^{∞} (a)_n (b)_n / (c)_n * z^n / n!
-    #
-    # Recurrence for terms:
-    #   t_0 = 1
-    #   t_{n+1} = t_n * (a+n)(b+n)/((c+n)(n+1)) * z
-    #
-    # This is JIT-safe with static max_terms.
-    def hyp2f1_series(a, b, c, z):
-        a = jnp.asarray(a)
-        b = jnp.asarray(b)
-        c = jnp.asarray(c)
-        z = jnp.asarray(z)
-
-        def body_fun(n, carry):
-            t, s = carry
-            n_f = jnp.asarray(n, dtype=t.dtype)
-            t = t * (a + n_f) * (b + n_f) / ((c + n_f) * (n_f + 1.0)) * z
-            s = s + t
-            return (t, s)
-
-        # Start: t0 = 1, s0 = 1
-        t0 = jnp.ones_like(z, dtype=jnp.result_type(a, b, c, z))
-        s0 = t0
-
-        # fori_loop has static iteration count => good under jit/vmap
-        tN, sN = jax.lax.fori_loop(0, max_terms - 1, body_fun, (t0, s0))
-        return sN
-
-    return hyp2f1_series
-
 def kappa_s_and_scale_radius(
     cosmology,
     virial_mass,
@@ -146,9 +103,12 @@ def kappa_s_and_scale_radius(
         from scipy.special import hyp2f1
     else:
         try:
-            from jax.scipy.special import hyp2f1
-        except ImportError:
-            hyp2f1 = _hyp2f1_jax(xp)
+            from jax.scipy.special import hyp2f1  # noqa: F401
+        except Exception as e:
+            raise RuntimeError(
+                "This feature requires jax.scipy.special.hyp2f1, which is available in "
+                "JAX >= 0.6.1. Please upgrade `jax` and `jaxlib`."
+            ) from e
 
     gamma = inner_slope
     concentration = (2.0 - gamma) * c_2  # gNFW concentration (your definition)
