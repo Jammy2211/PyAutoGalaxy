@@ -174,7 +174,7 @@ class cNFWSph(AbstractgNFW):
 
         return (
                 rho_at_scale_radius * self.scale_radius **3.0
-                * (theta + self.core_radius) ** (-1.0)
-                * (theta + self.scale_radius) ** (-2.0)
+                * (theta.array + self.core_radius) ** (-1.0)
+                * (theta.array + self.scale_radius) ** (-2.0)
         )
 
