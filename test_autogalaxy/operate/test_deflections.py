@@ -139,51 +139,6 @@ def test__magnification_2d_via_hessian_from():
     assert magnification.in_list[0] == pytest.approx(-0.56303, 1.0e-4)
     assert magnification.in_list[1] == pytest.approx(-2.57591, 1.0e-4)
 
-
-def test__magnification_2d_from__compare_eigen_values_and_determinant():
-    grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05)
-
-    mp = ag.mp.Isothermal(
-        centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
-    )
-
-    magnification_via_determinant = mp.magnification_2d_from(grid=grid)
-    tangential_eigen_value = mp.tangential_eigen_value_from(grid=grid)
-
-    radal_eigen_value = mp.radial_eigen_value_from(grid=grid)
-    magnification_via_eigen_values = 1 / (tangential_eigen_value * radal_eigen_value)
-
-    mean_error = np.mean(
-        magnification_via_determinant.slim - magnification_via_eigen_values.slim
-    )
-
-    assert mean_error < 1e-4
-
-
-def test__magnification_2d_from__compare_determinant_and_convergence_and_shear():
-    grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05)
-
-    mp = ag.mp.Isothermal(
-        centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
-    )
-
-    magnification_via_determinant = mp.magnification_2d_from(grid=grid)
-
-    convergence = mp.convergence_2d_via_jacobian_from(grid=grid)
-    shear = mp.shear_yx_2d_via_jacobian_from(grid=grid)
-
-    magnification_via_convergence_and_shear = 1 / (
-        (1 - convergence) ** 2 - shear.magnitudes**2
-    )
-
-    mean_error = np.mean(
-        magnification_via_determinant.slim
-        - magnification_via_convergence_and_shear.slim
-    )
-
-    assert mean_error < 1e-4
-
-
 def test__tangential_critical_curve_list_from():
     grid = ag.Grid2D.uniform(shape_native=(15, 15), pixel_scales=0.3)
 
@@ -488,7 +443,15 @@ def test__einstein_mass_angular_from():
 
 
 def test__jacobian_from():
-    grid = ag.Grid2D.uniform(shape_native=(100, 100), pixel_scales=0.05)
+    """
+    The Jacobian is A = I - H, where H is the Hessian of the deflection angles.
+
+    This test verifies the structure and values of `jacobian_from` by checking that:
+    - it returns a 2x2 list of lists;
+    - the convergence derived from its diagonal matches `convergence_2d_via_hessian_from`;
+    - the magnification derived from its determinant matches `magnification_2d_via_hessian_from`.
+    """
+    grid = ag.Grid2DIrregular(values=[(1.0, 1.0), (2.0, 0.5)])
 
     mp = ag.mp.Isothermal(
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
@@ -496,42 +459,24 @@ def test__jacobian_from():
 
     jacobian = mp.jacobian_from(grid=grid)
 
-    A_12 = jacobian[0][1]
-    A_21 = jacobian[1][0]
+    assert len(jacobian) == 2
+    assert len(jacobian[0]) == 2 and len(jacobian[1]) == 2
 
-    mean_error = np.mean(A_12.slim - A_21.slim)
+    # convergence = 1 - 0.5 * (a11 + a22) should match convergence_2d_via_hessian_from
+    convergence_via_jacobian = 1 - 0.5 * (jacobian[0][0] + jacobian[1][1])
+    convergence_via_hessian = mp.convergence_2d_via_hessian_from(grid=grid)
 
-    assert mean_error < 1e-4
-
-
-def test__convergence_2d_via_jacobian_from__compare_via_jacobian_and_analytic():
-    grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05)
-
-    mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
-
-    convergence_via_analytic = mp.convergence_2d_from(grid=grid)
-
-    convergence_via_jacobian = mp.convergence_2d_via_jacobian_from(grid=grid)
-
-    mean_error = np.mean(convergence_via_jacobian.slim - convergence_via_analytic.slim)
-
-    assert convergence_via_jacobian.native.shape == (20, 20)
-    assert mean_error < 1e-1
-
-    mean_error = np.mean(convergence_via_jacobian.slim - convergence_via_analytic.slim)
-
-    assert mean_error < 1e-1
-
-    grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.05)
-
-    mp = ag.mp.Isothermal(
-        centre=(0.0, 0.0), ell_comps=(0.111111, 0.0), einstein_radius=2.0
+    assert convergence_via_jacobian == pytest.approx(
+        np.array(convergence_via_hessian), rel=1e-6
     )
 
-    convergence_via_analytic = mp.convergence_2d_from(grid=grid)
+    # magnification = 1 / det(A) = 1 / (a11*a22 - a12*a21)
+    det_A = jacobian[0][0] * jacobian[1][1] - jacobian[0][1] * jacobian[1][0]
+    magnification_via_jacobian = 1 / det_A
+    magnification_via_hessian = mp.magnification_2d_via_hessian_from(grid=grid)
 
-    convergence_via_jacobian = mp.convergence_2d_via_jacobian_from(grid=grid)
+    assert magnification_via_jacobian == pytest.approx(
+        np.array(magnification_via_hessian), rel=1e-6
+    )
 
-    mean_error = np.mean(convergence_via_jacobian.slim - convergence_via_analytic.slim)
 
-    assert mean_error < 1e-1

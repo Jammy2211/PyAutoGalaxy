@@ -7,7 +7,6 @@ from autoconf import conf
 
 import autoarray as aa
 
-from autogalaxy.util.shear_field import ShearYX2D
 from autogalaxy.util.shear_field import ShearYX2DIrregular
 
 logger = logging.getLogger(__name__)
@@ -32,17 +31,6 @@ def grid_scaled_2d_for_marching_squares_from(
     grid_scaled_1d[:, 1] += pixel_scales[1] / 2.0
 
     return aa.Grid2DIrregular(values=grid_scaled_1d)
-
-
-def precompute_jacobian(func):
-    @wraps(func)
-    def wrapper(lensing_obj, grid, jacobian=None):
-        if jacobian is None:
-            jacobian = lensing_obj.jacobian_from(grid=grid)
-
-        return func(lensing_obj, grid, jacobian)
-
-    return wrapper
 
 
 def evaluation_grid(func):
@@ -181,8 +169,7 @@ class OperateDeflections:
             return aa.ArrayIrregular(values=fermat_potential)
         return aa.Array2D(values=fermat_potential, mask=grid.mask)
 
-    @precompute_jacobian
-    def tangential_eigen_value_from(self, grid, jacobian=None) -> aa.Array2D:
+    def tangential_eigen_value_from(self, grid) -> aa.Array2D:
         """
         Returns the tangential eigen values of lensing jacobian, which are given by the expression:
 
@@ -193,54 +180,43 @@ class OperateDeflections:
         grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and tangential eigen values are computed
             on.
-        jacobian
-            A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
         """
-        convergence = self.convergence_2d_via_jacobian_from(
-            grid=grid, jacobian=jacobian
-        )
-
-        shear_yx = self.shear_yx_2d_via_jacobian_from(grid=grid, jacobian=jacobian)
+        convergence = self.convergence_2d_via_hessian_from(grid=grid)
+        shear_yx = self.shear_yx_2d_via_hessian_from(grid=grid)
 
         return aa.Array2D(values=1 - convergence - shear_yx.magnitudes, mask=grid.mask)
 
-    @precompute_jacobian
-    def radial_eigen_value_from(self, grid, jacobian=None) -> aa.Array2D:
+    def radial_eigen_value_from(self, grid) -> aa.Array2D:
         """
         Returns the radial eigen values of lensing jacobian, which are given by the expression:
 
-        radial_eigen_value = 1 - convergence + shear
+        `radial_eigen_value = 1 - convergence + shear`
 
         Parameters
         ----------
         grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and radial eigen values are computed on.
-        jacobian
-            A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
         """
-        convergence = self.convergence_2d_via_jacobian_from(
-            grid=grid, jacobian=jacobian
-        )
-
-        shear = self.shear_yx_2d_via_jacobian_from(grid=grid, jacobian=jacobian)
+        convergence = self.convergence_2d_via_hessian_from(grid=grid)
+        shear = self.shear_yx_2d_via_hessian_from(grid=grid)
 
         return aa.Array2D(values=1 - convergence + shear.magnitudes, mask=grid.mask)
 
     def magnification_2d_from(self, grid) -> aa.Array2D:
         """
         Returns the 2D magnification map of lensing object, which is computed as the inverse of the determinant of the
-        jacobian.
+        lensing Jacobian, expressed via the Hessian components.
 
         Parameters
         ----------
         grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and magnification map are computed on.
         """
-        jacobian = self.jacobian_from(grid=grid)
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(grid=grid)
 
-        det_jacobian = jacobian[0][0] * jacobian[1][1] - jacobian[0][1] * jacobian[1][0]
+        det_A = (1 - hessian_xx) * (1 - hessian_yy) - hessian_xy * hessian_yx
 
-        return aa.Array2D(values=1 / det_jacobian, mask=grid.mask)
+        return aa.Array2D(values=1 / det_A, mask=grid.mask)
 
     def deflections_yx_scalar(self, y, x, pixel_scales):
         """
@@ -358,6 +334,37 @@ class OperateDeflections:
         hessian_xx = 0.5 * (deflections_right[:, 1] - deflections_left[:, 1]) / buffer
 
         return hessian_yy, hessian_xy, hessian_yx, hessian_xx
+
+    def jacobian_from(self, grid, xp=np) -> List:
+        """
+        Returns the lensing Jacobian of the lensing object as a 2x2 list of lists.
+
+        The Jacobian is the matrix `A = I - H`, where `H` is the Hessian matrix of the
+        deflection angles:
+
+        ``A = [[1 - hessian_xx, -hessian_xy], [-hessian_yx, 1 - hessian_yy]]``
+
+        It is computed from `hessian_from`, so it supports both uniform and irregular
+        grids and accepts the same `xp` parameter for JAX acceleration.
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the Jacobian is computed on.
+        xp
+            The array module (``numpy`` or ``jax.numpy``). Passed through to
+            ``hessian_from``.
+        """
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
+            grid=grid, xp=xp
+        )
+
+        a11 = 1 - hessian_xx
+        a12 = -hessian_xy
+        a21 = -hessian_yx
+        a22 = 1 - hessian_yy
+
+        return [[a11, a12], [a21, a22]]
 
     def convergence_2d_via_hessian_from(
         self, grid
@@ -833,106 +840,3 @@ class OperateDeflections:
 
         return einstein_mass_angular_list[0]
 
-    def jacobian_from(self, grid):
-        """
-        Returns the Jacobian of the lensing object, which is computed by taking the gradient of the 2D deflection
-        angle map in four direction (positive y, negative y, positive x, negative x).
-
-        By using the `np.gradient` method the Jacobian can therefore only be computed using uniform 2D grids of (y,x)
-        coordinates, and does not support irregular grids. For this reason, calculations by default use the Hessian,
-        which is slower to compute because more deflection angle calculations are necessary but more flexible in
-        general.
-
-        The Jacobian is returned as a list of lists, which reflect its structure as a 2x2 matrix.
-
-        Parameters
-        ----------
-        grid
-            The 2D grid of (y,x) arc-second coordinates the deflection angles and Jacobian are computed on.
-        """
-
-        deflections = self.deflections_yx_2d_from(grid=grid)
-
-        # TODO : Can probably make this work on irregular grid? Is there any point?
-
-        a11 = aa.Array2D(
-            values=1.0
-            - np.gradient(deflections.native[:, :, 1], grid.native[0, :, 1], axis=1),
-            mask=grid.mask,
-        )
-
-        a12 = aa.Array2D(
-            values=-1.0
-            * np.gradient(deflections.native[:, :, 1], grid.native[:, 0, 0], axis=0),
-            mask=grid.mask,
-        )
-
-        a21 = aa.Array2D(
-            values=-1.0
-            * np.gradient(deflections.native[:, :, 0], grid.native[0, :, 1], axis=1),
-            mask=grid.mask,
-        )
-
-        a22 = aa.Array2D(
-            values=1
-            - np.gradient(deflections.native[:, :, 0], grid.native[:, 0, 0], axis=0),
-            mask=grid.mask,
-        )
-
-        return [[a11, a12], [a21, a22]]
-
-    @precompute_jacobian
-    def convergence_2d_via_jacobian_from(self, grid, jacobian=None) -> aa.Array2D:
-        """
-        Returns the convergence of the lensing object, which is computed from the 2D deflection angle map via the
-        Jacobian using the expression (see equation 58 https://inspirehep.net/literature/419263):
-
-        `convergence = 1.0 - 0.5 * (jacobian_{0,0} + jacobian_{1,1}) = 0.5 * (jacobian_xx + jacobian_yy)`
-
-        By going via the Jacobian, the convergence must be calculated using 2D uniform grid.
-
-        This calculation of the convergence is independent of analytic calculations defined within `MassProfile`
-        objects and the calculation via the Hessian. It can therefore be used as a cross-check.
-
-        Parameters
-        ----------
-        grid
-            The 2D grid of (y,x) arc-second coordinates the deflection angles and Jacobian are computed on.
-        jacobian
-            A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
-        """
-        convergence = 1 - 0.5 * (jacobian[0][0] + jacobian[1][1])
-
-        return aa.Array2D(values=convergence, mask=grid.mask)
-
-    @precompute_jacobian
-    def shear_yx_2d_via_jacobian_from(
-        self, grid, jacobian=None
-    ) -> Union[ShearYX2D, ShearYX2DIrregular]:
-        """
-        Returns the 2D (y,x) shear vectors of the lensing object, which are computed from the 2D deflection angle map
-        via the Jacobian using the expression (see equation 58 https://inspirehep.net/literature/419263):
-
-        `shear_y = -0.5 * (jacobian_{0,1} + jacobian_{1,0} = -0.5 * (jacobian_yx + jacobian_xy)`
-        `shear_x = 0.5 * (jacobian_{1,1} + jacobian_{0,0} = 0.5 * (jacobian_yy + jacobian_xx)`
-
-        By going via the Jacobian, the convergence must be calculated using 2D uniform grid.
-
-        This calculation of the shear vectors is independent of analytic calculations defined within `MassProfile`
-        objects and the calculation via the Hessian. It can therefore be used as a cross-check.
-
-        Parameters
-        ----------
-        grid
-            The 2D grid of (y,x) arc-second coordinates the deflection angles and Jacobian are computed on.
-        jacobian
-            A precomputed lensing jacobian, which is passed throughout the `CalcLens` functions for efficiency.
-        """
-
-        shear_yx_2d = np.zeros(shape=(grid.shape_slim, 2))
-        shear_yx_2d[:, 0] = -0.5 * (jacobian[0][1] + jacobian[1][0])
-        shear_yx_2d[:, 1] = 0.5 * (jacobian[1][1] - jacobian[0][0])
-
-        if isinstance(grid, aa.Grid2DIrregular):
-            return ShearYX2DIrregular(values=shear_yx_2d, grid=grid)
-        return ShearYX2D(values=shear_yx_2d, grid=grid, mask=grid.mask)
