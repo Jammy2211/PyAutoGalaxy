@@ -286,8 +286,31 @@ class MGEDecomposer:
 
         return xp.where(ind_pos_y[None, :], core, xp.conj(core))
 
+    @aa.over_sample
+    @aa.grid_dec.to_array
+    @aa.grid_dec.transform
+    def convergence_2d_via_mge_from(
+            self, grid: aa.type.Grid2DLike, xp=np,  *,
+            sigma_log_list, three_D: bool, func_terms: int = 28, **kwargs,
+    ):
+        """
+        Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
-    def convergence_2d_via_mge_from(self, grid_radii, xp=np, *, sigma_log_list, three_D: bool,
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+
+        """
+
+        eccentric_radii = self.mass_profile.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs)
+
+        return self._convergence_2d_via_mge_from(grid_radii=eccentric_radii, xp=xp, sigma_log_list=sigma_log_list,
+            three_D=three_D, func_terms=func_terms
+        )
+
+
+    def _convergence_2d_via_mge_from(self, grid_radii, xp=np, *, sigma_log_list, three_D: bool,
                                     func_terms: int = 28, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -306,7 +329,6 @@ class MGEDecomposer:
         sigmas = xp.asarray(sigmas)[:, None]
         amps = xp.asarray(amps)[:, None]
 
-        grid_radii = grid_radii
         grid_radii = grid_radii[None, ...]
 
         convergence = xp.sum(
