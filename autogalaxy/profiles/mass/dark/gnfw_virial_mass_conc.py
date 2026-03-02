@@ -1,8 +1,7 @@
+import numpy as np
 from typing import Tuple
 
 from autogalaxy.profiles.mass.dark.gnfw import gNFWSph
-
-import numpy as np
 from autogalaxy import cosmology as cosmo
 
 
