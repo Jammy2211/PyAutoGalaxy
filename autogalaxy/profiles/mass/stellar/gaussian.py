@@ -151,7 +151,8 @@ class Gaussian(MassProfile, StellarProfile):
 
         """
         return self.convergence_func(
-            self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs)
+            self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs),
+            xp=xp
         )
 
     def convergence_func(self, grid_radius: float, xp=np) -> float:
