@@ -169,7 +169,7 @@ class OperateDeflections:
             return aa.ArrayIrregular(values=fermat_potential)
         return aa.Array2D(values=fermat_potential, mask=grid.mask)
 
-    def tangential_eigen_value_from(self, grid) -> aa.Array2D:
+    def tangential_eigen_value_from(self, grid, xp=np) -> aa.Array2D:
         """
         Returns the tangential eigen values of lensing jacobian, which are given by the expression:
 
@@ -180,13 +180,20 @@ class OperateDeflections:
         grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and tangential eigen values are computed
             on.
+        xp
+            The array module (``numpy`` or ``jax.numpy``). Passed through to ``convergence_2d_via_hessian_from``
+            and ``shear_yx_2d_via_hessian_from``. When ``xp`` is not ``numpy`` the result is a raw array rather
+            than an ``aa.Array2D`` wrapper.
         """
-        convergence = self.convergence_2d_via_hessian_from(grid=grid)
-        shear_yx = self.shear_yx_2d_via_hessian_from(grid=grid)
+        convergence = self.convergence_2d_via_hessian_from(grid=grid, xp=xp)
+        shear_yx = self.shear_yx_2d_via_hessian_from(grid=grid, xp=xp)
 
+        if xp is not np:
+            shear_magnitudes = xp.sqrt(shear_yx[:, 0] ** 2 + shear_yx[:, 1] ** 2)
+            return xp.array(1 - convergence - shear_magnitudes)
         return aa.Array2D(values=1 - convergence - shear_yx.magnitudes, mask=grid.mask)
 
-    def radial_eigen_value_from(self, grid) -> aa.Array2D:
+    def radial_eigen_value_from(self, grid, xp=np) -> aa.Array2D:
         """
         Returns the radial eigen values of lensing jacobian, which are given by the expression:
 
@@ -196,13 +203,20 @@ class OperateDeflections:
         ----------
         grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and radial eigen values are computed on.
+        xp
+            The array module (``numpy`` or ``jax.numpy``). Passed through to ``convergence_2d_via_hessian_from``
+            and ``shear_yx_2d_via_hessian_from``. When ``xp`` is not ``numpy`` the result is a raw array rather
+            than an ``aa.Array2D`` wrapper.
         """
-        convergence = self.convergence_2d_via_hessian_from(grid=grid)
-        shear = self.shear_yx_2d_via_hessian_from(grid=grid)
+        convergence = self.convergence_2d_via_hessian_from(grid=grid, xp=xp)
+        shear = self.shear_yx_2d_via_hessian_from(grid=grid, xp=xp)
 
+        if xp is not np:
+            shear_magnitudes = xp.sqrt(shear[:, 0] ** 2 + shear[:, 1] ** 2)
+            return xp.array(1 - convergence + shear_magnitudes)
         return aa.Array2D(values=1 - convergence + shear.magnitudes, mask=grid.mask)
 
-    def magnification_2d_from(self, grid) -> aa.Array2D:
+    def magnification_2d_from(self, grid, xp=np) -> aa.Array2D:
         """
         Returns the 2D magnification map of lensing object, which is computed as the inverse of the determinant of the
         lensing Jacobian, expressed via the Hessian components.
@@ -211,11 +225,18 @@ class OperateDeflections:
         ----------
         grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and magnification map are computed on.
+        xp
+            The array module (``numpy`` or ``jax.numpy``). Passed through to ``hessian_from``. When ``xp`` is
+            not ``numpy`` the result is a raw array rather than an ``aa.Array2D`` wrapper.
         """
-        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(grid=grid)
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
+            grid=grid, xp=xp
+        )
 
         det_A = (1 - hessian_xx) * (1 - hessian_yy) - hessian_xy * hessian_yx
 
+        if xp is not np:
+            return xp.array(1 / det_A)
         return aa.Array2D(values=1 / det_A, mask=grid.mask)
 
     def deflections_yx_scalar(self, y, x, pixel_scales):
@@ -367,7 +388,7 @@ class OperateDeflections:
         return [[a11, a12], [a21, a22]]
 
     def convergence_2d_via_hessian_from(
-        self, grid
+        self, grid, xp=np
     ) -> aa.ArrayIrregular:
         """
         Returns the convergence of the lensing object, which is computed from the 2D deflection angle map via the
@@ -385,13 +406,23 @@ class OperateDeflections:
         ----------
         grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and Hessian are computed on.
+        xp
+            The array module to use for the computation (e.g. `numpy` or `jax.numpy`). Passed through to
+            `hessian_from`. When `xp` is not `numpy` (e.g. inside a `jax.jit` trace) the result is returned
+            as a raw array rather than an `aa.ArrayIrregular` wrapper.
         """
-        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(grid=grid)
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
+            grid=grid, xp=xp
+        )
 
-        return aa.ArrayIrregular(values=0.5 * (hessian_yy + hessian_xx))
+        convergence = 0.5 * (hessian_yy + hessian_xx)
+
+        if xp is not np:
+            return xp.array(convergence)
+        return aa.ArrayIrregular(values=convergence)
 
     def shear_yx_2d_via_hessian_from(
-        self, grid
+        self, grid, xp=np
     ) -> ShearYX2DIrregular:
         """
         Returns the 2D (y,x) shear vectors of the lensing object, which are computed from the 2D deflection angle map
@@ -416,12 +447,21 @@ class OperateDeflections:
         ----------
         grids
             The 2D grid of (y,x) arc-second coordinates the deflection angles and Hessian are computed on.
+        xp
+            The array module to use for the computation (e.g. `numpy` or `jax.numpy`). Passed through to
+            `hessian_from`. When `xp` is not `numpy` (e.g. inside a `jax.jit` trace) the result is returned
+            as a raw array of shape `(N, 2)` rather than a `ShearYX2DIrregular` wrapper.
         """
 
-        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(grid=grid)
+        hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
+            grid=grid, xp=xp
+        )
 
         gamma_1 = 0.5 * (hessian_xx - hessian_yy)
         gamma_2 = hessian_xy
+
+        if xp is not np:
+            return xp.stack([gamma_2, gamma_1], axis=-1)
 
         shear_yx_2d = np.zeros(shape=(grid.shape[0], 2))
 
