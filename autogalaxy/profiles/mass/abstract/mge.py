@@ -107,7 +107,9 @@ class MGEDecomposer:
         for v in V5:
             s = v + z2 * s
 
-        w5 = xp.exp(xp.clip(-z2, None, 700.0)) + 1j * z * t / s #clip prevents overflow error
+        real_exp = xp.clip(-xp.real(z2), None, 700.0)
+        imag_exp = -xp.imag(z2)
+        w5 = xp.exp(real_exp + 1j * imag_exp) + 1j * z * t / s  # clip prevents overflow error
 
         # ---------- Region 6 ----------
         U6 = xp.asarray(
