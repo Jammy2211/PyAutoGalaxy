@@ -333,7 +333,7 @@ class MGEDecomposer:
 
         convergence = xp.sum(
             self.convergence_func_gaussian(
-                grid_radii=grid_radii,
+                grid_radii=aa.ArrayIrregular(grid_radii),
                 sigma=sigmas,
                 intensity=amps,
             ),
