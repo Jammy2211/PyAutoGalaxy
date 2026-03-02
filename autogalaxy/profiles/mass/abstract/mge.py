@@ -175,12 +175,14 @@ class MGEDecomposer:
         Returns
         -------
         """
+        sigma_log_array = xp.asarray(sigma_log_list, dtype=xp.float64)
+
         amps, sigmas = self.decompose_convergence_via_mge(
-            sigma_log_list=sigma_log_list, func_terms=func_terms, three_D=three_D, xp=xp)
+            sigma_log_list=sigma_log_array, func_terms=func_terms, three_D=three_D, xp=xp)
 
         q = xp.asarray(self.axis_ratio(xp), dtype=xp.float64)
 
-        sigmas = sigmas_factor * sigma_log_list
+        sigmas = sigmas_factor * sigma_log_array
 
         deflection_angles = (
                 amps[:, None]
