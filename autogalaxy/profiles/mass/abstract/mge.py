@@ -285,3 +285,42 @@ class MGEDecomposer:
         )
 
         return xp.where(ind_pos_y[None, :], core, xp.conj(core))
+
+
+    def convergence_2d_via_mge_from(self, grid_radii, xp=np, *, sigma_log_list, three_D: bool,
+                                    func_terms: int = 28, **kwargs):
+        """Calculate the projected convergence at a given set of arc-second gridded coordinates.
+
+        Parameters
+        ----------
+        grid
+            The grid of (y,x) arc-second coordinates the convergence is computed on.
+
+        """
+
+        sigma_log_array = xp.asarray(sigma_log_list, dtype=xp.float64)
+
+        amps, sigmas = self.decompose_convergence_via_mge(
+            sigma_log_list=sigma_log_array, func_terms=func_terms, three_D=three_D, xp=xp)
+
+        sigmas = xp.asarray(sigmas)[:, None]
+        amps = xp.asarray(amps)[:, None]
+
+        grid_radii = grid_radii
+        grid_radii = grid_radii[None, ...]
+
+        convergence = xp.sum(
+            self.convergence_func_gaussian(
+                grid_radii=grid_radii,
+                sigma=sigmas,
+                intensity=amps,
+            ),
+            axis=0,
+        )
+        return convergence
+
+
+    def convergence_func_gaussian(self, grid_radii, sigma, intensity, xp=np):
+        return xp.multiply(
+            intensity, xp.exp(-0.5 * xp.square(xp.divide(grid_radii.array, sigma)))
+        )
