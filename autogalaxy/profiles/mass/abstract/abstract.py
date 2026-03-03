@@ -4,10 +4,9 @@ from typing import Tuple
 import autoarray as aa
 
 from autogalaxy.profiles.geometry_profiles import EllProfile
-from autogalaxy.operate.deflections import OperateDeflections
 
 
-class MassProfile(EllProfile, OperateDeflections):
+class MassProfile(EllProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -27,6 +26,34 @@ class MassProfile(EllProfile, OperateDeflections):
 
     def deflections_yx_2d_from(self, grid):
         raise NotImplementedError
+
+    def fermat_potential_from(self, grid, xp=np) -> aa.Array2D:
+        """
+        Returns the Fermat potential for a given grid of image-plane positions.
+
+        This is the sum of the geometric time delay term and the gravitational (Shapiro) delay term (i.e. the lensing
+        potential), and is given by:
+
+        .. math::
+            \\phi(\\boldsymbol{\\theta}) = \\frac{1}{2} |\\boldsymbol{\\theta} - \\boldsymbol{\\beta}|^2
+            - \\psi(\\boldsymbol{\\theta})
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the Fermat potential is computed on.
+        xp
+            The array module (``numpy`` or ``jax.numpy``).
+        """
+        from autogalaxy.operate.deflections import OperateDeflections
+
+        od = OperateDeflections.from_mass_obj(self)
+        time_delay = od.time_delay_geometry_term_from(grid=grid, xp=xp)
+        potential = self.potential_2d_from(grid=grid, xp=xp)
+        fermat_potential = time_delay - potential
+        if isinstance(grid, aa.Grid2DIrregular):
+            return aa.ArrayIrregular(values=fermat_potential)
+        return aa.Array2D(values=fermat_potential, mask=grid.mask)
 
     def deflections_2d_via_potential_2d_from(self, grid):
         potential = self.potential_2d_from(grid=grid)

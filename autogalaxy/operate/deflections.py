@@ -86,43 +86,83 @@ class OperateDeflections:
     The majority of methods are those which from the 2D deflection angle map compute lensing quantities like a 2D
     shear field, magnification map or the Einstein Radius.
 
-    The methods in `CalcLens` are passed to the mass object to provide a concise API.
-
     Parameters
     ----------
     deflections_yx_2d_from
-        The function which returns the mass object's 2D deflection angles.
+        A callable with signature ``(grid, xp=np, **kwargs)`` that returns the 2D deflection angles on the given
+        grid.  Typically a bound method of a ``MassProfile``, ``Galaxy``, or ``Galaxies`` instance.
     """
 
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
-        raise NotImplementedError
+    def __init__(self, deflections_yx_2d_from):
+        self.deflections_yx_2d_from = deflections_yx_2d_from
 
-    def __eq__(self, other):
-        return self.__dict__ == other.__dict__ and self.__class__ is other.__class__
+    @classmethod
+    def from_mass_obj(cls, mass_obj):
+        """Construct from any object that has a ``deflections_yx_2d_from`` method."""
+        return cls(deflections_yx_2d_from=mass_obj.deflections_yx_2d_from)
+
+    @classmethod
+    def from_tracer(cls, tracer, use_multi_plane: bool = True, plane_i: int = 0, plane_j: int = -1):
+        """
+        Construct from a PyAutoLens ``Tracer`` object.
+
+        The ``Tracer`` type is deliberately left unannotated: ``autogalaxy`` does not
+        depend on ``autolens``, so no import of ``Tracer`` is performed here.  Callers
+        (which live inside ``autolens``) are responsible for passing the correct object.
+
+        Parameters
+        ----------
+        tracer
+            A PyAutoLens ``Tracer`` instance.  Must expose ``deflections_yx_2d_from``
+            and, when ``use_multi_plane=True``, ``deflections_between_planes_from``.
+        use_multi_plane
+            If ``True`` the stored callable is
+            ``tracer.deflections_between_planes_from`` with ``plane_i`` and ``plane_j``
+            bound via ``functools.partial``, matching the multi-plane ray-tracing path.
+            If ``False`` the stored callable is ``tracer.deflections_yx_2d_from``,
+            i.e. the standard two-plane path.
+        plane_i
+            Index of the first plane used by ``deflections_between_planes_from``.
+            Ignored when ``use_multi_plane=False``.  Defaults to ``0`` (image plane).
+        plane_j
+            Index of the second plane used by ``deflections_between_planes_from``.
+            Ignored when ``use_multi_plane=False``.  Defaults to ``-1`` (source plane).
+        """
+        if use_multi_plane:
+            from functools import partial
+
+            return cls(
+                deflections_yx_2d_from=partial(
+                    tracer.deflections_between_planes_from,
+                    plane_i=plane_i,
+                    plane_j=plane_j,
+                )
+            )
+        return cls(deflections_yx_2d_from=tracer.deflections_yx_2d_from)
 
     def time_delay_geometry_term_from(self, grid, xp=np) -> aa.Array2D:
         """
-            Returns the geometric time delay term of the Fermat potential for a given grid of image-plane positions.
+        Returns the geometric time delay term of the Fermat potential for a given grid of image-plane positions.
 
-            This term is given by:
+        This term is given by:
 
         .. math::
-                \[\tau_{\text{geom}}(\boldsymbol{\theta}) = \frac{1}{2} |\boldsymbol{\theta} - \boldsymbol{\beta}|^2\]
+            \[\tau_{\text{geom}}(\boldsymbol{\theta}) = \frac{1}{2} |\boldsymbol{\theta} - \boldsymbol{\beta}|^2\]
 
-            where:
-            - \( \boldsymbol{\theta} \) is the image-plane coordinate,
-            - \( \boldsymbol{\beta} = \boldsymbol{\theta} - \boldsymbol{\alpha}(\boldsymbol{\theta}) \) is the source-plane coordinate,
-            - \( \boldsymbol{\alpha} \) is the deflection angle at each image-plane coordinate.
+        where:
+        - \( \boldsymbol{\theta} \) is the image-plane coordinate,
+        - \( \boldsymbol{\beta} = \boldsymbol{\theta} - \boldsymbol{\alpha}(\boldsymbol{\theta}) \) is the source-plane coordinate,
+        - \( \boldsymbol{\alpha} \) is the deflection angle at each image-plane coordinate.
 
-            Parameters
-            ----------
-            grid
-                The 2D grid of (y,x) arc-second coordinates the deflection angles and time delay geometric term are computed
-                on.
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the deflection angles and time delay geometric term are computed
+            on.
 
-            Returns
-            -------
-            The geometric time delay term at each grid position.
+        Returns
+        -------
+        The geometric time delay term at each grid position.
         """
         deflections = self.deflections_yx_2d_from(grid=grid, xp=xp)
 
@@ -134,40 +174,6 @@ class OperateDeflections:
         if isinstance(grid, aa.Grid2DIrregular):
             return aa.ArrayIrregular(values=delay)
         return aa.Array2D(values=delay, mask=grid.mask)
-
-    def fermat_potential_from(self, grid, xp=np) -> aa.Array2D:
-        """
-        Returns the Fermat potential for a given grid of image-plane positions.
-
-        This is the sum of the geometric time delay term and the gravitational (Shapiro) delay term (i.e. the lensing
-        potential), and is given by:
-
-        .. math::
-            \[\phi(\boldsymbol{\theta}) = \frac{1}{2} |\boldsymbol{\theta} - \boldsymbol{\beta}|^2 - \psi(\boldsymbol{\theta})\]
-
-        where:
-        - \( \boldsymbol{\theta} \) is the image-plane coordinate,
-        - \( \boldsymbol{\beta} = \boldsymbol{\theta} - \boldsymbol{\alpha}(\boldsymbol{\theta}) \) is the source-plane coordinate,
-        - \( \psi(\boldsymbol{\theta}) \) is the lensing potential,
-        - \( \phi(\boldsymbol{\theta}) \) is the Fermat potential.
-
-        Parameters
-        ----------
-        grid
-            The 2D grid of (y,x) arc-second coordinates the Fermat potential is computed on.
-
-        Returns
-        -------
-        The Fermat potential at each grid position.
-        """
-        time_delay_geometry_term = self.time_delay_geometry_term_from(grid=grid, xp=xp)
-        potential = self.potential_2d_from(grid=grid, xp=xp)
-
-        fermat_potential = time_delay_geometry_term - potential
-
-        if isinstance(grid, aa.Grid2DIrregular):
-            return aa.ArrayIrregular(values=fermat_potential)
-        return aa.Array2D(values=fermat_potential, mask=grid.mask)
 
     def tangential_eigen_value_from(self, grid, xp=np) -> aa.Array2D:
         """
@@ -188,9 +194,6 @@ class OperateDeflections:
         convergence = self.convergence_2d_via_hessian_from(grid=grid, xp=xp)
         shear_yx = self.shear_yx_2d_via_hessian_from(grid=grid, xp=xp)
 
-        if xp is not np:
-            shear_magnitudes = xp.sqrt(shear_yx[:, 0] ** 2 + shear_yx[:, 1] ** 2)
-            return xp.array(1 - convergence - shear_magnitudes)
         return aa.Array2D(values=1 - convergence - shear_yx.magnitudes, mask=grid.mask)
 
     def radial_eigen_value_from(self, grid, xp=np) -> aa.Array2D:
@@ -211,9 +214,6 @@ class OperateDeflections:
         convergence = self.convergence_2d_via_hessian_from(grid=grid, xp=xp)
         shear = self.shear_yx_2d_via_hessian_from(grid=grid, xp=xp)
 
-        if xp is not np:
-            shear_magnitudes = xp.sqrt(shear[:, 0] ** 2 + shear[:, 1] ** 2)
-            return xp.array(1 - convergence + shear_magnitudes)
         return aa.Array2D(values=1 - convergence + shear.magnitudes, mask=grid.mask)
 
     def magnification_2d_from(self, grid, xp=np) -> aa.Array2D:
@@ -235,8 +235,6 @@ class OperateDeflections:
 
         det_A = (1 - hessian_xx) * (1 - hessian_yy) - hessian_xy * hessian_yx
 
-        if xp is not np:
-            return xp.array(1 / det_A)
         return aa.Array2D(values=1 / det_A, mask=grid.mask)
 
     def deflections_yx_scalar(self, y, x, pixel_scales):
@@ -295,10 +293,9 @@ class OperateDeflections:
             The array module (``numpy`` or ``jax.numpy``). Controls which computational path is
             used and the type of the returned arrays.
         """
-        if xp is not np:
-            return self._hessian_via_jax(grid=grid, xp=xp)
-
-        return self._hessian_via_finite_difference(grid=grid)
+        if xp is np:
+            return self._hessian_via_finite_difference(grid=grid)
+        return self._hessian_via_jax(grid=grid, xp=xp)
 
     def _hessian_via_jax(self, grid, xp) -> Tuple:
         import jax
@@ -417,8 +414,6 @@ class OperateDeflections:
 
         convergence = 0.5 * (hessian_yy + hessian_xx)
 
-        if xp is not np:
-            return xp.array(convergence)
         return aa.ArrayIrregular(values=convergence)
 
     def shear_yx_2d_via_hessian_from(
@@ -460,13 +455,7 @@ class OperateDeflections:
         gamma_1 = 0.5 * (hessian_xx - hessian_yy)
         gamma_2 = hessian_xy
 
-        if xp is not np:
-            return xp.stack([gamma_2, gamma_1], axis=-1)
-
-        shear_yx_2d = np.zeros(shape=(grid.shape[0], 2))
-
-        shear_yx_2d[:, 0] = gamma_2
-        shear_yx_2d[:, 1] = gamma_1
+        shear_yx_2d = xp.stack([gamma_2, gamma_1], axis=-1)
 
         return ShearYX2DIrregular(values=shear_yx_2d, grid=grid)
 
@@ -498,8 +487,6 @@ class OperateDeflections:
 
         det_A = (1 - hessian_xx) * (1 - hessian_yy) - hessian_xy * hessian_yx
 
-        if xp is not np:
-            return xp.array(1.0 / det_A)
         return aa.ArrayIrregular(values=1.0 / det_A)
 
     def contour_list_from(self, grid, contour_array):

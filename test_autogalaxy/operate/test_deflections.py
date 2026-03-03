@@ -5,11 +5,16 @@ from skimage import measure
 
 import autogalaxy as ag
 
-from autogalaxy.operate.deflections import grid_scaled_2d_for_marching_squares_from
+from autogalaxy.operate.deflections import (
+    grid_scaled_2d_for_marching_squares_from,
+    OperateDeflections,
+)
 
 
 def critical_curve_via_magnification_from(mass_profile, grid):
-    magnification = mass_profile.magnification_2d_from(grid=grid)
+    magnification = OperateDeflections.from_mass_obj(mass_profile).magnification_2d_from(
+        grid=grid
+    )
 
     inverse_magnification = 1 / magnification
 
@@ -64,7 +69,8 @@ def test__time_delay_geometry_term_from():
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
-    time_delay_geometry_term = mp.time_delay_geometry_term_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    time_delay_geometry_term = od.time_delay_geometry_term_from(grid=grid)
 
     assert time_delay_geometry_term == pytest.approx(
         np.array([1.92815688, 1.97625436]), 1.0e-4
@@ -93,7 +99,8 @@ def test__hessian_from():
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
-    hessian_yy, hessian_xy, hessian_yx, hessian_xx = mp.hessian_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    hessian_yy, hessian_xy, hessian_yx, hessian_xx = od.hessian_from(grid=grid)
 
     assert hessian_yy == pytest.approx(np.array([1.3883822, 0.694127]), 1.0e-4)
     assert hessian_xy == pytest.approx(np.array([-1.388124, -0.694094]), 1.0e-4)
@@ -102,7 +109,7 @@ def test__hessian_from():
 
     grid = ag.Grid2DIrregular(values=[(1.0, 0.0), (0.0, 1.0)])
 
-    hessian_yy, hessian_xy, hessian_yx, hessian_xx = mp.hessian_from(grid=grid)
+    hessian_yy, hessian_xy, hessian_yx, hessian_xx = od.hessian_from(grid=grid)
 
     assert hessian_yy == pytest.approx(np.array([0.0, 1.777699]), 1.0e-4)
     assert hessian_xy == pytest.approx(np.array([0.0, 0.0]), 1.0e-4)
@@ -119,7 +126,8 @@ def test__convergence_2d_via_hessian_from():
         centre=(0.0, 0.0), ell_comps=(0.001, 0.001), einstein_radius=1.0
     )
 
-    convergence = mp.convergence_2d_via_hessian_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    convergence = od.convergence_2d_via_hessian_from(grid=grid)
 
     assert convergence.in_list[0] == pytest.approx(0.46208, 1.0e-1)
     assert convergence.in_list[1] == pytest.approx(0.56840, 1.0e-1)
@@ -134,7 +142,8 @@ def test__magnification_2d_via_hessian_from():
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
-    magnification = mp.magnification_2d_via_hessian_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    magnification = od.magnification_2d_via_hessian_from(grid=grid)
 
     assert magnification.in_list[0] == pytest.approx(-0.56303, 1.0e-4)
     assert magnification.in_list[1] == pytest.approx(-2.57591, 1.0e-4)
@@ -144,7 +153,8 @@ def test__tangential_critical_curve_list_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    tangential_critical_curve_list = mp.tangential_critical_curve_list_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    tangential_critical_curve_list = od.tangential_critical_curve_list_from(grid=grid)
 
     x_critical_tangential, y_critical_tangential = (
         tangential_critical_curve_list[0][:, 1],
@@ -159,7 +169,8 @@ def test__tangential_critical_curve_list_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    tangential_critical_curve_list = mp.tangential_critical_curve_list_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    tangential_critical_curve_list = od.tangential_critical_curve_list_from(grid=grid)
 
     y_centre = np.mean(tangential_critical_curve_list[0][:, 0])
     x_centre = np.mean(tangential_critical_curve_list[0][:, 1])
@@ -169,7 +180,8 @@ def test__tangential_critical_curve_list_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
-    tangential_critical_curve_list = mp.tangential_critical_curve_list_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    tangential_critical_curve_list = od.tangential_critical_curve_list_from(grid=grid)
 
     y_centre = np.mean(tangential_critical_curve_list[0][:, 0])
     x_centre = np.mean(tangential_critical_curve_list[0][:, 1])
@@ -217,7 +229,8 @@ def test__radial_critical_curve_list_from():
 
     mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
 
-    radial_critical_curve_list = mp.radial_critical_curve_list_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    radial_critical_curve_list = od.radial_critical_curve_list_from(grid=grid)
 
     y_centre = np.mean(radial_critical_curve_list[0][:, 0])
     x_centre = np.mean(radial_critical_curve_list[0][:, 1])
@@ -227,7 +240,8 @@ def test__radial_critical_curve_list_from():
 
     mp = ag.mp.PowerLawSph(centre=(0.5, 1.0), einstein_radius=2.0, slope=1.5)
 
-    radial_critical_curve_list = mp.radial_critical_curve_list_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    radial_critical_curve_list = od.radial_critical_curve_list_from(grid=grid)
 
     y_centre = np.mean(radial_critical_curve_list[0][:, 0])
     x_centre = np.mean(radial_critical_curve_list[0][:, 1])
@@ -248,7 +262,8 @@ def test__radial_critical_curve_list_from__compare_via_magnification():
         mass_profile=mp, grid=grid
     )[1]
 
-    radial_critical_curve_list = mp.radial_critical_curve_list_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    radial_critical_curve_list = od.radial_critical_curve_list_from(grid=grid)
 
     assert sum(critical_curve_radial_via_magnification) == pytest.approx(
         sum(radial_critical_curve_list[0]), abs=0.7
@@ -260,7 +275,8 @@ def test__tangential_caustic_list_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    tangential_caustic_list = mp.tangential_caustic_list_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    tangential_caustic_list = od.tangential_caustic_list_from(grid=grid)
 
     y_centre = np.mean(tangential_caustic_list[0][:, 0])
     x_centre = np.mean(tangential_caustic_list[0][:, 1])
@@ -270,7 +286,8 @@ def test__tangential_caustic_list_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
-    tangential_caustic_list = mp.tangential_caustic_list_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    tangential_caustic_list = od.tangential_caustic_list_from(grid=grid)
 
     y_centre = np.mean(tangential_caustic_list[0][:, 0])
     x_centre = np.mean(tangential_caustic_list[0][:, 1])
@@ -306,7 +323,8 @@ def test__radial_caustic_list_from():
 
     mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
 
-    radial_caustic_list = mp.radial_caustic_list_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    radial_caustic_list = od.radial_caustic_list_from(grid=grid)
 
     x_caustic_radial, y_caustic_radial = (
         radial_caustic_list[0][:, 1],
@@ -321,7 +339,8 @@ def test__radial_caustic_list_from():
 
     mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
 
-    radial_caustic_list = mp.radial_caustic_list_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    radial_caustic_list = od.radial_caustic_list_from(grid=grid)
 
     y_centre = np.mean(radial_caustic_list[0][:, 0])
     x_centre = np.mean(radial_caustic_list[0][:, 1])
@@ -331,7 +350,8 @@ def test__radial_caustic_list_from():
 
     mp = ag.mp.PowerLawSph(centre=(0.5, 1.0), einstein_radius=2.0, slope=1.5)
 
-    radial_caustic_list = mp.radial_caustic_list_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    radial_caustic_list = od.radial_caustic_list_from(grid=grid)
 
     y_centre = np.mean(radial_caustic_list[0][:, 0])
     x_centre = np.mean(radial_caustic_list[0][:, 1])
@@ -351,7 +371,8 @@ def test__radial_caustic_list_from___compare_via_magnification():
         mass_profile=mp, grid=grid
     )[1]
 
-    radial_caustic_list = mp.radial_caustic_list_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    radial_caustic_list = od.radial_caustic_list_from(grid=grid)
 
     assert sum(radial_caustic_list[0]) == pytest.approx(
         sum(caustic_radial_via_magnification), 7e-1
@@ -363,7 +384,8 @@ def test__radial_critical_curve_area_list_from():
 
     mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
 
-    area_within_radial_critical_curve_list = mp.radial_critical_curve_area_list_from(
+    od = OperateDeflections.from_mass_obj(mp)
+    area_within_radial_critical_curve_list = od.radial_critical_curve_area_list_from(
         grid=grid
     )
 
@@ -377,8 +399,9 @@ def test__tangential_critical_curve_area_list_from():
 
     area_calc = np.pi * mp.einstein_radius**2
 
+    od = OperateDeflections.from_mass_obj(mp)
     area_within_tangential_critical_curve_list = (
-        mp.tangential_critical_curve_area_list_from(grid=grid)
+        od.tangential_critical_curve_area_list_from(grid=grid)
     )
 
     assert area_within_tangential_critical_curve_list[0] == pytest.approx(
@@ -391,7 +414,8 @@ def test__einstein_radius_list_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    einstein_radius_list = mp.einstein_radius_list_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    einstein_radius_list = od.einstein_radius_list_from(grid=grid)
 
     assert einstein_radius_list[0] == pytest.approx(2.0, 1e-1)
 
@@ -399,7 +423,8 @@ def test__einstein_radius_list_from():
         centre=(0.0, 0.0), einstein_radius=2.0, ell_comps=(0.0, -0.25)
     )
 
-    einstein_radius_list = mp.einstein_radius_list_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    einstein_radius_list = od.einstein_radius_list_from(grid=grid)
 
     assert einstein_radius_list[0] == pytest.approx(1.9360, 1e-1)
 
@@ -409,7 +434,8 @@ def test__einstein_radius_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    einstein_radius = mp.einstein_radius_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    einstein_radius = od.einstein_radius_from(grid=grid)
 
     assert einstein_radius == pytest.approx(2.0, 1e-1)
 
@@ -417,7 +443,8 @@ def test__einstein_radius_from():
         centre=(0.0, 0.0), einstein_radius=2.0, ell_comps=(0.0, -0.25)
     )
 
-    einstein_radius = mp.einstein_radius_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    einstein_radius = od.einstein_radius_from(grid=grid)
 
     assert einstein_radius == pytest.approx(1.9360, 1e-1)
 
@@ -427,7 +454,8 @@ def test__einstein_mass_angular_list_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    einstein_mass_angular_list = mp.einstein_mass_angular_list_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    einstein_mass_angular_list = od.einstein_mass_angular_list_from(grid=grid)
 
     assert einstein_mass_angular_list[0] == pytest.approx(np.pi * 2.0**2.0, 1e-1)
 
@@ -437,7 +465,8 @@ def test__einstein_mass_angular_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    einstein_mass_angular = mp.einstein_mass_angular_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    einstein_mass_angular = od.einstein_mass_angular_from(grid=grid)
 
     assert einstein_mass_angular == pytest.approx(np.pi * 2.0**2.0, 1e-1)
 
@@ -457,14 +486,15 @@ def test__jacobian_from():
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
-    jacobian = mp.jacobian_from(grid=grid)
+    od = OperateDeflections.from_mass_obj(mp)
+    jacobian = od.jacobian_from(grid=grid)
 
     assert len(jacobian) == 2
     assert len(jacobian[0]) == 2 and len(jacobian[1]) == 2
 
     # convergence = 1 - 0.5 * (a11 + a22) should match convergence_2d_via_hessian_from
     convergence_via_jacobian = 1 - 0.5 * (jacobian[0][0] + jacobian[1][1])
-    convergence_via_hessian = mp.convergence_2d_via_hessian_from(grid=grid)
+    convergence_via_hessian = od.convergence_2d_via_hessian_from(grid=grid)
 
     assert convergence_via_jacobian == pytest.approx(
         np.array(convergence_via_hessian), rel=1e-6
@@ -473,7 +503,7 @@ def test__jacobian_from():
     # magnification = 1 / det(A) = 1 / (a11*a22 - a12*a21)
     det_A = jacobian[0][0] * jacobian[1][1] - jacobian[0][1] * jacobian[1][0]
     magnification_via_jacobian = 1 / det_A
-    magnification_via_hessian = mp.magnification_2d_via_hessian_from(grid=grid)
+    magnification_via_hessian = od.magnification_2d_via_hessian_from(grid=grid)
 
     assert magnification_via_jacobian == pytest.approx(
         np.array(magnification_via_hessian), rel=1e-6

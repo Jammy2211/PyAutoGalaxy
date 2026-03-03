@@ -8,7 +8,6 @@ import autoarray as aa
 import autofit as af
 
 from autogalaxy import exc
-from autogalaxy.operate.deflections import OperateDeflections
 from autogalaxy.operate.image import OperateImageList
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
 from autogalaxy.profiles.light.abstract import LightProfile
@@ -17,7 +16,7 @@ from autogalaxy.profiles.light.snr.abstract import LightProfileSNR
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
-class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
+class Galaxy(af.ModelObject, OperateImageList):
     """
     @DynamicAttrs
     """
@@ -343,6 +342,34 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
                 )
             )
         return xp.zeros((grid.shape[0],))
+
+    def fermat_potential_from(self, grid, xp=np) -> aa.Array2D:
+        """
+        Returns the Fermat potential of the galaxy for a given grid of image-plane positions.
+
+        This is the sum of the geometric time delay term and the lensing potential, computed
+        using the galaxy's total deflections and total potential across all mass profiles:
+
+        .. math::
+            \\phi(\\boldsymbol{\\theta}) = \\frac{1}{2} |\\boldsymbol{\\alpha}|^2
+            - \\psi(\\boldsymbol{\\theta})
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the Fermat potential is computed on.
+        xp
+            The array module (``numpy`` or ``jax.numpy``).
+        """
+        from autogalaxy.operate.deflections import OperateDeflections
+
+        od = OperateDeflections.from_mass_obj(self)
+        time_delay = od.time_delay_geometry_term_from(grid=grid, xp=xp)
+        potential = self.potential_2d_from(grid=grid, xp=xp)
+        fermat_potential = time_delay - potential
+        if isinstance(grid, aa.Grid2DIrregular):
+            return aa.ArrayIrregular(values=fermat_potential)
+        return aa.Array2D(values=fermat_potential, mask=grid.mask)
 
     @property
     def half_light_radius(self):

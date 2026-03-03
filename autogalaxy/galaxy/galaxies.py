@@ -8,10 +8,9 @@ from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.profiles.basis import Basis
 from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.operate.image import OperateImageGalaxies
-from autogalaxy.operate.deflections import OperateDeflections
 
 
-class Galaxies(List, OperateImageGalaxies, OperateDeflections):
+class Galaxies(List, OperateImageGalaxies):
     def __init__(
         self,
         galaxies: List[Galaxy],
@@ -243,6 +242,34 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
             The 2D (y, x) coordinates where values of the potential are evaluated.
         """
         return sum(map(lambda g: g.potential_2d_from(grid=grid, xp=xp), self))
+
+    def fermat_potential_from(self, grid, xp=np) -> aa.Array2D:
+        """
+        Returns the Fermat potential of the galaxies for a given grid of image-plane positions.
+
+        This is the sum of the geometric time delay term and the lensing potential, computed
+        using the combined deflections and potential of all galaxies:
+
+        .. math::
+            \\phi(\\boldsymbol{\\theta}) = \\frac{1}{2} |\\boldsymbol{\\alpha}|^2
+            - \\psi(\\boldsymbol{\\theta})
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the Fermat potential is computed on.
+        xp
+            The array module (``numpy`` or ``jax.numpy``).
+        """
+        from autogalaxy.operate.deflections import OperateDeflections
+
+        od = OperateDeflections.from_mass_obj(self)
+        time_delay = od.time_delay_geometry_term_from(grid=grid, xp=xp)
+        potential = self.potential_2d_from(grid=grid, xp=xp)
+        fermat_potential = time_delay - potential
+        if isinstance(grid, aa.Grid2DIrregular):
+            return aa.ArrayIrregular(values=fermat_potential)
+        return aa.Array2D(values=fermat_potential, mask=grid.mask)
 
     def has(self, cls: Union[Type, Tuple[Type]]) -> bool:
         """
