@@ -1,5 +1,7 @@
 import numpy as np
 import pytest
+
+from autogalaxy.profiles.mass import MGEDecomposer
 from autogalaxy.profiles.mass.abstract.mge_numpy import MassProfileMGE
 
 import autogalaxy as ag
@@ -206,3 +208,140 @@ def test__chameleon_deflections_yx_2d_via_mge():
     assert deflections_analytic == pytest.approx(deflections_via_mge, 1.0e-3)
 
 
+def test__nfw_convergence_2d_via_mge_from():
+    # r = 2.0 (> 1.0)
+    # F(r) = (1/(sqrt(3))*atan(sqrt(3)) = 0.60459978807
+    # kappa(r) = 2 * kappa_s * (1 - 0.60459978807) / (4-1) = 0.263600141
+
+    nfw = ag.mp.NFWSph(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+
+    radii_min = nfw.scale_radius / 2000.0
+    radii_max = nfw.scale_radius * 30.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
+    mge_decomp = MGEDecomposer(mass_profile=nfw)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[2.0, 0.0]]),
+                                                         sigma_log_list=sigmas, three_D=True)
+
+    assert convergence == pytest.approx(0.263600141, 1e-2)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.5, 0.0]]),
+                                                         sigma_log_list=sigmas, three_D=True)
+
+    assert convergence == pytest.approx(1.388511, 1e-2)
+
+    nfw = ag.mp.NFWSph(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=1.0)
+
+    mge_decomp = MGEDecomposer(mass_profile=nfw)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.5, 0.0]]),
+                                                         sigma_log_list=sigmas, three_D=True)
+
+    assert convergence == pytest.approx(2.0 * 1.388511, 1e-2)
+
+    nfw = ag.mp.NFWSph(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=2.0)
+
+    radii_min = nfw.scale_radius / 2000.0
+    radii_max = nfw.scale_radius * 30.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
+    mge_decomp = MGEDecomposer(mass_profile=nfw)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]),
+                                                         sigma_log_list=sigmas, three_D=True)
+
+    assert convergence == pytest.approx(1.388511, 1e-2)
+
+    nfw = ag.mp.NFW(
+        centre=(0.0, 0.0),
+        ell_comps=(0.0, 0.333333),
+        kappa_s=1.0,
+        scale_radius=1.0,
+    )
+
+    radii_min = nfw.scale_radius / 2000.0
+    radii_max = nfw.scale_radius * 30.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
+    mge_decomp = MGEDecomposer(mass_profile=nfw)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.25, 0.0]]),
+                                                         sigma_log_list=sigmas, three_D=True)
+
+    assert convergence == pytest.approx(1.388511, 1e-3)
+
+
+def test__sersic_convergence_2d_via_mge_from():
+    mp = ag.mp.Sersic(
+        centre=(0.0, 0.0),
+        intensity=3.0,
+        effective_radius=2.0,
+        sersic_index=2.0,
+        mass_to_light_ratio=1.0,
+    )
+
+    radii_min = mp.effective_radius / 100.0
+    radii_max = mp.effective_radius * 20.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
+    mge_decomp = MGEDecomposer(mass_profile=mp)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.0, 1.5]]),
+                                                         sigma_log_list=sigmas, three_D=False,
+                                                         sigmas_factor=np.sqrt(mp.axis_ratio(np)))
+
+    assert convergence == pytest.approx(4.90657319276, 1e-3)
+
+    mp = ag.mp.Sersic(
+        centre=(0.0, 0.0),
+        intensity=6.0,
+        effective_radius=2.0,
+        sersic_index=2.0,
+        mass_to_light_ratio=1.0,
+    )
+
+    mge_decomp = MGEDecomposer(mass_profile=mp)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.0, 1.5]]),
+                                                         sigma_log_list=sigmas, three_D=False,
+                                                         sigmas_factor=np.sqrt(mp.axis_ratio(np)))
+
+    assert convergence == pytest.approx(2.0 * 4.90657319276, 1e-3)
+
+    mp = ag.mp.Sersic(
+        centre=(0.0, 0.0),
+        intensity=3.0,
+        effective_radius=2.0,
+        sersic_index=2.0,
+        mass_to_light_ratio=2.0,
+    )
+
+    mge_decomp = MGEDecomposer(mass_profile=mp)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.0, 1.5]]),
+                                                         sigma_log_list=sigmas, three_D=False,
+                                                         sigmas_factor=np.sqrt(mp.axis_ratio(np)))
+
+    assert convergence == pytest.approx(2.0 * 4.90657319276, 1e-3)
+
+    mp = ag.mp.Sersic(
+        centre=(0.0, 0.0),
+        ell_comps=(0.0, 0.333333),
+        intensity=3.0,
+        effective_radius=2.0,
+        sersic_index=2.0,
+        mass_to_light_ratio=1.0,
+    )
+
+    mge_decomp = MGEDecomposer(mass_profile=mp)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]),
+                                                         sigma_log_list=sigmas, three_D=False,
+                                                         sigmas_factor=np.sqrt(mp.axis_ratio(np)))
+
+    assert convergence == pytest.approx(5.38066670129, 1e-3)
