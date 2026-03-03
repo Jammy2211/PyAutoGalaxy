@@ -15,7 +15,7 @@ def test__perfect_fit__chi_squared_0():
         over_sample_size=1,
     )
 
-    psf = ag.Kernel2D.from_gaussian(
+    psf = ag.Convolver.from_gaussian(
         shape_native=(3, 3), pixel_scales=0.2, sigma=0.75, normalize=True
     )
 
@@ -86,7 +86,7 @@ def test__perfect_fit__chi_squared_0():
 def test__simulate_imaging_data_and_fit__known_likelihood():
     grid = ag.Grid2D.uniform(shape_native=(31, 31), pixel_scales=0.2)
 
-    psf = ag.Kernel2D.from_gaussian(
+    psf = ag.Convolver.from_gaussian(
         shape_native=(3, 3), pixel_scales=0.2, sigma=0.75, normalize=True
     )
 
@@ -144,7 +144,7 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
         over_sample_size=1,
     )
 
-    psf = ag.Kernel2D.from_gaussian(
+    psf = ag.Convolver.from_gaussian(
         shape_native=(3, 3), pixel_scales=0.2, sigma=0.75, normalize=True
     )
 

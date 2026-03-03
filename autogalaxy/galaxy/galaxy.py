@@ -455,7 +455,7 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
         grid: aa.type.Grid2DLike,
         exposure_time: float,
         background_sky_level: float = 0.0,
-        psf: Optional[aa.Kernel2D] = None,
+        psf: Optional[aa.Convolver] = None,
     ):
         """
         Iterate over every galaxy finding all `LightProfileSNR` light profiles and set their `intensity` values to

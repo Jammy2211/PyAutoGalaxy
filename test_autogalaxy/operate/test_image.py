@@ -95,10 +95,13 @@ def test__x1_galaxies__padded_image__compare_to_galaxy_images_using_padded_grid_
 
 
 def test__unmasked_blurred_image_2d_from():
-    psf = ag.Kernel2D.no_mask(
+
+    kernel = ag.Array2D.no_mask(
         values=(np.array([[0.0, 3.0, 0.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0]])),
         pixel_scales=1.0,
     )
+
+    psf = ag.Convolver(kernel=kernel)
 
     mask = ag.Mask2D(
         mask=[[True, True, True], [True, False, True], [True, True, True]],
@@ -126,7 +129,7 @@ def test__unmasked_blurred_image_2d_from():
     light_not_operated = ag.lp.Gaussian(intensity=1.0)
     light_operated = ag.lp_operated.Gaussian(intensity=1.0)
 
-    padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
+    padded_grid = grid.padded_grid_from(kernel_shape_native=psf.kernel.shape_native)
 
     image_2d_not_operated = light_not_operated.image_2d_from(grid=padded_grid)
 
@@ -138,7 +141,7 @@ def test__unmasked_blurred_image_2d_from():
 
     image_2d_operated = padded_grid.mask.unmasked_blurred_array_from(
         padded_array=image_2d_operated,
-        psf=ag.Kernel2D.no_blur(pixel_scales=1.0),
+        psf=ag.Convolver.no_blur(pixel_scales=1.0),
         image_shape=grid.mask.shape,
     )
 
@@ -239,10 +242,11 @@ def test__blurred_image_2d_list_from(
 
 
 def test__unmasked_blurred_image_2d_list_from():
-    psf = ag.Kernel2D.no_mask(
+    kernel = ag.Array2D.no_mask(
         values=(np.array([[0.0, 3.0, 0.0], [0.0, 1.0, 2.0], [0.0, 0.0, 0.0]])),
         pixel_scales=1.0,
     )
+    psf = ag.Convolver(kernel=kernel)
 
     mask = ag.Mask2D(
         mask=[[True, True, True], [True, False, True], [True, True, True]],
@@ -254,7 +258,7 @@ def test__unmasked_blurred_image_2d_list_from():
     lp_0 = ag.lp.Sersic(intensity=1.0)
     lp_1 = ag.lp.Sersic(intensity=2.0)
 
-    padded_grid = grid.padded_grid_from(kernel_shape_native=psf.shape_native)
+    padded_grid = grid.padded_grid_from(kernel_shape_native=psf.kernel.shape_native)
 
     manual_blurred_image_0 = lp_0.image_2d_from(grid=padded_grid)
     manual_blurred_image_0 = psf.convolved_image_from(

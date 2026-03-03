@@ -21,8 +21,6 @@ from autoarray.inversion.mesh.mesh.abstract import AbstractMesh
 from autoarray.inversion.regularization.abstract import AbstractRegularization
 from autoarray.inversion.pixelization import Pixelization  # noqa
 from autoarray.inversion.mesh.border_relocator import BorderRelocator
-from autoarray.preloads import Preloads
-from autoarray.preloads import mapper_indices_from
 from autoarray.mask.mask_1d import Mask1D  # noqa
 from autoarray.mask.mask_2d import Mask2D  # noqa
 from autoarray.mask.derive.zoom_2d import Zoom2D
@@ -38,6 +36,7 @@ from autoarray.structures.grids.uniform_1d import Grid1D  # noqa
 from autoarray.structures.grids.uniform_2d import Grid2D  # noqa
 from autoarray.structures.grids.irregular_2d import Grid2DIrregular  # noqa
 from autoarray.operators.over_sampling.over_sampler import OverSampler  # noqa
+from autoarray.operators.convolver import Convolver
 from autoarray.inversion.mesh.interpolator.rectangular import (
     InterpolatorRectangular,
 )  # noqa
@@ -48,7 +47,6 @@ from autoarray.structures.vectors.uniform import VectorYX2D  # noqa
 from autoarray.structures.vectors.irregular import VectorYX2DIrregular  # noqa
 from autoarray.layout.region import Region1D  # noqa
 from autoarray.layout.region import Region2D  # noqa
-from autoarray.structures.arrays.kernel_2d import Kernel2D  # noqa
 from autoarray.structures.visibilities import Visibilities  # noqa
 from autoarray.structures.visibilities import VisibilitiesNoiseMap  # noqa
 from autoarray.inversion.mesh.mesh_geometry.rectangular import (
@@ -121,4 +119,4 @@ from autoconf.fitsable import header_obj_from
 from autoconf.fitsable import output_to_fits
 from autoconf.fitsable import hdu_list_for_output_from
 
-__version__ = "2026.1.21.3"
+__version__ = "2026.2.26.4"
