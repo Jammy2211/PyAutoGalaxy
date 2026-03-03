@@ -182,6 +182,7 @@ class MGEDecomposer:
 
         q = xp.asarray(self.axis_ratio(xp), dtype=xp.float64)
 
+        # Change ellipticity convention to (q**2*x**2 + y**2) (most profiles are in (x**2 + y**2/q**2))
         sigmas = sigmas_factor * sigma_log_array
 
         deflection_angles = (
