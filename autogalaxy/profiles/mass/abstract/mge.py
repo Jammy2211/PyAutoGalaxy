@@ -417,6 +417,7 @@ class MGEDecomposer:
                 Multiplicative factor required to convert the scale parameter
                 between ellipticity conventions.
             """
+
         if target_convention == 'major':
             if input_convention == 'major':
                 return 1.0

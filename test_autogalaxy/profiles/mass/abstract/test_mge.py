@@ -33,7 +33,7 @@ def test__gnfw_deflections_yx_2d_via_mge():
         grid=ag.Grid2DIrregular([[0.1875, 0.1625]]),
         xp=np,
         sigma_log_list=sigmas,
-        sigmas_factor=nfw.axis_ratio(np),
+        ellipticity_convention='major',
         three_D=True
     )
 
@@ -61,7 +61,7 @@ def test__gnfw_deflections_yx_2d_via_mge():
         grid=ag.Grid2DIrregular([[0.1875, 0.1625]]),
         xp=np,
         sigma_log_list=sigmas,
-        sigmas_factor=nfw.axis_ratio(np),
+        ellipticity_convention='major',
         three_D=True
     )
 
@@ -93,7 +93,7 @@ def test__sersic_deflections_yx_2d_via_mge():
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]]),
         xp=np,
         sigma_log_list=sigmas,
-        sigmas_factor=np.sqrt(mp.axis_ratio(np)),
+        ellipticity_convention='circularised',
         three_D=False,
     )
 
@@ -118,7 +118,7 @@ def test__sersic_deflections_yx_2d_via_mge():
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]]),
         xp=np,
         sigma_log_list=sigmas,
-        sigmas_factor=np.sqrt(mp.axis_ratio(np)),
+        ellipticity_convention='circularised',
         three_D=False,
     )
 
@@ -147,6 +147,7 @@ def test__cnfw_deflections_yx_2d_via_mge():
         grid=ag.Grid2DIrregular([[0.1875, 0.1625]]),
         xp=np,
         sigma_log_list=sigmas,
+        ellipticity_convention='major',
         three_D=True
     )
 
@@ -174,7 +175,7 @@ def test__powerlaw_deflections_yx_2d_via_mge():
         grid=ag.Grid2DIrregular([[0.1875, 0.1625]]),
         xp=np,
         sigma_log_list=sigmas,
-        sigmas_factor=mp.axis_ratio(np),
+        ellipticity_convention='major',
         three_D=False
     )
 
@@ -201,7 +202,7 @@ def test__chameleon_deflections_yx_2d_via_mge():
         grid=ag.Grid2DIrregular([[-0.1875, 0.1625]]),
         xp=np,
         sigma_log_list=sigmas,
-        sigmas_factor=mp.axis_ratio(np),
+        ellipticity_convention='major',
         three_D=False
     )
 
@@ -223,12 +224,14 @@ def test__nfw_convergence_2d_via_mge_from():
     mge_decomp = MGEDecomposer(mass_profile=nfw)
 
     convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[2.0, 0.0]]),
-                                                         sigma_log_list=sigmas, three_D=True)
+                                                         sigma_log_list=sigmas, ellipticity_convention='major',
+                                                         three_D=True)
 
     assert convergence == pytest.approx(0.263600141, 1e-2)
 
     convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.5, 0.0]]),
-                                                         sigma_log_list=sigmas, three_D=True)
+                                                         sigma_log_list=sigmas, ellipticity_convention='major',
+                                                         three_D=True)
 
     assert convergence == pytest.approx(1.388511, 1e-2)
 
@@ -237,7 +240,8 @@ def test__nfw_convergence_2d_via_mge_from():
     mge_decomp = MGEDecomposer(mass_profile=nfw)
 
     convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.5, 0.0]]),
-                                                         sigma_log_list=sigmas, three_D=True)
+                                                         sigma_log_list=sigmas, ellipticity_convention='major',
+                                                         three_D=True)
 
     assert convergence == pytest.approx(2.0 * 1.388511, 1e-2)
 
@@ -251,7 +255,8 @@ def test__nfw_convergence_2d_via_mge_from():
     mge_decomp = MGEDecomposer(mass_profile=nfw)
 
     convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]),
-                                                         sigma_log_list=sigmas, three_D=True)
+                                                         sigma_log_list=sigmas, ellipticity_convention='major',
+                                                         three_D=True)
 
     assert convergence == pytest.approx(1.388511, 1e-2)
 
@@ -270,7 +275,8 @@ def test__nfw_convergence_2d_via_mge_from():
     mge_decomp = MGEDecomposer(mass_profile=nfw)
 
     convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.25, 0.0]]),
-                                                         sigma_log_list=sigmas, three_D=True)
+                                                         sigma_log_list=sigmas, ellipticity_convention='major',
+                                                         three_D=True)
 
     assert convergence == pytest.approx(1.388511, 1e-3)
 
@@ -293,7 +299,7 @@ def test__sersic_convergence_2d_via_mge_from():
 
     convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.0, 1.5]]),
                                                          sigma_log_list=sigmas, three_D=False,
-                                                         sigmas_factor=np.sqrt(mp.axis_ratio(np)))
+                                                         ellipticity_convention='circularised')
 
     assert convergence == pytest.approx(4.90657319276, 1e-3)
 
@@ -309,7 +315,7 @@ def test__sersic_convergence_2d_via_mge_from():
 
     convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.0, 1.5]]),
                                                          sigma_log_list=sigmas, three_D=False,
-                                                         sigmas_factor=np.sqrt(mp.axis_ratio(np)))
+                                                         ellipticity_convention='circularised')
 
     assert convergence == pytest.approx(2.0 * 4.90657319276, 1e-3)
 
@@ -325,7 +331,7 @@ def test__sersic_convergence_2d_via_mge_from():
 
     convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.0, 1.5]]),
                                                          sigma_log_list=sigmas, three_D=False,
-                                                         sigmas_factor=np.sqrt(mp.axis_ratio(np)))
+                                                         ellipticity_convention='circularised')
 
     assert convergence == pytest.approx(2.0 * 4.90657319276, 1e-3)
 
@@ -342,6 +348,6 @@ def test__sersic_convergence_2d_via_mge_from():
 
     convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]),
                                                          sigma_log_list=sigmas, three_D=False,
-                                                         sigmas_factor=np.sqrt(mp.axis_ratio(np)))
+                                                         ellipticity_convention='circularised')
 
     assert convergence == pytest.approx(5.38066670129, 1e-3)
