@@ -164,8 +164,26 @@ def mge_point_model_from(
     from autogalaxy.profiles.light.linear import Gaussian
     from autogalaxy.profiles.basis import Basis
 
-    log10_sigma_list = np.linspace(-2, np.log10(pixel_scales * 2.0), total_gaussians)
+    if total_gaussians < 1:
+        raise ValueError(
+            f"mge_point_model_from requires total_gaussians >= 1, got {total_gaussians}."
+        )
 
+    if pixel_scales <= 0:
+        raise ValueError(
+            f"mge_point_model_from requires pixel_scales > 0, got {pixel_scales}."
+        )
+
+    # Sigma values are logarithmically spaced between 0.01 arcsec (10**-2)
+    # and twice the pixel scale, with a floor to avoid taking log10 of
+    # very small or non-positive values.
+    min_log10_sigma = -2.0  # corresponds to 0.01 arcsec
+    max_sigma = max(2.0 * pixel_scales, 10 ** min_log10_sigma)
+    max_log10_sigma = np.log10(max_sigma)
+
+    log10_sigma_list = np.linspace(
+        min_log10_sigma, max_log10_sigma, total_gaussians
+    )
     centre_0 = af.UniformPrior(
         lower_limit=centre[0] - 0.1, upper_limit=centre[0] + 0.1
     )
