@@ -2,7 +2,6 @@ import numpy as np
 import pytest
 
 from autogalaxy.profiles.mass import MGEDecomposer
-from autogalaxy.profiles.mass.abstract.mge_numpy import MassProfileMGE
 
 import autogalaxy as ag
 
@@ -207,6 +206,209 @@ def test__chameleon_deflections_yx_2d_via_mge():
     )
 
     assert deflections_analytic == pytest.approx(deflections_via_mge, 1.0e-3)
+
+
+def test__DevVaucouleurs_convergence_2d_via_mge_from():
+    mp = ag.mp.DevVaucouleurs(
+        ell_comps=(0.0, 0.333333),
+        intensity=3.0,
+        effective_radius=2.0,
+        mass_to_light_ratio=1.0,
+    )
+
+    radii_min = mp.effective_radius / 100.0
+    radii_max = mp.effective_radius * 20.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
+    mge_decomp = MGEDecomposer(mass_profile=mp)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]),
+                                                         sigma_log_list=sigmas, ellipticity_convention='circularised',
+                                                         three_D=False)
+
+    assert convergence == pytest.approx(5.6697, 1e-3)
+
+    mp = ag.mp.DevVaucouleurs(
+        ell_comps=(0.0, -0.333333),
+        intensity=2.0,
+        effective_radius=3.0,
+        mass_to_light_ratio=1.0,
+    )
+
+    radii_min = mp.effective_radius / 100.0
+    radii_max = mp.effective_radius * 20.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
+    mge_decomp = MGEDecomposer(mass_profile=mp)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]),
+                                                         sigma_log_list=sigmas, ellipticity_convention='circularised',
+                                                         three_D=False)
+
+    assert convergence == pytest.approx(7.4455, 1e-3)
+
+    mp = ag.mp.DevVaucouleurs(
+        ell_comps=(0.0, -0.333333),
+        intensity=4.0,
+        effective_radius=3.0,
+        mass_to_light_ratio=1.0,
+    )
+
+    radii_min = mp.effective_radius / 100.0
+    radii_max = mp.effective_radius * 20.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
+    mge_decomp = MGEDecomposer(mass_profile=mp)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]),
+                                                         sigma_log_list=sigmas, ellipticity_convention='circularised',
+                                                         three_D=False)
+
+    assert convergence == pytest.approx(2.0 * 7.4455, 1e-3)
+
+    mp = ag.mp.DevVaucouleurs(
+        ell_comps=(0.0, -0.333333),
+        intensity=2.0,
+        effective_radius=3.0,
+        mass_to_light_ratio=2.0,
+    )
+
+    radii_min = mp.effective_radius / 100.0
+    radii_max = mp.effective_radius * 20.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
+    mge_decomp = MGEDecomposer(mass_profile=mp)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]),
+                                                         sigma_log_list=sigmas, ellipticity_convention='circularised',
+                                                         three_D=False)
+
+    assert convergence == pytest.approx(2.0 * 7.4455, 1e-3)
+
+    mp = ag.mp.DevVaucouleurs(
+        centre=(0.0, 0.0),
+        intensity=1.0,
+        effective_radius=0.6,
+        mass_to_light_ratio=1.0,
+    )
+
+    radii_min = mp.effective_radius / 100.0
+    radii_max = mp.effective_radius * 20.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
+    mge_decomp = MGEDecomposer(mass_profile=mp)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]),
+                                                         sigma_log_list=sigmas, ellipticity_convention='circularised',
+                                                         three_D=False)
+
+    assert convergence == pytest.approx(0.351797, 1e-3)
+
+
+def test__convergence_2d_via_mge_from():
+    mp = ag.mp.Exponential(
+        ell_comps=(0.0, 0.333333),
+        intensity=3.0,
+        effective_radius=2.0,
+        mass_to_light_ratio=1.0,
+    )
+
+    radii_min = mp.effective_radius / 100.0
+    radii_max = mp.effective_radius * 20.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
+    mge_decomp = MGEDecomposer(mass_profile=mp)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]),
+                                                         sigma_log_list=sigmas, ellipticity_convention='circularised',
+                                                         three_D=False)
+
+    assert convergence == pytest.approx(4.9047, 1e-3)
+
+    mp = ag.mp.Exponential(
+        ell_comps=(0.0, -0.333333),
+        intensity=2.0,
+        effective_radius=3.0,
+        mass_to_light_ratio=1.0,
+    )
+
+    radii_min = mp.effective_radius / 100.0
+    radii_max = mp.effective_radius * 20.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
+    mge_decomp = MGEDecomposer(mass_profile=mp)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]),
+                                                         sigma_log_list=sigmas, ellipticity_convention='circularised',
+                                                         three_D=False)
+
+    assert convergence == pytest.approx(4.8566, 1e-3)
+
+    mp = ag.mp.Exponential(
+        ell_comps=(0.0, -0.333333),
+        intensity=4.0,
+        effective_radius=3.0,
+        mass_to_light_ratio=1.0,
+    )
+    radii_min = mp.effective_radius / 100.0
+    radii_max = mp.effective_radius * 20.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
+    mge_decomp = MGEDecomposer(mass_profile=mp)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]),
+                                                         sigma_log_list=sigmas, ellipticity_convention='circularised',
+                                                         three_D=False)
+
+    assert convergence == pytest.approx(2.0 * 4.8566, 1e-3)
+
+    mp = ag.mp.Exponential(
+        ell_comps=(0.0, -0.333333),
+        intensity=2.0,
+        effective_radius=3.0,
+        mass_to_light_ratio=2.0,
+    )
+
+    radii_min = mp.effective_radius / 100.0
+    radii_max = mp.effective_radius * 20.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
+    mge_decomp = MGEDecomposer(mass_profile=mp)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]),
+                                                         sigma_log_list=sigmas, ellipticity_convention='circularised',
+                                                         three_D=False)
+
+    assert convergence == pytest.approx(2.0 * 4.8566, 1e-3)
+
+    mp = ag.mp.Exponential(
+        ell_comps=(0.0, -0.333333),
+        intensity=2.0,
+        effective_radius=3.0,
+        mass_to_light_ratio=1.0,
+    )
+
+    radii_min = mp.effective_radius / 100.0
+    radii_max = mp.effective_radius * 20.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
+    mge_decomp = MGEDecomposer(mass_profile=mp)
+
+    convergence = mge_decomp.convergence_2d_via_mge_from(grid=ag.Grid2DIrregular([[0.0, 1.0]]),
+                                                         sigma_log_list=sigmas, ellipticity_convention='circularised',
+                                                         three_D=False)
+
+    assert convergence == pytest.approx(4.8566, 1e-3)
 
 
 def test__nfw_convergence_2d_via_mge_from():

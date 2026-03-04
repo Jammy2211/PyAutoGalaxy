@@ -4,18 +4,31 @@ from typing import Tuple
 import autoarray as aa
 
 from autogalaxy.profiles.mass.dark.abstract import AbstractgNFW
+from autogalaxy.profiles.mass import MGEDecomposer
 
 
 class gNFW(AbstractgNFW):
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
-        return self.deflections_2d_via_mge_from(grid=grid, **kwargs)
+        return self.deflections_via_mge_from(grid=grid, xp=xp, **kwargs)
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
-    def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
-        return self._deflections_2d_via_mge_from(
-            grid=grid, sigmas_factor=self.axis_ratio(xp)
+    def deflections_2d_via_mge_from(
+            self, grid: aa.type.Grid2DLike, xp=np, **kwargs
+    ):
+        radii_min = self.scale_radius / 2000.0
+        radii_max = self.scale_radius * 30.0
+        log_sigmas = xp.linspace(xp.log(radii_min), xp.log(radii_max), 20)
+        sigmas = xp.exp(log_sigmas)
+
+        mge_decomp = MGEDecomposer(mass_profile=self)
+
+        deflections_via_mge = mge_decomp.deflections_2d_via_mge_from(
+            grid=grid,
+            xp=xp,
+            sigma_log_list=sigmas,
+            ellipticity_convention='major',
+            three_D=True,
         )
+        return deflections_via_mge
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform

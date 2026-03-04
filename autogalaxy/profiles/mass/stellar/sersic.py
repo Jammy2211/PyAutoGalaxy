@@ -7,9 +7,7 @@ from autoarray import Grid2D
 import autoarray as aa
 
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
-from autogalaxy.profiles.mass.abstract.mge_numpy import (
-    MassProfileMGE,
-)
+
 from autogalaxy.profiles.mass.abstract.cse import (
     MassProfileCSE,
 )
@@ -84,7 +82,7 @@ def cse_settings_from(
     return upper_dex, lower_dex, total_cses, sample_points
 
 
-class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile):
+class AbstractSersic(MassProfile, MassProfileCSE, StellarProfile):
     def __init__(
         self,
         centre: Tuple[float, float] = (0.0, 0.0),
@@ -115,7 +113,6 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         """
         super(AbstractSersic, self).__init__(centre=centre, ell_comps=ell_comps)
         super(MassProfile, self).__init__(centre=centre, ell_comps=ell_comps)
-        super(MassProfileMGE, self).__init__()
         super(MassProfileCSE, self).__init__()
         self.mass_to_light_ratio = mass_to_light_ratio
         self.intensity = intensity
@@ -125,30 +122,6 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self.deflections_2d_via_cse_from(grid=grid, xp=xp, **kwargs)
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
-    def deflections_2d_via_mge_from(
-        self, grid: aa.type.Grid2DLike, func_terms=28, func_gaussians=20, **kwargs
-    ):
-        """
-        Calculate the projected 2D deflection angles from a grid of (y,x) arc second coordinates, by computing and
-        summing the convergence of each individual cse used to decompose the mass profile.
-
-        The cored steep elliptical (cse) decomposition of a the elliptical NFW mass
-        profile (e.g. `decompose_convergence_via_cse`) is using equation (12) of
-        Oguri 2021 (https://arxiv.org/abs/2106.11464).
-
-        Parameters
-        ----------
-        grid
-            The grid of (y,x) arc-second coordinates the convergence is computed on.
-        """
-        return self._deflections_2d_via_mge_from(
-            grid=grid,
-            sigmas_factor=np.sqrt(self.axis_ratio()),
-            func_terms=func_terms,
-            func_gaussians=func_gaussians,
-        )
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
@@ -185,34 +158,6 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
             xp=xp
         )
 
-    @aa.over_sample
-    @aa.grid_dec.to_array
-    @aa.grid_dec.transform
-    def convergence_2d_via_mge_from(
-        self,
-        grid: aa.type.Grid2DLike,
-        xp=np,
-        func_terms=28,
-        func_gaussians=20,
-        **kwargs,
-    ):
-        """
-        Calculate the projected convergence at a given set of arc-second gridded coordinates.
-
-        Parameters
-        ----------
-        grid
-            The grid of (y,x) arc-second coordinates the convergence is computed on.
-
-        """
-
-        eccentric_radii = self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs)
-
-        return self._convergence_2d_via_mge_from(
-            grid_radii=eccentric_radii,
-            func_terms=func_terms,
-            func_gaussians=func_gaussians,
-        )
 
     @aa.over_sample
     @aa.grid_dec.to_array
@@ -260,30 +205,6 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
             )
         )
 
-
-    def decompose_convergence_via_mge(
-        self, func_terms=28, func_gaussians=20
-    ) -> Tuple[List, List]:
-        radii_min = self.effective_radius / 100.0
-        radii_max = self.effective_radius * 20.0
-
-        def sersic_2d(r):
-            return (
-                self.mass_to_light_ratio
-                * self.intensity
-                * np.exp(
-                    -self.sersic_constant
-                    * (((r / self.effective_radius) ** (1.0 / self.sersic_index)) - 1.0)
-                )
-            )
-
-        return self._decompose_convergence_via_mge(
-            func=sersic_2d,
-            radii_min=radii_min,
-            radii_max=radii_max,
-            func_terms=func_terms,
-            func_gaussians=func_gaussians,
-        )
 
     def decompose_convergence_via_cse(
         self, grid_radii: np.ndarray
@@ -377,7 +298,7 @@ class AbstractSersic(MassProfile, MassProfileMGE, MassProfileCSE, StellarProfile
         return self.effective_radius / np.sqrt(self.axis_ratio())
 
 
-class Sersic(AbstractSersic, MassProfileMGE, MassProfileCSE):
+class Sersic(AbstractSersic, MassProfileCSE):
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     def deflections_2d_via_integral_from(
