@@ -12,9 +12,9 @@ from autogalaxy.operate.deflections import (
 
 
 def critical_curve_via_magnification_from(mass_profile, grid):
-    magnification = OperateDeflections.from_mass_obj(mass_profile).magnification_2d_from(
-        grid=grid
-    )
+    magnification = OperateDeflections.from_mass_obj(
+        mass_profile
+    ).magnification_2d_from(grid=grid)
 
     inverse_magnification = 1 / magnification
 
@@ -147,6 +147,7 @@ def test__magnification_2d_via_hessian_from():
 
     assert magnification.in_list[0] == pytest.approx(-0.56303, 1.0e-4)
     assert magnification.in_list[1] == pytest.approx(-2.57591, 1.0e-4)
+
 
 def test__tangential_critical_curve_list_from():
     grid = ag.Grid2D.uniform(shape_native=(15, 15), pixel_scales=0.3)
@@ -508,5 +509,3 @@ def test__jacobian_from():
     assert magnification_via_jacobian == pytest.approx(
         np.array(magnification_via_hessian), rel=1e-6
     )
-
-

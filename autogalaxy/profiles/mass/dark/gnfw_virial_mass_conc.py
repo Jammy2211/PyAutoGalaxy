@@ -4,14 +4,17 @@ from typing import Tuple
 from autogalaxy.profiles.mass.dark.gnfw import gNFWSph
 from autogalaxy import cosmology as cosmo
 
+
 def is_jax(x):
     try:
         import jax
         from jax import Array
         from jax.core import Tracer
+
         return isinstance(x, (Array, Tracer))
     except Exception:
         return False
+
 
 def kappa_s_and_scale_radius(
     cosmology,
@@ -96,6 +99,7 @@ def kappa_s_and_scale_radius(
         xp = np
     else:
         from jax import numpy as jnp
+
         xp = jnp
 
     if xp is np:
@@ -112,15 +116,21 @@ def kappa_s_and_scale_radius(
     gamma = inner_slope
     concentration = (2.0 - gamma) * c_2  # gNFW concentration (your definition)
 
-    critical_density = cosmology.critical_density(redshift_object, xp=xp)  # Msun / kpc^3
+    critical_density = cosmology.critical_density(
+        redshift_object, xp=xp
+    )  # Msun / kpc^3
 
-    critical_surface_density = cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
-        redshift_0=redshift_object,
-        redshift_1=redshift_source,
-        xp=xp,
+    critical_surface_density = (
+        cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+            redshift_0=redshift_object,
+            redshift_1=redshift_source,
+            xp=xp,
+        )
     )  # Msun / kpc^2
 
-    kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_object, xp=xp)  # kpc / arcsec
+    kpc_per_arcsec = cosmology.kpc_per_arcsec_from(
+        redshift=redshift_object, xp=xp
+    )  # kpc / arcsec
 
     # Bryan & Norman (1998) overdensity if overdens == 0
     x = cosmology.Om(redshift_object, xp=xp) - 1.0
@@ -128,7 +138,9 @@ def kappa_s_and_scale_radius(
     overdens = xp.where(overdens == 0, overdens_bn98, overdens)
 
     # r_vir in kpc
-    virial_radius = (virial_mass / (overdens * critical_density * (4.0 * xp.pi / 3.0))) ** (1.0 / 3.0)
+    virial_radius = (
+        virial_mass / (overdens * critical_density * (4.0 * xp.pi / 3.0))
+    ) ** (1.0 / 3.0)
 
     # scale radius in kpc
     scale_radius_kpc = virial_radius / concentration

@@ -151,12 +151,13 @@ class Gaussian(MassProfile, StellarProfile):
 
         """
         return self.convergence_func(
-            self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs),
-            xp=xp
+            self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs), xp=xp
         )
 
     def convergence_func(self, grid_radius: float, xp=np) -> float:
-        return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius, xp=xp)
+        return self.mass_to_light_ratio * self.image_2d_via_radii_from(
+            grid_radius, xp=xp
+        )
 
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
@@ -261,7 +262,9 @@ class Gaussian(MassProfile, StellarProfile):
 
         real_exp = xp.clip(-xp.real(z2), None, 700.0)
         imag_exp = -xp.imag(z2)
-        w5 = xp.exp(real_exp + 1j * imag_exp) + 1j * z * t / s  # clip prevents overflow error
+        w5 = (
+            xp.exp(real_exp + 1j * imag_exp) + 1j * z * t / s
+        )  # clip prevents overflow error
 
         # ---------- Region 6 ----------
         U6 = xp.asarray(

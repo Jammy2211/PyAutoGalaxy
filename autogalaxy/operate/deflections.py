@@ -102,7 +102,9 @@ class OperateDeflections:
         return cls(deflections_yx_2d_from=mass_obj.deflections_yx_2d_from)
 
     @classmethod
-    def from_tracer(cls, tracer, use_multi_plane: bool = True, plane_i: int = 0, plane_j: int = -1):
+    def from_tracer(
+        cls, tracer, use_multi_plane: bool = True, plane_i: int = 0, plane_j: int = -1
+    ):
         """
         Construct from a PyAutoLens ``Tracer`` object.
 
@@ -384,9 +386,7 @@ class OperateDeflections:
 
         return [[a11, a12], [a21, a22]]
 
-    def convergence_2d_via_hessian_from(
-        self, grid, xp=np
-    ) -> aa.ArrayIrregular:
+    def convergence_2d_via_hessian_from(self, grid, xp=np) -> aa.ArrayIrregular:
         """
         Returns the convergence of the lensing object, which is computed from the 2D deflection angle map via the
         Hessian using the expression (see equation 56 https://inspirehep.net/literature/419263):
@@ -416,9 +416,7 @@ class OperateDeflections:
 
         return aa.ArrayIrregular(values=convergence)
 
-    def shear_yx_2d_via_hessian_from(
-        self, grid, xp=np
-    ) -> ShearYX2DIrregular:
+    def shear_yx_2d_via_hessian_from(self, grid, xp=np) -> ShearYX2DIrregular:
         """
         Returns the 2D (y,x) shear vectors of the lensing object, which are computed from the 2D deflection angle map
         via the Hessian using the expressions (see equation 57 https://inspirehep.net/literature/419263):
@@ -459,9 +457,7 @@ class OperateDeflections:
 
         return ShearYX2DIrregular(values=shear_yx_2d, grid=grid)
 
-    def magnification_2d_via_hessian_from(
-        self, grid, xp=np
-    ) -> aa.ArrayIrregular:
+    def magnification_2d_via_hessian_from(self, grid, xp=np) -> aa.ArrayIrregular:
         """
         Returns the 2D magnification map of lensing object, which is computed from the 2D deflection angle map
         via the Hessian using the expressions (see equation 60 https://inspirehep.net/literature/419263):
@@ -866,4 +862,3 @@ class OperateDeflections:
             )
 
         return einstein_mass_angular_list[0]
-

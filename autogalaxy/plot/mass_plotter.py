@@ -121,9 +121,9 @@ class MassPlotter(Plotter):
             from autogalaxy.operate.deflections import OperateDeflections
 
             self.mat_plot_2d.plot_array(
-                array=OperateDeflections.from_mass_obj(self.mass_obj).magnification_2d_from(
-                    grid=self.grid
-                ),
+                array=OperateDeflections.from_mass_obj(
+                    self.mass_obj
+                ).magnification_2d_from(grid=self.grid),
                 visuals_2d=self.visuals_2d_with_critical_curves,
                 auto_labels=aplt.AutoLabels(
                     title=f"Magnification{title_suffix}",

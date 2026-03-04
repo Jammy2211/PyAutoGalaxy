@@ -11,9 +11,7 @@ class gNFW(AbstractgNFW):
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self.deflections_2d_via_mge_from(grid=grid, xp=xp, **kwargs)
 
-    def deflections_2d_via_mge_from(
-            self, grid: aa.type.Grid2DLike, xp=np, **kwargs
-    ):
+    def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         radii_min = self.scale_radius / 20000.0
         radii_max = self.scale_radius * 200.0
         log_sigmas = xp.linspace(xp.log(radii_min), xp.log(radii_max), 30)
@@ -25,7 +23,7 @@ class gNFW(AbstractgNFW):
             grid=grid,
             xp=xp,
             sigma_log_list=sigmas,
-            ellipticity_convention='major',
+            ellipticity_convention="major",
             three_D=True,
         )
         return deflections_via_mge
