@@ -222,6 +222,11 @@ def hilbert_pixels_from_pixel_scale(pixel_scale: float) -> int:
     int
         The recommended number of Hilbert pixels.
     """
+    if not np.isfinite(pixel_scale) or pixel_scale <= 0:
+        raise ValueError(
+            f"hilbert_pixels_from_pixel_scale requires pixel_scale to be finite and > 0, got {pixel_scale}."
+        )
+
     if pixel_scale > 0.06:
         return 1000
     elif pixel_scale > 0.04:

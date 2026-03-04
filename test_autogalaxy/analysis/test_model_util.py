@@ -79,6 +79,20 @@ def test__hilbert_pixels_from_pixel_scale__below_003():
     assert ag.model_util.hilbert_pixels_from_pixel_scale(0.01) == 1750
 
 
+def test__hilbert_pixels_from_pixel_scale__raises_for_non_positive():
+    with pytest.raises(ValueError):
+        ag.model_util.hilbert_pixels_from_pixel_scale(0.0)
+    with pytest.raises(ValueError):
+        ag.model_util.hilbert_pixels_from_pixel_scale(-0.05)
+
+
+def test__hilbert_pixels_from_pixel_scale__raises_for_non_finite():
+    with pytest.raises(ValueError):
+        ag.model_util.hilbert_pixels_from_pixel_scale(float("nan"))
+    with pytest.raises(ValueError):
+        ag.model_util.hilbert_pixels_from_pixel_scale(float("inf"))
+
+
 def test__hilbert_pixels_from_pixel_scale__boundary_values():
     # Exactly 0.06 is NOT > 0.06, so falls to next branch (> 0.04 → 1250)
     assert ag.model_util.hilbert_pixels_from_pixel_scale(0.06) == 1250
