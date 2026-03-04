@@ -65,7 +65,7 @@ class AbstractgNFW(MassProfile, DarkProfile):
 
         grid_eta = self.elliptical_radii_grid_from(grid=grid, xp=xp, **kwargs)
 
-        return self.convergence_func(grid_radius=grid_eta)
+        return self.convergence_func(grid_radius=grid_eta, xp=xp)
 
 
     def tabulate_integral(self, grid, tabulate_bins, **kwargs):
