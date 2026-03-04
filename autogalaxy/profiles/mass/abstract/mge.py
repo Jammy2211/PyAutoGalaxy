@@ -254,7 +254,7 @@ class MGEDecomposer:
 
     def axis_ratio(self, xp=np):
         axis_ratio = self.mass_profile.axis_ratio(xp=xp)
-        return xp.where(axis_ratio < 0.9999, axis_ratio, 0.9999)
+        return xp.where(axis_ratio < 0.99999, axis_ratio, 0.99999)
 
 
     def zeta_from(self, grid: aa.type.Grid2DLike, sigma_log_list, xp=np):
