@@ -58,6 +58,34 @@ def test__mge_point_model_from__shared_centre_and_ell_comps():
     assert model.prior_count == 4
 
 
+def test__hilbert_pixels_from_pixel_scale__above_006():
+    assert ag.model_util.hilbert_pixels_from_pixel_scale(0.07) == 1000
+    assert ag.model_util.hilbert_pixels_from_pixel_scale(0.1) == 1000
+
+
+def test__hilbert_pixels_from_pixel_scale__between_004_and_006():
+    assert ag.model_util.hilbert_pixels_from_pixel_scale(0.05) == 1250
+    assert ag.model_util.hilbert_pixels_from_pixel_scale(0.061) == 1000
+    assert ag.model_util.hilbert_pixels_from_pixel_scale(0.041) == 1250
+
+
+def test__hilbert_pixels_from_pixel_scale__between_003_and_004():
+    assert ag.model_util.hilbert_pixels_from_pixel_scale(0.03) == 1500
+    assert ag.model_util.hilbert_pixels_from_pixel_scale(0.035) == 1500
+
+
+def test__hilbert_pixels_from_pixel_scale__below_003():
+    assert ag.model_util.hilbert_pixels_from_pixel_scale(0.02) == 1750
+    assert ag.model_util.hilbert_pixels_from_pixel_scale(0.01) == 1750
+
+
+def test__hilbert_pixels_from_pixel_scale__boundary_values():
+    # Exactly 0.06 is NOT > 0.06, so falls to next branch (> 0.04 → 1250)
+    assert ag.model_util.hilbert_pixels_from_pixel_scale(0.06) == 1250
+    # Exactly 0.04 is NOT > 0.04, but IS >= 0.03 → 1500
+    assert ag.model_util.hilbert_pixels_from_pixel_scale(0.04) == 1500
+
+
 def test__mge_point_model_from__centre_prior_bounds():
     """
     When a custom centre is supplied the UniformPrior limits shift by ±0.1
