@@ -122,7 +122,6 @@ class AbstractSersic(MassProfile, MassProfileCSE, StellarProfile):
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self.deflections_2d_via_cse_from(grid=grid, xp=xp, **kwargs)
 
-
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
     def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
@@ -154,10 +153,8 @@ class AbstractSersic(MassProfile, MassProfileCSE, StellarProfile):
 
         """
         return self.convergence_func(
-            self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs),
-            xp=xp
+            self.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs), xp=xp
         )
-
 
     @aa.over_sample
     @aa.grid_dec.to_array
@@ -182,7 +179,9 @@ class AbstractSersic(MassProfile, MassProfileCSE, StellarProfile):
         return self._convergence_2d_via_cse_from(grid_radii=elliptical_radii)
 
     def convergence_func(self, grid_radius: float, xp=np) -> float:
-        return self.mass_to_light_ratio * self.image_2d_via_radii_from(grid_radius, xp=xp)
+        return self.mass_to_light_ratio * self.image_2d_via_radii_from(
+            grid_radius, xp=xp
+        )
 
     @aa.grid_dec.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
@@ -200,11 +199,10 @@ class AbstractSersic(MassProfile, MassProfileCSE, StellarProfile):
         return self.intensity * xp.exp(
             -self.sersic_constant
             * (
-                    ((radius.array / self.effective_radius) ** (1.0 / self.sersic_index))
-                    - 1
+                ((radius.array / self.effective_radius) ** (1.0 / self.sersic_index))
+                - 1
             )
         )
-
 
     def decompose_convergence_via_cse(
         self, grid_radii: np.ndarray
@@ -257,7 +255,6 @@ class AbstractSersic(MassProfile, MassProfileCSE, StellarProfile):
                     )
                 )
             )
-
 
         return self._decompose_convergence_via_cse_from(
             func=sersic_2d,

@@ -178,22 +178,14 @@ def mge_point_model_from(
     # and twice the pixel scale, with a floor to avoid taking log10 of
     # very small or non-positive values.
     min_log10_sigma = -2.0  # corresponds to 0.01 arcsec
-    max_sigma = max(2.0 * pixel_scales, 10 ** min_log10_sigma)
+    max_sigma = max(2.0 * pixel_scales, 10**min_log10_sigma)
     max_log10_sigma = np.log10(max_sigma)
 
-    log10_sigma_list = np.linspace(
-        min_log10_sigma, max_log10_sigma, total_gaussians
-    )
-    centre_0 = af.UniformPrior(
-        lower_limit=centre[0] - 0.1, upper_limit=centre[0] + 0.1
-    )
-    centre_1 = af.UniformPrior(
-        lower_limit=centre[1] - 0.1, upper_limit=centre[1] + 0.1
-    )
+    log10_sigma_list = np.linspace(min_log10_sigma, max_log10_sigma, total_gaussians)
+    centre_0 = af.UniformPrior(lower_limit=centre[0] - 0.1, upper_limit=centre[0] + 0.1)
+    centre_1 = af.UniformPrior(lower_limit=centre[1] - 0.1, upper_limit=centre[1] + 0.1)
 
-    gaussian_list = af.Collection(
-        af.Model(Gaussian) for _ in range(total_gaussians)
-    )
+    gaussian_list = af.Collection(af.Model(Gaussian) for _ in range(total_gaussians))
 
     for i, gaussian in enumerate(gaussian_list):
         gaussian.centre.centre_0 = centre_0

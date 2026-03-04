@@ -67,7 +67,6 @@ class AbstractgNFW(MassProfile, DarkProfile):
 
         return self.convergence_func(grid_radius=grid_eta, xp=xp)
 
-
     def tabulate_integral(self, grid, tabulate_bins, **kwargs):
         """Tabulate an integral over the convergence of deflection potential of a mass profile. This is used in \
         the gNFW profile classes to speed up the integration procedure.
@@ -92,15 +91,14 @@ class AbstractgNFW(MassProfile, DarkProfile):
         x = r.array / self.scale_radius
 
         rho_at_scale_radius = (
-                self.kappa_s / self.scale_radius
+            self.kappa_s / self.scale_radius
         )  # density parameter of 3D gNFW
 
         return (
-                rho_at_scale_radius
-                * x ** (-self.inner_slope)
-                * (1.0 + x) ** (self.inner_slope - 3.0)
+            rho_at_scale_radius
+            * x ** (-self.inner_slope)
+            * (1.0 + x) ** (self.inner_slope - 3.0)
         )
-
 
     def coord_func_f(self, grid_radius: np.ndarray, xp=np) -> np.ndarray:
         """

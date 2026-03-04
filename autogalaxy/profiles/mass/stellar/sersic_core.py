@@ -63,9 +63,7 @@ class SersicCore(Sersic):
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self.deflections_2d_via_mge_from(grid=grid, xp=xp, **kwargs)
 
-    def deflections_2d_via_mge_from(
-        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
-    ):
+    def deflections_2d_via_mge_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         radii_min = self.effective_radius / 50.0
         radii_max = self.effective_radius * 20.0
         log_sigmas = xp.linspace(xp.log(radii_min), xp.log(radii_max), 20)
@@ -77,7 +75,7 @@ class SersicCore(Sersic):
             grid=grid,
             xp=xp,
             sigma_log_list=sigmas,
-            ellipticity_convention='circularised',
+            ellipticity_convention="circularised",
             three_D=False,
         )
         return deflections_via_mge
@@ -125,20 +123,19 @@ class SersicCore(Sersic):
 
     def convergence_func(self, grid_radius: float, xp=np) -> float:
         return (
-                self.mass_to_light_ratio
-                * self.intensity_prime(xp=xp)
-                * (1.0 + (self.radius_break / grid_radius.array) ** self.alpha)
-                ** (self.gamma / self.alpha)
-                * xp.exp(
-            -self.sersic_constant
-            * (
-                    (grid_radius.array ** self.alpha + self.radius_break ** self.alpha)
-                    / self.effective_radius ** self.alpha
+            self.mass_to_light_ratio
+            * self.intensity_prime(xp=xp)
+            * (1.0 + (self.radius_break / grid_radius.array) ** self.alpha)
+            ** (self.gamma / self.alpha)
+            * xp.exp(
+                -self.sersic_constant
+                * (
+                    (grid_radius.array**self.alpha + self.radius_break**self.alpha)
+                    / self.effective_radius**self.alpha
+                )
+                ** (1.0 / (self.sersic_index * self.alpha))
             )
-            ** (1.0 / (self.sersic_index * self.alpha))
         )
-        )
-
 
     def intensity_prime(self, xp=np):
         """Overall intensity normalisation in the rescaled Core-Sersic light profiles (electrons per second)"""

@@ -80,7 +80,25 @@ These inherit from `AnalysisDataset` → `Analysis` (in `analysis/analysis/`), w
 
 ### JAX Support
 
-JAX is integrated via the `xp` parameter pattern throughout the codebase. Fit classes accept `xp=np` (NumPy, default) or `xp=jnp` (JAX). The `AbstractFitInversion.use_jax` property tracks which backend is active. The `AnalysisImaging.__init__` has `use_jax: bool = True`. The conftest.py forces JAX backend initialization before tests run.
+The codebase is designed so that **NumPy is the default everywhere and JAX is opt-in**. JAX is never imported at module level — it is only imported locally inside functions when explicitly requested.
+
+The `xp` parameter pattern is the single point of control:
+- `xp=np` (default throughout) — pure NumPy path, no JAX dependency at runtime
+- `xp=jnp` — JAX path, imports `jax` / `jax.numpy` locally inside the function
+
+This means:
+- **Unit tests** (`test_autogalaxy/`) always run on the NumPy path. No test should import JAX or pass `xp=jnp` unless it is explicitly testing the JAX path.
+- **Integration tests** (in `autogalaxy_workspace_test/`) are where the JAX path is exercised, typically wrapped in `jax.jit` to test both correctness and compilation.
+- `conftest.py` forces JAX backend initialisation before the test suite runs, but this only ensures JAX is available — it does not switch the default backend.
+
+`AbstractFitInversion.use_jax` tracks whether a fit was constructed with JAX. `AnalysisImaging` has `use_jax: bool = True` to opt into the JAX path for model-fitting.
+
+When adding a new function that should support JAX:
+1. Default the parameter to `xp=np`
+2. Guard any JAX imports with `if xp is not np:` and import `jax` / `jax.numpy` locally inside that branch
+3. Add the NumPy implementation as the default path (finite-difference, `np.*` calls, etc.)
+4. Add a JAX implementation in the guarded branch (e.g. `jax.jacfwd`, `jnp.vectorize`)
+5. Verify correctness by comparing both paths in `autogalaxy_workspace_test/scripts/`
 
 ### Linear Light Profiles & Inversions
 
@@ -100,6 +118,10 @@ Default priors, visualization settings, and general config live in `autogalaxy/c
 - `OperateDeflections` (`operate/deflections.py`) – provides deflection-related operations on mass objects
 
 Both are mixin classes inherited by `LightProfile`, `MassProfile`, `Galaxy`, and `Galaxies`.
+
+### Workspace Script Style
+
+Scripts in `autogalaxy_workspace` and `autogalaxy_workspace_test` use `"""..."""` docstring blocks as prose commentary throughout — **not** `#` comments. Every script opens with a module-level docstring (title + underline + description), and each logical section of code is preceded by a `"""..."""` block with a `__Section Name__` header explaining what follows. See any script in `autogalaxy_workspace/scripts/` for examples of this style.
 
 ### Workspace (Examples & Notebooks)
 
