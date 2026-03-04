@@ -5,8 +5,6 @@ from autogalaxy.profiles.mass import MGEDecomposer
 
 import autogalaxy as ag
 
-grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.2,
-                             over_sample_size=8)
 
 def test__gnfw_deflections_yx_2d_via_mge():
     nfw = ag.mp.gNFW(
