@@ -14,9 +14,9 @@ class gNFW(AbstractgNFW):
     def deflections_2d_via_mge_from(
             self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ):
-        radii_min = self.scale_radius / 2000.0
-        radii_max = self.scale_radius * 30.0
-        log_sigmas = xp.linspace(xp.log(radii_min), xp.log(radii_max), 20)
+        radii_min = self.scale_radius / 20000.0
+        radii_max = self.scale_radius * 200.0
+        log_sigmas = xp.linspace(xp.log(radii_min), xp.log(radii_max), 30)
         sigmas = xp.exp(log_sigmas)
 
         mge_decomp = MGEDecomposer(mass_profile=self)
