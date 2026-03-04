@@ -129,6 +129,63 @@ def mge_model_from(
     )
 
 
+def mge_point_model_from(
+    pixel_scales: float,
+    total_gaussians: int = 10,
+    centre: Tuple[float, float] = (0.0, 0.0),
+) -> af.Model:
+    """
+    Construct a Multi-Gaussian Expansion (MGE) model for a compact or unresolved
+    point-like component (e.g. a nuclear starburst, AGN, or unresolved bulge).
+
+    The model is composed of ``total_gaussians`` linear Gaussians whose sigma values
+    are logarithmically spaced between 0.01 arcseconds and twice the pixel scale.
+    All Gaussians share the same centre and ellipticity components, keeping the
+    parameter count low while capturing a realistic PSF-convolved point source.
+
+    Parameters
+    ----------
+    pixel_scales
+        The pixel scale of the image in arcseconds per pixel.  The maximum Gaussian
+        width is set to ``2 * pixel_scales`` so that the model is compact relative to
+        the resolution of the data.
+    total_gaussians
+        Number of Gaussian components in the basis.
+    centre
+        (y, x) centre of the point source in arc-seconds.  A ±0.1 arcsecond uniform
+        prior is placed on each coordinate.
+
+    Returns
+    -------
+    af.Model
+        An ``autofit.Model`` wrapping a ``Basis`` of linear Gaussians.
+    """
+
+    from autogalaxy.profiles.light.linear import Gaussian
+    from autogalaxy.profiles.basis import Basis
+
+    log10_sigma_list = np.linspace(-2, np.log10(pixel_scales * 2.0), total_gaussians)
+
+    centre_0 = af.UniformPrior(
+        lower_limit=centre[0] - 0.1, upper_limit=centre[0] + 0.1
+    )
+    centre_1 = af.UniformPrior(
+        lower_limit=centre[1] - 0.1, upper_limit=centre[1] + 0.1
+    )
+
+    gaussian_list = af.Collection(
+        af.Model(Gaussian) for _ in range(total_gaussians)
+    )
+
+    for i, gaussian in enumerate(gaussian_list):
+        gaussian.centre.centre_0 = centre_0
+        gaussian.centre.centre_1 = centre_1
+        gaussian.ell_comps = gaussian_list[0].ell_comps
+        gaussian.sigma = 10 ** log10_sigma_list[i]
+
+    return af.Model(Basis, profile_list=gaussian_list)
+
+
 def simulator_start_here_model_from():
 
     from autogalaxy.profiles.light.snr import Sersic
