@@ -142,14 +142,14 @@ class gNFW(AbstractgNFW):
         ) * (_eta_u - r1) / (r2 - r1)
         return kap / (1.0 - (1.0 - axis_ratio**2) * u) ** (npow + 0.5)
 
-    def convergence_func(self, grid_radius: float) -> float:
+    def convergence_func(self, grid_radius: float, xp=np) -> float:
 
         from scipy.integrate import quad
 
         def integral_y(y, eta):
-            return (y + eta) ** (self.inner_slope - 4) * (1 - np.sqrt(1 - y**2))
+            return (y + eta) ** (self.inner_slope - 4) * (1 - xp.sqrt(1 - y**2))
 
-        grid_radius = np.array((1.0 / self.scale_radius) * grid_radius.array)
+        grid_radius = xp.array((1.0 / self.scale_radius) * grid_radius.array)
 
         for index in range(grid_radius.shape[0]):
             integral_y_value = quad(
