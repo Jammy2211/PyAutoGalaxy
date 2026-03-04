@@ -204,6 +204,39 @@ def mge_point_model_from(
     return af.Model(Basis, profile_list=gaussian_list)
 
 
+def hilbert_pixels_from_pixel_scale(pixel_scale: float) -> int:
+    """
+    Return the number of Hilbert-curve pixels appropriate for a given image pixel scale.
+
+    The Hilbert pixel count controls the resolution of the Hilbert-curve ordering used
+    in adaptive source-plane pixelizations. Finer pixel scales resolve smaller angular
+    features and therefore benefit from a higher Hilbert resolution.
+
+    Parameters
+    ----------
+    pixel_scale
+        The pixel scale of the image in arcseconds per pixel.
+
+    Returns
+    -------
+    int
+        The recommended number of Hilbert pixels.
+    """
+    if not np.isfinite(pixel_scale) or pixel_scale <= 0:
+        raise ValueError(
+            f"hilbert_pixels_from_pixel_scale requires pixel_scale to be finite and > 0, got {pixel_scale}."
+        )
+
+    if pixel_scale > 0.06:
+        return 1000
+    elif pixel_scale > 0.04:
+        return 1250
+    elif pixel_scale >= 0.03:
+        return 1500
+    else:
+        return 1750
+
+
 def simulator_start_here_model_from():
 
     from autogalaxy.profiles.light.snr import Sersic
