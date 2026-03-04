@@ -126,13 +126,13 @@ class SersicCore(Sersic):
     def convergence_func(self, grid_radius: float, xp=np) -> float:
         return (
                 self.mass_to_light_ratio
-                * self.intensity_prime()
-                * (1.0 + (self.radius_break / grid_radius) ** self.alpha)
+                * self.intensity_prime(xp=xp)
+                * (1.0 + (self.radius_break / grid_radius.array) ** self.alpha)
                 ** (self.gamma / self.alpha)
                 * xp.exp(
             -self.sersic_constant
             * (
-                    (grid_radius ** self.alpha + self.radius_break ** self.alpha)
+                    (grid_radius.array ** self.alpha + self.radius_break ** self.alpha)
                     / self.effective_radius ** self.alpha
             )
             ** (1.0 / (self.sersic_index * self.alpha))
