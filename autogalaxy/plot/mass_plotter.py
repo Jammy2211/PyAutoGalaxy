@@ -118,10 +118,10 @@ class MassPlotter(Plotter):
             )
 
         if magnification:
-            from autogalaxy.operate.deflections import OperateDeflections
+            from autogalaxy.operate.lens_calc import LensCalc
 
             self.mat_plot_2d.plot_array(
-                array=OperateDeflections.from_mass_obj(
+                array=LensCalc.from_mass_obj(
                     self.mass_obj
                 ).magnification_2d_from(grid=self.grid),
                 visuals_2d=self.visuals_2d_with_critical_curves,

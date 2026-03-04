@@ -170,12 +170,12 @@ class Visuals1D(aplt.Visuals1D):
             The collection of attributes that can be plotted by a `Plotter` object.
         """
 
-        from autogalaxy.operate.deflections import OperateDeflections
+        from autogalaxy.operate.lens_calc import LensCalc
 
         einstein_radius = None
 
         try:
-            od = OperateDeflections.from_mass_obj(mass_obj)
+            od = LensCalc.from_mass_obj(mass_obj)
             einstein_radius = od.einstein_radius_from(grid=grid)
         except (TypeError, AttributeError):
             pass
@@ -217,13 +217,13 @@ class Visuals1D(aplt.Visuals1D):
             The mean value and errors of each attribute that are plotted in 1D by a `Plotter` object.
         """
 
-        from autogalaxy.operate.deflections import OperateDeflections
+        from autogalaxy.operate.lens_calc import LensCalc
 
         einstein_radius_list = []
 
         for mass_obj in mass_obj_list:
             try:
-                od = OperateDeflections.from_mass_obj(mass_obj)
+                od = LensCalc.from_mass_obj(mass_obj)
                 einstein_radius_list.append(od.einstein_radius_from(grid=grid))
             except TypeError:
                 einstein_radius_list.append(None)

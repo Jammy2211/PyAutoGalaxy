@@ -2,7 +2,7 @@ from os import path
 import pytest
 
 import autogalaxy.plot as aplt
-from autogalaxy.operate.deflections import OperateDeflections
+from autogalaxy.operate.lens_calc import LensCalc
 
 directory = path.dirname(path.realpath(__file__))
 
@@ -37,7 +37,7 @@ def test__1d__add_einstein_radius(mp_0, grid_2d_7x7):
         mass_obj=mp_0, grid=grid_2d_7x7
     )
 
-    assert visuals_1d_via.einstein_radius == OperateDeflections.from_mass_obj(
+    assert visuals_1d_via.einstein_radius == LensCalc.from_mass_obj(
         mp_0
     ).einstein_radius_from(grid=grid_2d_7x7)
 
@@ -48,7 +48,7 @@ def test__1d__add_einstein_radius_errors(mp_0, grid_2d_7x7):
         mass_obj_list=[mp_0, mp_0], grid=grid_2d_7x7, low_limit=1.0
     )
 
-    od = OperateDeflections.from_mass_obj(mp_0)
+    od = LensCalc.from_mass_obj(mp_0)
     assert visuals_1d_via.einstein_radius == od.einstein_radius_from(grid=grid_2d_7x7)
     assert visuals_1d_via.einstein_radius_errors[0][0] == od.einstein_radius_from(
         grid=grid_2d_7x7
@@ -61,7 +61,7 @@ def test__2d__add_critical_curve(gal_x1_mp, grid_2d_7x7):
         mass_obj=gal_x1_mp, grid=grid_2d_7x7, plane_index=0
     )
 
-    od = OperateDeflections.from_mass_obj(gal_x1_mp)
+    od = LensCalc.from_mass_obj(gal_x1_mp)
     assert (
         visuals_2d_via.tangential_critical_curves[0]
         == od.tangential_critical_curve_list_from(grid=grid_2d_7x7)[0]
@@ -74,7 +74,7 @@ def test__2d__add_caustic(gal_x1_mp, grid_2d_7x7):
         mass_obj=gal_x1_mp, grid=grid_2d_7x7, plane_index=1
     )
 
-    od = OperateDeflections.from_mass_obj(gal_x1_mp)
+    od = LensCalc.from_mass_obj(gal_x1_mp)
     assert (
         visuals_2d_via.tangential_caustics[0]
         == od.tangential_caustic_list_from(grid=grid_2d_7x7)[0]

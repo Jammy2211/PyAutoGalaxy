@@ -78,28 +78,40 @@ def evaluation_grid(func):
     return wrapper
 
 
-class OperateDeflections:
+class LensCalc:
     """
-    Packages methods which manipulate the 2D deflection angle map returned from the `deflections_yx_2d_from` function
-    of a mass object (e.g. a `MassProfile`, `Galaxy`).
+    Computes lensing quantities from a deflection-angle callable and an optional potential callable.
 
-    The majority of methods are those which from the 2D deflection angle map compute lensing quantities like a 2D
-    shear field, magnification map or the Einstein Radius.
+    The deflection callable is used to compute the Hessian, Jacobian, convergence, shear,
+    magnification, critical curves, caustics, and Einstein radius/mass.  If a potential
+    callable is also supplied, ``fermat_potential_from`` is available as well.
 
     Parameters
     ----------
     deflections_yx_2d_from
-        A callable with signature ``(grid, xp=np, **kwargs)`` that returns the 2D deflection angles on the given
-        grid.  Typically a bound method of a ``MassProfile``, ``Galaxy``, or ``Galaxies`` instance.
+        A callable with signature ``(grid, xp=np, **kwargs)`` that returns the 2D deflection
+        angles on the given grid.  Typically a bound method of a ``MassProfile``, ``Galaxy``,
+        or ``Galaxies`` instance.
+    potential_2d_from
+        Optional callable with signature ``(grid, xp=np, **kwargs)`` that returns the 2D
+        lensing potential on the given grid.  Required only for ``fermat_potential_from``.
     """
 
-    def __init__(self, deflections_yx_2d_from):
+    def __init__(self, deflections_yx_2d_from, potential_2d_from=None):
         self.deflections_yx_2d_from = deflections_yx_2d_from
+        self.potential_2d_from = potential_2d_from
 
     @classmethod
     def from_mass_obj(cls, mass_obj):
-        """Construct from any object that has a ``deflections_yx_2d_from`` method."""
-        return cls(deflections_yx_2d_from=mass_obj.deflections_yx_2d_from)
+        """Construct from any object that has a ``deflections_yx_2d_from`` method.
+
+        If the object also exposes ``potential_2d_from``, it is captured so that
+        ``fermat_potential_from`` is available on the returned instance.
+        """
+        return cls(
+            deflections_yx_2d_from=mass_obj.deflections_yx_2d_from,
+            potential_2d_from=getattr(mass_obj, "potential_2d_from", None),
+        )
 
     @classmethod
     def from_tracer(
@@ -130,6 +142,8 @@ class OperateDeflections:
             Index of the second plane used by ``deflections_between_planes_from``.
             Ignored when ``use_multi_plane=False``.  Defaults to ``-1`` (source plane).
         """
+        potential_2d_from = getattr(tracer, "potential_2d_from", None)
+
         if use_multi_plane:
             from functools import partial
 
@@ -138,9 +152,13 @@ class OperateDeflections:
                     tracer.deflections_between_planes_from,
                     plane_i=plane_i,
                     plane_j=plane_j,
-                )
+                ),
+                potential_2d_from=potential_2d_from,
             )
-        return cls(deflections_yx_2d_from=tracer.deflections_yx_2d_from)
+        return cls(
+            deflections_yx_2d_from=tracer.deflections_yx_2d_from,
+            potential_2d_from=potential_2d_from,
+        )
 
     def time_delay_geometry_term_from(self, grid, xp=np) -> aa.Array2D:
         """
@@ -176,6 +194,39 @@ class OperateDeflections:
         if isinstance(grid, aa.Grid2DIrregular):
             return aa.ArrayIrregular(values=delay)
         return aa.Array2D(values=delay, mask=grid.mask)
+
+    def fermat_potential_from(self, grid, xp=np) -> aa.Array2D:
+        """
+        Returns the Fermat potential for a given grid of image-plane positions.
+
+        This is the sum of the geometric time delay term and the gravitational (Shapiro) delay
+        term (i.e. the lensing potential), and is given by:
+
+        .. math::
+            \\phi(\\boldsymbol{\\theta}) = \\frac{1}{2} |\\boldsymbol{\\theta} - \\boldsymbol{\\beta}|^2
+            - \\psi(\\boldsymbol{\\theta})
+
+        Requires that ``potential_2d_from`` was supplied at construction (e.g. via
+        ``LensCalc.from_mass_obj`` or ``LensCalc.from_tracer``).
+
+        Parameters
+        ----------
+        grid
+            The 2D grid of (y,x) arc-second coordinates the Fermat potential is computed on.
+        xp
+            The array module (``numpy`` or ``jax.numpy``).
+        """
+        if self.potential_2d_from is None:
+            raise ValueError(
+                "fermat_potential_from requires a potential_2d_from callable. "
+                "Construct LensCalc with potential_2d_from, or use from_mass_obj / from_tracer."
+            )
+        time_delay = self.time_delay_geometry_term_from(grid=grid, xp=xp)
+        potential = self.potential_2d_from(grid=grid, xp=xp)
+        fermat_potential = time_delay - potential
+        if isinstance(grid, aa.Grid2DIrregular):
+            return aa.ArrayIrregular(values=fermat_potential)
+        return aa.Array2D(values=fermat_potential, mask=grid.mask)
 
     def tangential_eigen_value_from(self, grid, xp=np) -> aa.Array2D:
         """

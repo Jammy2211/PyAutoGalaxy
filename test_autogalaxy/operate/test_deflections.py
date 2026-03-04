@@ -5,14 +5,14 @@ from skimage import measure
 
 import autogalaxy as ag
 
-from autogalaxy.operate.deflections import (
+from autogalaxy.operate.lens_calc import (
     grid_scaled_2d_for_marching_squares_from,
-    OperateDeflections,
+    LensCalc,
 )
 
 
 def critical_curve_via_magnification_from(mass_profile, grid):
-    magnification = OperateDeflections.from_mass_obj(
+    magnification = LensCalc.from_mass_obj(
         mass_profile
     ).magnification_2d_from(grid=grid)
 
@@ -69,7 +69,7 @@ def test__time_delay_geometry_term_from():
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     time_delay_geometry_term = od.time_delay_geometry_term_from(grid=grid)
 
     assert time_delay_geometry_term == pytest.approx(
@@ -85,7 +85,7 @@ def test__fermat_potential_from():
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
-    fermat_potential = mp.fermat_potential_from(grid=grid)
+    fermat_potential = LensCalc.from_mass_obj(mp).fermat_potential_from(grid=grid)
 
     assert fermat_potential == pytest.approx(
         np.array([0.24329033, -0.82766592]), 1.0e-4
@@ -99,7 +99,7 @@ def test__hessian_from():
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     hessian_yy, hessian_xy, hessian_yx, hessian_xx = od.hessian_from(grid=grid)
 
     assert hessian_yy == pytest.approx(np.array([1.3883822, 0.694127]), 1.0e-4)
@@ -126,7 +126,7 @@ def test__convergence_2d_via_hessian_from():
         centre=(0.0, 0.0), ell_comps=(0.001, 0.001), einstein_radius=1.0
     )
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     convergence = od.convergence_2d_via_hessian_from(grid=grid)
 
     assert convergence.in_list[0] == pytest.approx(0.46208, 1.0e-1)
@@ -142,7 +142,7 @@ def test__magnification_2d_via_hessian_from():
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     magnification = od.magnification_2d_via_hessian_from(grid=grid)
 
     assert magnification.in_list[0] == pytest.approx(-0.56303, 1.0e-4)
@@ -154,7 +154,7 @@ def test__tangential_critical_curve_list_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     tangential_critical_curve_list = od.tangential_critical_curve_list_from(grid=grid)
 
     x_critical_tangential, y_critical_tangential = (
@@ -170,7 +170,7 @@ def test__tangential_critical_curve_list_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     tangential_critical_curve_list = od.tangential_critical_curve_list_from(grid=grid)
 
     y_centre = np.mean(tangential_critical_curve_list[0][:, 0])
@@ -181,7 +181,7 @@ def test__tangential_critical_curve_list_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     tangential_critical_curve_list = od.tangential_critical_curve_list_from(grid=grid)
 
     y_centre = np.mean(tangential_critical_curve_list[0][:, 0])
@@ -230,7 +230,7 @@ def test__radial_critical_curve_list_from():
 
     mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     radial_critical_curve_list = od.radial_critical_curve_list_from(grid=grid)
 
     y_centre = np.mean(radial_critical_curve_list[0][:, 0])
@@ -241,7 +241,7 @@ def test__radial_critical_curve_list_from():
 
     mp = ag.mp.PowerLawSph(centre=(0.5, 1.0), einstein_radius=2.0, slope=1.5)
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     radial_critical_curve_list = od.radial_critical_curve_list_from(grid=grid)
 
     y_centre = np.mean(radial_critical_curve_list[0][:, 0])
@@ -263,7 +263,7 @@ def test__radial_critical_curve_list_from__compare_via_magnification():
         mass_profile=mp, grid=grid
     )[1]
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     radial_critical_curve_list = od.radial_critical_curve_list_from(grid=grid)
 
     assert sum(critical_curve_radial_via_magnification) == pytest.approx(
@@ -276,7 +276,7 @@ def test__tangential_caustic_list_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     tangential_caustic_list = od.tangential_caustic_list_from(grid=grid)
 
     y_centre = np.mean(tangential_caustic_list[0][:, 0])
@@ -287,7 +287,7 @@ def test__tangential_caustic_list_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     tangential_caustic_list = od.tangential_caustic_list_from(grid=grid)
 
     y_centre = np.mean(tangential_caustic_list[0][:, 0])
@@ -324,7 +324,7 @@ def test__radial_caustic_list_from():
 
     mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     radial_caustic_list = od.radial_caustic_list_from(grid=grid)
 
     x_caustic_radial, y_caustic_radial = (
@@ -340,7 +340,7 @@ def test__radial_caustic_list_from():
 
     mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     radial_caustic_list = od.radial_caustic_list_from(grid=grid)
 
     y_centre = np.mean(radial_caustic_list[0][:, 0])
@@ -351,7 +351,7 @@ def test__radial_caustic_list_from():
 
     mp = ag.mp.PowerLawSph(centre=(0.5, 1.0), einstein_radius=2.0, slope=1.5)
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     radial_caustic_list = od.radial_caustic_list_from(grid=grid)
 
     y_centre = np.mean(radial_caustic_list[0][:, 0])
@@ -372,7 +372,7 @@ def test__radial_caustic_list_from___compare_via_magnification():
         mass_profile=mp, grid=grid
     )[1]
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     radial_caustic_list = od.radial_caustic_list_from(grid=grid)
 
     assert sum(radial_caustic_list[0]) == pytest.approx(
@@ -385,7 +385,7 @@ def test__radial_critical_curve_area_list_from():
 
     mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     area_within_radial_critical_curve_list = od.radial_critical_curve_area_list_from(
         grid=grid
     )
@@ -400,7 +400,7 @@ def test__tangential_critical_curve_area_list_from():
 
     area_calc = np.pi * mp.einstein_radius**2
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     area_within_tangential_critical_curve_list = (
         od.tangential_critical_curve_area_list_from(grid=grid)
     )
@@ -415,7 +415,7 @@ def test__einstein_radius_list_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     einstein_radius_list = od.einstein_radius_list_from(grid=grid)
 
     assert einstein_radius_list[0] == pytest.approx(2.0, 1e-1)
@@ -424,7 +424,7 @@ def test__einstein_radius_list_from():
         centre=(0.0, 0.0), einstein_radius=2.0, ell_comps=(0.0, -0.25)
     )
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     einstein_radius_list = od.einstein_radius_list_from(grid=grid)
 
     assert einstein_radius_list[0] == pytest.approx(1.9360, 1e-1)
@@ -435,7 +435,7 @@ def test__einstein_radius_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     einstein_radius = od.einstein_radius_from(grid=grid)
 
     assert einstein_radius == pytest.approx(2.0, 1e-1)
@@ -444,7 +444,7 @@ def test__einstein_radius_from():
         centre=(0.0, 0.0), einstein_radius=2.0, ell_comps=(0.0, -0.25)
     )
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     einstein_radius = od.einstein_radius_from(grid=grid)
 
     assert einstein_radius == pytest.approx(1.9360, 1e-1)
@@ -455,7 +455,7 @@ def test__einstein_mass_angular_list_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     einstein_mass_angular_list = od.einstein_mass_angular_list_from(grid=grid)
 
     assert einstein_mass_angular_list[0] == pytest.approx(np.pi * 2.0**2.0, 1e-1)
@@ -466,7 +466,7 @@ def test__einstein_mass_angular_from():
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     einstein_mass_angular = od.einstein_mass_angular_from(grid=grid)
 
     assert einstein_mass_angular == pytest.approx(np.pi * 2.0**2.0, 1e-1)
@@ -487,7 +487,7 @@ def test__jacobian_from():
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
 
-    od = OperateDeflections.from_mass_obj(mp)
+    od = LensCalc.from_mass_obj(mp)
     jacobian = od.jacobian_from(grid=grid)
 
     assert len(jacobian) == 2

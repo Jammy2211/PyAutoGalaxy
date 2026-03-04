@@ -184,9 +184,9 @@ class Visuals2D(aplt.Visuals2D):
         vis.Visuals2D
             A collection of attributes that can be plotted by a `Plotter` object.
         """
-        from autogalaxy.operate.deflections import OperateDeflections
+        from autogalaxy.operate.lens_calc import LensCalc
 
-        od = OperateDeflections.from_mass_obj(mass_obj)
+        od = LensCalc.from_mass_obj(mass_obj)
 
         tangential_critical_curves = od.tangential_critical_curve_list_from(grid=grid)
 
@@ -227,9 +227,9 @@ class Visuals2D(aplt.Visuals2D):
         vis.Visuals2D
             A collection of attributes that can be plotted by a `Plotter` object.
         """
-        from autogalaxy.operate.deflections import OperateDeflections
+        from autogalaxy.operate.lens_calc import LensCalc
 
-        od = OperateDeflections.from_mass_obj(mass_obj)
+        od = LensCalc.from_mass_obj(mass_obj)
 
         tangential_caustics = od.tangential_caustic_list_from(grid=grid)
         radial_caustics = od.radial_caustic_list_from(grid=grid)
