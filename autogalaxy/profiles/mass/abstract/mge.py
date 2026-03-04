@@ -156,7 +156,7 @@ class MGEDecomposer:
     @aa.grid_dec.transform
     def deflections_2d_via_mge_from(
         self, grid: aa.type.Grid2DLike, xp=np, *, sigma_log_list, three_D: bool,
-            sigmas_factor: float = 1.0, func_terms: int = 28, **kwargs,
+            ellipticity_convention: str, func_terms: int = 28, **kwargs,
     ):
         """
         Calculates the deflection angle of an arbitrary elliptical convergence / 3d density
@@ -183,6 +183,9 @@ class MGEDecomposer:
         q = xp.asarray(self.axis_ratio(xp), dtype=xp.float64)
 
         # Change ellipticity convention to (q**2*x**2 + y**2) (most profiles are in (x**2 + y**2/q**2))
+        sigmas_factor = self.sigmas_factor_from(input_convention=ellipticity_convention,
+                                                target_convention='minor',
+                                                xp=xp)
         sigmas = sigmas_factor * sigma_log_array
 
         deflection_angles = (
@@ -292,7 +295,7 @@ class MGEDecomposer:
     @aa.grid_dec.transform
     def convergence_2d_via_mge_from(
             self, grid: aa.type.Grid2DLike, xp=np,  *,
-            sigma_log_list, three_D: bool, sigmas_factor: float = 1.0, func_terms: int = 28, **kwargs,
+            sigma_log_list, three_D: bool, ellipticity_convention: str, func_terms: int = 28, **kwargs,
     ):
         """
         Calculate the projected convergence at a given set of arc-second gridded coordinates.
@@ -305,6 +308,11 @@ class MGEDecomposer:
         """
 
         eccentric_radii = self.mass_profile.eccentric_radii_grid_from(grid=grid, xp=xp, **kwargs)
+
+
+        sigmas_factor = self.sigmas_factor_from(input_convention=ellipticity_convention,
+                                                target_convention='circularised',
+                                                xp=xp)
 
         return self._convergence_2d_via_mge_from(grid_radii=eccentric_radii, xp=xp, sigma_log_list=sigma_log_list,
             three_D=three_D, sigmas_factor=sigmas_factor, func_terms=func_terms
@@ -328,7 +336,7 @@ class MGEDecomposer:
             sigma_log_list=sigma_log_array, func_terms=func_terms, three_D=three_D, xp=xp)
 
         # Change ellipticity convention to (q*x**2 + y**2/q) (most profiles are in (x**2 + y**2/q**2))
-        sigmas = xp.sqrt(self.mass_profile.axis_ratio(xp)) * xp.asarray(sigmas)[:, None] / sigmas_factor
+        sigmas = sigmas_factor * xp.asarray(sigmas)[:, None]
         amps = xp.asarray(amps)[:, None]
 
         grid_radii = grid_radii[None, ...]
@@ -348,3 +356,100 @@ class MGEDecomposer:
         return xp.multiply(
             intensity, xp.exp(-0.5 * xp.square(xp.divide(grid_radii.array, sigma)))
         )
+
+    def sigmas_factor_from(self, input_convention: str, target_convention: str, xp=np):
+        """
+            Returns the multiplicative factor required to convert a scale parameter (e.g. sigma)
+            defined under one ellipticity convention to another.
+
+            The three supported ellipticity conventions are:
+
+            Major-axis convention
+            ---------------------
+            The elliptical radius is defined such that the scale parameter lies along
+            the major axis:
+
+                R^2 = x^2 + y^2 / q^2
+
+            where q = b/a is the projected minor-to-major axis ratio (q <= 1).
+            In this convention, the scale parameter corresponds directly to the
+            semi-major axis length.
+
+            Circularised convention
+            ------------------------
+            The elliptical radius is defined such that the ellipse has the same area
+            as a circle of radius R:
+
+                R^2 = q x^2 + y^2 / q
+
+            In this case:
+
+                a = R / sqrt(q)
+                b = R sqrt(q)
+
+            and the enclosed area πab = πR^2 is independent of q.
+            The scale parameter corresponds to the circularised radius.
+
+            Minor-axis convention
+            ----------------------
+            The elliptical radius is defined such that the scale parameter lies along
+            the minor axis:
+
+                R^2 = q^2 x^2 + y^2
+
+            Here, the scale parameter corresponds directly to the semi-minor axis length.
+
+            ------------------------------------------------------------------------------
+
+            Parameters
+            ----------
+            input_convention : str
+                The current definition of the scale parameter.
+                Must be one of: 'major', 'circularised', or 'minor'.
+
+            target_convention : str
+                The desired definition of the scale parameter.
+                Must be one of: 'major', 'circularised', or 'minor'.
+
+            Returns
+            -------
+            float or array-like
+                Multiplicative factor required to convert the scale parameter
+                between ellipticity conventions.
+            """
+        if target_convention == 'major':
+            if input_convention == 'major':
+                return 1.0
+            elif input_convention == 'circularised':
+                return xp.divide(1.0, xp.sqrt(self.mass_profile.axis_ratio(xp)))
+            elif input_convention == 'minor':
+                return xp.divide(1.0, self.mass_profile.axis_ratio(xp))
+            else:
+                raise TypeError(
+                    "sigmas_factor_from takes either 'major', 'circularised' or 'minor' as an input ellipticity convention")
+
+        elif target_convention == 'circularised':
+            if input_convention == "major":
+                return xp.sqrt(self.mass_profile.axis_ratio(xp))
+            elif input_convention == "circularised":
+                return 1.0
+            elif input_convention == "minor":
+                return xp.divide(1.0, xp.sqrt(self.mass_profile.axis_ratio(xp)))
+            else:
+                raise TypeError(
+                    "sigmas_factor_from takes either 'major', 'circularised' or 'minor' as an input ellipticity convention")
+
+        elif target_convention == 'minor':
+            if input_convention == "major":
+                return self.mass_profile.axis_ratio(xp)
+            elif input_convention == "circularised":
+                return xp.sqrt(self.mass_profile.axis_ratio(xp))
+            elif input_convention == "minor":
+                return 1.0
+            else:
+                raise TypeError(
+                    "sigmas_factor_from takes either 'major', 'circularised' or 'minor' as an input ellipticity convention")
+
+        else:
+            raise TypeError(
+                "sigmas_factor_from takes either 'major', 'circularised' or 'minor' as a target ellipticity convention")
