@@ -315,7 +315,7 @@ def test__same_as_above_but_cored_nfw():
 
     assert mp.axis_ratio() == cnfw_kappa_s.axis_ratio()
 
-    assert mp.angle() == 0.0
+    assert mp.angle() == cnfw_kappa_s.angle()
 
     assert mp.scale_radius == pytest.approx(0.21158, 1.0e-4)
 
