@@ -313,7 +313,7 @@ def test__same_as_above_but_cored_nfw():
 
     assert mp.ell_comps == (0.1, 0.2)
 
-    assert mp.axis_ratio() == 1.0
+    assert mp.axis_ratio() == cnfw_kappa_s.axis_ratio()
 
     assert mp.angle() == 0.0
 
