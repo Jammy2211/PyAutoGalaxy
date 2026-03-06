@@ -27,7 +27,7 @@ class cNFW(AbstractgNFW):
         ell_comps
             The first and second ellipticity components of the elliptical coordinate system.
         kappa_s
-            The overall normalization of the dark matter halo \|
+            The overall normalization of the dark matter halo
             (kappa_s = (rho_0 * D_d * scale_radius)/lensing_critical_density)
         scale_radius
             The cored NFW scale radius `theta_s`, as an angle on the sky in arcseconds.
@@ -92,7 +92,7 @@ class cNFWSph(cNFW):
         centre
             The (y,x) arc-second coordinates of the profile centre.
         kappa_s
-            The overall normalization of the dark matter halo \|
+            The overall normalization of the dark matter halo
             (kappa_s = (rho_0 * D_d * scale_radius)/lensing_critical_density)
         scale_radius
             The cored NFW scale radius `theta_s`, as an angle on the sky in arcseconds.
