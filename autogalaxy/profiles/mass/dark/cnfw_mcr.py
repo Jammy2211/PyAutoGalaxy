@@ -1,12 +1,9 @@
 from typing import Tuple
 
-from autogalaxy.profiles.mass.dark.cnfw import (cNFW, cNFWSph)
 from autogalaxy.profiles.mass.dark.cnfw_mcr_scatter import (
     cNFWMCRScatterLudlow,
     cNFWMCRScatterLudlowSph,
 )
-
-from autogalaxy.profiles.mass.dark import mcr_util
 
 class cNFWMCRLudlow(cNFWMCRScatterLudlow):
     def __init__(

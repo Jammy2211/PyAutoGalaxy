@@ -12,7 +12,7 @@ class cNFWMCRScatterLudlow(cNFW):
             ell_comps: Tuple[float, float] = (0.0, 0.0),
             mass_at_200: float = 1e9,
             scatter_sigma: float = 0.0,
-            f_c=0.01,
+            f_c: float = 0.01,
             redshift_object: float = 0.5,
             redshift_source: float = 1.0,
     ):
@@ -35,17 +35,6 @@ class cNFWMCRScatterLudlow(cNFW):
             redshift_source=redshift_source,
         )
 
-        """
-        #Make correction that Andrew proposed
-        fac = np.sqrt(ell_comps[1] ** 2 + ell_comps[0] ** 2)
-        if fac > 0.999:
-            fac = 0.999  # avoid unphysical solution
-        # if fac > 1: print('unphysical e1,e2')
-        axis_ratio = (1 - fac) / (1 + fac)
-        scale_radius = scale_radius / np.sqrt(axis_ratio)
-
-        print('With Correction')
-        """
         super().__init__(
             centre=centre,
             ell_comps=ell_comps,
@@ -60,7 +49,7 @@ class cNFWMCRScatterLudlowSph(cNFWSph):
         centre: Tuple[float, float] = (0.0, 0.0),
         mass_at_200: float = 1e9,
         scatter_sigma: float = 0.0,
-        f_c=0.01,
+        f_c: float = 0.01,
         redshift_object: float = 0.5,
         redshift_source: float = 1.0,
     ):

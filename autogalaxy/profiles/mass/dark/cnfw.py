@@ -18,12 +18,14 @@ class cNFW(AbstractgNFW):
             core_radius: float = 0.01,
     ):
         """
-        Represents a spherical cored NFW density distribution
+        Represents a cored NFW density distribution
 
         Parameters
         ----------
         centre
             The (y,x) arc-second coordinates of the profile centre.
+        ell_comps
+            The first and second ellipticity components of the elliptical coordinate system.
         kappa_s
             The overall normalization of the dark matter halo \|
             (kappa_s = (rho_0 * D_d * scale_radius)/lensing_critical_density)
