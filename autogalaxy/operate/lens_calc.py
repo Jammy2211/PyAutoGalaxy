@@ -247,7 +247,12 @@ class LensCalc:
         convergence = self.convergence_2d_via_hessian_from(grid=grid, xp=xp)
         shear_yx = self.shear_yx_2d_via_hessian_from(grid=grid, xp=xp)
 
-        return aa.Array2D(values=1 - convergence - shear_yx.magnitudes, mask=grid.mask)
+        if xp is np:
+            return aa.Array2D(
+                values=1 - convergence - shear_yx.magnitudes, mask=grid.mask
+            )
+        magnitudes = xp.sqrt(shear_yx[:, 0] ** 2 + shear_yx[:, 1] ** 2)
+        return 1 - convergence - magnitudes
 
     def radial_eigen_value_from(self, grid, xp=np) -> aa.Array2D:
         """
@@ -267,7 +272,12 @@ class LensCalc:
         convergence = self.convergence_2d_via_hessian_from(grid=grid, xp=xp)
         shear = self.shear_yx_2d_via_hessian_from(grid=grid, xp=xp)
 
-        return aa.Array2D(values=1 - convergence + shear.magnitudes, mask=grid.mask)
+        if xp is np:
+            return aa.Array2D(
+                values=1 - convergence + shear.magnitudes, mask=grid.mask
+            )
+        magnitudes = xp.sqrt(shear[:, 0] ** 2 + shear[:, 1] ** 2)
+        return 1 - convergence + magnitudes
 
     def magnification_2d_from(self, grid, xp=np) -> aa.Array2D:
         """
@@ -288,7 +298,9 @@ class LensCalc:
 
         det_A = (1 - hessian_xx) * (1 - hessian_yy) - hessian_xy * hessian_yx
 
-        return aa.Array2D(values=1 / det_A, mask=grid.mask)
+        if xp is np:
+            return aa.Array2D(values=1 / det_A, mask=grid.mask)
+        return 1 / det_A
 
     def deflections_yx_scalar(self, y, x, pixel_scales):
         """
@@ -465,7 +477,9 @@ class LensCalc:
 
         convergence = 0.5 * (hessian_yy + hessian_xx)
 
-        return aa.ArrayIrregular(values=convergence)
+        if xp is np:
+            return aa.ArrayIrregular(values=convergence)
+        return convergence
 
     def shear_yx_2d_via_hessian_from(self, grid, xp=np) -> ShearYX2DIrregular:
         """
@@ -506,7 +520,9 @@ class LensCalc:
 
         shear_yx_2d = xp.stack([gamma_2, gamma_1], axis=-1)
 
-        return ShearYX2DIrregular(values=shear_yx_2d, grid=grid)
+        if xp is np:
+            return ShearYX2DIrregular(values=shear_yx_2d, grid=grid)
+        return shear_yx_2d
 
     def magnification_2d_via_hessian_from(self, grid, xp=np) -> aa.ArrayIrregular:
         """
@@ -534,7 +550,9 @@ class LensCalc:
 
         det_A = (1 - hessian_xx) * (1 - hessian_yy) - hessian_xy * hessian_yx
 
-        return aa.ArrayIrregular(values=1.0 / det_A)
+        if xp is np:
+            return aa.ArrayIrregular(values=1.0 / det_A)
+        return 1.0 / det_A
 
     def contour_list_from(self, grid, contour_array):
         grid_contour = aa.Grid2DContour(
