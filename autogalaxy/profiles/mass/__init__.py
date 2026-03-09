@@ -37,8 +37,11 @@ from .dark import (
     NFWMCRLudlow,
     gNFWMCRLudlow,
     NFWVirialMassConcSph,
+    cNFW,
     cNFWSph,
+    cNFWMCRLudlow,
     cNFWMCRLudlowSph,
+    cNFWMCRScatterLudlow,
     cNFWMCRScatterLudlowSph,
 )
 from .stellar import (
