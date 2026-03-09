@@ -199,7 +199,7 @@ class AbstractSersic(MassProfile, MassProfileCSE, StellarProfile):
         return self.intensity * xp.exp(
             -self.sersic_constant
             * (
-                ((radius.array / self.effective_radius) ** (1.0 / self.sersic_index))
+                ((radius / self.effective_radius) ** (1.0 / self.sersic_index))
                 - 1
             )
         )
