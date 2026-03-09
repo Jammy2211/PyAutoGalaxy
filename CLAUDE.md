@@ -78,6 +78,32 @@ Each dataset type has an `Analysis*` class that implements `log_likelihood_funct
 
 These inherit from `AnalysisDataset` → `Analysis` (in `analysis/analysis/`), which inherits `af.Analysis`. The `log_likelihood_function` builds a `Fit*` object from the `af.ModelInstance` and returns its `figure_of_merit`.
 
+### Decorator System (from autoarray)
+
+Profile methods that consume a grid and return an array, grid, or vector use decorators from `autoarray.structures.decorators`. These ensure the **output type matches the input grid type**:
+
+| Decorator | `Grid2D` input | `Grid2DIrregular` input |
+|---|---|---|
+| `@aa.grid_dec.to_array` | `Array2D` | `ArrayIrregular` |
+| `@aa.grid_dec.to_grid` | `Grid2D` | `Grid2DIrregular` |
+| `@aa.grid_dec.to_vector_yx` | `VectorYX2D` | `VectorYX2DIrregular` |
+
+The `@aa.grid_dec.transform` decorator (always stacked below the output decorator) shifts and rotates the grid to the profile's reference frame before passing it to the function body.
+
+The canonical stacking order is:
+```python
+@aa.grid_dec.to_array      # outermost: wraps output
+@aa.grid_dec.transform     # innermost: transforms grid
+def convergence_2d_from(self, grid, xp=np, **kwargs):
+    y = grid.array[:, 0]   # use .array to get raw numpy/jax array
+    x = grid.array[:, 1]
+    return ...             # return raw array; decorator wraps it
+```
+
+**Key rule**: the function body must return a **raw array** (not an autoarray). The decorator handles wrapping. Access grid coordinates via `grid.array[:, 0]` / `grid.array[:, 1]` (not `grid[:, 0]`), because after `@transform` the grid is still an autoarray object and `.array` is the safe way to extract the underlying data for both numpy and jax backends.
+
+See PyAutoArray's `CLAUDE.md` for full details on the decorator internals.
+
 ### JAX Support
 
 The codebase is designed so that **NumPy is the default everywhere and JAX is opt-in**. JAX is never imported at module level — it is only imported locally inside functions when explicitly requested.
@@ -99,6 +125,28 @@ When adding a new function that should support JAX:
 3. Add the NumPy implementation as the default path (finite-difference, `np.*` calls, etc.)
 4. Add a JAX implementation in the guarded branch (e.g. `jax.jacfwd`, `jnp.vectorize`)
 5. Verify correctness by comparing both paths in `autogalaxy_workspace_test/scripts/`
+
+### JAX and autoarray wrappers at the `jax.jit` boundary
+
+Autoarray types (`Array2D`, `ArrayIrregular`, `VectorYX2DIrregular`, etc.) are **not registered as JAX pytrees**. This means:
+
+- Constructing them **inside** a JIT trace is fine (Python code runs normally during tracing)
+- **Returning** them as the output of a `jax.jit`-compiled function **fails** with `TypeError: ... is not a valid JAX type`
+
+Functions decorated with `@aa.grid_dec.to_array` / `@to_vector_yx` wrap their return value in an autoarray type. This wrapping is safe for intermediate calls (the autoarray object is consumed by downstream Python code). However, if such a function is the **outermost call** inside a `jax.jit` lambda, its return value will fail at the JIT boundary.
+
+The solution is the **`if xp is np:` guard** in the function body:
+
+```python
+def convergence_2d_via_hessian_from(self, grid, xp=np):
+    convergence = 0.5 * (hessian_yy + hessian_xx)
+
+    if xp is np:
+        return aa.ArrayIrregular(values=convergence)  # numpy: wrapped
+    return convergence                                  # jax: raw jax.Array
+```
+
+This pattern is applied throughout `autogalaxy/operate/lens_calc.py`. Functions that are only ever called as intermediate steps (e.g. `deflections_yx_2d_from`) do NOT need this guard — their autoarray wrappers are never the JIT output.
 
 ### Linear Light Profiles & Inversions
 
@@ -147,3 +195,22 @@ When importing `autogalaxy as ag`:
 - `ag.ps.*` – point sources
 - `ag.Galaxy`, `ag.Galaxies`
 - `ag.FitImaging`, `ag.AnalysisImaging`, `ag.SimulatorImaging`
+
+## Line Endings — Always Unix (LF)
+
+All files in this project **must use Unix line endings (LF, `\n`)**. Windows/DOS line endings (CRLF, `\r\n`) will break Python files on HPC systems.
+
+**When writing or editing any file**, always produce Unix line endings. Never write `\r\n` line endings.
+
+After creating or copying files, verify and convert if needed:
+
+```bash
+# Check for DOS line endings
+file autogalaxy/galaxy/galaxy.py   # should say "ASCII text", not "CRLF"
+
+# Convert all Python files in the project
+find . -type f -name "*.py" | xargs dos2unix
+```
+
+Prefer simple shell commands.
+Avoid chaining with && or pipes.
