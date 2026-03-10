@@ -1,3 +1,17 @@
+"""
+Fit isophotal ellipses to a 2D image dataset.
+
+`FitEllipse` uses a single `Ellipse` (plus optional `EllipseMultipole` perturbations) to fit an imaging
+dataset.  Rather than convolving a model image with a PSF, the fit works by:
+
+1. Computing the (y, x) sample points distributed around the ellipse's perimeter.
+2. Interpolating the image data and noise-map at those sample points.
+3. Computing residuals between the interpolated data values and the mean intensity along the ellipse.
+
+This is the classical isophote-fitting approach used in tools such as IRAF/ELLIPSE and galfit, and is
+appropriate for measuring galaxy morphology, position angles, axis ratios, and multipole perturbations
+directly from imaging data without fitting a parametric light profile model.
+"""
 import numpy as np
 from typing import List, Optional
 
