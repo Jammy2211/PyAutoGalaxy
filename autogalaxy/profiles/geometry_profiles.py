@@ -1,3 +1,11 @@
+"""
+Geometry profiles define the spatial geometry of light and mass profiles, including their centre coordinates and
+elliptical orientation.
+
+The `GeometryProfile`, `SphProfile` and `EllProfile` classes provide the base geometric transformations that all
+light and mass profiles inherit, including translating a grid to the profile centre and rotating it to the
+profile's position angle.
+"""
 import numpy as np
 
 from typing import Optional, Tuple, Type
@@ -34,14 +42,47 @@ class GeometryProfile:
 
     def has(self, cls: Type) -> bool:
         """
-        Does this instance have an attribute which is of type cls?
+        Returns `True` if any attribute of this profile is an instance of the input class `cls`, else `False`.
+
+        Parameters
+        ----------
+        cls
+            The class type to search for amongst the profile's attributes.
+
+        Returns
+        -------
+        bool
+            `True` if any attribute is an instance of `cls`, else `False`.
         """
         return aa.util.misc.has(values=self.__dict__.values(), cls=cls)
 
     def transformed_to_reference_frame_grid_from(self, grid, xp=np, **kwargs):
+        """
+        Transform a grid of (y,x) coordinates to the reference frame of the profile.
+
+        Subclasses override this to perform a translation to the profile centre and, for elliptical profiles,
+        a rotation to the profile's position angle.
+
+        Parameters
+        ----------
+        grid
+            The (y, x) coordinates in the original reference frame of the grid.
+        """
         raise NotImplemented()
 
     def transformed_from_reference_frame_grid_from(self, grid, xp=np, **kwargs):
+        """
+        Transform a grid of (y,x) coordinates from the reference frame of the profile back to the original
+        observer reference frame.
+
+        Subclasses override this to reverse the translation to the profile centre and, for elliptical profiles,
+        the rotation to the profile's position angle.
+
+        Parameters
+        ----------
+        grid
+            The (y, x) coordinates in the reference frame of the profile.
+        """
         raise NotImplemented()
 
 

@@ -1,3 +1,17 @@
+"""
+Abstract base classes for linear light profiles in **PyAutoGalaxy**.
+
+A linear light profile behaves identically to a standard light profile (e.g. `Sersic`, `Exponential`,
+`Gaussian`) except that its `intensity` is not a free parameter — instead, it is solved for analytically via
+a linear inversion during every likelihood evaluation.
+
+This reduces the number of non-linear parameters in a model fit by one per linear profile, which can
+substantially speed up non-linear sampling without any loss of accuracy.
+
+The `LightProfileLinear` class is the abstract base from which all linear light profile variants inherit.
+The `LightProfileLinearObjFuncList` subclass additionally supports regularization, allowing the solved
+intensities to be penalized by a smoothness prior.
+"""
 import inspect
 import numpy as np
 from typing import Dict, List, Optional
