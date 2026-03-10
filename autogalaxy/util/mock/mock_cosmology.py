@@ -1,7 +1,16 @@
+"""
+Mock cosmology object for use in unit tests.
+
+``MockCosmology`` implements the same interface as the real ``LensingCosmology`` class
+(``autogalaxy/cosmology/model.py``) but returns hard-coded constant values rather than
+calling ``astropy.cosmology``.  This makes unit tests fast and free of external
+dependencies while still exercising code paths that accept a cosmology argument.
+
+The ``Value`` helper wraps a scalar so that ``.to(unit)`` calls (which real astropy
+``Quantity`` objects support) are accepted without error.
+"""
 import math
 import numpy as np
-
-# Mock Cosmology #
 
 
 class Value:
