@@ -1,3 +1,13 @@
+"""
+`DatasetQuantity` — a dataset wrapper for derived lensing quantities.
+
+This module provides `DatasetQuantity`, which wraps an arbitrary array-valued quantity (e.g. convergence,
+deflection angles, surface brightness) together with a noise-map, so that the quantity can be treated as
+a dataset and fitted via `FitQuantity` and `AnalysisQuantity`.
+
+The noise-map enables the computation of chi-squared values and log-likelihoods, turning a pure
+comparison of model quantities into a statistically principled goodness-of-fit metric.
+"""
 import logging
 import numpy as np
 from pathlib import Path
