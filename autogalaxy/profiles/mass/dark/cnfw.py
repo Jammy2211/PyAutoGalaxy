@@ -75,6 +75,22 @@ class cNFW(AbstractgNFW):
             * (r.array + self.scale_radius) ** (-2.0)
         )
 
+    @aa.grid_dec.to_array
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        """
+        Convergence (dimensionless surface mass density) for the cored NFW profile.
+        This is not yet implemented for `cNFW`.
+        """
+        return xp.zeros(shape=grid.shape[0])
+
+    @aa.grid_dec.to_array
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
+        """
+        Lensing potential for the cored NFW profile.
+        This is not yet implemented for `cNFW`.
+        """
+        return xp.zeros(shape=grid.shape[0])
+
 
 class cNFWSph(cNFW):
     def __init__(
