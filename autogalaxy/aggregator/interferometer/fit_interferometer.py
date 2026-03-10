@@ -1,3 +1,20 @@
+"""
+Aggregator interface for loading ``FitInterferometer`` objects from model-fit results.
+
+This module combines all the pieces that are needed to re-create a ``FitInterferometer``
+object offline — the interferometer dataset, galaxy model, dataset model, and adapt
+images — and assembles them into a ``FitInterferometer`` instance identical to the one
+produced during the original non-linear search.
+
+Two public objects are provided:
+
+- ``_fit_interferometer_from`` — a free function that accepts a single ``PyAutoFit``
+  ``Fit`` entry and returns a list of ``FitInterferometer`` objects (one per summed
+  ``Analysis``).
+- ``FitInterferometerAgg`` — a ``PyAutoFit`` ``AggBase`` subclass wrapping an
+  ``Aggregator`` that exposes a generator of ``FitInterferometer`` objects, enabling
+  memory-efficient iteration over large result sets.
+"""
 from __future__ import annotations
 from typing import TYPE_CHECKING, Optional, List
 

@@ -1,3 +1,19 @@
+"""
+Aggregator interface for loading ``FitEllipse`` objects from ellipse model-fit results.
+
+This module reconstructs ``FitEllipse`` instances from the imaging dataset, fitted
+ellipses, and (optionally) multipole perturbations stored in an output directory or
+SQLite database, allowing full offline inspection of isophote fits without re-running the
+non-linear search.
+
+Two public objects are provided:
+
+- ``_fit_ellipse_from`` — a free function that accepts a single ``PyAutoFit`` ``Fit``
+  entry and returns a list of ``FitEllipse`` objects (one per ellipse in the fit).
+- ``FitEllipseAgg`` — a ``PyAutoFit`` ``AggBase`` subclass wrapping an ``Aggregator``
+  that exposes a generator of ``FitEllipse`` object lists, one entry per stored
+  model-fit.
+"""
 from __future__ import annotations
 from typing import TYPE_CHECKING, Optional, List
 
