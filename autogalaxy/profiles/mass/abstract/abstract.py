@@ -24,7 +24,7 @@ class MassProfile(EllProfile):
         """
         super().__init__(centre=centre, ell_comps=ell_comps)
 
-    def deflections_yx_2d_from(self, grid):
+    def deflections_yx_2d_from(self, grid, xp=np):
         raise NotImplementedError
 
     def deflections_2d_via_potential_2d_from(self, grid):
@@ -45,13 +45,13 @@ class MassProfile(EllProfile):
     def convergence_2d_from(self, grid, xp=np):
         raise NotImplementedError
 
-    def convergence_func(self, grid_radius: float) -> float:
+    def convergence_func(self, grid_radius: float , xp=np) -> float:
         raise NotImplementedError
 
-    def potential_2d_from(self, grid):
+    def potential_2d_from(self, grid, xp=np):
         raise NotImplementedError
 
-    def potential_func(self, u, y, x):
+    def potential_func(self, u, y, x, xp=np):
         raise NotImplementedError
 
     def mass_integral(self, x, xp=np):
