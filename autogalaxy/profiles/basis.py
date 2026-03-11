@@ -1,3 +1,14 @@
+"""
+The `Basis` class groups multiple light or mass profiles into a single object that acts like a single profile.
+
+A basis is typically used for multi-component decompositions of a galaxy's light or mass distribution — for
+example a multi-Gaussian expansion (MGE), which represents a galaxy as a sum of many Gaussian profiles, or
+a shapelet decomposition. Each component of the basis captures a distinct spatial scale of the galaxy.
+
+When linear light profiles are used in a basis, their individual intensities are solved simultaneously via a
+linear inversion (a single matrix solve), making the inference highly efficient regardless of how many basis
+components are included.
+"""
 import numpy as np
 from typing import Dict, List, Optional, Union
 

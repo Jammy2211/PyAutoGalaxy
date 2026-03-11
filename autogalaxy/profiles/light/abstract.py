@@ -1,3 +1,13 @@
+"""
+Abstract base classes for all light profiles in **PyAutoGalaxy**.
+
+A light profile has an analytic function that describes the surface brightness of a galaxy as a function of
+(y,x) Cartesian coordinates. Each profile is associated with a spatial geometry (centre and ellipticity) and
+an `intensity` normalisation that scales the overall brightness.
+
+The `LightProfile` class is the root of the light profile hierarchy. All concrete profiles (e.g. `Sersic`,
+`Exponential`, `Gaussian`) inherit from it and implement `image_2d_from` and `image_2d_via_radii_from`.
+"""
 import numpy as np
 from typing import Optional, Tuple
 
@@ -39,6 +49,13 @@ class LightProfile(EllProfile, OperateImage):
 
     @property
     def coefficient_tag(self) -> str:
+        """
+        A short string tag used to label the intensity coefficient when this profile is used inside a `Basis`
+        object (e.g. for multi-Gaussian expansion or shapelet decomposition).
+
+        Returns an empty string for standard light profiles, and is overridden by linear light profile subclasses
+        to label their solved-for intensity coefficient.
+        """
         return ""
 
     def image_2d_from(
@@ -114,9 +131,22 @@ class LightProfile(EllProfile, OperateImage):
 
     @property
     def half_light_radius(self) -> float:
+        """
+        The radius that contains half of the total light of the profile (the half-light radius).
+
+        For profiles with an `effective_radius` attribute (e.g. Sersic, Exponential) this returns the
+        `effective_radius`. Returns `None` for profiles that do not define an effective radius.
+        """
         if hasattr(self, "effective_radius"):
             return self.effective_radius
 
     @property
     def _intensity(self):
+        """
+        The normalisation intensity of the light profile used internally when evaluating the image.
+
+        For standard light profiles this simply returns `self.intensity`. Linear light profiles override this
+        property to return 1.0, because their intensity is solved for via a linear inversion rather than being
+        a free parameter.
+        """
         return self.intensity
