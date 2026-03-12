@@ -1,3 +1,11 @@
+"""
+Extends the **PyAutoArray** `SimulatorInterferometer` class with galaxy-aware simulation.
+
+`SimulatorInterferometer` (from `autoarray`) handles the low-level simulation: applying a Fourier
+transform and adding visibility noise. This module adds a `via_galaxies_from` method that takes a list
+of `Galaxy` objects and a 2D grid, evaluates the galaxy images, and passes them to the parent
+simulation pipeline.
+"""
 import numpy as np
 from typing import List
 
