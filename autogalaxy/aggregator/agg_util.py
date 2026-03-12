@@ -1,3 +1,24 @@
+"""
+Shared utility functions for the **PyAutoGalaxy** aggregator interface.
+
+This module provides low-level helpers used by all dataset-specific aggregator classes
+(`ImagingAgg`, `FitImagingAgg`, `GalaxiesAgg`, etc.).  They centralise the logic that
+is repeated across every aggregator module so that the higher-level classes stay concise.
+
+Key functions
+-------------
+- `instance_list_from` — Converts a ``PyAutoFit`` ``Fit`` into the correct list of model
+  instances, handling both single-analysis fits and multi-analysis ``FactorGraphModel``
+  fits.
+- `mask_header_from` — Loads a ``Mask2D`` and its FITS header from a stored dataset file.
+  Used whenever a dataset must be reconstructed from the database.
+- `adapt_images_from` — Reconstructs ``AdaptImages`` objects from files stored during the
+  model-fit.  Needed so that adaptive features (e.g. an ``Hilbert`` image-mesh) reproduce
+  the same behaviour on a local machine as on the HPC cluster where the fit was run.
+- `mesh_grids_of_planes_list_from` — Loads the pre-computed image-plane mesh grids that
+  were saved during the fit, removing any stochastic variation when inspecting results
+  offline.
+"""
 from __future__ import annotations
 import numpy as np
 from typing import List, Optional

@@ -1,3 +1,18 @@
+"""
+Aggregator interface for loading ``Ellipse`` objects from ellipse model-fit results.
+
+After an ellipse model-fit the best-fit ellipse parameters are stored in the output
+directory or SQLite database as part of the model JSON file.  This module reconstructs
+the list of ``Ellipse`` instances so that downstream analysis (e.g. re-plotting
+isophotes) can be performed without re-running the fit.
+
+Two public objects are provided:
+
+- ``_ellipses_from`` — a free function that accepts a single ``PyAutoFit`` ``Fit`` entry
+  and returns the list of ``Ellipse`` objects for the requested model instance.
+- ``EllipsesAgg`` — a ``PyAutoFit`` ``AggBase`` subclass wrapping an ``Aggregator`` that
+  exposes a generator of ellipse lists, one per stored model-fit.
+"""
 from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, Optional, List

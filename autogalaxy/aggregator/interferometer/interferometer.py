@@ -1,3 +1,20 @@
+"""
+Aggregator interface for loading ``Interferometer`` datasets from model-fit results.
+
+After an interferometer model-fit the dataset (complex visibilities, noise-map,
+uv-wavelengths, real-space mask, and transformer class) is written to a FITS file in
+the output directory or SQLite database.  This module reconstructs a fully-configured
+``aa.Interferometer`` object from those stored files.
+
+Two public objects are provided:
+
+- ``_interferometer_from`` — a free function that accepts a single ``PyAutoFit`` ``Fit``
+  entry and returns a list of ``aa.Interferometer`` datasets (one per summed
+  ``Analysis``).
+- ``InterferometerAgg`` — a class wrapping an ``Aggregator`` that returns a lazy
+  generator of ``Interferometer`` datasets, avoiding loading all results into memory at
+  once.
+"""
 from functools import partial
 from typing import List
 

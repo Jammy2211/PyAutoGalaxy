@@ -1,3 +1,19 @@
+"""
+Aggregator interface for loading **PyAutoGalaxy** ``Galaxy`` objects from model-fit results.
+
+After a non-linear search completes, its outputs (best-fit parameters, adapt images, etc.)
+are written to an output directory or stored in an SQLite database.  The helpers in this
+module reconstruct ``Galaxy`` instances from those stored files so that the full galaxy
+model can be re-created and inspected without re-running the fit.
+
+Two public objects are provided:
+
+- ``_galaxies_from`` — a free function that accepts a single ``PyAutoFit`` ``Fit`` entry
+  and returns the list of ``Galaxy`` objects (or lists of lists when multiple ``Analysis``
+  objects were summed).
+- ``GalaxiesAgg`` — a ``PyAutoFit`` ``AggBase`` subclass that wraps an ``Aggregator``
+  and returns a generator of galaxy lists, one per stored model-fit.
+"""
 from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, Optional, List
