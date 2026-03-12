@@ -1,3 +1,18 @@
+"""
+Result classes returned by **PyAutoGalaxy** model-fitting analyses.
+
+Each concrete analysis class (`AnalysisImaging`, `AnalysisInterferometer`, etc.) has a paired `Result*`
+class (e.g. `ResultImaging`, `ResultInterferometer`) that inherits from the base `Result` class defined here.
+
+The `Result` class extends **PyAutoFit**'s `af.Result` with galaxy-specific convenience properties:
+
+- `max_log_likelihood_galaxies` — the list of galaxies at the maximum likelihood point.
+- `path_galaxy_tuples` — (name, galaxy) pairs for inspecting which galaxy is which in the model.
+- Adapt-image utilities for propagating model images between pipeline stages.
+
+Dataset-specific result classes (e.g. `ResultImaging`) additionally expose the maximum-likelihood fit
+object (`max_log_likelihood_fit`) and other dataset-specific outputs.
+"""
 from __future__ import annotations
 
 from typing import Dict, List, Optional, Tuple, Type, Union
