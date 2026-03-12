@@ -1,11 +1,38 @@
+"""
+JAX-compatible cosmology models for gravitational lensing calculations.
+
+This module provides `LensingCosmology`, an abstract mixin that adds lensing-specific convenience methods
+(arcsec/kpc conversions, critical surface densities, scaling factors) on top of any flat ΛCDM cosmology, and
+`FlatLambdaCDM`, a concrete JAX-compatible implementation of a flat Lambda-CDM cosmology.
+
+The default cosmology used throughout **PyAutoGalaxy** and **PyAutoLens** is `Planck15`, a `FlatLambdaCDM`
+subclass initialized with Planck 2015 parameter values.
+
+All methods accept an `xp` keyword argument (defaulting to `numpy`) so they can be traced by JAX when
+automatic differentiation or GPU acceleration is required.
+"""
 import numpy as np
 
 
 class LensingCosmology:
     """
-    Class containing specific functions for performing gravitational lensing cosmology calculations.
+    Mixin class providing gravitational lensing cosmology calculations on top of a flat ΛCDM cosmology.
 
-    This version is JAX-compatible by using an explicit `xp` backend (NumPy or jax.numpy).
+    All methods are JAX-compatible: pass `xp=jax.numpy` to any method to trace it through JAX for automatic
+    differentiation or GPU/TPU acceleration.  The default is `xp=numpy` so there is no JAX dependency at
+    import time.
+
+    The methods cover:
+
+    - Unit conversions: arcseconds ↔ kpc at a given redshift.
+    - Physical distances: luminosity distance, angular diameter distances.
+    - Lensing-specific quantities: critical surface density Σ_cr, multi-plane scaling factors, velocity
+      dispersion from Einstein radius.
+    - Background cosmology: cosmic average density, critical density.
+
+    This class is inherited by `FlatLambdaCDM` (and therefore `Planck15`).  It does not define the background
+    expansion function `E(z)` or `angular_diameter_distance_kpc_z1z2` — those are implemented by the concrete
+    subclass.
     """
 
     def arcsec_per_kpc_proper(self, z: float, xp=np) -> float:
@@ -694,6 +721,21 @@ class FlatLambdaCDM(LensingCosmology):
 
 
 class Planck15(FlatLambdaCDM):
+    """
+    The Planck 2015 flat ΛCDM cosmology.
+
+    This is the default cosmology used throughout **PyAutoGalaxy** and **PyAutoLens**.  It is initialized with
+    the best-fit parameters from Planck Collaboration XIII (2016):
+
+    - H₀  = 67.74 km/s/Mpc
+    - Ω_m = 0.3075
+    - T_CMB = 2.7255 K
+    - N_eff = 3.046
+    - m_ν = [0, 0, 0.06] eV (sum = 0.06 eV)
+    - Ω_b = 0.0486
+
+    These values match the `astropy.cosmology.Planck15` cosmology object.
+    """
 
     def __init__(self):
 
