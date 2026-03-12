@@ -1,3 +1,18 @@
+"""
+`AnalysisImaging` — the **PyAutoFit** `Analysis` class for fitting galaxy models to CCD imaging data.
+
+This module provides `AnalysisImaging`, which implements `log_likelihood_function` by:
+
+1. Extracting galaxies from the model instance.
+2. Constructing a `FitImaging` object using those galaxies and the stored `Imaging` dataset.
+3. Returning the `figure_of_merit` of the fit (log-likelihood or log-evidence).
+
+It also handles:
+
+- Adapt images: per-galaxy model images from a previous search that drive adaptive pixelizations.
+- Visualization: automatic figure generation during and after the model-fit.
+- Results: wrapping fit outputs into a `ResultImaging` object for downstream use.
+"""
 import numpy as np
 from typing import Optional
 

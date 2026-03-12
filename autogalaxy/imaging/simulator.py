@@ -1,3 +1,14 @@
+"""
+Extends the **PyAutoArray** `SimulatorImaging` class with galaxy-aware simulation methods.
+
+`SimulatorImaging` (from `autoarray`) handles the low-level simulation pipeline: applying a PSF, adding
+Poisson noise, and adding a background sky. This module adds a `via_galaxies_from` method that takes a
+list of `Galaxy` objects and a 2D grid, evaluates the galaxy images, and passes them to the parent
+simulation pipeline.
+
+It also handles `LightProfileSNR` objects, automatically scaling each profile's `intensity` so that its
+peak signal-to-noise ratio matches the requested value given the simulation exposure time and sky level.
+"""
 import numpy as np
 from typing import List
 

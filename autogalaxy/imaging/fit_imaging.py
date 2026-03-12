@@ -1,3 +1,19 @@
+"""
+Fit an imaging (CCD) dataset with a model consisting of one or more galaxies.
+
+`FitImaging` is the central object in a **PyAutoGalaxy** imaging analysis. It:
+
+1. Computes the summed image of all non-linear (standard) galaxy light profiles.
+2. Convolves that image with the PSF to create the ``blurred_image``.
+3. Subtracts the blurred image from the data to create the ``profile_subtracted_image``.
+4. If linear light profiles or a pixelization are present, fits the residual image via a linear
+   inversion (see `autogalaxy.galaxy.to_inversion`).
+5. Combines the blurred image and inversion reconstruction into the ``model_data``.
+6. Computes residuals, chi-squared, log-likelihood (or log-evidence when an inversion is used).
+
+When fitting a model via `AnalysisImaging`, the `figure_of_merit` property of `FitImaging` is
+evaluated inside `log_likelihood_function` and returned to the non-linear search.
+"""
 import numpy as np
 from typing import Dict, List, Optional
 
@@ -116,6 +132,13 @@ class FitImaging(aa.FitImaging, AbstractFitInversion):
 
     @property
     def galaxies_to_inversion(self) -> GalaxiesToInversion:
+        """
+        Returns a `GalaxiesToInversion` object that converts the galaxies containing linear light profiles or
+        pixelizations into the inversion objects required for the linear algebra solve.
+
+        The dataset passed to this object is the ``profile_subtracted_image`` — the imaging data with all
+        standard (non-linear) light profile images subtracted — so the inversion only fits the residual signal.
+        """
         dataset = aa.DatasetInterface(
             data=self.profile_subtracted_image,
             noise_map=self.noise_map,
