@@ -1,3 +1,15 @@
+"""
+Aggregator interface for loading ``DatasetModel`` objects from model-fit results.
+
+A ``DatasetModel`` holds dataset-level nuisance parameters (e.g. an overall background
+offset or a noise scaling factor) that form part of the fitted model.  This module
+provides the helper function ``_dataset_model_from`` which reconstructs these objects from
+a stored ``PyAutoFit`` ``Fit`` entry so that the full fit can be replicated during
+offline analysis.
+
+When no ``dataset_model`` is present in the model (the common case), ``None`` is returned
+for that entry so that downstream ``Fit*`` constructors receive a well-typed argument.
+"""
 from __future__ import annotations
 import logging
 from typing import List

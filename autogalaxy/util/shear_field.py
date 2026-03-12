@@ -1,3 +1,26 @@
+"""
+Weak-lensing shear field data structures.
+
+This module extends **PyAutoArray**'s vector-field classes with properties specific to
+weak gravitational lensing.  A *shear field* is a set of (γ₂, γ₁) complex shear
+components stored on a 2D grid; each vector encodes the shape distortion induced on a
+background source galaxy by the intervening mass distribution.
+
+Convention
+----------
+The shear components are stored as ``[γ₂, γ₁]`` (``[:, 0]`` is γ₂, ``[:, 1]`` is γ₁),
+following the standard lensing sign convention where the position angle φ is measured
+counter-clockwise from the positive x-axis.
+
+Two concrete classes are provided:
+
+- ``ShearYX2D`` — regular grid variant (inherits ``aa.VectorYX2D``).
+- ``ShearYX2DIrregular`` — irregular grid variant (inherits ``aa.VectorYX2DIrregular``).
+
+Both classes inherit the shared mixin ``AbstractShearField`` which provides derived
+quantities: ellipticities, semi-major/minor axes, position angles (``phis``), and
+``matplotlib`` ellipse patches for visualization.
+"""
 import logging
 import numpy as np
 import typing

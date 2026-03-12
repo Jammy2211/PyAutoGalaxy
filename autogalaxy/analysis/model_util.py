@@ -11,6 +11,7 @@ def mge_model_from(
     centre_prior_is_uniform: bool = True,
     centre: Tuple[float, float] = (0.0, 0.0),
     centre_fixed: Optional[Tuple[float, float]] = None,
+    centre_sigma: float = 0.3,
     use_spherical: bool = False,
 ) -> af.Collection:
     """
@@ -89,8 +90,8 @@ def mge_model_from(
             lower_limit=centre[1] - 0.1, upper_limit=centre[1] + 0.1
         )
     else:
-        centre_0 = af.GaussianPrior(mean=centre[0], sigma=0.3)
-        centre_1 = af.GaussianPrior(mean=centre[1], sigma=0.3)
+        centre_0 = af.GaussianPrior(mean=centre[0], sigma=centre_sigma)
+        centre_1 = af.GaussianPrior(mean=centre[1], sigma=centre_sigma)
 
     if use_spherical:
         model_cls = GaussianSph

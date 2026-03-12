@@ -1,3 +1,16 @@
+"""
+Fit an interferometer (ALMA/JVLA uv-plane) dataset with a model consisting of one or more galaxies.
+
+`FitInterferometer` mirrors `FitImaging` but works in the uv-plane:
+
+1. Compute the sum of all galaxy light profile images.
+2. Fourier-transform that image to ``profile_visibilities`` using the dataset's transformer.
+3. Subtract from the observed visibilities to create ``profile_subtracted_visibilities``.
+4. If linear light profiles or a pixelization are present, fit the residual visibilities via a
+   linear inversion.
+5. Combine the profile visibilities and inversion reconstruction into ``model_data``.
+6. Compute residuals, chi-squared, and log-likelihood (or log-evidence when an inversion is used).
+"""
 import numpy as np
 from typing import Dict, List, Optional
 

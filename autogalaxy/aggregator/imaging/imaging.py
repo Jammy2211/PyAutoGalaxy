@@ -1,3 +1,18 @@
+"""
+Aggregator interface for loading ``Imaging`` datasets from model-fit results.
+
+After a model-fit the imaging dataset (data array, noise-map, PSF, mask, and
+over-sampling settings) is written to a FITS file in the output directory or SQLite
+database.  This module reconstructs a fully-masked ``aa.Imaging`` object from those
+stored files.
+
+Two public objects are provided:
+
+- ``_imaging_from`` — a free function that accepts a single ``PyAutoFit`` ``Fit`` entry
+  and returns a list of ``aa.Imaging`` datasets (one per summed ``Analysis``).
+- ``ImagingAgg`` — a class wrapping an ``Aggregator`` that returns a lazy generator of
+  ``Imaging`` datasets, avoiding loading all results into memory at once.
+"""
 from functools import partial
 from typing import List
 

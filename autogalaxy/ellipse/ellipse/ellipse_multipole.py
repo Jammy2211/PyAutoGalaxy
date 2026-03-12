@@ -63,9 +63,9 @@ class EllipseMultipole:
             ellipse.angle()
             - multipole_k_m_and_phi_m_from(self.multipole_comps, self.m)[1]
         )
-        if angle < -180 / self.m:
+        while angle < -180 / self.m:
             angle += 360 / self.m
-        elif angle > 180 / self.m:
+        while angle > 180 / self.m:
             angle -= 360 / self.m
 
         return angle

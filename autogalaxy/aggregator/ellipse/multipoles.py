@@ -1,3 +1,19 @@
+"""
+Aggregator interface for loading ``EllipseMultipole`` objects from ellipse model-fit results.
+
+``EllipseMultipole`` objects represent higher-order harmonic perturbations (e.g. m=3, m=4
+boxy/disky distortions) on top of the base ellipse isophotes.  This module reconstructs
+the nested list of multipole objects from a stored ``PyAutoFit`` ``Fit`` entry so that
+multipole-enhanced isophote fits can be inspected offline.
+
+Two public objects are provided:
+
+- ``_multipoles_from`` — a free function that accepts a single ``PyAutoFit`` ``Fit``
+  entry and returns the nested list of ``EllipseMultipole`` objects for the requested
+  model instance.
+- ``MultipolesAgg`` — a ``PyAutoFit`` ``AggBase`` subclass wrapping an ``Aggregator``
+  that exposes a generator of multipole lists, one per stored model-fit.
+"""
 from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, Optional, List

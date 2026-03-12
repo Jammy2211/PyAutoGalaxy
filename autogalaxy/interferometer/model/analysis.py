@@ -1,3 +1,14 @@
+"""
+`AnalysisInterferometer` — the **PyAutoFit** `Analysis` class for fitting galaxy models to interferometer data.
+
+This module provides `AnalysisInterferometer`, which implements `log_likelihood_function` by:
+
+1. Extracting galaxies from the model instance.
+2. Constructing a `FitInterferometer` object from those galaxies and the stored `Interferometer` dataset.
+3. Returning the `figure_of_merit` of the fit (log-likelihood or log-evidence).
+
+It also handles adapt images, visualization, and result wrapping into `ResultInterferometer`.
+"""
 import logging
 import numpy as np
 from typing import Optional

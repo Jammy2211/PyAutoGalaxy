@@ -1,3 +1,19 @@
+"""
+Mixin classes that add image-operation methods (PSF convolution, Fourier transform) to light objects.
+
+The three mixin classes here are arranged in a hierarchy:
+
+- `OperateImage` — methods that operate on a **single** image from a light object
+  (e.g. a `LightProfile` or `Galaxy`).
+- `OperateImageList` — extends `OperateImage` with methods that operate on a **list** of images,
+  one per light profile component.
+- `OperateImageGalaxies` — extends `OperateImageList` with methods that operate on a **dict** mapping
+  each `Galaxy` to its image, preserving galaxy identity through the pipeline.
+
+All three classes are mixins — they are not instantiated directly but are inherited by light objects
+(`LightProfile`, `Galaxy`, `Galaxies`, `Tracer`) to expose a consistent API for blurring and Fourier
+transforming images.
+"""
 from __future__ import annotations
 import numpy as np
 from typing import TYPE_CHECKING, Dict, List, Optional
@@ -24,9 +40,31 @@ class OperateImage:
     def image_2d_from(
         self, grid: aa.Grid2D, xp=np, operated_only: Optional[bool] = None
     ) -> aa.Array2D:
+        """
+        Abstract method — return the 2D image of this light object at every coordinate on `grid`.
+
+        Subclasses (e.g. `LightProfile`, `Galaxy`) implement this method to evaluate their surface
+        brightness at each (y, x) coordinate.
+
+        Parameters
+        ----------
+        grid
+            The 2D (y, x) coordinates where the image is evaluated.
+        operated_only
+            Controls which light profiles contribute. `None` (default) returns all profiles;
+            `True` returns only `LightProfileOperated` images; `False` excludes them.
+        """
         raise NotImplementedError
 
     def has(self, cls) -> bool:
+        """
+        Returns `True` if any attribute of this object is an instance of `cls`, else `False`.
+
+        Parameters
+        ----------
+        cls
+            The class type to search for.
+        """
         raise NotImplementedError
 
     def _blurred_image_2d_from(
@@ -36,6 +74,21 @@ class OperateImage:
         psf: aa.Convolver,
         xp=np,
     ) -> aa.Array2D:
+        """
+        Convolve a 2D image with a PSF using the supplied `Convolver`.
+
+        This is the internal helper used by `blurred_image_2d_from`. It does not handle the
+        `LightProfileOperated` logic — the caller must do that separately.
+
+        Parameters
+        ----------
+        image_2d
+            The 2D image of the masked pixels to be convolved.
+        blurring_image_2d
+            The 2D image of the pixels just outside the mask whose light blurs into the masked region.
+        psf
+            The PSF convolver that performs the 2D convolution.
+        """
 
         values = psf.convolved_image_from(
             image=image_2d, blurring_image=blurring_image_2d, xp=xp

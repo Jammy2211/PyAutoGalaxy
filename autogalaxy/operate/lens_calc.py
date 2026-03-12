@@ -1,3 +1,21 @@
+"""
+`LensCalc` — a calculator that derives all secondary lensing quantities from a deflection callable.
+
+Given any object that exposes `deflections_yx_2d_from` (a `MassProfile`, `Galaxy`, `Galaxies`, or
+`Tracer`), `LensCalc` computes:
+
+- **Hessian** (four components: H_yy, H_xy, H_yx, H_xx) — the matrix of second derivatives of the
+  lensing potential, computed by finite differences (NumPy) or automatic differentiation (JAX).
+- **Convergence via Hessian** — κ = 0.5 (H_yy + H_xx), independent of the analytic profile formula.
+- **Shear** — γ₁ = 0.5 (H_xx − H_yy), γ₂ = H_xy.
+- **Magnification** — μ = 1 / det(I − H).
+- **Critical curves** — image-plane loci where det(I − H) = 0, found via marching squares.
+- **Caustics** — source-plane images of the critical curves.
+- **Einstein radius** — the effective radius from the area enclosed by the tangential critical curve.
+- **Fermat potential** — φ(θ) = ½|θ − β|² − ψ(θ), using the optional potential callable.
+
+The class is constructed with `LensCalc.from_mass_obj(mass)` or `LensCalc.from_tracer(tracer)`.
+"""
 from functools import wraps
 import logging
 import numpy as np

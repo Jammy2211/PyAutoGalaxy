@@ -1,3 +1,16 @@
+"""
+Classes that convert a list of galaxies (some of which may contain linear light profiles or pixelizations) into
+the inversion objects required by **PyAutoArray** to perform the linear algebra solve.
+
+The key class is `GalaxiesToInversion`, which:
+
+1. Extracts all linear light profiles across all galaxies and computes their mapping matrices.
+2. Extracts all pixelization objects and constructs the `Mapper` objects they require.
+3. Passes these to `autoarray.inversion_from` to perform the linear algebra inversion.
+
+Standard (non-linear) light profiles are handled separately by the `Fit*` classes, which subtract them from
+the data before passing the residuals to this inversion pipeline.
+"""
 from __future__ import annotations
 import numpy as np
 from typing import Dict, List, Optional, Type, Union

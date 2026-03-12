@@ -1,3 +1,19 @@
+"""
+Fit a `DatasetQuantity` object with model quantities computed from light or mass profiles.
+
+`FitQuantity` provides a general-purpose fitting framework for derived lensing quantities (e.g. convergence,
+deflection angles, surface brightness). Given a `DatasetQuantity` (which contains a target quantity array and
+a noise-map), `FitQuantity` evaluates the same quantity from a model object and computes the likelihood of
+the model matching the target.
+
+This is useful for, for example:
+
+- Matching the convergence of a power-law model to the convergence of an NFW profile.
+- Comparing deflection angles from two different mass distributions.
+- Fitting a pixelized reconstruction to a separately computed model quantity.
+
+The `AnalysisQuantity` class uses `FitQuantity` internally to enable non-linear fitting of these quantities.
+"""
 from typing import List, Optional, Union
 
 import autoarray as aa

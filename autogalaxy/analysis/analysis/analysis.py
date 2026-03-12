@@ -1,3 +1,18 @@
+"""
+Abstract `Analysis` class providing shared functionality across all **PyAutoGalaxy** model-fitting analyses.
+
+This module provides `Analysis`, the root analysis class from which all dataset-specific analysis classes
+inherit (`AnalysisImaging`, `AnalysisInterferometer`, `AnalysisEllipse`, `AnalysisQuantity`).
+
+`Analysis` itself inherits from `af.Analysis` (from **PyAutoFit**) and extends it with:
+
+- A cosmology instance (defaulting to Planck15).
+- A `galaxies_via_instance_from` helper that extracts galaxies from a model instance, handling the
+  case where an `extra_galaxies` collection is also present.
+
+All subclasses call `super().__init__` to initialise the cosmology before implementing their own
+`log_likelihood_function`.
+"""
 import logging
 import numpy as np
 from typing import List, Optional

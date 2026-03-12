@@ -1,3 +1,19 @@
+"""
+Aggregator interface for loading ``FitImaging`` objects from model-fit results.
+
+This module combines all the pieces that are needed to re-create a ``FitImaging``
+object offline — the imaging dataset, galaxy model, dataset model, and adapt images —
+and assembles them into a ``FitImaging`` instance identical to the one produced during
+the original non-linear search.
+
+Two public objects are provided:
+
+- ``_fit_imaging_from`` — a free function that accepts a single ``PyAutoFit`` ``Fit``
+  entry and returns a list of ``FitImaging`` objects (one per summed ``Analysis``).
+- ``FitImagingAgg`` — a ``PyAutoFit`` ``AggBase`` subclass that wraps an ``Aggregator``
+  and exposes a generator of ``FitImaging`` objects, enabling memory-efficient iteration
+  over large result sets.
+"""
 from __future__ import annotations
 from typing import TYPE_CHECKING, Optional, List
 
