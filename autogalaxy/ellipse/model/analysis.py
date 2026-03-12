@@ -1,3 +1,15 @@
+"""
+`AnalysisEllipse` — the **PyAutoFit** `Analysis` class for fitting isophotal ellipse models to imaging data.
+
+This module provides `AnalysisEllipse`, which implements `log_likelihood_function` by:
+
+1. Extracting the ellipse (and optional multipoles) from the model instance.
+2. Constructing a `FitEllipse` object.
+3. Returning the `figure_of_merit` of the fit.
+
+Unlike `AnalysisImaging`, this class does not use PSF convolution or linear inversions. It directly fits
+the isophotal structure of the image via interpolation along the ellipse perimeter.
+"""
 import logging
 import numpy as np
 from typing import List, Optional
