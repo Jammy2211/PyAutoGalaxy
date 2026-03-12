@@ -1,3 +1,24 @@
+"""
+Utility functions for computing posterior error estimates on 1D profiles and 2D ellipses.
+
+These helpers operate on lists of sampled quantities (e.g. 1D light-profile intensity
+curves or 2D isophote coordinate arrays drawn from a ``PyAutoFit`` posterior PDF) and
+return the median value together with a lower/upper confidence interval computed from
+user-specified quantiles.
+
+Key functions
+-------------
+- ``value_median_and_error_region_via_quantile`` — scalar median + credible interval.
+- ``profile_1d_median_and_error_region_via_quantile`` — per-radial-bin median + interval
+  for 1D profiles (e.g. a convergence or surface-brightness radial profile).
+- ``quantile_profile_1d`` — low-level per-bin quantile computation, adapted from
+  ``corner.py``.
+- ``ellipse_median_and_error_region_via_quantile`` — Cartesian median + interval for 2D
+  isophote coordinate arrays.
+- ``ellipse_median_and_error_region_in_polar`` — same but computed in polar coordinates
+  so that the confidence region is expressed radially rather than in (y, x), which is
+  more robust for highly elongated isophotes.
+"""
 import numpy as np
 
 from autofit.non_linear.samples.pdf import quantile
