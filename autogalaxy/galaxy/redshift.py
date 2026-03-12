@@ -1,3 +1,14 @@
+"""
+Provides the `Redshift` class, a thin float subclass used when the redshift of a `Galaxy` is treated as a
+free parameter in a model fit.
+
+In standard use, galaxy redshifts are fixed scalars passed directly to `Galaxy(redshift=0.5, ...)`.
+When the redshift itself needs to be inferred by the non-linear search, **PyAutoFit** requires every model
+parameter to be wrapped in a Python class. The `Redshift` class satisfies this requirement while behaving
+identically to a plain Python `float` in all arithmetic and comparison contexts.
+"""
+
+
 class Redshift(float):
     """
     Class used when assigning a redshift to a `Galaxy` object.

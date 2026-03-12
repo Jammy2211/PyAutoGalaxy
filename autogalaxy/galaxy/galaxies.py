@@ -1,3 +1,15 @@
+"""
+The `Galaxies` class groups a list of `Galaxy` objects and exposes aggregate methods that operate across all
+galaxies simultaneously.
+
+Common operations — summing images, deflection angles, convergence, and potential — are trivial (simply sum
+each galaxy's contribution). More complex operations, such as computing a PSF-blurred image that correctly
+handles a mix of standard and operated (PSF-already-applied) light profiles, require careful bookkeeping that
+`Galaxies` handles automatically.
+
+In a typical modeling workflow, a list of fitted galaxies is always wrapped in a `Galaxies` object, which is
+then passed to a `Fit*` class (e.g. `FitImaging`) for comparison against the observed data.
+"""
 import numpy as np
 from typing import Dict, List, Optional, Tuple, Type, Union
 
@@ -8,10 +20,9 @@ from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.profiles.basis import Basis
 from autogalaxy.profiles.light.linear import LightProfileLinear
 from autogalaxy.operate.image import OperateImageGalaxies
-from autogalaxy.operate.deflections import OperateDeflections
 
 
-class Galaxies(List, OperateImageGalaxies, OperateDeflections):
+class Galaxies(List, OperateImageGalaxies):
     def __init__(
         self,
         galaxies: List[Galaxy],
@@ -47,6 +58,13 @@ class Galaxies(List, OperateImageGalaxies, OperateDeflections):
 
     @property
     def redshift(self):
+        """
+        The redshift of the first galaxy in the collection.
+
+        This is used when all galaxies in the collection are at the same redshift (e.g. a group of galaxies
+        at the lens plane). For multi-plane lensing with galaxies at different redshifts, individual galaxy
+        redshifts should be accessed directly via `galaxies[i].redshift`.
+        """
         return self[0].redshift
 
     def image_2d_list_from(

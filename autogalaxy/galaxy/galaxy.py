@@ -1,3 +1,15 @@
+"""
+The `Galaxy` class is the central object in **PyAutoGalaxy** that groups light profiles, mass profiles, and
+other components (e.g. pixelizations) at a given redshift.
+
+A `Galaxy` holds its components as named keyword-argument attributes, so the user can access them by name
+(e.g. `galaxy.bulge`, `galaxy.disk`). It then provides aggregate methods — `image_2d_from`,
+`deflections_yx_2d_from`, `convergence_2d_from`, `potential_2d_from` — that sum the contributions of all
+matching component types.
+
+The `Galaxies` class (in `galaxies.py`) wraps a list of `Galaxy` objects and provides the same aggregate
+interface over the whole ensemble.
+"""
 from typing import Dict, List, Optional, Type, Union
 
 import numpy as np
@@ -8,7 +20,6 @@ import autoarray as aa
 import autofit as af
 
 from autogalaxy import exc
-from autogalaxy.operate.deflections import OperateDeflections
 from autogalaxy.operate.image import OperateImageList
 from autogalaxy.profiles.geometry_profiles import GeometryProfile
 from autogalaxy.profiles.light.abstract import LightProfile
@@ -17,7 +28,7 @@ from autogalaxy.profiles.light.snr.abstract import LightProfileSNR
 from autogalaxy.profiles.mass.abstract.abstract import MassProfile
 
 
-class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
+class Galaxy(af.ModelObject, OperateImageList):
     """
     @DynamicAttrs
     """
@@ -296,12 +307,41 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
 
         return xp.zeros((grid.shape[0],))
 
+    @property
+    def half_light_radius(self):
+        """
+        The half-light radius of the galaxy.
+
+        Returns `None` because a `Galaxy` may contain multiple light profiles with different effective radii;
+        there is no single half-light radius that characterises the whole galaxy. Individual light profile
+        components expose their own `half_light_radius` / `effective_radius` attributes.
+        """
+        return None
+
     @aa.grid_dec.to_grid
     def traced_grid_2d_from(
         self, grid: aa.type.Grid2DLike, xp=np
     ) -> aa.type.Grid2DLike:
         """
-        Trace an input grid using the galaxy's its deflection angles.
+        Trace an input grid of (y,x) coordinates through the galaxy's deflection angles.
+
+        The traced grid is computed as:
+
+            β = θ − α(θ)
+
+        where θ is the image-plane grid and α(θ) are the deflection angles from the galaxy's mass profiles.
+
+        This is the lensing ray-tracing step that maps image-plane positions to source-plane positions.
+
+        Parameters
+        ----------
+        grid
+            The 2D (y, x) image-plane coordinates to be traced to the source plane.
+
+        Returns
+        -------
+        aa.type.Grid2DLike
+            The source-plane (y, x) coordinates after deflection.
         """
         if isinstance(grid, aa.Grid2D):
             return aa.Grid2D(
@@ -343,10 +383,6 @@ class Galaxy(af.ModelObject, OperateImageList, OperateDeflections):
                 )
             )
         return xp.zeros((grid.shape[0],))
-
-    @property
-    def half_light_radius(self):
-        return None
 
     def extract_attribute(self, cls, attr_name):
         """

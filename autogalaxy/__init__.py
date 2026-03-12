@@ -69,7 +69,7 @@ from .ellipse.model.analysis import AnalysisEllipse
 from .operate.image import OperateImage
 from .operate.image import OperateImageList
 from .operate.image import OperateImageGalaxies
-from .operate.deflections import OperateDeflections
+from .operate.lens_calc import LensCalc
 from .gui.scribbler import Scribbler
 from .imaging.fit_imaging import FitImaging
 from .imaging.model.analysis import AnalysisImaging

@@ -1,3 +1,18 @@
+"""
+Sersic light profiles.
+
+The Sersic profile is one of the most widely used models for describing the surface brightness of galaxies.
+It has the functional form:
+
+    I(r) = I_eff * exp{ -b_n * [(r / r_eff)^(1/n) - 1] }
+
+where `r_eff` is the effective (half-light) radius, `n` is the Sersic index controlling concentration, and
+`b_n` is derived from `n` to ensure that `r_eff` encloses half the total flux.
+
+Special cases: n=1 is the exponential (disk) profile, n=4 is the de Vaucouleurs (bulge) profile.
+
+This module provides both elliptical (`Sersic`) and spherical (`SersicSph`) variants.
+"""
 import numpy as np
 
 from numpy import seterr

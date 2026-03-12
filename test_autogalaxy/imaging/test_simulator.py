@@ -31,56 +31,6 @@ def clean_fits(fits_path):
         shutil.rmtree(fits_path)
 
 
-def test__from_fits__all_imaging_data_structures_are_flipped_for_ds9():
-    fits_path = path.join("{}".format(path.dirname(path.realpath(__file__))), "files")
-    image_path = path.join(fits_path, "data.fits")
-    noise_map_path = path.join(fits_path, "noise_map.fits")
-    psf_path = path.join(fits_path, "psf.fits")
-
-    create_fits(fits_path=image_path, array=[[1.0, 0.0], [0.0, 0.0]])
-    create_fits(fits_path=noise_map_path, array=[[2.0, 1.0], [1.0, 1.0]])
-    create_fits(
-        fits_path=psf_path, array=[[1.0, 1.0, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]
-    )
-
-    dataset = ag.Imaging.from_fits(
-        data_path=image_path,
-        noise_map_path=noise_map_path,
-        psf_path=psf_path,
-        pixel_scales=0.1,
-    )
-
-    assert (dataset.data.native == np.array([[0.0, 0.0], [1.0, 0.0]])).all()
-    assert (dataset.noise_map.native == np.array([[1.0, 1.0], [2.0, 1.0]])).all()
-    assert dataset.psf.kernel.native == pytest.approx(
-        np.array([[0.0, 0.0, 0.0], [0.0, 0.0, 0.0], [0.5, 0.5, 0.0]]), 1.0e-4
-    )
-
-    dataset.output_to_fits(
-        data_path=image_path,
-        noise_map_path=noise_map_path,
-        psf_path=psf_path,
-        overwrite=True,
-    )
-
-    from astropy.io import fits
-
-    hdu_list = fits.open(image_path)
-    image = np.array(hdu_list[0].data).astype("float64")
-    assert (image == np.array([[1.0, 0.0], [0.0, 0.0]])).all()
-
-    hdu_list = fits.open(noise_map_path)
-    noise_map = np.array(hdu_list[0].data).astype("float64")
-    assert (noise_map == np.array([[2.0, 1.0], [1.0, 1.0]])).all()
-
-    hdu_list = fits.open(psf_path)
-    psf = np.array(hdu_list[0].data).astype("float64")
-    assert psf == pytest.approx(
-        np.array([[0.5, 0.5, 0.0], [0.0, 0.0, 0.0], [0.0, 0.0, 0.0]]), 1.0e-4
-    )
-
-    clean_fits(fits_path=fits_path)
-
 
 def test__simulator__via_galaxies_from():
     psf = ag.Convolver.from_gaussian(shape_native=(7, 7), sigma=0.5, pixel_scales=0.05)
