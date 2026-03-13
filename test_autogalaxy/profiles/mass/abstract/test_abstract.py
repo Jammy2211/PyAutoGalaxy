@@ -26,13 +26,12 @@ def mass_within_radius_of_profile_from_grid_calculation(radius, profile):
     return mass_total
 
 
-def test__deflections_2d_via_potential_2d_from():
+def test__deflections_2d_via_potential_2d_from__isothermal_sph():
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05)
 
     deflections_via_calculation = mp.deflections_yx_2d_from(grid=grid)
-
     deflections_via_potential = mp.deflections_2d_via_potential_2d_from(grid=grid)
 
     mean_error = np.mean(
@@ -41,6 +40,8 @@ def test__deflections_2d_via_potential_2d_from():
 
     assert mean_error < 1e-4
 
+
+def test__deflections_2d_via_potential_2d_from__isothermal_ell_comps_1():
     sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), ell_comps=(0.111111, 0.0), einstein_radius=2.0
     )
@@ -48,7 +49,6 @@ def test__deflections_2d_via_potential_2d_from():
     grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05)
 
     deflections_via_calculation = sie.deflections_yx_2d_from(grid=grid)
-
     deflections_via_potential = sie.deflections_2d_via_potential_2d_from(grid=grid)
 
     mean_error = np.mean(
@@ -57,6 +57,8 @@ def test__deflections_2d_via_potential_2d_from():
 
     assert mean_error < 1e-4
 
+
+def test__deflections_2d_via_potential_2d_from__isothermal_ell_comps_2():
     sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
     )
@@ -64,7 +66,6 @@ def test__deflections_2d_via_potential_2d_from():
     grid = ag.Grid2D.uniform(shape_native=(10, 10), pixel_scales=0.05)
 
     deflections_via_calculation = sie.deflections_yx_2d_from(grid=grid)
-
     deflections_via_potential = sie.deflections_2d_via_potential_2d_from(grid=grid)
 
     mean_error = np.mean(
@@ -74,17 +75,21 @@ def test__deflections_2d_via_potential_2d_from():
     assert mean_error < 1e-4
 
 
-def test__mass_angular_within_circle_from():
+def test__mass_angular_within_circle_from__sph_einstein_radius_2():
     mp = ag.mp.IsothermalSph(einstein_radius=2.0)
 
     mass = mp.mass_angular_within_circle_from(radius=2.0)
     assert math.pi * mp.einstein_radius * 2.0 == pytest.approx(mass, 1e-3)
 
+
+def test__mass_angular_within_circle_from__sph_einstein_radius_4():
     mp = ag.mp.IsothermalSph(einstein_radius=4.0)
 
     mass = mp.mass_angular_within_circle_from(radius=4.0)
     assert math.pi * mp.einstein_radius * 4.0 == pytest.approx(mass, 1e-3)
 
+
+def test__mass_angular_within_circle_from__sph_grid_integration():
     mp = ag.mp.IsothermalSph(einstein_radius=2.0)
 
     mass_grid = mass_within_radius_of_profile_from_grid_calculation(
@@ -96,23 +101,29 @@ def test__mass_angular_within_circle_from():
     assert mass_grid == pytest.approx(mass, 0.02)
 
 
-def test__average_convergence_of_1_radius():
+def test__average_convergence_of_1_radius__isothermal_sph():
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
 
     assert mp.average_convergence_of_1_radius == pytest.approx(2.0, 1e-4)
 
+
+def test__average_convergence_of_1_radius__isothermal_low_ellipticity():
     sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), einstein_radius=1.0, ell_comps=(0.0, 0.111111)
     )
 
     assert sie.average_convergence_of_1_radius == pytest.approx(1.0, 1e-4)
 
+
+def test__average_convergence_of_1_radius__isothermal_medium_ellipticity():
     sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), einstein_radius=3.0, ell_comps=(0.0, 0.333333)
     )
 
     assert sie.average_convergence_of_1_radius == pytest.approx(3.0, 1e-4)
 
+
+def test__average_convergence_of_1_radius__isothermal_high_ellipticity():
     sie = ag.mp.Isothermal(
         centre=(0.0, 0.0), einstein_radius=8.0, ell_comps=(0.0, 0.666666)
     )
@@ -163,7 +174,7 @@ def test__extract_attribute():
     mp.extract_attribute(cls=ag.LightProfile, attr_name="einstein_radius")
 
 
-def test__regression__centre_of_profile_in_right_place():
+def test__regression__centre_of_profile_in_right_place__isothermal():
     grid = ag.Grid2D.uniform(shape_native=(7, 7), pixel_scales=1.0)
 
     mass_profile = ag.mp.Isothermal(centre=(1.999999, 0.9999999), einstein_radius=1.0)
@@ -183,6 +194,10 @@ def test__regression__centre_of_profile_in_right_place():
     assert deflections.native[2, 4, 0] < 0
     assert deflections.native[1, 4, 1] > 0
     assert deflections.native[1, 3, 1] < 0
+
+
+def test__regression__centre_of_profile_in_right_place__isothermal_sph():
+    grid = ag.Grid2D.uniform(shape_native=(7, 7), pixel_scales=1.0)
 
     mass_profile = ag.mp.IsothermalSph(centre=(2.0, 1.0), einstein_radius=1.0)
     convergence = mass_profile.convergence_2d_from(grid=grid)
