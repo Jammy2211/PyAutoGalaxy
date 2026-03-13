@@ -218,7 +218,7 @@ def test__same_as_above_but_generalized_elliptical():
     assert (deflections_ludlow == deflections).all()
 
 
-def test__same_as_above_but_cored_nfw():
+def test__same_as_above_but_cored_nfw__spherical():
 
     from autogalaxy.cosmology.model import FlatLambdaCDM
 
@@ -272,6 +272,13 @@ def test__same_as_above_but_cored_nfw():
     deflections = cnfw_kappa_s.deflections_yx_2d_from(grid=grid)
 
     assert (deflections_ludlow == deflections).all()
+
+
+def test__same_as_above_but_cored_nfw__elliptical():
+
+    from autogalaxy.cosmology.model import FlatLambdaCDM
+
+    cosmology = FlatLambdaCDM(H0=70.0, Om0=0.3)
 
     mp = ag.mp.cNFWMCRLudlow(
         centre=(1.0, 2.0),

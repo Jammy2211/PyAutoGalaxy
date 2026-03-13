@@ -98,7 +98,7 @@ grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 #
 
 
-def test__convergence_2d_from():
+def test__convergence_2d_from__sersic_core_mass_to_light_1():
     mp = ag.mp.SersicCore(
         ell_comps=(0.0, 0.0),
         effective_radius=5.0,
@@ -114,6 +114,8 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(0.1, 1e-3)
 
+
+def test__convergence_2d_from__sersic_core_mass_to_light_2():
     mp = ag.mp.SersicCore(
         ell_comps=(0.0, 0.0),
         effective_radius=5.0,
@@ -129,6 +131,8 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(0.2, 1e-3)
 
+
+def test__convergence_2d_from__elliptical_vs_spherical():
     elliptical = ag.mp.SersicCore(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.0),
