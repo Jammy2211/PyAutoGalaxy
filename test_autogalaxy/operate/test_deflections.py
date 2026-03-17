@@ -92,7 +92,7 @@ def test__fermat_potential_from():
     )
 
 
-def test__hessian_from():
+def test__hessian_from__diagonal_grid__correct_values():
     grid = ag.Grid2DIrregular(values=[(0.5, 0.5), (1.0, 1.0)])
 
     mp = ag.mp.Isothermal(
@@ -107,8 +107,15 @@ def test__hessian_from():
     assert hessian_yx == pytest.approx(np.array([-1.388165, -0.694099]), 1.0e-4)
     assert hessian_xx == pytest.approx(np.array([1.3883824, 0.694127]), 1.0e-4)
 
+
+def test__hessian_from__axis_aligned_grid__correct_values():
     grid = ag.Grid2DIrregular(values=[(1.0, 0.0), (0.0, 1.0)])
 
+    mp = ag.mp.Isothermal(
+        centre=(0.0, 0.0), ell_comps=(0.0, -0.111111), einstein_radius=2.0
+    )
+
+    od = LensCalc.from_mass_obj(mp)
     hessian_yy, hessian_xy, hessian_yx, hessian_xx = od.hessian_from(grid=grid)
 
     assert hessian_yy == pytest.approx(np.array([0.0, 1.777699]), 1.0e-4)
@@ -149,7 +156,7 @@ def test__magnification_2d_via_hessian_from():
     assert magnification.in_list[1] == pytest.approx(-2.57591, 1.0e-4)
 
 
-def test__tangential_critical_curve_list_from():
+def test__tangential_critical_curve_list_from__radius_matches_einstein_radius():
     grid = ag.Grid2D.uniform(shape_native=(15, 15), pixel_scales=0.3)
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
@@ -166,6 +173,8 @@ def test__tangential_critical_curve_list_from():
         x_critical_tangential**2 + y_critical_tangential**2
     ) == pytest.approx(mp.einstein_radius**2, 5e-1)
 
+
+def test__tangential_critical_curve_list_from__centre_at_origin__curve_centred_on_origin():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
@@ -178,6 +187,10 @@ def test__tangential_critical_curve_list_from():
 
     assert -0.03 < y_centre < 0.03
     assert -0.03 < x_centre < 0.03
+
+
+def test__tangential_critical_curve_list_from__offset_centre__curve_centred_on_offset():
+    grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     mp = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
@@ -225,7 +238,7 @@ def test__tangential_critical_curve_list_from():
 #     )
 
 
-def test__radial_critical_curve_list_from():
+def test__radial_critical_curve_list_from__centre_at_origin__curve_centred_on_origin():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
@@ -238,6 +251,10 @@ def test__radial_critical_curve_list_from():
 
     assert -0.05 < y_centre < 0.05
     assert -0.05 < x_centre < 0.05
+
+
+def test__radial_critical_curve_list_from__offset_centre__curve_centred_on_offset():
+    grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     mp = ag.mp.PowerLawSph(centre=(0.5, 1.0), einstein_radius=2.0, slope=1.5)
 
@@ -271,7 +288,7 @@ def test__radial_critical_curve_list_from__compare_via_magnification():
     )
 
 
-def test__tangential_caustic_list_from():
+def test__tangential_caustic_list_from__centre_at_origin__caustic_centred_on_origin():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
@@ -284,6 +301,10 @@ def test__tangential_caustic_list_from():
 
     assert -0.03 < y_centre < 0.03
     assert -0.03 < x_centre < 0.03
+
+
+def test__tangential_caustic_list_from__offset_centre__caustic_centred_on_offset():
+    grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     mp = ag.mp.IsothermalSph(centre=(0.5, 1.0), einstein_radius=2.0)
 
@@ -319,7 +340,7 @@ def test__tangential_caustic_list_from():
 #     )
 
 
-def test__radial_caustic_list_from():
+def test__radial_caustic_list_from__radius_check__correct_mean_radius():
     grid = ag.Grid2D.uniform(shape_native=(20, 20), pixel_scales=0.2)
 
     mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
@@ -336,6 +357,8 @@ def test__radial_caustic_list_from():
         0.25, 5e-1
     )
 
+
+def test__radial_caustic_list_from__centre_at_origin__caustic_centred_on_origin():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     mp = ag.mp.PowerLawSph(centre=(0.0, 0.0), einstein_radius=2.0, slope=1.5)
@@ -348,6 +371,10 @@ def test__radial_caustic_list_from():
 
     assert -0.2 < y_centre < 0.2
     assert -0.35 < x_centre < 0.35
+
+
+def test__radial_caustic_list_from__offset_centre__caustic_centred_near_offset():
+    grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     mp = ag.mp.PowerLawSph(centre=(0.5, 1.0), einstein_radius=2.0, slope=1.5)
 
@@ -410,7 +437,7 @@ def test__tangential_critical_curve_area_list_from():
     )
 
 
-def test__einstein_radius_list_from():
+def test__einstein_radius_list_from__isothermal_sph__correct_einstein_radius():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
@@ -419,6 +446,10 @@ def test__einstein_radius_list_from():
     einstein_radius_list = od.einstein_radius_list_from(grid=grid)
 
     assert einstein_radius_list[0] == pytest.approx(2.0, 1e-1)
+
+
+def test__einstein_radius_list_from__isothermal_elliptical__correct_einstein_radius():
+    grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     mp = ag.mp.Isothermal(
         centre=(0.0, 0.0), einstein_radius=2.0, ell_comps=(0.0, -0.25)
@@ -430,7 +461,7 @@ def test__einstein_radius_list_from():
     assert einstein_radius_list[0] == pytest.approx(1.9360, 1e-1)
 
 
-def test__einstein_radius_from():
+def test__einstein_radius_from__isothermal_sph__correct_einstein_radius():
     grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
@@ -439,6 +470,10 @@ def test__einstein_radius_from():
     einstein_radius = od.einstein_radius_from(grid=grid)
 
     assert einstein_radius == pytest.approx(2.0, 1e-1)
+
+
+def test__einstein_radius_from__isothermal_elliptical__correct_einstein_radius():
+    grid = ag.Grid2D.uniform(shape_native=(50, 50), pixel_scales=0.2)
 
     mp = ag.mp.Isothermal(
         centre=(0.0, 0.0), einstein_radius=2.0, ell_comps=(0.0, -0.25)

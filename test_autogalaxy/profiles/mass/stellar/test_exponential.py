@@ -6,7 +6,7 @@ import autogalaxy as ag
 grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
-def test__deflections_yx_2d_from():
+def test__deflections_yx_2d_from__exponential():
     mp = ag.mp.Exponential()
 
     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]))
@@ -16,6 +16,8 @@ def test__deflections_yx_2d_from():
 
     assert deflections == pytest.approx(deflections_via_cse.array, 1.0e-4)
 
+
+def test__deflections_yx_2d_from__exponential_sph():
     mp = ag.mp.ExponentialSph()
 
     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]))
@@ -26,7 +28,7 @@ def test__deflections_yx_2d_from():
     assert deflections == pytest.approx(deflections_via_cse.array, 1.0e-4)
 
 
-def test__deflections_2d_via_integral_from():
+def test__deflections_2d_via_integral_from__config_1():
     mp = ag.mp.Exponential(
         centre=(-0.4, -0.2),
         ell_comps=(-0.07142, -0.085116),
@@ -42,6 +44,8 @@ def test__deflections_2d_via_integral_from():
     assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
     assert deflections[0, 1] == pytest.approx(0.62569, 1e-3)
 
+
+def test__deflections_2d_via_integral_from__config_2():
     mp = ag.mp.Exponential(
         centre=(-0.4, -0.2),
         ell_comps=(-0.07142, -0.085116),
@@ -58,7 +62,7 @@ def test__deflections_2d_via_integral_from():
     assert deflections[0, 1] == pytest.approx(0.62569, 1e-3)
 
 
-def test__deflections_2d_via_cse_from():
+def test__deflections_2d_via_cse_from__config_1():
     mp = ag.mp.Exponential(
         centre=(-0.4, -0.2),
         ell_comps=(-0.07142, -0.085116),
@@ -76,6 +80,8 @@ def test__deflections_2d_via_cse_from():
 
     assert deflections_via_integral == pytest.approx(deflections_via_cse.array, 1.0e-4)
 
+
+def test__deflections_2d_via_cse_from__config_2():
     mp = ag.mp.Exponential(
         centre=(-0.4, -0.2),
         ell_comps=(-0.07142, -0.085116),
@@ -94,7 +100,7 @@ def test__deflections_2d_via_cse_from():
     assert deflections_via_integral == pytest.approx(deflections_via_cse.array, 1.0e-4)
 
 
-def test__convergence_2d_from():
+def test__convergence_2d_from__exponential_config_1():
     mp = ag.mp.Exponential(
         ell_comps=(0.0, 0.333333),
         intensity=3.0,
@@ -106,6 +112,8 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(4.9047, 1e-3)
 
+
+def test__convergence_2d_from__exponential_config_2():
     mp = ag.mp.Exponential(
         ell_comps=(0.0, -0.333333),
         intensity=2.0,
@@ -117,6 +125,8 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(4.8566, 1e-3)
 
+
+def test__convergence_2d_from__exponential_intensity_4():
     mp = ag.mp.Exponential(
         ell_comps=(0.0, -0.333333),
         intensity=4.0,
@@ -127,6 +137,8 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(2.0 * 4.8566, 1e-3)
 
+
+def test__convergence_2d_from__exponential_mass_to_light_2():
     mp = ag.mp.Exponential(
         ell_comps=(0.0, -0.333333),
         intensity=2.0,
@@ -138,6 +150,8 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(2.0 * 4.8566, 1e-3)
 
+
+def test__convergence_2d_from__exponential_config_5():
     mp = ag.mp.Exponential(
         ell_comps=(0.0, -0.333333),
         intensity=2.0,
@@ -149,6 +163,8 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(4.8566, 1e-3)
 
+
+def test__convergence_2d_from__elliptical_vs_spherical():
     elliptical = ag.mp.Exponential(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.0),
