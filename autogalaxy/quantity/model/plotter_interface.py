@@ -5,9 +5,6 @@ from autogalaxy.quantity.fit_quantity import FitQuantity
 from autogalaxy.quantity.plot.fit_quantity_plotters import FitQuantityPlotter
 from autogalaxy.analysis.plotter_interface import PlotterInterface
 from autogalaxy.analysis.plotter_interface import plot_setting
-from autogalaxy.plot.visuals.two_d import Visuals2D
-
-
 class PlotterInterfaceQuantity(PlotterInterface):
     def dataset_quantity(self, dataset: DatasetQuantity):
         """
@@ -51,7 +48,6 @@ class PlotterInterfaceQuantity(PlotterInterface):
     def fit_quantity(
         self,
         fit: FitQuantity,
-        visuals_2d: Visuals2D = None,
         fit_quanaity_plotter_cls=FitQuantityPlotter,
     ):
         """
@@ -72,9 +68,6 @@ class PlotterInterfaceQuantity(PlotterInterface):
         ----------
         fit
             The maximum log likelihood `FitQuantity` of the non-linear search which is used to plot the fit.
-        visuals_2d
-            An object containing attributes which may be plotted over the figure (e.g. the centres of mass and light
-            profiles).
         """
 
         def should_plot(name):
@@ -85,7 +78,6 @@ class PlotterInterfaceQuantity(PlotterInterface):
         fit_quantity_plotter = fit_quanaity_plotter_cls(
             fit=fit,
             mat_plot_2d=mat_plot_2d,
-            visuals_2d=visuals_2d,
         )
 
         if should_plot("subplot_fit"):

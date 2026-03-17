@@ -4,7 +4,6 @@ import autoarray as aa
 import autoarray.plot as aplt
 
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
-from autogalaxy.plot.visuals.two_d import Visuals2D
 
 from autogalaxy.plot.abstract_plotters import Plotter
 
@@ -15,21 +14,50 @@ class MassPlotter(Plotter):
         mass_obj,
         grid: aa.type.Grid2DLike,
         mat_plot_2d: MatPlot2D = None,
-        visuals_2d: Visuals2D = None,
+        positions=None,
+        light_profile_centres=None,
+        mass_profile_centres=None,
+        multiple_images=None,
+        tangential_critical_curves=None,
+        radial_critical_curves=None,
+        tangential_caustics=None,
+        radial_caustics=None,
     ):
-        super().__init__(mat_plot_2d=mat_plot_2d, visuals_2d=visuals_2d)
+        super().__init__(mat_plot_2d=mat_plot_2d)
 
         self.mass_obj = mass_obj
         self.grid = grid
+        self.positions = positions
+        self.light_profile_centres = light_profile_centres
+        self.mass_profile_centres = mass_profile_centres
+        self.multiple_images = multiple_images
+        self._tc = tangential_critical_curves
+        self._rc = radial_critical_curves
+        self._tc_caustic = tangential_caustics
+        self._rc_caustic = radial_caustics
 
     @cached_property
-    def visuals_2d_with_critical_curves(self) -> aplt.Visuals2D:
-        """
-        Returns the `Visuals2D` of the plotter with critical curves and caustics added, which are used to plot
-        the critical curves and caustics of the `Tracer` object.
-        """
-        return self.visuals_2d.add_critical_curves_or_caustics(
-            mass_obj=self.mass_obj, grid=self.grid, plane_index=0
+    def visuals_2d_with_critical_curves(self):
+        from autogalaxy.plot.visuals.two_d import Visuals2D
+        from autogalaxy.operate.lens_calc import LensCalc
+
+        tc = self._tc
+        rc = self._rc
+
+        if tc is None:
+            od = LensCalc.from_mass_obj(self.mass_obj)
+            tc = od.tangential_critical_curve_list_from(grid=self.grid)
+            rc_area = od.radial_critical_curve_area_list_from(grid=self.grid)
+            if any(area > self.grid.pixel_scale for area in rc_area):
+                rc = od.radial_critical_curve_list_from(grid=self.grid)
+
+        return Visuals2D(
+            positions=self.positions,
+            light_profile_centres=self.light_profile_centres,
+            mass_profile_centres=self.mass_profile_centres,
+            multiple_images=self.multiple_images,
+            tangential_critical_curves=tc,
+            radial_critical_curves=rc,
         )
 
     def figures_2d(
@@ -42,27 +70,6 @@ class MassPlotter(Plotter):
         title_suffix: str = "",
         filename_suffix: str = "",
     ):
-        """
-        Plots the individual attributes of the plotter's mass object in 2D, which are computed via the plotter's 2D
-        grid object.
-
-        The API is such that every plottable attribute of the `Imaging` object is an input parameter of type bool of
-        the function, which if switched to `True` means that it is plotted.
-
-        Parameters
-        ----------
-        convergence
-            Whether to make a 2D plot (via `imshow`) of the convergence.
-        potential
-            Whether to make a 2D plot (via `imshow`) of the potential.
-        deflections_y
-            Whether to make a 2D plot (via `imshow`) of the y component of the deflection angles.
-        deflections_x
-            Whether to make a 2D plot (via `imshow`) of the x component of the deflection angles.
-        magnification
-            Whether to make a 2D plot (via `imshow`) of the magnification.
-        """
-
         if convergence:
             self._plot_array(
                 array=self.mass_obj.convergence_2d_from(grid=self.grid),

@@ -10,8 +10,6 @@ from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_plot.one_d import MatPlot1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
-from autogalaxy.plot.visuals.one_d import Visuals1D
-from autogalaxy.plot.visuals.two_d import Visuals2D
 
 from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
 
@@ -21,60 +19,32 @@ class FitInterferometerPlotter(Plotter):
         self,
         fit: FitInterferometer,
         mat_plot_1d: MatPlot1D = None,
-        visuals_1d: Visuals1D = None,
         mat_plot_2d: MatPlot2D = None,
-        visuals_2d: Visuals2D = None,
+        positions=None,
         residuals_symmetric_cmap: bool = True,
     ):
-        """
-        Plots the attributes of `FitInterferometer` objects using the matplotlib method `imshow()` and many
-        other matplotlib functions which customize the plot's appearance.
-
-        The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default,
-        the settings passed to every matplotlib function called are those specified in
-        the `config/visualize/mat_wrap/*.ini` files, but a user can manually input values into `MatPlot2d` to
-        customize the figure's appearance.
-
-        Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
-        extracted from the `FitInterferometer` and plotted via the visuals object.
-
-        Parameters
-        ----------
-        fit
-            The fit to an interferometer dataset the plotter plots.
-        mat_plot_1d
-            Contains objects which wrap the matplotlib function calls that make 1D plots.
-        visuals_1d
-            Contains 1D visuals that can be overlaid on 1D plots.
-        mat_plot_2d
-            Contains objects which wrap the matplotlib function calls that make 2D plots.
-        visuals_2d
-            Contains 2D visuals that can be overlaid on 2D plots.
-        residuals_symmetric_cmap
-            If true, the `residual_map` and `normalized_residual_map` are plotted with a symmetric color map such
-            that `abs(vmin) = abs(vmax)`.
-        """
         super().__init__(
             mat_plot_1d=mat_plot_1d,
-            visuals_1d=visuals_1d,
             mat_plot_2d=mat_plot_2d,
-            visuals_2d=visuals_2d,
         )
 
         self.fit = fit
+        self.positions = positions
+
+        from autogalaxy.plot.visuals.one_d import Visuals1D
+        from autogalaxy.plot.visuals.two_d import Visuals2D
 
         self._fit_interferometer_meta_plotter = FitInterferometerPlotterMeta(
             fit=self.fit,
             mat_plot_1d=self.mat_plot_1d,
-            visuals_1d=self.visuals_1d,
+            visuals_1d=Visuals1D(),
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.visuals_2d,
+            visuals_2d=Visuals2D(positions=positions),
             residuals_symmetric_cmap=residuals_symmetric_cmap,
         )
 
         self.figures_2d = self._fit_interferometer_meta_plotter.figures_2d
         self.subplot = self._fit_interferometer_meta_plotter.subplot
-        #  self.subplot_fit = self._fit_interferometer_meta_plotter.subplot_fit
         self.subplot_fit_dirty_images = (
             self._fit_interferometer_meta_plotter.subplot_fit_dirty_images
         )
@@ -84,42 +54,20 @@ class FitInterferometerPlotter(Plotter):
         return self.fit.galaxies_linear_light_profiles_to_light_profiles
 
     def galaxies_plotter_from(self, galaxies: List[Galaxy]) -> GalaxiesPlotter:
-        """
-        Returns a `GalaxiesPlotter` corresponding to an input galaxies list.
-
-        Returns
-        -------
-        galaxies
-            The galaxies used to make the `GalaxiesPlotter`.
-        """
         return GalaxiesPlotter(
             galaxies=galaxies,
             grid=self.fit.grids.lp,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.visuals_2d,
         )
 
     @property
     def inversion_plotter(self) -> aplt.InversionPlotter:
-        """
-        Returns an `InversionPlotter` corresponding to the `Inversion` of the fit.
-
-        Returns
-        -------
-        InversionPlotter
-            An object that plots inversions which is used for plotting attributes of the inversion.
-        """
         return aplt.InversionPlotter(
             inversion=self.fit.inversion,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.visuals_2d,
         )
 
     def subplot_fit(self):
-        """
-        Standard subplot of the attributes of the plotter's `FitImaging` object.
-        """
-
         self.open_subplot_figure(number_subplots=9)
 
         self.figures_2d(amplitudes_vs_uv_distances=True)
@@ -162,12 +110,6 @@ class FitInterferometerPlotter(Plotter):
         self.close_subplot_figure()
 
     def subplot_fit_real_space(self):
-        """
-        Standard subplot of the real-space attributes of the plotter's `FitInterferometer` object.
-
-        Depending on whether `LightProfile`'s or an `Inversion` are used to represent galaxies, different
-        methods are called to create these real-space images.
-        """
         if not self.galaxies.has(cls=aa.Pixelization):
             galaxies_plotter = self.galaxies_plotter_from(galaxies=self.galaxies)
 

@@ -12,9 +12,7 @@ from autogalaxy.ellipse.plot import fit_ellipse_plot_util
 from autogalaxy.ellipse.fit_ellipse import FitEllipse
 from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_plot.one_d import MatPlot1D
-from autogalaxy.plot.visuals.one_d import Visuals1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
-from autogalaxy.plot.visuals.two_d import Visuals2D
 
 from autogalaxy.util import error_util
 
@@ -24,18 +22,18 @@ class FitEllipsePlotter(Plotter):
         self,
         fit_list: List[FitEllipse],
         mat_plot_1d: MatPlot1D = None,
-        visuals_1d: Visuals1D = None,
         mat_plot_2d: MatPlot2D = None,
-        visuals_2d: Visuals2D = None,
+        positions=None,
+        lines=None,
     ):
         super().__init__(
             mat_plot_1d=mat_plot_1d,
-            visuals_1d=visuals_1d,
             mat_plot_2d=mat_plot_2d,
-            visuals_2d=visuals_2d,
         )
 
         self.fit_list = fit_list
+        self.positions = positions
+        self.lines = lines
 
     def figures_2d(
         self,
@@ -45,24 +43,10 @@ class FitEllipsePlotter(Plotter):
         for_subplot: bool = False,
         suffix: str = "",
     ):
-        """
-        Plots the individual attributes of the plotter's `FitEllipse` object in 1D.
-
-        The API is such that every plottable attribute of the `FitEllipse` object is an input parameter of type bool of
-        the function, which if switched to `True` means that it is plotted.
-
-        Parameters
-        ----------
-        data
-            Whether to make a 1D plot (via `imshow`) of the image data.
-        disable_data_contours
-            If `True`, the data is plotted without the black data contours over the top (but the white contours
-            showing the ellipses are still plotted).
-        """
-
         filename_tag = ""
 
         if data:
+            from autogalaxy.plot.visuals.two_d import Visuals2D
 
             self.mat_plot_2d.contour = aplt.Contour(
                 manual_levels=np.sort(
@@ -85,7 +69,7 @@ class FitEllipsePlotter(Plotter):
 
                 ellipse_list.append(aa.Grid2DIrregular.from_yx_1d(y=y, x=x))
 
-            visuals_2d = self.visuals_2d + Visuals2D(
+            visuals_2d = Visuals2D(
                 positions=ellipse_list, lines=ellipse_list
             )
 
@@ -117,10 +101,6 @@ class FitEllipsePlotter(Plotter):
             )
 
     def subplot_fit_ellipse(self, disable_data_contours: bool = False):
-        """
-        Standard subplot of the attributes of the plotter's `FitEllipse` object.
-        """
-
         self.open_subplot_figure(number_subplots=2)
 
         self.mat_plot_2d.use_log10 = True
@@ -136,43 +116,20 @@ class FitEllipsePDFPlotter(Plotter):
         self,
         fit_pdf_list: List[FitEllipse],
         mat_plot_1d: MatPlot1D = MatPlot1D(),
-        visuals_1d: Visuals1D = Visuals1D(),
         mat_plot_2d: MatPlot2D = MatPlot2D(),
-        visuals_2d: Visuals2D = Visuals2D(),
         sigma: Optional[float] = 3.0,
     ):
         super().__init__(
             mat_plot_1d=mat_plot_1d,
-            visuals_1d=visuals_1d,
             mat_plot_2d=mat_plot_2d,
-            visuals_2d=visuals_2d,
         )
 
         self.fit_pdf_list = fit_pdf_list
         self.sigma = sigma
         self.low_limit = (1 - math.erf(sigma / math.sqrt(2))) / 2
 
-    def get_visuals_1d(self) -> Visuals1D:
-        return self.visuals_1d
-
-    def get_visuals_2d(self):
-        return self.get_2d.via_mask_from(mask=self.fit_pdf_list[0][0].dataset.mask)
-
     def subplot_ellipse_errors(self):
-        """
-        Plots the individual attributes of the plotter's `FitEllipse` object in 1D.
-
-        The API is such that every plottable attribute of the `FitEllipse` object is an input parameter of type bool of
-        the function, which if switched to `True` means that it is plotted.
-
-        Parameters
-        ----------
-        data
-            Whether to make a 1D plot (via `imshow`) of the image data.
-        disable_data_contours
-            If `True`, the data is plotted without the black data contours over the top (but the white contours
-            showing the ellipses are still plotted).
-        """
+        from autogalaxy.plot.visuals.two_d import Visuals2D
 
         contour_original = self.mat_plot_2d.contour
         self.mat_plot_2d.contour = False
@@ -213,7 +170,7 @@ class FitEllipsePDFPlotter(Plotter):
             x_fill = np.concatenate([x_lower, x_upper[::-1]])
             y_fill = np.concatenate([y_lower, y_upper[::-1]])
 
-            visuals_2d = self.get_visuals_2d() + Visuals2D(
+            visuals_2d = Visuals2D(
                 lines=median_ellipse, fill_region=[y_fill, x_fill]
             )
 

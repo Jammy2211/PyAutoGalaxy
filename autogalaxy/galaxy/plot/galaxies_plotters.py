@@ -6,8 +6,6 @@ import autoarray.plot as aplt
 from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_plot.one_d import MatPlot1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
-from autogalaxy.plot.visuals.one_d import Visuals1D
-from autogalaxy.plot.visuals.two_d import Visuals2D
 from autogalaxy.plot.mass_plotter import MassPlotter
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
@@ -22,38 +20,14 @@ class GalaxiesPlotter(Plotter):
         galaxies: List[Galaxy],
         grid: aa.type.Grid1D2DLike,
         mat_plot_1d: MatPlot1D = None,
-        visuals_1d: Visuals1D = None,
         mat_plot_2d: MatPlot2D = None,
-        visuals_2d: Visuals2D = None,
+        positions=None,
+        light_profile_centres=None,
+        mass_profile_centres=None,
+        multiple_images=None,
+        tangential_critical_curves=None,
+        radial_critical_curves=None,
     ):
-        """
-        Plots the attributes of a list of galaxies using the matplotlib methods `plot()` and `imshow()` and many
-        other matplotlib functions which customize the plot's appearance.
-
-        The `mat_plot_1d` and `mat_plot_2d` attributes wrap matplotlib function calls to make the figure. By default,
-        the settings passed to every matplotlib function called are those specified in
-        the `config/visualize/mat_wrap/*.ini` files, but a user can manually input values into `MatPlot2D` to
-        customize the figure's appearance.
-
-        Overlaid on the figure are visuals, contained in the `Visuals1D` and `Visuals2D` objects. Attributes may be
-        extracted from the `MassProfile` and plotted via the visuals object.
-
-        Parameters
-        ----------
-        galaxies
-            The galaxies the plotter plots.
-        grid
-            The 2D (y,x) grid of coordinates used to evaluate the galaxies light and mass quantities that are plotted.
-        mat_plot_1d
-            Contains objects which wrap the matplotlib function calls that make 1D plots.
-        visuals_1d
-            Contains 1D visuals that can be overlaid on 1D plots.
-        mat_plot_2d
-            Contains objects which wrap the matplotlib function calls that make 2D plots.
-        visuals_2d
-            Contains 2D visuals that can be overlaid on 2D plots.
-        """
-
         self.galaxies = Galaxies(galaxies=galaxies)
 
         from autogalaxy.profiles.light.linear import (
@@ -67,35 +41,38 @@ class GalaxiesPlotter(Plotter):
 
         super().__init__(
             mat_plot_2d=mat_plot_2d,
-            visuals_2d=visuals_2d,
             mat_plot_1d=mat_plot_1d,
-            visuals_1d=visuals_1d,
         )
 
         self.grid = grid
+        self.positions = positions
+        self.light_profile_centres = light_profile_centres
+        self.mass_profile_centres = mass_profile_centres
+        self.multiple_images = multiple_images
 
         self._mass_plotter = MassPlotter(
             mass_obj=self.galaxies,
             grid=self.grid,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.visuals_2d,
+            positions=positions,
+            light_profile_centres=light_profile_centres,
+            mass_profile_centres=mass_profile_centres,
+            multiple_images=multiple_images,
+            tangential_critical_curves=tangential_critical_curves,
+            radial_critical_curves=radial_critical_curves,
         )
 
     def galaxy_plotter_from(self, galaxy_index: int) -> GalaxyPlotter:
-        """
-        Returns an `GalaxyPlotter` corresponding to a `Galaxy` in the `Tracer`.
-
-        Returns
-        -------
-        galaxy_index
-            The index of the galaxy in the `Tracer` used to make the `GalaxyPlotter`.
-        """
+        visuals_with_cc = self._mass_plotter.visuals_2d_with_critical_curves
+        tc = visuals_with_cc.tangential_critical_curves
+        rc = visuals_with_cc.radial_critical_curves
 
         return GalaxyPlotter(
             galaxy=self.galaxies[galaxy_index],
             grid=self.grid,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self._mass_plotter.visuals_2d_with_critical_curves,
+            tangential_critical_curves=tc,
+            radial_critical_curves=rc,
         )
 
     def figures_2d(
@@ -113,42 +90,16 @@ class GalaxiesPlotter(Plotter):
         filename_suffix: str = "",
         source_plane_title: bool = False,
     ):
-        """
-        Plots the individual attributes of the plotter's `Galaxies` object in 2D, which are computed via the plotter's 2D
-        grid object.
-
-        The API is such that every plottable attribute of the `Galaxies` object is an input parameter of type bool of
-        the function, which if switched to `True` means that it is plotted.
-
-        Parameters
-        ----------
-        image
-            Whether to make a 2D plot (via `imshow`) of the image of the galaxies.
-        convergence
-            Whether to make a 2D plot (via `imshow`) of the convergence.
-        potential
-            Whether to make a 2D plot (via `imshow`) of the potential.
-        deflections_y
-            Whether to make a 2D plot (via `imshow`) of the y component of the deflection angles.
-        deflections_x
-            Whether to make a 2D plot (via `imshow`) of the x component of the deflection angles.
-        magnification
-            Whether to make a 2D plot (via `imshow`) of the magnification.
-        plane_image
-            Whether to make a 2D plot (via `imshow`) of the image of the plane in the soure-plane (e.g. its
-            unlensed light).
-        zoom_to_brightest
-            Whether to automatically zoom the plot to the brightest regions of the galaxies being plotted as
-            opposed to the full extent of the grid.
-        title_suffix
-            Add a suffix to the end of the matplotlib title label.
-        filename_suffix
-            Add a suffix to the end of the filename the plot is saved to hard-disk using.
-        """
         if image:
+            from autogalaxy.plot.visuals.two_d import Visuals2D
+
             self._plot_array(
                 array=self.galaxies.image_2d_from(grid=self.grid),
-                visuals_2d=self.visuals_2d,
+                visuals_2d=Visuals2D(
+                    positions=self.positions,
+                    light_profile_centres=self.light_profile_centres,
+                    mass_profile_centres=self.mass_profile_centres,
+                ),
                 auto_labels=aplt.AutoLabels(
                     title=f"Image{title_suffix}", filename=f"image_2d{filename_suffix}"
                 ),
@@ -160,11 +111,13 @@ class GalaxiesPlotter(Plotter):
             else:
                 title = f"Plane Image{title_suffix}"
 
+            from autogalaxy.plot.visuals.two_d import Visuals2D
+
             self._plot_array(
                 array=self.galaxies.plane_image_2d_from(
                     grid=self.grid, zoom_to_brightest=zoom_to_brightest
                 ),
-                visuals_2d=self.visuals_2d,
+                visuals_2d=Visuals2D(positions=self.positions),
                 auto_labels=aplt.AutoLabels(
                     title=title,
                     filename=f"plane_image{filename_suffix}",
@@ -177,9 +130,11 @@ class GalaxiesPlotter(Plotter):
             else:
                 title = f"Plane Grid{title_suffix}"
 
+            from autogalaxy.plot.visuals.two_d import Visuals2D
+
             self._plot_grid(
                 grid=self.grid,
-                visuals_2d=self.visuals_2d,
+                visuals_2d=Visuals2D(positions=self.positions),
                 auto_labels=aplt.AutoLabels(
                     title=title,
                     filename=f"plane_grid{filename_suffix}",
@@ -195,20 +150,6 @@ class GalaxiesPlotter(Plotter):
         )
 
     def galaxy_indexes_from(self, galaxy_index: Optional[int]) -> List[int]:
-        """
-        Returns a list of all indexes of the galaxys in the fit, which is iterated over in figures that plot
-        individual figures of each galaxy.
-
-        Parameters
-        ----------
-        galaxy_index
-            A specific galaxy index which when input means that only a single galaxy index is returned.
-
-        Returns
-        -------
-        list
-            A list of galaxy indexes corresponding to galaxys in the galaxy.
-        """
         if galaxy_index is None:
             return list(range(len(self.galaxies)))
         return [galaxy_index]
@@ -216,21 +157,6 @@ class GalaxiesPlotter(Plotter):
     def figures_2d_of_galaxies(
         self, image: bool = False, galaxy_index: Optional[int] = None
     ):
-        """
-        Plots galaxy images for each individual `Galaxy` in the plotter's `Galaxies` in 2D,  which are computed via the
-        plotter's 2D grid object.
-
-        The API is such that every plottable attribute of the `galaxy` object is an input parameter of type bool of
-        the function, which if switched to `True` means that it is plotted.
-
-        Parameters
-        ----------
-        image
-            Whether to make a 2D plot (via `imshow`) of the image of the galaxy in the soure-galaxy (e.g. its
-            unlensed light).
-        galaxy_index
-            If input, plots for only a single galaxy based on its index are created.
-        """
         galaxy_indexes = self.galaxy_indexes_from(galaxy_index=galaxy_index)
 
         for galaxy_index in galaxy_indexes:
@@ -253,30 +179,6 @@ class GalaxiesPlotter(Plotter):
         magnification: bool = False,
         auto_filename: str = "subplot_galaxies",
     ):
-        """
-        Plots the individual attributes of the plotter's `Galaxies` object in 2D on a subplot, which are computed via the
-        plotter's 2D grid object.
-
-        The API is such that every plottable attribute of the `Galaxies` object is an input parameter of type bool of
-        the function, which if switched to `True` means that it is included on the subplot.
-
-        Parameters
-        ----------
-        image
-            Whether or not to include a 2D plot (via `imshow`) of the image.
-        convergence
-            Whether or not to include a 2D plot (via `imshow`) of the convergence.
-        potential
-            Whether or not to include a 2D plot (via `imshow`) of the potential.
-        deflections_y
-            Whether or not to include a 2D plot (via `imshow`) of the y component of the deflection angles.
-        deflections_x
-            Whether or not to include a 2D plot (via `imshow`) of the x component of the deflection angles.
-        magnification
-            Whether or not to include a 2D plot (via `imshow`) of the magnification.
-        auto_filename
-            The default filename of the output subplot if written to hard-disk.
-        """
         self._subplot_custom_plot(
             image=image,
             convergence=convergence,
@@ -288,9 +190,6 @@ class GalaxiesPlotter(Plotter):
         )
 
     def subplot_galaxies(self):
-        """
-        Standard subplot of the attributes of the plotter's `Galaxies` object.
-        """
         return self.subplot(
             image=True,
             convergence=True,
@@ -300,11 +199,6 @@ class GalaxiesPlotter(Plotter):
         )
 
     def subplot_galaxy_images(self):
-        """
-        Subplot of the image of every galaxy.
-
-        For example, for a 2 galaxy `Galaxies`, this creates a subplot with 2 panels, one for each galaxy.
-        """
         number_subplots = len(self.galaxies)
 
         self.open_subplot_figure(number_subplots=number_subplots)

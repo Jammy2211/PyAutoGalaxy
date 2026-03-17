@@ -9,7 +9,6 @@ from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.plot.abstract_plotters import Plotter
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
-from autogalaxy.plot.visuals.two_d import Visuals2D
 
 
 class FitImagingPlotter(Plotter):
@@ -17,40 +16,20 @@ class FitImagingPlotter(Plotter):
         self,
         fit: FitImaging,
         mat_plot_2d: MatPlot2D = None,
-        visuals_2d: Visuals2D = None,
+        positions=None,
         residuals_symmetric_cmap: bool = True,
     ):
-        """
-        Plots the attributes of `FitImaging` objects using the matplotlib method `imshow()` and many other matplotlib
-        functions which customize the plot's appearance.
-
-        The `mat_plot_2d` attribute wraps matplotlib function calls to make the figure. By default, the settings
-        passed to every matplotlib function called are those specified in the `config/visualize/mat_wrap/*.ini` files,
-        but a user can manually input values into `MatPlot2d` to customize the figure's appearance.
-
-        Overlaid on the figure are visuals, contained in the `Visuals2D` object. Attributes may be extracted from
-        the `FitImaging` and plotted via the visuals object.
-
-        Parameters
-        ----------
-        fit
-            The fit to an imaging dataset the plotter plots.
-        mat_plot_2d
-            Contains objects which wrap the matplotlib function calls that make the plot.
-        visuals_2d
-            Contains visuals that can be overlaid on the plot.
-        residuals_symmetric_cmap
-            If true, the `residual_map` and `normalized_residual_map` are plotted with a symmetric color map such
-            that `abs(vmin) = abs(vmax)`.
-        """
-        super().__init__(mat_plot_2d=mat_plot_2d, visuals_2d=visuals_2d)
+        super().__init__(mat_plot_2d=mat_plot_2d)
 
         self.fit = fit
+        self.positions = positions
+
+        from autogalaxy.plot.visuals.two_d import Visuals2D
 
         self._fit_imaging_meta_plotter = FitImagingPlotterMeta(
             fit=self.fit,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.visuals_2d,
+            visuals_2d=Visuals2D(positions=positions),
             residuals_symmetric_cmap=residuals_symmetric_cmap,
         )
 
@@ -59,18 +38,9 @@ class FitImagingPlotter(Plotter):
 
     @property
     def inversion_plotter(self) -> aplt.InversionPlotter:
-        """
-        Returns an `InversionPlotter` corresponding to the `Inversion` of the fit.
-
-        Returns
-        -------
-        InversionPlotter
-            An object that plots inversions which is used for plotting attributes of the inversion.
-        """
         return aplt.InversionPlotter(
             inversion=self.fit.inversion,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=self.visuals_2d,
         )
 
     @property
@@ -79,20 +49,6 @@ class FitImagingPlotter(Plotter):
 
     @property
     def galaxy_indices(self) -> List[int]:
-        """
-        Returns a list of all indexes of the galaxies in the fit, which is iterated over in figures that plot
-        individual figures of each galaxy.
-
-        Parameters
-        ----------
-        galaxy_index
-            A specific galaxy index such that only a single galaxy index is returned.
-
-        Returns
-        -------
-        list
-            A list of galaxy indexes corresponding to the galaxies.
-        """
         return list(range(len(self.fit.galaxies)))
 
     def figures_2d_of_galaxies(
@@ -101,38 +57,18 @@ class FitImagingPlotter(Plotter):
         subtracted_image: bool = False,
         model_image: bool = False,
     ):
-        """
-        Plots images representing each individual `Galaxy` in the plotter's list of galaxies in 2D, which are
-        computed via the plotter's 2D grid object.
-
-        These images subtract or omit the contribution of other galaxies, such that plots showing
-        each individual galaxy are made.
-
-        The API is such that every plottable attribute of the `Galaxy` object is an input parameter of type bool of
-        the function, which if switched to `True` means that it is plotted.
-
-        Parameters
-        ----------
-        subtracted_image
-            Whether to make a 2D plot (via `imshow`) of the subtracted image of a galaxy, where this image is
-            the fit's `data` minus the model images of all other galaxies, thereby showing an individual galaxy in the
-            data.
-        model_image
-            Whether to make a 2D plot (via `imshow`) of the model image of a galaxy, where this image is the
-            model image of one galaxy, thereby showing how much it contributes to the overall model image.
-        galaxy_index
-            If input, plots for only a single galaxy based on its index are created.
-        """
         if galaxy_index is None:
             galaxy_indices = self.galaxy_indices
         else:
             galaxy_indices = [galaxy_index]
 
         for galaxy_index in galaxy_indices:
+            from autogalaxy.plot.visuals.two_d import Visuals2D
+
             if subtracted_image:
                 self._plot_array(
                     array=self.fit.subtracted_images_of_galaxies_list[galaxy_index],
-                    visuals_2d=self.visuals_2d,
+                    visuals_2d=Visuals2D(positions=self.positions),
                     auto_labels=aplt.AutoLabels(
                         title=f"Subtracted Image of Galaxy {galaxy_index}",
                         filename=f"subtracted_image_of_galaxy_{galaxy_index}",
@@ -142,7 +78,7 @@ class FitImagingPlotter(Plotter):
             if model_image:
                 self._plot_array(
                     array=self.fit.model_images_of_galaxies_list[galaxy_index],
-                    visuals_2d=self.visuals_2d,
+                    visuals_2d=Visuals2D(positions=self.positions),
                     auto_labels=aplt.AutoLabels(
                         title=f"Model Image of Galaxy {galaxy_index}",
                         filename=f"model_image_of_galaxy_{galaxy_index}",
@@ -150,10 +86,6 @@ class FitImagingPlotter(Plotter):
                 )
 
     def subplot_fit(self):
-        """
-        Standard subplot of the attributes of the plotter's `FitImaging` object.
-        """
-
         self.open_subplot_figure(number_subplots=6)
 
         self.figures_2d(data=True)
@@ -178,22 +110,6 @@ class FitImagingPlotter(Plotter):
         self.close_subplot_figure()
 
     def subplot_of_galaxies(self, galaxy_index: Optional[int] = None):
-        """
-        Plots images representing each individual `Galaxy` in the plotter's list of galaxies in 2D on a subplot,
-        which are computed via the plotter's 2D grid object.
-
-        These images subtract or omit the contribution of other galaxies, such that plots showing each individual
-        galaxy are made.
-
-        The subplot plots the subtracted image and model image of each galaxy, where are described in the
-        `figures_2d_of_galaxies` function.
-
-        Parameters
-        ----------
-        galaxy_index
-            If input, plots for only a single galaxy based on its index are created.
-        """
-
         if galaxy_index is None:
             galaxy_indices = self.galaxy_indices
         else:
