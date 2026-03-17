@@ -6,7 +6,7 @@ import autogalaxy as ag
 grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
-def test__deflections_2d_via_analytic_from():
+def test__deflections_2d_via_analytic_from__config_1_positive_y():
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.05263),
@@ -22,6 +22,16 @@ def test__deflections_2d_via_analytic_from():
     assert deflections[0, 0] == pytest.approx(1.024423, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.0, abs=1.0e-4)
 
+
+def test__deflections_2d_via_analytic_from__config_1_negative_y():
+    mp = ag.mp.Gaussian(
+        centre=(0.0, 0.0),
+        ell_comps=(0.0, 0.05263),
+        intensity=1.0,
+        sigma=3.0,
+        mass_to_light_ratio=1.0,
+    )
+
     deflections = mp.deflections_2d_via_analytic_from(
         grid=ag.Grid2DIrregular([[-1.0, 0.0]])
     )
@@ -29,6 +39,8 @@ def test__deflections_2d_via_analytic_from():
     assert deflections[0, 0] == pytest.approx(-1.024423, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.0, abs=1.0e-4)
 
+
+def test__deflections_2d_via_analytic_from__config_2_positive():
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.111111),
@@ -44,6 +56,16 @@ def test__deflections_2d_via_analytic_from():
     assert deflections[0, 0] == pytest.approx(0.554062, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.177336, 1.0e-4)
 
+
+def test__deflections_2d_via_analytic_from__config_2_negative():
+    mp = ag.mp.Gaussian(
+        centre=(0.0, 0.0),
+        ell_comps=(0.0, 0.111111),
+        intensity=1.0,
+        sigma=5.0,
+        mass_to_light_ratio=1.0,
+    )
+
     deflections = mp.deflections_2d_via_analytic_from(
         grid=ag.Grid2DIrregular([[-0.5, -0.2]])
     )
@@ -51,6 +73,8 @@ def test__deflections_2d_via_analytic_from():
     assert deflections[0, 0] == pytest.approx(-0.554062, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(-0.177336, 1.0e-4)
 
+
+def test__deflections_2d_via_analytic_from__mass_to_light_2():
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.111111),
@@ -66,6 +90,8 @@ def test__deflections_2d_via_analytic_from():
     assert deflections[0, 0] == pytest.approx(1.108125, 1.0e-4)
     assert deflections[0, 1] == pytest.approx(0.35467, 1.0e-4)
 
+
+def test__deflections_2d_via_analytic_from__intensity_2():
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.111111),
@@ -82,7 +108,7 @@ def test__deflections_2d_via_analytic_from():
     assert deflections[0, 1] == pytest.approx(0.35467, 1.0e-4)
 
 
-def test__deflections_2d_via_integral_from():
+def test__deflections_2d_via_integral_from__config_1():
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.05263),
@@ -100,6 +126,8 @@ def test__deflections_2d_via_integral_from():
 
     assert deflections == pytest.approx(deflections_via_analytic.array, 1.0e-3)
 
+
+def test__deflections_2d_via_integral_from__config_2():
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.111111),
@@ -117,6 +145,8 @@ def test__deflections_2d_via_integral_from():
 
     assert deflections == pytest.approx(deflections_via_analytic.array, 1.0e-3)
 
+
+def test__deflections_2d_via_integral_from__mass_to_light_2():
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.111111),
@@ -134,6 +164,8 @@ def test__deflections_2d_via_integral_from():
 
     assert deflections == pytest.approx(deflections_via_analytic.array, 1.0e-3)
 
+
+def test__deflections_2d_via_integral_from__intensity_2():
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.111111),
@@ -163,7 +195,7 @@ def test__deflections_yx_2d_from():
     assert deflections == pytest.approx(deflections_via_integral.array, 1.0e-4)
 
 
-def test__convergence_2d_from():
+def test__convergence_2d_from__gaussian_config_1():
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.0),
@@ -176,6 +208,8 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(0.60653, 1e-2)
 
+
+def test__convergence_2d_from__gaussian_mass_to_light_2():
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.0),
@@ -188,6 +222,8 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(2.0 * 0.60653, 1e-2)
 
+
+def test__convergence_2d_from__gaussian_elliptical():
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.333333),
@@ -223,7 +259,7 @@ def test__intensity_and_convergence_match_for_mass_light_ratio_1():
     assert (intensity == convergence).all()
 
 
-def test__image_2d_via_radii_from__correct_value():
+def test__image_2d_via_radii_from__config_1():
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0), ell_comps=(0.0, 0.0), intensity=1.0, sigma=1.0
     )
@@ -232,6 +268,8 @@ def test__image_2d_via_radii_from__correct_value():
 
     assert intensity == pytest.approx(0.60653, 1e-2)
 
+
+def test__image_2d_via_radii_from__intensity_2():
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0), ell_comps=(0.0, 0.0), intensity=2.0, sigma=1.0
     )
@@ -240,6 +278,8 @@ def test__image_2d_via_radii_from__correct_value():
 
     assert intensity == pytest.approx(2.0 * 0.60653, 1e-2)
 
+
+def test__image_2d_via_radii_from__sigma_2():
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0), ell_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
     )
@@ -247,6 +287,8 @@ def test__image_2d_via_radii_from__correct_value():
 
     assert intensity == pytest.approx(0.882496, 1e-2)
 
+
+def test__image_2d_via_radii_from__sigma_2_radii_3():
     mp = ag.mp.Gaussian(
         centre=(0.0, 0.0), ell_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
     )
@@ -256,7 +298,7 @@ def test__image_2d_via_radii_from__correct_value():
     assert intensity == pytest.approx(0.32465, 1e-2)
 
 
-def test__wofz():
+def test__wofz__regions_1_2_3():
     from scipy.special import wofz
 
     mp = ag.mp.Gaussian(
@@ -270,6 +312,14 @@ def test__wofz():
     assert wofz_approx_reg_1 == pytest.approx(wofz(20.0 + 1j * 0.001), 1e-4)
     assert wofz_approx_reg_2 == pytest.approx(wofz(2.0 + 1j * 0.001), 1e-4)
     assert wofz_approx_reg_3 == pytest.approx(wofz(1.0 + 1j * 0.001), 1e-4)
+
+
+def test__wofz__regions_4_5_6():
+    from scipy.special import wofz
+
+    mp = ag.mp.Gaussian(
+        centre=(0.0, 0.0), ell_comps=(0.0, 0.0), intensity=1.0, sigma=2.0
+    )
 
     wofz_approx_reg_1 = mp.wofz(7.0 + 1j * 0.1)
     wofz_approx_reg_2 = mp.wofz(7.0 + 1j * 1e-11)

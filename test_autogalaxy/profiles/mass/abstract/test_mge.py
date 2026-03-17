@@ -6,7 +6,7 @@ from autogalaxy.profiles.mass import MGEDecomposer
 import autogalaxy as ag
 
 
-def test__gnfw_deflections_yx_2d_via_mge():
+def test__gnfw_deflections_yx_2d_via_mge__config_1__inner_slope_05():
     nfw = ag.mp.gNFW(
         centre=(0.0, 0.0),
         kappa_s=1.0,
@@ -36,6 +36,8 @@ def test__gnfw_deflections_yx_2d_via_mge():
 
     assert deflections_via_integral == pytest.approx(deflections_via_mge, 1.0e-3)
 
+
+def test__gnfw_deflections_yx_2d_via_mge__config_2__inner_slope_15():
     nfw = ag.mp.gNFW(
         centre=(0.3, 0.2),
         kappa_s=2.5,
@@ -65,7 +67,7 @@ def test__gnfw_deflections_yx_2d_via_mge():
     assert deflections_via_integral == pytest.approx(deflections_via_mge, 1.0e-3)
 
 
-def test__sersic_deflections_yx_2d_via_mge():
+def test__sersic_deflections_yx_2d_via_mge__sersic_index_2():
     mp = ag.mp.Sersic(
         centre=(-0.4, -0.2),
         ell_comps=(-0.07142, -0.085116),
@@ -95,6 +97,8 @@ def test__sersic_deflections_yx_2d_via_mge():
 
     assert deflections_via_integral == pytest.approx(deflections_via_mge, 1.0e-3)
 
+
+def test__sersic_deflections_yx_2d_via_mge__sersic_index_3():
     mp = ag.mp.Sersic(
         centre=(-0.4, -0.2),
         ell_comps=(-0.07142, -0.085116),
@@ -103,6 +107,11 @@ def test__sersic_deflections_yx_2d_via_mge():
         sersic_index=3.0,
         mass_to_light_ratio=1.0,
     )
+
+    radii_min = mp.effective_radius / 100.0
+    radii_max = mp.effective_radius * 20.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
 
     deflections_via_integral = mp.deflections_2d_via_integral_from(
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
@@ -205,7 +214,7 @@ def test__chameleon_deflections_yx_2d_via_mge():
     assert deflections_analytic == pytest.approx(deflections_via_mge, 1.0e-3)
 
 
-def test__DevVaucouleurs_convergence_2d_via_mge_from():
+def test__DevVaucouleurs_convergence_2d_via_mge_from__config_1():
     mp = ag.mp.DevVaucouleurs(
         ell_comps=(0.0, 0.333333),
         intensity=3.0,
@@ -229,6 +238,8 @@ def test__DevVaucouleurs_convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(5.6697, 1e-3)
 
+
+def test__DevVaucouleurs_convergence_2d_via_mge_from__config_2():
     mp = ag.mp.DevVaucouleurs(
         ell_comps=(0.0, -0.333333),
         intensity=2.0,
@@ -252,6 +263,8 @@ def test__DevVaucouleurs_convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(7.4455, 1e-3)
 
+
+def test__DevVaucouleurs_convergence_2d_via_mge_from__intensity_4():
     mp = ag.mp.DevVaucouleurs(
         ell_comps=(0.0, -0.333333),
         intensity=4.0,
@@ -275,6 +288,8 @@ def test__DevVaucouleurs_convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(2.0 * 7.4455, 1e-3)
 
+
+def test__DevVaucouleurs_convergence_2d_via_mge_from__mass_to_light_2():
     mp = ag.mp.DevVaucouleurs(
         ell_comps=(0.0, -0.333333),
         intensity=2.0,
@@ -298,6 +313,8 @@ def test__DevVaucouleurs_convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(2.0 * 7.4455, 1e-3)
 
+
+def test__DevVaucouleurs_convergence_2d_via_mge_from__small_effective_radius():
     mp = ag.mp.DevVaucouleurs(
         centre=(0.0, 0.0),
         intensity=1.0,
@@ -322,7 +339,7 @@ def test__DevVaucouleurs_convergence_2d_via_mge_from():
     assert convergence == pytest.approx(0.351797, 1e-3)
 
 
-def test__convergence_2d_via_mge_from():
+def test__exponential_convergence_2d_via_mge_from__config_1():
     mp = ag.mp.Exponential(
         ell_comps=(0.0, 0.333333),
         intensity=3.0,
@@ -346,6 +363,8 @@ def test__convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(4.9047, 1e-3)
 
+
+def test__exponential_convergence_2d_via_mge_from__config_2():
     mp = ag.mp.Exponential(
         ell_comps=(0.0, -0.333333),
         intensity=2.0,
@@ -369,12 +388,15 @@ def test__convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(4.8566, 1e-3)
 
+
+def test__exponential_convergence_2d_via_mge_from__intensity_4():
     mp = ag.mp.Exponential(
         ell_comps=(0.0, -0.333333),
         intensity=4.0,
         effective_radius=3.0,
         mass_to_light_ratio=1.0,
     )
+
     radii_min = mp.effective_radius / 100.0
     radii_max = mp.effective_radius * 20.0
     log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
@@ -391,6 +413,8 @@ def test__convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(2.0 * 4.8566, 1e-3)
 
+
+def test__exponential_convergence_2d_via_mge_from__mass_to_light_2():
     mp = ag.mp.Exponential(
         ell_comps=(0.0, -0.333333),
         intensity=2.0,
@@ -414,6 +438,8 @@ def test__convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(2.0 * 4.8566, 1e-3)
 
+
+def test__exponential_convergence_2d_via_mge_from__mass_to_light_1():
     mp = ag.mp.Exponential(
         ell_comps=(0.0, -0.333333),
         intensity=2.0,
@@ -438,11 +464,7 @@ def test__convergence_2d_via_mge_from():
     assert convergence == pytest.approx(4.8566, 1e-3)
 
 
-def test__nfw_convergence_2d_via_mge_from():
-    # r = 2.0 (> 1.0)
-    # F(r) = (1/(sqrt(3))*atan(sqrt(3)) = 0.60459978807
-    # kappa(r) = 2 * kappa_s * (1 - 0.60459978807) / (4-1) = 0.263600141
-
+def test__nfw_convergence_2d_via_mge_from__grid_2():
     nfw = ag.mp.NFWSph(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
 
     radii_min = nfw.scale_radius / 2000.0
@@ -461,6 +483,17 @@ def test__nfw_convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(0.263600141, 1e-2)
 
+
+def test__nfw_convergence_2d_via_mge_from__grid_05():
+    nfw = ag.mp.NFWSph(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=1.0)
+
+    radii_min = nfw.scale_radius / 2000.0
+    radii_max = nfw.scale_radius * 30.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
+    mge_decomp = MGEDecomposer(mass_profile=nfw)
+
     convergence = mge_decomp.convergence_2d_via_mge_from(
         grid=ag.Grid2DIrregular([[0.5, 0.0]]),
         sigma_log_list=sigmas,
@@ -470,7 +503,14 @@ def test__nfw_convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(1.388511, 1e-2)
 
+
+def test__nfw_convergence_2d_via_mge_from__kappa_s_2():
     nfw = ag.mp.NFWSph(centre=(0.0, 0.0), kappa_s=2.0, scale_radius=1.0)
+
+    radii_min = nfw.scale_radius / 2000.0
+    radii_max = nfw.scale_radius * 30.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
 
     mge_decomp = MGEDecomposer(mass_profile=nfw)
 
@@ -483,6 +523,8 @@ def test__nfw_convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(2.0 * 1.388511, 1e-2)
 
+
+def test__nfw_convergence_2d_via_mge_from__scale_radius_2():
     nfw = ag.mp.NFWSph(centre=(0.0, 0.0), kappa_s=1.0, scale_radius=2.0)
 
     radii_min = nfw.scale_radius / 2000.0
@@ -501,6 +543,8 @@ def test__nfw_convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(1.388511, 1e-2)
 
+
+def test__nfw_convergence_2d_via_mge_from__elliptical():
     nfw = ag.mp.NFW(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.333333),
@@ -525,7 +569,7 @@ def test__nfw_convergence_2d_via_mge_from():
     assert convergence == pytest.approx(1.388511, 1e-3)
 
 
-def test__sersic_convergence_2d_via_mge_from():
+def test__sersic_convergence_2d_via_mge_from__intensity_3():
     mp = ag.mp.Sersic(
         centre=(0.0, 0.0),
         intensity=3.0,
@@ -550,6 +594,8 @@ def test__sersic_convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(4.90657319276, 1e-3)
 
+
+def test__sersic_convergence_2d_via_mge_from__intensity_6():
     mp = ag.mp.Sersic(
         centre=(0.0, 0.0),
         intensity=6.0,
@@ -558,6 +604,11 @@ def test__sersic_convergence_2d_via_mge_from():
         mass_to_light_ratio=1.0,
     )
 
+    radii_min = mp.effective_radius / 100.0
+    radii_max = mp.effective_radius * 20.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
     mge_decomp = MGEDecomposer(mass_profile=mp)
 
     convergence = mge_decomp.convergence_2d_via_mge_from(
@@ -569,6 +620,8 @@ def test__sersic_convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(2.0 * 4.90657319276, 1e-3)
 
+
+def test__sersic_convergence_2d_via_mge_from__mass_to_light_2():
     mp = ag.mp.Sersic(
         centre=(0.0, 0.0),
         intensity=3.0,
@@ -577,6 +630,11 @@ def test__sersic_convergence_2d_via_mge_from():
         mass_to_light_ratio=2.0,
     )
 
+    radii_min = mp.effective_radius / 100.0
+    radii_max = mp.effective_radius * 20.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
+
     mge_decomp = MGEDecomposer(mass_profile=mp)
 
     convergence = mge_decomp.convergence_2d_via_mge_from(
@@ -588,6 +646,8 @@ def test__sersic_convergence_2d_via_mge_from():
 
     assert convergence == pytest.approx(2.0 * 4.90657319276, 1e-3)
 
+
+def test__sersic_convergence_2d_via_mge_from__elliptical():
     mp = ag.mp.Sersic(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.333333),
@@ -596,6 +656,11 @@ def test__sersic_convergence_2d_via_mge_from():
         sersic_index=2.0,
         mass_to_light_ratio=1.0,
     )
+
+    radii_min = mp.effective_radius / 100.0
+    radii_max = mp.effective_radius * 20.0
+    log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
+    sigmas = np.exp(log_sigmas)
 
     mge_decomp = MGEDecomposer(mass_profile=mp)
 

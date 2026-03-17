@@ -5,7 +5,7 @@ import autogalaxy as ag
 grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
-def test__deflections_via_integral_from():
+def test__deflections_via_integral_from__gradient_1():
     mp = ag.mp.SersicGradient(
         centre=(-0.4, -0.2),
         ell_comps=(-0.07142, -0.085116),
@@ -23,6 +23,8 @@ def test__deflections_via_integral_from():
     assert deflections[0, 0] == pytest.approx(3.60324873535244, 1e-3)
     assert deflections[0, 1] == pytest.approx(2.3638898009652, 1e-3)
 
+
+def test__deflections_via_integral_from__gradient_neg_1():
     mp = ag.mp.SersicGradient(
         centre=(-0.4, -0.2),
         ell_comps=(-0.07142, -0.085116),
@@ -62,7 +64,7 @@ def test__deflections_via_integral_from():
 #     assert deflections_via_integral == pytest.approx(deflections_via_mge.array, 1.0e-3)
 
 
-def test__deflections_2d_via_cse_from():
+def test__deflections_2d_via_cse_from__gradient_1():
     mp = ag.mp.SersicGradient(
         centre=(-0.4, -0.2),
         ell_comps=(-0.07142, -0.085116),
@@ -82,6 +84,8 @@ def test__deflections_2d_via_cse_from():
 
     assert deflections_via_integral == pytest.approx(deflections_via_cse.array, 1.0e-4)
 
+
+def test__deflections_2d_via_cse_from__gradient_neg_1():
     mp = ag.mp.SersicGradient(
         centre=(-0.4, -0.2),
         ell_comps=(-0.07142, -0.085116),
@@ -102,7 +106,7 @@ def test__deflections_2d_via_cse_from():
     assert deflections_via_integral == pytest.approx(deflections_via_cse.array, 1.0e-4)
 
 
-def test__deflections_yx_2d_from():
+def test__deflections_yx_2d_from__sersic_gradient():
     mp = ag.mp.SersicGradient()
 
     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]))
@@ -112,6 +116,8 @@ def test__deflections_yx_2d_from():
 
     assert deflections == pytest.approx(deflections_via_integral.array, 1.0e-4)
 
+
+def test__deflections_yx_2d_from__sersic_gradient_sph():
     mp = ag.mp.SersicGradientSph()
 
     deflections = mp.deflections_yx_2d_from(grid=ag.Grid2DIrregular([[1.0, 0.0]]))
@@ -121,6 +127,8 @@ def test__deflections_yx_2d_from():
 
     assert deflections == pytest.approx(deflections_via_integral.array, 1.0e-4)
 
+
+def test__deflections_yx_2d_from__elliptical_vs_spherical():
     elliptical = ag.mp.SersicGradient(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.0),
@@ -146,7 +154,7 @@ def test__deflections_yx_2d_from():
     ell_deflections_yx_2d == pytest.approx(sph_deflections_yx_2d.array, 1.0e-4)
 
 
-def test__convergence_2d_from():
+def test__convergence_2d_from__sersic_gradient_config_1():
     # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = (1/0.6)**-1.0 = 0.6
     mp = ag.mp.SersicGradient(
         centre=(0.0, 0.0),
@@ -162,6 +170,8 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(0.6 * 0.351797, 1e-3)
 
+
+def test__convergence_2d_from__sersic_gradient_config_2():
     # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = (1.5/2.0)**1.0 = 0.75
 
     mp = ag.mp.SersicGradient(
@@ -177,6 +187,8 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(0.75 * 4.90657319276, 1e-3)
 
+
+def test__convergence_2d_from__sersic_gradient_intensity_6():
     mp = ag.mp.SersicGradient(
         ell_comps=(0.0, 0.0),
         intensity=6.0,
@@ -190,6 +202,8 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(2.0 * 0.75 * 4.90657319276, 1e-3)
 
+
+def test__convergence_2d_from__sersic_gradient_mass_to_light_2():
     mp = ag.mp.SersicGradient(
         ell_comps=(0.0, 0.0),
         intensity=3.0,
@@ -203,6 +217,8 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(2.0 * 0.75 * 4.90657319276, 1e-3)
 
+
+def test__convergence_2d_from__sersic_gradient_elliptical():
     # ((axis_ratio*radius/effective_radius)**-mass_to_light_gradient) = ((0.5*1.41)/2.0)**-1.0 = 2.836
     mp = ag.mp.SersicGradient(
         ell_comps=(0.0, 0.333333),
@@ -217,6 +233,8 @@ def test__convergence_2d_from():
 
     assert convergence == pytest.approx(2.836879 * 5.38066670129, abs=2e-01)
 
+
+def test__convergence_2d_from__elliptical_vs_spherical():
     elliptical = ag.mp.SersicGradient(
         centre=(0.0, 0.0),
         ell_comps=(0.0, 0.0),
@@ -242,7 +260,7 @@ def test__convergence_2d_from():
     assert ell_convergence_2d == pytest.approx(sph_convergence_2d.array, 1.0e-4)
 
 
-def test__compare_to_sersic():
+def test__compare_to_sersic__gradient_0_vs_exponential():
     mp = ag.mp.SersicGradient(
         centre=(-0.4, -0.2),
         ell_comps=(-0.07142, -0.085116),
@@ -277,6 +295,8 @@ def test__compare_to_sersic():
     )
     assert sersic_deflections[0, 1] == pytest.approx(0.62569, 1e-3)
 
+
+def test__compare_to_sersic__gradient_0_vs_dev_vaucouleurs():
     mp = ag.mp.SersicGradient(
         centre=(0.4, 0.2),
         ell_comps=(0.0180010, 0.0494575),
@@ -307,6 +327,8 @@ def test__compare_to_sersic():
     # assert sersic_deflections[0, 1] == pytest.approx(dev_deflections[0, 1], 1e-3)
     # assert sersic_deflections[0, 1] == pytest.approx(-3.37605, 1e-3)
 
+
+def test__compare_to_sersic__gradient_0_vs_sersic():
     sersic_grad = ag.mp.SersicGradient(
         centre=(-0.4, -0.2),
         ell_comps=(-0.07142, -0.085116),
