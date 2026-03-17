@@ -32,3 +32,21 @@ class Plotter(AbstractPlotter):
 
         self.visuals_2d = visuals_2d or Visuals2D()
         self.mat_plot_2d = mat_plot_2d or MatPlot2D()
+
+    def _plot_array(self, array, visuals_2d, auto_labels):
+        """Bridge: delegates to mat_plot_2d.plot_array(), ready for future migration
+        to the direct-matplotlib plot_array() from autoarray."""
+        self.mat_plot_2d.plot_array(
+            array=array,
+            visuals_2d=visuals_2d,
+            auto_labels=auto_labels,
+        )
+
+    def _plot_grid(self, grid, visuals_2d, auto_labels):
+        """Bridge: delegates to mat_plot_2d.plot_grid(), ready for future migration
+        to the direct-matplotlib plot_grid() from autoarray."""
+        self.mat_plot_2d.plot_grid(
+            grid=grid,
+            visuals_2d=visuals_2d,
+            auto_labels=auto_labels,
+        )

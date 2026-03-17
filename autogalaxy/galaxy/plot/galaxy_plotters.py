@@ -201,7 +201,7 @@ class GalaxyPlotter(Plotter):
             Whether to make a 2D plot (via `imshow`) of the magnification.
         """
         if image:
-            self.mat_plot_2d.plot_array(
+            self._plot_array(
                 array=self.galaxy.image_2d_from(grid=self.grid),
                 visuals_2d=self.visuals_2d,
                 auto_labels=aplt.AutoLabels(

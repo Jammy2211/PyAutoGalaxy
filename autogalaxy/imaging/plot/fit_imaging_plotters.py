@@ -1,4 +1,3 @@
-import numpy as np
 from typing import List, Optional
 
 import autoarray as aa
@@ -131,14 +130,7 @@ class FitImagingPlotter(Plotter):
 
         for galaxy_index in galaxy_indices:
             if subtracted_image:
-                self.mat_plot_2d.cmap.kwargs["vmin"] = np.max(
-                    self.fit.model_images_of_galaxies_list[galaxy_index]
-                )
-                self.mat_plot_2d.cmap.kwargs["vmin"] = np.min(
-                    self.fit.model_images_of_galaxies_list[galaxy_index]
-                )
-
-                self.mat_plot_2d.plot_array(
+                self._plot_array(
                     array=self.fit.subtracted_images_of_galaxies_list[galaxy_index],
                     visuals_2d=self.visuals_2d,
                     auto_labels=aplt.AutoLabels(
@@ -148,7 +140,7 @@ class FitImagingPlotter(Plotter):
                 )
 
             if model_image:
-                self.mat_plot_2d.plot_array(
+                self._plot_array(
                     array=self.fit.model_images_of_galaxies_list[galaxy_index],
                     visuals_2d=self.visuals_2d,
                     auto_labels=aplt.AutoLabels(

@@ -89,7 +89,7 @@ class FitEllipsePlotter(Plotter):
                 positions=ellipse_list, lines=ellipse_list
             )
 
-            self.mat_plot_2d.plot_array(
+            self._plot_array(
                 array=self.fit_list[0].data,
                 visuals_2d=visuals_2d,
                 auto_labels=aplt.AutoLabels(
@@ -217,7 +217,7 @@ class FitEllipsePDFPlotter(Plotter):
                 lines=median_ellipse, fill_region=[y_fill, x_fill]
             )
 
-            self.mat_plot_2d.plot_array(
+            self._plot_array(
                 array=self.fit_pdf_list[0][0].data,
                 visuals_2d=visuals_2d,
                 auto_labels=aplt.AutoLabels(

@@ -146,7 +146,7 @@ class GalaxiesPlotter(Plotter):
             Add a suffix to the end of the filename the plot is saved to hard-disk using.
         """
         if image:
-            self.mat_plot_2d.plot_array(
+            self._plot_array(
                 array=self.galaxies.image_2d_from(grid=self.grid),
                 visuals_2d=self.visuals_2d,
                 auto_labels=aplt.AutoLabels(
@@ -160,7 +160,7 @@ class GalaxiesPlotter(Plotter):
             else:
                 title = f"Plane Image{title_suffix}"
 
-            self.mat_plot_2d.plot_array(
+            self._plot_array(
                 array=self.galaxies.plane_image_2d_from(
                     grid=self.grid, zoom_to_brightest=zoom_to_brightest
                 ),
@@ -177,7 +177,7 @@ class GalaxiesPlotter(Plotter):
             else:
                 title = f"Plane Grid{title_suffix}"
 
-            self.mat_plot_2d.plot_grid(
+            self._plot_grid(
                 grid=self.grid,
                 visuals_2d=self.visuals_2d,
                 auto_labels=aplt.AutoLabels(

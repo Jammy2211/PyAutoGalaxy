@@ -27,7 +27,7 @@ class AdaptPlotter(Plotter):
             The adapt model image that is plotted.
         """
 
-        self.mat_plot_2d.plot_array(
+        self._plot_array(
             array=model_image,
             visuals_2d=self.visuals_2d,
             auto_labels=aplt.AutoLabels(
@@ -44,7 +44,7 @@ class AdaptPlotter(Plotter):
         galaxy_image
             The galaxy image that is plotted.
         """
-        self.mat_plot_2d.plot_array(
+        self._plot_array(
             array=galaxy_image,
             visuals_2d=self.visuals_2d,
             auto_labels=aplt.AutoLabels(

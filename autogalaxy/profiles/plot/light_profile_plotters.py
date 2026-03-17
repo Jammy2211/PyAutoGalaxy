@@ -89,7 +89,7 @@ class LightProfilePlotter(Plotter):
             Whether to make a 2D plot (via `imshow`) of the image.
         """
         if image:
-            self.mat_plot_2d.plot_array(
+            self._plot_array(
                 array=self.light_profile.image_2d_from(grid=self.grid),
                 visuals_2d=self.visuals_2d,
                 auto_labels=aplt.AutoLabels(title="Image", filename="image_2d"),

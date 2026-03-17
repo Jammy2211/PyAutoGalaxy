@@ -115,7 +115,7 @@ class BasisPlotter(Plotter):
         self.open_subplot_figure(number_subplots=len(self.basis.light_profile_list))
 
         for light_profile in self.basis.light_profile_list:
-            self.mat_plot_2d.plot_array(
+            self._plot_array(
                 array=light_profile.image_2d_from(grid=self.grid),
                 visuals_2d=self.visuals_2d,
                 auto_labels=aplt.AutoLabels(title=light_profile.coefficient_tag),
