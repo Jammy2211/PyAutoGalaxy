@@ -1,3 +1,5 @@
+import numpy as np
+
 from autoconf import cached_property
 
 import autoarray as aa
@@ -5,7 +7,7 @@ import autoarray.plot as aplt
 
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 
-from autogalaxy.plot.abstract_plotters import Plotter
+from autogalaxy.plot.abstract_plotters import Plotter, _to_lines, _to_positions
 
 
 class MassPlotter(Plotter):
@@ -37,8 +39,7 @@ class MassPlotter(Plotter):
         self._rc_caustic = radial_caustics
 
     @cached_property
-    def visuals_2d_with_critical_curves(self):
-        from autogalaxy.plot.visuals.two_d import Visuals2D
+    def _critical_curves(self):
         from autogalaxy.operate.lens_calc import LensCalc
 
         tc = self._tc
@@ -51,13 +52,28 @@ class MassPlotter(Plotter):
             if any(area > self.grid.pixel_scale for area in rc_area):
                 rc = od.radial_critical_curve_list_from(grid=self.grid)
 
-        return Visuals2D(
-            positions=self.positions,
-            light_profile_centres=self.light_profile_centres,
-            mass_profile_centres=self.mass_profile_centres,
-            multiple_images=self.multiple_images,
-            tangential_critical_curves=tc,
-            radial_critical_curves=rc,
+        return tc, rc
+
+    @property
+    def tangential_critical_curves(self):
+        tc, rc = self._critical_curves
+        return tc
+
+    @property
+    def radial_critical_curves(self):
+        tc, rc = self._critical_curves
+        return rc
+
+    def _lines(self):
+        tc, rc = self._critical_curves
+        return _to_lines(tc, rc)
+
+    def _positions_list(self):
+        return _to_positions(
+            self.positions,
+            self.light_profile_centres,
+            self.mass_profile_centres,
+            self.multiple_images,
         )
 
     def figures_2d(
@@ -70,24 +86,29 @@ class MassPlotter(Plotter):
         title_suffix: str = "",
         filename_suffix: str = "",
     ):
+        lines = self._lines()
+        positions = self._positions_list()
+
         if convergence:
             self._plot_array(
                 array=self.mass_obj.convergence_2d_from(grid=self.grid),
-                visuals_2d=self.visuals_2d_with_critical_curves,
                 auto_labels=aplt.AutoLabels(
                     title=f"Convergence{title_suffix}",
                     filename=f"convergence_2d{filename_suffix}",
                 ),
+                lines=lines,
+                positions=positions,
             )
 
         if potential:
             self._plot_array(
                 array=self.mass_obj.potential_2d_from(grid=self.grid),
-                visuals_2d=self.visuals_2d_with_critical_curves,
                 auto_labels=aplt.AutoLabels(
                     title=f"Potential{title_suffix}",
                     filename=f"potential_2d{filename_suffix}",
                 ),
+                lines=lines,
+                positions=positions,
             )
 
         if deflections_y:
@@ -98,11 +119,12 @@ class MassPlotter(Plotter):
 
             self._plot_array(
                 array=deflections_y,
-                visuals_2d=self.visuals_2d_with_critical_curves,
                 auto_labels=aplt.AutoLabels(
                     title=f"Deflections Y{title_suffix}",
                     filename=f"deflections_y_2d{filename_suffix}",
                 ),
+                lines=lines,
+                positions=positions,
             )
 
         if deflections_x:
@@ -113,11 +135,12 @@ class MassPlotter(Plotter):
 
             self._plot_array(
                 array=deflections_x,
-                visuals_2d=self.visuals_2d_with_critical_curves,
                 auto_labels=aplt.AutoLabels(
                     title=f"Deflections X{title_suffix}",
                     filename=f"deflections_x_2d{filename_suffix}",
                 ),
+                lines=lines,
+                positions=positions,
             )
 
         if magnification:
@@ -127,9 +150,10 @@ class MassPlotter(Plotter):
                 array=LensCalc.from_mass_obj(
                     self.mass_obj
                 ).magnification_2d_from(grid=self.grid),
-                visuals_2d=self.visuals_2d_with_critical_curves,
                 auto_labels=aplt.AutoLabels(
                     title=f"Magnification{title_suffix}",
                     filename=f"magnification_2d{filename_suffix}",
                 ),
+                lines=lines,
+                positions=positions,
             )

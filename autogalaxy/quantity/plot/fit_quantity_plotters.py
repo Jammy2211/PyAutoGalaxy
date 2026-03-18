@@ -4,7 +4,7 @@ from autoarray.fit.plot.fit_imaging_plotters import FitImagingPlotterMeta
 
 from autogalaxy.quantity.fit_quantity import FitQuantity
 
-from autogalaxy.plot.abstract_plotters import Plotter
+from autogalaxy.plot.abstract_plotters import Plotter, _to_positions
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 
 
@@ -23,10 +23,8 @@ class FitQuantityPlotter(Plotter):
         self.fit = fit
         self.positions = positions
 
-    def _make_visuals_2d(self):
-        from autogalaxy.plot.visuals.two_d import Visuals2D
-
-        return Visuals2D(positions=self.positions)
+    def _make_positions(self):
+        return _to_positions(self.positions)
 
     def figures_2d(
         self,
@@ -42,7 +40,7 @@ class FitQuantityPlotter(Plotter):
             fit_plotter = FitImagingPlotterMeta(
                 fit=self.fit,
                 mat_plot_2d=self.mat_plot_2d,
-                visuals_2d=self._make_visuals_2d(),
+                positions=self._make_positions(),
             )
 
             fit_plotter.figures_2d(
@@ -59,7 +57,7 @@ class FitQuantityPlotter(Plotter):
             fit_plotter_y = FitImagingPlotterMeta(
                 fit=self.fit.y,
                 mat_plot_2d=self.mat_plot_2d,
-                visuals_2d=self._make_visuals_2d(),
+                positions=self._make_positions(),
             )
 
             fit_plotter_y.figures_2d(
@@ -74,9 +72,9 @@ class FitQuantityPlotter(Plotter):
             )
 
             fit_plotter_x = FitImagingPlotterMeta(
-                fit=self.fit.y,
+                fit=self.fit.x,
                 mat_plot_2d=self.mat_plot_2d,
-                visuals_2d=self._make_visuals_2d(),
+                positions=self._make_positions(),
             )
 
             fit_plotter_x.figures_2d(
@@ -95,7 +93,7 @@ class FitQuantityPlotter(Plotter):
             fit_plotter = FitImagingPlotterMeta(
                 fit=self.fit,
                 mat_plot_2d=self.mat_plot_2d,
-                visuals_2d=self._make_visuals_2d(),
+                positions=self._make_positions(),
             )
 
             fit_plotter.subplot(
@@ -112,7 +110,7 @@ class FitQuantityPlotter(Plotter):
             fit_plotter_y = FitImagingPlotterMeta(
                 fit=self.fit.y,
                 mat_plot_2d=self.mat_plot_2d,
-                visuals_2d=self._make_visuals_2d(),
+                positions=self._make_positions(),
             )
 
             fit_plotter_y.subplot(
@@ -128,7 +126,7 @@ class FitQuantityPlotter(Plotter):
             fit_plotter_x = FitImagingPlotterMeta(
                 fit=self.fit.x,
                 mat_plot_2d=self.mat_plot_2d,
-                visuals_2d=self._make_visuals_2d(),
+                positions=self._make_positions(),
             )
 
             fit_plotter_x.subplot(

@@ -3,7 +3,7 @@ import autoarray.plot as aplt
 
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.basis import Basis
-from autogalaxy.plot.abstract_plotters import Plotter
+from autogalaxy.plot.abstract_plotters import Plotter, _to_positions
 from autogalaxy.plot.mat_plot.one_d import MatPlot1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 
@@ -57,12 +57,11 @@ class BasisPlotter(Plotter):
         self.open_subplot_figure(number_subplots=len(self.basis.light_profile_list))
 
         for light_profile in self.basis.light_profile_list:
-            from autogalaxy.plot.visuals.two_d import Visuals2D
-
             self._plot_array(
                 array=light_profile.image_2d_from(grid=self.grid),
-                visuals_2d=Visuals2D(positions=self.positions, lines=self.lines),
                 auto_labels=aplt.AutoLabels(title=light_profile.coefficient_tag),
+                positions=_to_positions(self.positions),
+                lines=self.lines,
             )
 
         self.mat_plot_2d.output.subplot_to_figure(auto_filename=f"subplot_basis_image")

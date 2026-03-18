@@ -16,22 +16,16 @@ class AdaptPlotter(Plotter):
         super().__init__(mat_plot_2d=mat_plot_2d)
 
     def figure_model_image(self, model_image: aa.Array2D):
-        from autogalaxy.plot.visuals.two_d import Visuals2D
-
         self._plot_array(
             array=model_image,
-            visuals_2d=Visuals2D(),
             auto_labels=aplt.AutoLabels(
                 title="adapt image", filename="adapt_model_image"
             ),
         )
 
     def figure_galaxy_image(self, galaxy_image: aa.Array2D):
-        from autogalaxy.plot.visuals.two_d import Visuals2D
-
         self._plot_array(
             array=galaxy_image,
-            visuals_2d=Visuals2D(),
             auto_labels=aplt.AutoLabels(
                 title="galaxy Image", filename="adapt_galaxy_image"
             ),

@@ -4,7 +4,7 @@ from typing import TYPE_CHECKING, Optional
 import autoarray as aa
 import autoarray.plot as aplt
 
-from autogalaxy.plot.abstract_plotters import Plotter
+from autogalaxy.plot.abstract_plotters import Plotter, _to_positions
 from autogalaxy.plot.mat_plot.one_d import MatPlot1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 from autogalaxy.plot.mass_plotter import MassPlotter
@@ -95,9 +95,8 @@ class GalaxyPlotter(Plotter):
     ) -> MassProfilePlotter:
         from autogalaxy.operate.lens_calc import LensCalc
 
-        visuals_with_cc = self._mass_plotter.visuals_2d_with_critical_curves
-        tc = visuals_with_cc.tangential_critical_curves
-        rc = visuals_with_cc.radial_critical_curves
+        tc = self._mass_plotter.tangential_critical_curves
+        rc = self._mass_plotter.radial_critical_curves
 
         einstein_radius = None
         try:
@@ -136,18 +135,17 @@ class GalaxyPlotter(Plotter):
         filename_suffix: str = "",
     ):
         if image:
-            from autogalaxy.plot.visuals.two_d import Visuals2D
-
+            positions = _to_positions(
+                self.positions,
+                self.light_profile_centres,
+                self.mass_profile_centres,
+            )
             self._plot_array(
                 array=self.galaxy.image_2d_from(grid=self.grid),
-                visuals_2d=Visuals2D(
-                    positions=self.positions,
-                    light_profile_centres=self.light_profile_centres,
-                    mass_profile_centres=self.mass_profile_centres,
-                ),
                 auto_labels=aplt.AutoLabels(
                     title=f"Image{title_suffix}", filename=f"image_2d{filename_suffix}"
                 ),
+                positions=positions,
             )
 
         self._mass_plotter.figures_2d(

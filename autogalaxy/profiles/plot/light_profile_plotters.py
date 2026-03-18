@@ -3,7 +3,7 @@ import autoarray.plot as aplt
 
 
 from autogalaxy.profiles.light.abstract import LightProfile
-from autogalaxy.plot.abstract_plotters import Plotter
+from autogalaxy.plot.abstract_plotters import Plotter, _to_positions
 from autogalaxy.plot.mat_plot.one_d import MatPlot1D
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 
@@ -49,23 +49,11 @@ class LightProfilePlotter(Plotter):
             centre=self.light_profile.centre, angle=self.light_profile.angle()
         )
 
-    def _visuals_2d(self):
-        from autogalaxy.plot.visuals.two_d import Visuals2D
-
-        return Visuals2D(positions=self.positions, lines=self.lines)
-
-    def _visuals_1d(self):
-        from autogalaxy.plot.visuals.one_d import Visuals1D
-
-        return Visuals1D(
-            half_light_radius=self.half_light_radius,
-            half_light_radius_errors=self.half_light_radius_errors,
-        )
-
     def figures_2d(self, image: bool = False):
         if image:
             self._plot_array(
                 array=self.light_profile.image_2d_from(grid=self.grid),
-                visuals_2d=self._visuals_2d(),
                 auto_labels=aplt.AutoLabels(title="Image", filename="image_2d"),
+                positions=_to_positions(self.positions),
+                lines=self.lines,
             )

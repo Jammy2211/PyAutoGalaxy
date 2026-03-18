@@ -31,15 +31,10 @@ class FitInterferometerPlotter(Plotter):
         self.fit = fit
         self.positions = positions
 
-        from autogalaxy.plot.visuals.one_d import Visuals1D
-        from autogalaxy.plot.visuals.two_d import Visuals2D
-
         self._fit_interferometer_meta_plotter = FitInterferometerPlotterMeta(
             fit=self.fit,
             mat_plot_1d=self.mat_plot_1d,
-            visuals_1d=Visuals1D(),
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=Visuals2D(positions=positions),
             residuals_symmetric_cmap=residuals_symmetric_cmap,
         )
 

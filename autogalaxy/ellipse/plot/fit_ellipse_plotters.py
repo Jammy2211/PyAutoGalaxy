@@ -46,8 +46,6 @@ class FitEllipsePlotter(Plotter):
         filename_tag = ""
 
         if data:
-            from autogalaxy.plot.visuals.two_d import Visuals2D
-
             self.mat_plot_2d.contour = aplt.Contour(
                 manual_levels=np.sort(
                     [float(np.mean(fit.data_interp)) for fit in self.fit_list]
@@ -69,17 +67,18 @@ class FitEllipsePlotter(Plotter):
 
                 ellipse_list.append(aa.Grid2DIrregular.from_yx_1d(y=y, x=x))
 
-            visuals_2d = Visuals2D(
-                positions=ellipse_list, lines=ellipse_list
-            )
+            # Convert ellipse_list to list of (N,2) numpy arrays
+            lines = [np.array(e.array) for e in ellipse_list if e is not None]
+            positions = lines  # same data used for both
 
             self._plot_array(
                 array=self.fit_list[0].data,
-                visuals_2d=visuals_2d,
                 auto_labels=aplt.AutoLabels(
                     title=f"Ellipse Fit",
                     filename=f"ellipse_fit{filename_tag}",
                 ),
+                lines=lines or None,
+                positions=positions or None,
             )
 
             if disable_data_contours:
@@ -115,13 +114,13 @@ class FitEllipsePDFPlotter(Plotter):
     def __init__(
         self,
         fit_pdf_list: List[FitEllipse],
-        mat_plot_1d: MatPlot1D = MatPlot1D(),
-        mat_plot_2d: MatPlot2D = MatPlot2D(),
+        mat_plot_1d: MatPlot1D = None,
+        mat_plot_2d: MatPlot2D = None,
         sigma: Optional[float] = 3.0,
     ):
         super().__init__(
-            mat_plot_1d=mat_plot_1d,
-            mat_plot_2d=mat_plot_2d,
+            mat_plot_1d=mat_plot_1d or MatPlot1D(),
+            mat_plot_2d=mat_plot_2d or MatPlot2D(),
         )
 
         self.fit_pdf_list = fit_pdf_list
@@ -129,8 +128,6 @@ class FitEllipsePDFPlotter(Plotter):
         self.low_limit = (1 - math.erf(sigma / math.sqrt(2))) / 2
 
     def subplot_ellipse_errors(self):
-        from autogalaxy.plot.visuals.two_d import Visuals2D
-
         contour_original = self.mat_plot_2d.contour
         self.mat_plot_2d.contour = False
 
@@ -170,17 +167,24 @@ class FitEllipsePDFPlotter(Plotter):
             x_fill = np.concatenate([x_lower, x_upper[::-1]])
             y_fill = np.concatenate([y_lower, y_upper[::-1]])
 
-            visuals_2d = Visuals2D(
-                lines=median_ellipse, fill_region=[y_fill, x_fill]
-            )
+            # Convert median_ellipse to a numpy line
+            try:
+                median_arr = np.array(
+                    median_ellipse.array
+                    if hasattr(median_ellipse, "array")
+                    else median_ellipse
+                )
+                lines = [median_arr] if median_arr.ndim == 2 else None
+            except Exception:
+                lines = None
 
             self._plot_array(
                 array=self.fit_pdf_list[0][0].data,
-                visuals_2d=visuals_2d,
                 auto_labels=aplt.AutoLabels(
                     title=f"Ellipse Fit",
                     filename=f"subplot_ellipse_errors",
                 ),
+                lines=lines,
             )
 
         self.mat_plot_2d.output.subplot_to_figure(

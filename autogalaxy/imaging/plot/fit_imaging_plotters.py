@@ -7,7 +7,7 @@ from autoarray.fit.plot.fit_imaging_plotters import FitImagingPlotterMeta
 
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.imaging.fit_imaging import FitImaging
-from autogalaxy.plot.abstract_plotters import Plotter
+from autogalaxy.plot.abstract_plotters import Plotter, _to_positions
 from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 
 
@@ -24,12 +24,10 @@ class FitImagingPlotter(Plotter):
         self.fit = fit
         self.positions = positions
 
-        from autogalaxy.plot.visuals.two_d import Visuals2D
-
         self._fit_imaging_meta_plotter = FitImagingPlotterMeta(
             fit=self.fit,
             mat_plot_2d=self.mat_plot_2d,
-            visuals_2d=Visuals2D(positions=positions),
+            positions=_to_positions(positions),
             residuals_symmetric_cmap=residuals_symmetric_cmap,
         )
 
@@ -63,26 +61,26 @@ class FitImagingPlotter(Plotter):
             galaxy_indices = [galaxy_index]
 
         for galaxy_index in galaxy_indices:
-            from autogalaxy.plot.visuals.two_d import Visuals2D
+            positions = _to_positions(self.positions)
 
             if subtracted_image:
                 self._plot_array(
                     array=self.fit.subtracted_images_of_galaxies_list[galaxy_index],
-                    visuals_2d=Visuals2D(positions=self.positions),
                     auto_labels=aplt.AutoLabels(
                         title=f"Subtracted Image of Galaxy {galaxy_index}",
                         filename=f"subtracted_image_of_galaxy_{galaxy_index}",
                     ),
+                    positions=positions,
                 )
 
             if model_image:
                 self._plot_array(
                     array=self.fit.model_images_of_galaxies_list[galaxy_index],
-                    visuals_2d=Visuals2D(positions=self.positions),
                     auto_labels=aplt.AutoLabels(
                         title=f"Model Image of Galaxy {galaxy_index}",
                         filename=f"model_image_of_galaxy_{galaxy_index}",
                     ),
+                    positions=positions,
                 )
 
     def subplot_fit(self):

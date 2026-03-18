@@ -38,34 +38,23 @@ def test__2d__caustics_from_mass_obj(gal_x1_mp, grid_2d_7x7):
     assert rc is not None
 
 
-def test__mass_plotter__visuals_with_critical_curves(gal_x1_mp, grid_2d_7x7):
+def test__mass_plotter__tangential_critical_curves(gal_x1_mp, grid_2d_7x7):
     from autogalaxy.plot.mass_plotter import MassPlotter
 
     plotter = MassPlotter(mass_obj=gal_x1_mp, grid=grid_2d_7x7)
-    visuals = plotter.visuals_2d_with_critical_curves
+    tc = plotter.tangential_critical_curves
 
     od = LensCalc.from_mass_obj(gal_x1_mp)
     expected_tc = od.tangential_critical_curve_list_from(grid=grid_2d_7x7)
 
-    assert (
-        visuals.tangential_critical_curves[0] == expected_tc[0]
-    ).all()
+    assert (tc[0] == expected_tc[0]).all()
 
 
-def test__mass_plotter__visuals_with_caustics_plane_index_1(gal_x1_mp, grid_2d_7x7):
-    from autogalaxy.plot.visuals.two_d import Visuals2D
-    from autogalaxy.operate.lens_calc import LensCalc
-
+def test__mass_plotter__caustics_via_lens_calc(gal_x1_mp, grid_2d_7x7):
     od = LensCalc.from_mass_obj(gal_x1_mp)
-    visuals = Visuals2D().add_critical_curves_or_caustics(
-        mass_obj=gal_x1_mp, grid=grid_2d_7x7, plane_index=1
-    )
+    tc = od.tangential_caustic_list_from(grid=grid_2d_7x7)
+    rc = od.radial_caustic_list_from(grid=grid_2d_7x7)
 
-    assert (
-        visuals.tangential_caustics[0]
-        == od.tangential_caustic_list_from(grid=grid_2d_7x7)[0]
-    ).all()
-    assert (
-        visuals.radial_caustics[0]
-        == od.radial_caustic_list_from(grid=grid_2d_7x7)[0]
-    ).all()
+    assert tc is not None
+    assert len(tc) > 0
+    assert rc is not None
