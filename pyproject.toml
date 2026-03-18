@@ -26,7 +26,7 @@ classifiers = [
 keywords = ["cli"]
 dependencies = [
     "autofit",
-    "autoarray",
+    "autoarray @ git+https://github.com/Jammy2211/PyAutoArray.git@claude/refactor-plotting-module-s6Zq1",
     "colossus==1.3.1",
     "astropy>=5.0,<=6.1.2",
     "nautilus-sampler==1.0.5"
