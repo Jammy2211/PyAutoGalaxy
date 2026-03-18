@@ -5,6 +5,7 @@ test_autogalaxy/galaxy/files/galaxy.json
 test_autogalaxy/imaging/plot/files/
 test_autogalaxy/interferometer/model/files/
 test_autogalaxy/quantity/plot/files/
+test_autogalaxy/galaxy/plot/files/
 *.log
 test_autogalaxy/unit/pipeline/files/plot/
 test_autogalaxy/imaging/model/files/
