@@ -24,7 +24,7 @@ def test__figures_2d__all_are_output(
     mass_profile_plotter = aplt.MassProfilePlotter(
         mass_profile=mp_0,
         grid=grid_2d_7x7,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
+        output=aplt.Output(plot_path, format="png"),
     )
     mass_profile_plotter.figures_2d(
         convergence=True,

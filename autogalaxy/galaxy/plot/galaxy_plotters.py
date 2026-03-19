@@ -1,12 +1,13 @@
 from __future__ import annotations
+import matplotlib.pyplot as plt
 from typing import TYPE_CHECKING, Optional
 
-import autoarray as aa
-import autoarray.plot as aplt
+from autoarray.plot.wrap.base.output import Output
+from autoarray.plot.wrap.base.cmap import Cmap
 
-from autogalaxy.plot.abstract_plotters import Plotter, _to_positions
-from autogalaxy.plot.mat_plot.one_d import MatPlot1D
-from autogalaxy.plot.mat_plot.two_d import MatPlot2D
+import autoarray as aa
+
+from autogalaxy.plot.abstract_plotters import Plotter, _to_positions, _save_subplot
 from autogalaxy.plot.mass_plotter import MassPlotter
 
 from autogalaxy.profiles.light.abstract import LightProfile
@@ -25,8 +26,9 @@ class GalaxyPlotter(Plotter):
         self,
         galaxy: Galaxy,
         grid: aa.type.Grid1D2DLike,
-        mat_plot_1d: MatPlot1D = None,
-        mat_plot_2d: MatPlot2D = None,
+        output: Output = None,
+        cmap: Cmap = None,
+        use_log10: bool = False,
         positions=None,
         light_profile_centres=None,
         mass_profile_centres=None,
@@ -34,9 +36,7 @@ class GalaxyPlotter(Plotter):
         tangential_critical_curves=None,
         radial_critical_curves=None,
     ):
-        from autogalaxy.profiles.light.linear import (
-            LightProfileLinear,
-        )
+        from autogalaxy.profiles.light.linear import LightProfileLinear
 
         if galaxy is not None:
             if galaxy.has(cls=LightProfileLinear):
@@ -44,10 +44,7 @@ class GalaxyPlotter(Plotter):
                     plotter_type=self.__class__.__name__,
                 )
 
-        super().__init__(
-            mat_plot_2d=mat_plot_2d,
-            mat_plot_1d=mat_plot_1d,
-        )
+        super().__init__(output=output, cmap=cmap, use_log10=use_log10)
 
         self.galaxy = galaxy
         self.grid = grid
@@ -59,7 +56,9 @@ class GalaxyPlotter(Plotter):
         self._mass_plotter = MassPlotter(
             mass_obj=self.galaxy,
             grid=self.grid,
-            mat_plot_2d=self.mat_plot_2d,
+            output=self.output,
+            cmap=self.cmap,
+            use_log10=self.use_log10,
             positions=positions,
             light_profile_centres=light_profile_centres,
             mass_profile_centres=mass_profile_centres,
@@ -73,21 +72,14 @@ class GalaxyPlotter(Plotter):
     ) -> LightProfilePlotter:
         from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
 
-        if not one_d_only:
-            return LightProfilePlotter(
-                light_profile=light_profile,
-                grid=self.grid,
-                mat_plot_2d=self.mat_plot_2d,
-                mat_plot_1d=self.mat_plot_1d,
-                half_light_radius=light_profile.half_light_radius,
-                positions=self.positions,
-            )
-
         return LightProfilePlotter(
             light_profile=light_profile,
             grid=self.grid,
-            mat_plot_1d=self.mat_plot_1d,
+            output=self.output,
+            cmap=self.cmap,
+            use_log10=self.use_log10,
             half_light_radius=light_profile.half_light_radius,
+            positions=self.positions if not one_d_only else None,
         )
 
     def mass_profile_plotter_from(
@@ -105,21 +97,14 @@ class GalaxyPlotter(Plotter):
         except (TypeError, AttributeError):
             pass
 
-        if not one_d_only:
-            return MassProfilePlotter(
-                mass_profile=mass_profile,
-                grid=self.grid,
-                mat_plot_2d=self.mat_plot_2d,
-                mat_plot_1d=self.mat_plot_1d,
-                tangential_critical_curves=tc,
-                radial_critical_curves=rc,
-                einstein_radius=einstein_radius,
-            )
-
         return MassProfilePlotter(
             mass_profile=mass_profile,
             grid=self.grid,
-            mat_plot_1d=self.mat_plot_1d,
+            output=self.output,
+            cmap=self.cmap,
+            use_log10=self.use_log10,
+            tangential_critical_curves=tc if not one_d_only else None,
+            radial_critical_curves=rc if not one_d_only else None,
             einstein_radius=einstein_radius,
         )
 
@@ -133,6 +118,7 @@ class GalaxyPlotter(Plotter):
         magnification: bool = False,
         title_suffix: str = "",
         filename_suffix: str = "",
+        ax=None,
     ):
         if image:
             positions = _to_positions(
@@ -142,10 +128,10 @@ class GalaxyPlotter(Plotter):
             )
             self._plot_array(
                 array=self.galaxy.image_2d_from(grid=self.grid),
-                auto_labels=aplt.AutoLabels(
-                    title=f"Image{title_suffix}", filename=f"image_2d{filename_suffix}"
-                ),
+                auto_filename=f"image_2d{filename_suffix}",
+                title=f"Image{title_suffix}",
                 positions=positions,
+                ax=ax,
             )
 
         self._mass_plotter.figures_2d(
@@ -159,15 +145,20 @@ class GalaxyPlotter(Plotter):
         )
 
     def subplot_of_light_profiles(self, image: bool = False):
-        light_profile_plotters = [
-            self.light_profile_plotter_from(light_profile)
-            for light_profile in self.galaxy.cls_list_from(cls=LightProfile)
-        ]
+        light_profiles = self.galaxy.cls_list_from(cls=LightProfile)
+        if not light_profiles or not image:
+            return
 
-        if image:
-            self.subplot_of_plotters_figure(
-                plotter_list=light_profile_plotters, name="image"
-            )
+        n = len(light_profiles)
+        fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+        axes_flat = [axes] if n == 1 else list(axes.flatten())
+
+        for i, lp in enumerate(light_profiles):
+            plotter = self.light_profile_plotter_from(lp)
+            plotter.figures_2d(image=True, ax=axes_flat[i])
+
+        plt.tight_layout()
+        _save_subplot(fig, self.output, "subplot_image")
 
     def subplot_of_mass_profiles(
         self,
@@ -176,27 +167,27 @@ class GalaxyPlotter(Plotter):
         deflections_y: bool = False,
         deflections_x: bool = False,
     ):
-        mass_profile_plotters = [
-            self.mass_profile_plotter_from(mass_profile)
-            for mass_profile in self.galaxy.cls_list_from(cls=MassProfile)
-        ]
+        mass_profiles = self.galaxy.cls_list_from(cls=MassProfile)
+        if not mass_profiles:
+            return
 
-        if convergence:
-            self.subplot_of_plotters_figure(
-                plotter_list=mass_profile_plotters, name="convergence"
-            )
+        n = len(mass_profiles)
 
-        if potential:
-            self.subplot_of_plotters_figure(
-                plotter_list=mass_profile_plotters, name="potential"
-            )
+        for name, flag in [
+            ("convergence", convergence),
+            ("potential", potential),
+            ("deflections_y", deflections_y),
+            ("deflections_x", deflections_x),
+        ]:
+            if not flag:
+                continue
 
-        if deflections_y:
-            self.subplot_of_plotters_figure(
-                plotter_list=mass_profile_plotters, name="deflections_y"
-            )
+            fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+            axes_flat = [axes] if n == 1 else list(axes.flatten())
 
-        if deflections_x:
-            self.subplot_of_plotters_figure(
-                plotter_list=mass_profile_plotters, name="deflections_x"
-            )
+            for i, mp in enumerate(mass_profiles):
+                plotter = self.mass_profile_plotter_from(mp)
+                plotter.figures_2d(**{name: True})
+
+            plt.tight_layout()
+            _save_subplot(fig, self.output, f"subplot_{name}")

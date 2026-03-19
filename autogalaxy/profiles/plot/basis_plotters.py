@@ -1,14 +1,14 @@
+import matplotlib.pyplot as plt
+
+from autoarray.plot.wrap.base.output import Output
+from autoarray.plot.wrap.base.cmap import Cmap
+
 import autoarray as aa
-import autoarray.plot as aplt
 
 from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.basis import Basis
-from autogalaxy.plot.abstract_plotters import Plotter, _to_positions
-from autogalaxy.plot.mat_plot.one_d import MatPlot1D
-from autogalaxy.plot.mat_plot.two_d import MatPlot2D
-
+from autogalaxy.plot.abstract_plotters import Plotter, _to_positions, _save_subplot
 from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
-
 from autogalaxy import exc
 
 
@@ -17,14 +17,13 @@ class BasisPlotter(Plotter):
         self,
         basis: Basis,
         grid: aa.type.Grid1D2DLike,
-        mat_plot_1d: MatPlot1D = None,
-        mat_plot_2d: MatPlot2D = None,
+        output: Output = None,
+        cmap: Cmap = None,
+        use_log10: bool = False,
         positions=None,
         lines=None,
     ):
-        from autogalaxy.profiles.light.linear import (
-            LightProfileLinear,
-        )
+        from autogalaxy.profiles.light.linear import LightProfileLinear
 
         for light_profile in basis.light_profile_list:
             if isinstance(light_profile, LightProfileLinear):
@@ -37,33 +36,37 @@ class BasisPlotter(Plotter):
         self.positions = positions
         self.lines = lines
 
-        super().__init__(
-            mat_plot_2d=mat_plot_2d,
-            mat_plot_1d=mat_plot_1d,
-        )
+        super().__init__(output=output, cmap=cmap, use_log10=use_log10)
 
-    def light_profile_plotter_from(
-        self,
-        light_profile: LightProfile,
-    ) -> LightProfilePlotter:
+    def light_profile_plotter_from(self, light_profile: LightProfile) -> LightProfilePlotter:
         return LightProfilePlotter(
             light_profile=light_profile,
             grid=self.grid,
-            mat_plot_1d=self.mat_plot_1d,
+            output=self.output,
+            cmap=self.cmap,
+            use_log10=self.use_log10,
             half_light_radius=light_profile.half_light_radius,
         )
 
     def subplot_image(self):
-        self.open_subplot_figure(number_subplots=len(self.basis.light_profile_list))
+        n = len(self.basis.light_profile_list)
+        cols = min(n, 4)
+        rows = (n + cols - 1) // cols
+        fig, axes = plt.subplots(rows, cols, figsize=(7 * cols, 7 * rows))
+        import numpy as np
+        axes_flat = [axes] if n == 1 else list(np.array(axes).flatten())
 
-        for light_profile in self.basis.light_profile_list:
+        positions = _to_positions(self.positions)
+
+        for i, light_profile in enumerate(self.basis.light_profile_list):
             self._plot_array(
                 array=light_profile.image_2d_from(grid=self.grid),
-                auto_labels=aplt.AutoLabels(title=light_profile.coefficient_tag),
-                positions=_to_positions(self.positions),
+                auto_filename="subplot_basis_image",
+                title=light_profile.coefficient_tag,
+                positions=positions,
                 lines=self.lines,
+                ax=axes_flat[i],
             )
 
-        self.mat_plot_2d.output.subplot_to_figure(auto_filename=f"subplot_basis_image")
-
-        self.close_subplot_figure()
+        plt.tight_layout()
+        _save_subplot(fig, self.output, "subplot_basis_image")

@@ -19,7 +19,7 @@ def test__fit_sub_plot_real_space(
 ):
     fit_plotter = aplt.FitInterferometerPlotter(
         fit=fit_interferometer_7x7,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
+        output=aplt.Output(plot_path, format="png"),
     )
 
     fit_plotter.subplot_fit_real_space()
@@ -30,7 +30,7 @@ def test__fit_sub_plot_real_space(
 
     fit_plotter = aplt.FitInterferometerPlotter(
         fit=fit_interferometer_x2_galaxy_inversion_7x7,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
+        output=aplt.Output(plot_path, format="png"),
     )
 
     fit_plotter.subplot_fit_real_space()

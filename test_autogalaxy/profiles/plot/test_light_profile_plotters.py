@@ -25,7 +25,7 @@ def test__figures_2d__all_are_output(
     light_profile_plotter = aplt.LightProfilePlotter(
         light_profile=lp_0,
         grid=grid_2d_7x7,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
+        output=aplt.Output(plot_path, format="png"),
     )
 
     light_profile_plotter.figures_2d(image=True)

@@ -49,9 +49,6 @@ from autoarray.inversion.plot.inversion_plotters import InversionPlotter
 from autoarray.dataset.plot.imaging_plotters import ImagingPlotter
 from autoarray.dataset.plot.interferometer_plotters import InterferometerPlotter
 
-from autoarray.plot.multi_plotters import MultiFigurePlotter
-from autoarray.plot.multi_plotters import MultiYX1DPlotter
-
 from autoarray.plot.auto_labels import AutoLabels
 
 from autogalaxy.plot.wrap import (
@@ -60,16 +57,12 @@ from autogalaxy.plot.wrap import (
     ModelFluxesYXScatter,
     LightProfileCentresScatter,
     MassProfileCentresScatter,
+    MultipleImagesScatter,
     TangentialCriticalCurvesPlot,
     RadialCriticalCurvesPlot,
     TangentialCausticsPlot,
     RadialCausticsPlot,
-    MultipleImagesScatter,
 )
-
-
-from autogalaxy.plot.mat_plot.one_d import MatPlot1D
-from autogalaxy.plot.mat_plot.two_d import MatPlot2D
 
 from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
 from autogalaxy.profiles.plot.basis_plotters import BasisPlotter
@@ -81,7 +74,6 @@ from autogalaxy.imaging.plot.fit_imaging_plotters import FitImagingPlotter
 from autogalaxy.interferometer.plot.fit_interferometer_plotters import (
     FitInterferometerPlotter,
 )
-from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
 from autogalaxy.galaxy.plot.adapt_plotters import AdaptPlotter
 from autogalaxy.ellipse.plot.fit_ellipse_plotters import FitEllipsePlotter
 from autogalaxy.ellipse.plot.fit_ellipse_plotters import FitEllipsePDFPlotter

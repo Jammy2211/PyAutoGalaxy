@@ -19,7 +19,7 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
 ):
     fit_plotter = aplt.FitImagingPlotter(
         fit=fit_imaging_x2_galaxy_7x7,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
+        output=aplt.Output(plot_path, format="png"),
     )
 
     fit_plotter.figures_2d(
@@ -42,7 +42,7 @@ def test__fit_individuals__source_and_galaxy__dependent_on_input(
 def test__figures_of_galaxies(fit_imaging_x2_galaxy_7x7, plot_path, plot_patch):
     fit_plotter = aplt.FitImagingPlotter(
         fit=fit_imaging_x2_galaxy_7x7,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
+        output=aplt.Output(plot_path, format="png"),
     )
 
     fit_plotter.figures_2d_of_galaxies(subtracted_image=True)
@@ -73,7 +73,7 @@ def test__figures_of_galaxies(fit_imaging_x2_galaxy_7x7, plot_path, plot_patch):
 def test__subplot_of_galaxy(fit_imaging_x2_galaxy_7x7, plot_path, plot_patch):
     fit_plotter = aplt.FitImagingPlotter(
         fit=fit_imaging_x2_galaxy_7x7,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
+        output=aplt.Output(plot_path, format="png"),
     )
     fit_plotter.subplot_of_galaxies()
     assert path.join(plot_path, "subplot_of_galaxy_0.png") in plot_patch.paths

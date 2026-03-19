@@ -26,7 +26,7 @@ def test__subplot_image(
     plotter = aplt.BasisPlotter(
         basis=basis,
         grid=grid_2d_7x7,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
+        output=aplt.Output(plot_path, format="png"),
     )
     plotter.subplot_image()
 

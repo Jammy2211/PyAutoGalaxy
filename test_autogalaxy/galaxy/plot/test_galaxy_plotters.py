@@ -25,7 +25,7 @@ def test__figures_2d__all_are_output(
     galaxy_plotter = aplt.GalaxyPlotter(
         galaxy=gal_x1_lp_x1_mp,
         grid=grid_2d_7x7,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
+        output=aplt.Output(plot_path, format="png"),
     )
     galaxy_plotter.figures_2d(image=True, convergence=True)
 
@@ -43,7 +43,7 @@ def test__subplots_galaxy_quantities__all_are_output(
     galaxy_plotter = aplt.GalaxyPlotter(
         galaxy=gal_x1_lp_x1_mp,
         grid=grid_2d_7x7,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
+        output=aplt.Output(plot_path, format="png"),
     )
     galaxy_plotter.subplot_of_light_profiles(image=True)
 

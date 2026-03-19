@@ -25,7 +25,7 @@ def test__all_individual_plotter__output_file_with_default_name(
     plotter = aplt.GalaxiesPlotter(
         galaxies=galaxies_7x7,
         grid=grid_2d_7x7,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
+        output=aplt.Output(plot_path, format="png"),
     )
 
     plotter.figures_2d(image=True, convergence=True)
@@ -44,7 +44,7 @@ def test__figures_of_galaxies(
     plotter = aplt.GalaxiesPlotter(
         galaxies=galaxies_x2_7x7,
         grid=grid_2d_7x7,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(path=plot_path, format="png")),
+        output=aplt.Output(path=plot_path, format="png"),
     )
 
     plotter.figures_2d_of_galaxies(image=True)
@@ -64,8 +64,7 @@ def test__galaxies_sub_plot_output(galaxies_x2_7x7, grid_2d_7x7, plot_path, plot
     plotter = aplt.GalaxiesPlotter(
         galaxies=galaxies_x2_7x7,
         grid=grid_2d_7x7,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
-        mat_plot_1d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
+        output=aplt.Output(plot_path, format="png"),
     )
 
     plotter.subplot_galaxies()

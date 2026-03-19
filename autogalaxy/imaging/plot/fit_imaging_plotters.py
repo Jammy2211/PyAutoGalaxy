@@ -1,4 +1,8 @@
+import matplotlib.pyplot as plt
 from typing import List, Optional
+
+from autoarray.plot.wrap.base.output import Output
+from autoarray.plot.wrap.base.cmap import Cmap
 
 import autoarray as aa
 import autoarray.plot as aplt
@@ -7,38 +11,43 @@ from autoarray.fit.plot.fit_imaging_plotters import FitImagingPlotterMeta
 
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.imaging.fit_imaging import FitImaging
-from autogalaxy.plot.abstract_plotters import Plotter, _to_positions
-from autogalaxy.plot.mat_plot.two_d import MatPlot2D
+from autogalaxy.plot.abstract_plotters import Plotter, _to_positions, _save_subplot
 
 
 class FitImagingPlotter(Plotter):
     def __init__(
         self,
         fit: FitImaging,
-        mat_plot_2d: MatPlot2D = None,
+        output: Output = None,
+        cmap: Cmap = None,
+        use_log10: bool = False,
         positions=None,
         residuals_symmetric_cmap: bool = True,
     ):
-        super().__init__(mat_plot_2d=mat_plot_2d)
+        super().__init__(output=output, cmap=cmap, use_log10=use_log10)
 
         self.fit = fit
         self.positions = positions
 
         self._fit_imaging_meta_plotter = FitImagingPlotterMeta(
             fit=self.fit,
-            mat_plot_2d=self.mat_plot_2d,
+            output=self.output,
+            cmap=self.cmap,
+            use_log10=self.use_log10,
             positions=_to_positions(positions),
             residuals_symmetric_cmap=residuals_symmetric_cmap,
         )
 
         self.figures_2d = self._fit_imaging_meta_plotter.figures_2d
-        self.subplot = self._fit_imaging_meta_plotter.subplot
+        self.subplot_fit = self._fit_imaging_meta_plotter.subplot_fit
 
     @property
     def inversion_plotter(self) -> aplt.InversionPlotter:
         return aplt.InversionPlotter(
             inversion=self.fit.inversion,
-            mat_plot_2d=self.mat_plot_2d,
+            output=self.output,
+            cmap=self.cmap,
+            use_log10=self.use_log10,
         )
 
     @property
@@ -60,52 +69,24 @@ class FitImagingPlotter(Plotter):
         else:
             galaxy_indices = [galaxy_index]
 
-        for galaxy_index in galaxy_indices:
-            positions = _to_positions(self.positions)
+        positions = _to_positions(self.positions)
 
+        for galaxy_index in galaxy_indices:
             if subtracted_image:
                 self._plot_array(
                     array=self.fit.subtracted_images_of_galaxies_list[galaxy_index],
-                    auto_labels=aplt.AutoLabels(
-                        title=f"Subtracted Image of Galaxy {galaxy_index}",
-                        filename=f"subtracted_image_of_galaxy_{galaxy_index}",
-                    ),
+                    auto_filename=f"subtracted_image_of_galaxy_{galaxy_index}",
+                    title=f"Subtracted Image of Galaxy {galaxy_index}",
                     positions=positions,
                 )
 
             if model_image:
                 self._plot_array(
                     array=self.fit.model_images_of_galaxies_list[galaxy_index],
-                    auto_labels=aplt.AutoLabels(
-                        title=f"Model Image of Galaxy {galaxy_index}",
-                        filename=f"model_image_of_galaxy_{galaxy_index}",
-                    ),
+                    auto_filename=f"model_image_of_galaxy_{galaxy_index}",
+                    title=f"Model Image of Galaxy {galaxy_index}",
                     positions=positions,
                 )
-
-    def subplot_fit(self):
-        self.open_subplot_figure(number_subplots=6)
-
-        self.figures_2d(data=True)
-
-        self.figures_2d(signal_to_noise_map=True)
-        self.figures_2d(model_image=True)
-        self.figures_2d(normalized_residual_map=True)
-
-        self.mat_plot_2d.cmap.kwargs["vmin"] = -1.0
-        self.mat_plot_2d.cmap.kwargs["vmax"] = 1.0
-
-        self.set_title(label=r"Normalized Residual Map $1\sigma$")
-        self.figures_2d(normalized_residual_map=True)
-        self.set_title(label=None)
-
-        self.mat_plot_2d.cmap.kwargs.pop("vmin")
-        self.mat_plot_2d.cmap.kwargs.pop("vmax")
-
-        self.figures_2d(chi_squared_map=True)
-
-        self.mat_plot_2d.output.subplot_to_figure(auto_filename="subplot_fit")
-        self.close_subplot_figure()
 
     def subplot_of_galaxies(self, galaxy_index: Optional[int] = None):
         if galaxy_index is None:
@@ -114,20 +95,31 @@ class FitImagingPlotter(Plotter):
             galaxy_indices = [galaxy_index]
 
         for galaxy_index in galaxy_indices:
-            self.open_subplot_figure(number_subplots=4)
+            has_pix = self.galaxies.has(cls=aa.Pixelization)
+            n = 4 if has_pix else 3
+            fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+            axes_flat = list(axes.flatten())
 
-            self.figures_2d(data=True)
-            self.figures_2d_of_galaxies(
-                galaxy_index=galaxy_index, subtracted_image=True
+            self._fit_imaging_meta_plotter._plot_array(
+                self.fit.data, "data", "Data", ax=axes_flat[0]
             )
-            self.figures_2d_of_galaxies(galaxy_index=galaxy_index, model_image=True)
+            self._fit_imaging_meta_plotter._plot_array(
+                self.fit.subtracted_images_of_galaxies_list[galaxy_index],
+                f"subtracted_image_of_galaxy_{galaxy_index}",
+                f"Subtracted Image of Galaxy {galaxy_index}",
+                ax=axes_flat[1],
+            )
+            self._fit_imaging_meta_plotter._plot_array(
+                self.fit.model_images_of_galaxies_list[galaxy_index],
+                f"model_image_of_galaxy_{galaxy_index}",
+                f"Model Image of Galaxy {galaxy_index}",
+                ax=axes_flat[2],
+            )
 
-            if self.galaxies.has(cls=aa.Pixelization):
+            if has_pix:
                 self.inversion_plotter.figures_2d_of_pixelization(
                     pixelization_index=0, reconstruction=True
                 )
 
-            self.mat_plot_2d.output.subplot_to_figure(
-                auto_filename=f"subplot_of_galaxy_{galaxy_index}"
-            )
-            self.close_subplot_figure()
+            plt.tight_layout()
+            _save_subplot(fig, self.output, f"subplot_of_galaxy_{galaxy_index}")

@@ -1,11 +1,12 @@
+import matplotlib.pyplot as plt
 from typing import List, Optional
 
-import autoarray as aa
-import autoarray.plot as aplt
+from autoarray.plot.wrap.base.output import Output
+from autoarray.plot.wrap.base.cmap import Cmap
 
-from autogalaxy.plot.abstract_plotters import Plotter, _to_positions
-from autogalaxy.plot.mat_plot.one_d import MatPlot1D
-from autogalaxy.plot.mat_plot.two_d import MatPlot2D
+import autoarray as aa
+
+from autogalaxy.plot.abstract_plotters import Plotter, _to_positions, _save_subplot
 from autogalaxy.plot.mass_plotter import MassPlotter
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
@@ -19,8 +20,9 @@ class GalaxiesPlotter(Plotter):
         self,
         galaxies: List[Galaxy],
         grid: aa.type.Grid1D2DLike,
-        mat_plot_1d: MatPlot1D = None,
-        mat_plot_2d: MatPlot2D = None,
+        output: Output = None,
+        cmap: Cmap = None,
+        use_log10: bool = False,
         positions=None,
         light_profile_centres=None,
         mass_profile_centres=None,
@@ -30,19 +32,14 @@ class GalaxiesPlotter(Plotter):
     ):
         self.galaxies = Galaxies(galaxies=galaxies)
 
-        from autogalaxy.profiles.light.linear import (
-            LightProfileLinear,
-        )
+        from autogalaxy.profiles.light.linear import LightProfileLinear
 
         if self.galaxies.has(cls=LightProfileLinear):
             raise exc.raise_linear_light_profile_in_plot(
                 plotter_type=self.__class__.__name__,
             )
 
-        super().__init__(
-            mat_plot_2d=mat_plot_2d,
-            mat_plot_1d=mat_plot_1d,
-        )
+        super().__init__(output=output, cmap=cmap, use_log10=use_log10)
 
         self.grid = grid
         self.positions = positions
@@ -53,7 +50,9 @@ class GalaxiesPlotter(Plotter):
         self._mass_plotter = MassPlotter(
             mass_obj=self.galaxies,
             grid=self.grid,
-            mat_plot_2d=self.mat_plot_2d,
+            output=self.output,
+            cmap=self.cmap,
+            use_log10=self.use_log10,
             positions=positions,
             light_profile_centres=light_profile_centres,
             mass_profile_centres=mass_profile_centres,
@@ -69,7 +68,9 @@ class GalaxiesPlotter(Plotter):
         return GalaxyPlotter(
             galaxy=self.galaxies[galaxy_index],
             grid=self.grid,
-            mat_plot_2d=self.mat_plot_2d,
+            output=self.output,
+            cmap=self.cmap,
+            use_log10=self.use_log10,
             tangential_critical_curves=tc,
             radial_critical_curves=rc,
         )
@@ -88,6 +89,7 @@ class GalaxiesPlotter(Plotter):
         title_suffix: str = "",
         filename_suffix: str = "",
         source_plane_title: bool = False,
+        ax=None,
     ):
         if image:
             positions = _to_positions(
@@ -97,41 +99,31 @@ class GalaxiesPlotter(Plotter):
             )
             self._plot_array(
                 array=self.galaxies.image_2d_from(grid=self.grid),
-                auto_labels=aplt.AutoLabels(
-                    title=f"Image{title_suffix}", filename=f"image_2d{filename_suffix}"
-                ),
+                auto_filename=f"image_2d{filename_suffix}",
+                title=f"Image{title_suffix}",
                 positions=positions,
+                ax=ax,
             )
 
         if plane_image:
-            if source_plane_title:
-                title = "Source Plane Image"
-            else:
-                title = f"Plane Image{title_suffix}"
-
+            title = "Source Plane Image" if source_plane_title else f"Plane Image{title_suffix}"
             self._plot_array(
                 array=self.galaxies.plane_image_2d_from(
                     grid=self.grid, zoom_to_brightest=zoom_to_brightest
                 ),
-                auto_labels=aplt.AutoLabels(
-                    title=title,
-                    filename=f"plane_image{filename_suffix}",
-                ),
+                auto_filename=f"plane_image{filename_suffix}",
+                title=title,
                 positions=_to_positions(self.positions),
+                ax=ax,
             )
 
         if plane_grid:
-            if source_plane_title:
-                title = "Source Plane Grid"
-            else:
-                title = f"Plane Grid{title_suffix}"
-
+            title = "Source Plane Grid" if source_plane_title else f"Plane Grid{title_suffix}"
             self._plot_grid(
                 grid=self.grid,
-                auto_labels=aplt.AutoLabels(
-                    title=title,
-                    filename=f"plane_grid{filename_suffix}",
-                ),
+                auto_filename=f"plane_grid{filename_suffix}",
+                title=title,
+                ax=ax,
             )
 
         self._mass_plotter.figures_2d(
@@ -172,15 +164,30 @@ class GalaxiesPlotter(Plotter):
         magnification: bool = False,
         auto_filename: str = "subplot_galaxies",
     ):
-        self._subplot_custom_plot(
-            image=image,
-            convergence=convergence,
-            potential=potential,
-            deflections_y=deflections_y,
-            deflections_x=deflections_x,
-            magnification=magnification,
-            auto_labels=aplt.AutoLabels(filename=auto_filename),
-        )
+        panels = [
+            ("image", image),
+            ("convergence", convergence),
+            ("potential", potential),
+            ("deflections_y", deflections_y),
+            ("deflections_x", deflections_x),
+            ("magnification", magnification),
+        ]
+        active = [(n, f) for n, f in panels if f]
+        if not active:
+            return
+
+        n = len(active)
+        cols = min(n, 3)
+        rows = (n + cols - 1) // cols
+        fig, axes = plt.subplots(rows, cols, figsize=(7 * cols, 7 * rows))
+        import numpy as np
+        axes_flat = [axes] if n == 1 else list(np.array(axes).flatten())
+
+        for i, (name, _) in enumerate(active):
+            self.figures_2d(**{name: True}, ax=axes_flat[i])
+
+        plt.tight_layout()
+        _save_subplot(fig, self.output, auto_filename)
 
     def subplot_galaxies(self):
         return self.subplot(
@@ -192,17 +199,17 @@ class GalaxiesPlotter(Plotter):
         )
 
     def subplot_galaxy_images(self):
-        number_subplots = len(self.galaxies)
+        n = len(self.galaxies)
+        fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+        axes_flat = [axes] if n == 1 else list(axes.flatten())
 
-        self.open_subplot_figure(number_subplots=number_subplots)
-
-        for galaxy_index in range(0, len(self.galaxies)):
-            galaxy_plotter = self.galaxy_plotter_from(galaxy_index=galaxy_index)
+        for i in range(n):
+            galaxy_plotter = self.galaxy_plotter_from(galaxy_index=i)
             galaxy_plotter.figures_2d(
-                image=True, title_suffix=f" Of Galaxies {galaxy_index}"
+                image=True,
+                title_suffix=f" Of Galaxies {i}",
+                ax=axes_flat[i],
             )
 
-        self.mat_plot_2d.output.subplot_to_figure(
-            auto_filename=f"subplot_galaxy_images"
-        )
-        self.close_subplot_figure()
+        plt.tight_layout()
+        _save_subplot(fig, self.output, "subplot_galaxy_images")

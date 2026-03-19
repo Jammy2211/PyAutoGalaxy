@@ -1,34 +1,39 @@
-from typing import Dict, List
+import matplotlib.pyplot as plt
+from typing import Dict
 
 import autoarray as aa
 import autoarray.plot as aplt
 
+from autoarray.plot.wrap.base.output import Output
+from autoarray.plot.wrap.base.cmap import Cmap
+
 from autogalaxy.galaxy.galaxy import Galaxy
-from autogalaxy.plot.abstract_plotters import Plotter
-from autogalaxy.plot.mat_plot.two_d import MatPlot2D
+from autogalaxy.plot.abstract_plotters import Plotter, _save_subplot
 
 
 class AdaptPlotter(Plotter):
     def __init__(
         self,
-        mat_plot_2d: MatPlot2D = None,
+        output: Output = None,
+        cmap: Cmap = None,
+        use_log10: bool = False,
     ):
-        super().__init__(mat_plot_2d=mat_plot_2d)
+        super().__init__(output=output, cmap=cmap, use_log10=use_log10)
 
-    def figure_model_image(self, model_image: aa.Array2D):
+    def figure_model_image(self, model_image: aa.Array2D, ax=None):
         self._plot_array(
             array=model_image,
-            auto_labels=aplt.AutoLabels(
-                title="adapt image", filename="adapt_model_image"
-            ),
+            auto_filename="adapt_model_image",
+            title="adapt image",
+            ax=ax,
         )
 
-    def figure_galaxy_image(self, galaxy_image: aa.Array2D):
+    def figure_galaxy_image(self, galaxy_image: aa.Array2D, ax=None):
         self._plot_array(
             array=galaxy_image,
-            auto_labels=aplt.AutoLabels(
-                title="galaxy Image", filename="adapt_galaxy_image"
-            ),
+            auto_filename="adapt_galaxy_image",
+            title="galaxy Image",
+            ax=ax,
         )
 
     def subplot_adapt_images(
@@ -37,11 +42,15 @@ class AdaptPlotter(Plotter):
         if adapt_galaxy_name_image_dict is None:
             return
 
-        self.open_subplot_figure(number_subplots=len(adapt_galaxy_name_image_dict))
+        n = len(adapt_galaxy_name_image_dict)
+        cols = min(n, 3)
+        rows = (n + cols - 1) // cols
+        fig, axes = plt.subplots(rows, cols, figsize=(7 * cols, 7 * rows))
+        import numpy as np
+        axes = [axes] if n == 1 else list(np.array(axes).flatten())
 
-        for path, galaxy_image in adapt_galaxy_name_image_dict.items():
-            self.figure_galaxy_image(galaxy_image=galaxy_image)
+        for i, (_, galaxy_image) in enumerate(adapt_galaxy_name_image_dict.items()):
+            self.figure_galaxy_image(galaxy_image=galaxy_image, ax=axes[i])
 
-        self.mat_plot_2d.output.subplot_to_figure(auto_filename="subplot_adapt_images")
-
-        self.close_subplot_figure()
+        plt.tight_layout()
+        _save_subplot(fig, self.output, "subplot_adapt_images")

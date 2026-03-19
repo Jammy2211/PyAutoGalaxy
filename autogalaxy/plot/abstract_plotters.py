@@ -1,13 +1,11 @@
+import os
 import numpy as np
-
-from autoarray.plot.wrap.base.abstract import set_backend
-
-set_backend()
+import matplotlib.pyplot as plt
 
 from autoarray.plot.abstract_plotters import AbstractPlotter
-
-from autogalaxy.plot.mat_plot.one_d import MatPlot1D
-from autogalaxy.plot.mat_plot.two_d import MatPlot2D
+from autoarray.plot.wrap.base.output import Output
+from autoarray.plot.wrap.base.cmap import Cmap
+from autoarray.plot.wrap.base.title import Title
 
 
 def _to_lines(*items):
@@ -39,40 +37,49 @@ def _to_positions(*items):
     return _to_lines(*items)
 
 
+def _save_subplot(fig, output, auto_filename):
+    """Save or show a subplot figure using an Output object."""
+    from autoarray.structures.plot.structure_plotters import _output_for_plotter
+
+    output_path, filename, fmt = _output_for_plotter(output, auto_filename)
+    if output_path:
+        os.makedirs(output_path, exist_ok=True)
+        fig.savefig(
+            os.path.join(output_path, f"{filename}.{fmt}"),
+            bbox_inches="tight",
+            pad_inches=0.1,
+        )
+    else:
+        plt.show()
+    plt.close(fig)
+
+
 class Plotter(AbstractPlotter):
 
     def __init__(
         self,
-        mat_plot_1d: MatPlot1D = None,
-        mat_plot_2d: MatPlot2D = None,
+        output: Output = None,
+        cmap: Cmap = None,
+        use_log10: bool = False,
+        title: Title = None,
     ):
+        super().__init__(output=output, cmap=cmap, use_log10=use_log10, title=title)
 
-        super().__init__(
-            mat_plot_1d=mat_plot_1d,
-            mat_plot_2d=mat_plot_2d,
-        )
-
-        self.mat_plot_1d = mat_plot_1d or MatPlot1D()
-        self.mat_plot_2d = mat_plot_2d or MatPlot2D()
-
-    def _plot_array(self, array, auto_labels, lines=None, positions=None, grid=None):
+    def _plot_array(self, array, auto_filename, title, lines=None, positions=None, grid=None, ax=None):
         from autoarray.plot.plots.array import plot_array
         from autoarray.structures.plot.structure_plotters import (
             _auto_mask_edge,
             _numpy_lines,
             _numpy_grid,
             _numpy_positions,
-            _output_for_mat_plot,
+            _output_for_plotter,
             _zoom_array,
         )
 
-        is_sub = self.mat_plot_2d.is_for_subplot
-        ax = self.mat_plot_2d.setup_subplot() if is_sub else None
-        output_path, filename, fmt = _output_for_mat_plot(
-            self.mat_plot_2d,
-            is_sub,
-            auto_labels.filename if auto_labels else "array",
-        )
+        if ax is None:
+            output_path, filename, fmt = _output_for_plotter(self.output, auto_filename)
+        else:
+            output_path, filename, fmt = None, auto_filename, "png"
 
         array = _zoom_array(array)
 
@@ -85,41 +92,39 @@ class Plotter(AbstractPlotter):
 
         mask = _auto_mask_edge(array) if hasattr(array, "mask") else None
 
+        _positions = positions if isinstance(positions, list) else _numpy_positions(positions)
+        _lines = lines if isinstance(lines, list) else _numpy_lines(lines)
+
         plot_array(
             array=arr,
             ax=ax,
             extent=extent,
             mask=mask,
             grid=_numpy_grid(grid),
-            positions=_numpy_positions(positions) if not isinstance(positions, list) else positions,
-            lines=_numpy_lines(lines) if not isinstance(lines, list) else lines,
-            title=auto_labels.title if auto_labels else "",
-            colormap=self.mat_plot_2d.cmap.cmap,
-            use_log10=self.mat_plot_2d.use_log10,
+            positions=_positions,
+            lines=_lines,
+            title=title or "",
+            colormap=self.cmap.cmap,
+            use_log10=self.use_log10,
             output_path=output_path,
             output_filename=filename,
             output_format=fmt,
             structure=array,
         )
 
-    def _plot_grid(self, grid, auto_labels, lines=None):
+    def _plot_grid(self, grid, auto_filename, title, lines=None, ax=None):
         from autoarray.plot.plots.grid import plot_grid
-        from autoarray.structures.plot.structure_plotters import (
-            _output_for_mat_plot,
-        )
+        from autoarray.structures.plot.structure_plotters import _output_for_plotter
 
-        is_sub = self.mat_plot_2d.is_for_subplot
-        ax = self.mat_plot_2d.setup_subplot() if is_sub else None
-        output_path, filename, fmt = _output_for_mat_plot(
-            self.mat_plot_2d,
-            is_sub,
-            auto_labels.filename if auto_labels else "grid",
-        )
+        if ax is None:
+            output_path, filename, fmt = _output_for_plotter(self.output, auto_filename)
+        else:
+            output_path, filename, fmt = None, auto_filename, "png"
 
         plot_grid(
             grid=np.array(grid.array),
             ax=ax,
-            title=auto_labels.title if auto_labels else "",
+            title=title or "",
             output_path=output_path,
             output_filename=filename,
             output_format=fmt,

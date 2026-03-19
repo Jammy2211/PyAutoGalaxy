@@ -5,7 +5,8 @@ from autoconf import cached_property
 import autoarray as aa
 import autoarray.plot as aplt
 
-from autogalaxy.plot.mat_plot.two_d import MatPlot2D
+from autoarray.plot.wrap.base.output import Output
+from autoarray.plot.wrap.base.cmap import Cmap
 
 from autogalaxy.plot.abstract_plotters import Plotter, _to_lines, _to_positions
 
@@ -15,7 +16,9 @@ class MassPlotter(Plotter):
         self,
         mass_obj,
         grid: aa.type.Grid2DLike,
-        mat_plot_2d: MatPlot2D = None,
+        output: Output = None,
+        cmap: Cmap = None,
+        use_log10: bool = False,
         positions=None,
         light_profile_centres=None,
         mass_profile_centres=None,
@@ -25,7 +28,7 @@ class MassPlotter(Plotter):
         tangential_caustics=None,
         radial_caustics=None,
     ):
-        super().__init__(mat_plot_2d=mat_plot_2d)
+        super().__init__(output=output, cmap=cmap, use_log10=use_log10)
 
         self.mass_obj = mass_obj
         self.grid = grid
@@ -92,10 +95,8 @@ class MassPlotter(Plotter):
         if convergence:
             self._plot_array(
                 array=self.mass_obj.convergence_2d_from(grid=self.grid),
-                auto_labels=aplt.AutoLabels(
-                    title=f"Convergence{title_suffix}",
-                    filename=f"convergence_2d{filename_suffix}",
-                ),
+                auto_filename=f"convergence_2d{filename_suffix}",
+                title=f"Convergence{title_suffix}",
                 lines=lines,
                 positions=positions,
             )
@@ -103,10 +104,8 @@ class MassPlotter(Plotter):
         if potential:
             self._plot_array(
                 array=self.mass_obj.potential_2d_from(grid=self.grid),
-                auto_labels=aplt.AutoLabels(
-                    title=f"Potential{title_suffix}",
-                    filename=f"potential_2d{filename_suffix}",
-                ),
+                auto_filename=f"potential_2d{filename_suffix}",
+                title=f"Potential{title_suffix}",
                 lines=lines,
                 positions=positions,
             )
@@ -116,13 +115,10 @@ class MassPlotter(Plotter):
             deflections_y = aa.Array2D(
                 values=deflections.slim[:, 0], mask=self.grid.mask
             )
-
             self._plot_array(
                 array=deflections_y,
-                auto_labels=aplt.AutoLabels(
-                    title=f"Deflections Y{title_suffix}",
-                    filename=f"deflections_y_2d{filename_suffix}",
-                ),
+                auto_filename=f"deflections_y_2d{filename_suffix}",
+                title=f"Deflections Y{title_suffix}",
                 lines=lines,
                 positions=positions,
             )
@@ -132,13 +128,10 @@ class MassPlotter(Plotter):
             deflections_x = aa.Array2D(
                 values=deflections.slim[:, 1], mask=self.grid.mask
             )
-
             self._plot_array(
                 array=deflections_x,
-                auto_labels=aplt.AutoLabels(
-                    title=f"Deflections X{title_suffix}",
-                    filename=f"deflections_x_2d{filename_suffix}",
-                ),
+                auto_filename=f"deflections_x_2d{filename_suffix}",
+                title=f"Deflections X{title_suffix}",
                 lines=lines,
                 positions=positions,
             )
@@ -147,13 +140,11 @@ class MassPlotter(Plotter):
             from autogalaxy.operate.lens_calc import LensCalc
 
             self._plot_array(
-                array=LensCalc.from_mass_obj(
-                    self.mass_obj
-                ).magnification_2d_from(grid=self.grid),
-                auto_labels=aplt.AutoLabels(
-                    title=f"Magnification{title_suffix}",
-                    filename=f"magnification_2d{filename_suffix}",
+                array=LensCalc.from_mass_obj(self.mass_obj).magnification_2d_from(
+                    grid=self.grid
                 ),
+                auto_filename=f"magnification_2d{filename_suffix}",
+                title=f"Magnification{title_suffix}",
                 lines=lines,
                 positions=positions,
             )
