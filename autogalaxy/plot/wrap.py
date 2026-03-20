@@ -1,41 +1,38 @@
-import autoarray.plot as aplt
-
-
-class HalfLightRadiusAXVLine(aplt.AXVLine):
+class HalfLightRadiusAXVLine:
     pass
 
 
-class EinsteinRadiusAXVLine(aplt.AXVLine):
+class EinsteinRadiusAXVLine:
     pass
 
 
-class ModelFluxesYXScatter(aplt.YXScatter):
+class ModelFluxesYXScatter:
     pass
 
 
-class LightProfileCentresScatter(aplt.GridScatter):
+class LightProfileCentresScatter:
     pass
 
 
-class MassProfileCentresScatter(aplt.GridScatter):
+class MassProfileCentresScatter:
     pass
 
 
-class MultipleImagesScatter(aplt.GridScatter):
+class MultipleImagesScatter:
     pass
 
 
-class TangentialCriticalCurvesPlot(aplt.GridPlot):
+class TangentialCriticalCurvesPlot:
     pass
 
 
-class RadialCriticalCurvesPlot(aplt.GridPlot):
+class RadialCriticalCurvesPlot:
     pass
 
 
-class TangentialCausticsPlot(aplt.GridPlot):
+class TangentialCausticsPlot:
     pass
 
 
-class RadialCausticsPlot(aplt.GridPlot):
+class RadialCausticsPlot:
     pass

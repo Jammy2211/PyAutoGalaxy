@@ -76,7 +76,8 @@ class Scribbler:
             plt.imshow(image, interpolation="none")
         else:
             norm = cmap.norm_from(array=image)
-            plt.imshow(image, cmap=cmap.config_dict["cmap"], norm=norm)
+            cmap_name = getattr(cmap, "cmap_name", None) or cmap.config_dict.get("cmap", "viridis")
+            plt.imshow(image, cmap=cmap_name, norm=norm)
 
         if mask_overlay is not None:
             grid = mask_overlay.derive_grid.edge
