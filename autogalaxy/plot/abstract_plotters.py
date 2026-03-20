@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 from autoarray.plot.abstract_plotters import AbstractPlotter
 from autoarray.plot.wrap.base.output import Output
 from autoarray.plot.wrap.base.cmap import Cmap
-from autoarray.plot.wrap.base.title import Title
 
 
 def _to_lines(*items):
@@ -61,7 +60,7 @@ class Plotter(AbstractPlotter):
         output: Output = None,
         cmap: Cmap = None,
         use_log10: bool = False,
-        title: Title = None,
+        title: str = None,
     ):
         super().__init__(output=output, cmap=cmap, use_log10=use_log10, title=title)
 
