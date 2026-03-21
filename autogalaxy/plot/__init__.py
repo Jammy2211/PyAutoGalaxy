@@ -31,17 +31,11 @@ from autogalaxy.plot.wrap import (
     RadialCausticsPlot,
 )
 
+# Core plot functions
+from autogalaxy.plot.plot_utils import plot_array, plot_grid
+
 # Standalone plot functions — light profiles
 from autogalaxy.profiles.plot.light_profile_plots import plot_image_2d as plot_light_profile_image_2d
-
-# Standalone plot functions — mass profiles
-from autogalaxy.profiles.plot.mass_profile_plots import (
-    plot_convergence_2d as plot_mass_profile_convergence_2d,
-    plot_potential_2d as plot_mass_profile_potential_2d,
-    plot_deflections_y_2d as plot_mass_profile_deflections_y_2d,
-    plot_deflections_x_2d as plot_mass_profile_deflections_x_2d,
-    plot_magnification_2d as plot_mass_profile_magnification_2d,
-)
 
 # Standalone plot functions — basis
 from autogalaxy.profiles.plot.basis_plots import subplot_image as subplot_basis_image

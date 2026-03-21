@@ -299,15 +299,23 @@ def subplot_of_mass_profiles(
     if not mass_profiles:
         return
 
-    from autogalaxy.profiles.plot import mass_profile_plots as mpplots
+    from autogalaxy.plot.plot_utils import plot_array
 
     n = len(mass_profiles)
 
-    for name, flag, fn in [
-        ("convergence", convergence, mpplots.plot_convergence_2d),
-        ("potential", potential, mpplots.plot_potential_2d),
-        ("deflections_y", deflections_y, mpplots.plot_deflections_y_2d),
-        ("deflections_x", deflections_x, mpplots.plot_deflections_x_2d),
+    def _deflections_y(mp):
+        deflections = mp.deflections_yx_2d_from(grid=grid)
+        return aa.Array2D(values=deflections.slim[:, 0], mask=grid.mask)
+
+    def _deflections_x(mp):
+        deflections = mp.deflections_yx_2d_from(grid=grid)
+        return aa.Array2D(values=deflections.slim[:, 1], mask=grid.mask)
+
+    for name, flag, array_fn, title in [
+        ("convergence", convergence, lambda mp: mp.convergence_2d_from(grid=grid), "Convergence"),
+        ("potential", potential, lambda mp: mp.potential_2d_from(grid=grid), "Potential"),
+        ("deflections_y", deflections_y, _deflections_y, "Deflections Y"),
+        ("deflections_x", deflections_x, _deflections_x, "Deflections X"),
     ]:
         if not flag:
             continue
@@ -316,9 +324,9 @@ def subplot_of_mass_profiles(
         axes_flat = [axes] if n == 1 else list(axes.flatten())
 
         for i, mp in enumerate(mass_profiles):
-            fn(
-                mass_profile=mp,
-                grid=grid,
+            plot_array(
+                array=array_fn(mp),
+                title=title,
                 colormap=colormap,
                 use_log10=use_log10,
                 ax=axes_flat[i],
