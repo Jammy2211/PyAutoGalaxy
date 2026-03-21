@@ -50,21 +50,21 @@ class PlotterInterfaceEllipse(PlotterInterface):
             return plot_setting(section=["fit", "fit_ellipse"], name=name)
 
         if should_plot("data"):
-            fit_ellipse_plots.plot_data(
+            fit_ellipse_plots._plot_data(
                 fit_list=fit_list,
                 output_path=self.image_path,
                 output_format=self.fmt,
             )
 
         if should_plot("ellipse_residuals"):
-            fit_ellipse_plots.plot_ellipse_residuals(
+            fit_ellipse_plots._plot_ellipse_residuals(
                 fit_list=fit_list,
                 output_path=self.image_path,
                 output_format=self.fmt,
             )
 
         if should_plot("data_no_ellipse"):
-            fit_ellipse_plots.plot_data(
+            fit_ellipse_plots._plot_data(
                 fit_list=fit_list,
                 output_path=self.image_path,
                 output_format=self.fmt,
@@ -78,7 +78,7 @@ class PlotterInterfaceEllipse(PlotterInterface):
                 output_format=self.fmt,
             )
 
-        fit_ellipse_plots.plot_data(
+        fit_ellipse_plots._plot_data(
             fit_list=fit_list,
             output_path=self.image_path,
             output_format=self.fmt,
@@ -86,7 +86,7 @@ class PlotterInterfaceEllipse(PlotterInterface):
         )
 
         if should_plot("data_no_ellipse"):
-            fit_ellipse_plots.plot_data(
+            fit_ellipse_plots._plot_data(
                 fit_list=fit_list,
                 output_path=self.image_path,
                 output_format=self.fmt,

@@ -25,90 +25,6 @@ def _make_meta(fit, output_path, output_format, colormap, use_log10, positions, 
     )
 
 
-def plot_data(
-    fit: FitImaging,
-    output_path=None,
-    output_format="png",
-    colormap="default",
-    use_log10=False,
-    positions=None,
-    residuals_symmetric_cmap: bool = True,
-):
-    _make_meta(fit, output_path, output_format, colormap, use_log10, positions, residuals_symmetric_cmap).figures_2d(data=True)
-
-
-def plot_noise_map(
-    fit: FitImaging,
-    output_path=None,
-    output_format="png",
-    colormap="default",
-    use_log10=False,
-    positions=None,
-    residuals_symmetric_cmap: bool = True,
-):
-    _make_meta(fit, output_path, output_format, colormap, use_log10, positions, residuals_symmetric_cmap).figures_2d(noise_map=True)
-
-
-def plot_signal_to_noise_map(
-    fit: FitImaging,
-    output_path=None,
-    output_format="png",
-    colormap="default",
-    use_log10=False,
-    positions=None,
-    residuals_symmetric_cmap: bool = True,
-):
-    _make_meta(fit, output_path, output_format, colormap, use_log10, positions, residuals_symmetric_cmap).figures_2d(signal_to_noise_map=True)
-
-
-def plot_model_image(
-    fit: FitImaging,
-    output_path=None,
-    output_format="png",
-    colormap="default",
-    use_log10=False,
-    positions=None,
-    residuals_symmetric_cmap: bool = True,
-):
-    _make_meta(fit, output_path, output_format, colormap, use_log10, positions, residuals_symmetric_cmap).figures_2d(model_image=True)
-
-
-def plot_residual_map(
-    fit: FitImaging,
-    output_path=None,
-    output_format="png",
-    colormap="default",
-    use_log10=False,
-    positions=None,
-    residuals_symmetric_cmap: bool = True,
-):
-    _make_meta(fit, output_path, output_format, colormap, use_log10, positions, residuals_symmetric_cmap).figures_2d(residual_map=True)
-
-
-def plot_normalized_residual_map(
-    fit: FitImaging,
-    output_path=None,
-    output_format="png",
-    colormap="default",
-    use_log10=False,
-    positions=None,
-    residuals_symmetric_cmap: bool = True,
-):
-    _make_meta(fit, output_path, output_format, colormap, use_log10, positions, residuals_symmetric_cmap).figures_2d(normalized_residual_map=True)
-
-
-def plot_chi_squared_map(
-    fit: FitImaging,
-    output_path=None,
-    output_format="png",
-    colormap="default",
-    use_log10=False,
-    positions=None,
-    residuals_symmetric_cmap: bool = True,
-):
-    _make_meta(fit, output_path, output_format, colormap, use_log10, positions, residuals_symmetric_cmap).figures_2d(chi_squared_map=True)
-
-
 def subplot_fit(
     fit: FitImaging,
     output_path=None,
@@ -119,48 +35,6 @@ def subplot_fit(
     residuals_symmetric_cmap: bool = True,
 ):
     _make_meta(fit, output_path, output_format, colormap, use_log10, positions, residuals_symmetric_cmap).subplot_fit()
-
-
-def plot_subtracted_image_of_galaxy(
-    fit: FitImaging,
-    galaxy_index: int,
-    output_path=None,
-    output_format="png",
-    colormap="default",
-    use_log10=False,
-    positions=None,
-):
-    plot_array(
-        array=fit.subtracted_images_of_galaxies_list[galaxy_index],
-        title=f"Subtracted Image of Galaxy {galaxy_index}",
-        output_path=output_path,
-        output_filename=f"subtracted_image_of_galaxy_{galaxy_index}",
-        output_format=output_format,
-        colormap=colormap,
-        use_log10=use_log10,
-        positions=_to_positions(positions),
-    )
-
-
-def plot_model_image_of_galaxy(
-    fit: FitImaging,
-    galaxy_index: int,
-    output_path=None,
-    output_format="png",
-    colormap="default",
-    use_log10=False,
-    positions=None,
-):
-    plot_array(
-        array=fit.model_images_of_galaxies_list[galaxy_index],
-        title=f"Model Image of Galaxy {galaxy_index}",
-        output_path=output_path,
-        output_filename=f"model_image_of_galaxy_{galaxy_index}",
-        output_format=output_format,
-        colormap=colormap,
-        use_log10=use_log10,
-        positions=_to_positions(positions),
-    )
 
 
 def subplot_of_galaxy(

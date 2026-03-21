@@ -12,7 +12,7 @@ from autogalaxy.plot.plot_utils import plot_array, _save_subplot
 from autogalaxy.util import error_util
 
 
-def plot_data(
+def _plot_data(
     fit_list: List[FitEllipse],
     output_path=None,
     output_filename="ellipse_fit",
@@ -47,7 +47,7 @@ def plot_data(
     )
 
 
-def plot_ellipse_residuals(
+def _plot_ellipse_residuals(
     fit_list: List[FitEllipse],
     output_path=None,
     output_format="png",
@@ -76,14 +76,14 @@ def subplot_fit_ellipse(
 ):
     fig, axes = plt.subplots(1, 2, figsize=(14, 7))
 
-    plot_data(
+    _plot_data(
         fit_list=fit_list,
         colormap=colormap,
         use_log10=use_log10,
         disable_data_contours=disable_data_contours,
         ax=axes[0],
     )
-    plot_ellipse_residuals(fit_list=fit_list, for_subplot=True, ax=axes[1])
+    _plot_ellipse_residuals(fit_list=fit_list, for_subplot=True, ax=axes[1])
 
     plt.tight_layout()
     _save_subplot(fig, output_path, "subplot_fit_ellipse", output_format)
