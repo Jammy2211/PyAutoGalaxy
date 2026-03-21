@@ -23,11 +23,11 @@ def test__subplot_image(
 ):
     basis = ag.lp_basis.Basis(profile_list=[lp_0, lp_1])
 
-    plotter = aplt.BasisPlotter(
+    aplt.subplot_basis_image(
         basis=basis,
         grid=grid_2d_7x7,
-        output=aplt.Output(plot_path, format="png"),
+        output_path=plot_path,
+        output_format="png",
     )
-    plotter.subplot_image()
 
     assert path.join(plot_path, "subplot_basis_image.png") in plot_patch.paths

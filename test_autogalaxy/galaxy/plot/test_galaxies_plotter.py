@@ -1,6 +1,5 @@
 from os import path
 
-import autogalaxy as ag
 import autogalaxy.plot as aplt
 import pytest
 
@@ -22,13 +21,18 @@ def test__all_individual_plotter__output_file_with_default_name(
     plot_path,
     plot_patch,
 ):
-    plotter = aplt.GalaxiesPlotter(
+    aplt.plot_galaxies_image_2d(
         galaxies=galaxies_7x7,
         grid=grid_2d_7x7,
-        output=aplt.Output(plot_path, format="png"),
+        output_path=plot_path,
+        output_format="png",
     )
-
-    plotter.figures_2d(image=True, convergence=True)
+    aplt.plot_galaxies_convergence_2d(
+        galaxies=galaxies_7x7,
+        grid=grid_2d_7x7,
+        output_path=plot_path,
+        output_format="png",
+    )
 
     assert path.join(plot_path, "image_2d.png") in plot_patch.paths
     assert path.join(plot_path, "convergence_2d.png") in plot_patch.paths
@@ -41,34 +45,53 @@ def test__figures_of_galaxies(
     plot_path,
     plot_patch,
 ):
-    plotter = aplt.GalaxiesPlotter(
+    from autogalaxy.galaxy.plot.galaxies_plots import plot_image_2d_of_galaxy
+
+    plot_image_2d_of_galaxy(
         galaxies=galaxies_x2_7x7,
         grid=grid_2d_7x7,
-        output=aplt.Output(path=plot_path, format="png"),
+        galaxy_index=0,
+        output_path=plot_path,
+        output_format="png",
     )
-
-    plotter.figures_2d_of_galaxies(image=True)
+    plot_image_2d_of_galaxy(
+        galaxies=galaxies_x2_7x7,
+        grid=grid_2d_7x7,
+        galaxy_index=1,
+        output_path=plot_path,
+        output_format="png",
+    )
 
     assert path.join(plot_path, "image_2d_of_galaxy_0.png") in plot_patch.paths
     assert path.join(plot_path, "image_2d_of_galaxy_1.png") in plot_patch.paths
 
     plot_patch.paths = []
 
-    plotter.figures_2d_of_galaxies(image=True, galaxy_index=0)
+    plot_image_2d_of_galaxy(
+        galaxies=galaxies_x2_7x7,
+        grid=grid_2d_7x7,
+        galaxy_index=0,
+        output_path=plot_path,
+        output_format="png",
+    )
 
     assert path.join(plot_path, "image_2d_of_galaxy_0.png") in plot_patch.paths
     assert path.join(plot_path, "image_2d_of_galaxy_1.png") not in plot_patch.paths
 
 
 def test__galaxies_sub_plot_output(galaxies_x2_7x7, grid_2d_7x7, plot_path, plot_patch):
-    plotter = aplt.GalaxiesPlotter(
+    aplt.subplot_galaxies(
         galaxies=galaxies_x2_7x7,
         grid=grid_2d_7x7,
-        output=aplt.Output(plot_path, format="png"),
+        output_path=plot_path,
+        output_format="png",
     )
-
-    plotter.subplot_galaxies()
     assert path.join(plot_path, "subplot_galaxies.png") in plot_patch.paths
 
-    plotter.subplot_galaxy_images()
+    aplt.subplot_galaxy_images(
+        galaxies=galaxies_x2_7x7,
+        grid=grid_2d_7x7,
+        output_path=plot_path,
+        output_format="png",
+    )
     assert path.join(plot_path, "subplot_galaxy_images.png") in plot_patch.paths

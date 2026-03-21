@@ -6,7 +6,7 @@ import autoarray as aa
 import autoarray.plot as aplt
 
 from autogalaxy.ellipse.fit_ellipse import FitEllipse
-from autogalaxy.ellipse.plot.fit_ellipse_plotters import FitEllipsePlotter
+from autogalaxy.ellipse.plot import fit_ellipse_plots
 from autogalaxy.analysis.plotter_interface import PlotterInterface, plot_setting
 
 
@@ -49,37 +49,47 @@ class PlotterInterfaceEllipse(PlotterInterface):
         def should_plot(name):
             return plot_setting(section=["fit", "fit_ellipse"], name=name)
 
-        output = self.output_from()
+        if should_plot("data"):
+            fit_ellipse_plots.plot_data(
+                fit_list=fit_list,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )
 
-        fit_plotter = FitEllipsePlotter(
-            fit_list=fit_list,
-            output=output,
-        )
-
-        fit_plotter.figures_2d(
-            data=should_plot("data"),
-            ellipse_residuals=should_plot("ellipse_residuals"),
-        )
+        if should_plot("ellipse_residuals"):
+            fit_ellipse_plots.plot_ellipse_residuals(
+                fit_list=fit_list,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )
 
         if should_plot("data_no_ellipse"):
-            fit_plotter.figures_2d(
-                data=True,
+            fit_ellipse_plots.plot_data(
+                fit_list=fit_list,
+                output_path=self.image_path,
+                output_format=self.fmt,
                 disable_data_contours=True,
             )
 
         if should_plot("subplot_fit_ellipse"):
-            fit_plotter.subplot_fit_ellipse()
+            fit_ellipse_plots.subplot_fit_ellipse(
+                fit_list=fit_list,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )
 
-        fit_plotter_log10 = FitEllipsePlotter(
+        fit_ellipse_plots.plot_data(
             fit_list=fit_list,
-            output=output,
+            output_path=self.image_path,
+            output_format=self.fmt,
             use_log10=True,
         )
 
-        fit_plotter_log10.figures_2d(data=should_plot("data"))
-
         if should_plot("data_no_ellipse"):
-            fit_plotter_log10.figures_2d(
-                data=True,
+            fit_ellipse_plots.plot_data(
+                fit_list=fit_list,
+                output_path=self.image_path,
+                output_format=self.fmt,
+                use_log10=True,
                 disable_data_contours=True,
             )

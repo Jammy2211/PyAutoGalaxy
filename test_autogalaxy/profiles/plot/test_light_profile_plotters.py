@@ -1,7 +1,5 @@
 from os import path
 
-from autoconf import conf
-import autogalaxy as ag
 import autogalaxy.plot as aplt
 import pytest
 
@@ -22,12 +20,11 @@ def test__figures_2d__all_are_output(
     plot_path,
     plot_patch,
 ):
-    light_profile_plotter = aplt.LightProfilePlotter(
+    aplt.plot_light_profile_image_2d(
         light_profile=lp_0,
         grid=grid_2d_7x7,
-        output=aplt.Output(plot_path, format="png"),
+        output_path=plot_path,
+        output_format="png",
     )
-
-    light_profile_plotter.figures_2d(image=True)
 
     assert path.join(plot_path, "image_2d.png") in plot_patch.paths

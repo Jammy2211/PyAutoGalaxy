@@ -16,8 +16,8 @@ import autoarray.plot as aplt
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.galaxy.galaxies import Galaxies
-from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
-from autogalaxy.galaxy.plot.adapt_plotters import AdaptPlotter
+from autogalaxy.galaxy.plot import galaxies_plots
+from autogalaxy.galaxy.plot import adapt_plots
 
 
 def setting(section: Union[List[str], str], name: str):
@@ -63,19 +63,21 @@ class PlotterInterface:
         def should_plot(name):
             return plot_setting(section="galaxies", name=name)
 
-        output = self.output_from()
-
-        plotter = GalaxiesPlotter(
-            galaxies=galaxies,
-            grid=grid,
-            output=output,
-        )
-
         if should_plot("subplot_galaxy_images"):
-            plotter.subplot_galaxy_images()
+            galaxies_plots.subplot_galaxy_images(
+                galaxies=galaxies,
+                grid=grid,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )
 
         if should_plot("subplot_galaxies"):
-            plotter.subplot_galaxies()
+            galaxies_plots.subplot_galaxies(
+                galaxies=galaxies,
+                grid=grid,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )
 
         if should_plot("fits_galaxy_images"):
             image_list = [
@@ -141,14 +143,12 @@ class PlotterInterface:
         def should_plot(name):
             return plot_setting(section="adapt", name=name)
 
-        output = self.output_from()
-
-        adapt_plotter = AdaptPlotter(output=output)
-
         if adapt_images.galaxy_name_image_dict is not None:
             if should_plot("subplot_adapt_images"):
-                adapt_plotter.subplot_adapt_images(
-                    adapt_galaxy_name_image_dict=adapt_images.galaxy_name_image_dict
+                adapt_plots.subplot_adapt_images(
+                    adapt_galaxy_name_image_dict=adapt_images.galaxy_name_image_dict,
+                    output_path=self.image_path,
+                    output_format=self.fmt,
                 )
 
         if should_plot("fits_adapt_images"):

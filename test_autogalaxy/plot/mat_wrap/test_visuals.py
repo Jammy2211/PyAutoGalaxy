@@ -39,10 +39,9 @@ def test__2d__caustics_from_mass_obj(gal_x1_mp, grid_2d_7x7):
 
 
 def test__mass_plotter__tangential_critical_curves(gal_x1_mp, grid_2d_7x7):
-    from autogalaxy.plot.mass_plotter import MassPlotter
+    from autogalaxy.plot.plot_utils import _critical_curves_from
 
-    plotter = MassPlotter(mass_obj=gal_x1_mp, grid=grid_2d_7x7)
-    tc = plotter.tangential_critical_curves
+    tc, rc = _critical_curves_from(gal_x1_mp, grid_2d_7x7)
 
     od = LensCalc.from_mass_obj(gal_x1_mp)
     expected_tc = od.tangential_critical_curve_list_from(grid=grid_2d_7x7)

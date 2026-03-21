@@ -8,9 +8,9 @@ import autoarray as aa
 import autoarray.plot as aplt
 
 from autogalaxy.imaging.fit_imaging import FitImaging
-from autogalaxy.imaging.plot.fit_imaging_plotters import FitImagingPlotter
+from autogalaxy.imaging.plot import fit_imaging_plots
 from autogalaxy.analysis.plotter_interface import PlotterInterface, plot_setting
-from autogalaxy.plot.abstract_plotters import _save_subplot
+from autogalaxy.plot.plot_utils import _save_subplot, plot_array
 
 
 def fits_to_fits(should_plot, image_path: Path, fit: FitImaging):
@@ -92,18 +92,25 @@ class PlotterInterfaceImaging(PlotterInterface):
         def should_plot(name):
             return plot_setting(section=["fit", "fit_imaging"], name=name)
 
-        output = self.output_from()
-
-        fit_plotter = FitImagingPlotter(fit=fit, output=output)
-
         if should_plot("subplot_fit") or quick_update:
-            fit_plotter.subplot_fit()
+            fit_imaging_plots.subplot_fit(
+                fit=fit,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )
 
         if quick_update:
             return
 
         if should_plot("subplot_of_galaxies"):
-            fit_plotter.subplot_of_galaxies()
+            galaxy_indices = list(range(len(fit.galaxies)))
+            for galaxy_index in galaxy_indices:
+                fit_imaging_plots.subplot_of_galaxy(
+                    fit=fit,
+                    galaxy_index=galaxy_index,
+                    output_path=self.image_path,
+                    output_format=self.fmt,
+                )
 
         fits_to_fits(should_plot=should_plot, image_path=self.image_path, fit=fit)
 
@@ -128,7 +135,7 @@ class PlotterInterfaceImaging(PlotterInterface):
                                  "Signal-To-Noise Map", ax=axes[i][2])
 
             plt.tight_layout()
-            _save_subplot(fig, output, "subplot_dataset_combined")
+            _save_subplot(fig, self.image_path, "subplot_dataset_combined", self.fmt)
 
     def fit_imaging_combined(self, fit_list: List[FitImaging]):
         def should_plot(name):
@@ -137,13 +144,15 @@ class PlotterInterfaceImaging(PlotterInterface):
         output = self.output_from()
 
         if should_plot("subplot_fit"):
+            from autoarray.fit.plot.fit_imaging_plotters import FitImagingPlotterMeta
+
             n = len(fit_list)
             fig, axes = plt.subplots(n, 5, figsize=(35, 7 * n))
             if n == 1:
                 axes = [axes]
 
             for i, fit in enumerate(fit_list):
-                meta = FitImagingPlotter(fit=fit, output=output)._fit_imaging_meta_plotter
+                meta = FitImagingPlotterMeta(fit=fit, output=output)
                 meta._plot_array(fit.data, "data", "Data", ax=axes[i][0])
                 meta._plot_array(fit.signal_to_noise_map, "signal_to_noise_map",
                                  "Signal-To-Noise Map", ax=axes[i][1])
@@ -154,4 +163,4 @@ class PlotterInterfaceImaging(PlotterInterface):
                                  "Chi-Squared Map", ax=axes[i][4])
 
             plt.tight_layout()
-            _save_subplot(fig, output, "subplot_fit_combined")
+            _save_subplot(fig, self.image_path, "subplot_fit_combined", self.fmt)

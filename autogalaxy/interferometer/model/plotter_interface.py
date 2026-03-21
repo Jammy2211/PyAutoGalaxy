@@ -6,9 +6,7 @@ import autoarray as aa
 import autoarray.plot as aplt
 
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
-from autogalaxy.interferometer.plot.fit_interferometer_plotters import (
-    FitInterferometerPlotter,
-)
+from autogalaxy.interferometer.plot import fit_interferometer_plots
 from autogalaxy.analysis.plotter_interface import PlotterInterface, plot_setting
 
 
@@ -96,24 +94,29 @@ class PlotterInterfaceInterferometer(PlotterInterface):
         def should_plot(name):
             return plot_setting(section=["fit", "fit_interferometer"], name=name)
 
-        output = self.output_from()
-
-        fit_plotter = FitInterferometerPlotter(
-            fit=fit,
-            output=output,
-        )
-
         if should_plot("subplot_fit") or quick_update:
-            fit_plotter.subplot_fit()
+            fit_interferometer_plots.subplot_fit(
+                fit=fit,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )
 
         if should_plot("subplot_fit_dirty_images") or quick_update:
-            fit_plotter.subplot_fit_dirty_images()
+            fit_interferometer_plots.subplot_fit_dirty_images(
+                fit=fit,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )
 
         if quick_update:
             return
 
         if should_plot("subplot_fit_real_space"):
-            fit_plotter.subplot_fit_real_space()
+            fit_interferometer_plots.subplot_fit_real_space(
+                fit=fit,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )
 
         fits_to_fits(
             should_plot=should_plot,
