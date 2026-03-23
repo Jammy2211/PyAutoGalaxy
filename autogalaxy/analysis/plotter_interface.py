@@ -1,5 +1,6 @@
 from __future__ import annotations
 import csv
+import matplotlib.pyplot as plt
 import numpy as np
 import os
 from typing import List, Union, TYPE_CHECKING
@@ -98,19 +99,22 @@ class PlotterInterface:
 
         output = self.output_from()
 
-        inversion_plotter = aplt.InversionPlotter(
-            inversion=inversion,
-            output=output,
-        )
-
         if should_plot("subplot_inversion"):
+            from autogalaxy.plot.plot_utils import _save_subplot
+
             mapper_list = inversion.cls_list_from(cls=aa.Mapper)
 
-            for i in range(len(mapper_list)):
+            for i, mapper in enumerate(mapper_list):
                 suffix = "" if len(mapper_list) == 1 else f"_{i}"
-                inversion_plotter.subplot_of_mapper(
-                    mapper_index=i, auto_filename=f"subplot_inversion{suffix}"
-                )
+                reconstruction = inversion.reconstruction_dict[mapper]
+                grid = np.array(mapper.source_plane_mesh_grid)
+
+                fig, ax = plt.subplots(1, 1, figsize=(7, 7))
+                sc = ax.scatter(grid[:, 1], grid[:, 0], c=reconstruction, s=10)
+                plt.colorbar(sc, ax=ax)
+                ax.set_title("Reconstruction")
+                ax.set_aspect("equal")
+                _save_subplot(fig, output.path, f"subplot_inversion{suffix}", output.format_list[0] if output.format_list else "png")
 
         if should_plot("csv_reconstruction"):
             mapper_list = inversion.cls_list_from(cls=aa.Mapper)

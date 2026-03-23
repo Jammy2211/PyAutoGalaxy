@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 from typing import List
 
 from autoconf.fitsable import hdu_list_for_output_from
@@ -8,6 +9,7 @@ import autoarray.plot as aplt
 from autogalaxy.ellipse.fit_ellipse import FitEllipse
 from autogalaxy.ellipse.plot import fit_ellipse_plots
 from autogalaxy.analysis.plotter_interface import PlotterInterface, plot_setting
+from autogalaxy.plot.plot_utils import plot_array, _save_subplot
 
 
 class PlotterInterfaceEllipse(PlotterInterface):
@@ -15,15 +17,19 @@ class PlotterInterfaceEllipse(PlotterInterface):
         def should_plot(name):
             return plot_setting(section=["dataset", "imaging"], name=name)
 
-        output = self.output_from()
-
-        dataset_plotter = aplt.ImagingPlotter(
-            dataset=dataset,
-            output=output,
-        )
-
         if should_plot("subplot_dataset"):
-            dataset_plotter.subplot_dataset()
+            panels = [
+                (dataset.data, "Data"),
+                (dataset.noise_map, "Noise Map"),
+                (dataset.signal_to_noise_map, "Signal-To-Noise Map"),
+            ]
+            n = len(panels)
+            fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+            axes_flat = list(axes.flatten()) if n > 1 else [axes]
+            for i, (array, title) in enumerate(panels):
+                plot_array(array, title, ax=axes_flat[i])
+            plt.tight_layout()
+            _save_subplot(fig, self.image_path, "subplot_dataset", self.fmt)
 
         image_list = [
             dataset.data.native,

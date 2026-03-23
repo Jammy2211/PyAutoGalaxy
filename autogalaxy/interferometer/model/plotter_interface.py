@@ -61,15 +61,22 @@ class PlotterInterfaceInterferometer(PlotterInterface):
         def should_plot(name):
             return plot_setting(section=["dataset", "interferometer"], name=name)
 
-        output = self.output_from()
-
-        dataset_plotter = aplt.InterferometerPlotter(
-            dataset=dataset,
-            output=output,
-        )
-
         if should_plot("subplot_dataset"):
-            dataset_plotter.subplot_dataset()
+            from autogalaxy.plot.plot_utils import plot_array, _save_subplot
+            import matplotlib.pyplot as plt
+
+            panels = [
+                (dataset.dirty_image, "Dirty Image"),
+                (dataset.dirty_noise_map, "Dirty Noise Map"),
+                (dataset.dirty_signal_to_noise_map, "Dirty Signal-To-Noise Map"),
+            ]
+            n = len(panels)
+            fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+            axes_flat = list(axes.flatten())
+            for i, (array, title) in enumerate(panels):
+                plot_array(array, title, ax=axes_flat[i])
+            plt.tight_layout()
+            _save_subplot(fig, self.image_path, "subplot_dataset", self.fmt)
 
         if should_plot("fits_dataset"):
 

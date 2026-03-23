@@ -61,15 +61,23 @@ class PlotterInterfaceImaging(PlotterInterface):
         def should_plot(name):
             return plot_setting(section=["dataset", "imaging"], name=name)
 
-        output = self.output_from()
-
-        dataset_plotter = aplt.ImagingPlotter(
-            dataset=dataset,
-            output=output,
-        )
-
         if should_plot("subplot_dataset"):
-            dataset_plotter.subplot_dataset()
+            panels = [
+                (dataset.data, "Data"),
+                (dataset.noise_map, "Noise Map"),
+                (dataset.signal_to_noise_map, "Signal-To-Noise Map"),
+            ]
+            try:
+                panels.append((dataset.psf.kernel, "PSF"))
+            except Exception:
+                pass
+            n = len(panels)
+            fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+            axes_flat = list(axes.flatten()) if n > 1 else [axes]
+            for i, (array, title) in enumerate(panels):
+                plot_array(array, title, ax=axes_flat[i])
+            plt.tight_layout()
+            _save_subplot(fig, self.image_path, "subplot_dataset", self.fmt)
 
         if should_plot("fits_dataset"):
             image_list = [
@@ -118,8 +126,6 @@ class PlotterInterfaceImaging(PlotterInterface):
         def should_plot(name):
             return plot_setting(section=["dataset", "imaging"], name=name)
 
-        output = self.output_from()
-
         if should_plot("subplot_dataset"):
             n = len(dataset_list)
             fig, axes = plt.subplots(n, 4, figsize=(28, 7 * n))
@@ -127,12 +133,9 @@ class PlotterInterfaceImaging(PlotterInterface):
                 axes = [axes]
 
             for i, dataset in enumerate(dataset_list):
-                plotter = aplt.ImagingPlotter(dataset=dataset, output=output)
-                meta = plotter._imaging_meta_plotter
-                meta._plot_array(dataset.data, "data", "Data", ax=axes[i][0])
-                meta._plot_array(dataset.noise_map, "noise_map", "Noise Map", ax=axes[i][1])
-                meta._plot_array(dataset.signal_to_noise_map, "signal_to_noise_map",
-                                 "Signal-To-Noise Map", ax=axes[i][2])
+                plot_array(dataset.data, "Data", ax=axes[i][0])
+                plot_array(dataset.noise_map, "Noise Map", ax=axes[i][1])
+                plot_array(dataset.signal_to_noise_map, "Signal-To-Noise Map", ax=axes[i][2])
 
             plt.tight_layout()
             _save_subplot(fig, self.image_path, "subplot_dataset_combined", self.fmt)
