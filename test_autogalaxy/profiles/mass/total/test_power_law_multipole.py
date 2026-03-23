@@ -5,7 +5,7 @@ import autogalaxy as ag
 grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
-def test__deflections_yx_2d_from():
+def test__deflections_yx_2d_from__config_1():
     mp = ag.mp.PowerLawMultipole(
         m=4,
         centre=(0.1, 0.2),
@@ -19,6 +19,8 @@ def test__deflections_yx_2d_from():
     assert deflections[0, 0] == pytest.approx(-0.036120991, 1e-3)
     assert deflections[0, 1] == pytest.approx(-0.0476260676, 1e-3)
 
+
+def test__deflections_yx_2d_from__config_2():
     mp = ag.mp.PowerLawMultipole(
         m=4,
         centre=(0.2, 0.3),
@@ -33,7 +35,7 @@ def test__deflections_yx_2d_from():
     assert deflections[0, 1] == pytest.approx(-0.1298677210, 1e-3)
 
 
-def test__convergence_2d_from():
+def test__convergence_2d_from__config_1():
     mp = ag.mp.PowerLawMultipole(
         m=4,
         centre=(0.1, 0.2),
@@ -46,6 +48,8 @@ def test__convergence_2d_from():
 
     assert convergence[0] == pytest.approx(0.25958037, 1e-3)
 
+
+def test__convergence_2d_from__config_2():
     mp = ag.mp.PowerLawMultipole(
         m=4,
         centre=(0.2, 0.3),
