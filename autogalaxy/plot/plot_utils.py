@@ -64,6 +64,42 @@ def _resolve_format(output_format):
     return output_format or "png"
 
 
+def _zoom_array(array):
+    """Apply zoom_around_mask if configured; otherwise return unchanged."""
+    try:
+        from autoconf import conf
+        zoom = conf.instance["visualize"]["general"]["general"]["zoom_around_mask"]
+    except Exception:
+        zoom = False
+    if zoom and hasattr(array, "mask") and not array.mask.is_all_false:
+        try:
+            from autoarray.mask.derive.zoom_2d import Zoom2D
+            return Zoom2D(mask=array.mask).array_2d_from(array=array, buffer=1)
+        except Exception:
+            pass
+    return array
+
+
+def _auto_mask_edge(array):
+    """Return edge-pixel coordinates of the array's mask, or None."""
+    try:
+        if not array.mask.is_all_false:
+            return np.array(array.mask.derive_grid.edge.array)
+    except Exception:
+        pass
+    return None
+
+
+def _numpy_grid(grid):
+    """Convert a grid-like object to a numpy array, or return None."""
+    if grid is None:
+        return None
+    try:
+        return np.array(grid.array if hasattr(grid, "array") else grid)
+    except Exception:
+        return None
+
+
 def plot_array(
     array,
     title,
@@ -79,13 +115,6 @@ def plot_array(
 ):
     """Plot an autoarray Array2D to file or onto an existing Axes."""
     from autoarray.plot.plots.array import plot_array as _aa_plot_array
-    from autoarray.structures.plot.structure_plotters import (
-        _auto_mask_edge,
-        _numpy_lines,
-        _numpy_grid,
-        _numpy_positions,
-        _zoom_array,
-    )
 
     colormap = _resolve_colormap(colormap)
     output_format = _resolve_format(output_format)
@@ -100,8 +129,8 @@ def plot_array(
 
     mask = _auto_mask_edge(array) if hasattr(array, "mask") else None
 
-    _positions_list = positions if isinstance(positions, list) else _numpy_positions(positions)
-    _lines_list = lines if isinstance(lines, list) else _numpy_lines(lines)
+    _positions_list = positions if isinstance(positions, list) else _to_positions(positions)
+    _lines_list = lines if isinstance(lines, list) else _to_lines(lines)
 
     _output_path = None if ax is not None else output_path
 

@@ -1,26 +1,23 @@
-from typing import List
+import matplotlib.pyplot as plt
+import numpy as np
 
 import autoarray as aa
-import autoarray.plot as aplt
-
-from autoarray.fit.plot.fit_interferometer_plotters import FitInterferometerPlotterMeta
 
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.galaxy.plot import galaxies_plots
+from autogalaxy.plot.plot_utils import plot_array, _save_subplot
 
 
-def _make_meta(fit, output_path, output_format, colormap, use_log10, residuals_symmetric_cmap):
-    from autogalaxy.plot.plot_utils import _resolve_format
-    output_format = _resolve_format(output_format)
-    output = aplt.Output(path=output_path, format=output_format) if output_path else aplt.Output()
-    cmap = aplt.Cmap(cmap=colormap) if colormap != "default" else aplt.Cmap()
-    return FitInterferometerPlotterMeta(
-        fit=fit,
-        output=output,
-        cmap=cmap,
-        use_log10=use_log10,
-        residuals_symmetric_cmap=residuals_symmetric_cmap,
-    )
+def _plot_visibilities_1d(vis, ax, title):
+    """Plot real and imaginary components of a visibilities array as 1D line plots."""
+    try:
+        y = np.array(vis.slim if hasattr(vis, "slim") else vis)
+    except Exception:
+        y = np.asarray(vis)
+    ax.plot(y.real, label="Real", alpha=0.7)
+    ax.plot(y.imag, label="Imaginary", alpha=0.7)
+    ax.set_title(title)
+    ax.legend(fontsize=8)
 
 
 def subplot_fit(
@@ -31,7 +28,20 @@ def subplot_fit(
     use_log10=False,
     residuals_symmetric_cmap: bool = True,
 ):
-    _make_meta(fit, output_path, output_format, colormap, use_log10, residuals_symmetric_cmap).subplot_fit()
+    panels = [
+        (fit.residual_map, "Residual Map"),
+        (fit.normalized_residual_map, "Normalized Residual Map"),
+        (fit.chi_squared_map, "Chi-Squared Map"),
+    ]
+    n = len(panels)
+    fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+    axes_flat = list(axes.flatten())
+
+    for i, (vis, title) in enumerate(panels):
+        _plot_visibilities_1d(vis, axes_flat[i], title)
+
+    plt.tight_layout()
+    _save_subplot(fig, output_path, "subplot_fit", output_format)
 
 
 def subplot_fit_dirty_images(
@@ -42,7 +52,29 @@ def subplot_fit_dirty_images(
     use_log10=False,
     residuals_symmetric_cmap: bool = True,
 ):
-    _make_meta(fit, output_path, output_format, colormap, use_log10, residuals_symmetric_cmap).subplot_fit_dirty_images()
+    panels = [
+        (fit.dirty_image, "Dirty Image"),
+        (fit.dirty_signal_to_noise_map, "Dirty Signal-To-Noise Map"),
+        (fit.dirty_model_image, "Dirty Model Image"),
+        (fit.dirty_residual_map, "Dirty Residual Map"),
+        (fit.dirty_normalized_residual_map, "Dirty Normalized Residual Map"),
+        (fit.dirty_chi_squared_map, "Dirty Chi-Squared Map"),
+    ]
+    n = len(panels)
+    fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+    axes_flat = list(axes.flatten())
+
+    for i, (array, title) in enumerate(panels):
+        plot_array(
+            array=array,
+            title=title,
+            colormap=colormap,
+            use_log10=use_log10,
+            ax=axes_flat[i],
+        )
+
+    plt.tight_layout()
+    _save_subplot(fig, output_path, "subplot_fit_dirty_images", output_format)
 
 
 def subplot_fit_real_space(
@@ -65,11 +97,21 @@ def subplot_fit_real_space(
             auto_filename="subplot_fit_real_space",
         )
     else:
-        output = aplt.Output(path=output_path, format=output_format) if output_path else aplt.Output()
-        inversion_plotter = aplt.InversionPlotter(inversion=fit.inversion, output=output)
-        inversion_plotter.figures_2d_of_pixelization(
-            pixelization_index=0, reconstructed_operated_data=True
-        )
-        inversion_plotter.figures_2d_of_pixelization(
-            pixelization_index=0, reconstruction=True
-        )
+        panels = [
+            (fit.dirty_image, "Dirty Image"),
+            (fit.dirty_model_image, "Dirty Model Image"),
+            (fit.dirty_residual_map, "Dirty Residual Map"),
+        ]
+        n = len(panels)
+        fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+        axes_flat = list(axes.flatten())
+        for i, (array, title) in enumerate(panels):
+            plot_array(
+                array=array,
+                title=title,
+                colormap=colormap,
+                use_log10=use_log10,
+                ax=axes_flat[i],
+            )
+        plt.tight_layout()
+        _save_subplot(fig, output_path, "subplot_fit_real_space", output_format)

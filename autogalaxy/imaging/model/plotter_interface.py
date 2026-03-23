@@ -144,23 +144,17 @@ class PlotterInterfaceImaging(PlotterInterface):
         output = self.output_from()
 
         if should_plot("subplot_fit"):
-            from autoarray.fit.plot.fit_imaging_plotters import FitImagingPlotterMeta
-
             n = len(fit_list)
             fig, axes = plt.subplots(n, 5, figsize=(35, 7 * n))
             if n == 1:
                 axes = [axes]
 
             for i, fit in enumerate(fit_list):
-                meta = FitImagingPlotterMeta(fit=fit, output=output)
-                meta._plot_array(fit.data, "data", "Data", ax=axes[i][0])
-                meta._plot_array(fit.signal_to_noise_map, "signal_to_noise_map",
-                                 "Signal-To-Noise Map", ax=axes[i][1])
-                meta._plot_array(fit.model_data, "model_image", "Model Image", ax=axes[i][2])
-                meta._plot_array(fit.normalized_residual_map, "normalized_residual_map",
-                                 "Normalized Residual Map", ax=axes[i][3])
-                meta._plot_array(fit.chi_squared_map, "chi_squared_map",
-                                 "Chi-Squared Map", ax=axes[i][4])
+                plot_array(fit.data, "Data", ax=axes[i][0])
+                plot_array(fit.signal_to_noise_map, "Signal-To-Noise Map", ax=axes[i][1])
+                plot_array(fit.model_data, "Model Image", ax=axes[i][2])
+                plot_array(fit.normalized_residual_map, "Normalized Residual Map", ax=axes[i][3])
+                plot_array(fit.chi_squared_map, "Chi-Squared Map", ax=axes[i][4])
 
             plt.tight_layout()
             _save_subplot(fig, self.image_path, "subplot_fit_combined", self.fmt)
