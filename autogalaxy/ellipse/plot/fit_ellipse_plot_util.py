@@ -4,7 +4,36 @@ import numpy as np
 
 
 def plot_ellipse_residuals(array, fit_list, colors, output, for_subplot: bool = False):
+    """Plot the 1-D ellipse residuals as a function of position angle.
 
+    For each :class:`~autogalaxy.ellipse.fit_ellipse.FitEllipse` in
+    *fit_list*, the interpolated data values are scatter-plotted against
+    the position angle (in degrees) together with error bars from the noise
+    map and a horizontal line at the mean intensity.  The y-axis uses a
+    log₁₀ scale so that faint residuals remain visible.
+
+    The plot can be used either as a standalone figure (``for_subplot=False``)
+    — in which case it is saved via the *output* object and the figure is
+    closed — or as the right-hand panel of a larger subplot
+    (``for_subplot=True``), in which case it draws onto the current figure
+    and the caller is responsible for saving.
+
+    Parameters
+    ----------
+    array
+        The native 2-D data array; used only to extract the pixel scale for
+        computing position angles.
+    fit_list : list of FitEllipse
+        The ellipse fits to summarise.  One series is drawn per fit.
+    colors : str or sequence
+        A color spec or iterable of color specs cycled across the fits.
+    output
+        An ``autoarray`` ``Output`` object used to save the figure when
+        ``for_subplot=False``.
+    for_subplot : bool
+        If ``True``, draw onto subplot position ``(1, 2, 2)`` of the current
+        figure instead of creating a new figure.
+    """
     from astropy import units
 
     color = itertools.cycle(colors)

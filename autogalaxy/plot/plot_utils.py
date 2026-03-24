@@ -7,7 +7,25 @@ logger = logging.getLogger(__name__)
 
 
 def _to_lines(*items):
-    """Convert multiple line sources into a flat list of (N,2) numpy arrays."""
+    """Convert multiple line sources into a flat list of (N,2) numpy arrays.
+
+    Each item may be ``None`` (skipped), a list of line-like objects, or a
+    single line-like object.  A line-like object is anything that either has
+    an ``.array`` attribute or can be coerced to a 2-D numpy array with shape
+    ``(N, 2)``.  Items that cannot be converted, or that are empty, are
+    silently dropped.
+
+    Parameters
+    ----------
+    *items
+        Any number of line sources to merge.
+
+    Returns
+    -------
+    list of np.ndarray or None
+        A flat list of ``(N, 2)`` arrays, or ``None`` if nothing valid was
+        found.
+    """
     result = []
     for item in items:
         if item is None:
@@ -31,7 +49,22 @@ def _to_lines(*items):
 
 
 def _to_positions(*items):
-    """Convert multiple position sources into a flat list of (N,2) numpy arrays."""
+    """Convert multiple position sources into a flat list of (N,2) numpy arrays.
+
+    Thin wrapper around :func:`_to_lines` — positions and lines share the same
+    underlying representation (lists of ``(N, 2)`` coordinate arrays).
+
+    Parameters
+    ----------
+    *items
+        Any number of position sources to merge.
+
+    Returns
+    -------
+    list of np.ndarray or None
+        A flat list of ``(N, 2)`` arrays, or ``None`` if nothing valid was
+        found.
+    """
     return _to_lines(*items)
 
 
@@ -102,10 +135,45 @@ def plot_array(
     grid=None,
     ax=None,
 ):
-    """Plot an autoarray Array2D to file or onto an existing Axes.
+    """Plot an autoarray ``Array2D`` to file or onto an existing ``Axes``.
 
     All array preprocessing (zoom, mask-edge extraction, native/extent
     unpacking) is handled internally so callers never need to duplicate it.
+    The actual rendering is delegated to ``autoarray.plot.plot_array``.
+
+    Parameters
+    ----------
+    array
+        The ``Array2D`` (or array-like) to plot.
+    title : str
+        Title displayed above the panel.
+    output_path : str or None
+        Directory in which to save the figure.  ``None`` → call
+        ``plt.show()`` instead.
+    output_filename : str
+        Stem of the output file name (extension is added from
+        *output_format*).
+    output_format : str
+        File format, e.g. ``"png"`` or ``"pdf"``.
+    colormap : str
+        Matplotlib colormap name, or ``"default"`` to use the autoarray
+        default (``"jet"``).
+    use_log10 : bool
+        If ``True`` apply a log₁₀ stretch to the array values.
+    vmin, vmax : float or None
+        Explicit colour-bar limits.  Ignored when *symmetric* is ``True``.
+    symmetric : bool
+        If ``True`` set ``vmin = -vmax`` so that zero maps to the middle of
+        the colormap.
+    positions : list or array-like or None
+        Point positions to scatter-plot over the image.
+    lines : list or array-like or None
+        Line coordinates to overlay on the image.
+    grid : array-like or None
+        An additional grid of points to overlay.
+    ax : matplotlib.axes.Axes or None
+        Existing ``Axes`` to draw into.  When provided the figure is *not*
+        saved — the caller is responsible for saving.
     """
     from autoarray.plot import plot_array as _aa_plot_array
     from autoarray.plot import zoom_array, auto_mask_edge
@@ -162,7 +230,29 @@ def plot_grid(
     lines=None,
     ax=None,
 ):
-    """Plot an autoarray Grid2D to file or onto an existing Axes."""
+    """Plot an autoarray ``Grid2D`` as a scatter plot.
+
+    Delegates to ``autoarray.plot.plot_grid`` after converting the grid to a
+    plain numpy array.
+
+    Parameters
+    ----------
+    grid
+        The ``Grid2D`` (or grid-like) to plot.
+    title : str
+        Title displayed above the panel.
+    output_path : str or None
+        Directory in which to save the figure.  ``None`` → call
+        ``plt.show()`` instead.
+    output_filename : str
+        Stem of the output file name.
+    output_format : str
+        File format, e.g. ``"png"``.
+    lines : list or None
+        Line coordinates to overlay on the grid plot.
+    ax : matplotlib.axes.Axes or None
+        Existing ``Axes`` to draw into.
+    """
     from autoarray.plot import plot_grid as _aa_plot_grid
 
     output_format = _resolve_format(output_format)
@@ -179,7 +269,33 @@ def plot_grid(
 
 
 def _critical_curves_from(mass_obj, grid, tc=None, rc=None):
-    """Compute tangential and radial critical curves for a mass object."""
+    """Compute tangential and radial critical curves for a mass object.
+
+    If *tc* is already provided it is returned unchanged (along with *rc*),
+    allowing callers to cache the curves across multiple plot calls.  When
+    *tc* is ``None`` the curves are computed via :class:`LensCalc`.  Radial
+    critical curves are only computed when at least one radial critical-curve
+    area exceeds the grid pixel scale, avoiding spurious empty curves.
+
+    Parameters
+    ----------
+    mass_obj
+        Any object understood by ``LensCalc.from_mass_obj`` (e.g. a
+        :class:`~autogalaxy.galaxy.galaxies.Galaxies` instance).
+    grid : aa.type.Grid2DLike
+        The grid on which to evaluate the critical curves.
+    tc : list or None
+        Pre-computed tangential critical curves.  Pass ``None`` to trigger
+        computation.
+    rc : list or None
+        Pre-computed radial critical curves.  Pass ``None`` to trigger
+        computation.
+
+    Returns
+    -------
+    tuple[list, list or None]
+        ``(tangential_critical_curves, radial_critical_curves)``.
+    """
     from autogalaxy.operate.lens_calc import LensCalc
 
     if tc is None:

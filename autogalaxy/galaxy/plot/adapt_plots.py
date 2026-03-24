@@ -15,6 +15,30 @@ def subplot_adapt_images(
     colormap="default",
     use_log10=False,
 ):
+    """Create a subplot showing the adapt (model) image for each galaxy.
+
+    Adapt images are per-galaxy model images produced during a previous
+    non-linear search.  They are used to drive adaptive mesh and
+    regularisation schemes in subsequent searches.  This function lays out
+    one panel per entry in *adapt_galaxy_name_image_dict*, arranged in rows
+    of up to three columns.
+
+    If *adapt_galaxy_name_image_dict* is ``None`` the function returns
+    immediately without producing any output.
+
+    Parameters
+    ----------
+    adapt_galaxy_name_image_dict : dict[Galaxy, aa.Array2D] or None
+        Mapping from galaxy (used as a label) to its adapt image array.
+    output_path : str or None
+        Directory in which to save the figure.  ``None`` → ``plt.show()``.
+    output_format : str
+        File format, e.g. ``"png"``.
+    colormap : str
+        Matplotlib colormap name, or ``"default"``.
+    use_log10 : bool
+        Apply a log₁₀ stretch to the image values.
+    """
     if adapt_galaxy_name_image_dict is None:
         return
 

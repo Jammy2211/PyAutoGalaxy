@@ -17,6 +17,28 @@ def subplot_fit(
     use_log10=False,
     residuals_symmetric_cmap: bool = True,
 ):
+    """Create a three-panel subplot summarising a :class:`~autogalaxy.interferometer.fit_interferometer.FitInterferometer`.
+
+    The panels show the visibility-space residual map, normalised residual
+    map, and chi-squared map, each rendered as 1-D visibility plots via
+    ``autoarray.plot.plot_visibilities_1d``.
+
+    Parameters
+    ----------
+    fit : FitInterferometer
+        The completed interferometer fit to visualise.
+    output_path : str or None
+        Directory in which to save the figure.  ``None`` → ``plt.show()``.
+    output_format : str
+        File format, e.g. ``"png"``.
+    colormap : str
+        Matplotlib colormap name, or ``"default"`` (passed through but not
+        used by the 1-D visibility renderer).
+    use_log10 : bool
+        Reserved for future log-stretch support (currently unused).
+    residuals_symmetric_cmap : bool
+        Reserved for future symmetric-colormap support (currently unused).
+    """
     panels = [
         (fit.residual_map, "Residual Map"),
         (fit.normalized_residual_map, "Normalized Residual Map"),
@@ -41,6 +63,28 @@ def subplot_fit_dirty_images(
     use_log10=False,
     residuals_symmetric_cmap: bool = True,
 ):
+    """Create a six-panel subplot of dirty-image diagnostics for an interferometer fit.
+
+    Dirty images are the real-space counterparts of the visibility-space data,
+    obtained via an inverse Fourier transform.  The panels show: dirty image,
+    dirty signal-to-noise map, dirty model image, dirty residual map, dirty
+    normalised residual map, and dirty chi-squared map.
+
+    Parameters
+    ----------
+    fit : FitInterferometer
+        The completed interferometer fit to visualise.
+    output_path : str or None
+        Directory in which to save the figure.  ``None`` → ``plt.show()``.
+    output_format : str
+        File format, e.g. ``"png"``.
+    colormap : str
+        Matplotlib colormap name, or ``"default"``.
+    use_log10 : bool
+        Apply a log₁₀ stretch to the plotted values.
+    residuals_symmetric_cmap : bool
+        Reserved for future symmetric-colormap support (currently unused).
+    """
     panels = [
         (fit.dirty_image, "Dirty Image"),
         (fit.dirty_signal_to_noise_map, "Dirty Signal-To-Noise Map"),
@@ -73,6 +117,31 @@ def subplot_fit_real_space(
     colormap="default",
     use_log10=False,
 ):
+    """Create a real-space summary subplot for an interferometer fit.
+
+    The exact panels depend on whether the fit includes a pixelization:
+
+    - **No pixelization**: delegates to
+      :func:`~autogalaxy.galaxy.plot.galaxies_plots.subplot_galaxies` which
+      shows image, convergence, potential, and deflections on the light-profile
+      grid.
+    - **With pixelization**: shows three dirty-image panels (dirty image, dirty
+      model image, dirty residual map), which are the best real-space
+      representation available when a pixelized source is used.
+
+    Parameters
+    ----------
+    fit : FitInterferometer
+        The completed interferometer fit to visualise.
+    output_path : str or None
+        Directory in which to save the figure.  ``None`` → ``plt.show()``.
+    output_format : str
+        File format, e.g. ``"png"``.
+    colormap : str
+        Matplotlib colormap name, or ``"default"``.
+    use_log10 : bool
+        Apply a log₁₀ stretch to the plotted values.
+    """
     galaxy_list = fit.galaxies_linear_light_profiles_to_light_profiles
 
     if not galaxy_list.has(cls=aa.Pixelization):

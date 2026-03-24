@@ -18,6 +18,36 @@ def subplot_image(
     positions=None,
     lines=None,
 ):
+    """Create a subplot showing the image of every light profile in a basis.
+
+    Produces one panel per profile in
+    :attr:`~autogalaxy.profiles.basis.Basis.light_profile_list`, arranged in
+    rows of up to four columns.  Each panel title is taken from the profile's
+    ``coefficient_tag`` attribute.
+
+    Linear light profiles cannot be plotted directly (their intensity is
+    solved via inversion), so an error is raised if any are present.
+
+    Parameters
+    ----------
+    basis : Basis
+        The basis (e.g. MGE or shapelet set) whose component images are to be
+        plotted.
+    grid : aa.type.Grid1D2DLike
+        The grid on which each light profile image is evaluated.
+    output_path : str or None
+        Directory in which to save the figure.  ``None`` → ``plt.show()``.
+    output_format : str
+        File format, e.g. ``"png"``.
+    colormap : str
+        Matplotlib colormap name, or ``"default"``.
+    use_log10 : bool
+        Apply a log₁₀ stretch to the image values.
+    positions : array-like or None
+        Point positions to scatter-plot over each panel.
+    lines : list or None
+        Line coordinates to overlay on each panel.
+    """
     from autogalaxy.profiles.light.linear import LightProfileLinear
 
     for light_profile in basis.light_profile_list:

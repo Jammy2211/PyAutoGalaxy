@@ -19,6 +19,29 @@ def subplot_of_light_profiles(
     use_log10=False,
     positions=None,
 ):
+    """Create a subplot showing the image of every light profile in a galaxy.
+
+    One panel is drawn per :class:`~autogalaxy.profiles.light.abstract.LightProfile`
+    attached to *galaxy*.  If the galaxy has no light profiles the function
+    returns immediately without producing any output.
+
+    Parameters
+    ----------
+    galaxy : Galaxy
+        The galaxy whose light profiles are to be plotted.
+    grid : aa.type.Grid1D2DLike
+        The grid on which each light profile image is evaluated.
+    output_path : str or None
+        Directory in which to save the figure.  ``None`` → ``plt.show()``.
+    output_format : str
+        File format, e.g. ``"png"``.
+    colormap : str
+        Matplotlib colormap name, or ``"default"``.
+    use_log10 : bool
+        Apply a log₁₀ stretch to the image values.
+    positions : array-like or None
+        Point positions to scatter-plot over each panel.
+    """
     light_profiles = galaxy.cls_list_from(cls=LightProfile)
     if not light_profiles:
         return
@@ -52,6 +75,37 @@ def subplot_of_mass_profiles(
     colormap="default",
     use_log10=False,
 ):
+    """Create subplots showing lensing quantities for every mass profile in a galaxy.
+
+    One figure is produced *per requested quantity*, each containing one panel
+    per :class:`~autogalaxy.profiles.mass.abstract.abstract.MassProfile`
+    attached to *galaxy*.  Only the quantities whose corresponding flag is
+    ``True`` are plotted; if none are requested, or if the galaxy has no mass
+    profiles, the function returns without producing output.
+
+    Parameters
+    ----------
+    galaxy : Galaxy
+        The galaxy whose mass profiles are to be plotted.
+    grid : aa.type.Grid2DLike
+        The grid on which lensing quantities are evaluated.
+    convergence : bool
+        Plot the convergence map of each mass profile.
+    potential : bool
+        Plot the gravitational potential map of each mass profile.
+    deflections_y : bool
+        Plot the y-component of the deflection-angle map.
+    deflections_x : bool
+        Plot the x-component of the deflection-angle map.
+    output_path : str or None
+        Directory in which to save figures.  ``None`` → ``plt.show()``.
+    output_format : str
+        File format, e.g. ``"png"``.
+    colormap : str
+        Matplotlib colormap name, or ``"default"``.
+    use_log10 : bool
+        Apply a log₁₀ stretch to the plotted values.
+    """
     mass_profiles = galaxy.cls_list_from(cls=MassProfile)
     if not mass_profiles:
         return

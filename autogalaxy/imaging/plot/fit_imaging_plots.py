@@ -15,6 +15,29 @@ def subplot_fit(
     positions=None,
     residuals_symmetric_cmap: bool = True,
 ):
+    """Create a six-panel subplot summarising a :class:`~autogalaxy.imaging.fit_imaging.FitImaging`.
+
+    The panels show, in order: data, signal-to-noise map, model image,
+    residual map, normalised residual map, and chi-squared map.
+
+    Parameters
+    ----------
+    fit : FitImaging
+        The completed imaging fit to visualise.
+    output_path : str or None
+        Directory in which to save the figure.  ``None`` → ``plt.show()``.
+    output_format : str
+        File format, e.g. ``"png"``.
+    colormap : str
+        Matplotlib colormap name, or ``"default"``.
+    use_log10 : bool
+        Apply a log₁₀ stretch to the plotted values.
+    positions : array-like or None
+        Point positions to scatter-plot over each panel.
+    residuals_symmetric_cmap : bool
+        Reserved for future symmetric-colormap support on residual panels
+        (currently unused).
+    """
     panels = [
         (fit.data, "Data"),
         (fit.signal_to_noise_map, "Signal-To-Noise Map"),
@@ -51,6 +74,32 @@ def subplot_of_galaxy(
     positions=None,
     residuals_symmetric_cmap: bool = True,
 ):
+    """Create a three-panel subplot focused on a single galaxy contribution.
+
+    Shows the observed data alongside the subtracted image and model image
+    for the galaxy at *galaxy_index* in the fitted galaxy list.  This is
+    useful for inspecting the contribution of individual galaxies when
+    multiple galaxies are being fitted simultaneously.
+
+    Parameters
+    ----------
+    fit : FitImaging
+        The completed imaging fit to visualise.
+    galaxy_index : int
+        Index into ``fit.galaxies`` selecting which galaxy to highlight.
+    output_path : str or None
+        Directory in which to save the figure.  ``None`` → ``plt.show()``.
+    output_format : str
+        File format, e.g. ``"png"``.
+    colormap : str
+        Matplotlib colormap name, or ``"default"``.
+    use_log10 : bool
+        Apply a log₁₀ stretch to the plotted values.
+    positions : array-like or None
+        Point positions to scatter-plot over each panel.
+    residuals_symmetric_cmap : bool
+        Reserved for future symmetric-colormap support (currently unused).
+    """
     panels = [
         (fit.data, "Data"),
         (
