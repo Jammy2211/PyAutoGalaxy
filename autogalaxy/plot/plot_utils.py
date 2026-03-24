@@ -63,10 +63,9 @@ def _save_subplot(fig, output_path, output_filename, output_format="png",
 
 
 def _resolve_colormap(colormap):
-    """Resolve 'default' to the actual default matplotlib colormap."""
+    """Resolve 'default' to the autoarray default colormap."""
     if colormap == "default":
-        from autoarray.plot import Cmap
-        return Cmap().cmap
+        return "jet"
     return colormap
 
 
@@ -109,14 +108,11 @@ def plot_array(
     unpacking) is handled internally so callers never need to duplicate it.
     """
     from autoarray.plot import plot_array as _aa_plot_array
-    from autoarray.structures.plot.structure_plotters import (
-        _zoom_array,
-        _mask_edge_from,
-    )
+    from autoarray.plot import zoom_array, auto_mask_edge
 
     colormap = _resolve_colormap(colormap)
     output_format = _resolve_format(output_format)
-    array = _zoom_array(array)
+    array = zoom_array(array)
 
     try:
         arr = array.native.array
@@ -125,7 +121,7 @@ def plot_array(
         arr = np.asarray(array)
         extent = None
 
-    mask = _mask_edge_from(array, None) if hasattr(array, "mask") else None
+    mask = auto_mask_edge(array) if hasattr(array, "mask") else None
 
     if symmetric:
         finite = arr[np.isfinite(arr)]

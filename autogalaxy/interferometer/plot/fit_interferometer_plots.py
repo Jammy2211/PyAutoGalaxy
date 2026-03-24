@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import autoarray as aa
-from autoarray.plot.plots.utils import plot_visibilities_1d
+from autoarray.plot import plot_visibilities_1d
 
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.galaxy.plot import galaxies_plots
