@@ -268,6 +268,30 @@ def plot_grid(
     )
 
 
+def _caustics_from(mass_obj, grid):
+    """Compute tangential and radial caustics for a mass object via LensCalc.
+
+    Parameters
+    ----------
+    mass_obj
+        Any object understood by ``LensCalc.from_mass_obj`` (e.g. a
+        :class:`~autogalaxy.galaxy.galaxies.Galaxies` or autolens ``Tracer``).
+    grid : aa.type.Grid2DLike
+        The grid on which to evaluate the caustics.
+
+    Returns
+    -------
+    tuple[list, list]
+        ``(tangential_caustics, radial_caustics)``.
+    """
+    from autogalaxy.operate.lens_calc import LensCalc
+
+    od = LensCalc.from_mass_obj(mass_obj)
+    tan_ca = od.tangential_caustic_list_from(grid=grid)
+    rad_ca = od.radial_caustic_list_from(grid=grid)
+    return tan_ca, rad_ca
+
+
 def _critical_curves_from(mass_obj, grid, tc=None, rc=None):
     """Compute tangential and radial critical curves for a mass object.
 
