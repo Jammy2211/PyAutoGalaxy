@@ -29,8 +29,11 @@ class PlotPatch:
 
 @pytest.fixture(name="plot_patch")
 def make_plot_patch(monkeypatch):
+    import matplotlib.figure
+
     plot_patch = PlotPatch()
     monkeypatch.setattr(pyplot, "savefig", plot_patch)
+    monkeypatch.setattr(matplotlib.figure.Figure, "savefig", plot_patch)
     return plot_patch
 
 

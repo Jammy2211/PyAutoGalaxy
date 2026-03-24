@@ -1,89 +1,37 @@
-from autofit.non_linear.plot.nest_plotters import NestPlotter
-from autofit.non_linear.plot.mcmc_plotters import MCMCPlotter
-from autofit.non_linear.plot.mle_plotters import MLEPlotter
+from autogalaxy.plot.plot_utils import plot_array, plot_grid
 
-from autoarray.plot.wrap.base import (
-    Units,
-    Figure,
-    Axis,
-    Cmap,
-    Colorbar,
-    ColorbarTickParams,
-    TickParams,
-    YTicks,
-    XTicks,
-    Title,
-    YLabel,
-    XLabel,
-    Text,
-    Annotate,
-    Legend,
-    Output,
-)
-from autoarray.plot.wrap.one_d import YXPlot, FillBetween
-from autoarray.plot.wrap.two_d import (
-    ArrayOverlay,
-    Contour,
-    GridScatter,
-    GridPlot,
-    VectorYXQuiver,
-    PatchOverlay,
-    DelaunayDrawer,
-    OriginScatter,
-    MaskScatter,
-    BorderScatter,
-    PositionsScatter,
-    IndexScatter,
-    MeshGridScatter,
-    ParallelOverscanPlot,
-    SerialPrescanPlot,
-    SerialOverscanPlot,
+from autogalaxy.profiles.plot.basis_plots import subplot_image as subplot_basis_image
+
+from autogalaxy.galaxy.plot.galaxy_plots import (
+    subplot_of_light_profiles as subplot_galaxy_light_profiles,
+    subplot_of_mass_profiles as subplot_galaxy_mass_profiles,
 )
 
-from autoarray.structures.plot.structure_plotters import Array2DPlotter
-from autoarray.structures.plot.structure_plotters import Grid2DPlotter
-from autoarray.structures.plot.structure_plotters import YX1DPlotter
-from autoarray.structures.plot.structure_plotters import YX1DPlotter as Array1DPlotter
-from autoarray.inversion.plot.mapper_plotters import MapperPlotter
-from autoarray.inversion.plot.inversion_plotters import InversionPlotter
-from autoarray.dataset.plot.imaging_plotters import ImagingPlotter
-from autoarray.dataset.plot.interferometer_plotters import InterferometerPlotter
-
-from autoarray.plot.multi_plotters import MultiFigurePlotter
-from autoarray.plot.multi_plotters import MultiYX1DPlotter
-
-from autoarray.plot.auto_labels import AutoLabels
-
-from autogalaxy.plot.wrap import (
-    HalfLightRadiusAXVLine,
-    EinsteinRadiusAXVLine,
-    ModelFluxesYXScatter,
-    LightProfileCentresScatter,
-    MassProfileCentresScatter,
-    TangentialCriticalCurvesPlot,
-    RadialCriticalCurvesPlot,
-    TangentialCausticsPlot,
-    RadialCausticsPlot,
-    MultipleImagesScatter,
+from autogalaxy.galaxy.plot.galaxies_plots import (
+    subplot_galaxies,
+    subplot_galaxy_images,
 )
 
-
-from autogalaxy.plot.mat_plot.one_d import MatPlot1D
-from autogalaxy.plot.mat_plot.two_d import MatPlot2D
-from autogalaxy.plot.visuals.one_d import Visuals1D
-from autogalaxy.plot.visuals.two_d import Visuals2D
-
-from autogalaxy.profiles.plot.light_profile_plotters import LightProfilePlotter
-from autogalaxy.profiles.plot.basis_plotters import BasisPlotter
-from autogalaxy.profiles.plot.mass_profile_plotters import MassProfilePlotter
-from autogalaxy.galaxy.plot.galaxy_plotters import GalaxyPlotter
-from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
-from autogalaxy.quantity.plot.fit_quantity_plotters import FitQuantityPlotter
-from autogalaxy.imaging.plot.fit_imaging_plotters import FitImagingPlotter
-from autogalaxy.interferometer.plot.fit_interferometer_plotters import (
-    FitInterferometerPlotter,
+from autogalaxy.galaxy.plot.adapt_plots import (
+    subplot_adapt_images,
 )
-from autogalaxy.galaxy.plot.galaxies_plotters import GalaxiesPlotter
-from autogalaxy.galaxy.plot.adapt_plotters import AdaptPlotter
-from autogalaxy.ellipse.plot.fit_ellipse_plotters import FitEllipsePlotter
-from autogalaxy.ellipse.plot.fit_ellipse_plotters import FitEllipsePDFPlotter
+
+from autogalaxy.imaging.plot.fit_imaging_plots import (
+    subplot_fit as subplot_fit_imaging,
+    subplot_of_galaxy as subplot_fit_imaging_of_galaxy,
+)
+
+from autogalaxy.interferometer.plot.fit_interferometer_plots import (
+    subplot_fit as subplot_fit_interferometer,
+    subplot_fit_dirty_images,
+    subplot_fit_real_space,
+)
+
+from autogalaxy.quantity.plot.fit_quantity_plots import (
+    subplot_fit as subplot_fit_quantity,
+)
+
+from autogalaxy.ellipse.plot.fit_ellipse_plots import (
+    subplot_fit_ellipse,
+    subplot_ellipse_errors,
+)

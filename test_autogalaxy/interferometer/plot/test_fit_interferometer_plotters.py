@@ -17,22 +17,20 @@ def test__fit_sub_plot_real_space(
     plot_path,
     plot_patch,
 ):
-    fit_plotter = aplt.FitInterferometerPlotter(
+    aplt.subplot_fit_real_space(
         fit=fit_interferometer_7x7,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
+        output_path=plot_path,
+        output_format="png",
     )
-
-    fit_plotter.subplot_fit_real_space()
 
     assert path.join(plot_path, "subplot_fit_real_space.png") in plot_patch.paths
 
     plot_patch.paths = []
 
-    fit_plotter = aplt.FitInterferometerPlotter(
+    aplt.subplot_fit_real_space(
         fit=fit_interferometer_x2_galaxy_inversion_7x7,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
+        output_path=plot_path,
+        output_format="png",
     )
-
-    fit_plotter.subplot_fit_real_space()
 
     assert path.join(plot_path, "subplot_fit_real_space.png") in plot_patch.paths

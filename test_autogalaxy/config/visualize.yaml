@@ -4,11 +4,6 @@ general:
     imshow_origin: upper
     zoom_around_mask: true
 mat_wrap:
-  Axis:
-    figure:
-      emit: true
-    subplot:
-      emit: false
   Cmap:
     figure:
       cmap: default
@@ -31,305 +26,6 @@ mat_wrap:
     subplot:
       fraction: 0.1
       pad: 0.2
-  ColorbarTickParams:
-    figure:
-      labelsize: 1
-    subplot:
-      labelsize: 1
-  Figure:
-    figure:
-      aspect: square
-      figsize: (7,7)
-    subplot:
-      aspect: square
-      figsize: auto
-  Legend:
-    figure:
-      fontsize: 12
-      include: true
-    subplot:
-      fontsize: 13
-      include: false
-  Text:
-    figure:
-      fontsize: 16
-    subplot:
-      fontsize: 10
-  TickParams:
-    figure:
-      labelsize: 16
-    subplot:
-      labelsize: 10
-  Title:
-    figure:
-      fontsize: 11
-    subplot:
-      fontsize: 15
-  XLabel:
-    figure:
-      fontsize: 3
-    subplot:
-      fontsize: 4
-  XTicks:
-    figure:
-      fontsize: 17
-    subplot:
-      fontsize: 11
-  YLabel:
-    figure:
-      fontsize: 1
-    subplot:
-      fontsize: 2
-  YTicks:
-    figure:
-      fontsize: 16
-    subplot:
-      fontsize: 10
-mat_wrap_1d:
-  AXVLine:
-    figure:
-      c: k
-      ymin: 0.5
-    subplot:
-      c: k
-      ymin: 0.6
-  FillBetween:
-    figure:
-      alpha: 0.6
-      color: k
-    subplot:
-      alpha: 0.5
-      color: k
-  YXPlot:
-    figure:
-      c: k
-      linestyle: '-'
-      linewidth: 3
-    subplot:
-      c: k
-      linestyle: '-'
-      linewidth: 1
-  YXScatter:
-    figure:
-      c: k
-      marker: .
-    subplot:
-      c: k
-      marker: x
-  EinsteinRadiusAXVLine:
-    figure: {}
-    subplot: {}
-  HalfLightRadiusAXVLine:
-    figure: {}
-    subplot: {}
-mat_wrap_2d:
-  ArrayOverlay:
-    figure:
-      alpha: 0.5
-    subplot:
-      alpha: 0.7
-  BorderScatter:
-    figure:
-      c: c
-      marker: +
-      s: 13
-    subplot:
-      c: k
-      marker: .
-      s: 7
-  GridErrorbar:
-    figure:
-      c: k
-      marker: o
-    subplot:
-      c: b
-      marker: .
-  GridPlot:
-    figure:
-      c: k
-      linestyle: '-'
-      linewidth: 3
-    subplot:
-      c: k
-      linestyle: '-'
-      linewidth: 1
-  GridScatter:
-    figure:
-      c: y
-      marker: x
-      s: 14
-    subplot:
-      c: r
-      marker: .
-      s: 6
-  IndexScatter:
-    figure:
-      c: r,g,b,y,k,w
-      marker: .
-      s: 20
-    subplot:
-      c: r,g,b,y,w,k
-      marker: +
-      s: 21
-  MaskScatter:
-    figure:
-      c: g
-      marker: .
-      s: 12
-    subplot:
-      c: w
-      marker: .
-      s: 8
-  MeshGridScatter:
-    figure:
-      c: r
-      marker: .
-      s: 5
-    subplot:
-      c: g
-      marker: o
-      s: 6
-  OriginScatter:
-    figure:
-      c: k
-      marker: x
-      s: 80
-    subplot:
-      c: r
-      marker: .
-      s: 81
-  ParallelOverscanPlot:
-    figure:
-      c: k
-      linestyle: '-'
-      linewidth: 1
-    subplot:
-      c: k
-      linestyle: '-'
-      linewidth: 1
-  PatchOverlay:
-    figure:
-      edgecolor: c
-      facecolor: null
-    subplot:
-      edgecolor: y
-      facecolor: null
-  PositionsScatter:
-    figure:
-      c: r,g,b
-      marker: o
-      s: 15
-    subplot:
-      c: c,g,b
-      marker: .
-      s: 5
-  SerialOverscanPlot:
-    figure:
-      c: k
-      linestyle: '-'
-      linewidth: 2
-    subplot:
-      c: k
-      linestyle: '-'
-      linewidth: 1
-  SerialPrescanPlot:
-    figure:
-      c: k
-      linestyle: '-'
-      linewidth: 3
-    subplot:
-      c: k
-      linestyle: '-'
-      linewidth: 1
-  VectorYXQuiver:
-    figure:
-      alpha: 1.0
-      angles: xy
-      headlength: 0
-      headwidth: 1
-      linewidth: 5
-      pivot: middle
-      units: xy
-    subplot:
-      alpha: 1.1
-      angles: xy1
-      headlength: 0.1
-      headwidth: 11
-      linewidth: 51
-      pivot: middle1
-      units: xy1
-  VoronoiDrawer:
-    figure:
-      alpha: 0.7
-      edgecolor: k
-      linewidth: 0.3
-    subplot:
-      alpha: 0.5
-      edgecolor: r
-      linewidth: 1.0      
-  TangentialCausticsPlot:
-    figure:
-      c: w,g
-      linestyle: --
-      linewidth: 5
-    subplot:
-      c: g
-      linestyle: --
-      linewidth: 7
-  TangentialCriticalCurvesPlot:
-    figure:
-      c: w,k
-      linestyle: '-'
-      linewidth: 4
-    subplot:
-      c: b
-      linestyle: '-'
-      linewidth: 6
-  RadialCausticsPlot:
-    figure:
-      c: w,g
-      linestyle: --
-      linewidth: 5
-    subplot:
-      c: g
-      linestyle: --
-      linewidth: 7
-  RadialCriticalCurvesPlot:
-    figure:
-      c: w,k
-      linestyle: '-'
-      linewidth: 4
-    subplot:
-      c: b
-      linestyle: '-'
-      linewidth: 6
-  LightProfileCentresScatter:
-    figure:
-      c: k,r
-      marker: +
-      s: 1
-    subplot:
-      c: b
-      marker: .
-      s: 15
-  MassProfileCentresScatter:
-    figure:
-      c: r,k
-      marker: x
-      s: 2
-    subplot:
-      c: k
-      marker: o
-      s: 16
-  MultipleImagesScatter:
-    figure:
-      c: k,w
-      marker: o
-      s: 3
-    subplot:
-      c: g
-      marker: .
-      s: 17
 plots:
   fits_are_zoomed: true
   dataset:
@@ -337,22 +33,22 @@ plots:
   fit:
     subplot_fit: true
     subplot_of_galaxies: false
-    fits_fit: true                          # Output a .fits file containing the fit model data, residual map, normalized residual map and chi-squared?
-    fits_galaxy_images : true                # Output a .fits file containing the images (e.g. without PSF convolution) of every galaxy?
-    fits_model_galaxy_images : true          # Output a .fits file containing the model images (e.g. with PSF convolution) of every galaxy?
+    fits_fit: true
+    fits_galaxy_images : true
+    fits_model_galaxy_images : true
   fit_imaging: {}
   fit_interferometer:
-    fits_dirty_images: true                 # output dirty_images.fits showing the dirty image, noise-map, model-data, resiual-map, normalized residual map and chi-squared map?
+    fits_dirty_images: true
   fit_quantity:
     subplot_fit: false
   adapt:
     subplot_adapt_images: true
   inversion:
     subplot_inversion: true
-    csv_reconstruction: true          # output reconstruction_mesh.fits containing the reconstructed pixelization and noise map on the source-plane mesh?
+    csv_reconstruction: true
   galaxies:
     subplot_galaxies: true
     subplot_galaxy_images: true
-    fits_galaxy_images: true                # Output a .fits file containing images of every galaxy?
+    fits_galaxy_images: true
   positions:
     image_with_positions: true

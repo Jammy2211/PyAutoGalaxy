@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 from pathlib import Path
 from typing import List
 
@@ -7,35 +8,13 @@ import autoarray as aa
 import autoarray.plot as aplt
 
 from autogalaxy.imaging.fit_imaging import FitImaging
-from autogalaxy.imaging.plot.fit_imaging_plotters import FitImagingPlotter
-from autogalaxy.analysis.plotter_interface import PlotterInterface
+from autogalaxy.imaging.plot import fit_imaging_plots
+from autogalaxy.analysis.plotter_interface import PlotterInterface, plot_setting
+from autogalaxy.plot.plot_utils import _save_subplot, plot_array
 
-from autogalaxy.analysis.plotter_interface import plot_setting
 
-
-def fits_to_fits(
-    should_plot: bool,
-    image_path: Path,
-    fit: FitImaging,
-):
-    """
-    Output attributes of a `FitImaging` to .fits format.
-
-    This function is separated on its own so that it can be called by `PyAutoLens` and therefore avoid repeating
-    large amounts of code for visualization.
-
-    Parameters
-    ----------
-    should_plot
-        The function which inspects the configuration files to determine if a .fits file should be output.
-    image_path
-        The path the .fits files are output and the name of the .fits files.
-    fit
-        The fit to output to a .fits file.
-    """
-
+def fits_to_fits(should_plot, image_path: Path, fit: FitImaging):
     if should_plot("fits_fit"):
-
         image_list = [
             fit.model_data.native_for_fits,
             fit.residual_map.native_for_fits,
@@ -44,10 +23,7 @@ def fits_to_fits(
         ]
 
         hdu_list = hdu_list_for_output_from(
-            values_list=[
-                image_list[0].mask.astype("float"),
-            ]
-            + image_list,
+            values_list=[image_list[0].mask.astype("float")] + image_list,
             ext_name_list=[
                 "mask",
                 "model_data",
@@ -57,76 +33,51 @@ def fits_to_fits(
             ],
             header_dict=fit.mask.header_dict,
         )
-
         hdu_list.writeto(image_path / "fit.fits", overwrite=True)
 
     if should_plot("fits_galaxy_images"):
         number_plots = len(fit.galaxy_image_dict.keys()) + 1
-
         image_list = [image.native_for_fits for image in fit.galaxy_image_dict.values()]
-
         hdu_list = hdu_list_for_output_from(
             values_list=[image_list[0].mask.astype("float")] + image_list,
-            ext_name_list=[
-                "mask",
-            ]
-            + [f"galaxy_{i}" for i in range(number_plots)],
+            ext_name_list=["mask"] + [f"galaxy_{i}" for i in range(number_plots)],
             header_dict=fit.mask.header_dict,
         )
-
         hdu_list.writeto(image_path / "galaxy_images.fits", overwrite=True)
 
     if should_plot("fits_model_galaxy_images"):
         number_plots = len(fit.galaxy_model_image_dict.keys()) + 1
-
-        image_list = [
-            image.native_for_fits for image in fit.galaxy_model_image_dict.values()
-        ]
-
+        image_list = [image.native_for_fits for image in fit.galaxy_model_image_dict.values()]
         hdu_list = hdu_list_for_output_from(
             values_list=[image_list[0].mask.astype("float")] + image_list,
-            ext_name_list=[
-                "mask",
-            ]
-            + [f"galaxy_{i}" for i in range(number_plots)],
+            ext_name_list=["mask"] + [f"galaxy_{i}" for i in range(number_plots)],
             header_dict=fit.mask.header_dict,
         )
-
         hdu_list.writeto(image_path / "model_galaxy_images.fits", overwrite=True)
 
 
 class PlotterInterfaceImaging(PlotterInterface):
     def imaging(self, dataset: aa.Imaging):
-        """
-        Output visualization of an `Imaging` dataset, typically before a model-fit is performed.
-
-        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the `image_path`
-        is the output folder of the non-linear search.
-
-        Visualization includes a subplot of the individual images of attributes of the dataset (e.g. the image,
-        noise map, PSF).
-
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
-        the `dataset` and `imaging` headers.
-
-        Parameters
-        ----------
-        dataset
-            The imaging dataset which is visualized.
-        """
-
         def should_plot(name):
             return plot_setting(section=["dataset", "imaging"], name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from()
-
-        dataset_plotter = aplt.ImagingPlotter(
-            dataset=dataset,
-            mat_plot_2d=mat_plot_2d,
-        )
-
         if should_plot("subplot_dataset"):
-            dataset_plotter.subplot_dataset()
+            panels = [
+                (dataset.data, "Data"),
+                (dataset.noise_map, "Noise Map"),
+                (dataset.signal_to_noise_map, "Signal-To-Noise Map"),
+            ]
+            try:
+                panels.append((dataset.psf.kernel, "PSF"))
+            except Exception:
+                pass
+            n = len(panels)
+            fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+            axes_flat = list(axes.flatten()) if n > 1 else [axes]
+            for i, (array, title) in enumerate(panels):
+                plot_array(array, title, ax=axes_flat[i])
+            plt.tight_layout()
+            _save_subplot(fig, self.image_path, "subplot_dataset", self.fmt)
 
         if should_plot("fits_dataset"):
             image_list = [
@@ -134,203 +85,79 @@ class PlotterInterfaceImaging(PlotterInterface):
                 dataset.noise_map.native_for_fits,
                 dataset.psf.kernel.native_for_fits,
                 dataset.grids.lp.over_sample_size.native_for_fits.astype("float"),
-                dataset.grids.pixelization.over_sample_size.native_for_fits.astype(
-                    "float"
-                ),
+                dataset.grids.pixelization.over_sample_size.native_for_fits.astype("float"),
             ]
 
             hdu_list = hdu_list_for_output_from(
                 values_list=[image_list[0].mask.astype("float")] + image_list,
-                ext_name_list=[
-                    "mask",
-                    "data",
-                    "noise_map",
-                    "psf",
-                    "over_sample_size_lp",
-                    "over_sample_size_pixelization",
-                ],
+                ext_name_list=["mask", "data", "noise_map", "psf",
+                               "over_sample_size_lp", "over_sample_size_pixelization"],
                 header_dict=dataset.mask.header_dict,
             )
-
             hdu_list.writeto(self.image_path / "dataset.fits", overwrite=True)
 
     def fit_imaging(self, fit: FitImaging, quick_update: bool = False):
-        """
-        Visualizes a `FitImaging` object, which fits an imaging dataset.
-
-        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the `image_path`
-        points to the search's results folder and this function visualizes the maximum log likelihood `FitImaging`
-        inferred by the search so far.
-
-        Visualization includes a subplot of individual images of attributes of the `FitImaging` (e.g. the model data,
-        residual map) and .fits files containing its attributes grouped together.
-
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
-        the `fit` and `fit_imaging` headers.
-
-        Parameters
-        ----------
-        fit
-            The maximum log likelihood `FitImaging` of the non-linear search which is used to plot the fit.
-        """
-
         def should_plot(name):
             return plot_setting(section=["fit", "fit_imaging"], name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from()
-
-        fit_plotter = FitImagingPlotter(
-            fit=fit,
-            mat_plot_2d=mat_plot_2d,
-        )
-
         if should_plot("subplot_fit") or quick_update:
-            fit_plotter.subplot_fit()
+            fit_imaging_plots.subplot_fit(
+                fit=fit,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )
 
         if quick_update:
             return
 
         if should_plot("subplot_of_galaxies"):
-            fit_plotter.subplot_of_galaxies()
+            galaxy_indices = list(range(len(fit.galaxies)))
+            for galaxy_index in galaxy_indices:
+                fit_imaging_plots.subplot_of_galaxy(
+                    fit=fit,
+                    galaxy_index=galaxy_index,
+                    output_path=self.image_path,
+                    output_format=self.fmt,
+                )
 
-        fits_to_fits(
-            should_plot=should_plot,
-            image_path=self.image_path,
-            fit=fit,
-        )
+        fits_to_fits(should_plot=should_plot, image_path=self.image_path, fit=fit)
 
     def imaging_combined(self, dataset_list: List[aa.Imaging]):
-        """
-        Output visualization of all `Imaging` datasets in a summed combined analysis, typically before a model-fit
-        is performed.
-
-        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the `image_path`
-        is the output folder of the non-linear search.
-
-        Visualization includes a single subplot of individual images of attributes of each dataset (e.g. the image,
-        noise map,  PSF), such that the full suite of multiple datasets can be viewed on the same figure.
-
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
-        the `dataset` header.
-
-        Parameters
-        ----------
-        dataset
-            The list of imaging datasets which are visualized.
-        """
-
         def should_plot(name):
             return plot_setting(section=["dataset", "imaging"], name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from()
-
-        dataset_plotter_list = [
-            aplt.ImagingPlotter(
-                dataset=dataset,
-                mat_plot_2d=mat_plot_2d,
-            )
-            for dataset in dataset_list
-        ]
-
-        subplot_shape = (len(dataset_list), 4)
-
-        multi_plotter = aplt.MultiFigurePlotter(
-            plotter_list=dataset_plotter_list, subplot_shape=subplot_shape
-        )
-
         if should_plot("subplot_dataset"):
-            multi_plotter.subplot_of_figures_multi(
-                func_name_list=["figures_2d"] * 4,
-                figure_name_list=["data", "noise_map", "signal_to_noise_map", "psf"],
-                filename_suffix="dataset_combined",
-            )
+            n = len(dataset_list)
+            fig, axes = plt.subplots(n, 4, figsize=(28, 7 * n))
+            if n == 1:
+                axes = [axes]
 
-            for plotter in multi_plotter.plotter_list:
-                plotter.mat_plot_2d.use_log10 = True
+            for i, dataset in enumerate(dataset_list):
+                plot_array(dataset.data, "Data", ax=axes[i][0])
+                plot_array(dataset.noise_map, "Noise Map", ax=axes[i][1])
+                plot_array(dataset.signal_to_noise_map, "Signal-To-Noise Map", ax=axes[i][2])
 
-            multi_plotter.subplot_of_figures_multi(
-                func_name_list=["figures_2d"] * 4,
-                figure_name_list=["data", "noise_map", "signal_to_noise_map", "psf"],
-                filename_suffix="dataset_combined_log10",
-            )
+            plt.tight_layout()
+            _save_subplot(fig, self.image_path, "subplot_dataset_combined", self.fmt)
 
     def fit_imaging_combined(self, fit_list: List[FitImaging]):
-        """
-        Output visualization of all `FitImaging` objects in a summed combined analysis, typically during or after a
-        model-fit is performed.
-
-        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the `image_path`
-        is the output folder of the non-linear search.
-
-        Visualization includes a single subplot of individual images of attributes of each fit (e.g. data,
-        normalized residual-map), such that the full suite of multiple datasets can be viewed on the same figure.
-
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
-        the `fit` header.
-
-        Parameters
-        ----------
-        fit
-            The list of imaging fits which are visualized.
-        """
-
         def should_plot(name):
             return plot_setting(section=["fit", "fit_imaging"], name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from()
-
-        fit_plotter_list = [
-            FitImagingPlotter(
-                fit=fit,
-                mat_plot_2d=mat_plot_2d,
-            )
-            for fit in fit_list
-        ]
-
-        subplot_shape = (len(fit_list), 5)
-
-        multi_plotter = aplt.MultiFigurePlotter(
-            plotter_list=fit_plotter_list, subplot_shape=subplot_shape
-        )
+        output = self.output_from()
 
         if should_plot("subplot_fit"):
+            n = len(fit_list)
+            fig, axes = plt.subplots(n, 5, figsize=(35, 7 * n))
+            if n == 1:
+                axes = [axes]
 
-            def make_subplot_fit(filename_suffix):
-                multi_plotter.subplot_of_figures_multi(
-                    func_name_list=["figures_2d"] * 4,
-                    figure_name_list=[
-                        "data",
-                        "signal_to_noise_map",
-                        "model_image",
-                        "normalized_residual_map",
-                    ],
-                    filename_suffix=filename_suffix,
-                    number_subplots=len(fit_list) * 5,
-                    close_subplot=False,
-                )
+            for i, fit in enumerate(fit_list):
+                plot_array(fit.data, "Data", ax=axes[i][0])
+                plot_array(fit.signal_to_noise_map, "Signal-To-Noise Map", ax=axes[i][1])
+                plot_array(fit.model_data, "Model Image", ax=axes[i][2])
+                plot_array(fit.normalized_residual_map, "Normalized Residual Map", ax=axes[i][3])
+                plot_array(fit.chi_squared_map, "Chi-Squared Map", ax=axes[i][4])
 
-                for plotter in multi_plotter.plotter_list:
-                    plotter.mat_plot_2d.cmap.kwargs["vmin"] = -1.0
-                    plotter.mat_plot_2d.cmap.kwargs["vmax"] = 1.0
-
-                multi_plotter.subplot_of_figures_multi(
-                    func_name_list=["figures_2d"],
-                    figure_name_list=[
-                        "normalized_residual_map",
-                    ],
-                    filename_suffix=filename_suffix,
-                    number_subplots=len(fit_list) * 5,
-                    subplot_index_offset=4,
-                    open_subplot=False,
-                )
-
-                for plotter in multi_plotter.plotter_list:
-                    plotter.mat_plot_2d.cmap.kwargs["vmin"] = None
-                    plotter.mat_plot_2d.cmap.kwargs["vmax"] = None
-
-            make_subplot_fit(filename_suffix="fit_combined")
-
-            for plotter in multi_plotter.plotter_list:
-                plotter.mat_plot_2d.use_log10 = True
-
-            make_subplot_fit(filename_suffix="fit_combined_log10")
+            plt.tight_layout()
+            _save_subplot(fig, self.image_path, "subplot_fit_combined", self.fmt)

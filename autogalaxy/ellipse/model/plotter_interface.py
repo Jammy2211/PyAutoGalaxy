@@ -1,3 +1,4 @@
+import matplotlib.pyplot as plt
 from typing import List
 
 from autoconf.fitsable import hdu_list_for_output_from
@@ -6,44 +7,29 @@ import autoarray as aa
 import autoarray.plot as aplt
 
 from autogalaxy.ellipse.fit_ellipse import FitEllipse
-from autogalaxy.ellipse.plot.fit_ellipse_plotters import FitEllipsePlotter
-from autogalaxy.analysis.plotter_interface import PlotterInterface
-
-from autogalaxy.analysis.plotter_interface import plot_setting
+from autogalaxy.ellipse.plot import fit_ellipse_plots
+from autogalaxy.analysis.plotter_interface import PlotterInterface, plot_setting
+from autogalaxy.plot.plot_utils import plot_array, _save_subplot
 
 
 class PlotterInterfaceEllipse(PlotterInterface):
     def imaging(self, dataset: aa.Imaging):
-        """
-        Visualizes an `Imaging` dataset object.
-
-        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the `image_path`
-        is the output folder of the non-linear search.
-
-        Visualization includes individual images of attributes of the dataset (e.g. the image, noise map, PSF) and a
-        subplot of all these attributes on the same figure.
-
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under the
-        [dataset] header.
-
-        Parameters
-        ----------
-        dataset
-            The imaging dataset whose attributes are visualized.
-        """
-
         def should_plot(name):
             return plot_setting(section=["dataset", "imaging"], name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from()
-
-        dataset_plotter = aplt.ImagingPlotter(
-            dataset=dataset,
-            mat_plot_2d=mat_plot_2d,
-        )
-
         if should_plot("subplot_dataset"):
-            dataset_plotter.subplot_dataset()
+            panels = [
+                (dataset.data, "Data"),
+                (dataset.noise_map, "Noise Map"),
+                (dataset.signal_to_noise_map, "Signal-To-Noise Map"),
+            ]
+            n = len(panels)
+            fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+            axes_flat = list(axes.flatten()) if n > 1 else [axes]
+            for i, (array, title) in enumerate(panels):
+                plot_array(array, title, ax=axes_flat[i])
+            plt.tight_layout()
+            _save_subplot(fig, self.image_path, "subplot_dataset", self.fmt)
 
         image_list = [
             dataset.data.native,
@@ -66,56 +52,50 @@ class PlotterInterfaceEllipse(PlotterInterface):
         self,
         fit_list: List[FitEllipse],
     ):
-        """
-        Visualizes a `FitEllipse` object, which fits an imaging dataset.
-
-        Images are output to the `image` folder of the `image_path`. When used with a non-linear search the `image_path`
-        points to the search's results folder and this function visualizes the maximum log likelihood `FitEllipse`
-        inferred by the search so far.
-
-        Visualization includes a subplot of individual images of attributes of the `FitEllipse` (e.g. the model data,
-        residual map).
-
-        The images output by the `PlotterInterface` are customized using the file `config/visualize/plots.yaml` under
-        the `fit` and `fit_ellipse` headers.
-
-        Parameters
-        ----------
-        fit
-            The maximum log likelihood `FitEllipse` of the non-linear search which is used to plot the fit.
-        """
-
         def should_plot(name):
             return plot_setting(section=["fit", "fit_ellipse"], name=name)
 
-        mat_plot_2d = self.mat_plot_2d_from()
+        if should_plot("data"):
+            fit_ellipse_plots._plot_data(
+                fit_list=fit_list,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )
 
-        fit_plotter = FitEllipsePlotter(
-            fit_list=fit_list,
-            mat_plot_2d=mat_plot_2d,
-        )
-
-        fit_plotter.figures_2d(
-            data=should_plot("data"),
-            ellipse_residuals=should_plot("ellipse_residuals"),
-        )
+        if should_plot("ellipse_residuals"):
+            fit_ellipse_plots._plot_ellipse_residuals(
+                fit_list=fit_list,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )
 
         if should_plot("data_no_ellipse"):
-            fit_plotter.figures_2d(
-                data=True,
+            fit_ellipse_plots._plot_data(
+                fit_list=fit_list,
+                output_path=self.image_path,
+                output_format=self.fmt,
                 disable_data_contours=True,
             )
 
         if should_plot("subplot_fit_ellipse"):
+            fit_ellipse_plots.subplot_fit_ellipse(
+                fit_list=fit_list,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )
 
-            fit_plotter.subplot_fit_ellipse()
-
-        fit_plotter.mat_plot_2d.use_log10 = True
-
-        fit_plotter.figures_2d(data=should_plot("data"))
+        fit_ellipse_plots._plot_data(
+            fit_list=fit_list,
+            output_path=self.image_path,
+            output_format=self.fmt,
+            use_log10=True,
+        )
 
         if should_plot("data_no_ellipse"):
-            fit_plotter.figures_2d(
-                data=True,
+            fit_ellipse_plots._plot_data(
+                fit_list=fit_list,
+                output_path=self.image_path,
+                output_format=self.fmt,
+                use_log10=True,
                 disable_data_contours=True,
             )

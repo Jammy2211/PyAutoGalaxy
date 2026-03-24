@@ -1,7 +1,5 @@
 from os import path
 
-from autoconf import conf
-import autogalaxy as ag
 import autogalaxy.plot as aplt
 import pytest
 
@@ -18,16 +16,15 @@ def make_profile_plotter_setup():
 def test__figures_2d__all_are_output(
     lp_0,
     grid_2d_7x7,
-    grid_2d_irregular_7x7_list,
     plot_path,
     plot_patch,
 ):
-    light_profile_plotter = aplt.LightProfilePlotter(
-        light_profile=lp_0,
-        grid=grid_2d_7x7,
-        mat_plot_2d=aplt.MatPlot2D(output=aplt.Output(plot_path, format="png")),
+    aplt.plot_array(
+        array=lp_0.image_2d_from(grid=grid_2d_7x7),
+        title="Image",
+        output_path=plot_path,
+        output_filename="image_2d",
+        output_format="png",
     )
-
-    light_profile_plotter.figures_2d(image=True)
 
     assert path.join(plot_path, "image_2d.png") in plot_patch.paths
