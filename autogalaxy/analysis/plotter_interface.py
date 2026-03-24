@@ -105,7 +105,7 @@ class PlotterInterface:
             mapper_list = inversion.cls_list_from(cls=aa.Mapper)
 
             for i, mapper in enumerate(mapper_list):
-                suffix = "" if len(mapper_list) == 1 else f"_{i}"
+                suffix = f"_{i}"
                 reconstruction = inversion.reconstruction_dict[mapper]
                 grid = np.array(mapper.source_plane_mesh_grid)
 

@@ -108,6 +108,9 @@ def plot_array(
     output_format="png",
     colormap="default",
     use_log10=False,
+    vmin=None,
+    vmax=None,
+    symmetric=False,
     positions=None,
     lines=None,
     grid=None,
@@ -129,6 +132,11 @@ def plot_array(
 
     mask = _auto_mask_edge(array) if hasattr(array, "mask") else None
 
+    if symmetric:
+        finite = arr[np.isfinite(arr)]
+        abs_max = float(np.max(np.abs(finite))) if len(finite) > 0 else 1.0
+        vmin, vmax = -abs_max, abs_max
+
     _positions_list = positions if isinstance(positions, list) else _to_positions(positions)
     _lines_list = lines if isinstance(lines, list) else _to_lines(lines)
 
@@ -145,6 +153,8 @@ def plot_array(
         title=title or "",
         colormap=colormap,
         use_log10=use_log10,
+        vmin=vmin,
+        vmax=vmax,
         output_path=_output_path,
         output_filename=output_filename,
         output_format=output_format,
