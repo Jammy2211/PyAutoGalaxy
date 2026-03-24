@@ -52,7 +52,7 @@ def _save_subplot(fig, output_path, output_filename, output_format="png"):
 def _resolve_colormap(colormap):
     """Resolve 'default' to the actual default matplotlib colormap from Cmap."""
     if colormap == "default":
-        from autoarray.plot.wrap.base.cmap import Cmap
+        from autoarray.plot import Cmap
         return Cmap().cmap
     return colormap
 
@@ -117,7 +117,7 @@ def plot_array(
     ax=None,
 ):
     """Plot an autoarray Array2D to file or onto an existing Axes."""
-    from autoarray.plot.plots.array import plot_array as _aa_plot_array
+    from autoarray.plot import plot_array as _aa_plot_array
 
     colormap = _resolve_colormap(colormap)
     output_format = _resolve_format(output_format)
@@ -172,7 +172,7 @@ def plot_grid(
     ax=None,
 ):
     """Plot an autoarray Grid2D to file or onto an existing Axes."""
-    from autoarray.plot.plots.grid import plot_grid as _aa_plot_grid
+    from autoarray.plot import plot_grid as _aa_plot_grid
 
     output_format = _resolve_format(output_format)
     _output_path = None if ax is not None else output_path
