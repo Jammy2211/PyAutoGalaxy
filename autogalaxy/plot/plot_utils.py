@@ -1,6 +1,9 @@
+import logging
 import os
 import numpy as np
 import matplotlib.pyplot as plt
+
+logger = logging.getLogger(__name__)
 
 
 def _to_lines(*items):
@@ -32,25 +35,35 @@ def _to_positions(*items):
     return _to_lines(*items)
 
 
-def _save_subplot(fig, output_path, output_filename, output_format="png"):
-    """Save a subplot figure to disk or display it."""
-    # Normalise format: accept a list (e.g. ['png']) or a plain string
-    if isinstance(output_format, (list, tuple)):
-        output_format = output_format[0]
+def _save_subplot(fig, output_path, output_filename, output_format="png",
+                  dpi=300, structure=None):
+    """Save a subplot figure to disk (or show it if output_path is falsy).
+
+    Mirrors the interface of ``autoarray.plot.plots.utils.save_figure``.
+    When ``output_format`` is ``"fits"`` the *structure* argument is used to
+    write a FITS file via its ``output_to_fits`` method.
+    """
+    fmt = output_format[0] if isinstance(output_format, (list, tuple)) else (output_format or "png")
     if output_path:
         os.makedirs(str(output_path), exist_ok=True)
-        fig.savefig(
-            os.path.join(str(output_path), f"{output_filename}.{output_format}"),
-            bbox_inches="tight",
-            pad_inches=0.1,
-        )
+        fpath = os.path.join(str(output_path), f"{output_filename}.{fmt}")
+        if fmt == "fits":
+            if structure is not None and hasattr(structure, "output_to_fits"):
+                structure.output_to_fits(file_path=fpath, overwrite=True)
+            else:
+                logger.warning(
+                    f"_save_subplot: fits format requested for {output_filename} "
+                    "but no compatible structure was provided; skipping."
+                )
+        else:
+            fig.savefig(fpath, dpi=dpi, bbox_inches="tight", pad_inches=0.1)
     else:
         plt.show()
     plt.close(fig)
 
 
 def _resolve_colormap(colormap):
-    """Resolve 'default' to the actual default matplotlib colormap from Cmap."""
+    """Resolve 'default' to the actual default matplotlib colormap."""
     if colormap == "default":
         from autoarray.plot import Cmap
         return Cmap().cmap
@@ -62,32 +75,6 @@ def _resolve_format(output_format):
     if isinstance(output_format, (list, tuple)):
         return output_format[0]
     return output_format or "png"
-
-
-def _zoom_array(array):
-    """Apply zoom_around_mask if configured; otherwise return unchanged."""
-    try:
-        from autoconf import conf
-        zoom = conf.instance["visualize"]["general"]["general"]["zoom_around_mask"]
-    except Exception:
-        zoom = False
-    if zoom and hasattr(array, "mask") and not array.mask.is_all_false:
-        try:
-            from autoarray.mask.derive.zoom_2d import Zoom2D
-            return Zoom2D(mask=array.mask).array_2d_from(array=array, buffer=1)
-        except Exception:
-            pass
-    return array
-
-
-def _auto_mask_edge(array):
-    """Return edge-pixel coordinates of the array's mask, or None."""
-    try:
-        if not array.mask.is_all_false:
-            return np.array(array.mask.derive_grid.edge.array)
-    except Exception:
-        pass
-    return None
 
 
 def _numpy_grid(grid):
@@ -116,8 +103,16 @@ def plot_array(
     grid=None,
     ax=None,
 ):
-    """Plot an autoarray Array2D to file or onto an existing Axes."""
+    """Plot an autoarray Array2D to file or onto an existing Axes.
+
+    All array preprocessing (zoom, mask-edge extraction, native/extent
+    unpacking) is handled internally so callers never need to duplicate it.
+    """
     from autoarray.plot import plot_array as _aa_plot_array
+    from autoarray.structures.plot.structure_plotters import (
+        _zoom_array,
+        _auto_mask_edge,
+    )
 
     colormap = _resolve_colormap(colormap)
     output_format = _resolve_format(output_format)
