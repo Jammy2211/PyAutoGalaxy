@@ -2,22 +2,11 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import autoarray as aa
+from autoarray.plot.plots.utils import plot_visibilities_1d
 
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.galaxy.plot import galaxies_plots
 from autogalaxy.plot.plot_utils import plot_array, _save_subplot
-
-
-def _plot_visibilities_1d(vis, ax, title):
-    """Plot real and imaginary components of a visibilities array as 1D line plots."""
-    try:
-        y = np.array(vis.slim if hasattr(vis, "slim") else vis)
-    except Exception:
-        y = np.asarray(vis)
-    ax.plot(y.real, label="Real", alpha=0.7)
-    ax.plot(y.imag, label="Imaginary", alpha=0.7)
-    ax.set_title(title)
-    ax.legend(fontsize=8)
 
 
 def subplot_fit(
@@ -38,7 +27,7 @@ def subplot_fit(
     axes_flat = list(axes.flatten())
 
     for i, (vis, title) in enumerate(panels):
-        _plot_visibilities_1d(vis, axes_flat[i], title)
+        plot_visibilities_1d(vis, axes_flat[i], title)
 
     plt.tight_layout()
     _save_subplot(fig, output_path, "subplot_fit", output_format)

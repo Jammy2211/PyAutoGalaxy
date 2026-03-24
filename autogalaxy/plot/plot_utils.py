@@ -111,7 +111,7 @@ def plot_array(
     from autoarray.plot import plot_array as _aa_plot_array
     from autoarray.structures.plot.structure_plotters import (
         _zoom_array,
-        _auto_mask_edge,
+        _mask_edge_from,
     )
 
     colormap = _resolve_colormap(colormap)
@@ -125,7 +125,7 @@ def plot_array(
         arr = np.asarray(array)
         extent = None
 
-    mask = _auto_mask_edge(array) if hasattr(array, "mask") else None
+    mask = _mask_edge_from(array, None) if hasattr(array, "mask") else None
 
     if symmetric:
         finite = arr[np.isfinite(arr)]
