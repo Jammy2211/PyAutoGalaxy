@@ -59,3 +59,54 @@ def subplot_adapt_images(
 
     plt.tight_layout()
     _save_subplot(fig, output_path, "subplot_adapt_images", output_format)
+
+
+def save_adapt_images_fits(adapt_images, output_path) -> None:
+    """Write FITS files for the adapt images and image-plane mesh grids.
+
+    Writes up to two FITS files into *output_path*:
+
+    * ``adapt_images.fits`` — one HDU per galaxy adapt image, plus a
+      ``mask`` extension, written when
+      ``adapt_images.galaxy_name_image_dict`` is not ``None``.
+    * ``adapt_image_plane_mesh_grids.fits`` — one HDU per galaxy
+      image-plane mesh grid, written when
+      ``adapt_images.galaxy_name_image_plane_mesh_grid_dict`` is not
+      ``None``.
+
+    Parameters
+    ----------
+    adapt_images : AdaptImages
+        The adapt images container holding per-galaxy image and mesh-grid
+        dictionaries.
+    output_path : str or Path
+        Directory in which to write the FITS files.
+    """
+    import numpy as np
+    from pathlib import Path
+    from autoconf.fitsable import hdu_list_for_output_from
+
+    output_path = Path(output_path)
+
+    if adapt_images.galaxy_name_image_dict is not None:
+        image_list = [
+            adapt_images.galaxy_name_image_dict[name].native_for_fits
+            for name in adapt_images.galaxy_name_image_dict
+        ]
+        hdu_list = hdu_list_for_output_from(
+            values_list=[image_list[0].mask.astype("float")] + image_list,
+            ext_name_list=["mask"] + list(adapt_images.galaxy_name_image_dict.keys()),
+            header_dict=adapt_images.mask.header_dict,
+        )
+        hdu_list.writeto(output_path / "adapt_images.fits", overwrite=True)
+
+    if adapt_images.galaxy_name_image_plane_mesh_grid_dict is not None:
+        mesh_grid_list = [
+            adapt_images.galaxy_name_image_plane_mesh_grid_dict[name].native
+            for name in adapt_images.galaxy_name_image_plane_mesh_grid_dict
+        ]
+        hdu_list = hdu_list_for_output_from(
+            values_list=[np.array([1])] + mesh_grid_list,
+            ext_name_list=[""] + list(adapt_images.galaxy_name_image_plane_mesh_grid_dict.keys()),
+        )
+        hdu_list.writeto(output_path / "adapt_image_plane_mesh_grids.fits", overwrite=True)

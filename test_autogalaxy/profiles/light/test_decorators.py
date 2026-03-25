@@ -26,29 +26,67 @@ class MockLightProfileOperated(ag.lp_operated.LightProfileOperated):
         return np.ones(shape=(3, 3))
 
 
-def test__decorator_changes_behaviour_correctly():
+def test__image_2d_from__standard_profile__operated_only_none__returns_image():
     grid = ag.Grid2D.uniform(shape_native=(3, 3), pixel_scales=1.0)
 
     lp = ag.lp.Gaussian()
 
     lp_image_2d = lp.image_2d_from(grid=grid)
-
     image_2d = lp.image_2d_from(grid=grid)
+
     assert image_2d == pytest.approx(lp_image_2d.array, 1.0e-4)
+
+
+def test__image_2d_from__standard_profile__operated_only_true__returns_zeros():
+    grid = ag.Grid2D.uniform(shape_native=(3, 3), pixel_scales=1.0)
+
+    lp = ag.lp.Gaussian()
 
     image_2d = lp.image_2d_from(grid=grid, operated_only=True)
+
     assert image_2d == pytest.approx(np.zeros(shape=(9,)), 1.0e-4)
 
+
+def test__image_2d_from__standard_profile__operated_only_false__returns_image():
+    grid = ag.Grid2D.uniform(shape_native=(3, 3), pixel_scales=1.0)
+
+    lp = ag.lp.Gaussian()
+
+    lp_image_2d = lp.image_2d_from(grid=grid)
     image_2d = lp.image_2d_from(grid=grid, operated_only=False)
+
     assert image_2d == pytest.approx(lp_image_2d.array, 1.0e-4)
+
+
+def test__image_2d_from__operated_profile__operated_only_none__returns_image():
+    grid = ag.Grid2D.uniform(shape_native=(3, 3), pixel_scales=1.0)
+
+    lp_standard = ag.lp.Gaussian()
+    lp_image_2d = lp_standard.image_2d_from(grid=grid)
+
+    lp = ag.lp_operated.Gaussian()
+    image_2d = lp.image_2d_from(grid=grid)
+
+    assert image_2d == pytest.approx(lp_image_2d.array, 1.0e-4)
+
+
+def test__image_2d_from__operated_profile__operated_only_true__returns_image():
+    grid = ag.Grid2D.uniform(shape_native=(3, 3), pixel_scales=1.0)
+
+    lp_standard = ag.lp.Gaussian()
+    lp_image_2d = lp_standard.image_2d_from(grid=grid)
+
+    lp = ag.lp_operated.Gaussian()
+    image_2d = lp.image_2d_from(grid=grid, operated_only=True)
+
+    assert image_2d == pytest.approx(lp_image_2d.array, 1.0e-4)
+
+
+def test__image_2d_from__operated_profile__operated_only_false__returns_zeros():
+    grid = ag.Grid2D.uniform(shape_native=(3, 3), pixel_scales=1.0)
 
     lp = ag.lp_operated.Gaussian()
 
-    image_2d = lp.image_2d_from(grid=grid)
-    assert image_2d == pytest.approx(lp_image_2d.array, 1.0e-4)
-
-    image_2d = lp.image_2d_from(grid=grid, operated_only=True)
-    assert image_2d == pytest.approx(lp_image_2d.array, 1.0e-4)
-
     image_2d = lp.image_2d_from(grid=grid, operated_only=False)
+
     assert image_2d == pytest.approx(np.zeros(shape=(9,)), 1.0e-4)

@@ -5,7 +5,7 @@ from autoconf.fitsable import hdu_list_for_output_from
 
 import autoarray as aa
 
-from autoarray.dataset.plot.imaging_plots import subplot_imaging, subplot_imaging_dataset_list
+from autoarray.dataset.plot.imaging_plots import subplot_imaging_dataset, subplot_imaging_dataset_list
 
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.imaging.plot import fit_imaging_plots
@@ -91,7 +91,7 @@ class PlotterImaging(Plotter):
             return plot_setting(section=["dataset", "imaging"], name=name)
 
         if should_plot("subplot_dataset"):
-            subplot_imaging(
+            subplot_imaging_dataset(
                 dataset,
                 output_path=self.image_path,
                 output_format=self.fmt,

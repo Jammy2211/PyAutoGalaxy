@@ -7,7 +7,9 @@ import shutil
 import autogalaxy as ag
 
 
-def test_via_signal_to_noise_map(dataset_quantity_7x7_array_2d, mask_2d_7x7):
+def test__via_signal_to_noise_map__array_2d_data__correct_noise_map(
+    dataset_quantity_7x7_array_2d, mask_2d_7x7
+):
     data = ag.Array2D.no_mask(values=[[1.0, 2.0], [3.0, 4.0]], pixel_scales=1.0)
     signal_to_noise_map = ag.Array2D.no_mask(
         values=[[1.0, 5.0], [15.0, 40.0]], pixel_scales=1.0
@@ -24,6 +26,10 @@ def test_via_signal_to_noise_map(dataset_quantity_7x7_array_2d, mask_2d_7x7):
         np.array([[1.0, 0.4], [0.2, 0.1]]), 1.0e-4
     )
 
+
+def test__via_signal_to_noise_map__vector_yx_2d_data__correct_noise_map(
+    dataset_quantity_7x7_array_2d, mask_2d_7x7
+):
     data = ag.VectorYX2D.no_mask(
         values=[[[1.0, 1.0], [2.0, 2.0]], [[3.0, 3.0], [4.0, 4.0]]], pixel_scales=1.0
     )
@@ -43,8 +49,8 @@ def test_via_signal_to_noise_map(dataset_quantity_7x7_array_2d, mask_2d_7x7):
     )
 
 
-def test__apply_mask__masks_dataset(
-    dataset_quantity_7x7_array_2d, dataset_quantity_7x7_vector_yx_2d, mask_2d_7x7
+def test__apply_mask__array_2d_dataset__slim_and_native_values_correct(
+    dataset_quantity_7x7_array_2d, mask_2d_7x7
 ):
     dataset_quantity_7x7 = dataset_quantity_7x7_array_2d.apply_mask(mask=mask_2d_7x7)
 
@@ -59,6 +65,10 @@ def test__apply_mask__masks_dataset(
         == 2.0 * np.ones((7, 7)) * np.invert(mask_2d_7x7)
     ).all()
 
+
+def test__apply_mask__vector_yx_2d_dataset__slim_values_correct(
+    dataset_quantity_7x7_vector_yx_2d, mask_2d_7x7
+):
     dataset_quantity_7x7 = dataset_quantity_7x7_vector_yx_2d.apply_mask(
         mask=mask_2d_7x7
     )
@@ -67,7 +77,7 @@ def test__apply_mask__masks_dataset(
     assert (dataset_quantity_7x7.noise_map.slim == 2.0 * np.ones((9, 2))).all()
 
 
-def test__grid(
+def test__grid__default_over_sample__matches_fixture_grid(
     dataset_quantity_7x7_array_2d,
     mask_2d_7x7,
     grid_2d_7x7,
@@ -78,6 +88,11 @@ def test__grid(
     assert isinstance(dataset.grids.lp, ag.Grid2D)
     assert (dataset.grids.lp == grid_2d_7x7).all()
 
+
+def test__grid__custom_over_sample_size_4__matches_fixture_grid(
+    mask_2d_7x7,
+    grid_2d_7x7,
+):
     dataset_quantity = ag.DatasetQuantity(
         data=ag.Array2D.ones(shape_native=(7, 7), pixel_scales=1.0),
         noise_map=ag.Array2D.full(
@@ -134,7 +149,9 @@ def make_test_data_path():
     return test_data_path
 
 
-def test__output_to_fits(dataset_quantity_7x7_array_2d, test_data_path):
+def test__output_to_fits__array_2d_data__data_and_noise_map_written_correctly(
+    dataset_quantity_7x7_array_2d, test_data_path
+):
     dataset_quantity_7x7_array_2d.output_to_fits(
         data_path=path.join(test_data_path, "data.fits"),
         noise_map_path=path.join(test_data_path, "noise_map.fits"),
@@ -151,6 +168,10 @@ def test__output_to_fits(dataset_quantity_7x7_array_2d, test_data_path):
     assert (data.native == np.ones((7, 7))).all()
     assert (noise_map.native == 2.0 * np.ones((7, 7))).all()
 
+
+def test__output_to_fits__vector_yx_2d_data__first_pixel_written_correctly(
+    test_data_path,
+):
     data = ag.VectorYX2D.no_mask(
         values=[[[1.0, 5.0], [2.0, 6.0]], [[3.0, 7.0], [4.0, 8.0]]],
         pixel_scales=1.0,

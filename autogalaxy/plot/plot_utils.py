@@ -96,9 +96,10 @@ def _save_subplot(fig, output_path, output_filename, output_format="png",
 
 
 def _resolve_colormap(colormap):
-    """Resolve 'default' to the autoarray default colormap."""
-    if colormap == "default":
-        return "jet"
+    """Resolve 'default' or None to the autoarray default colormap."""
+    if colormap in ("default", None):
+        from autoarray.plot.utils import _default_colormap
+        return _default_colormap()
     return colormap
 
 

@@ -6,7 +6,7 @@ import autogalaxy as ag
 grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
-def test__image_2d_from():
+def test__image_2d_from__elliptical__ell_comps_nonzero__correct_value():
     lp = ag.lp.SersicCore(
         ell_comps=(0.0, 0.333333),
         effective_radius=5.0,
@@ -21,6 +21,8 @@ def test__image_2d_from():
 
     assert image == pytest.approx(0.0255173, 1.0e-4)
 
+
+def test__image_2d_from__spherical_profile__matches_elliptical_with_zero_ellipticity():
     elliptical = ag.lp.SersicCore(
         ell_comps=(0.0, 0.0),
         effective_radius=5.0,
@@ -41,7 +43,6 @@ def test__image_2d_from():
     )
 
     image_elliptical = elliptical.image_2d_from(grid=grid)
-
     image_spherical = spherical.image_2d_from(grid=grid)
 
     assert image_elliptical.array == pytest.approx(image_spherical.array, 1.0e-4)
