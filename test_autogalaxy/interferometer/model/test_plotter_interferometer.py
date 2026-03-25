@@ -3,22 +3,22 @@ import pytest
 
 import autogalaxy as ag
 
-from autogalaxy.interferometer.model.plotter_interface import (
-    PlotterInterfaceInterferometer,
+from autogalaxy.interferometer.model.plotter import (
+    PlotterInterferometer,
 )
 
 directory = path.dirname(path.abspath(__file__))
 
 
 @pytest.fixture(name="plot_path")
-def make_plotter_interface_plotter_setup():
+def make_plotter_plotter_setup():
     return path.join("{}".format(directory), "files")
 
 
 def test__interferometer(interferometer_7, plot_path, plot_patch):
-    plotter_interface = PlotterInterfaceInterferometer(image_path=plot_path)
+    plotter = PlotterInterferometer(image_path=plot_path)
 
-    plotter_interface.interferometer(dataset=interferometer_7)
+    plotter.interferometer(dataset=interferometer_7)
 
     assert path.join(plot_path, "subplot_dataset.png") in plot_patch.paths
 
@@ -35,9 +35,9 @@ def test__fit_interferometer(
     plot_path,
     plot_patch,
 ):
-    PlotterInterface = PlotterInterfaceInterferometer(image_path=plot_path)
+    plotter = PlotterInterferometer(image_path=plot_path)
 
-    PlotterInterface.fit_interferometer(
+    plotter.fit_interferometer(
         fit=fit_interferometer_x2_galaxy_inversion_7x7,
     )
 

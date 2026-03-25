@@ -126,3 +126,40 @@ def subplot_of_galaxy(
 
     plt.tight_layout()
     _save_subplot(fig, output_path, f"subplot_of_galaxy_{galaxy_index}", output_format)
+
+
+def subplot_fit_imaging_list(
+    fit_list,
+    output_path=None,
+    output_filename: str = "subplot_fit_combined",
+    output_format="png",
+):
+    """
+    n×5 subplot summarising a list of ``FitImaging`` objects.
+
+    Each row shows: Data | Signal-To-Noise Map | Model Image |
+    Normalized Residual Map | Chi-Squared Map
+
+    Parameters
+    ----------
+    fit_list
+        List of ``FitImaging`` instances.
+    output_path
+        Directory to save the figure.  ``None`` calls ``plt.show()``.
+    output_filename
+        Base filename without extension.
+    output_format
+        File format string or list, e.g. ``"png"`` or ``["png"]``.
+    """
+    n = len(fit_list)
+    fig, axes = plt.subplots(n, 5, figsize=(35, 7 * n))
+    if n == 1:
+        axes = [axes]
+    for i, fit in enumerate(fit_list):
+        plot_array(array=fit.data, title="Data", ax=axes[i][0])
+        plot_array(array=fit.signal_to_noise_map, title="Signal-To-Noise Map", ax=axes[i][1])
+        plot_array(array=fit.model_data, title="Model Image", ax=axes[i][2])
+        plot_array(array=fit.normalized_residual_map, title="Normalized Residual Map", ax=axes[i][3])
+        plot_array(array=fit.chi_squared_map, title="Chi-Squared Map", ax=axes[i][4])
+    plt.tight_layout()
+    _save_subplot(fig, output_path, output_filename, output_format)

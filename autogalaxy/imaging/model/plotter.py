@@ -1,19 +1,35 @@
-import matplotlib.pyplot as plt
 from pathlib import Path
 from typing import List
 
 from autoconf.fitsable import hdu_list_for_output_from
 
 import autoarray as aa
-import autoarray.plot as aplt
+
+from autoarray.dataset.plot.imaging_plots import subplot_imaging, subplot_imaging_dataset_list
 
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.imaging.plot import fit_imaging_plots
-from autogalaxy.analysis.plotter_interface import PlotterInterface, plot_setting
-from autogalaxy.plot.plot_utils import _save_subplot, plot_array
+from autogalaxy.imaging.plot.fit_imaging_plots import subplot_fit_imaging_list
+from autogalaxy.analysis.plotter import Plotter, plot_setting
 
 
 def fits_to_fits(should_plot, image_path: Path, fit: FitImaging):
+    """
+    Write fit residuals and galaxy images from a ``FitImaging`` to FITS files.
+
+    Controlled by the ``fits_fit``, ``fits_galaxy_images``, and
+    ``fits_model_galaxy_images`` toggles in ``config/visualize/plots.yaml``.
+
+    Parameters
+    ----------
+    should_plot
+        A callable that accepts a plot-name string and returns ``True`` when
+        that plot is enabled in the config.
+    image_path
+        Directory where the FITS files are written.
+    fit
+        The imaging fit whose arrays are saved to FITS.
+    """
     if should_plot("fits_fit"):
         image_list = [
             fit.model_data.native_for_fits,
@@ -56,28 +72,30 @@ def fits_to_fits(should_plot, image_path: Path, fit: FitImaging):
         hdu_list.writeto(image_path / "model_galaxy_images.fits", overwrite=True)
 
 
-class PlotterInterfaceImaging(PlotterInterface):
+class PlotterImaging(Plotter):
     def imaging(self, dataset: aa.Imaging):
+        """
+        Output visualization of an ``Imaging`` dataset.
+
+        Controlled by the ``[dataset]`` / ``[imaging]`` sections of
+        ``config/visualize/plots.yaml``.  Outputs a subplot of the imaging data
+        and, when enabled, a FITS file containing the mask, data, noise map, PSF,
+        and over-sample-size arrays.
+
+        Parameters
+        ----------
+        dataset
+            The imaging dataset to visualize.
+        """
         def should_plot(name):
             return plot_setting(section=["dataset", "imaging"], name=name)
 
         if should_plot("subplot_dataset"):
-            panels = [
-                (dataset.data, "Data"),
-                (dataset.noise_map, "Noise Map"),
-                (dataset.signal_to_noise_map, "Signal-To-Noise Map"),
-            ]
-            try:
-                panels.append((dataset.psf.kernel, "PSF"))
-            except Exception:
-                pass
-            n = len(panels)
-            fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
-            axes_flat = list(axes.flatten()) if n > 1 else [axes]
-            for i, (array, title) in enumerate(panels):
-                plot_array(array, title, ax=axes_flat[i])
-            plt.tight_layout()
-            _save_subplot(fig, self.image_path, "subplot_dataset", self.fmt)
+            subplot_imaging(
+                dataset,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )
 
         if should_plot("fits_dataset"):
             image_list = [
@@ -97,6 +115,21 @@ class PlotterInterfaceImaging(PlotterInterface):
             hdu_list.writeto(self.image_path / "dataset.fits", overwrite=True)
 
     def fit_imaging(self, fit: FitImaging, quick_update: bool = False):
+        """
+        Output visualization of a ``FitImaging`` object.
+
+        Controlled by the ``[fit]`` / ``[fit_imaging]`` sections of
+        ``config/visualize/plots.yaml``.  Outputs the main fit subplot and,
+        optionally, per-galaxy subplots and FITS residual files.
+
+        Parameters
+        ----------
+        fit
+            The imaging fit to visualize.
+        quick_update
+            When ``True`` only the essential ``subplot_fit`` is written; all
+            other outputs are skipped.
+        """
         def should_plot(name):
             return plot_setting(section=["fit", "fit_imaging"], name=name)
 
@@ -123,41 +156,47 @@ class PlotterInterfaceImaging(PlotterInterface):
         fits_to_fits(should_plot=should_plot, image_path=self.image_path, fit=fit)
 
     def imaging_combined(self, dataset_list: List[aa.Imaging]):
+        """
+        Output visualization of a list of ``Imaging`` datasets from a combined analysis.
+
+        Controlled by the ``[dataset]`` / ``[imaging]`` sections of
+        ``config/visualize/plots.yaml``.  Outputs a combined subplot with one
+        row per dataset.
+
+        Parameters
+        ----------
+        dataset_list
+            The list of imaging datasets to visualize.
+        """
         def should_plot(name):
             return plot_setting(section=["dataset", "imaging"], name=name)
 
         if should_plot("subplot_dataset"):
-            n = len(dataset_list)
-            fig, axes = plt.subplots(n, 4, figsize=(28, 7 * n))
-            if n == 1:
-                axes = [axes]
-
-            for i, dataset in enumerate(dataset_list):
-                plot_array(dataset.data, "Data", ax=axes[i][0])
-                plot_array(dataset.noise_map, "Noise Map", ax=axes[i][1])
-                plot_array(dataset.signal_to_noise_map, "Signal-To-Noise Map", ax=axes[i][2])
-
-            plt.tight_layout()
-            _save_subplot(fig, self.image_path, "subplot_dataset_combined", self.fmt)
+            subplot_imaging_dataset_list(
+                dataset_list,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )
 
     def fit_imaging_combined(self, fit_list: List[FitImaging]):
+        """
+        Output visualization of a list of ``FitImaging`` objects from a combined analysis.
+
+        Controlled by the ``[fit]`` / ``[fit_imaging]`` sections of
+        ``config/visualize/plots.yaml``.  Outputs a combined subplot with one
+        row per fit.
+
+        Parameters
+        ----------
+        fit_list
+            The list of imaging fits to visualize.
+        """
         def should_plot(name):
             return plot_setting(section=["fit", "fit_imaging"], name=name)
 
-        output = self.output_from()
-
         if should_plot("subplot_fit"):
-            n = len(fit_list)
-            fig, axes = plt.subplots(n, 5, figsize=(35, 7 * n))
-            if n == 1:
-                axes = [axes]
-
-            for i, fit in enumerate(fit_list):
-                plot_array(fit.data, "Data", ax=axes[i][0])
-                plot_array(fit.signal_to_noise_map, "Signal-To-Noise Map", ax=axes[i][1])
-                plot_array(fit.model_data, "Model Image", ax=axes[i][2])
-                plot_array(fit.normalized_residual_map, "Normalized Residual Map", ax=axes[i][3])
-                plot_array(fit.chi_squared_map, "Chi-Squared Map", ax=axes[i][4])
-
-            plt.tight_layout()
-            _save_subplot(fig, self.image_path, "subplot_fit_combined", self.fmt)
+            subplot_fit_imaging_list(
+                fit_list,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )

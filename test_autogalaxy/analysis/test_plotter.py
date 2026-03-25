@@ -6,13 +6,13 @@ import pytest
 
 import autogalaxy as ag
 
-from autogalaxy.analysis.plotter_interface import PlotterInterface
+from autogalaxy.analysis.plotter import Plotter
 
 directory = path.dirname(path.abspath(__file__))
 
 
 @pytest.fixture(name="plot_path")
-def make_plotter_interface_plotter_setup():
+def make_plotter_plotter_setup():
     return path.join("{}".format(directory), "files")
 
 
@@ -20,9 +20,9 @@ def test__galaxies(masked_imaging_7x7, galaxies_7x7, plot_path, plot_patch):
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    plotter_interface = PlotterInterface(image_path=plot_path)
+    plotter = Plotter(image_path=plot_path)
 
-    plotter_interface.galaxies(
+    plotter.galaxies(
         galaxies=galaxies_7x7,
         grid=masked_imaging_7x7.grids.lp,
     )
@@ -45,9 +45,9 @@ def test__inversion(
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    plotter_interface = PlotterInterface(image_path=plot_path)
+    plotter = Plotter(image_path=plot_path)
 
-    plotter_interface.inversion(
+    plotter.inversion(
         inversion=rectangular_inversion_7x7_3x3,
     )
 
@@ -80,13 +80,13 @@ def test__adapt_images(
     plot_path,
     plot_patch,
 ):
-    plotter_interface = PlotterInterface(image_path=plot_path)
+    plotter = Plotter(image_path=plot_path)
 
     adapt_images = ag.AdaptImages(
         galaxy_name_image_dict=adapt_galaxy_name_image_dict_7x7,
     )
 
-    plotter_interface.adapt_images(
+    plotter.adapt_images(
         adapt_images=adapt_images,
     )
 

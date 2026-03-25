@@ -51,8 +51,7 @@ We make and plot a uniform Cartesian grid:
         pixel_scales=0.05,  # The pixel-scale describes the conversion from pixel units to arc-seconds.
     )
 
-    grid_plotter = aplt.Grid2DPlotter(grid=grid)
-    grid_plotter.figure_2d()
+    aplt.plot_grid(grid=grid, title="Uniform Grid")
 
 The ``Grid2D`` looks like this:
 
@@ -95,19 +94,16 @@ Plotting
 In-built plotting methods are provided for plotting objects and their properties, like the image of
 a light profile we just created.
 
-By using a ``LightProfilePlotter`` to plot the light profile's image, the figured is improved. 
+By using ``aplt.plot_array`` to plot the light profile's image, the figure is improved.
 
-Its axis units are scaled to arc-seconds, a color-bar is added, its given a descriptive labels, etc.
+Its axis units are scaled to arc-seconds, a color-bar is added, descriptive labels are included, etc.
 
 The plot module is highly customizable and designed to make it straight forward to create clean and informative figures
 for fits to large datasets.
 
 .. code:: python
 
-    light_profile_plotter = aplt.LightProfilePlotter(
-        light_profile=sersic_light_profile, grid=grid
-    )
-    light_profile_plotter.figures_2d(image=True)
+    aplt.plot_array(array=sersic_light_profile.image_2d_from(grid=grid), title="Sersic Light Profile Image")
 
 The light profile appears as follows:
 
@@ -136,12 +132,11 @@ a bulge and disk component.
     )
 
 
-The ``GalaxyPlotter`` object plots the image of the galaxy, which is the sum of its bulge and disk light profiles.
+We can plot the image of the galaxy, which is the sum of its bulge and disk light profiles:
 
 .. code:: python
 
-    galaxy_plotter = aplt.GalaxyPlotter(galaxy=galaxy, grid=grid)
-    galaxy_plotter.figures_2d(image=True)
+    aplt.plot_array(array=galaxy.image_2d_from(grid=grid), title="Galaxy Image")
 
 The galaxy, with both a bulge and disk, appears as follows:
 
@@ -149,12 +144,11 @@ The galaxy, with both a bulge and disk, appears as follows:
   :width: 600
   :alt: Alternative text
 
-One example of the plotter's customizability is the ability to plot the individual light profiles of the galaxy
-on a subplot.
+The individual light profiles of the galaxy can be plotted on a subplot:
 
 .. code:: python
 
-    galaxy_plotter.subplot_of_light_profiles(image=True)
+    aplt.subplot_galaxy_light_profiles(galaxy=galaxy, grid=grid)
 
 The light profiles appear as follows:
 
@@ -186,8 +180,7 @@ the galaxy is used below where the ``Sersic`` is passed directly to the ``Galaxy
         galaxies=[galaxy, galaxy_1],
     )
 
-    galaxies_plotter = aplt.GalaxiesPlotter(galaxies=galaxies, grid=grid)
-    galaxies_plotter.figures_2d(image=True)
+    aplt.plot_array(array=galaxies.image_2d_from(grid=grid), title="Galaxies Image")
 
 .. image:: https://raw.githubusercontent.com/Jammy2211/PyAutoGalaxy/main/docs/overview/images/overview_1/4_image_2d.png
   :width: 600
@@ -252,8 +245,7 @@ To further illustrate this, we create a merging galaxy system with 4 star formin
 
     galaxies = ag.Galaxies(galaxies=[galaxy_0, galaxy_1])
 
-    galaxies_plotter = aplt.GalaxiesPlotter(galaxies=galaxies, grid=grid)
-    galaxies_plotter.figures_2d(image=True)
+    aplt.plot_array(array=galaxies.image_2d_from(grid=grid), title="Galaxies Image")
 
 The image of the merging galaxy system appears as follows:
 

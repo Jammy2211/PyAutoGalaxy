@@ -19,27 +19,57 @@ Create figures and subplots showing quantities of standard **PyAutoGalaxy** obje
 
 .. currentmodule:: autogalaxy.plot
 
+**Basic Plot Functions:**
+
 .. autosummary::
    :toctree: _autosummary
-   :template: custom-class-template.rst
-   :recursive:
 
-    Array2DPlotter
-    Grid2DPlotter
-    MapperPlotter
-    YX1DPlotter
-    InversionPlotter
-    ImagingPlotter
-    InterferometerPlotter
-    LightProfilePlotter
-    GalaxyPlotter
-    FitImagingPlotter
-    FitInterferometerPlotter
-    GalaxiesPlotter
-    FitImagingPlotter
-    FitInterferometerPlotter
-    MultiFigurePlotter
-    MultiYX1DPlotter
+    plot_array
+    plot_grid
+
+**Galaxy and Light / Mass Profile Subplots:**
+
+.. autosummary::
+   :toctree: _autosummary
+
+    subplot_galaxy_light_profiles
+    subplot_galaxy_mass_profiles
+    subplot_basis_image
+    subplot_galaxies
+    subplot_galaxy_images
+    subplot_adapt_images
+
+**Imaging Fit Subplots:**
+
+.. autosummary::
+   :toctree: _autosummary
+
+    subplot_fit_imaging
+    subplot_fit_imaging_of_galaxy
+
+**Interferometer Fit Subplots:**
+
+.. autosummary::
+   :toctree: _autosummary
+
+    subplot_fit_interferometer
+    subplot_fit_dirty_images
+    subplot_fit_real_space
+
+**Quantity Fit Subplots:**
+
+.. autosummary::
+   :toctree: _autosummary
+
+    subplot_fit_quantity
+
+**Ellipse Fit Subplots:**
+
+.. autosummary::
+   :toctree: _autosummary
+
+    subplot_fit_ellipse
+    subplot_ellipse_errors
 
 Non-linear Search Plotters [aplt]
 ---------------------------------

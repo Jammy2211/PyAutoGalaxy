@@ -4,13 +4,13 @@ import pytest
 
 import autogalaxy as ag
 
-from autogalaxy.quantity.model.plotter_interface import PlotterInterfaceQuantity
+from autogalaxy.quantity.model.plotter import PlotterQuantity
 
 directory = path.dirname(path.abspath(__file__))
 
 
 @pytest.fixture(name="plot_path")
-def make_plotter_interface_plotter_setup():
+def make_plotter_plotter_setup():
     return path.join("{}".format(directory), "files")
 
 
@@ -22,9 +22,9 @@ def test__dataset(
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    PlotterInterface = PlotterInterfaceQuantity(image_path=plot_path)
+    plotter = PlotterQuantity(image_path=plot_path)
 
-    PlotterInterface.dataset_quantity(dataset=dataset_quantity_7x7_array_2d)
+    plotter.dataset_quantity(dataset=dataset_quantity_7x7_array_2d)
 
     image = ag.ndarray_via_fits_from(
         file_path=path.join(plot_path, "dataset.fits"), hdu=1
@@ -42,8 +42,8 @@ def test__fit_quantity(
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    PlotterInterface = PlotterInterfaceQuantity(image_path=plot_path)
+    plotter = PlotterQuantity(image_path=plot_path)
 
-    PlotterInterface.fit_quantity(fit=fit_quantity_7x7_array_2d)
+    plotter.fit_quantity(fit=fit_quantity_7x7_array_2d)
 
     assert path.join(plot_path, "subplot_fit.png") not in plot_patch.paths

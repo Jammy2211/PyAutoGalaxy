@@ -38,8 +38,25 @@ def plot_setting(section: Union[List[str], str], name: str) -> bool:
     return setting(section, name)
 
 
-class PlotterInterface:
+class Plotter:
     def __init__(self, image_path: Union[Path, str], title_prefix: str = None):
+        """
+        Base class for all plotters, which output visualizations during a model fit.
+
+        The methods of the `Plotter` are called throughout a non-linear search via the
+        `Analysis` class `visualize` method.
+
+        The images output by the `Plotter` are customized using the file
+        `config/visualize/plots.yaml`.
+
+        Parameters
+        ----------
+        image_path
+            The path on the hard-disk to the `image` folder of the non-linear search
+            results where all visualizations are saved.
+        title_prefix
+            An optional string prefixed to every plot title.
+        """
         from pathlib import Path
 
         self.image_path = Path(image_path)
@@ -49,9 +66,11 @@ class PlotterInterface:
 
     @property
     def fmt(self) -> List[str]:
+        """The output file format(s) read from ``config/visualize/plots.yaml``."""
         return conf.instance["visualize"]["plots"]["subplot_format"]
 
     def output_from(self) -> aplt.Output:
+        """Return an ``autoarray`` ``Output`` object pointed at ``image_path``."""
         return aplt.Output(path=self.image_path, format=self.fmt)
 
     def galaxies(
@@ -59,6 +78,21 @@ class PlotterInterface:
         galaxies: List[Galaxy],
         grid: aa.type.Grid2DLike,
     ):
+        """
+        Output visualization of a list of galaxies.
+
+        Controlled by the ``[galaxies]`` section of ``config/visualize/plots.yaml``.
+        Outputs include galaxy image subplots and, when enabled, a FITS file of each
+        galaxy image.
+
+        Parameters
+        ----------
+        galaxies
+            The list of galaxies to visualize.
+        grid
+            A 2D grid of (y, x) arc-second coordinates used to evaluate each galaxy
+            image.
+        """
         galaxies = Galaxies(galaxies=galaxies)
 
         def should_plot(name):
@@ -94,6 +128,18 @@ class PlotterInterface:
             hdu_list.writeto(self.image_path / "galaxy_images.fits", overwrite=True)
 
     def inversion(self, inversion: aa.Inversion):
+        """
+        Output visualization of an ``Inversion``.
+
+        Controlled by the ``[inversion]`` section of ``config/visualize/plots.yaml``.
+        When enabled, outputs a scatter-plot of each mapper's source-plane
+        reconstruction and a CSV of the reconstruction values and noise map.
+
+        Parameters
+        ----------
+        inversion
+            The inversion whose reconstruction is visualized.
+        """
         def should_plot(name):
             return plot_setting(section="inversion", name=name)
 
@@ -144,6 +190,19 @@ class PlotterInterface:
                         )
 
     def adapt_images(self, adapt_images: AdaptImages):
+        """
+        Output visualization of adapt images from a previous model-fit search.
+
+        Controlled by the ``[adapt]`` section of ``config/visualize/plots.yaml``.
+        Outputs a subplot of the per-galaxy adapt images and, when enabled, FITS files
+        of the adapt images and image-plane mesh grids.
+
+        Parameters
+        ----------
+        adapt_images
+            The adapt images containing per-galaxy images used to drive adaptive mesh
+            and regularization schemes.
+        """
         def should_plot(name):
             return plot_setting(section="adapt", name=name)
 

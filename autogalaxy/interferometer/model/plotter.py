@@ -3,11 +3,12 @@ from pathlib import Path
 from autoconf.fitsable import hdu_list_for_output_from
 
 import autoarray as aa
-import autoarray.plot as aplt
+
+from autoarray.dataset.plot.interferometer_plots import subplot_interferometer_dirty_images
 
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.interferometer.plot import fit_interferometer_plots
-from autogalaxy.analysis.plotter_interface import PlotterInterface, plot_setting
+from autogalaxy.analysis.plotter import Plotter, plot_setting
 
 
 def fits_to_fits(
@@ -15,6 +16,22 @@ def fits_to_fits(
     image_path: Path,
     fit: FitInterferometer,
 ):
+    """
+    Write galaxy images and dirty-image residuals from a ``FitInterferometer`` to FITS files.
+
+    Controlled by the ``fits_galaxy_images`` and ``fits_dirty_images`` toggles in
+    ``config/visualize/plots.yaml``.
+
+    Parameters
+    ----------
+    should_plot
+        A callable that accepts a plot-name string and returns ``True`` when
+        that plot is enabled in the config.
+    image_path
+        Directory where the FITS files are written.
+    fit
+        The interferometer fit whose arrays are saved to FITS.
+    """
     if should_plot("fits_galaxy_images"):
 
         image_list = [image.native_for_fits for image in fit.galaxy_image_dict.values()]
@@ -56,27 +73,31 @@ def fits_to_fits(
         hdu_list.writeto(image_path / "fit_dirty_images.fits", overwrite=True)
 
 
-class PlotterInterfaceInterferometer(PlotterInterface):
+class PlotterInterferometer(Plotter):
     def interferometer(self, dataset: aa.Interferometer):
+        """
+        Output visualization of an ``Interferometer`` dataset.
+
+        Controlled by the ``[dataset]`` / ``[interferometer]`` sections of
+        ``config/visualize/plots.yaml``.  Outputs a dirty-image subplot and,
+        when enabled, a FITS file containing the mask, visibilities, noise map,
+        and UV-wavelengths arrays.
+
+        Parameters
+        ----------
+        dataset
+            The interferometer dataset to visualize.
+        """
         def should_plot(name):
             return plot_setting(section=["dataset", "interferometer"], name=name)
 
         if should_plot("subplot_dataset"):
-            from autogalaxy.plot.plot_utils import plot_array, _save_subplot
-            import matplotlib.pyplot as plt
-
-            panels = [
-                (dataset.dirty_image, "Dirty Image"),
-                (dataset.dirty_noise_map, "Dirty Noise Map"),
-                (dataset.dirty_signal_to_noise_map, "Dirty Signal-To-Noise Map"),
-            ]
-            n = len(panels)
-            fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
-            axes_flat = list(axes.flatten())
-            for i, (array, title) in enumerate(panels):
-                plot_array(array, title, ax=axes_flat[i])
-            plt.tight_layout()
-            _save_subplot(fig, self.image_path, "subplot_dataset", self.fmt)
+            subplot_interferometer_dirty_images(
+                dataset,
+                output_path=self.image_path,
+                output_filename="subplot_dataset",
+                output_format=self.fmt[0] if isinstance(self.fmt, (list, tuple)) else self.fmt,
+            )
 
         if should_plot("fits_dataset"):
 
@@ -98,6 +119,22 @@ class PlotterInterfaceInterferometer(PlotterInterface):
         fit: FitInterferometer,
         quick_update: bool = False,
     ):
+        """
+        Output visualization of a ``FitInterferometer`` object.
+
+        Controlled by the ``[fit]`` / ``[fit_interferometer]`` sections of
+        ``config/visualize/plots.yaml``.  Outputs the main fit subplot, a
+        dirty-images subplot, and when enabled a real-space subplot and FITS
+        residual files.
+
+        Parameters
+        ----------
+        fit
+            The interferometer fit to visualize.
+        quick_update
+            When ``True`` only the essential subplots are written; the
+            real-space subplot and FITS outputs are skipped.
+        """
         def should_plot(name):
             return plot_setting(section=["fit", "fit_interferometer"], name=name)
 

@@ -1,35 +1,39 @@
-import matplotlib.pyplot as plt
 from typing import List
 
 from autoconf.fitsable import hdu_list_for_output_from
 
 import autoarray as aa
-import autoarray.plot as aplt
+
+from autoarray.dataset.plot.imaging_plots import subplot_imaging
 
 from autogalaxy.ellipse.fit_ellipse import FitEllipse
 from autogalaxy.ellipse.plot import fit_ellipse_plots
-from autogalaxy.analysis.plotter_interface import PlotterInterface, plot_setting
-from autogalaxy.plot.plot_utils import plot_array, _save_subplot
+from autogalaxy.analysis.plotter import Plotter, plot_setting
 
 
-class PlotterInterfaceEllipse(PlotterInterface):
+class PlotterEllipse(Plotter):
     def imaging(self, dataset: aa.Imaging):
+        """
+        Output visualization of an ``Imaging`` dataset for ellipse fitting.
+
+        Controlled by the ``[dataset]`` / ``[imaging]`` sections of
+        ``config/visualize/plots.yaml``.  Outputs a subplot of the imaging data
+        and a FITS file containing the mask, data, and noise-map arrays.
+
+        Parameters
+        ----------
+        dataset
+            The imaging dataset to visualize.
+        """
         def should_plot(name):
             return plot_setting(section=["dataset", "imaging"], name=name)
 
         if should_plot("subplot_dataset"):
-            panels = [
-                (dataset.data, "Data"),
-                (dataset.noise_map, "Noise Map"),
-                (dataset.signal_to_noise_map, "Signal-To-Noise Map"),
-            ]
-            n = len(panels)
-            fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
-            axes_flat = list(axes.flatten()) if n > 1 else [axes]
-            for i, (array, title) in enumerate(panels):
-                plot_array(array, title, ax=axes_flat[i])
-            plt.tight_layout()
-            _save_subplot(fig, self.image_path, "subplot_dataset", self.fmt)
+            subplot_imaging(
+                dataset,
+                output_path=self.image_path,
+                output_format=self.fmt,
+            )
 
         image_list = [
             dataset.data.native,
@@ -52,6 +56,18 @@ class PlotterInterfaceEllipse(PlotterInterface):
         self,
         fit_list: List[FitEllipse],
     ):
+        """
+        Output visualization of a list of ``FitEllipse`` objects.
+
+        Controlled by the ``[fit]`` / ``[fit_ellipse]`` sections of
+        ``config/visualize/plots.yaml``.  Outputs data images with ellipse
+        overlays, ellipse residual plots, and a combined fit subplot.
+
+        Parameters
+        ----------
+        fit_list
+            The list of ellipse fits to visualize (one per ellipse).
+        """
         def should_plot(name):
             return plot_setting(section=["fit", "fit_ellipse"], name=name)
 

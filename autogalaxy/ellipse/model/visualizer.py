@@ -2,7 +2,7 @@ import autofit as af
 
 from autoarray import exc
 
-from autogalaxy.ellipse.model.plotter_interface import PlotterInterfaceEllipse
+from autogalaxy.ellipse.model.plotter import PlotterEllipse
 
 
 class VisualizerEllipse(af.Visualizer):
@@ -27,7 +27,7 @@ class VisualizerEllipse(af.Visualizer):
             the imaging data.
         """
 
-        plotter = PlotterInterfaceEllipse(
+        plotter = PlotterEllipse(
             image_path=paths.image_path, title_prefix=analysis.title_prefix
         )
 
@@ -63,7 +63,7 @@ class VisualizerEllipse(af.Visualizer):
         """
         fit_list = analysis.fit_list_from(instance=instance)
 
-        plotter = PlotterInterfaceEllipse(
+        plotter = PlotterEllipse(
             image_path=paths.image_path, title_prefix=analysis.title_prefix
         )
         plotter.imaging(dataset=analysis.dataset)
