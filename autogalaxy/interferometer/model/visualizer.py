@@ -2,8 +2,8 @@ import logging
 
 import autofit as af
 
-from autogalaxy.interferometer.model.plotter_interface import (
-    PlotterInterfaceInterferometer,
+from autogalaxy.interferometer.model.plotter import (
+    PlotterInterferometer,
 )
 from autogalaxy import exc
 
@@ -32,14 +32,14 @@ class VisualizerInterferometer(af.Visualizer):
             the imaging data.
         """
 
-        PlotterInterface = PlotterInterfaceInterferometer(
+        plotter = PlotterInterferometer(
             image_path=paths.image_path, title_prefix=analysis.title_prefix
         )
 
-        PlotterInterface.interferometer(dataset=analysis.interferometer)
+        plotter.interferometer(dataset=analysis.interferometer)
 
         if analysis.adapt_images is not None:
-            PlotterInterface.adapt_images(adapt_images=analysis.adapt_images)
+            plotter.adapt_images(adapt_images=analysis.adapt_images)
 
     @staticmethod
     def visualize(
@@ -80,12 +80,12 @@ class VisualizerInterferometer(af.Visualizer):
         """
         fit = analysis.fit_from(instance=instance)
 
-        plotter_interface = PlotterInterfaceInterferometer(
+        plotter = PlotterInterferometer(
             image_path=paths.image_path, title_prefix=analysis.title_prefix
         )
 
         try:
-            plotter_interface.fit_interferometer(
+            plotter.fit_interferometer(
                 fit=fit,
                 quick_update=quick_update,
             )
@@ -97,14 +97,14 @@ class VisualizerInterferometer(af.Visualizer):
 
         galaxies = fit.galaxies_linear_light_profiles_to_light_profiles
 
-        plotter_interface.galaxies(
+        plotter.galaxies(
             galaxies=galaxies,
             grid=fit.grids.lp,
         )
 
         if fit.inversion is not None:
             try:
-                plotter_interface.inversion(
+                plotter.inversion(
                     inversion=fit.inversion,
                 )
             except (IndexError, exc.InversionException):

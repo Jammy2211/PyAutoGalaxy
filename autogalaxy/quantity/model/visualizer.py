@@ -2,7 +2,7 @@ import os
 
 import autofit as af
 
-from autogalaxy.quantity.model.plotter_interface import PlotterInterfaceQuantity
+from autogalaxy.quantity.model.plotter import PlotterQuantity
 
 
 class VisualizerQuantity(af.Visualizer):
@@ -28,7 +28,7 @@ class VisualizerQuantity(af.Visualizer):
         """
         dataset = analysis.dataset
 
-        plotter = PlotterInterfaceQuantity(
+        plotter = PlotterQuantity(
             image_path=paths.image_path, title_prefix=analysis.title_prefix
         )
 
@@ -70,7 +70,7 @@ class VisualizerQuantity(af.Visualizer):
 
         fit = analysis.fit_quantity_for_instance(instance=instance)
 
-        PlotterInterface = PlotterInterfaceQuantity(
+        plotter = PlotterQuantity(
             image_path=paths.image_path, title_prefix=analysis.title_prefix
         )
-        PlotterInterface.fit_quantity(fit=fit)
+        plotter.fit_quantity(fit=fit)

@@ -3,13 +3,13 @@ from os import path
 import pytest
 
 import autogalaxy as ag
-from autogalaxy.imaging.model.plotter_interface import PlotterInterfaceImaging
+from autogalaxy.imaging.model.plotter import PlotterImaging
 
 directory = path.dirname(path.abspath(__file__))
 
 
 @pytest.fixture(name="plot_path")
-def make_plotter_interface_plotter_setup():
+def make_plotter_plotter_setup():
     return path.join("{}".format(directory), "files")
 
 
@@ -17,9 +17,9 @@ def test__imaging(imaging_7x7, plot_path, plot_patch):
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    plotter_interface = PlotterInterfaceImaging(image_path=plot_path)
+    plotter = PlotterImaging(image_path=plot_path)
 
-    plotter_interface.imaging(dataset=imaging_7x7)
+    plotter.imaging(dataset=imaging_7x7)
 
     assert path.join(plot_path, "subplot_dataset.png") in plot_patch.paths
 
@@ -34,7 +34,7 @@ def test__imaging_combined(imaging_7x7, plot_path, plot_patch):
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    visualizer = PlotterInterfaceImaging(image_path=plot_path)
+    visualizer = PlotterImaging(image_path=plot_path)
 
     visualizer.imaging_combined(dataset_list=[imaging_7x7, imaging_7x7])
 
@@ -50,9 +50,9 @@ def test__fit_imaging(
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    plotter_interface = PlotterInterfaceImaging(image_path=plot_path)
+    plotter = PlotterImaging(image_path=plot_path)
 
-    plotter_interface.fit_imaging(
+    plotter.fit_imaging(
         fit=fit_imaging_x2_galaxy_inversion_7x7,
     )
 
@@ -75,7 +75,7 @@ def test__fit_imaging_combined(
     if path.exists(plot_path):
         shutil.rmtree(plot_path)
 
-    visualizer = PlotterInterfaceImaging(image_path=plot_path)
+    visualizer = PlotterImaging(image_path=plot_path)
 
     visualizer.fit_imaging_combined(fit_list=2 * [fit_imaging_x2_galaxy_inversion_7x7])
 

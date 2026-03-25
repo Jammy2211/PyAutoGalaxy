@@ -4,7 +4,7 @@ import autofit as af
 
 from autoarray import exc
 
-from autogalaxy.imaging.model.plotter_interface import PlotterInterfaceImaging
+from autogalaxy.imaging.model.plotter import PlotterImaging
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +33,7 @@ class VisualizerImaging(af.Visualizer):
 
         dataset = analysis.dataset
 
-        plotter = PlotterInterfaceImaging(
+        plotter = PlotterImaging(
             image_path=paths.image_path, title_prefix=analysis.title_prefix
         )
 
@@ -78,7 +78,7 @@ class VisualizerImaging(af.Visualizer):
         """
         fit = analysis.fit_from(instance=instance)
 
-        plotter = PlotterInterfaceImaging(
+        plotter = PlotterImaging(
             image_path=paths.image_path, title_prefix=analysis.title_prefix
         )
         # Quick Update only, skips everything after
@@ -130,7 +130,7 @@ class VisualizerImaging(af.Visualizer):
         if analyses is None:
             return
 
-        plotter = PlotterInterfaceImaging(
+        plotter = PlotterImaging(
             image_path=paths.image_path, title_prefix=analyses[0].title_prefix
         )
 
@@ -168,7 +168,7 @@ class VisualizerImaging(af.Visualizer):
         if analyses is None:
             return
 
-        plotter = PlotterInterfaceImaging(
+        plotter = PlotterImaging(
             image_path=paths.image_path, title_prefix=analyses[0].title_prefix
         )
 
