@@ -5,6 +5,7 @@ import autoarray as aa
 
 from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.plot.plot_utils import _to_lines, _to_positions, plot_array, plot_grid, _save_subplot, _critical_curves_from
+from autoarray.plot.utils import hide_unused_axes
 from autogalaxy import exc
 
 
@@ -154,6 +155,7 @@ def subplot_galaxies(
             ax=axes_flat[i],
         )
 
+    hide_unused_axes(axes_flat)
     plt.tight_layout()
     _save_subplot(fig, output_path, auto_filename, output_format)
 
@@ -213,3 +215,36 @@ def subplot_galaxy_images(
 
     plt.tight_layout()
     _save_subplot(fig, output_path, "subplot_galaxy_images", output_format)
+
+
+def save_galaxy_images_fits(
+    galaxies,
+    grid: aa.type.Grid1D2DLike,
+    output_path,
+) -> None:
+    """Write a FITS file containing the 2D image of every galaxy.
+
+    Produces ``galaxy_images.fits`` in *output_path*.  The file contains one
+    HDU per galaxy, named ``galaxy_0``, ``galaxy_1``, …, plus a ``mask``
+    extension as the first extension.
+
+    Parameters
+    ----------
+    galaxies : Galaxies
+        The galaxies whose images are evaluated.  Must not contain
+        :class:`~autogalaxy.profiles.light.linear.LightProfileLinear` profiles.
+    grid : aa.type.Grid1D2DLike
+        The grid on which each galaxy image is evaluated.
+    output_path : str or Path
+        Directory in which to write ``galaxy_images.fits``.
+    """
+    from pathlib import Path
+    from autoconf.fitsable import hdu_list_for_output_from
+
+    image_list = [galaxy.image_2d_from(grid=grid).native_for_fits for galaxy in galaxies]
+    hdu_list = hdu_list_for_output_from(
+        values_list=[image_list[0].mask.astype("float")] + image_list,
+        ext_name_list=["mask"] + [f"galaxy_{i}" for i in range(len(galaxies))],
+        header_dict=grid.mask.header_dict,
+    )
+    hdu_list.writeto(Path(output_path) / "galaxy_images.fits", overwrite=True)

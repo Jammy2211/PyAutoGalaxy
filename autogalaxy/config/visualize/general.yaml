@@ -7,3 +7,13 @@ inversion:
 zoom:
   plane_percent: 0.01
   inversion_percent: 0.01
+colormap: autoarray
+ticks:
+  extent_factor_2d: 0.75
+  number_of_ticks_2d: 3
+colorbar:
+  fraction: 0.047
+  pad: 0.01
+  labelrotation: 90
+  labelsize: 22
+  labelsize_subplot: 18
