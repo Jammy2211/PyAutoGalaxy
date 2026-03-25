@@ -11,6 +11,9 @@ colormap: autoarray
 ticks:
   extent_factor_2d: 0.75
   number_of_ticks_2d: 3
+contour:
+  total_contours: 10
+  include_values: false
 colorbar:
   fraction: 0.047
   pad: 0.01
