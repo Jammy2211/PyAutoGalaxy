@@ -4,7 +4,7 @@ from autoconf.fitsable import hdu_list_for_output_from
 
 import autoarray as aa
 
-from autoarray.dataset.plot.imaging_plots import subplot_imaging
+from autoarray.dataset.plot.imaging_plots import subplot_imaging_dataset
 
 from autogalaxy.ellipse.fit_ellipse import FitEllipse
 from autogalaxy.ellipse.plot import fit_ellipse_plots
@@ -29,7 +29,7 @@ class PlotterEllipse(Plotter):
             return plot_setting(section=["dataset", "imaging"], name=name)
 
         if should_plot("subplot_dataset"):
-            subplot_imaging(
+            subplot_imaging_dataset(
                 dataset,
                 output_path=self.image_path,
                 output_format=self.fmt,

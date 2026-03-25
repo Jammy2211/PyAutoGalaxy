@@ -133,7 +133,7 @@ and `PyNUFFT` [@pynufft].
     We can use the grid and galaxies to perform many calculations, for example
     plotting the image of the galaxies.
     """
-    galaxies_plotter = aplt.GalaxiesPlotter(galaxies=[galaxy], grid=grid)
+    galaxies_plotter = aplt.Galaxies(galaxies=[galaxy], grid=grid)
     galaxies_plotter.figures_2d(image=True)
 
 

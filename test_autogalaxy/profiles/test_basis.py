@@ -42,25 +42,44 @@ def test__image_2d_from__does_not_include_linear_light_profiles(grid_2d_7x7):
     assert (image == lp_image).all()
 
 
-def test__image_2d_from__operated_only_input(grid_2d_7x7, lp_0, lp_operated_0):
+def test__image_2d_from__operated_only_false__returns_only_non_operated_profile_image(
+    grid_2d_7x7, lp_0, lp_operated_0
+):
     image_2d_not_operated = lp_0.image_2d_from(grid=grid_2d_7x7)
-    image_2d_operated = lp_operated_0.image_2d_from(grid=grid_2d_7x7)
 
     basis = ag.lp_basis.Basis(profile_list=[lp_0, lp_operated_0])
 
     image_2d = basis.image_2d_from(grid=grid_2d_7x7, operated_only=False)
     assert (image_2d == image_2d_not_operated).all()
 
+
+def test__image_2d_from__operated_only_true__returns_only_operated_profile_image(
+    grid_2d_7x7, lp_0, lp_operated_0
+):
+    image_2d_operated = lp_operated_0.image_2d_from(grid=grid_2d_7x7)
+
+    basis = ag.lp_basis.Basis(profile_list=[lp_0, lp_operated_0])
+
     image_2d = basis.image_2d_from(grid=grid_2d_7x7, operated_only=True)
     assert (image_2d == image_2d_operated).all()
+
+
+def test__image_2d_from__operated_only_none__returns_sum_of_all_images(
+    grid_2d_7x7, lp_0, lp_operated_0
+):
+    image_2d_not_operated = lp_0.image_2d_from(grid=grid_2d_7x7)
+    image_2d_operated = lp_operated_0.image_2d_from(grid=grid_2d_7x7)
+
+    basis = ag.lp_basis.Basis(profile_list=[lp_0, lp_operated_0])
 
     image_2d = basis.image_2d_from(grid=grid_2d_7x7, operated_only=None)
     assert (image_2d == image_2d_not_operated + image_2d_operated).all()
 
 
-def test__image_2d_list_from__operated_only_input(grid_2d_7x7, lp_0, lp_operated_0):
+def test__image_2d_list_from__operated_only_false__non_operated_image_returned_operated_image_zeros(
+    grid_2d_7x7, lp_0, lp_operated_0
+):
     image_2d_not_operated = lp_0.image_2d_from(grid=grid_2d_7x7)
-    image_2d_operated = lp_operated_0.image_2d_from(grid=grid_2d_7x7)
 
     basis = ag.lp_basis.Basis(profile_list=[lp_0, lp_operated_0])
 
@@ -68,9 +87,26 @@ def test__image_2d_list_from__operated_only_input(grid_2d_7x7, lp_0, lp_operated
     assert (image_2d_list[0] == image_2d_not_operated).all()
     assert (image_2d_list[1] == np.zeros((9))).all()
 
+
+def test__image_2d_list_from__operated_only_true__non_operated_image_zeros_operated_image_returned(
+    grid_2d_7x7, lp_0, lp_operated_0
+):
+    image_2d_operated = lp_operated_0.image_2d_from(grid=grid_2d_7x7)
+
+    basis = ag.lp_basis.Basis(profile_list=[lp_0, lp_operated_0])
+
     image_2d_list = basis.image_2d_list_from(grid=grid_2d_7x7, operated_only=True)
     assert (image_2d_list[0] == np.zeros((9))).all()
     assert (image_2d_list[1] == image_2d_operated).all()
+
+
+def test__image_2d_list_from__operated_only_none__list_sums_to_total_image(
+    grid_2d_7x7, lp_0, lp_operated_0
+):
+    image_2d_not_operated = lp_0.image_2d_from(grid=grid_2d_7x7)
+    image_2d_operated = lp_operated_0.image_2d_from(grid=grid_2d_7x7)
+
+    basis = ag.lp_basis.Basis(profile_list=[lp_0, lp_operated_0])
 
     image_2d_list = basis.image_2d_list_from(grid=grid_2d_7x7, operated_only=None)
     assert (

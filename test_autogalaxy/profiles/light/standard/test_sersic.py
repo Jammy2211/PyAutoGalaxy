@@ -6,7 +6,7 @@ import autogalaxy as ag
 grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
-def test__image_2d_from():
+def test__image_2d_from__sersic_index_4__intensity_1__correct_value():
     lp = ag.lp.Sersic(
         ell_comps=(0.0, 0.0),
         intensity=1.0,
@@ -18,18 +18,21 @@ def test__image_2d_from():
 
     assert image == pytest.approx(0.351797, 1e-3)
 
+
+def test__image_2d_from__sersic_index_2__intensity_3__correct_value():
     lp = ag.lp.Sersic(
         ell_comps=(0.0, 0.0),
         intensity=3.0,
         effective_radius=2.0,
         sersic_index=2.0,
     )
-    # 3.0 * exp(-3.67206544592 * (1,5/2.0) ** (1.0 / 2.0)) - 1) = 0.351797
 
     image = lp.image_2d_from(grid=ag.Grid2DIrregular([[1.5, 0.0]]))
 
     assert image == pytest.approx(4.90657319276, 1e-3)
 
+
+def test__image_2d_from__elliptical__ell_comps_nonzero__correct_value():
     lp = ag.lp.Sersic(
         ell_comps=(0.0, 0.333333),
         intensity=3.0,
@@ -41,6 +44,8 @@ def test__image_2d_from():
 
     assert image == pytest.approx(5.38066670129, 1e-3)
 
+
+def test__image_2d_from__spherical_profile__matches_elliptical_with_zero_ellipticity():
     elliptical = ag.lp.Sersic(
         ell_comps=(0.0, 0.0),
         intensity=3.0,
@@ -51,7 +56,6 @@ def test__image_2d_from():
     spherical = ag.lp.SersicSph(intensity=3.0, effective_radius=2.0, sersic_index=2.0)
 
     image_elliptical = elliptical.image_2d_from(grid=grid)
-
     image_spherical = spherical.image_2d_from(grid=grid)
 
     assert image_elliptical.array == pytest.approx(image_spherical.array, 1.0e-4)

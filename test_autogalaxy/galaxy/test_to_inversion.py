@@ -4,7 +4,9 @@ import pytest
 import autogalaxy as ag
 
 
-def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
+def test__lp_linear_func_list_galaxy_dict__no_linear_profiles__returns_empty_dict(
+    lp_0, masked_imaging_7x7
+):
     to_inversion = ag.GalaxiesToInversion(
         galaxies=[ag.Galaxy(redshift=0.5)], dataset=masked_imaging_7x7
     )
@@ -13,6 +15,10 @@ def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
 
     assert lp_linear_func_galaxy_dict == {}
 
+
+def test__lp_linear_func_list_galaxy_dict__multiple_galaxies_with_linear_profiles__maps_profiles_to_correct_galaxies(
+    lp_0, masked_imaging_7x7
+):
     lp_linear_0 = ag.lp_linear.LightProfileLinear()
     lp_linear_1 = ag.lp_linear.LightProfileLinear()
     lp_linear_2 = ag.lp_linear.LightProfileLinear()
@@ -20,7 +26,6 @@ def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
     g0 = ag.Galaxy(
         redshift=0.5, lp_0=lp_0, light_linear_0=lp_linear_0, light_linear_1=lp_linear_1
     )
-
     g1 = ag.Galaxy(redshift=0.5, light_linear=lp_linear_2)
 
     to_inversion = ag.GalaxiesToInversion(galaxies=[g0, g1], dataset=masked_imaging_7x7)
@@ -37,9 +42,18 @@ def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
     assert lp_linear_func_list[1].light_profile_list[0] == lp_linear_1
     assert lp_linear_func_list[2].light_profile_list[0] == lp_linear_2
 
+
+def test__lp_linear_func_list_galaxy_dict__basis_galaxy__groups_profiles_under_basis(
+    masked_imaging_7x7
+):
+    lp_linear_0 = ag.lp_linear.LightProfileLinear()
+    lp_linear_1 = ag.lp_linear.LightProfileLinear()
+    lp_linear_2 = ag.lp_linear.LightProfileLinear()
+
     basis = ag.lp_basis.Basis(profile_list=[lp_linear_0, lp_linear_1])
 
     g0 = ag.Galaxy(redshift=0.5, bulge=basis)
+    g1 = ag.Galaxy(redshift=0.5, light_linear=lp_linear_2)
 
     to_inversion = ag.GalaxiesToInversion(galaxies=[g0, g1], dataset=masked_imaging_7x7)
 
@@ -55,14 +69,12 @@ def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
     assert lp_linear_func_list[1].light_profile_list[1] == lp_linear_1
 
 
-def test__image_plane_mesh_grid_list(masked_imaging_7x7):
-
+def test__image_plane_mesh_grid_list__with_adapt_images__returns_adapt_mesh_grid(
+    masked_imaging_7x7,
+):
     pixelization = ag.m.MockPixelization()
 
-    galaxy_pix = ag.Galaxy(
-        redshift=0.5,
-        pixelization=pixelization,
-    )
+    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     adapt_images = ag.AdaptImages(
         galaxy_image_dict={galaxy_pix: 2},
@@ -77,7 +89,13 @@ def test__image_plane_mesh_grid_list(masked_imaging_7x7):
 
     assert image_plane_mesh_grid_list[0] == 3
 
-    # No Adapt Images
+
+def test__image_plane_mesh_grid_list__no_adapt_images__returns_none_in_list(
+    masked_imaging_7x7,
+):
+    pixelization = ag.m.MockPixelization()
+
+    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     to_inversion = ag.GalaxiesToInversion(
         galaxies=[galaxy_pix],
@@ -88,8 +106,10 @@ def test__image_plane_mesh_grid_list(masked_imaging_7x7):
 
     assert image_plane_mesh_grid_list[0] is None
 
-    # No Galalxies
 
+def test__image_plane_mesh_grid_list__no_pixelization_galaxies__returns_none(
+    masked_imaging_7x7,
+):
     galaxy_no_pix = ag.Galaxy(redshift=0.5)
 
     to_inversion = ag.GalaxiesToInversion(
@@ -101,9 +121,10 @@ def test__image_plane_mesh_grid_list(masked_imaging_7x7):
     assert image_plane_mesh_grid_list is None
 
 
-def test__mapper_galaxy_dict(masked_imaging_7x7):
+def test__mapper_galaxy_dict__single_pixelization_galaxy__mapper_has_correct_pixels(
+    masked_imaging_7x7,
+):
     mesh = ag.mesh.RectangularUniform(shape=(3, 3))
-
     pixelization = ag.m.MockPixelization(mesh=mesh)
 
     galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
@@ -120,10 +141,18 @@ def test__mapper_galaxy_dict(masked_imaging_7x7):
     assert mapper_list[0].pixels == 9
     assert mapper_galaxy_dict[mapper_list[0]] == galaxy_pix
 
-    mesh = ag.mesh.RectangularUniform(shape=(4, 3))
-    pixelization = ag.m.MockPixelization(mesh=mesh)
 
-    galaxy_pix_2 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
+def test__mapper_galaxy_dict__two_pixelization_galaxies__both_mappers_correct(
+    masked_imaging_7x7,
+):
+    mesh = ag.mesh.RectangularUniform(shape=(3, 3))
+    pixelization = ag.m.MockPixelization(mesh=mesh)
+    galaxy_pix = ag.Galaxy(redshift=0.5, pixelization=pixelization)
+
+    mesh_2 = ag.mesh.RectangularUniform(shape=(4, 3))
+    pixelization_2 = ag.m.MockPixelization(mesh=mesh_2)
+    galaxy_pix_2 = ag.Galaxy(redshift=0.5, pixelization=pixelization_2)
+
     galaxy_no_pix = ag.Galaxy(redshift=0.5)
 
     to_inversion = ag.GalaxiesToInversion(
@@ -141,6 +170,10 @@ def test__mapper_galaxy_dict(masked_imaging_7x7):
     assert mapper_galaxy_dict[mapper_list[0]] == galaxy_pix
     assert mapper_galaxy_dict[mapper_list[1]] == galaxy_pix_2
 
+
+def test__mapper_galaxy_dict__no_pixelization_galaxy__returns_empty_dict(
+    masked_imaging_7x7,
+):
     galaxy_no_pix = ag.Galaxy(redshift=0.5)
 
     to_inversion = ag.GalaxiesToInversion(
@@ -152,7 +185,9 @@ def test__mapper_galaxy_dict(masked_imaging_7x7):
     assert mapper_galaxy_dict == {}
 
 
-def test__inversion_imaging_from(grid_2d_7x7, masked_imaging_7x7):
+def test__inversion_imaging_from__linear_light_profile__correct_reconstruction(
+    grid_2d_7x7, masked_imaging_7x7
+):
     g_linear = ag.Galaxy(
         redshift=0.5, light_linear=ag.lp_linear.Sersic(centre=(0.05, 0.05))
     )
@@ -166,6 +201,10 @@ def test__inversion_imaging_from(grid_2d_7x7, masked_imaging_7x7):
 
     assert inversion.reconstruction[0] == pytest.approx(0.186868464426, 1.0e-2)
 
+
+def test__inversion_imaging_from__rectangular_pixelization__reconstructed_data_matches_input(
+    grid_2d_7x7, masked_imaging_7x7
+):
     pixelization = ag.Pixelization(
         mesh=ag.mesh.RectangularUniform(shape=(3, 3)),
         regularization=ag.reg.Constant(coefficient=0.0),
@@ -185,7 +224,9 @@ def test__inversion_imaging_from(grid_2d_7x7, masked_imaging_7x7):
     )
 
 
-def test__inversion_interferometer_from(grid_2d_7x7, interferometer_7):
+def test__inversion_interferometer_from__linear_light_profile__correct_reconstruction(
+    grid_2d_7x7, interferometer_7
+):
     g_linear = ag.Galaxy(
         redshift=0.5, light_linear=ag.lp_linear.Sersic(centre=(0.05, 0.05))
     )
@@ -199,6 +240,10 @@ def test__inversion_interferometer_from(grid_2d_7x7, interferometer_7):
 
     assert inversion.reconstruction[0] == pytest.approx(0.04124846952, 1.0e-2)
 
+
+def test__inversion_interferometer_from__rectangular_pixelization__reconstructed_visibilities_match_input(
+    grid_2d_7x7, interferometer_7
+):
     interferometer_7.data = ag.Visibilities.ones(shape_slim=(7,))
 
     pixelization = ag.Pixelization(
