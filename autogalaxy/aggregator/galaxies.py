@@ -68,6 +68,10 @@ def _galaxies_from(fit: af.Fit, instance: af.ModelInstance) -> List[Galaxy]:
         if hasattr(instance, "extra_galaxies"):
             if instance.extra_galaxies is not None:
                 galaxies = galaxies + instance.extra_galaxies
+                
+        if hasattr(instance, "scaling_galaxies"):
+            if instance.scaling_galaxies is not None:
+                galaxies = galaxies + instance.scaling_galaxies
 
         galaxies_list.append(galaxies)
 

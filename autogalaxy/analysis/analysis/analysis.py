@@ -77,13 +77,17 @@ class Analysis(af.Analysis):
         -------
         A list of galaxies that is used to then fit the dataset.
         """
+        galaxy_list = list(instance.galaxies)
+
         if hasattr(instance, "extra_galaxies"):
             if getattr(instance, "extra_galaxies", None) is not None:
-                return Galaxies(
-                    galaxies=instance.galaxies + instance.extra_galaxies,
-                )
+                galaxy_list += list(instance.extra_galaxies)
 
-        return Galaxies(galaxies=instance.galaxies)
+        if hasattr(instance, "scaling_galaxies"):
+            if getattr(instance, "scaling_galaxies", None) is not None:
+                galaxy_list += list(instance.scaling_galaxies)
+
+        return Galaxies(galaxies=galaxy_list)
 
     def dataset_model_via_instance_from(
         self, instance: af.ModelInstance
