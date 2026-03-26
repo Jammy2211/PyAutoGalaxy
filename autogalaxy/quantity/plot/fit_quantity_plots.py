@@ -1,12 +1,13 @@
 import matplotlib.pyplot as plt
 
 import autoarray as aa
+from autoarray.plot.utils import conf_subplot_figsize
 
 from autogalaxy.quantity.fit_quantity import FitQuantity
 from autogalaxy.plot.plot_utils import plot_array, _save_subplot
 
 
-def _subplot_fit_array(fit, output_path, output_format, colormap, use_log10, positions, filename="subplot_fit"):
+def _subplot_fit_array(fit, output_path, output_format, colormap, use_log10, positions, filename="fit"):
     """Render a six-panel fit summary subplot for a single array-valued quantity fit.
 
     The panels show: data, signal-to-noise map, model image, residual map,
@@ -42,7 +43,7 @@ def _subplot_fit_array(fit, output_path, output_format, colormap, use_log10, pos
         (fit.chi_squared_map, "Chi-Squared Map"),
     ]
     n = len(panels)
-    fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+    fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
     axes_flat = list(axes.flatten())
 
     for i, (array, title) in enumerate(panels):
@@ -96,8 +97,8 @@ def subplot_fit(
         _subplot_fit_array(fit, output_path, output_format, colormap, use_log10, positions)
     else:
         _subplot_fit_array(
-            fit.y, output_path, output_format, colormap, use_log10, positions, filename="subplot_fit_y"
+            fit.y, output_path, output_format, colormap, use_log10, positions, filename="fit_y"
         )
         _subplot_fit_array(
-            fit.x, output_path, output_format, colormap, use_log10, positions, filename="subplot_fit_x"
+            fit.x, output_path, output_format, colormap, use_log10, positions, filename="fit_x"
         )

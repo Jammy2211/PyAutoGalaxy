@@ -3,6 +3,7 @@ import numpy as np
 
 import autoarray as aa
 from autoarray.plot import plot_visibilities_1d
+from autoarray.plot.utils import conf_subplot_figsize
 
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.galaxy.plot import galaxies_plots
@@ -45,7 +46,7 @@ def subplot_fit(
         (fit.chi_squared_map, "Chi-Squared Map"),
     ]
     n = len(panels)
-    fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+    fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
     axes_flat = list(axes.flatten())
 
     for i, (vis, title) in enumerate(panels):
@@ -86,23 +87,24 @@ def subplot_fit_dirty_images(
         Reserved for future symmetric-colormap support (currently unused).
     """
     panels = [
-        (fit.dirty_image, "Dirty Image"),
-        (fit.dirty_signal_to_noise_map, "Dirty Signal-To-Noise Map"),
-        (fit.dirty_model_image, "Dirty Model Image"),
-        (fit.dirty_residual_map, "Dirty Residual Map"),
-        (fit.dirty_normalized_residual_map, "Dirty Normalized Residual Map"),
-        (fit.dirty_chi_squared_map, "Dirty Chi-Squared Map"),
+        (fit.dirty_image, "Dirty Image", None),
+        (fit.dirty_signal_to_noise_map, "Dirty Signal-To-Noise Map", None),
+        (fit.dirty_model_image, "Dirty Model Image", None),
+        (fit.dirty_residual_map, "Dirty Residual Map", None),
+        (fit.dirty_normalized_residual_map, "Dirty Normalized Residual Map", r"$\sigma$"),
+        (fit.dirty_chi_squared_map, "Dirty Chi-Squared Map", r"$\chi^2$"),
     ]
     n = len(panels)
-    fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+    fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
     axes_flat = list(axes.flatten())
 
-    for i, (array, title) in enumerate(panels):
+    for i, (array, title, cb_unit) in enumerate(panels):
         plot_array(
             array=array,
             title=title,
             colormap=colormap,
             use_log10=use_log10,
+            cb_unit=cb_unit,
             ax=axes_flat[i],
         )
 
@@ -152,7 +154,7 @@ def subplot_fit_real_space(
             output_format=output_format,
             colormap=colormap,
             use_log10=use_log10,
-            auto_filename="subplot_fit_real_space",
+            auto_filename="fit_real_space",
         )
     else:
         panels = [
@@ -161,7 +163,7 @@ def subplot_fit_real_space(
             (fit.dirty_residual_map, "Dirty Residual Map"),
         ]
         n = len(panels)
-        fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+        fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
         axes_flat = list(axes.flatten())
         for i, (array, title) in enumerate(panels):
             plot_array(

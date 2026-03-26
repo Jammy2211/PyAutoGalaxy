@@ -95,7 +95,7 @@ class PlotterInterferometer(Plotter):
             subplot_interferometer_dirty_images(
                 dataset,
                 output_path=self.image_path,
-                output_filename="subplot_dataset",
+                output_filename="dataset",
                 output_format=self.fmt[0] if isinstance(self.fmt, (list, tuple)) else self.fmt,
             )
 

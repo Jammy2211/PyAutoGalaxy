@@ -5,6 +5,7 @@ from typing import List, Optional
 
 import autoarray as aa
 from autoarray import plot as aplt
+from autoarray.plot.utils import conf_subplot_figsize
 
 from autogalaxy.ellipse.plot import fit_ellipse_plot_util
 from autogalaxy.ellipse.fit_ellipse import FitEllipse
@@ -147,7 +148,7 @@ def subplot_fit_ellipse(
     disable_data_contours : bool
         If ``True``, suppress ellipse contour overlays on the image panel.
     """
-    fig, axes = plt.subplots(1, 2, figsize=(14, 7))
+    fig, axes = plt.subplots(1, 2, figsize=conf_subplot_figsize(1, 2))
 
     _plot_data(
         fit_list=fit_list,
@@ -212,7 +213,7 @@ def subplot_ellipse_errors(
             fit_ellipse_list[i].append(aa.Grid2DIrregular.from_yx_1d(y=y, x=x))
 
     n = len(fit_ellipse_list)
-    fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+    fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
     axes_flat = [axes] if n == 1 else list(axes.flatten())
 
     for i in range(n):

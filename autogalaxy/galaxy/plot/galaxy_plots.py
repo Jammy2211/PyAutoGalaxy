@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 from typing import TYPE_CHECKING
 
 import autoarray as aa
+from autoarray.plot.utils import conf_subplot_figsize
 
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.profiles.light.abstract import LightProfile
@@ -47,7 +48,7 @@ def subplot_of_light_profiles(
         return
 
     n = len(light_profiles)
-    fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+    fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
     axes_flat = [axes] if n == 1 else list(axes.flatten())
 
     for i, lp in enumerate(light_profiles):
@@ -129,7 +130,7 @@ def subplot_of_mass_profiles(
         if not flag:
             continue
 
-        fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+        fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
         axes_flat = [axes] if n == 1 else list(axes.flatten())
 
         for i, mp in enumerate(mass_profiles):

@@ -13,10 +13,10 @@ ticks:
   number_of_ticks_2d: 3
 contour:
   total_contours: 10
-  include_values: false
+  include_values: true
 colorbar:
   fraction: 0.047
   pad: 0.01
   labelrotation: 90
   labelsize: 22
-  labelsize_subplot: 18
+  labelsize_subplot: 22

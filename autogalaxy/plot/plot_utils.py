@@ -218,7 +218,6 @@ def plot_array(
         output_path=_output_path,
         output_filename=output_filename,
         output_format=output_format,
-        structure=array,
     )
 
 
