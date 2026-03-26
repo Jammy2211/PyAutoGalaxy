@@ -97,7 +97,7 @@ class Plotter:
         def should_plot(name):
             return plot_setting(section="galaxies", name=name)
 
-        if should_plot("galaxy_images"):
+        if should_plot("subplot_galaxy_images"):
             galaxies_plots.subplot_galaxy_images(
                 galaxies=galaxies,
                 grid=grid,
@@ -105,7 +105,7 @@ class Plotter:
                 output_format=self.fmt,
             )
 
-        if should_plot("galaxies"):
+        if should_plot("subplot_galaxies"):
             galaxies_plots.subplot_galaxies(
                 galaxies=galaxies,
                 grid=grid,
@@ -136,7 +136,7 @@ class Plotter:
 
         output = self.output_from()
 
-        if should_plot("inversion"):
+        if should_plot("subplot_inversion"):
             from autoarray.inversion.plot.inversion_plots import subplot_of_mapper
 
             mapper_list = inversion.cls_list_from(cls=aa.Mapper)
