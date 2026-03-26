@@ -173,7 +173,7 @@ class Plotter:
             return plot_setting(section="adapt", name=name)
 
         if adapt_images.galaxy_name_image_dict is not None:
-            if should_plot("adapt_images"):
+            if should_plot("subplot_adapt_images"):
                 adapt_plots.subplot_adapt_images(
                     adapt_galaxy_name_image_dict=adapt_images.galaxy_name_image_dict,
                     output_path=self.image_path,
