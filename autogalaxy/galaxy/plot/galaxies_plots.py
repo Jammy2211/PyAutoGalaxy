@@ -5,7 +5,7 @@ import autoarray as aa
 
 from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.plot.plot_utils import _to_lines, _to_positions, plot_array, plot_grid, _save_subplot, _critical_curves_from
-from autoarray.plot.utils import hide_unused_axes
+from autoarray.plot.utils import hide_unused_axes, conf_subplot_figsize
 from autogalaxy import exc
 
 
@@ -73,7 +73,7 @@ def subplot_galaxies(
     multiple_images=None,
     tangential_critical_curves=None,
     radial_critical_curves=None,
-    auto_filename="subplot_galaxies",
+    auto_filename="galaxies",
 ):
     """Create a standard five-panel summary subplot for a collection of galaxies.
 
@@ -141,7 +141,7 @@ def subplot_galaxies(
     n = len(panels)
     cols = min(n, 3)
     rows = (n + cols - 1) // cols
-    fig, axes = plt.subplots(rows, cols, figsize=(7 * cols, 7 * rows))
+    fig, axes = plt.subplots(rows, cols, figsize=conf_subplot_figsize(rows, cols))
     axes_flat = [axes] if n == 1 else list(np.array(axes).flatten())
 
     for i, (_, array, title, p, l) in enumerate(panels):
@@ -201,7 +201,7 @@ def subplot_galaxy_images(
     gs = Galaxies(galaxies=galaxies)
 
     n = len(gs)
-    fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+    fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
     axes_flat = [axes] if n == 1 else list(axes.flatten())
 
     for i in range(n):

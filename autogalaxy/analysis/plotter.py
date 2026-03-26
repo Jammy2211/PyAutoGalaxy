@@ -63,7 +63,10 @@ class Plotter:
     @property
     def fmt(self) -> List[str]:
         """The output file format(s) read from ``config/visualize/plots.yaml``."""
-        return conf.instance["visualize"]["plots"]["subplot_format"]
+        try:
+            return conf.instance["visualize"]["plots"]["subplot_format"]
+        except KeyError:
+            return conf.instance["visualize"]["plots"]["format"]
 
     def output_from(self) -> aplt.Output:
         """Return an ``autoarray`` ``Output`` object pointed at ``image_path``."""
@@ -94,7 +97,7 @@ class Plotter:
         def should_plot(name):
             return plot_setting(section="galaxies", name=name)
 
-        if should_plot("subplot_galaxy_images"):
+        if should_plot("galaxy_images"):
             galaxies_plots.subplot_galaxy_images(
                 galaxies=galaxies,
                 grid=grid,
@@ -102,7 +105,7 @@ class Plotter:
                 output_format=self.fmt,
             )
 
-        if should_plot("subplot_galaxies"):
+        if should_plot("galaxies"):
             galaxies_plots.subplot_galaxies(
                 galaxies=galaxies,
                 grid=grid,
@@ -133,7 +136,7 @@ class Plotter:
 
         output = self.output_from()
 
-        if should_plot("subplot_inversion"):
+        if should_plot("inversion"):
             from autoarray.inversion.plot.inversion_plots import subplot_of_mapper
 
             mapper_list = inversion.cls_list_from(cls=aa.Mapper)
@@ -144,7 +147,7 @@ class Plotter:
                     inversion=inversion,
                     mapper_index=i,
                     output_path=output.path,
-                    output_filename=f"subplot_inversion_{i}",
+                    output_filename=f"inversion_{i}",
                     output_format=fmt,
                 )
 
@@ -170,7 +173,7 @@ class Plotter:
             return plot_setting(section="adapt", name=name)
 
         if adapt_images.galaxy_name_image_dict is not None:
-            if should_plot("subplot_adapt_images"):
+            if should_plot("adapt_images"):
                 adapt_plots.subplot_adapt_images(
                     adapt_galaxy_name_image_dict=adapt_images.galaxy_name_image_dict,
                     output_path=self.image_path,

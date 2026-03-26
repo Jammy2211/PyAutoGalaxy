@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import autoarray as aa
+from autoarray.plot.utils import conf_subplot_figsize
 
 from autogalaxy.profiles.basis import Basis
 from autogalaxy.plot.plot_utils import _to_positions, plot_array, _save_subplot
@@ -59,7 +60,7 @@ def subplot_image(
     n = len(basis.light_profile_list)
     cols = min(n, 4)
     rows = (n + cols - 1) // cols
-    fig, axes = plt.subplots(rows, cols, figsize=(7 * cols, 7 * rows))
+    fig, axes = plt.subplots(rows, cols, figsize=conf_subplot_figsize(rows, cols))
     axes_flat = [axes] if n == 1 else list(np.array(axes).flatten())
 
     _positions = _to_positions(positions)

@@ -3,6 +3,7 @@ import numpy as np
 from typing import Dict
 
 import autoarray as aa
+from autoarray.plot.utils import conf_subplot_figsize
 
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plot.plot_utils import plot_array, _save_subplot
@@ -45,7 +46,7 @@ def subplot_adapt_images(
     n = len(adapt_galaxy_name_image_dict)
     cols = min(n, 3)
     rows = (n + cols - 1) // cols
-    fig, axes = plt.subplots(rows, cols, figsize=(7 * cols, 7 * rows))
+    fig, axes = plt.subplots(rows, cols, figsize=conf_subplot_figsize(rows, cols))
     axes_list = [axes] if n == 1 else list(np.array(axes).flatten())
 
     for i, (_, galaxy_image) in enumerate(adapt_galaxy_name_image_dict.items()):

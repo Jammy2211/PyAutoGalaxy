@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 
 import autoarray as aa
+from autoarray.plot.utils import conf_subplot_figsize
 
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.plot.plot_utils import plot_array, _save_subplot
@@ -39,29 +40,30 @@ def subplot_fit(
         (currently unused).
     """
     panels = [
-        (fit.data, "Data"),
-        (fit.signal_to_noise_map, "Signal-To-Noise Map"),
-        (fit.model_data, "Model Image"),
-        (fit.residual_map, "Residual Map"),
-        (fit.normalized_residual_map, "Normalized Residual Map"),
-        (fit.chi_squared_map, "Chi-Squared Map"),
+        (fit.data, "Data", None),
+        (fit.signal_to_noise_map, "Signal-To-Noise Map", None),
+        (fit.model_data, "Model Image", None),
+        (fit.residual_map, "Residual Map", None),
+        (fit.normalized_residual_map, "Normalized Residual Map", r"$\sigma$"),
+        (fit.chi_squared_map, "Chi-Squared Map", r"$\chi^2$"),
     ]
     n = len(panels)
-    fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+    fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
     axes_flat = list(axes.flatten())
 
-    for i, (array, title) in enumerate(panels):
+    for i, (array, title, cb_unit) in enumerate(panels):
         plot_array(
             array=array,
             title=title,
             colormap=colormap,
             use_log10=use_log10,
             positions=positions,
+            cb_unit=cb_unit,
             ax=axes_flat[i],
         )
 
     plt.tight_layout()
-    _save_subplot(fig, output_path, "subplot_fit", output_format)
+    _save_subplot(fig, output_path, "fit", output_format)
 
 
 def subplot_of_galaxy(
@@ -112,7 +114,7 @@ def subplot_of_galaxy(
         ),
     ]
     n = len(panels)
-    fig, axes = plt.subplots(1, n, figsize=(7 * n, 7))
+    fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
     axes_flat = list(axes.flatten())
 
     for i, (array, title) in enumerate(panels):
@@ -125,13 +127,13 @@ def subplot_of_galaxy(
         )
 
     plt.tight_layout()
-    _save_subplot(fig, output_path, f"subplot_of_galaxy_{galaxy_index}", output_format)
+    _save_subplot(fig, output_path, f"of_galaxy_{galaxy_index}", output_format)
 
 
 def subplot_fit_imaging_list(
     fit_list,
     output_path=None,
-    output_filename: str = "subplot_fit_combined",
+    output_filename: str = "fit_combined",
     output_format="png",
 ):
     """
@@ -152,14 +154,14 @@ def subplot_fit_imaging_list(
         File format string or list, e.g. ``"png"`` or ``["png"]``.
     """
     n = len(fit_list)
-    fig, axes = plt.subplots(n, 5, figsize=(35, 7 * n))
+    fig, axes = plt.subplots(n, 5, figsize=conf_subplot_figsize(n, 5))
     if n == 1:
         axes = [axes]
     for i, fit in enumerate(fit_list):
         plot_array(array=fit.data, title="Data", ax=axes[i][0])
         plot_array(array=fit.signal_to_noise_map, title="Signal-To-Noise Map", ax=axes[i][1])
         plot_array(array=fit.model_data, title="Model Image", ax=axes[i][2])
-        plot_array(array=fit.normalized_residual_map, title="Normalized Residual Map", ax=axes[i][3])
-        plot_array(array=fit.chi_squared_map, title="Chi-Squared Map", ax=axes[i][4])
+        plot_array(array=fit.normalized_residual_map, title="Normalized Residual Map", cb_unit=r"$\sigma$", ax=axes[i][3])
+        plot_array(array=fit.chi_squared_map, title="Chi-Squared Map", cb_unit=r"$\chi^2$", ax=axes[i][4])
     plt.tight_layout()
     _save_subplot(fig, output_path, output_filename, output_format)
