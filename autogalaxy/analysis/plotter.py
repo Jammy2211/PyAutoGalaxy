@@ -63,7 +63,10 @@ class Plotter:
     @property
     def fmt(self) -> List[str]:
         """The output file format(s) read from ``config/visualize/plots.yaml``."""
-        return conf.instance["visualize"]["plots"]["format"]
+        try:
+            return conf.instance["visualize"]["plots"]["subplot_format"]
+        except KeyError:
+            return conf.instance["visualize"]["plots"]["format"]
 
     def output_from(self) -> aplt.Output:
         """Return an ``autoarray`` ``Output`` object pointed at ``image_path``."""
