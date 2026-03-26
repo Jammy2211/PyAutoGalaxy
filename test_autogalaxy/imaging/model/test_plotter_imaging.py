@@ -21,7 +21,7 @@ def test__imaging(imaging_7x7, plot_path, plot_patch):
 
     plotter.imaging(dataset=imaging_7x7)
 
-    assert path.join(plot_path, "subplot_dataset.png") in plot_patch.paths
+    assert path.join(plot_path, "dataset.png") in plot_patch.paths
 
     image = ag.ndarray_via_fits_from(
         file_path=path.join(plot_path, "dataset.fits"), hdu=1
@@ -38,7 +38,7 @@ def test__imaging_combined(imaging_7x7, plot_path, plot_patch):
 
     visualizer.imaging_combined(dataset_list=[imaging_7x7, imaging_7x7])
 
-    assert path.join(plot_path, "subplot_dataset_combined.png") in plot_patch.paths
+    assert path.join(plot_path, "dataset_combined.png") in plot_patch.paths
 
 
 def test__fit_imaging(
@@ -56,7 +56,7 @@ def test__fit_imaging(
         fit=fit_imaging_x2_galaxy_inversion_7x7,
     )
 
-    assert path.join(plot_path, "subplot_fit.png") in plot_patch.paths
+    assert path.join(plot_path, "fit.png") in plot_patch.paths
 
     image = ag.ndarray_via_fits_from(file_path=path.join(plot_path, "fit.fits"), hdu=1)
 
@@ -79,4 +79,4 @@ def test__fit_imaging_combined(
 
     visualizer.fit_imaging_combined(fit_list=2 * [fit_imaging_x2_galaxy_inversion_7x7])
 
-    assert path.join(plot_path, "subplot_fit_combined.png") in plot_patch.paths
+    assert path.join(plot_path, "fit_combined.png") in plot_patch.paths

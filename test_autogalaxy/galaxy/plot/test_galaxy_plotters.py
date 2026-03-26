@@ -26,7 +26,7 @@ def test__subplots_galaxy_quantities__all_are_output(
         output_format="png",
     )
 
-    assert path.join(plot_path, "subplot_image.png") in plot_patch.paths
+    assert path.join(plot_path, "image.png") in plot_patch.paths
 
     aplt.subplot_galaxy_mass_profiles(
         galaxy=gal_x1_lp_x1_mp,
@@ -39,7 +39,7 @@ def test__subplots_galaxy_quantities__all_are_output(
         output_format="png",
     )
 
-    assert path.join(plot_path, "subplot_convergence.png") in plot_patch.paths
-    assert path.join(plot_path, "subplot_potential.png") in plot_patch.paths
-    assert path.join(plot_path, "subplot_deflections_y.png") in plot_patch.paths
-    assert path.join(plot_path, "subplot_deflections_x.png") in plot_patch.paths
+    assert path.join(plot_path, "convergence.png") in plot_patch.paths
+    assert path.join(plot_path, "potential.png") in plot_patch.paths
+    assert path.join(plot_path, "deflections_y.png") in plot_patch.paths
+    assert path.join(plot_path, "deflections_x.png") in plot_patch.paths

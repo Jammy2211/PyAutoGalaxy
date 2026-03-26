@@ -27,8 +27,8 @@ def test__subplot_of_galaxy(fit_imaging_x2_galaxy_7x7, plot_path, plot_patch):
         output_path=plot_path,
         output_format="png",
     )
-    assert path.join(plot_path, "subplot_of_galaxy_0.png") in plot_patch.paths
-    assert path.join(plot_path, "subplot_of_galaxy_1.png") in plot_patch.paths
+    assert path.join(plot_path, "of_galaxy_0.png") in plot_patch.paths
+    assert path.join(plot_path, "of_galaxy_1.png") in plot_patch.paths
 
     plot_patch.paths = []
 
@@ -39,5 +39,5 @@ def test__subplot_of_galaxy(fit_imaging_x2_galaxy_7x7, plot_path, plot_patch):
         output_format="png",
     )
 
-    assert path.join(plot_path, "subplot_of_galaxy_0.png") in plot_patch.paths
-    assert path.join(plot_path, "subplot_of_galaxy_1.png") not in plot_patch.paths
+    assert path.join(plot_path, "of_galaxy_0.png") in plot_patch.paths
+    assert path.join(plot_path, "of_galaxy_1.png") not in plot_patch.paths

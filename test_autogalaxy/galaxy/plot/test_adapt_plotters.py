@@ -22,4 +22,4 @@ def test__plot_adapt_adapt_images(
         output_path=plot_path,
         output_format="png",
     )
-    assert path.join(plot_path, "subplot_adapt_images.png") in plot_patch.paths
+    assert path.join(plot_path, "adapt_images.png") in plot_patch.paths

@@ -134,6 +134,7 @@ def plot_array(
     positions=None,
     lines=None,
     grid=None,
+    cb_unit=None,
     ax=None,
 ):
     """Plot an autoarray ``Array2D`` to file or onto an existing ``Axes``.
@@ -215,6 +216,7 @@ def plot_array(
         use_log10=use_log10,
         vmin=vmin,
         vmax=vmax,
+        cb_unit=cb_unit,
         output_path=_output_path,
         output_filename=output_filename,
         output_format=output_format,

@@ -1,7 +1,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
+from pathlib import Path
 
 import autoarray as aa
+from autoconf.fitsable import hdu_list_for_output_from
 from autoarray.plot import plot_visibilities_1d
 from autoarray.plot.utils import conf_subplot_figsize
 
@@ -53,7 +55,7 @@ def subplot_fit(
         plot_visibilities_1d(vis, axes_flat[i], title)
 
     plt.tight_layout()
-    _save_subplot(fig, output_path, "subplot_fit", output_format)
+    _save_subplot(fig, output_path, "fit", output_format)
 
 
 def subplot_fit_dirty_images(
@@ -109,7 +111,7 @@ def subplot_fit_dirty_images(
         )
 
     plt.tight_layout()
-    _save_subplot(fig, output_path, "subplot_fit_dirty_images", output_format)
+    _save_subplot(fig, output_path, "fit_dirty_images", output_format)
 
 
 def subplot_fit_real_space(
@@ -174,4 +176,62 @@ def subplot_fit_real_space(
                 ax=axes_flat[i],
             )
         plt.tight_layout()
-        _save_subplot(fig, output_path, "subplot_fit_real_space", output_format)
+        _save_subplot(fig, output_path, "fit_real_space", output_format)
+
+
+def fits_galaxy_images(fit: FitInterferometer, output_path) -> None:
+    """Write per-galaxy images from a ``FitInterferometer`` to ``galaxy_images.fits``.
+
+    Extensions: ``mask``, ``galaxy_0``, ``galaxy_1``, …
+
+    Parameters
+    ----------
+    fit
+        The interferometer fit whose per-galaxy images are saved.
+    output_path
+        Directory in which to write ``galaxy_images.fits``.
+    """
+    image_list = [image.native_for_fits for image in fit.galaxy_image_dict.values()]
+    hdu_list = hdu_list_for_output_from(
+        values_list=[image_list[0].mask.astype("float")] + image_list,
+        ext_name_list=["mask"] + [f"galaxy_{i}" for i in range(len(image_list))],
+        header_dict=fit.dataset.real_space_mask.header_dict,
+    )
+    hdu_list.writeto(Path(output_path) / "galaxy_images.fits", overwrite=True)
+
+
+def fits_dirty_images(fit: FitInterferometer, output_path) -> None:
+    """Write dirty-image residual maps from a ``FitInterferometer`` to ``fit_dirty_images.fits``.
+
+    Extensions: ``mask``, ``dirty_image``, ``dirty_noise_map``, ``dirty_model_image``,
+    ``dirty_residual_map``, ``dirty_normalized_residual_map``, ``dirty_chi_squared_map``.
+
+    Parameters
+    ----------
+    fit
+        The interferometer fit whose dirty-image arrays are saved.
+    output_path
+        Directory in which to write ``fit_dirty_images.fits``.
+    """
+    image_list = [
+        fit.dirty_image.native_for_fits,
+        fit.dirty_noise_map.native_for_fits,
+        fit.dirty_model_image.native_for_fits,
+        fit.dirty_residual_map.native_for_fits,
+        fit.dirty_normalized_residual_map.native_for_fits,
+        fit.dirty_chi_squared_map.native_for_fits,
+    ]
+    hdu_list = hdu_list_for_output_from(
+        values_list=[image_list[0].mask.astype("float")] + image_list,
+        ext_name_list=[
+            "mask",
+            "dirty_image",
+            "dirty_noise_map",
+            "dirty_model_image",
+            "dirty_residual_map",
+            "dirty_normalized_residual_map",
+            "dirty_chi_squared_map",
+        ],
+        header_dict=fit.dataset.real_space_mask.header_dict,
+    )
+    hdu_list.writeto(Path(output_path) / "fit_dirty_images.fits", overwrite=True)

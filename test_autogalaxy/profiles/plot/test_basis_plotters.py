@@ -30,4 +30,4 @@ def test__subplot_image(
         output_format="png",
     )
 
-    assert path.join(plot_path, "subplot_basis_image.png") in plot_patch.paths
+    assert path.join(plot_path, "basis_image.png") in plot_patch.paths

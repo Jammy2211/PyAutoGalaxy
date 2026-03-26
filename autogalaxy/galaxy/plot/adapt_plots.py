@@ -59,10 +59,10 @@ def subplot_adapt_images(
         )
 
     plt.tight_layout()
-    _save_subplot(fig, output_path, "subplot_adapt_images", output_format)
+    _save_subplot(fig, output_path, "adapt_images", output_format)
 
 
-def save_adapt_images_fits(adapt_images, output_path) -> None:
+def fits_adapt_images(adapt_images, output_path) -> None:
     """Write FITS files for the adapt images and image-plane mesh grids.
 
     Writes up to two FITS files into *output_path*:

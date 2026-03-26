@@ -20,7 +20,7 @@ def test__galaxies_sub_plot_output(galaxies_x2_7x7, grid_2d_7x7, plot_path, plot
         output_path=plot_path,
         output_format="png",
     )
-    assert path.join(plot_path, "subplot_galaxies.png") in plot_patch.paths
+    assert path.join(plot_path, "galaxies.png") in plot_patch.paths
 
     aplt.subplot_galaxy_images(
         galaxies=galaxies_x2_7x7,
@@ -28,4 +28,4 @@ def test__galaxies_sub_plot_output(galaxies_x2_7x7, grid_2d_7x7, plot_path, plot
         output_path=plot_path,
         output_format="png",
     )
-    assert path.join(plot_path, "subplot_galaxy_images.png") in plot_patch.paths
+    assert path.join(plot_path, "galaxy_images.png") in plot_patch.paths

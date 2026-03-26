@@ -46,4 +46,4 @@ def test__fit_quantity(
 
     plotter.fit_quantity(fit=fit_quantity_7x7_array_2d)
 
-    assert path.join(plot_path, "subplot_fit.png") not in plot_patch.paths
+    assert path.join(plot_path, "fit.png") not in plot_patch.paths

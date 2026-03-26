@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
+from pathlib import Path
 
 import autoarray as aa
+from autoconf.fitsable import hdu_list_for_output_from
 from autoarray.plot.utils import conf_subplot_figsize
 
 from autogalaxy.imaging.fit_imaging import FitImaging
@@ -165,3 +167,78 @@ def subplot_fit_imaging_list(
         plot_array(array=fit.chi_squared_map, title="Chi-Squared Map", cb_unit=r"$\chi^2$", ax=axes[i][4])
     plt.tight_layout()
     _save_subplot(fig, output_path, output_filename, output_format)
+
+
+def fits_fit(fit: FitImaging, output_path) -> None:
+    """Write fit residual maps from a ``FitImaging`` to ``fit.fits``.
+
+    Extensions: ``mask``, ``model_data``, ``residual_map``,
+    ``normalized_residual_map``, ``chi_squared_map``.
+
+    Parameters
+    ----------
+    fit
+        The imaging fit whose residual arrays are saved.
+    output_path
+        Directory in which to write ``fit.fits``.
+    """
+    image_list = [
+        fit.model_data.native_for_fits,
+        fit.residual_map.native_for_fits,
+        fit.normalized_residual_map.native_for_fits,
+        fit.chi_squared_map.native_for_fits,
+    ]
+    hdu_list = hdu_list_for_output_from(
+        values_list=[image_list[0].mask.astype("float")] + image_list,
+        ext_name_list=[
+            "mask",
+            "model_data",
+            "residual_map",
+            "normalized_residual_map",
+            "chi_squared_map",
+        ],
+        header_dict=fit.mask.header_dict,
+    )
+    hdu_list.writeto(Path(output_path) / "fit.fits", overwrite=True)
+
+
+def fits_galaxy_images(fit: FitImaging, output_path) -> None:
+    """Write per-galaxy images from a ``FitImaging`` to ``galaxy_images.fits``.
+
+    Extensions: ``mask``, ``galaxy_0``, ``galaxy_1``, …
+
+    Parameters
+    ----------
+    fit
+        The imaging fit whose per-galaxy images are saved.
+    output_path
+        Directory in which to write ``galaxy_images.fits``.
+    """
+    image_list = [image.native_for_fits for image in fit.galaxy_image_dict.values()]
+    hdu_list = hdu_list_for_output_from(
+        values_list=[image_list[0].mask.astype("float")] + image_list,
+        ext_name_list=["mask"] + [f"galaxy_{i}" for i in range(len(image_list))],
+        header_dict=fit.mask.header_dict,
+    )
+    hdu_list.writeto(Path(output_path) / "galaxy_images.fits", overwrite=True)
+
+
+def fits_model_galaxy_images(fit: FitImaging, output_path) -> None:
+    """Write per-galaxy model images from a ``FitImaging`` to ``model_galaxy_images.fits``.
+
+    Extensions: ``mask``, ``galaxy_0``, ``galaxy_1``, …
+
+    Parameters
+    ----------
+    fit
+        The imaging fit whose per-galaxy model images are saved.
+    output_path
+        Directory in which to write ``model_galaxy_images.fits``.
+    """
+    image_list = [image.native_for_fits for image in fit.galaxy_model_image_dict.values()]
+    hdu_list = hdu_list_for_output_from(
+        values_list=[image_list[0].mask.astype("float")] + image_list,
+        ext_name_list=["mask"] + [f"galaxy_{i}" for i in range(len(image_list))],
+        header_dict=fit.mask.header_dict,
+    )
+    hdu_list.writeto(Path(output_path) / "model_galaxy_images.fits", overwrite=True)

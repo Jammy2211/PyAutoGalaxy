@@ -114,7 +114,7 @@ class Plotter:
             )
 
         if should_plot("fits_galaxy_images"):
-            galaxies_plots.save_galaxy_images_fits(
+            galaxies_plots.fits_galaxy_images(
                 galaxies=galaxies, grid=grid, output_path=self.image_path
             )
 
@@ -181,6 +181,6 @@ class Plotter:
                 )
 
         if should_plot("fits_adapt_images"):
-            adapt_plots.save_adapt_images_fits(
+            adapt_plots.fits_adapt_images(
                 adapt_images=adapt_images, output_path=self.image_path
             )
