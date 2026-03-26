@@ -46,7 +46,7 @@ def subplot_fit(
         (fit.signal_to_noise_map, "Signal-To-Noise Map", None),
         (fit.model_data, "Model Image", None),
         (fit.residual_map, "Residual Map", None),
-        (fit.normalized_residual_map, "Normalized Residual Map", r"$\sigma$"),
+        (fit.normalized_residual_map, "Normalized Residual Map", None),
         (fit.chi_squared_map, "Chi-Squared Map", r"$\chi^2$"),
     ]
     n = len(panels)
