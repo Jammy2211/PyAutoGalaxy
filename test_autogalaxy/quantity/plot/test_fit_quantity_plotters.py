@@ -28,4 +28,4 @@ def test__fit_sub_plot__all_types_of_fit(
         output_path=plot_path,
         output_format="png",
     )
-    assert path.join(plot_path, "subplot_fit.png") in plot_patch.paths
+    assert path.join(plot_path, "fit.png") in plot_patch.paths

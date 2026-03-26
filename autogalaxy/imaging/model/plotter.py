@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import List
 
 from autoconf.fitsable import hdu_list_for_output_from
@@ -9,67 +8,13 @@ from autoarray.dataset.plot.imaging_plots import subplot_imaging_dataset, subplo
 
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.imaging.plot import fit_imaging_plots
-from autogalaxy.imaging.plot.fit_imaging_plots import subplot_fit_imaging_list
+from autogalaxy.imaging.plot.fit_imaging_plots import (
+    subplot_fit_imaging_list,
+    fits_fit,
+    fits_galaxy_images,
+    fits_model_galaxy_images,
+)
 from autogalaxy.analysis.plotter import Plotter, plot_setting
-
-
-def fits_to_fits(should_plot, image_path: Path, fit: FitImaging):
-    """
-    Write fit residuals and galaxy images from a ``FitImaging`` to FITS files.
-
-    Controlled by the ``fits_fit``, ``fits_galaxy_images``, and
-    ``fits_model_galaxy_images`` toggles in ``config/visualize/plots.yaml``.
-
-    Parameters
-    ----------
-    should_plot
-        A callable that accepts a plot-name string and returns ``True`` when
-        that plot is enabled in the config.
-    image_path
-        Directory where the FITS files are written.
-    fit
-        The imaging fit whose arrays are saved to FITS.
-    """
-    if should_plot("fits_fit"):
-        image_list = [
-            fit.model_data.native_for_fits,
-            fit.residual_map.native_for_fits,
-            fit.normalized_residual_map.native_for_fits,
-            fit.chi_squared_map.native_for_fits,
-        ]
-
-        hdu_list = hdu_list_for_output_from(
-            values_list=[image_list[0].mask.astype("float")] + image_list,
-            ext_name_list=[
-                "mask",
-                "model_data",
-                "residual_map",
-                "normalized_residual_map",
-                "chi_squared_map",
-            ],
-            header_dict=fit.mask.header_dict,
-        )
-        hdu_list.writeto(image_path / "fit.fits", overwrite=True)
-
-    if should_plot("fits_galaxy_images"):
-        number_plots = len(fit.galaxy_image_dict.keys()) + 1
-        image_list = [image.native_for_fits for image in fit.galaxy_image_dict.values()]
-        hdu_list = hdu_list_for_output_from(
-            values_list=[image_list[0].mask.astype("float")] + image_list,
-            ext_name_list=["mask"] + [f"galaxy_{i}" for i in range(number_plots)],
-            header_dict=fit.mask.header_dict,
-        )
-        hdu_list.writeto(image_path / "galaxy_images.fits", overwrite=True)
-
-    if should_plot("fits_model_galaxy_images"):
-        number_plots = len(fit.galaxy_model_image_dict.keys()) + 1
-        image_list = [image.native_for_fits for image in fit.galaxy_model_image_dict.values()]
-        hdu_list = hdu_list_for_output_from(
-            values_list=[image_list[0].mask.astype("float")] + image_list,
-            ext_name_list=["mask"] + [f"galaxy_{i}" for i in range(number_plots)],
-            header_dict=fit.mask.header_dict,
-        )
-        hdu_list.writeto(image_path / "model_galaxy_images.fits", overwrite=True)
 
 
 class PlotterImaging(Plotter):
@@ -153,7 +98,14 @@ class PlotterImaging(Plotter):
                     output_format=self.fmt,
                 )
 
-        fits_to_fits(should_plot=should_plot, image_path=self.image_path, fit=fit)
+        if should_plot("fits_fit"):
+            fits_fit(fit=fit, output_path=self.image_path)
+
+        if should_plot("fits_galaxy_images"):
+            fits_galaxy_images(fit=fit, output_path=self.image_path)
+
+        if should_plot("fits_model_galaxy_images"):
+            fits_model_galaxy_images(fit=fit, output_path=self.image_path)
 
     def imaging_combined(self, dataset_list: List[aa.Imaging]):
         """

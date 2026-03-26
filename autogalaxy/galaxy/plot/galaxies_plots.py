@@ -214,10 +214,10 @@ def subplot_galaxy_images(
         )
 
     plt.tight_layout()
-    _save_subplot(fig, output_path, "subplot_galaxy_images", output_format)
+    _save_subplot(fig, output_path, "galaxy_images", output_format)
 
 
-def save_galaxy_images_fits(
+def fits_galaxy_images(
     galaxies,
     grid: aa.type.Grid1D2DLike,
     output_path,

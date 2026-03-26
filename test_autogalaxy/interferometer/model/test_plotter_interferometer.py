@@ -20,7 +20,7 @@ def test__interferometer(interferometer_7, plot_path, plot_patch):
 
     plotter.interferometer(dataset=interferometer_7)
 
-    assert path.join(plot_path, "subplot_dataset.png") in plot_patch.paths
+    assert path.join(plot_path, "dataset.png") in plot_patch.paths
 
     image = ag.ndarray_via_fits_from(
         file_path=path.join(plot_path, "dataset.fits"), hdu=1
@@ -41,7 +41,7 @@ def test__fit_interferometer(
         fit=fit_interferometer_x2_galaxy_inversion_7x7,
     )
 
-    assert path.join(plot_path, "subplot_fit.png") in plot_patch.paths
+    assert path.join(plot_path, "fit.png") in plot_patch.paths
 
     image = ag.ndarray_via_fits_from(
         file_path=path.join(plot_path, "galaxy_images.fits"), hdu=1

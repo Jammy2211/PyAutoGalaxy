@@ -77,4 +77,4 @@ def subplot_image(
         )
 
     plt.tight_layout()
-    _save_subplot(fig, output_path, "subplot_basis_image", output_format)
+    _save_subplot(fig, output_path, "basis_image", output_format)

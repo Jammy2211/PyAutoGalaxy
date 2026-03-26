@@ -160,7 +160,7 @@ def subplot_fit_ellipse(
     _plot_ellipse_residuals(fit_list=fit_list, for_subplot=True, ax=axes[1])
 
     plt.tight_layout()
-    _save_subplot(fig, output_path, "subplot_fit_ellipse", output_format)
+    _save_subplot(fig, output_path, "fit_ellipse", output_format)
 
 
 def subplot_ellipse_errors(
@@ -243,4 +243,4 @@ def subplot_ellipse_errors(
         )
 
     plt.tight_layout()
-    _save_subplot(fig, output_path, "subplot_ellipse_errors", output_format)
+    _save_subplot(fig, output_path, "ellipse_errors", output_format)

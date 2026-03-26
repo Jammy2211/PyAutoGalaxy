@@ -27,8 +27,8 @@ def test__galaxies(masked_imaging_7x7, galaxies_7x7, plot_path, plot_patch):
         grid=masked_imaging_7x7.grids.lp,
     )
 
-    assert path.join(plot_path, "subplot_galaxies.png") in plot_patch.paths
-    assert path.join(plot_path, "subplot_galaxy_images.png") in plot_patch.paths
+    assert path.join(plot_path, "galaxies.png") in plot_patch.paths
+    assert path.join(plot_path, "galaxy_images.png") in plot_patch.paths
 
     image = ag.ndarray_via_fits_from(
         file_path=path.join(plot_path, "galaxy_images.fits"), hdu=1
@@ -51,7 +51,7 @@ def test__inversion(
         inversion=rectangular_inversion_7x7_3x3,
     )
 
-    assert path.join(plot_path, "subplot_inversion_0.png") in plot_patch.paths
+    assert path.join(plot_path, "inversion_0_0.png") in plot_patch.paths
 
     with open(
         path.join(plot_path, "source_plane_reconstruction_0.csv"), mode="r"
@@ -92,7 +92,7 @@ def test__adapt_images(
 
     plot_path = path.join(plot_path)
 
-    assert path.join(plot_path, "subplot_adapt_images.png") in plot_patch.paths
+    assert path.join(plot_path, "adapt_images.png") in plot_patch.paths
 
     image = ag.ndarray_via_fits_from(
         file_path=path.join(plot_path, "adapt_images.fits"), hdu=1

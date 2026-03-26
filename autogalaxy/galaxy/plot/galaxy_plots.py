@@ -61,7 +61,7 @@ def subplot_of_light_profiles(
         )
 
     plt.tight_layout()
-    _save_subplot(fig, output_path, "subplot_image", output_format)
+    _save_subplot(fig, output_path, "image", output_format)
 
 
 def subplot_of_mass_profiles(
