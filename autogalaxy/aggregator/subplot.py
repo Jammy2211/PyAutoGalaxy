@@ -12,9 +12,9 @@ class FITSFit(Enum):
     chi_squared_map = "CHI_SQUARED_MAP"
 
 
-class SubplotDataset(Enum):
+class Dataset(Enum):
     """
-    The subplots that can be extracted from the subplot_fit image.
+    The subplots that can be extracted from the fit image.
 
     The values correspond to the position of the subplot in the 4x3 grid.
     """
@@ -29,9 +29,9 @@ class SubplotDataset(Enum):
     over_sample_size_pixelization = (1, 2)
 
 
-class SubplotFit(Enum):
+class Fit(Enum):
     """
-    The subplots that can be extracted from the subplot_fit image.
+    The subplots that can be extracted from the fit image.
 
     The values correspond to the position of the subplot in the 4x3 grid.
     """
