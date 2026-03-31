@@ -12,7 +12,7 @@ def mge_model_from(
     centre: Tuple[float, float] = (0.0, 0.0),
     centre_fixed: Optional[Tuple[float, float]] = None,
     centre_sigma: float = 0.3,
-    ell_comps_prior_is_uniform: bool = True,
+    ell_comps_prior_is_uniform: bool = False,
     ell_comps_uniform_width: float = 0.2,
     ell_comps_sigma : float = 0.3,
     use_spherical: bool = False,
