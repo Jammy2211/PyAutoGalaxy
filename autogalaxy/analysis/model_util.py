@@ -12,6 +12,9 @@ def mge_model_from(
     centre: Tuple[float, float] = (0.0, 0.0),
     centre_fixed: Optional[Tuple[float, float]] = None,
     centre_sigma: float = 0.3,
+    ell_comps_prior_is_uniform: bool = True,
+    ell_comps_uniform_width: float = 0.2,
+    ell_comps_sigma : float = 0.3,
     use_spherical: bool = False,
 ) -> af.Collection:
     """
@@ -98,6 +101,16 @@ def mge_model_from(
     else:
         model_cls = Gaussian
 
+        if ell_comps_prior_is_uniform:
+
+            ell_comps_0 = af.UniformPrior(lower_limit=-ell_comps_uniform_width, upper_limit=ell_comps_uniform_width)
+            ell_comps_1 = af.UniformPrior(lower_limit=-ell_comps_uniform_width, upper_limit=ell_comps_uniform_width)
+
+        else:
+
+            ell_comps_0 = af.TruncatedGaussianPrior(mean=0.0, sigma=ell_comps_sigma, lower_limit=-1.0, upper_limit=1.0)
+            ell_comps_1 = af.TruncatedGaussianPrior(mean=0.0, sigma=ell_comps_sigma, lower_limit=-1.0, upper_limit=1.0)
+
     bulge_gaussian_list = []
 
     for j in range(gaussian_per_basis):
@@ -113,9 +126,8 @@ def mge_model_from(
             gaussian.centre.centre_0 = centre_0  # All Gaussians have same y centre.
             gaussian.centre.centre_1 = centre_1  # All Gaussians have same x centre.
             if not use_spherical:
-                gaussian.ell_comps = gaussian_list[
-                    0
-                ].ell_comps  # All Gaussians have same elliptical components.
+                gaussian.ell_comps.ell_comps_0 = ell_comps_0
+                gaussian.ell_comps.ell_comps_1 = ell_comps_1
             gaussian.sigma = (
                 10 ** log10_sigma_list[i]
             )  # All Gaussian sigmas are fixed to values above.
