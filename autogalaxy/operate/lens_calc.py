@@ -943,9 +943,499 @@ class LensCalc:
         if len(einstein_mass_angular_list) > 1:
             logger.info(
                 """
-                There are multiple tangential critical curves, and the computed Einstein mass is the sum of 
-                all of them. Check the `einstein_mass_list_from` function for the individual Einstein. 
+                There are multiple tangential critical curves, and the computed Einstein mass is the sum of
+                all of them. Check the `einstein_mass_list_from` function for the individual Einstein.
             """
             )
 
         return einstein_mass_angular_list[0]
+
+    # -------------------------------------------------------------------------
+    # jax_zero_contour-based critical curves / caustics
+    # -------------------------------------------------------------------------
+
+    def _make_eigen_fn(self, kind: str, pixel_scales=(0.05, 0.05)):
+        """Return a JAX scalar function ``f(pos) -> eigen_value``.
+
+        ``pos`` has shape ``(2,)`` (y, x) — ``ZeroSolver.newton`` is vmapped
+        over the init_guess rows, passing each row slice individually to
+        ``jax.lax.custom_root(f, ...)``.
+
+        The function is fully JAX-differentiable: ``ZeroSolver`` calls
+        ``jacfwd``/``jacrev`` on it internally (Newton's method on the eigen
+        value requires the second derivative of the deflections).
+
+        ``hessian_xy`` is symmetrised as ``0.5 * (H[0,1] + H[1,0])`` to guard
+        against numerically non-curl-free deflection fields.
+
+        Parameters
+        ----------
+        kind
+            ``"tangential"`` (eigen value = ``1 - κ - |γ|``) or
+            ``"radial"`` (``1 - κ + |γ|``).
+        pixel_scales
+            Forwarded to ``deflections_yx_scalar`` for its internal
+            single-pixel ``Mask2D``.
+        """
+        import jax
+        import jax.numpy as jnp
+        from jax.tree_util import Partial
+
+        # Capture as local names so the closure holds no `self` reference.
+        # ZeroSolver.zero_contour_finder is jit-compiled with `f` as a
+        # non-static argument, so it must be a JAX pytree.  Wrapping in
+        # Partial with no dynamic args gives a pytree whose treedef is the
+        # closure itself and whose leaves list is empty.
+        _deflections_yx_scalar = self.deflections_yx_scalar
+        _pixel_scales = pixel_scales
+        _sign = -1.0 if kind == "tangential" else 1.0
+
+        def _f(pos):
+            y, x = pos[0], pos[1]
+            H = jnp.stack(
+                jax.jacfwd(_deflections_yx_scalar, argnums=(0, 1))(
+                    y, x, _pixel_scales
+                )
+            )
+            convergence = 0.5 * (H[0, 0] + H[1, 1])
+            gamma_1 = 0.5 * (H[1, 1] - H[0, 0])
+            gamma_2 = 0.5 * (H[0, 1] + H[1, 0])  # symmetrised
+            shear = jnp.sqrt(gamma_1 ** 2 + gamma_2 ** 2)
+            return 1.0 - convergence + _sign * shear
+
+        return Partial(_f)
+
+    def _make_tangential_eigen_fn(self, pixel_scales=(0.05, 0.05)):
+        """Return a JAX scalar function ``f(pos) -> tangential_eigen_value``."""
+        return self._make_eigen_fn(kind="tangential", pixel_scales=pixel_scales)
+
+    def _make_radial_eigen_fn(self, pixel_scales=(0.05, 0.05)):
+        """Return a JAX scalar function ``f(pos) -> radial_eigen_value``."""
+        return self._make_eigen_fn(kind="radial", pixel_scales=pixel_scales)
+
+    def _init_guess_from_coarse_grid(
+        self,
+        kind: str = "tangential",
+        grid_shape: Tuple[int, int] = (25, 25),
+        grid_extent: float = 3.0,
+    ):
+        """Return a rough initial-guess array near the critical curve.
+
+        Evaluates the eigen values on a very coarse uniform grid (default
+        25 × 25 = 625 evaluations, versus ~250 000 for the production grid)
+        and runs the existing marching-squares ``contour_list_from`` on it to
+        find seed points — one per distinct curve segment.  The midpoint of
+        each coarse segment is taken as the initial guess.
+
+        Parameters
+        ----------
+        kind
+            ``"tangential"`` or ``"radial"``.
+        grid_shape
+            Number of pixels along each axis of the coarse evaluation grid.
+        grid_extent
+            Half-width of the coarse grid in arc-seconds.
+
+        Returns
+        -------
+        jax.numpy.ndarray of shape ``(n_curves, 2)``
+        """
+        import jax.numpy as jnp
+
+        pixel_scale = 2.0 * grid_extent / grid_shape[0]
+        grid = aa.Grid2D.uniform(
+            shape_native=grid_shape,
+            pixel_scales=(pixel_scale, pixel_scale),
+        )
+
+        if kind == "tangential":
+            eigen_values = self.tangential_eigen_value_from(grid=grid)
+        else:
+            eigen_values = self.radial_eigen_value_from(grid=grid)
+
+        coarse_curves = self.contour_list_from(
+            grid=grid, contour_array=eigen_values
+        )
+
+        if not coarse_curves:
+            raise ValueError(
+                f"No {kind} critical curve found within the coarse grid "
+                f"(extent ±{grid_extent} arcsec, shape {grid_shape}). "
+                "Pass an explicit `init_guess` or increase `grid_extent`."
+            )
+
+        seeds = [curve[len(curve) // 2] for curve in coarse_curves]
+        return jnp.array(seeds)
+
+    def _critical_curve_list_via_zero_contour(
+        self,
+        kind: str,
+        init_guess=None,
+        delta: float = 0.05,
+        N: int = 500,
+        pixel_scales: Tuple[float, float] = (0.05, 0.05),
+        tol: float = 1e-6,
+        max_newton: int = 5,
+    ) -> List[aa.Grid2DIrregular]:
+        """Shared implementation for tangential/radial critical curves.
+
+        Parameters
+        ----------
+        kind
+            ``"tangential"`` or ``"radial"``.
+        init_guess
+            JAX or NumPy array of shape ``(n, 2)``.  ``None`` triggers an
+            automatic coarse-grid seed search.
+        delta
+            Arc-second step size along the contour.
+        N
+            Maximum steps in each direction from each seed.
+        pixel_scales
+            Pixel scales passed to ``deflections_yx_scalar``.
+        tol
+            Newton's method convergence tolerance.
+        max_newton
+            Maximum Newton iterations per step.
+        """
+        try:
+            from jax_zero_contour import ZeroSolver
+        except ModuleNotFoundError as exc:
+            raise ModuleNotFoundError(
+                "jax_zero_contour is required for zero-contour critical curve tracing. "
+                "Install it with: pip install jax_zero_contour"
+            ) from exc
+        import jax.numpy as jnp
+
+        if init_guess is None:
+            try:
+                init_guess = self._init_guess_from_coarse_grid(kind=kind)
+            except ValueError:
+                return []
+
+        init_guess = jnp.atleast_2d(jnp.asarray(init_guess))
+        f = self._make_eigen_fn(kind=kind, pixel_scales=pixel_scales)
+        solver = ZeroSolver(tol=tol, max_newton=max_newton)
+        paths, _ = solver.zero_contour_finder(f, init_guess, delta=delta, N=N)
+        paths = ZeroSolver.path_reduce(paths)
+
+        closed_paths = []
+        for path in paths["path"]:
+            if len(path) > 1:
+                pts = np.array(path)
+                pts = np.vstack([pts, pts[0]])  # close the curve
+                closed_paths.append(aa.Grid2DIrregular(values=pts))
+        return closed_paths
+
+    def tangential_critical_curve_list_via_zero_contour_from(
+        self,
+        init_guess=None,
+        delta: float = 0.05,
+        N: int = 500,
+        pixel_scales: Tuple[float, float] = (0.05, 0.05),
+        tol: float = 1e-6,
+        max_newton: int = 5,
+    ) -> List[aa.Grid2DIrregular]:
+        """
+        Returns tangential critical curves using the ``jax_zero_contour`` package.
+
+        Unlike ``tangential_critical_curve_list_from``, this method does not
+        evaluate lensing quantities on a dense uniform grid.  Instead it traces
+        the zero contour of the tangential eigen value directly, evaluating the
+        function only along the curve itself.
+
+        The algorithm (from ``jax_zero_contour.ZeroSolver``):
+
+        1. Newton's method projects each initial guess onto the exact zero
+           contour of the tangential eigen value.
+        2. Euler-Lagrange (gradient-perpendicular) stepping traces the contour
+           in both directions from each projected seed point.
+        3. Tracing stops when the path closes, hits an endpoint, or exhausts
+           ``N`` steps.
+
+        Parameters
+        ----------
+        init_guess
+            JAX or NumPy array of shape ``(n, 2)`` with rough ``(y, x)``
+            positions near the tangential critical curve — one seed per
+            distinct curve.  If ``None`` a coarse 25 × 25 grid scan is used
+            to find seed points automatically.
+        delta
+            Arc-second step size along the contour.  Smaller values give
+            denser, more accurate curves but require a larger ``N`` to trace
+            the same total length.
+        N
+            Maximum number of steps in each direction from each seed point.
+            The traced path has at most ``2N + 1`` points per seed.
+        pixel_scales
+            Pixel scales passed to ``deflections_yx_scalar`` for its internal
+            single-pixel mask.
+        tol
+            Newton's method convergence tolerance (forwarded to ``ZeroSolver``).
+        max_newton
+            Maximum Newton iterations per step (forwarded to ``ZeroSolver``).
+
+        Returns
+        -------
+        List[aa.Grid2DIrregular]
+            One ``Grid2DIrregular`` per traced contour segment, matching the
+            return type of ``tangential_critical_curve_list_from``.
+        """
+        return self._critical_curve_list_via_zero_contour(
+            kind="tangential",
+            init_guess=init_guess,
+            delta=delta,
+            N=N,
+            pixel_scales=pixel_scales,
+            tol=tol,
+            max_newton=max_newton,
+        )
+
+    def radial_critical_curve_list_via_zero_contour_from(
+        self,
+        init_guess=None,
+        delta: float = 0.05,
+        N: int = 500,
+        pixel_scales: Tuple[float, float] = (0.05, 0.05),
+        tol: float = 1e-6,
+        max_newton: int = 5,
+    ) -> List[aa.Grid2DIrregular]:
+        """
+        Returns radial critical curves using the ``jax_zero_contour`` package.
+
+        Identical to ``tangential_critical_curve_list_via_zero_contour_from``
+        except the zero contour of the *radial* eigen value is traced.
+
+        Parameters
+        ----------
+        init_guess
+            JAX or NumPy array of shape ``(n, 2)`` with rough ``(y, x)``
+            positions near the radial critical curve.  If ``None`` a coarse
+            grid scan finds seed points automatically.
+        delta
+            Arc-second step size along the contour.
+        N
+            Maximum number of steps in each direction from each seed.
+        pixel_scales
+            Pixel scales passed to ``deflections_yx_scalar``.
+        tol
+            Newton's method convergence tolerance.
+        max_newton
+            Maximum Newton iterations per step.
+
+        Returns
+        -------
+        List[aa.Grid2DIrregular]
+        """
+        return self._critical_curve_list_via_zero_contour(
+            kind="radial",
+            init_guess=init_guess,
+            delta=delta,
+            N=N,
+            pixel_scales=pixel_scales,
+            tol=tol,
+            max_newton=max_newton,
+        )
+
+    def _caustic_list_via_zero_contour(
+        self,
+        kind: str,
+        init_guess=None,
+        delta: float = 0.05,
+        N: int = 500,
+        pixel_scales: Tuple[float, float] = (0.05, 0.05),
+        tol: float = 1e-6,
+        max_newton: int = 5,
+    ) -> List[aa.Grid2DIrregular]:
+        """Shared implementation for tangential/radial caustics."""
+        cc_list = self._critical_curve_list_via_zero_contour(
+            kind=kind,
+            init_guess=init_guess,
+            delta=delta,
+            N=N,
+            pixel_scales=pixel_scales,
+            tol=tol,
+            max_newton=max_newton,
+        )
+        return [
+            cc - self.deflections_yx_2d_from(grid=cc) for cc in cc_list
+        ]
+
+    def tangential_caustic_list_via_zero_contour_from(
+        self,
+        init_guess=None,
+        delta: float = 0.05,
+        N: int = 500,
+        pixel_scales: Tuple[float, float] = (0.05, 0.05),
+        tol: float = 1e-6,
+        max_newton: int = 5,
+    ) -> List[aa.Grid2DIrregular]:
+        """
+        Returns tangential caustics by ray-tracing the tangential critical
+        curves computed via ``tangential_critical_curve_list_via_zero_contour_from``.
+
+        Parameters
+        ----------
+        init_guess
+            Forwarded to ``tangential_critical_curve_list_via_zero_contour_from``.
+        delta
+            Arc-second step size along the contour.
+        N
+            Maximum steps per seed direction.
+        pixel_scales
+            Pixel scales passed to ``deflections_yx_scalar``.
+        tol
+            Newton's method convergence tolerance.
+        max_newton
+            Maximum Newton iterations per step.
+
+        Returns
+        -------
+        List[aa.Grid2DIrregular]
+        """
+        return self._caustic_list_via_zero_contour(
+            kind="tangential",
+            init_guess=init_guess,
+            delta=delta,
+            N=N,
+            pixel_scales=pixel_scales,
+            tol=tol,
+            max_newton=max_newton,
+        )
+
+    def radial_caustic_list_via_zero_contour_from(
+        self,
+        init_guess=None,
+        delta: float = 0.05,
+        N: int = 500,
+        pixel_scales: Tuple[float, float] = (0.05, 0.05),
+        tol: float = 1e-6,
+        max_newton: int = 5,
+    ) -> List[aa.Grid2DIrregular]:
+        """
+        Returns radial caustics by ray-tracing the radial critical curves
+        computed via ``radial_critical_curve_list_via_zero_contour_from``.
+
+        Parameters
+        ----------
+        init_guess
+            Forwarded to ``radial_critical_curve_list_via_zero_contour_from``.
+        delta
+            Arc-second step size along the contour.
+        N
+            Maximum steps per seed direction.
+        pixel_scales
+            Pixel scales passed to ``deflections_yx_scalar``.
+        tol
+            Newton's method convergence tolerance.
+        max_newton
+            Maximum Newton iterations per step.
+
+        Returns
+        -------
+        List[aa.Grid2DIrregular]
+        """
+        return self._caustic_list_via_zero_contour(
+            kind="radial",
+            init_guess=init_guess,
+            delta=delta,
+            N=N,
+            pixel_scales=pixel_scales,
+            tol=tol,
+            max_newton=max_newton,
+        )
+
+    def einstein_radius_list_via_zero_contour_from(
+        self,
+        init_guess=None,
+        delta: float = 0.05,
+        N: int = 500,
+        pixel_scales: Tuple[float, float] = (0.05, 0.05),
+        tol: float = 1e-6,
+        max_newton: int = 5,
+    ) -> List[float]:
+        """
+        Returns a list of Einstein radii from the tangential critical curves
+        traced via ``tangential_critical_curve_list_via_zero_contour_from``.
+
+        Each Einstein radius is the radius of the circle with the same area
+        as the corresponding tangential critical curve.
+
+        Parameters
+        ----------
+        init_guess
+            Forwarded to ``tangential_critical_curve_list_via_zero_contour_from``.
+        delta
+            Arc-second step size along the contour.
+        N
+            Maximum steps per seed direction.
+        pixel_scales
+            Pixel scales passed to ``deflections_yx_scalar``.
+        tol
+            Newton's method convergence tolerance.
+        max_newton
+            Maximum Newton iterations per step.
+
+        Returns
+        -------
+        List[float]
+        """
+        tangential_critical_curve_list = (
+            self.tangential_critical_curve_list_via_zero_contour_from(
+                init_guess=init_guess,
+                delta=delta,
+                N=N,
+                pixel_scales=pixel_scales,
+                tol=tol,
+                max_newton=max_newton,
+            )
+        )
+        area_list = self.area_within_curve_list_from(
+            curve_list=tangential_critical_curve_list
+        )
+        return [np.sqrt(area / np.pi) for area in area_list]
+
+    def einstein_radius_via_zero_contour_from(
+        self,
+        init_guess=None,
+        delta: float = 0.05,
+        N: int = 500,
+        pixel_scales: Tuple[float, float] = (0.05, 0.05),
+        tol: float = 1e-6,
+        max_newton: int = 5,
+    ) -> float:
+        """
+        Returns the Einstein radius from the tangential critical curve traced
+        via ``jax_zero_contour``.
+
+        If there are multiple tangential critical curves the radii are summed,
+        consistent with ``einstein_radius_from``.
+
+        Parameters
+        ----------
+        init_guess
+            Forwarded to ``einstein_radius_list_via_zero_contour_from``.
+        delta
+            Arc-second step size along the contour.
+        N
+            Maximum steps per seed direction.
+        pixel_scales
+            Pixel scales passed to ``deflections_yx_scalar``.
+        tol
+            Newton's method convergence tolerance.
+        max_newton
+            Maximum Newton iterations per step.
+
+        Returns
+        -------
+        float
+        """
+        return sum(
+            self.einstein_radius_list_via_zero_contour_from(
+                init_guess=init_guess,
+                delta=delta,
+                N=N,
+                pixel_scales=pixel_scales,
+                tol=tol,
+                max_newton=max_newton,
+            )
+        )

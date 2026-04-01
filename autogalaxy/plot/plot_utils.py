@@ -270,8 +270,39 @@ def plot_grid(
     )
 
 
+def _critical_curves_method():
+    """Read ``general.critical_curves_method`` from the visualize config.
+
+    Returns ``"zero_contour"`` (the default) or ``"marching_squares"``.
+    Any unrecognised value falls back to ``"zero_contour"`` with a warning.
+    """
+    from autoconf import conf
+
+    try:
+        method = conf.instance["visualize"]["general"]["general"]["critical_curves_method"]
+    except (KeyError, TypeError):
+        method = "zero_contour"
+
+    if method not in ("zero_contour", "marching_squares"):
+        logger.warning(
+            f"visualize/general.yaml: unrecognised critical_curves_method "
+            f"'{method}'. Falling back to 'zero_contour'."
+        )
+        return "zero_contour"
+    return method
+
+
 def _caustics_from(mass_obj, grid):
     """Compute tangential and radial caustics for a mass object via LensCalc.
+
+    The algorithm used is controlled by ``general.critical_curves_method`` in
+    ``visualize/general.yaml``:
+
+    - ``"zero_contour"`` *(default)* — uses ``jax_zero_contour`` to trace the
+      zero contour of each eigen value directly.  No dense evaluation grid is
+      needed; a coarse 25 × 25 scan finds the seed points automatically.
+    - ``"marching_squares"`` — evaluates eigen values on the full *grid* and
+      uses marching squares to find the contours.
 
     Parameters
     ----------
@@ -279,7 +310,8 @@ def _caustics_from(mass_obj, grid):
         Any object understood by ``LensCalc.from_mass_obj`` (e.g. a
         :class:`~autogalaxy.galaxy.galaxies.Galaxies` or autolens ``Tracer``).
     grid : aa.type.Grid2DLike
-        The grid on which to evaluate the caustics.
+        The grid on which to evaluate the caustics (used only for the
+        ``"marching_squares"`` path; ignored by ``"zero_contour"``).
 
     Returns
     -------
@@ -289,8 +321,15 @@ def _caustics_from(mass_obj, grid):
     from autogalaxy.operate.lens_calc import LensCalc
 
     od = LensCalc.from_mass_obj(mass_obj)
-    tan_ca = od.tangential_caustic_list_from(grid=grid)
-    rad_ca = od.radial_caustic_list_from(grid=grid)
+    method = _critical_curves_method()
+
+    if method == "zero_contour":
+        tan_ca = od.tangential_caustic_list_via_zero_contour_from()
+        rad_ca = od.radial_caustic_list_via_zero_contour_from()
+    else:
+        tan_ca = od.tangential_caustic_list_from(grid=grid)
+        rad_ca = od.radial_caustic_list_from(grid=grid)
+
     return tan_ca, rad_ca
 
 
@@ -298,24 +337,28 @@ def _critical_curves_from(mass_obj, grid, tc=None, rc=None):
     """Compute tangential and radial critical curves for a mass object.
 
     If *tc* is already provided it is returned unchanged (along with *rc*),
-    allowing callers to cache the curves across multiple plot calls.  When
-    *tc* is ``None`` the curves are computed via :class:`LensCalc`.  Radial
-    critical curves are only computed when at least one radial critical-curve
-    area exceeds the grid pixel scale, avoiding spurious empty curves.
+    allowing callers to cache the curves across multiple plot calls.
+
+    The algorithm used when *tc* is ``None`` is controlled by
+    ``general.critical_curves_method`` in ``visualize/general.yaml``:
+/btw ok
+    - ``"zero_contour"`` *(default)* — uses ``jax_zero_contour``; no dense
+      grid needed, seed points found automatically via a coarse grid scan.
+    - ``"marching_squares"`` — evaluates eigen values on the full *grid* and
+      uses marching squares.  Radial critical curves are only computed when at
+      least one radial critical-curve area exceeds the grid pixel scale.
 
     Parameters
     ----------
     mass_obj
-        Any object understood by ``LensCalc.from_mass_obj`` (e.g. a
-        :class:`~autogalaxy.galaxy.galaxies.Galaxies` instance).
+        Any object understood by ``LensCalc.from_mass_obj``.
     grid : aa.type.Grid2DLike
-        The grid on which to evaluate the critical curves.
+        Evaluation grid (used only for the ``"marching_squares"`` path).
     tc : list or None
-        Pre-computed tangential critical curves.  Pass ``None`` to trigger
+        Pre-computed tangential critical curves; ``None`` to trigger
         computation.
     rc : list or None
-        Pre-computed radial critical curves.  Pass ``None`` to trigger
-        computation.
+        Pre-computed radial critical curves; ``None`` to trigger computation.
 
     Returns
     -------
@@ -326,9 +369,15 @@ def _critical_curves_from(mass_obj, grid, tc=None, rc=None):
 
     if tc is None:
         od = LensCalc.from_mass_obj(mass_obj)
-        tc = od.tangential_critical_curve_list_from(grid=grid)
-        rc_area = od.radial_critical_curve_area_list_from(grid=grid)
-        if any(area > grid.pixel_scale for area in rc_area):
-            rc = od.radial_critical_curve_list_from(grid=grid)
+        method = _critical_curves_method()
+
+        if method == "zero_contour":
+            tc = od.tangential_critical_curve_list_via_zero_contour_from()
+            rc = od.radial_critical_curve_list_via_zero_contour_from()
+        else:
+            tc = od.tangential_critical_curve_list_from(grid=grid)
+            rc_area = od.radial_critical_curve_area_list_from(grid=grid)
+            if any(area > grid.pixel_scale for area in rc_area):
+                rc = od.radial_critical_curve_list_from(grid=grid)
 
     return tc, rc

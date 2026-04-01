@@ -24,6 +24,16 @@ python -m pytest test_autogalaxy/galaxy/test_galaxy.py::TestGalaxy::test_name
 python -m pytest test_autogalaxy/imaging/test_fit_imaging.py -s
 ```
 
+### Codex / sandboxed runs
+
+When running Python from Codex or any restricted environment, set writable cache directories so `numba` and `matplotlib` do not fail on unwritable home or source-tree paths:
+
+```bash
+NUMBA_CACHE_DIR=/tmp/numba_cache MPLCONFIGDIR=/tmp/matplotlib python -m pytest test_autogalaxy/
+```
+
+This workspace is often imported from `/mnt/c/...` and Codex may not be able to write to module `__pycache__` directories or `/home/jammy/.cache`, which can cause import-time `numba` caching failures without this override.
+
 ### Formatting
 ```bash
 black autogalaxy/

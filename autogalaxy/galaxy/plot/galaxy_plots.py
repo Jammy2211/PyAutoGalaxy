@@ -143,4 +143,4 @@ def subplot_of_mass_profiles(
             )
 
         plt.tight_layout()
-        _save_subplot(fig, output_path, f"subplot_{name}", output_format)
+        _save_subplot(fig, output_path, name, output_format)

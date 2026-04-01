@@ -2,6 +2,7 @@ general:
   backend: default
   imshow_origin: upper
   zoom_around_mask: true
+  critical_curves_method: zero_contour
 inversion:
   reconstruction_vmax_factor: 0.5
 zoom:
