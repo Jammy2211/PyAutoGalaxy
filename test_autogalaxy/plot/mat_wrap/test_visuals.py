@@ -39,14 +39,25 @@ def test__2d__caustics_from_mass_obj(gal_x1_mp, grid_2d_7x7):
 
 
 def test__mass_plotter__tangential_critical_curves(gal_x1_mp, grid_2d_7x7):
+    import numpy as np
     from autogalaxy.plot.plot_utils import _critical_curves_from
 
     tc, rc = _critical_curves_from(gal_x1_mp, grid_2d_7x7)
 
+    assert tc is not None
+    assert len(tc) > 0
+
+    # The default method is zero_contour, which traces the same locus as
+    # marching squares but with a different point density.  Verify geometric
+    # consistency: mean radius must agree to within 5%.
     od = LensCalc.from_mass_obj(gal_x1_mp)
     expected_tc = od.tangential_critical_curve_list_from(grid=grid_2d_7x7)
 
-    assert (tc[0] == expected_tc[0]).all()
+    def _mean_radius(curve):
+        pts = np.array(curve)
+        return float(np.mean(np.sqrt(pts[:, 0] ** 2 + pts[:, 1] ** 2)))
+
+    assert abs(_mean_radius(tc[0]) - _mean_radius(expected_tc[0])) / _mean_radius(expected_tc[0]) < 0.05
 
 
 def test__mass_plotter__caustics_via_lens_calc(gal_x1_mp, grid_2d_7x7):
