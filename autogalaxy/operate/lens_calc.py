@@ -1118,11 +1118,13 @@ class LensCalc:
         paths, _ = solver.zero_contour_finder(f, init_guess, delta=delta, N=N)
         paths = ZeroSolver.path_reduce(paths)
 
-        return [
-            aa.Grid2DIrregular(values=np.array(path))
-            for path in paths["path"]
-            if len(path) > 1
-        ]
+        closed_paths = []
+        for path in paths["path"]:
+            if len(path) > 1:
+                pts = np.array(path)
+                pts = np.vstack([pts, pts[0]])  # close the curve
+                closed_paths.append(aa.Grid2DIrregular(values=pts))
+        return closed_paths
 
     def tangential_critical_curve_list_via_zero_contour_from(
         self,
