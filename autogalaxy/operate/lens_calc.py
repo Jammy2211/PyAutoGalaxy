@@ -1097,7 +1097,13 @@ class LensCalc:
         max_newton
             Maximum Newton iterations per step.
         """
-        from jax_zero_contour import ZeroSolver
+        try:
+            from jax_zero_contour import ZeroSolver
+        except ModuleNotFoundError as exc:
+            raise ModuleNotFoundError(
+                "jax_zero_contour is required for zero-contour critical curve tracing. "
+                "Install it with: pip install jax_zero_contour"
+            ) from exc
         import jax.numpy as jnp
 
         if init_guess is None:
