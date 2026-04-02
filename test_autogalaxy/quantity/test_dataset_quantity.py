@@ -152,10 +152,19 @@ def make_test_data_path():
 def test__output_to_fits__array_2d_data__data_and_noise_map_written_correctly(
     dataset_quantity_7x7_array_2d, test_data_path
 ):
-    dataset_quantity_7x7_array_2d.output_to_fits(
-        data_path=path.join(test_data_path, "data.fits"),
-        noise_map_path=path.join(test_data_path, "noise_map.fits"),
+    from autoconf.fitsable import output_to_fits
+
+    output_to_fits(
+        values=dataset_quantity_7x7_array_2d.data.native.array.astype("float"),
+        file_path=path.join(test_data_path, "data.fits"),
         overwrite=True,
+        header_dict=dataset_quantity_7x7_array_2d.data.mask.header_dict,
+    )
+    output_to_fits(
+        values=dataset_quantity_7x7_array_2d.noise_map.native.array.astype("float"),
+        file_path=path.join(test_data_path, "noise_map.fits"),
+        overwrite=True,
+        header_dict=dataset_quantity_7x7_array_2d.noise_map.mask.header_dict,
     )
 
     data = ag.Array2D.from_fits(
@@ -184,10 +193,19 @@ def test__output_to_fits__vector_yx_2d_data__first_pixel_written_correctly(
 
     dataset_quantity = ag.DatasetQuantity(data=data, noise_map=noise_map)
 
-    dataset_quantity.output_to_fits(
-        data_path=path.join(test_data_path, "data.fits"),
-        noise_map_path=path.join(test_data_path, "noise_map.fits"),
+    from autoconf.fitsable import output_to_fits
+
+    output_to_fits(
+        values=dataset_quantity.data.native.array.astype("float"),
+        file_path=path.join(test_data_path, "data.fits"),
         overwrite=True,
+        header_dict=dataset_quantity.data.mask.header_dict,
+    )
+    output_to_fits(
+        values=dataset_quantity.noise_map.native.array.astype("float"),
+        file_path=path.join(test_data_path, "noise_map.fits"),
+        overwrite=True,
+        header_dict=dataset_quantity.noise_map.mask.header_dict,
     )
 
     data = ag.Array2D.from_fits(

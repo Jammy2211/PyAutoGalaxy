@@ -313,7 +313,7 @@ def plot_grid(
         _output_path = output_path if output_path is not None else "."
 
     _aa_plot_grid(
-        grid=np.array(grid.array),
+        grid=np.array(grid.array if hasattr(grid, "array") else grid),
         ax=ax,
         title=title or "",
         output_path=_output_path,

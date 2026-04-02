@@ -49,10 +49,14 @@ def test__perfect_fit__simulate_and_reload__chi_squared_zero():
     if path.exists(file_path) is False:
         os.makedirs(file_path)
 
-    dataset.output_to_fits(
+    from autoarray.dataset.plot.imaging_plots import fits_imaging
+
+    fits_imaging(
+        dataset=dataset,
         data_path=path.join(file_path, "data.fits"),
         noise_map_path=path.join(file_path, "noise_map.fits"),
         psf_path=path.join(file_path, "psf.fits"),
+        overwrite=True,
     )
 
     dataset = ag.Imaging.from_fits(
