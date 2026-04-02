@@ -273,22 +273,22 @@ def plot_grid(
 def _critical_curves_method():
     """Read ``general.critical_curves_method`` from the visualize config.
 
-    Returns ``"zero_contour"`` (the default) or ``"marching_squares"``.
-    Any unrecognised value falls back to ``"zero_contour"`` with a warning.
+    Returns ``"marching_squares"`` (the default) or ``"zero_contour"``.
+    Any unrecognised value falls back to ``"marching_squares"`` with a warning.
     """
     from autoconf import conf
 
     try:
         method = conf.instance["visualize"]["general"]["general"]["critical_curves_method"]
     except (KeyError, TypeError):
-        method = "zero_contour"
+        method = "marching_squares"
 
     if method not in ("zero_contour", "marching_squares"):
         logger.warning(
             f"visualize/general.yaml: unrecognised critical_curves_method "
-            f"'{method}'. Falling back to 'zero_contour'."
+            f"'{method}'. Falling back to 'marching_squares'."
         )
-        return "zero_contour"
+        return "marching_squares"
     return method
 
 
