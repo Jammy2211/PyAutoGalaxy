@@ -4,6 +4,8 @@ import matplotlib
 import matplotlib.pyplot as plt
 from typing import Tuple
 
+from autoarray.plot.utils import _conf_imshow_origin
+
 
 class Scribbler:
     def __init__(
@@ -69,15 +71,15 @@ class Scribbler:
             self.ax = self.figure.add_subplot(121)
             plt.axis(extent)
             plt.axis("off")
-            plt.imshow(rgb_image)
+            plt.imshow(rgb_image, origin=_conf_imshow_origin())
         self.ax = self.figure.add_subplot(111)
 
         if cmap is None:
-            plt.imshow(image, interpolation="none")
+            plt.imshow(image, interpolation="none", origin=_conf_imshow_origin())
         else:
             norm = cmap.norm_from(array=image)
             cmap_name = getattr(cmap, "cmap_name", None) or cmap.config_dict.get("cmap", "viridis")
-            plt.imshow(image, cmap=cmap_name, norm=norm)
+            plt.imshow(image, cmap=cmap_name, norm=norm, origin=_conf_imshow_origin())
 
         if mask_overlay is not None:
             grid = mask_overlay.derive_grid.edge

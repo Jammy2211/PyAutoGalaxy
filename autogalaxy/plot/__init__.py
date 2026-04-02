@@ -1,10 +1,14 @@
-from autogalaxy.plot.plot_utils import plot_array, plot_grid
+from autogalaxy.plot.plot_utils import plot_array, plot_grid, fits_array
 
 from autoarray.dataset.plot.imaging_plots import (
     subplot_imaging_dataset,
     subplot_imaging_dataset_list,
+    fits_imaging,
 )
-from autoarray.dataset.plot.interferometer_plots import subplot_interferometer_dirty_images
+from autoarray.dataset.plot.interferometer_plots import (
+    subplot_interferometer_dirty_images,
+    fits_interferometer,
+)
 
 from autogalaxy.profiles.plot.basis_plots import subplot_image as subplot_basis_image
 
