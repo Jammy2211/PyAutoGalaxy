@@ -1,5 +1,3 @@
-fits:
-  flip_for_ds9: false
 psf:
   use_fft_default: true              # If True, PSFs are convolved using FFTs by default, which is faster and uses less memory in all cases except for very small PSFs, False uses direct convolution.
 updates:

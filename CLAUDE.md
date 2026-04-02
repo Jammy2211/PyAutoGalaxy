@@ -39,6 +39,17 @@ This workspace is often imported from `/mnt/c/...` and Codex may not be able to 
 black autogalaxy/
 ```
 
+### Plot Output Mode
+
+Set `PYAUTOARRAY_OUTPUT_MODE=1` to capture every figure produced by a script into numbered PNG files in `./output_mode/<script_name>/`. This is useful for visually inspecting all plots from an integration test without needing a display.
+
+```bash
+PYAUTOARRAY_OUTPUT_MODE=1 python scripts/my_script.py
+# -> ./output_mode/my_script/0_fit.png, 1_tracer.png, ...
+```
+
+When this env var is set, all `save_figure`, `subplot_save`, and `_save_subplot` calls are intercepted — the normal output path is bypassed and figures are written sequentially to the output_mode directory instead.
+
 ## Architecture
 
 **PyAutoGalaxy** is a Bayesian galaxy morphology fitting library. It depends on two sibling packages:

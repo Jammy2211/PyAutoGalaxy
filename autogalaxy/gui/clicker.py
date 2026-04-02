@@ -3,6 +3,7 @@ from matplotlib import pyplot as plt
 
 import autoarray as aa
 import autoarray.plot as aplt
+from autoarray.plot.utils import _conf_imshow_origin
 
 from autogalaxy import exc
 
@@ -29,7 +30,7 @@ class Clicker:
         fig = plt.figure(figsize=(14, 14))
         cmap = aplt.Cmap(cmap="jet", norm="log", vmin=1.0e-3, vmax=np.max(data) / 3.0)
         norm = cmap.norm_from(array=data, use_log10=True)
-        plt.imshow(data.native, cmap="jet", norm=norm, extent=ext)
+        plt.imshow(data.native, cmap="jet", norm=norm, extent=ext, origin=_conf_imshow_origin())
         if not data.mask.is_all_false:
             grid = data.mask.derive_grid.edge
             plt.scatter(y=grid[:, 0], x=grid[:, 1], c="k", marker="x", s=10)

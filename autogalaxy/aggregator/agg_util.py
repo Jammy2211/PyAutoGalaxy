@@ -23,7 +23,6 @@ from __future__ import annotations
 import numpy as np
 from typing import List, Optional
 
-from autoconf.fitsable import flip_for_ds9_from
 from autoconf.fitsable import ndarray_via_hdu_from
 
 import autofit as af
@@ -168,7 +167,7 @@ def adapt_images_from(
         for i, value in enumerate(fit.value(name="adapt_image_plane_mesh_grids")[1:]):
 
             adapt_image_plane_mesh_grid = aa.Grid2DIrregular(
-                values=flip_for_ds9_from(value.data.astype("float")),
+                values=value.data.astype("float"),
             )
 
             galaxy_name_image_plane_mesh_grid_dict[value.header["EXTNAME"].lower()] = (
