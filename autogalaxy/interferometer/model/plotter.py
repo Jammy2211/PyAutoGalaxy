@@ -1,6 +1,6 @@
 import autoarray as aa
 
-from autoarray.dataset.plot.interferometer_plots import subplot_interferometer_dirty_images
+from autoarray.dataset.plot.interferometer_plots import subplot_interferometer_dataset
 
 from autoconf.fitsable import hdu_list_for_output_from
 
@@ -32,7 +32,7 @@ class PlotterInterferometer(Plotter):
             return plot_setting(section=["dataset", "interferometer"], name=name)
 
         if should_plot("subplot_dataset"):
-            subplot_interferometer_dirty_images(
+            subplot_interferometer_dataset(
                 dataset,
                 output_path=self.image_path,
                 output_filename="dataset",

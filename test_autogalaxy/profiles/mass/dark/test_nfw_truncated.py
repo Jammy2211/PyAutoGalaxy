@@ -1,7 +1,9 @@
 import numpy as np
 import pytest
+from scipy.optimize import fsolve
 
 import autogalaxy as ag
+from autogalaxy.cosmology.model import Planck15
 
 grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
@@ -155,3 +157,360 @@ def test__compare_nfw_and_truncated_nfw_with_large_truncation_radius():
     )
 
     assert truncated_nfw_deflections == pytest.approx(nfw_deflections.array, abs=1.0e-4)
+
+
+# ---------------------------------------------------------------------------
+# Helpers: reference implementation of the los_pipes unit-conversion formulas
+# (convert_units.py from He et al. 2022, MNRAS 511 3046) expressed in terms of
+# the PyAutoGalaxy cosmology API.  These are used as ground-truth values in the
+# regression tests below.
+# ---------------------------------------------------------------------------
+
+def _los_pipes_reference_delta_c(concentration):
+    """NFW characteristic overdensity as computed by los_pipes."""
+    c = concentration
+    return 200.0 / 3.0 * (c**3 / (np.log(1.0 + c) - c / (1.0 + c)))
+
+
+def _los_pipes_reference_c50(concentration, truncation_factor):
+    """Concentration at the truncation overdensity (c50 in los_pipes)."""
+    delta_c = _los_pipes_reference_delta_c(concentration)
+
+    def eq(tau):
+        return (
+            truncation_factor / 3.0 * (tau**3 / (np.log(1.0 + tau) - tau / (1.0 + tau)))
+            - delta_c
+        )
+
+    return float(fsolve(eq, concentration)[0])
+
+
+def _los_pipes_reference_convert_to_lens_unit(
+    m200, concentration, z_halo, z_source, truncation_factor=100.0
+):
+    """
+    Replicate los_pipes convert_to_lens_unit() using PyAutoGalaxy cosmology.
+
+    Returns (kappa_s, scale_radius_arcsec, truncation_radius_arcsec).
+    """
+    cosmo = Planck15()
+
+    critical_density = cosmo.critical_density(z_halo)
+    kpc_per_arcsec = cosmo.kpc_per_arcsec_from(z_halo)
+    sigma_crit = cosmo.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+        z_halo, z_source
+    )
+
+    r200_kpc = (m200 / (200.0 * critical_density * (4.0 * np.pi / 3.0))) ** (1.0 / 3.0)
+    delta_c = _los_pipes_reference_delta_c(concentration)
+    rs_kpc = r200_kpc / concentration
+    rho_s = critical_density * delta_c
+
+    kappa_s = rho_s * rs_kpc / sigma_crit
+    scale_radius_arcsec = rs_kpc / kpc_per_arcsec
+
+    c50 = _los_pipes_reference_c50(concentration, truncation_factor)
+    truncation_radius_arcsec = c50 * scale_radius_arcsec
+
+    return kappa_s, scale_radius_arcsec, truncation_radius_arcsec
+
+
+def _los_pipes_reference_mass_ratio(concentration, truncation_factor=100.0):
+    """Replicate los_pipes scale_c(c): M_tNFW / M_200."""
+    tau = _los_pipes_reference_c50(concentration, truncation_factor)
+    tau2 = tau**2
+    tau_scale = (
+        tau2
+        / (tau2 + 1.0) ** 2
+        * ((tau2 - 1.0) * np.log(tau) + tau * np.pi - (tau2 + 1.0))
+    )
+    c_scale = np.log(1.0 + concentration) - concentration / (1.0 + concentration)
+    return tau_scale / c_scale
+
+
+# ---------------------------------------------------------------------------
+# Tests for _delta_c_from_concentration
+# ---------------------------------------------------------------------------
+
+
+def test__delta_c_from_concentration__standard_value():
+    """delta_c formula for c=10 matches the known analytic result."""
+    c = 10.0
+    expected = 200.0 / 3.0 * (c**3 / (np.log(1.0 + c) - c / (1.0 + c)))
+    result = ag.mp.NFWTruncatedSph._delta_c_from_concentration(c)
+    assert result == pytest.approx(expected, rel=1.0e-10)
+
+
+def test__delta_c_from_concentration__various_concentrations():
+    """delta_c increases monotonically with concentration."""
+    deltas = [
+        ag.mp.NFWTruncatedSph._delta_c_from_concentration(c) for c in [5.0, 10.0, 20.0]
+    ]
+    assert deltas[0] < deltas[1] < deltas[2]
+
+
+# ---------------------------------------------------------------------------
+# Tests for _concentration_at_overdensity_factor
+# ---------------------------------------------------------------------------
+
+
+def test__concentration_at_overdensity_factor__self_consistent():
+    """
+    For truncation_factor == 200, tau should equal the input concentration because
+    both solve the same overdensity condition.
+    """
+    c = 10.0
+    tau = ag.mp.NFWTruncatedSph._concentration_at_overdensity_factor(c, 200.0)
+    assert tau == pytest.approx(c, rel=1.0e-4)
+
+
+def test__concentration_at_overdensity_factor__larger_for_smaller_factor():
+    """
+    A smaller overdensity threshold means a larger enclosed radius, so tau must
+    be larger when truncation_factor < 200.
+    """
+    c = 10.0
+    tau_100 = ag.mp.NFWTruncatedSph._concentration_at_overdensity_factor(c, 100.0)
+    tau_50 = ag.mp.NFWTruncatedSph._concentration_at_overdensity_factor(c, 50.0)
+    assert tau_50 > tau_100 > c
+
+
+def test__concentration_at_overdensity_factor__matches_los_pipes_reference():
+    c = 10.0
+    expected = _los_pipes_reference_c50(c, 100.0)
+    result = ag.mp.NFWTruncatedSph._concentration_at_overdensity_factor(c, 100.0)
+    assert result == pytest.approx(expected, rel=1.0e-6)
+
+
+# ---------------------------------------------------------------------------
+# Tests for from_m200_concentration
+# ---------------------------------------------------------------------------
+
+
+def test__from_m200_concentration__kappa_s_matches_los_pipes():
+    """kappa_s from from_m200_concentration matches los_pipes reference."""
+    kappa_s_ref, _, _ = _los_pipes_reference_convert_to_lens_unit(
+        1e9, 10.0, 0.5, 1.0, 100.0
+    )
+    nfw = ag.mp.NFWTruncatedSph.from_m200_concentration(
+        centre=(0.0, 0.0),
+        m200_solar_mass=1e9,
+        concentration=10.0,
+        redshift_halo=0.5,
+        redshift_source=1.0,
+        cosmology=Planck15(),
+        truncation_factor=100.0,
+    )
+    assert nfw.kappa_s == pytest.approx(kappa_s_ref, rel=1.0e-6)
+
+
+def test__from_m200_concentration__scale_radius_matches_los_pipes():
+    """scale_radius_arcsec from from_m200_concentration matches los_pipes reference."""
+    _, scale_radius_ref, _ = _los_pipes_reference_convert_to_lens_unit(
+        1e9, 10.0, 0.5, 1.0, 100.0
+    )
+    nfw = ag.mp.NFWTruncatedSph.from_m200_concentration(
+        centre=(0.0, 0.0),
+        m200_solar_mass=1e9,
+        concentration=10.0,
+        redshift_halo=0.5,
+        redshift_source=1.0,
+        cosmology=Planck15(),
+        truncation_factor=100.0,
+    )
+    assert nfw.scale_radius == pytest.approx(scale_radius_ref, rel=1.0e-6)
+
+
+def test__from_m200_concentration__truncation_radius_matches_los_pipes():
+    """truncation_radius from from_m200_concentration matches los_pipes reference."""
+    _, _, truncation_radius_ref = _los_pipes_reference_convert_to_lens_unit(
+        1e9, 10.0, 0.5, 1.0, 100.0
+    )
+    nfw = ag.mp.NFWTruncatedSph.from_m200_concentration(
+        centre=(0.0, 0.0),
+        m200_solar_mass=1e9,
+        concentration=10.0,
+        redshift_halo=0.5,
+        redshift_source=1.0,
+        cosmology=Planck15(),
+        truncation_factor=100.0,
+    )
+    assert nfw.truncation_radius == pytest.approx(truncation_radius_ref, rel=1.0e-6)
+
+
+def test__from_m200_concentration__different_redshifts():
+    """from_m200_concentration at a different redshift pair produces valid parameters."""
+    nfw = ag.mp.NFWTruncatedSph.from_m200_concentration(
+        centre=(0.1, -0.2),
+        m200_solar_mass=1e10,
+        concentration=7.0,
+        redshift_halo=0.3,
+        redshift_source=2.0,
+        cosmology=Planck15(),
+        truncation_factor=100.0,
+    )
+    kappa_s_ref, rs_ref, rt_ref = _los_pipes_reference_convert_to_lens_unit(
+        1e10, 7.0, 0.3, 2.0, 100.0
+    )
+    assert nfw.kappa_s == pytest.approx(kappa_s_ref, rel=1.0e-6)
+    assert nfw.scale_radius == pytest.approx(rs_ref, rel=1.0e-6)
+    assert nfw.truncation_radius == pytest.approx(rt_ref, rel=1.0e-6)
+
+
+def test__from_m200_concentration__centre_is_preserved():
+    nfw = ag.mp.NFWTruncatedSph.from_m200_concentration(
+        centre=(1.5, -0.3),
+        m200_solar_mass=1e9,
+        concentration=10.0,
+        redshift_halo=0.5,
+        redshift_source=1.0,
+    )
+    assert nfw.centre == (1.5, -0.3)
+
+
+def test__from_m200_concentration__default_cosmology():
+    """from_m200_concentration with no cosmology argument uses Planck15."""
+    nfw_default = ag.mp.NFWTruncatedSph.from_m200_concentration(
+        m200_solar_mass=1e9, concentration=10.0, redshift_halo=0.5, redshift_source=1.0
+    )
+    nfw_explicit = ag.mp.NFWTruncatedSph.from_m200_concentration(
+        m200_solar_mass=1e9,
+        concentration=10.0,
+        redshift_halo=0.5,
+        redshift_source=1.0,
+        cosmology=Planck15(),
+    )
+    assert nfw_default.kappa_s == pytest.approx(nfw_explicit.kappa_s, rel=1.0e-10)
+
+
+# ---------------------------------------------------------------------------
+# Tests for m200_concentration_from
+# ---------------------------------------------------------------------------
+
+
+def test__m200_concentration_from__round_trip_m200():
+    """m200_concentration_from recovers the input M_200 to better than 0.01%."""
+    nfw = ag.mp.NFWTruncatedSph.from_m200_concentration(
+        m200_solar_mass=1e9,
+        concentration=10.0,
+        redshift_halo=0.5,
+        redshift_source=1.0,
+        cosmology=Planck15(),
+    )
+    m200_recovered, _ = ag.mp.NFWTruncatedSph.m200_concentration_from(
+        kappa_s=nfw.kappa_s,
+        scale_radius=nfw.scale_radius,
+        redshift_halo=0.5,
+        redshift_source=1.0,
+        cosmology=Planck15(),
+    )
+    assert m200_recovered == pytest.approx(1e9, rel=1.0e-4)
+
+
+def test__m200_concentration_from__round_trip_concentration():
+    """m200_concentration_from recovers the input concentration to better than 0.01%."""
+    nfw = ag.mp.NFWTruncatedSph.from_m200_concentration(
+        m200_solar_mass=1e9,
+        concentration=10.0,
+        redshift_halo=0.5,
+        redshift_source=1.0,
+        cosmology=Planck15(),
+    )
+    _, c_recovered = ag.mp.NFWTruncatedSph.m200_concentration_from(
+        kappa_s=nfw.kappa_s,
+        scale_radius=nfw.scale_radius,
+        redshift_halo=0.5,
+        redshift_source=1.0,
+        cosmology=Planck15(),
+    )
+    assert c_recovered == pytest.approx(10.0, rel=1.0e-4)
+
+
+def test__m200_concentration_from__round_trip_high_mass():
+    """Round-trip test for a high-mass halo (M_200 = 1e12 M_sun)."""
+    nfw = ag.mp.NFWTruncatedSph.from_m200_concentration(
+        m200_solar_mass=1e12,
+        concentration=5.0,
+        redshift_halo=0.3,
+        redshift_source=2.0,
+        cosmology=Planck15(),
+    )
+    m200_recovered, c_recovered = ag.mp.NFWTruncatedSph.m200_concentration_from(
+        kappa_s=nfw.kappa_s,
+        scale_radius=nfw.scale_radius,
+        redshift_halo=0.3,
+        redshift_source=2.0,
+        cosmology=Planck15(),
+    )
+    assert m200_recovered == pytest.approx(1e12, rel=1.0e-4)
+    assert c_recovered == pytest.approx(5.0, rel=1.0e-4)
+
+
+def test__m200_concentration_from__default_cosmology():
+    """m200_concentration_from with no cosmology argument uses Planck15."""
+    m200_default, c_default = ag.mp.NFWTruncatedSph.m200_concentration_from(
+        kappa_s=0.005781,
+        scale_radius=0.279092,
+        redshift_halo=0.5,
+        redshift_source=1.0,
+    )
+    m200_explicit, c_explicit = ag.mp.NFWTruncatedSph.m200_concentration_from(
+        kappa_s=0.005781,
+        scale_radius=0.279092,
+        redshift_halo=0.5,
+        redshift_source=1.0,
+        cosmology=Planck15(),
+    )
+    assert m200_default == pytest.approx(m200_explicit, rel=1.0e-10)
+    assert c_default == pytest.approx(c_explicit, rel=1.0e-10)
+
+
+# ---------------------------------------------------------------------------
+# Tests for mass_ratio_from_concentration_and_truncation_factor
+# ---------------------------------------------------------------------------
+
+
+def test__mass_ratio_from_concentration_and_truncation_factor__matches_los_pipes():
+    """Mass ratio from source code matches the los_pipes scale_c(c) reference."""
+    c = 10.0
+    expected = _los_pipes_reference_mass_ratio(c, 100.0)
+    result = ag.mp.NFWTruncatedSph.mass_ratio_from_concentration_and_truncation_factor(
+        concentration=c, truncation_factor=100.0
+    )
+    assert result == pytest.approx(expected, rel=1.0e-6)
+
+
+def test__mass_ratio_from_concentration_and_truncation_factor__larger_for_smaller_factor():
+    """A smaller truncation factor (larger truncation radius) gives a larger mass ratio."""
+    c = 10.0
+    ratio_100 = ag.mp.NFWTruncatedSph.mass_ratio_from_concentration_and_truncation_factor(
+        c, 100.0
+    )
+    ratio_50 = ag.mp.NFWTruncatedSph.mass_ratio_from_concentration_and_truncation_factor(
+        c, 50.0
+    )
+    assert ratio_50 > ratio_100
+
+
+def test__mass_ratio_from_concentration_and_truncation_factor__various_concentrations():
+    """Spot-check mass ratios at several concentrations against los_pipes reference."""
+    for c in [5.0, 10.0, 20.0]:
+        expected = _los_pipes_reference_mass_ratio(c, 100.0)
+        result = ag.mp.NFWTruncatedSph.mass_ratio_from_concentration_and_truncation_factor(
+            c, 100.0
+        )
+        assert result == pytest.approx(expected, rel=1.0e-6), f"failed for c={c}"
+
+
+def test__mass_ratio_from_concentration_and_truncation_factor__default_truncation_factor():
+    """The default truncation_factor=100 is applied when not specified."""
+    c = 10.0
+    result_default = (
+        ag.mp.NFWTruncatedSph.mass_ratio_from_concentration_and_truncation_factor(c)
+    )
+    result_explicit = (
+        ag.mp.NFWTruncatedSph.mass_ratio_from_concentration_and_truncation_factor(
+            c, 100.0
+        )
+    )
+    assert result_default == pytest.approx(result_explicit, rel=1.0e-10)

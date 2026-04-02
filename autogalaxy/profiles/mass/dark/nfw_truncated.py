@@ -1,5 +1,5 @@
 import numpy as np
-from typing import Tuple
+from typing import Optional, Tuple
 
 import autoarray as aa
 
@@ -105,6 +105,258 @@ class NFWTruncatedSph(AbstractgNFW):
                 * (((self.tau**2.0 - 1.0) / self.tau) * k_r - xp.pi)
             )
         )
+
+    @staticmethod
+    def _delta_c_from_concentration(concentration: float) -> float:
+        """
+        NFW characteristic overdensity delta_c for a given concentration.
+
+        This is the standard NFW normalisation:
+
+            delta_c = (200/3) * c^3 / (ln(1+c) - c/(1+c))
+
+        Parameters
+        ----------
+        concentration
+            NFW concentration parameter c = r_200 / r_s.
+        """
+        return (
+            200.0
+            / 3.0
+            * (
+                concentration**3
+                / (
+                    np.log(1.0 + concentration)
+                    - concentration / (1.0 + concentration)
+                )
+            )
+        )
+
+    @staticmethod
+    def _concentration_at_overdensity_factor(
+        concentration: float,
+        truncation_factor: float,
+    ) -> float:
+        """
+        Solve for the concentration-like parameter ``tau`` at which the mean enclosed
+        density of the NFW equals ``truncation_factor`` times the critical density.
+
+        For a truncation factor of 100, this finds ``r_100`` expressed as ``r_100 / r_s``.
+        The truncation radius of the tNFW profile is then ``tau * r_s``.
+
+        Parameters
+        ----------
+        concentration
+            NFW concentration parameter c = r_200 / r_s.
+        truncation_factor
+            Overdensity threshold that defines the truncation radius.  The
+            truncation radius is the sphere within which the mean enclosed density
+            equals ``truncation_factor`` times the critical density.  The default
+            value of 100 sets truncation at r_100.
+        """
+        from scipy.optimize import fsolve
+
+        delta_c = NFWTruncatedSph._delta_c_from_concentration(concentration)
+
+        def equation(tau):
+            return (
+                truncation_factor
+                / 3.0
+                * (tau**3 / (np.log(1.0 + tau) - tau / (1.0 + tau)))
+                - delta_c
+            )
+
+        return float(fsolve(equation, concentration, full_output=False)[0])
+
+    @classmethod
+    def from_m200_concentration(
+        cls,
+        centre: Tuple[float, float] = (0.0, 0.0),
+        m200_solar_mass: float = 1e9,
+        concentration: float = 10.0,
+        redshift_halo: float = 0.5,
+        redshift_source: float = 1.0,
+        cosmology: Optional[LensingCosmology] = None,
+        truncation_factor: float = 100.0,
+    ) -> "NFWTruncatedSph":
+        """
+        Construct an ``NFWTruncatedSph`` from the halo virial mass M_200 and
+        concentration rather than the lensing parameters (kappa_s, scale_radius,
+        truncation_radius).
+
+        The conversion follows the standard NFW lensing procedure (He et al. 2022,
+        MNRAS 511 3046):
+
+        1. Derive the NFW scale radius and characteristic density from M_200, the
+           concentration, and the critical density at ``redshift_halo``.
+        2. Convert to the dimensionless convergence ``kappa_s`` using the critical
+           surface density between ``redshift_halo`` and ``redshift_source``.
+        3. Express the scale radius in arc-seconds using the angular diameter
+           distance to ``redshift_halo``.
+        4. Set the truncation radius to ``r_t`` where the mean enclosed density
+           equals ``truncation_factor`` times the critical density (default is
+           r_100 for ``truncation_factor=100``).
+
+        Parameters
+        ----------
+        centre
+            The (y, x) arc-second coordinates of the profile centre.
+        m200_solar_mass
+            Virial mass M_200 in solar masses.
+        concentration
+            NFW concentration parameter c = r_200 / r_s.
+        redshift_halo
+            Redshift of the line-of-sight halo.
+        redshift_source
+            Redshift of the lensed background source.
+        cosmology
+            Cosmology used for distance and density calculations.  Defaults to
+            Planck15 if not supplied.
+        truncation_factor
+            Overdensity threshold defining the truncation radius.  The default
+            value of 100 sets the truncation at r_100.
+        """
+        from autogalaxy.cosmology.model import Planck15
+
+        if cosmology is None:
+            cosmology = Planck15()
+
+        critical_density = cosmology.critical_density(redshift_halo)
+        kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_halo)
+        critical_surface_density = cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+            redshift_0=redshift_halo,
+            redshift_1=redshift_source,
+        )
+
+        r200_kpc = (
+            m200_solar_mass / (200.0 * critical_density * (4.0 * np.pi / 3.0))
+        ) ** (1.0 / 3.0)
+
+        delta_c = cls._delta_c_from_concentration(concentration)
+        rs_kpc = r200_kpc / concentration
+        rho_s = critical_density * delta_c
+
+        kappa_s = rho_s * rs_kpc / critical_surface_density
+        scale_radius = rs_kpc / kpc_per_arcsec
+
+        tau = cls._concentration_at_overdensity_factor(concentration, truncation_factor)
+        truncation_radius = tau * scale_radius
+
+        return cls(
+            centre=centre,
+            kappa_s=kappa_s,
+            scale_radius=scale_radius,
+            truncation_radius=truncation_radius,
+        )
+
+    @staticmethod
+    def m200_concentration_from(
+        kappa_s: float,
+        scale_radius: float,
+        redshift_halo: float,
+        redshift_source: float,
+        cosmology: Optional[LensingCosmology] = None,
+    ) -> Tuple[float, float]:
+        """
+        Recover the virial mass M_200 and concentration from lensing parameters.
+
+        This is the inverse of :meth:`from_m200_concentration`.  Given the
+        dimensionless convergence ``kappa_s`` and the scale radius in arc-seconds,
+        the characteristic NFW density and scale radius in kpc are recovered, and
+        the concentration is solved numerically from the NFW overdensity equation.
+
+        Parameters
+        ----------
+        kappa_s
+            Dimensionless NFW convergence normalisation = rho_s * r_s / Sigma_crit.
+        scale_radius
+            NFW scale radius in arc-seconds.
+        redshift_halo
+            Redshift of the halo.
+        redshift_source
+            Redshift of the background source.
+        cosmology
+            Cosmology used for distance and density calculations.  Defaults to
+            Planck15 if not supplied.
+
+        Returns
+        -------
+        Tuple[float, float]
+            ``(m200_solar_mass, concentration)``.
+        """
+        from scipy.optimize import fsolve
+        from autogalaxy.cosmology.model import Planck15
+
+        if cosmology is None:
+            cosmology = Planck15()
+
+        critical_density = cosmology.critical_density(redshift_halo)
+        kpc_per_arcsec = cosmology.kpc_per_arcsec_from(redshift=redshift_halo)
+        critical_surface_density = cosmology.critical_surface_density_between_redshifts_solar_mass_per_kpc2_from(
+            redshift_0=redshift_halo,
+            redshift_1=redshift_source,
+        )
+
+        rs_kpc = scale_radius * kpc_per_arcsec
+        rho_s = kappa_s * critical_surface_density / rs_kpc
+        delta_c = rho_s / critical_density
+
+        def equation(c):
+            return (
+                200.0
+                / 3.0
+                * (c**3 / (np.log(1.0 + c) - c / (1.0 + c)))
+                - delta_c
+            )
+
+        concentration = float(fsolve(equation, 10.0)[0])
+        r200_kpc = concentration * rs_kpc
+        m200 = 200.0 * (4.0 / 3.0 * np.pi) * critical_density * r200_kpc**3
+
+        return m200, concentration
+
+    @staticmethod
+    def mass_ratio_from_concentration_and_truncation_factor(
+        concentration: float,
+        truncation_factor: float = 100.0,
+    ) -> float:
+        """
+        Mass ratio of a truncated NFW halo to its untruncated M_200 value.
+
+        The truncated NFW mass is:
+
+            M_tNFW = M_200 * tau_scale / c_scale
+
+        where:
+            tau_scale = tau^2/(tau^2+1)^2 * ((tau^2-1)*ln(tau) + tau*pi - (tau^2+1))
+            c_scale   = ln(1+c) - c/(1+c)
+
+        and ``tau`` is the solution to the ``_concentration_at_overdensity_factor``
+        equation for the given concentration and truncation factor.
+
+        This is the function tabulated and cubic-spline interpolated as the
+        ``scale_c(c)`` function in the los_pipes simulation code (He et al. 2022).
+
+        Parameters
+        ----------
+        concentration
+            NFW concentration parameter c = r_200 / r_s.
+        truncation_factor
+            Overdensity threshold defining the truncation radius (default 100).
+        """
+        tau = NFWTruncatedSph._concentration_at_overdensity_factor(
+            concentration, truncation_factor
+        )
+
+        tau2 = tau**2
+        tau_scale = (
+            tau2
+            / (tau2 + 1.0) ** 2
+            * ((tau2 - 1.0) * np.log(tau) + tau * np.pi - (tau2 + 1.0))
+        )
+        c_scale = np.log(1.0 + concentration) - concentration / (1.0 + concentration)
+
+        return tau_scale / c_scale
 
     def mass_at_truncation_radius_solar_mass(
         self,
