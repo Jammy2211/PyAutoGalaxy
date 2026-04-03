@@ -13,7 +13,7 @@ def subplot_image(
     basis: Basis,
     grid: aa.type.Grid1D2DLike,
     output_path=None,
-    output_format="png",
+    output_format=None,
     colormap="default",
     use_log10=False,
     positions=None,

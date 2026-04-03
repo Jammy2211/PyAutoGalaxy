@@ -68,24 +68,24 @@ def _to_positions(*items):
     return _to_lines(*items)
 
 
-def _save_subplot(fig, output_path, output_filename, output_format="png",
+def _save_subplot(fig, output_path, output_filename, output_format=None,
                   dpi=300):
-    """Save a subplot figure to disk (or show it if output_path is falsy).
+    """Save a subplot figure to disk (or show it if output_format/output_path say so).
 
     For FITS output use the dedicated ``fits_*`` functions instead.
     """
-    from autoarray.plot.utils import _output_mode_save
+    from autoarray.plot.utils import _output_mode_save, _conf_output_format
 
     if _output_mode_save(fig, output_filename):
         return
 
-    fmt = output_format[0] if isinstance(output_format, (list, tuple)) else (output_format or "png")
-    if output_path:
+    fmt = output_format[0] if isinstance(output_format, (list, tuple)) else (output_format or _conf_output_format())
+    if fmt == "show" or not output_path:
+        plt.show()
+    else:
         os.makedirs(str(output_path), exist_ok=True)
         fpath = os.path.join(str(output_path), f"{output_filename}.{fmt}")
         fig.savefig(fpath, dpi=dpi, bbox_inches="tight", pad_inches=0.1)
-    else:
-        plt.show()
     plt.close(fig)
 
 
@@ -99,9 +99,11 @@ def _resolve_colormap(colormap):
 
 def _resolve_format(output_format):
     """Normalise output_format: accept a list/tuple or a plain string."""
+    from autoarray.plot.utils import _conf_output_format
+
     if isinstance(output_format, (list, tuple)):
         return output_format[0]
-    return output_format or "png"
+    return output_format or _conf_output_format()
 
 
 def _numpy_grid(grid):
@@ -119,7 +121,7 @@ def plot_array(
     title="",
     output_path=None,
     output_filename="array",
-    output_format="png",
+    output_format=None,
     colormap="default",
     use_log10=False,
     vmin=None,
@@ -276,7 +278,7 @@ def plot_grid(
     title="",
     output_path=None,
     output_filename="grid",
-    output_format="png",
+    output_format=None,
     lines=None,
     ax=None,
 ):

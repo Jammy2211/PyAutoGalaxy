@@ -12,7 +12,7 @@ from autogalaxy.plot.plot_utils import plot_array, _save_subplot
 def subplot_fit(
     fit: FitImaging,
     output_path=None,
-    output_format="png",
+    output_format=None,
     colormap="default",
     use_log10=False,
     positions=None,
@@ -72,7 +72,7 @@ def subplot_of_galaxy(
     fit: FitImaging,
     galaxy_index: int,
     output_path=None,
-    output_format="png",
+    output_format=None,
     colormap="default",
     use_log10=False,
     positions=None,
@@ -136,7 +136,7 @@ def subplot_fit_imaging_list(
     fit_list,
     output_path=None,
     output_filename: str = "fit_combined",
-    output_format="png",
+    output_format=None,
 ):
     """
     n×5 subplot summarising a list of ``FitImaging`` objects.

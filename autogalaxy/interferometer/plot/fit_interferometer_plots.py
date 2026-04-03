@@ -15,7 +15,7 @@ from autogalaxy.plot.plot_utils import plot_array, _save_subplot
 def subplot_fit(
     fit: FitInterferometer,
     output_path=None,
-    output_format="png",
+    output_format=None,
     colormap="default",
     use_log10=False,
     residuals_symmetric_cmap: bool = True,
@@ -61,7 +61,7 @@ def subplot_fit(
 def subplot_fit_dirty_images(
     fit: FitInterferometer,
     output_path=None,
-    output_format="png",
+    output_format=None,
     colormap="default",
     use_log10=False,
     residuals_symmetric_cmap: bool = True,
@@ -117,7 +117,7 @@ def subplot_fit_dirty_images(
 def subplot_fit_real_space(
     fit: FitInterferometer,
     output_path=None,
-    output_format="png",
+    output_format=None,
     colormap="default",
     use_log10=False,
 ):
