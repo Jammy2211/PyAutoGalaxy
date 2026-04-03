@@ -63,7 +63,7 @@ def _subplot_fit_array(fit, output_path, output_format, colormap, use_log10, pos
 def subplot_fit(
     fit: FitQuantity,
     output_path=None,
-    output_format="png",
+    output_format=None,
     colormap="default",
     use_log10=False,
     positions=None,

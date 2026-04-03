@@ -12,7 +12,7 @@ from autogalaxy.plot.plot_utils import plot_array, _save_subplot
 def subplot_adapt_images(
     adapt_galaxy_name_image_dict: Dict[Galaxy, aa.Array2D],
     output_path=None,
-    output_format="png",
+    output_format=None,
     colormap="default",
     use_log10=False,
 ):

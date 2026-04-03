@@ -15,7 +15,7 @@ def subplot_of_light_profiles(
     galaxy: Galaxy,
     grid: aa.type.Grid1D2DLike,
     output_path=None,
-    output_format="png",
+    output_format=None,
     colormap="default",
     use_log10=False,
     positions=None,
@@ -72,7 +72,7 @@ def subplot_of_mass_profiles(
     deflections_y: bool = False,
     deflections_x: bool = False,
     output_path=None,
-    output_format="png",
+    output_format=None,
     colormap="default",
     use_log10=False,
 ):

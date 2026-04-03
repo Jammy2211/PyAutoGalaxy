@@ -17,7 +17,7 @@ def _plot_data(
     fit_list: List[FitEllipse],
     output_path=None,
     output_filename="ellipse_fit",
-    output_format="png",
+    output_format=None,
     colormap="default",
     use_log10=False,
     disable_data_contours: bool = False,
@@ -80,7 +80,7 @@ def _plot_data(
 def _plot_ellipse_residuals(
     fit_list: List[FitEllipse],
     output_path=None,
-    output_format="png",
+    output_format=None,
     for_subplot: bool = False,
     suffix: str = "",
     ax=None,
@@ -122,7 +122,7 @@ def _plot_ellipse_residuals(
 def subplot_fit_ellipse(
     fit_list: List[FitEllipse],
     output_path=None,
-    output_format="png",
+    output_format=None,
     colormap="default",
     use_log10=False,
     disable_data_contours: bool = False,
@@ -166,7 +166,7 @@ def subplot_fit_ellipse(
 def subplot_ellipse_errors(
     fit_pdf_list: List[List[FitEllipse]],
     output_path=None,
-    output_format="png",
+    output_format=None,
     colormap="default",
     use_log10=False,
     sigma: Optional[float] = 3.0,
