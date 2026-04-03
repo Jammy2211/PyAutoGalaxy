@@ -1,3 +1,11 @@
+from autofit.non_linear.plot import (
+    corner_cornerpy,
+    corner_anesthetic,
+    subplot_parameters,
+    log_likelihood_vs_iteration,
+    output_figure,
+)
+
 from autogalaxy.plot.plot_utils import plot_array, plot_grid, fits_array
 
 from autoarray.dataset.plot.imaging_plots import (
