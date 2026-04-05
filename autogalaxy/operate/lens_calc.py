@@ -411,17 +411,21 @@ class LensCalc:
         )
 
     def _hessian_via_finite_difference(self, grid, buffer: float = 0.01) -> Tuple:
+        grid_values = grid.array if hasattr(grid, "array") else grid
+        g0 = np.array(grid_values[:, 0], dtype=np.float64, copy=True)
+        g1 = np.array(grid_values[:, 1], dtype=np.float64, copy=True)
+
         grid_shift_y_up = aa.Grid2DIrregular(
-            values=np.stack([grid[:, 0] + buffer, grid[:, 1]], axis=1)
+            values=np.stack([g0 + buffer, g1], axis=1)
         )
         grid_shift_y_down = aa.Grid2DIrregular(
-            values=np.stack([grid[:, 0] - buffer, grid[:, 1]], axis=1)
+            values=np.stack([g0 - buffer, g1], axis=1)
         )
         grid_shift_x_left = aa.Grid2DIrregular(
-            values=np.stack([grid[:, 0], grid[:, 1] - buffer], axis=1)
+            values=np.stack([g0, g1 - buffer], axis=1)
         )
         grid_shift_x_right = aa.Grid2DIrregular(
-            values=np.stack([grid[:, 0], grid[:, 1] + buffer], axis=1)
+            values=np.stack([g0, g1 + buffer], axis=1)
         )
 
         deflections_up = self.deflections_yx_2d_from(grid=grid_shift_y_up)
