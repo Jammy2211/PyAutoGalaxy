@@ -80,64 +80,6 @@ class Gaussian(MassProfile, StellarProfile):
             xp=xp,
         )
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
-    def deflections_2d_via_integral_from(
-        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
-    ):
-        """
-        Calculate the deflection angles at a given set of arc-second gridded coordinates.
-
-        Parameters
-        ----------
-        grid
-            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-
-        Note: sigma is divided by sqrt(q) here.
-
-        """
-        from scipy.integrate import quad
-
-        def calculate_deflection_component(npow, index):
-            deflection_grid = np.array(self.axis_ratio(xp) * grid.array[:, index])
-
-            for i in range(grid.shape[0]):
-                deflection_grid[i] *= (
-                    self.intensity
-                    * self.mass_to_light_ratio
-                    * quad(
-                        self.deflection_func,
-                        a=0.0,
-                        b=1.0,
-                        args=(
-                            grid.array[i, 0],
-                            grid.array[i, 1],
-                            npow,
-                            self.axis_ratio(xp),
-                            self.sigma / xp.sqrt(self.axis_ratio(xp)),
-                        ),
-                    )[0]
-                )
-
-            return deflection_grid
-
-        deflection_y = calculate_deflection_component(1.0, 0)
-        deflection_x = calculate_deflection_component(0.0, 1)
-
-        return self.rotated_grid_from_reference_frame_from(
-            np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T), xp=xp
-        )
-
-    @staticmethod
-    def deflection_func(u, y, x, npow, axis_ratio, sigma, xp=np):
-        _eta_u = xp.sqrt(axis_ratio) * xp.sqrt(
-            (u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u))))
-        )
-
-        return xp.exp(-0.5 * xp.square(xp.divide(_eta_u, sigma))) / (
-            (1 - (1 - axis_ratio**2) * u) ** (npow + 0.5)
-        )
-
     @aa.over_sample
     @aa.grid_dec.to_array
     @aa.grid_dec.transform

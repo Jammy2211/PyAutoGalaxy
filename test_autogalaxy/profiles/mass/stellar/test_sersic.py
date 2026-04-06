@@ -6,42 +6,6 @@ import autogalaxy as ag
 grid = ag.Grid2DIrregular([[1.0, 1.0], [2.0, 2.0], [3.0, 3.0], [2.0, 4.0]])
 
 
-def test__deflections_via_integral_from__config_1():
-    mp = ag.mp.Sersic(
-        centre=(-0.4, -0.2),
-        ell_comps=(-0.07142, -0.085116),
-        intensity=5.0,
-        effective_radius=0.2,
-        sersic_index=2.0,
-        mass_to_light_ratio=1.0,
-    )
-
-    deflections = mp.deflections_2d_via_integral_from(
-        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
-    )
-
-    assert deflections[0, 0] == pytest.approx(1.1446, 1e-3)
-    assert deflections[0, 1] == pytest.approx(0.79374, 1e-3)
-
-
-def test__deflections_via_integral_from__config_2():
-    mp = ag.mp.Sersic(
-        centre=(-0.4, -0.2),
-        ell_comps=(-0.07142, -0.085116),
-        intensity=10.0,
-        effective_radius=0.2,
-        sersic_index=3.0,
-        mass_to_light_ratio=1.0,
-    )
-
-    deflections = mp.deflections_2d_via_integral_from(
-        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
-    )
-
-    assert deflections[0, 0] == pytest.approx(2.6134, 1e-3)
-    assert deflections[0, 1] == pytest.approx(1.80719, 1e-3)
-
-
 def test__deflections_2d_via_cse_from__config_1():
     mp = ag.mp.Sersic(
         centre=(-0.4, -0.2),
@@ -52,9 +16,7 @@ def test__deflections_2d_via_cse_from__config_1():
         mass_to_light_ratio=1.0,
     )
 
-    deflections_via_integral = mp.deflections_2d_via_integral_from(
-        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
-    )
+    deflections_via_integral = np.array([[1.1446, 0.79374]])
     deflections_via_cse = mp.deflections_2d_via_cse_from(
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
@@ -72,9 +34,7 @@ def test__deflections_2d_via_cse_from__config_2():
         mass_to_light_ratio=1.0,
     )
 
-    deflections_via_integral = mp.deflections_2d_via_integral_from(
-        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
-    )
+    deflections_via_integral = np.array([[2.6134, 1.80719]])
     deflections_via_cse = mp.deflections_2d_via_cse_from(
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
@@ -92,9 +52,7 @@ def test__deflections_2d_via_cse_from__config_3():
         mass_to_light_ratio=2.0,
     )
 
-    deflections_via_integral = mp.deflections_2d_via_integral_from(
-        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
-    )
+    deflections_via_integral = np.array([[2.0810915255, 1.4433668621]])
     deflections_via_cse = mp.deflections_2d_via_cse_from(
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
@@ -142,8 +100,8 @@ def test__deflections_yx_2d_from__elliptical_vs_spherical():
         mass_to_light_ratio=1.0,
     )
 
-    elliptical_deflections = elliptical.deflections_2d_via_integral_from(grid=grid)
-    spherical_deflections = spherical.deflections_2d_via_integral_from(grid=grid)
+    elliptical_deflections = elliptical.deflections_yx_2d_from(grid=grid)
+    spherical_deflections = spherical.deflections_yx_2d_from(grid=grid)
 
     assert elliptical_deflections == pytest.approx(spherical_deflections.array, 1.0e-4)
 

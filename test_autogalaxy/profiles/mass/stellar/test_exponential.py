@@ -28,40 +28,6 @@ def test__deflections_yx_2d_from__exponential_sph():
     assert deflections == pytest.approx(deflections_via_cse.array, 1.0e-4)
 
 
-def test__deflections_2d_via_integral_from__config_1():
-    mp = ag.mp.Exponential(
-        centre=(-0.4, -0.2),
-        ell_comps=(-0.07142, -0.085116),
-        intensity=5.0,
-        effective_radius=0.2,
-        mass_to_light_ratio=1.0,
-    )
-
-    deflections = mp.deflections_2d_via_integral_from(
-        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
-    )
-
-    assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
-    assert deflections[0, 1] == pytest.approx(0.62569, 1e-3)
-
-
-def test__deflections_2d_via_integral_from__config_2():
-    mp = ag.mp.Exponential(
-        centre=(-0.4, -0.2),
-        ell_comps=(-0.07142, -0.085116),
-        intensity=5.0,
-        effective_radius=0.2,
-        mass_to_light_ratio=1.0,
-    )
-
-    deflections = mp.deflections_2d_via_integral_from(
-        grid=ag.Grid2DIrregular([(0.1625, 0.1625)])
-    )
-
-    assert deflections[0, 0] == pytest.approx(0.90493, 1e-3)
-    assert deflections[0, 1] == pytest.approx(0.62569, 1e-3)
-
-
 def test__deflections_2d_via_cse_from__config_1():
     mp = ag.mp.Exponential(
         centre=(-0.4, -0.2),
@@ -71,9 +37,7 @@ def test__deflections_2d_via_cse_from__config_1():
         mass_to_light_ratio=1.0,
     )
 
-    deflections_via_integral = mp.deflections_2d_via_integral_from(
-        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
-    )
+    deflections_via_integral = np.array([[5.9679849756, 4.5901980642]])
     deflections_via_cse = mp.deflections_2d_via_cse_from(
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
@@ -90,9 +54,7 @@ def test__deflections_2d_via_cse_from__config_2():
         mass_to_light_ratio=1.0,
     )
 
-    deflections_via_integral = mp.deflections_2d_via_integral_from(
-        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
-    )
+    deflections_via_integral = np.array([[5.9679849756, 4.5901980642]])
     deflections_via_cse = mp.deflections_2d_via_cse_from(
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
