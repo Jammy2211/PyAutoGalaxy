@@ -296,68 +296,7 @@ class AbstractSersic(MassProfile, MassProfileCSE, StellarProfile):
 
 
 class Sersic(AbstractSersic, MassProfileCSE):
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
-    def deflections_2d_via_integral_from(
-        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
-    ):
-        """
-        Calculate the deflection angles at a given set of arc-second gridded coordinates.
-
-        Parameters
-        ----------
-        grid
-            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-
-        """
-        from scipy.integrate import quad
-
-        def calculate_deflection_component(npow, index):
-            sersic_constant = self.sersic_constant
-
-            deflection_grid = self.axis_ratio() * grid.array[:, index]
-
-            for i in range(grid.shape[0]):
-                deflection_grid[i] = deflection_grid[i] * (
-                    self.intensity
-                    * self.mass_to_light_ratio
-                    * quad(
-                        self.deflection_func,
-                        a=0.0,
-                        b=1.0,
-                        args=(
-                            grid.array[i, 0],
-                            grid.array[i, 1],
-                            npow,
-                            self.axis_ratio(),
-                            self.sersic_index,
-                            self.effective_radius,
-                            sersic_constant,
-                        ),
-                    )[0]
-                )
-
-            return deflection_grid
-
-        deflection_y = calculate_deflection_component(1.0, 0)
-        deflection_x = calculate_deflection_component(0.0, 1)
-
-        return self.rotated_grid_from_reference_frame_from(
-            np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T), xp=xp
-        )
-
-    @staticmethod
-    def deflection_func(
-        u, y, x, npow, axis_ratio, sersic_index, effective_radius, sersic_constant
-    ):
-        _eta_u = np.sqrt(axis_ratio) * np.sqrt(
-            (u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u))))
-        )
-
-        return np.exp(
-            -sersic_constant
-            * (((_eta_u / effective_radius) ** (1.0 / sersic_index)) - 1)
-        ) / ((1 - (1 - axis_ratio**2) * u) ** (npow + 0.5))
+    pass
 
 
 class SersicSph(Sersic):

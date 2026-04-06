@@ -111,77 +111,8 @@ class NFW(gNFW, MassProfileCSE):
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform
-    def deflections_2d_via_integral_from(
-        self, grid: aa.type.Grid2DLike, xp=np, **kwargs
-    ):
-        """
-        Calculate the deflection angles at a given set of arc-second gridded coordinates.
-
-        Parameters
-        ----------
-        grid
-            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-
-        """
-        from scipy.integrate import quad
-
-        def calculate_deflection_component(npow, index):
-            deflection_grid = np.array(self.axis_ratio(xp) * grid.array[:, index])
-
-            for i in range(grid.shape[0]):
-                deflection_grid[i] *= (
-                    self.kappa_s
-                    * quad(
-                        self.deflection_func,
-                        a=0.0,
-                        b=1.0,
-                        args=(
-                            grid.array[i, 0],
-                            grid.array[i, 1],
-                            npow,
-                            self.axis_ratio(xp),
-                            self.scale_radius,
-                        ),
-                    )[0]
-                )
-
-            return deflection_grid
-
-        deflection_y = calculate_deflection_component(1.0, 0)
-        deflection_x = calculate_deflection_component(0.0, 1)
-
-        return self.rotated_grid_from_reference_frame_from(
-            np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T)
-        )
-
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
     def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self._deflections_2d_via_cse_from(grid=grid, **kwargs)
-
-    @staticmethod
-    def deflection_func(u, y, x, npow, axis_ratio, scale_radius):
-        _eta_u = (1.0 / scale_radius) * np.sqrt(
-            (u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u))))
-        )
-
-        if _eta_u > 1:
-            _eta_u_2 = (1.0 / np.sqrt(_eta_u**2 - 1)) * np.arctan(
-                np.sqrt(_eta_u**2 - 1)
-            )
-        elif _eta_u < 1:
-            _eta_u_2 = (1.0 / np.sqrt(1 - _eta_u**2)) * np.arctanh(
-                np.sqrt(1 - _eta_u**2)
-            )
-        else:
-            _eta_u_2 = 1
-
-        return (
-            2.0
-            * (1 - _eta_u_2)
-            / (_eta_u**2 - 1)
-            / ((1 - (1 - axis_ratio**2) * u) ** (npow + 0.5))
-        )
 
     @aa.over_sample
     @aa.grid_dec.to_array
@@ -211,67 +142,6 @@ class NFW(gNFW, MassProfileCSE):
             2.0
             * self.kappa_s
             * xp.array(self.coord_func_g(grid_radius=grid_radius, xp=xp))
-        )
-
-    @aa.over_sample
-    @aa.grid_dec.to_array
-    @aa.grid_dec.transform
-    def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
-        """
-        Calculate the potential at a given set of arc-second gridded coordinates.
-
-        Parameters
-        ----------
-        grid
-            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-
-        """
-        from scipy.integrate import quad
-
-        potential_grid = np.zeros(grid.shape[0])
-
-        for i in range(grid.shape[0]):
-            potential_grid[i] = quad(
-                self.potential_func,
-                a=0.0,
-                b=1.0,
-                args=(
-                    grid.array[i, 0],
-                    grid.array[i, 1],
-                    self.axis_ratio(xp),
-                    self.kappa_s,
-                    self.scale_radius,
-                ),
-                epsrel=1.49e-5,
-            )[0]
-
-        return potential_grid
-
-    @staticmethod
-    def potential_func(u, y, x, axis_ratio, kappa_s, scale_radius):
-        _eta_u = (1.0 / scale_radius) * np.sqrt(
-            (u * ((x**2) + (y**2 / (1 - (1 - axis_ratio**2) * u))))
-        )
-
-        if _eta_u > 1:
-            _eta_u_2 = (1.0 / np.sqrt(_eta_u**2 - 1)) * np.arctan(
-                np.sqrt(_eta_u**2 - 1)
-            )
-        elif _eta_u < 1:
-            _eta_u_2 = (1.0 / np.sqrt(1 - _eta_u**2)) * np.arctanh(
-                np.sqrt(1 - _eta_u**2)
-            )
-        else:
-            _eta_u_2 = 1
-
-        return (
-            4.0
-            * kappa_s
-            * scale_radius
-            * (axis_ratio / 2.0)
-            * (_eta_u / u)
-            * ((np.log(_eta_u / 2.0) + _eta_u_2) / _eta_u)
-            / ((1 - (1 - axis_ratio**2) * u) ** 0.5)
         )
 
     def decompose_convergence_via_cse(

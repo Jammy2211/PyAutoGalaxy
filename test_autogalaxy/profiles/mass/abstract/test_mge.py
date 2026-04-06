@@ -20,9 +20,7 @@ def test__gnfw_deflections_yx_2d_via_mge__config_1__inner_slope_05():
     log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
     sigmas = np.exp(log_sigmas)
 
-    deflections_via_integral = nfw.deflections_2d_via_integral_from(
-        grid=ag.Grid2DIrregular([[0.1875, 0.1625]])
-    )
+    deflections_via_integral = np.array([[0.26604, 0.58988]])
 
     mge_decomp = ag.mp.MGEDecomposer(mass_profile=nfw)
 
@@ -51,9 +49,7 @@ def test__gnfw_deflections_yx_2d_via_mge__config_2__inner_slope_15():
     log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 30)
     sigmas = np.exp(log_sigmas)
 
-    deflections_via_integral = nfw.deflections_2d_via_integral_from(
-        grid=ag.Grid2DIrregular([[0.1875, 0.1625]])
-    )
+    deflections_via_integral = np.array([[-5.99032, -4.02541]])
     mge_decomp = ag.mp.MGEDecomposer(mass_profile=nfw)
 
     deflections_via_mge = mge_decomp.deflections_2d_via_mge_from(
@@ -82,9 +78,7 @@ def test__sersic_deflections_yx_2d_via_mge__sersic_index_2():
     log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
     sigmas = np.exp(log_sigmas)
 
-    deflections_via_integral = mp.deflections_2d_via_integral_from(
-        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
-    )
+    deflections_via_integral = np.array([[1.1446, 0.79374]])
     mge_decomp = ag.mp.MGEDecomposer(mass_profile=mp)
 
     deflections_via_mge = mge_decomp.deflections_2d_via_mge_from(
@@ -113,9 +107,7 @@ def test__sersic_deflections_yx_2d_via_mge__sersic_index_3():
     log_sigmas = np.linspace(np.log(radii_min), np.log(radii_max), 20)
     sigmas = np.exp(log_sigmas)
 
-    deflections_via_integral = mp.deflections_2d_via_integral_from(
-        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
-    )
+    deflections_via_integral = np.array([[2.6134, 1.80719]])
 
     mge_decomp = ag.mp.MGEDecomposer(mass_profile=mp)
 

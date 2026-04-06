@@ -67,26 +67,6 @@ class AbstractgNFW(MassProfile, DarkProfile):
 
         return self.convergence_func(grid_radius=grid_eta, xp=xp)
 
-    def tabulate_integral(self, grid, tabulate_bins, **kwargs):
-        """Tabulate an integral over the convergence of deflection potential of a mass profile. This is used in \
-        the gNFW profile classes to speed up the integration procedure.
-
-        Parameters
-        ----------
-        grid
-            The grid of (y,x) arc-second coordinates the potential / deflection_stacks are computed on.
-        tabulate_bins
-            The number of bins to tabulate the inner integral of this profile.
-        """
-        eta_min = 1.0e-4
-        eta_max = 1.05 * np.max(self.elliptical_radii_grid_from(grid=grid, **kwargs))
-
-        minimum_log_eta = np.log10(eta_min)
-        maximum_log_eta = np.log10(eta_max)
-        bin_size = (maximum_log_eta - minimum_log_eta) / (tabulate_bins - 1)
-
-        return eta_min, eta_max, minimum_log_eta, maximum_log_eta, bin_size
-
     def density_3d_func(self, r, xp=np):
         x = r.array / self.scale_radius
 

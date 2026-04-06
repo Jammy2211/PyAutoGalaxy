@@ -28,23 +28,6 @@ def test__deflections_yx_2d_from__dev_vaucouleurs_sph():
     assert deflections == pytest.approx(deflections_via_cse.array, 1.0e-4)
 
 
-def test__deflections_via_integral_from():
-    mp = ag.mp.DevVaucouleurs(
-        centre=(0.4, 0.2),
-        ell_comps=(0.0180010, 0.0494575),
-        intensity=2.0,
-        effective_radius=0.8,
-        mass_to_light_ratio=3.0,
-    )
-
-    deflections = mp.deflections_2d_via_integral_from(
-        grid=ag.Grid2DIrregular([(0.1625, 0.1625)])
-    )
-
-    assert deflections[0, 0] == pytest.approx(-24.528, 1e-3)
-    assert deflections[0, 1] == pytest.approx(-3.37605, 1e-3)
-
-
 def test__deflections_2d_via_cse_from__config_1():
     mp = ag.mp.DevVaucouleurs(
         centre=(0.4, 0.2),
@@ -54,9 +37,7 @@ def test__deflections_2d_via_cse_from__config_1():
         mass_to_light_ratio=3.0,
     )
 
-    deflections_via_integral = mp.deflections_2d_via_integral_from(
-        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
-    )
+    deflections_via_integral = np.array([[-24.528, -3.37605]])
     deflections_via_cse = mp.deflections_2d_via_cse_from(
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
@@ -73,9 +54,7 @@ def test__deflections_2d_via_cse_from__config_2():
         mass_to_light_ratio=3.0,
     )
 
-    deflections_via_integral = mp.deflections_2d_via_integral_from(
-        grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
-    )
+    deflections_via_integral = np.array([[-3.1360329449, 0.1181013046]])
     deflections_via_cse = mp.deflections_2d_via_cse_from(
         grid=ag.Grid2DIrregular([[0.1625, 0.1625]])
     )
