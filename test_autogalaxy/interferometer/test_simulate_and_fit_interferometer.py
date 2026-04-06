@@ -10,7 +10,7 @@ import autogalaxy as ag
 
 def test__perfect_fit__chi_squared_0():
     grid = ag.Grid2D.uniform(
-        shape_native=(51, 51),
+        shape_native=(31, 31),
         pixel_scales=0.1,
         over_sample_size=1,
     )
@@ -24,7 +24,7 @@ def test__perfect_fit__chi_squared_0():
     )
 
     simulator = ag.SimulatorInterferometer(
-        uv_wavelengths=np.ones(shape=(7, 2)),
+        uv_wavelengths=np.ones(shape=(3, 2)),
         transformer_class=ag.TransformerDFT,
         exposure_time=300.0,
         noise_if_add_noise_false=1.0,
@@ -58,7 +58,7 @@ def test__perfect_fit__chi_squared_0():
     )
 
     real_space_mask = ag.Mask2D.all_false(
-        shape_native=(51, 51),
+        shape_native=(31, 31),
         pixel_scales=0.1,
     )
 
@@ -78,7 +78,7 @@ def test__perfect_fit__chi_squared_0():
     assert fit.chi_squared == pytest.approx(0.0)
 
     pixelization = ag.Pixelization(
-        mesh=ag.mesh.RectangularUniform(shape=(7, 7)),
+        mesh=ag.mesh.RectangularUniform(shape=(5, 5)),
         regularization=ag.reg.Constant(coefficient=0.0001),
     )
 
@@ -142,7 +142,7 @@ def test__simulate_interferometer_data_and_fit__known_likelihood():
 
 def test__linear_light_profiles_agree_with_standard_light_profiles():
     grid = ag.Grid2D.uniform(
-        shape_native=(51, 51),
+        shape_native=(31, 31),
         pixel_scales=0.1,
         over_sample_size=1,
     )

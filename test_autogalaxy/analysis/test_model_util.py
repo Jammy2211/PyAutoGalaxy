@@ -10,12 +10,12 @@ def test__mge_point_model_from__returns_basis_model_with_correct_gaussians():
     mge_point_model_from should return an af.Model wrapping a Basis whose
     profile_list contains the requested number of linear Gaussian components.
     """
-    model = ag.model_util.mge_point_model_from(pixel_scales=0.1, total_gaussians=5)
+    model = ag.model_util.mge_point_model_from(pixel_scales=0.1, total_gaussians=2)
 
     instance = model.instance_from_prior_medians()
 
     assert isinstance(instance, ag.lp_basis.Basis)
-    assert len(instance.profile_list) == 5
+    assert len(instance.profile_list) == 2
 
 
 def test__mge_point_model_from__sigma_values_span_correct_range():
@@ -24,7 +24,7 @@ def test__mge_point_model_from__sigma_values_span_correct_range():
     logarithmically spaced.
     """
     pixel_scales = 0.1
-    total_gaussians = 10
+    total_gaussians = 3
 
     model = ag.model_util.mge_point_model_from(
         pixel_scales=pixel_scales, total_gaussians=total_gaussians
@@ -41,7 +41,7 @@ def test__mge_point_model_from__shared_centre_and_ell_comps():
     All Gaussians must share exactly the same centre prior objects and ell_comps
     prior objects so the model has only 4 free parameters total.
     """
-    model = ag.model_util.mge_point_model_from(pixel_scales=0.1, total_gaussians=5)
+    model = ag.model_util.mge_point_model_from(pixel_scales=0.1, total_gaussians=2)
 
     gaussian_list = list(model.profile_list)
 

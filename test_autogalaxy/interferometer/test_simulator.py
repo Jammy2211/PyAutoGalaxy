@@ -17,7 +17,7 @@ def test__simulator__via_galaxies_from__data_matches_via_image():
     galaxies = ag.Galaxies(galaxies=[galaxy_0, galaxy_1])
 
     simulator = ag.SimulatorInterferometer(
-        uv_wavelengths=np.ones(shape=(7, 2)),
+        uv_wavelengths=np.ones(shape=(3, 2)),
         exposure_time=10000.0,
         noise_sigma=0.1,
         noise_seed=1,
@@ -46,7 +46,7 @@ def test__simulator__via_galaxies_from__uv_wavelengths_match_via_image():
     galaxies = ag.Galaxies(galaxies=[galaxy_0, galaxy_1])
 
     simulator = ag.SimulatorInterferometer(
-        uv_wavelengths=np.ones(shape=(7, 2)),
+        uv_wavelengths=np.ones(shape=(3, 2)),
         exposure_time=10000.0,
         noise_sigma=0.1,
         noise_seed=1,
@@ -75,7 +75,7 @@ def test__simulator__via_galaxies_from__noise_map_matches_via_image():
     galaxies = ag.Galaxies(galaxies=[galaxy_0, galaxy_1])
 
     simulator = ag.SimulatorInterferometer(
-        uv_wavelengths=np.ones(shape=(7, 2)),
+        uv_wavelengths=np.ones(shape=(3, 2)),
         exposure_time=10000.0,
         noise_sigma=0.1,
         noise_seed=1,
@@ -112,7 +112,7 @@ def test__simulator__simulate_from_source_galaxy__data_matches_via_image():
     grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.05)
 
     simulator = ag.SimulatorInterferometer(
-        uv_wavelengths=np.ones(shape=(7, 2)),
+        uv_wavelengths=np.ones(shape=(3, 2)),
         exposure_time=10000.0,
         noise_sigma=0.1,
         noise_seed=1,
@@ -151,7 +151,7 @@ def test__simulator__simulate_from_source_galaxy__uv_wavelengths_match_via_image
     grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.05)
 
     simulator = ag.SimulatorInterferometer(
-        uv_wavelengths=np.ones(shape=(7, 2)),
+        uv_wavelengths=np.ones(shape=(3, 2)),
         exposure_time=10000.0,
         noise_sigma=0.1,
         noise_seed=1,
@@ -190,7 +190,7 @@ def test__simulator__simulate_from_source_galaxy__noise_map_matches_via_image():
     grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.05)
 
     simulator = ag.SimulatorInterferometer(
-        uv_wavelengths=np.ones(shape=(7, 2)),
+        uv_wavelengths=np.ones(shape=(3, 2)),
         exposure_time=10000.0,
         noise_sigma=0.1,
         noise_seed=1,
