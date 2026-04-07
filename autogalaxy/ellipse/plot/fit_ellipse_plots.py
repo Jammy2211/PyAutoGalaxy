@@ -5,7 +5,7 @@ from typing import List, Optional
 
 import autoarray as aa
 from autoarray import plot as aplt
-from autoarray.plot.utils import conf_subplot_figsize
+from autoarray.plot.utils import conf_subplot_figsize, tight_layout
 
 from autogalaxy.ellipse.plot import fit_ellipse_plot_util
 from autogalaxy.ellipse.fit_ellipse import FitEllipse
@@ -159,7 +159,7 @@ def subplot_fit_ellipse(
     )
     _plot_ellipse_residuals(fit_list=fit_list, for_subplot=True, ax=axes[1])
 
-    plt.tight_layout()
+    tight_layout()
     _save_subplot(fig, output_path, "fit_ellipse", output_format)
 
 
@@ -242,5 +242,5 @@ def subplot_ellipse_errors(
             ax=axes_flat[i],
         )
 
-    plt.tight_layout()
+    tight_layout()
     _save_subplot(fig, output_path, "ellipse_errors", output_format)

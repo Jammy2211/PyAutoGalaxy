@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 import autoarray as aa
-from autoarray.plot.utils import conf_subplot_figsize
+from autoarray.plot.utils import conf_subplot_figsize, tight_layout
 
 from autogalaxy.quantity.fit_quantity import FitQuantity
 from autogalaxy.plot.plot_utils import plot_array, _save_subplot
@@ -56,7 +56,7 @@ def _subplot_fit_array(fit, output_path, output_format, colormap, use_log10, pos
             ax=axes_flat[i],
         )
 
-    plt.tight_layout()
+    tight_layout()
     _save_subplot(fig, output_path, filename, output_format)
 
 

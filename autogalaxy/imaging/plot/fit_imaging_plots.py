@@ -3,7 +3,7 @@ from pathlib import Path
 
 import autoarray as aa
 from autoconf.fitsable import hdu_list_for_output_from
-from autoarray.plot.utils import conf_subplot_figsize
+from autoarray.plot.utils import conf_subplot_figsize, tight_layout
 
 from autogalaxy.imaging.fit_imaging import FitImaging
 from autogalaxy.plot.plot_utils import plot_array, _save_subplot
@@ -64,7 +64,7 @@ def subplot_fit(
             ax=axes_flat[i],
         )
 
-    plt.tight_layout()
+    tight_layout()
     _save_subplot(fig, output_path, "fit", output_format)
 
 
@@ -128,7 +128,7 @@ def subplot_of_galaxy(
             ax=axes_flat[i],
         )
 
-    plt.tight_layout()
+    tight_layout()
     _save_subplot(fig, output_path, f"of_galaxy_{galaxy_index}", output_format)
 
 
@@ -165,7 +165,7 @@ def subplot_fit_imaging_list(
         plot_array(array=fit.model_data, title="Model Image", ax=axes[i][2])
         plot_array(array=fit.normalized_residual_map, title="Normalized Residual Map", cb_unit=r"$\sigma$", ax=axes[i][3])
         plot_array(array=fit.chi_squared_map, title="Chi-Squared Map", cb_unit=r"$\chi^2$", ax=axes[i][4])
-    plt.tight_layout()
+    tight_layout()
     _save_subplot(fig, output_path, output_filename, output_format)
 
 

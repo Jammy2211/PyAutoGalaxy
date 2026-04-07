@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import autoarray as aa
-from autoarray.plot.utils import conf_subplot_figsize
+from autoarray.plot.utils import conf_subplot_figsize, tight_layout
 
 from autogalaxy.profiles.basis import Basis
 from autogalaxy.plot.plot_utils import _to_positions, plot_array, _save_subplot
@@ -76,5 +76,5 @@ def subplot_image(
             ax=axes_flat[i],
         )
 
-    plt.tight_layout()
+    tight_layout()
     _save_subplot(fig, output_path, "basis_image", output_format)
