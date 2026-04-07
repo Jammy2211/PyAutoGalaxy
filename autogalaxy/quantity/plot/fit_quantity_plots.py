@@ -1,10 +1,9 @@
-import matplotlib.pyplot as plt
 
 import autoarray as aa
-from autoarray.plot.utils import conf_subplot_figsize, tight_layout
+from autoarray.plot.utils import subplots, conf_subplot_figsize, tight_layout
 
 from autogalaxy.quantity.fit_quantity import FitQuantity
-from autogalaxy.plot.plot_utils import plot_array, _save_subplot
+from autogalaxy.util.plot_utils import plot_array, _save_subplot
 
 
 def _subplot_fit_array(fit, output_path, output_format, colormap, use_log10, positions, filename="fit"):
@@ -43,7 +42,7 @@ def _subplot_fit_array(fit, output_path, output_format, colormap, use_log10, pos
         (fit.chi_squared_map, "Chi-Squared Map"),
     ]
     n = len(panels)
-    fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
+    fig, axes = subplots(1, n, figsize=conf_subplot_figsize(1, n))
     axes_flat = list(axes.flatten())
 
     for i, (array, title) in enumerate(panels):

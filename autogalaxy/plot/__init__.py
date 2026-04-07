@@ -6,7 +6,7 @@ from autofit.non_linear.plot import (
     output_figure,
 )
 
-from autogalaxy.plot.plot_utils import plot_array, plot_grid, fits_array
+from autogalaxy.util.plot_utils import plot_array, plot_grid, fits_array
 
 from autoarray.dataset.plot.imaging_plots import (
     subplot_imaging_dataset,

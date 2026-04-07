@@ -1,12 +1,11 @@
-import matplotlib.pyplot as plt
 from pathlib import Path
 
 import autoarray as aa
 from autoconf.fitsable import hdu_list_for_output_from
-from autoarray.plot.utils import conf_subplot_figsize, tight_layout
+from autoarray.plot.utils import subplots, conf_subplot_figsize, tight_layout
 
 from autogalaxy.imaging.fit_imaging import FitImaging
-from autogalaxy.plot.plot_utils import plot_array, _save_subplot
+from autogalaxy.util.plot_utils import plot_array, _save_subplot
 
 
 def subplot_fit(
@@ -50,7 +49,7 @@ def subplot_fit(
         (fit.chi_squared_map, "Chi-Squared Map", r"$\chi^2$"),
     ]
     n = len(panels)
-    fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
+    fig, axes = subplots(1, n, figsize=conf_subplot_figsize(1, n))
     axes_flat = list(axes.flatten())
 
     for i, (array, title, cb_unit) in enumerate(panels):
@@ -116,7 +115,7 @@ def subplot_of_galaxy(
         ),
     ]
     n = len(panels)
-    fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
+    fig, axes = subplots(1, n, figsize=conf_subplot_figsize(1, n))
     axes_flat = list(axes.flatten())
 
     for i, (array, title) in enumerate(panels):
@@ -156,7 +155,7 @@ def subplot_fit_imaging_list(
         File format string or list, e.g. ``"png"`` or ``["png"]``.
     """
     n = len(fit_list)
-    fig, axes = plt.subplots(n, 5, figsize=conf_subplot_figsize(n, 5))
+    fig, axes = subplots(n, 5, figsize=conf_subplot_figsize(n, 5))
     if n == 1:
         axes = [axes]
     for i, fit in enumerate(fit_list):

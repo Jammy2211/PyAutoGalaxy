@@ -4,11 +4,11 @@ from typing import List, Union, TYPE_CHECKING
 
 if TYPE_CHECKING:
     from pathlib import Path
+    from autoarray.plot.output import Output
 
 from autoconf import conf
 
 import autoarray as aa
-import autoarray.plot as aplt
 
 from autogalaxy.analysis.adapt_images.adapt_images import AdaptImages
 from autogalaxy.galaxy.galaxy import Galaxy
@@ -68,9 +68,11 @@ class Plotter:
         except KeyError:
             return conf.instance["visualize"]["plots"]["format"]
 
-    def output_from(self) -> aplt.Output:
+    def output_from(self) -> "Output":
         """Return an ``autoarray`` ``Output`` object pointed at ``image_path``."""
-        return aplt.Output(path=self.image_path, format=self.fmt)
+        from autoarray.plot.output import Output
+
+        return Output(path=self.image_path, format=self.fmt)
 
     def galaxies(
         self,
