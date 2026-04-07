@@ -3,7 +3,7 @@ import numpy as np
 from typing import Dict
 
 import autoarray as aa
-from autoarray.plot.utils import conf_subplot_figsize
+from autoarray.plot.utils import conf_subplot_figsize, tight_layout
 
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.plot.plot_utils import plot_array, _save_subplot
@@ -58,7 +58,7 @@ def subplot_adapt_images(
             ax=axes_list[i],
         )
 
-    plt.tight_layout()
+    tight_layout()
     _save_subplot(fig, output_path, "adapt_images", output_format)
 
 

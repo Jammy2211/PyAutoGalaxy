@@ -5,7 +5,7 @@ import autoarray as aa
 
 from autogalaxy.galaxy.galaxies import Galaxies
 from autogalaxy.plot.plot_utils import _to_lines, _to_positions, plot_array, plot_grid, _save_subplot, _critical_curves_from
-from autoarray.plot.utils import hide_unused_axes, conf_subplot_figsize
+from autoarray.plot.utils import hide_unused_axes, conf_subplot_figsize, tight_layout
 from autogalaxy import exc
 
 
@@ -156,7 +156,7 @@ def subplot_galaxies(
         )
 
     hide_unused_axes(axes_flat)
-    plt.tight_layout()
+    tight_layout()
     _save_subplot(fig, output_path, auto_filename, output_format)
 
 
@@ -213,7 +213,7 @@ def subplot_galaxy_images(
             ax=axes_flat[i],
         )
 
-    plt.tight_layout()
+    tight_layout()
     _save_subplot(fig, output_path, "galaxy_images", output_format)
 
 

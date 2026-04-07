@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from typing import TYPE_CHECKING
 
 import autoarray as aa
-from autoarray.plot.utils import conf_subplot_figsize
+from autoarray.plot.utils import conf_subplot_figsize, tight_layout
 
 from autogalaxy.galaxy.galaxy import Galaxy
 from autogalaxy.profiles.light.abstract import LightProfile
@@ -60,7 +60,7 @@ def subplot_of_light_profiles(
             ax=axes_flat[i],
         )
 
-    plt.tight_layout()
+    tight_layout()
     _save_subplot(fig, output_path, "image", output_format)
 
 
@@ -142,5 +142,5 @@ def subplot_of_mass_profiles(
                 ax=axes_flat[i],
             )
 
-        plt.tight_layout()
+        tight_layout()
         _save_subplot(fig, output_path, name, output_format)

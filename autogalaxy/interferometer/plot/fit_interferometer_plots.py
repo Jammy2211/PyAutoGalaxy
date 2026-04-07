@@ -5,7 +5,7 @@ from pathlib import Path
 import autoarray as aa
 from autoconf.fitsable import hdu_list_for_output_from
 from autoarray.plot import plot_visibilities_1d
-from autoarray.plot.utils import conf_subplot_figsize
+from autoarray.plot.utils import conf_subplot_figsize, tight_layout
 
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.galaxy.plot import galaxies_plots
@@ -54,7 +54,7 @@ def subplot_fit(
     for i, (vis, title) in enumerate(panels):
         plot_visibilities_1d(vis, axes_flat[i], title)
 
-    plt.tight_layout()
+    tight_layout()
     _save_subplot(fig, output_path, "fit", output_format)
 
 
@@ -110,7 +110,7 @@ def subplot_fit_dirty_images(
             ax=axes_flat[i],
         )
 
-    plt.tight_layout()
+    tight_layout()
     _save_subplot(fig, output_path, "fit_dirty_images", output_format)
 
 
@@ -175,7 +175,7 @@ def subplot_fit_real_space(
                 use_log10=use_log10,
                 ax=axes_flat[i],
             )
-        plt.tight_layout()
+        tight_layout()
         _save_subplot(fig, output_path, "fit_real_space", output_format)
 
 
