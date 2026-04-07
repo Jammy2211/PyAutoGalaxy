@@ -153,6 +153,7 @@ class Plotter:
                     output_path=output.path,
                     output_filename=f"inversion_{i}",
                     output_format=fmt,
+                    title_prefix=self.title_prefix,
                 )
 
         if should_plot("csv_reconstruction"):
