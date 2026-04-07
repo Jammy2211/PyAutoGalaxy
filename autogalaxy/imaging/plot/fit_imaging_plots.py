@@ -16,6 +16,7 @@ def subplot_fit(
     use_log10=False,
     positions=None,
     residuals_symmetric_cmap: bool = True,
+    title_prefix: str = None,
 ):
     """Create a six-panel subplot summarising a :class:`~autogalaxy.imaging.fit_imaging.FitImaging`.
 
@@ -40,13 +41,14 @@ def subplot_fit(
         Reserved for future symmetric-colormap support on residual panels
         (currently unused).
     """
+    _pf = (lambda t: f"{title_prefix.rstrip()} {t}") if title_prefix else (lambda t: t)
     panels = [
-        (fit.data, "Data", None),
-        (fit.signal_to_noise_map, "Signal-To-Noise Map", None),
-        (fit.model_data, "Model Image", None),
-        (fit.residual_map, "Residual Map", None),
-        (fit.normalized_residual_map, "Normalized Residual Map", None),
-        (fit.chi_squared_map, "Chi-Squared Map", r"$\chi^2$"),
+        (fit.data, _pf("Data"), None),
+        (fit.signal_to_noise_map, _pf("Signal-To-Noise Map"), None),
+        (fit.model_data, _pf("Model Image"), None),
+        (fit.residual_map, _pf("Residual Map"), None),
+        (fit.normalized_residual_map, _pf("Normalized Residual Map"), None),
+        (fit.chi_squared_map, _pf("Chi-Squared Map"), r"$\chi^2$"),
     ]
     n = len(panels)
     fig, axes = subplots(1, n, figsize=conf_subplot_figsize(1, n))
@@ -76,6 +78,7 @@ def subplot_of_galaxy(
     use_log10=False,
     positions=None,
     residuals_symmetric_cmap: bool = True,
+    title_prefix: str = None,
 ):
     """Create a three-panel subplot focused on a single galaxy contribution.
 
@@ -103,15 +106,16 @@ def subplot_of_galaxy(
     residuals_symmetric_cmap : bool
         Reserved for future symmetric-colormap support (currently unused).
     """
+    _pf = (lambda t: f"{title_prefix.rstrip()} {t}") if title_prefix else (lambda t: t)
     panels = [
-        (fit.data, "Data"),
+        (fit.data, _pf("Data")),
         (
             fit.subtracted_images_of_galaxies_list[galaxy_index],
-            f"Subtracted Image of Galaxy {galaxy_index}",
+            _pf(f"Subtracted Image of Galaxy {galaxy_index}"),
         ),
         (
             fit.model_images_of_galaxies_list[galaxy_index],
-            f"Model Image of Galaxy {galaxy_index}",
+            _pf(f"Model Image of Galaxy {galaxy_index}"),
         ),
     ]
     n = len(panels)
@@ -136,6 +140,7 @@ def subplot_fit_imaging_list(
     output_path=None,
     output_filename: str = "fit_combined",
     output_format=None,
+    title_prefix: str = None,
 ):
     """
     n×5 subplot summarising a list of ``FitImaging`` objects.
@@ -154,16 +159,17 @@ def subplot_fit_imaging_list(
     output_format
         File format string or list, e.g. ``"png"`` or ``["png"]``.
     """
+    _pf = (lambda t: f"{title_prefix.rstrip()} {t}") if title_prefix else (lambda t: t)
     n = len(fit_list)
     fig, axes = subplots(n, 5, figsize=conf_subplot_figsize(n, 5))
     if n == 1:
         axes = [axes]
     for i, fit in enumerate(fit_list):
-        plot_array(array=fit.data, title="Data", ax=axes[i][0])
-        plot_array(array=fit.signal_to_noise_map, title="Signal-To-Noise Map", ax=axes[i][1])
-        plot_array(array=fit.model_data, title="Model Image", ax=axes[i][2])
-        plot_array(array=fit.normalized_residual_map, title="Normalized Residual Map", cb_unit=r"$\sigma$", ax=axes[i][3])
-        plot_array(array=fit.chi_squared_map, title="Chi-Squared Map", cb_unit=r"$\chi^2$", ax=axes[i][4])
+        plot_array(array=fit.data, title=_pf("Data"), ax=axes[i][0])
+        plot_array(array=fit.signal_to_noise_map, title=_pf("Signal-To-Noise Map"), ax=axes[i][1])
+        plot_array(array=fit.model_data, title=_pf("Model Image"), ax=axes[i][2])
+        plot_array(array=fit.normalized_residual_map, title=_pf("Normalized Residual Map"), cb_unit=r"$\sigma$", ax=axes[i][3])
+        plot_array(array=fit.chi_squared_map, title=_pf("Chi-Squared Map"), cb_unit=r"$\chi^2$", ax=axes[i][4])
     tight_layout()
     _save_subplot(fig, output_path, output_filename, output_format)
 

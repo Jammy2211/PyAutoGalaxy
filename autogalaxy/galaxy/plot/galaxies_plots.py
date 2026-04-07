@@ -73,6 +73,7 @@ def subplot_galaxies(
     tangential_critical_curves=None,
     radial_critical_curves=None,
     auto_filename="galaxies",
+    title_prefix: str = None,
 ):
     """Create a standard five-panel summary subplot for a collection of galaxies.
 
@@ -129,12 +130,13 @@ def subplot_galaxies(
         d = gs.deflections_yx_2d_from(grid=grid)
         return aa.Array2D(values=d.slim[:, 1], mask=grid.mask)
 
+    _pf = (lambda t: f"{title_prefix.rstrip()} {t}") if title_prefix else (lambda t: t)
     panels = [
-        ("image", gs.image_2d_from(grid=grid), "Image", pos_no_cc, None),
-        ("convergence", gs.convergence_2d_from(grid=grid), "Convergence", pos, lines),
-        ("potential", gs.potential_2d_from(grid=grid), "Potential", pos, lines),
-        ("deflections_y", _defl_y(), "Deflections Y", pos, lines),
-        ("deflections_x", _defl_x(), "Deflections X", pos, lines),
+        ("image", gs.image_2d_from(grid=grid), _pf("Image"), pos_no_cc, None),
+        ("convergence", gs.convergence_2d_from(grid=grid), _pf("Convergence"), pos, lines),
+        ("potential", gs.potential_2d_from(grid=grid), _pf("Potential"), pos, lines),
+        ("deflections_y", _defl_y(), _pf("Deflections Y"), pos, lines),
+        ("deflections_x", _defl_x(), _pf("Deflections X"), pos, lines),
     ]
 
     n = len(panels)
@@ -168,6 +170,7 @@ def subplot_galaxy_images(
     use_log10=False,
     tangential_critical_curves=None,
     radial_critical_curves=None,
+    title_prefix: str = None,
 ):
     """Create a subplot showing the individual image of each galaxy.
 
@@ -198,6 +201,7 @@ def subplot_galaxy_images(
     """
     _check_no_linear(galaxies)
     gs = Galaxies(galaxies=galaxies)
+    _pf = (lambda t: f"{title_prefix.rstrip()} {t}") if title_prefix else (lambda t: t)
 
     n = len(gs)
     fig, axes = subplots(1, n, figsize=conf_subplot_figsize(1, n))
@@ -206,7 +210,7 @@ def subplot_galaxy_images(
     for i in range(n):
         plot_array(
             array=gs[i].image_2d_from(grid=grid),
-            title=f"Image Of Galaxies {i}",
+            title=_pf(f"Image Of Galaxies {i}"),
             colormap=colormap,
             use_log10=use_log10,
             ax=axes_flat[i],

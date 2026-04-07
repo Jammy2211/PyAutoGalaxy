@@ -40,6 +40,7 @@ class PlotterImaging(Plotter):
                 dataset,
                 output_path=self.image_path,
                 output_format=self.fmt,
+                title_prefix=self.title_prefix,
             )
 
         if should_plot("fits_dataset"):
@@ -83,6 +84,7 @@ class PlotterImaging(Plotter):
                 fit=fit,
                 output_path=self.image_path,
                 output_format=self.fmt,
+                title_prefix=self.title_prefix,
             )
 
         if quick_update:
@@ -96,6 +98,7 @@ class PlotterImaging(Plotter):
                     galaxy_index=galaxy_index,
                     output_path=self.image_path,
                     output_format=self.fmt,
+                    title_prefix=self.title_prefix,
                 )
 
         if should_plot("fits_fit"):
@@ -128,6 +131,7 @@ class PlotterImaging(Plotter):
                 dataset_list,
                 output_path=self.image_path,
                 output_format=self.fmt,
+                title_prefix=self.title_prefix,
             )
 
     def fit_imaging_combined(self, fit_list: List[FitImaging]):
@@ -151,4 +155,5 @@ class PlotterImaging(Plotter):
                 fit_list,
                 output_path=self.image_path,
                 output_format=self.fmt,
+                title_prefix=self.title_prefix,
             )

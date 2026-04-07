@@ -33,6 +33,7 @@ class PlotterEllipse(Plotter):
                 dataset,
                 output_path=self.image_path,
                 output_format=self.fmt,
+                title_prefix=self.title_prefix,
             )
 
         image_list = [
@@ -76,6 +77,7 @@ class PlotterEllipse(Plotter):
                 fit_list=fit_list,
                 output_path=self.image_path,
                 output_format=self.fmt,
+                title_prefix=self.title_prefix,
             )
 
         if should_plot("ellipse_residuals"):
@@ -91,6 +93,7 @@ class PlotterEllipse(Plotter):
                 output_path=self.image_path,
                 output_format=self.fmt,
                 disable_data_contours=True,
+                title_prefix=self.title_prefix,
             )
 
         if should_plot("subplot_fit_ellipse"):
@@ -98,6 +101,7 @@ class PlotterEllipse(Plotter):
                 fit_list=fit_list,
                 output_path=self.image_path,
                 output_format=self.fmt,
+                title_prefix=self.title_prefix,
             )
 
         fit_ellipse_plots._plot_data(
@@ -105,6 +109,7 @@ class PlotterEllipse(Plotter):
             output_path=self.image_path,
             output_format=self.fmt,
             use_log10=True,
+            title_prefix=self.title_prefix,
         )
 
         if should_plot("data_no_ellipse"):
@@ -114,4 +119,5 @@ class PlotterEllipse(Plotter):
                 output_format=self.fmt,
                 use_log10=True,
                 disable_data_contours=True,
+                title_prefix=self.title_prefix,
             )

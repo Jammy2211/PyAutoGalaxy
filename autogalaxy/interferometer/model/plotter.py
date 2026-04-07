@@ -37,6 +37,7 @@ class PlotterInterferometer(Plotter):
                 output_path=self.image_path,
                 output_filename="dataset",
                 output_format=self.fmt[0] if isinstance(self.fmt, (list, tuple)) else self.fmt,
+                title_prefix=self.title_prefix,
             )
 
         if should_plot("fits_dataset"):
@@ -83,6 +84,7 @@ class PlotterInterferometer(Plotter):
                 fit=fit,
                 output_path=self.image_path,
                 output_format=self.fmt,
+                title_prefix=self.title_prefix,
             )
 
         if should_plot("subplot_fit_dirty_images") or quick_update:
@@ -90,6 +92,7 @@ class PlotterInterferometer(Plotter):
                 fit=fit,
                 output_path=self.image_path,
                 output_format=self.fmt,
+                title_prefix=self.title_prefix,
             )
 
         if quick_update:
@@ -100,6 +103,7 @@ class PlotterInterferometer(Plotter):
                 fit=fit,
                 output_path=self.image_path,
                 output_format=self.fmt,
+                title_prefix=self.title_prefix,
             )
 
         if should_plot("fits_galaxy_images"):
