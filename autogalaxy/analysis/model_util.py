@@ -74,6 +74,12 @@ def mge_model_from(
       composition and provides a ready-to-use lens model for quick experimentation.
     """
 
+    import os
+
+    if os.environ.get("PYAUTO_WORKSPACE_SMALL_DATASETS") == "1":
+        total_gaussians = 2
+        gaussian_per_basis = 1
+
     from autogalaxy.profiles.light.linear import Gaussian, GaussianSph
     from autogalaxy.profiles.basis import Basis
 
