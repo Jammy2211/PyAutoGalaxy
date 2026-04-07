@@ -1,15 +1,14 @@
-import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
 
 import autoarray as aa
 from autoconf.fitsable import hdu_list_for_output_from
 from autoarray.plot import plot_visibilities_1d
-from autoarray.plot.utils import conf_subplot_figsize, tight_layout
+from autoarray.plot.utils import subplots, conf_subplot_figsize, tight_layout
 
 from autogalaxy.interferometer.fit_interferometer import FitInterferometer
 from autogalaxy.galaxy.plot import galaxies_plots
-from autogalaxy.plot.plot_utils import plot_array, _save_subplot
+from autogalaxy.util.plot_utils import plot_array, _save_subplot
 
 
 def subplot_fit(
@@ -48,7 +47,7 @@ def subplot_fit(
         (fit.chi_squared_map, "Chi-Squared Map"),
     ]
     n = len(panels)
-    fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
+    fig, axes = subplots(1, n, figsize=conf_subplot_figsize(1, n))
     axes_flat = list(axes.flatten())
 
     for i, (vis, title) in enumerate(panels):
@@ -97,7 +96,7 @@ def subplot_fit_dirty_images(
         (fit.dirty_chi_squared_map, "Dirty Chi-Squared Map", r"$\chi^2$"),
     ]
     n = len(panels)
-    fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
+    fig, axes = subplots(1, n, figsize=conf_subplot_figsize(1, n))
     axes_flat = list(axes.flatten())
 
     for i, (array, title, cb_unit) in enumerate(panels):
@@ -165,7 +164,7 @@ def subplot_fit_real_space(
             (fit.dirty_residual_map, "Dirty Residual Map"),
         ]
         n = len(panels)
-        fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
+        fig, axes = subplots(1, n, figsize=conf_subplot_figsize(1, n))
         axes_flat = list(axes.flatten())
         for i, (array, title) in enumerate(panels):
             plot_array(

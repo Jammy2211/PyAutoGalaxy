@@ -1,9 +1,10 @@
 import itertools
-import matplotlib.pyplot as plt
 import numpy as np
 
 
 def plot_ellipse_residuals(array, fit_list, colors, output, for_subplot: bool = False):
+    import matplotlib.pyplot as plt
+
     """Plot the 1-D ellipse residuals as a function of position angle.
 
     For each :class:`~autogalaxy.ellipse.fit_ellipse.FitEllipse` in

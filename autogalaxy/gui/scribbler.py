@@ -1,10 +1,6 @@
 from collections import OrderedDict
 import numpy as np
-import matplotlib
-import matplotlib.pyplot as plt
 from typing import Tuple
-
-from autoarray.plot.utils import _conf_imshow_origin
 
 
 class Scribbler:
@@ -59,6 +55,10 @@ class Scribbler:
             )
 
             extent = (x0_pix, x1_pix, y0_pix, y1_pix)
+
+        import matplotlib
+        import matplotlib.pyplot as plt
+        from autoarray.plot.utils import _conf_imshow_origin
 
         matplotlib.use(backend)
         self.im = image

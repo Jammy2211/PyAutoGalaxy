@@ -1,15 +1,13 @@
 import numpy as np
 import math
-import matplotlib.pyplot as plt
 from typing import List, Optional
 
 import autoarray as aa
-from autoarray import plot as aplt
-from autoarray.plot.utils import conf_subplot_figsize, tight_layout
+from autoarray.plot.utils import subplots, conf_subplot_figsize, tight_layout
 
 from autogalaxy.ellipse.plot import fit_ellipse_plot_util
 from autogalaxy.ellipse.fit_ellipse import FitEllipse
-from autogalaxy.plot.plot_utils import plot_array, _save_subplot
+from autogalaxy.util.plot_utils import plot_array, _save_subplot
 from autogalaxy.util import error_util
 
 
@@ -108,7 +106,9 @@ def _plot_ellipse_residuals(
     ax : matplotlib.axes.Axes or None
         Reserved for future direct-axes support (currently unused).
     """
-    output = aplt.Output(path=output_path, format=output_format) if output_path else aplt.Output()
+    from autoarray.plot.output import Output
+
+    output = Output(path=output_path, format=output_format) if output_path else Output()
 
     fit_ellipse_plot_util.plot_ellipse_residuals(
         array=fit_list[0].dataset.data.native,
@@ -148,7 +148,7 @@ def subplot_fit_ellipse(
     disable_data_contours : bool
         If ``True``, suppress ellipse contour overlays on the image panel.
     """
-    fig, axes = plt.subplots(1, 2, figsize=conf_subplot_figsize(1, 2))
+    fig, axes = subplots(1, 2, figsize=conf_subplot_figsize(1, 2))
 
     _plot_data(
         fit_list=fit_list,
@@ -213,7 +213,7 @@ def subplot_ellipse_errors(
             fit_ellipse_list[i].append(aa.Grid2DIrregular.from_yx_1d(y=y, x=x))
 
     n = len(fit_ellipse_list)
-    fig, axes = plt.subplots(1, n, figsize=conf_subplot_figsize(1, n))
+    fig, axes = subplots(1, n, figsize=conf_subplot_figsize(1, n))
     axes_flat = [axes] if n == 1 else list(axes.flatten())
 
     for i in range(n):

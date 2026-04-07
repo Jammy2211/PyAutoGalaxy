@@ -58,7 +58,6 @@ from .analysis.adapt_images.adapt_images import AdaptImages
 from .analysis.adapt_images.adapt_images import galaxy_name_image_dict_via_result_from
 from . import aggregator as agg
 from . import exc
-from . import plot
 from . import util
 from .ellipse.dataset_interp import DatasetInterp
 from .ellipse.ellipse.ellipse import Ellipse
@@ -120,3 +119,12 @@ from autoconf.fitsable import output_to_fits
 from autoconf.fitsable import hdu_list_for_output_from
 
 __version__ = "2026.4.5.3"
+
+
+def __getattr__(name):
+    if name == "plot":
+        from . import plot
+
+        globals()["plot"] = plot
+        return plot
+    raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

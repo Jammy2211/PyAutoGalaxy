@@ -1,9 +1,6 @@
 import numpy as np
-from matplotlib import pyplot as plt
 
 import autoarray as aa
-import autoarray.plot as aplt
-from autoarray.plot.utils import _conf_imshow_origin
 
 from autogalaxy import exc
 
@@ -23,6 +20,9 @@ class Clicker:
         self.in_pixels = in_pixels
 
     def start(self, data, pixel_scales):
+        from matplotlib import pyplot as plt
+        import autoarray.plot as aplt
+        from autoarray.plot.utils import _conf_imshow_origin
 
         n_y, n_x = data.shape_native
         hw = int(n_x / 2) * pixel_scales
