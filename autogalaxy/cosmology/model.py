@@ -572,7 +572,18 @@ class FlatLambdaCDM(LensingCosmology):
         Notes:
         - Flat universe: Omega_k = 0
         - Dark energy equation of state constant w0
+
+        Results are cached keyed on (z1, z2, n_steps) to avoid redundant
+        Simpson integrations for repeated redshift pairs.
         """
+        cache = getattr(self, "_dist_cache", None)
+        if cache is None:
+            cache = {}
+            self._dist_cache = cache
+        key = (float(z1), float(z2), n_steps)
+        if key in cache:
+            return xp.asarray(cache[key])
+
         # Ensure odd number of samples for Simpson (safe: n_steps is a Python int)
         if (n_steps % 2) == 0:
             n_steps += 1
@@ -637,7 +648,11 @@ class FlatLambdaCDM(LensingCosmology):
         Da_Mpc = Dc_Mpc / (xp.asarray(1.0) + z2a)
         Da_kpc = Da_Mpc * xp.asarray(1.0e3)
 
-        return xp.where(same, xp.asarray(0.0), Da_kpc)
+        result = xp.where(same, xp.asarray(0.0), Da_kpc)
+
+        self._dist_cache[key] = float(result)
+
+        return result
 
     def E(self, z: float, xp=np):
         """
