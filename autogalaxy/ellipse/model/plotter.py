@@ -33,6 +33,7 @@ class PlotterEllipse(Plotter):
                 dataset,
                 output_path=self.image_path,
                 output_format=self.fmt,
+                title_prefix=self.title_prefix,
             )
 
         image_list = [

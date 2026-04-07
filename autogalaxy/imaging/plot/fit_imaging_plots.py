@@ -41,7 +41,7 @@ def subplot_fit(
         Reserved for future symmetric-colormap support on residual panels
         (currently unused).
     """
-    _pf = (lambda t: f"{title_prefix}{t}") if title_prefix else (lambda t: t)
+    _pf = (lambda t: f"{title_prefix.rstrip()} {t}") if title_prefix else (lambda t: t)
     panels = [
         (fit.data, _pf("Data"), None),
         (fit.signal_to_noise_map, _pf("Signal-To-Noise Map"), None),
@@ -106,7 +106,7 @@ def subplot_of_galaxy(
     residuals_symmetric_cmap : bool
         Reserved for future symmetric-colormap support (currently unused).
     """
-    _pf = (lambda t: f"{title_prefix}{t}") if title_prefix else (lambda t: t)
+    _pf = (lambda t: f"{title_prefix.rstrip()} {t}") if title_prefix else (lambda t: t)
     panels = [
         (fit.data, _pf("Data")),
         (
@@ -159,7 +159,7 @@ def subplot_fit_imaging_list(
     output_format
         File format string or list, e.g. ``"png"`` or ``["png"]``.
     """
-    _pf = (lambda t: f"{title_prefix}{t}") if title_prefix else (lambda t: t)
+    _pf = (lambda t: f"{title_prefix.rstrip()} {t}") if title_prefix else (lambda t: t)
     n = len(fit_list)
     fig, axes = subplots(n, 5, figsize=conf_subplot_figsize(n, 5))
     if n == 1:

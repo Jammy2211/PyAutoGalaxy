@@ -62,7 +62,7 @@ def _plot_data(
     lines = [np.array(e.array) for e in ellipse_list if e is not None]
     positions = lines
 
-    _title = f"{title_prefix}Ellipse Fit" if title_prefix else "Ellipse Fit"
+    _title = f"{title_prefix.rstrip()} Ellipse Fit" if title_prefix else "Ellipse Fit"
     plot_array(
         array=fit_list[0].data,
         title=_title,

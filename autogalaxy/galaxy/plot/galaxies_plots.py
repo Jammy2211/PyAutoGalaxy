@@ -130,7 +130,7 @@ def subplot_galaxies(
         d = gs.deflections_yx_2d_from(grid=grid)
         return aa.Array2D(values=d.slim[:, 1], mask=grid.mask)
 
-    _pf = (lambda t: f"{title_prefix}{t}") if title_prefix else (lambda t: t)
+    _pf = (lambda t: f"{title_prefix.rstrip()} {t}") if title_prefix else (lambda t: t)
     panels = [
         ("image", gs.image_2d_from(grid=grid), _pf("Image"), pos_no_cc, None),
         ("convergence", gs.convergence_2d_from(grid=grid), _pf("Convergence"), pos, lines),
@@ -201,7 +201,7 @@ def subplot_galaxy_images(
     """
     _check_no_linear(galaxies)
     gs = Galaxies(galaxies=galaxies)
-    _pf = (lambda t: f"{title_prefix}{t}") if title_prefix else (lambda t: t)
+    _pf = (lambda t: f"{title_prefix.rstrip()} {t}") if title_prefix else (lambda t: t)
 
     n = len(gs)
     fig, axes = subplots(1, n, figsize=conf_subplot_figsize(1, n))

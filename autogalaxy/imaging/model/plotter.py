@@ -40,6 +40,7 @@ class PlotterImaging(Plotter):
                 dataset,
                 output_path=self.image_path,
                 output_format=self.fmt,
+                title_prefix=self.title_prefix,
             )
 
         if should_plot("fits_dataset"):
@@ -130,6 +131,7 @@ class PlotterImaging(Plotter):
                 dataset_list,
                 output_path=self.image_path,
                 output_format=self.fmt,
+                title_prefix=self.title_prefix,
             )
 
     def fit_imaging_combined(self, fit_list: List[FitImaging]):

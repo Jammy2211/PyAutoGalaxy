@@ -42,7 +42,7 @@ def subplot_fit(
     residuals_symmetric_cmap : bool
         Reserved for future symmetric-colormap support (currently unused).
     """
-    _pf = (lambda t: f"{title_prefix}{t}") if title_prefix else (lambda t: t)
+    _pf = (lambda t: f"{title_prefix.rstrip()} {t}") if title_prefix else (lambda t: t)
     panels = [
         (fit.residual_map, _pf("Residual Map")),
         (fit.normalized_residual_map, _pf("Normalized Residual Map")),
@@ -90,7 +90,7 @@ def subplot_fit_dirty_images(
     residuals_symmetric_cmap : bool
         Reserved for future symmetric-colormap support (currently unused).
     """
-    _pf = (lambda t: f"{title_prefix}{t}") if title_prefix else (lambda t: t)
+    _pf = (lambda t: f"{title_prefix.rstrip()} {t}") if title_prefix else (lambda t: t)
     panels = [
         (fit.dirty_image, _pf("Dirty Image"), None),
         (fit.dirty_signal_to_noise_map, _pf("Dirty Signal-To-Noise Map"), None),
@@ -164,7 +164,7 @@ def subplot_fit_real_space(
             title_prefix=title_prefix,
         )
     else:
-        _pf = (lambda t: f"{title_prefix}{t}") if title_prefix else (lambda t: t)
+        _pf = (lambda t: f"{title_prefix.rstrip()} {t}") if title_prefix else (lambda t: t)
         panels = [
             (fit.dirty_image, _pf("Dirty Image")),
             (fit.dirty_model_image, _pf("Dirty Model Image")),

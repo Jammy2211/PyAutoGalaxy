@@ -49,7 +49,7 @@ def subplot_adapt_images(
     fig, axes = subplots(rows, cols, figsize=conf_subplot_figsize(rows, cols))
     axes_list = [axes] if n == 1 else list(np.array(axes).flatten())
 
-    _pf = (lambda t: f"{title_prefix}{t}") if title_prefix else (lambda t: t)
+    _pf = (lambda t: f"{title_prefix.rstrip()} {t}") if title_prefix else (lambda t: t)
     for i, (_, galaxy_image) in enumerate(adapt_galaxy_name_image_dict.items()):
         plot_array(
             array=galaxy_image,

@@ -33,7 +33,7 @@ def _subplot_fit_array(fit, output_path, output_format, colormap, use_log10, pos
     filename : str
         Output filename stem (default ``"subplot_fit"``).
     """
-    _pf = (lambda t: f"{title_prefix}{t}") if title_prefix else (lambda t: t)
+    _pf = (lambda t: f"{title_prefix.rstrip()} {t}") if title_prefix else (lambda t: t)
     panels = [
         (fit.data, _pf("Data")),
         (fit.signal_to_noise_map, _pf("Signal-To-Noise Map")),
