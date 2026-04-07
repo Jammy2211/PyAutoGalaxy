@@ -1,9 +1,6 @@
 import numpy as np
 from typing import Tuple, Optional
 
-from astropy.modeling import InputParameterError
-from docutils.io import InputError
-
 
 def ell_comps_from(axis_ratio: float, angle: float, xp=np) -> Tuple[float, float]:
     """
