@@ -74,9 +74,13 @@ def _save_subplot(fig, output_path, output_filename, output_format=None,
 
     For FITS output use the dedicated ``fits_*`` functions instead.
     """
-    from autoarray.plot.utils import _output_mode_save, _conf_output_format
+    from autoarray.plot.utils import _output_mode_save, _conf_output_format, _FAST_PLOTS
 
     if _output_mode_save(fig, output_filename):
+        return
+
+    if _FAST_PLOTS:
+        plt.close(fig)
         return
 
     fmt = output_format[0] if isinstance(output_format, (list, tuple)) else (output_format or _conf_output_format())
