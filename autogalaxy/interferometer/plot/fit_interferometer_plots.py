@@ -18,6 +18,7 @@ def subplot_fit(
     colormap="default",
     use_log10=False,
     residuals_symmetric_cmap: bool = True,
+    title_prefix: str = None,
 ):
     """Create a three-panel subplot summarising a :class:`~autogalaxy.interferometer.fit_interferometer.FitInterferometer`.
 
@@ -41,10 +42,11 @@ def subplot_fit(
     residuals_symmetric_cmap : bool
         Reserved for future symmetric-colormap support (currently unused).
     """
+    _pf = (lambda t: f"{title_prefix}{t}") if title_prefix else (lambda t: t)
     panels = [
-        (fit.residual_map, "Residual Map"),
-        (fit.normalized_residual_map, "Normalized Residual Map"),
-        (fit.chi_squared_map, "Chi-Squared Map"),
+        (fit.residual_map, _pf("Residual Map")),
+        (fit.normalized_residual_map, _pf("Normalized Residual Map")),
+        (fit.chi_squared_map, _pf("Chi-Squared Map")),
     ]
     n = len(panels)
     fig, axes = subplots(1, n, figsize=conf_subplot_figsize(1, n))
@@ -64,6 +66,7 @@ def subplot_fit_dirty_images(
     colormap="default",
     use_log10=False,
     residuals_symmetric_cmap: bool = True,
+    title_prefix: str = None,
 ):
     """Create a six-panel subplot of dirty-image diagnostics for an interferometer fit.
 
@@ -87,13 +90,14 @@ def subplot_fit_dirty_images(
     residuals_symmetric_cmap : bool
         Reserved for future symmetric-colormap support (currently unused).
     """
+    _pf = (lambda t: f"{title_prefix}{t}") if title_prefix else (lambda t: t)
     panels = [
-        (fit.dirty_image, "Dirty Image", None),
-        (fit.dirty_signal_to_noise_map, "Dirty Signal-To-Noise Map", None),
-        (fit.dirty_model_image, "Dirty Model Image", None),
-        (fit.dirty_residual_map, "Dirty Residual Map", None),
-        (fit.dirty_normalized_residual_map, "Dirty Normalized Residual Map", r"$\sigma$"),
-        (fit.dirty_chi_squared_map, "Dirty Chi-Squared Map", r"$\chi^2$"),
+        (fit.dirty_image, _pf("Dirty Image"), None),
+        (fit.dirty_signal_to_noise_map, _pf("Dirty Signal-To-Noise Map"), None),
+        (fit.dirty_model_image, _pf("Dirty Model Image"), None),
+        (fit.dirty_residual_map, _pf("Dirty Residual Map"), None),
+        (fit.dirty_normalized_residual_map, _pf("Dirty Normalized Residual Map"), r"$\sigma$"),
+        (fit.dirty_chi_squared_map, _pf("Dirty Chi-Squared Map"), r"$\chi^2$"),
     ]
     n = len(panels)
     fig, axes = subplots(1, n, figsize=conf_subplot_figsize(1, n))
@@ -119,6 +123,7 @@ def subplot_fit_real_space(
     output_format=None,
     colormap="default",
     use_log10=False,
+    title_prefix: str = None,
 ):
     """Create a real-space summary subplot for an interferometer fit.
 
@@ -156,12 +161,14 @@ def subplot_fit_real_space(
             colormap=colormap,
             use_log10=use_log10,
             auto_filename="fit_real_space",
+            title_prefix=title_prefix,
         )
     else:
+        _pf = (lambda t: f"{title_prefix}{t}") if title_prefix else (lambda t: t)
         panels = [
-            (fit.dirty_image, "Dirty Image"),
-            (fit.dirty_model_image, "Dirty Model Image"),
-            (fit.dirty_residual_map, "Dirty Residual Map"),
+            (fit.dirty_image, _pf("Dirty Image")),
+            (fit.dirty_model_image, _pf("Dirty Model Image")),
+            (fit.dirty_residual_map, _pf("Dirty Residual Map")),
         ]
         n = len(panels)
         fig, axes = subplots(1, n, figsize=conf_subplot_figsize(1, n))

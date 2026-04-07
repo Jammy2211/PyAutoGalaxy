@@ -105,6 +105,7 @@ class Plotter:
                 grid=grid,
                 output_path=self.image_path,
                 output_format=self.fmt,
+                title_prefix=self.title_prefix,
             )
 
         if should_plot("subplot_galaxies"):
@@ -113,6 +114,7 @@ class Plotter:
                 grid=grid,
                 output_path=self.image_path,
                 output_format=self.fmt,
+                title_prefix=self.title_prefix,
             )
 
         if should_plot("fits_galaxy_images"):
@@ -180,6 +182,7 @@ class Plotter:
                     adapt_galaxy_name_image_dict=adapt_images.galaxy_name_image_dict,
                     output_path=self.image_path,
                     output_format=self.fmt,
+                    title_prefix=self.title_prefix,
                 )
 
         if should_plot("fits_adapt_images"):

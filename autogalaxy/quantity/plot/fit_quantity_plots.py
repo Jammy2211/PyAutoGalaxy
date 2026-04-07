@@ -6,7 +6,7 @@ from autogalaxy.quantity.fit_quantity import FitQuantity
 from autogalaxy.util.plot_utils import plot_array, _save_subplot
 
 
-def _subplot_fit_array(fit, output_path, output_format, colormap, use_log10, positions, filename="fit"):
+def _subplot_fit_array(fit, output_path, output_format, colormap, use_log10, positions, filename="fit", title_prefix=None):
     """Render a six-panel fit summary subplot for a single array-valued quantity fit.
 
     The panels show: data, signal-to-noise map, model image, residual map,
@@ -33,13 +33,14 @@ def _subplot_fit_array(fit, output_path, output_format, colormap, use_log10, pos
     filename : str
         Output filename stem (default ``"subplot_fit"``).
     """
+    _pf = (lambda t: f"{title_prefix}{t}") if title_prefix else (lambda t: t)
     panels = [
-        (fit.data, "Data"),
-        (fit.signal_to_noise_map, "Signal-To-Noise Map"),
-        (fit.model_data, "Model Image"),
-        (fit.residual_map, "Residual Map"),
-        (fit.normalized_residual_map, "Normalized Residual Map"),
-        (fit.chi_squared_map, "Chi-Squared Map"),
+        (fit.data, _pf("Data")),
+        (fit.signal_to_noise_map, _pf("Signal-To-Noise Map")),
+        (fit.model_data, _pf("Model Image")),
+        (fit.residual_map, _pf("Residual Map")),
+        (fit.normalized_residual_map, _pf("Normalized Residual Map")),
+        (fit.chi_squared_map, _pf("Chi-Squared Map")),
     ]
     n = len(panels)
     fig, axes = subplots(1, n, figsize=conf_subplot_figsize(1, n))
@@ -66,6 +67,7 @@ def subplot_fit(
     colormap="default",
     use_log10=False,
     positions=None,
+    title_prefix: str = None,
 ):
     """Create a summary subplot for a :class:`~autogalaxy.quantity.fit_quantity.FitQuantity`.
 
@@ -93,11 +95,11 @@ def subplot_fit(
         Point positions to scatter-plot over each panel.
     """
     if isinstance(fit.dataset.data, aa.Array2D):
-        _subplot_fit_array(fit, output_path, output_format, colormap, use_log10, positions)
+        _subplot_fit_array(fit, output_path, output_format, colormap, use_log10, positions, title_prefix=title_prefix)
     else:
         _subplot_fit_array(
-            fit.y, output_path, output_format, colormap, use_log10, positions, filename="fit_y"
+            fit.y, output_path, output_format, colormap, use_log10, positions, filename="fit_y", title_prefix=title_prefix
         )
         _subplot_fit_array(
-            fit.x, output_path, output_format, colormap, use_log10, positions, filename="fit_x"
+            fit.x, output_path, output_format, colormap, use_log10, positions, filename="fit_x", title_prefix=title_prefix
         )

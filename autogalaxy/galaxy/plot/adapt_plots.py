@@ -14,6 +14,7 @@ def subplot_adapt_images(
     output_format=None,
     colormap="default",
     use_log10=False,
+    title_prefix: str = None,
 ):
     """Create a subplot showing the adapt (model) image for each galaxy.
 
@@ -48,10 +49,11 @@ def subplot_adapt_images(
     fig, axes = subplots(rows, cols, figsize=conf_subplot_figsize(rows, cols))
     axes_list = [axes] if n == 1 else list(np.array(axes).flatten())
 
+    _pf = (lambda t: f"{title_prefix}{t}") if title_prefix else (lambda t: t)
     for i, (_, galaxy_image) in enumerate(adapt_galaxy_name_image_dict.items()):
         plot_array(
             array=galaxy_image,
-            title="Galaxy Image",
+            title=_pf("Galaxy Image"),
             colormap=colormap,
             use_log10=use_log10,
             ax=axes_list[i],

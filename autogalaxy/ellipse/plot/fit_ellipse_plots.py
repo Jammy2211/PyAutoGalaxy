@@ -21,6 +21,7 @@ def _plot_data(
     disable_data_contours: bool = False,
     suffix: str = "",
     ax=None,
+    title_prefix: str = None,
 ):
     """Plot the 2-D image data with fitted ellipse contours overlaid.
 
@@ -61,9 +62,10 @@ def _plot_data(
     lines = [np.array(e.array) for e in ellipse_list if e is not None]
     positions = lines
 
+    _title = f"{title_prefix}Ellipse Fit" if title_prefix else "Ellipse Fit"
     plot_array(
         array=fit_list[0].data,
-        title="Ellipse Fit",
+        title=_title,
         output_path=output_path,
         output_filename=f"{output_filename}{suffix}",
         output_format=output_format,
@@ -126,6 +128,7 @@ def subplot_fit_ellipse(
     colormap="default",
     use_log10=False,
     disable_data_contours: bool = False,
+    title_prefix: str = None,
 ):
     """Create a two-panel subplot summarising a list of ellipse fits.
 
@@ -156,6 +159,7 @@ def subplot_fit_ellipse(
         use_log10=use_log10,
         disable_data_contours=disable_data_contours,
         ax=axes[0],
+        title_prefix=title_prefix,
     )
     _plot_ellipse_residuals(fit_list=fit_list, for_subplot=True, ax=axes[1])
 
