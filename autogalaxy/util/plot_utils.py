@@ -376,7 +376,7 @@ def _caustics_from(mass_obj, grid):
     tuple[list, list]
         ``(tangential_caustics, radial_caustics)``.
     """
-    if os.environ.get("PYAUTO_DISABLE_CRITICAL_CAUSTICS") == "1":
+    if os.environ.get("PYAUTO_FAST_PLOTS") == "1":
         return [], []
 
     from autogalaxy.operate.lens_calc import LensCalc
@@ -428,7 +428,7 @@ def _critical_curves_from(mass_obj, grid, tc=None, rc=None):
     """
     from autogalaxy.operate.lens_calc import LensCalc
 
-    if os.environ.get("PYAUTO_DISABLE_CRITICAL_CAUSTICS") == "1":
+    if os.environ.get("PYAUTO_FAST_PLOTS") == "1":
         return [], []
 
     if tc is None:
