@@ -11,6 +11,7 @@ def mge_model_from(
     centre_prior_is_uniform: bool = True,
     centre: Tuple[float, float] = (0.0, 0.0),
     centre_fixed: Optional[Tuple[float, float]] = None,
+    centre_per_basis: bool = False,
     centre_sigma: float = 0.3,
     ell_comps_prior_is_uniform: bool = False,
     ell_comps_uniform_width: float = 0.2,
@@ -18,7 +19,7 @@ def mge_model_from(
     use_spherical: bool = False,
 ) -> af.Collection:
     """
-    Construct a Multi-Gaussian Expansion (MGE) for the lens or source galaxy light
+    Construct a Multi-Gaussian Expansion (MGE) for the lens or source galaxy light.
 
     This model is designed as a "start here" configuration for lens modeling:
 
@@ -26,52 +27,65 @@ def mge_model_from(
       Gaussian light profiles with fixed logarithmically spaced widths (`sigma`).
     - All Gaussians within each basis share common centres and ellipticity
       components, reducing degeneracy while retaining flexibility.
+    - Users can combine with a lens mass model of their choice.
 
-    - Users can combine with a lens mass model of their choiuce.
+    When ``gaussian_per_basis > 1``, each basis receives **independent** ellipticity
+    components (``ell_comps``), allowing the model to represent twisting or varying
+    isophotes across different radial scales. Centres are **shared** across bases by
+    default (the common case: one luminosity centre, complex isophotal shape). Set
+    ``centre_per_basis=True`` to give each basis its own centre priors.
 
-    The resulting model provides a good balance of speed, flexibility, and accuracy
-    for fitting most galaxy-scale strong lenses.
+    Expected free-parameter counts (elliptical, ``use_spherical=False``):
 
-    This code is mostly to make the API simple for new users, hiding the technical
-    details of setting up an MGE. More advanced users may wish to customize the
-    model further.
+    - ``gaussian_per_basis=1`` : 2 centre + 2 ell_comps = 4
+    - ``gaussian_per_basis=K`` (shared centre) : 2 + 2K
+    - ``gaussian_per_basis=K, centre_per_basis=True`` : 2K + 2K = 4K
+
+    Spherical (``use_spherical=True``): no ell_comps, only centres.
+
+    - Shared centre: 2.  Per-basis centre: 2K.
 
     Parameters
     ----------
     mask_radius
         The outer radius (in arcseconds) of the circular mask applied to the data.
-        This determines the maximum Gaussian width (`sigma`) used in the lens MGE.
-    lens_total_gaussians
-        Total number of Gaussian light profiles used in the lens MGE basis.
-    source_total_gaussians
-        Total number of Gaussian light profiles used in the source MGE basis.
-    lens_gaussian_per_basis
-        Number of separate Gaussian bases to include for the lens light profile.
-        Each basis has `lens_total_gaussians` components.
-    source_gaussian_per_basis
-        Number of separate Gaussian bases to include for the source light profile.
-        Each basis has `source_total_gaussians` components.
+        This determines the maximum Gaussian width (`sigma`) used in the MGE.
+    total_gaussians
+        Total number of Gaussian light profiles used in each basis.
+    gaussian_per_basis
+        Number of separate Gaussian bases. Each basis has ``total_gaussians``
+        components sharing the same centre and ellipticity. Multiple bases allow
+        independent ellipticity (and optionally centre) per radial scale group.
+    centre_prior_is_uniform
+        If True (default), centre priors are ``UniformPrior(±0.1)`` around
+        ``centre``. If False, ``GaussianPrior`` with ``centre_sigma``.
+    centre
+        (y, x) centre in arcseconds used as the mean/midpoint for centre priors.
+    centre_fixed
+        If not None, fix all Gaussian centres to this (y, x) value instead of
+        making them free parameters. Overrides ``centre_per_basis``.
+    centre_per_basis
+        If True, each basis gets independently drawn centre priors. If False
+        (default), all bases share the same centre. Ignored when ``centre_fixed``
+        is set.
+    centre_sigma
+        Sigma for ``GaussianPrior`` centre priors (used when
+        ``centre_prior_is_uniform=False``).
+    ell_comps_prior_is_uniform
+        If True, ell_comps priors are ``UniformPrior``. If False (default),
+        ``TruncatedGaussianPrior``.
+    ell_comps_uniform_width
+        Half-width for uniform ell_comps priors.
+    ell_comps_sigma
+        Sigma for truncated-Gaussian ell_comps priors.
+    use_spherical
+        If True, use ``GaussianSph`` (no ell_comps). If False (default), use
+        ``Gaussian`` with ellipticity.
 
     Returns
     -------
-    model : af.Collection
-        An `autofit.Collection` containing:
-        - A lens galaxy at redshift 0.5, with:
-          * bulge light profile: MGE basis of Gaussians
-          * mass profile: Isothermal ellipsoid
-          * external shear
-        - A source galaxy at redshift 1.0, with:
-          * bulge light profile: MGE basis of Gaussians
-
-    Notes
-    -----
-    - Lens light Gaussians have widths (sigma) logarithmically spaced between 0.01"
-      and the mask radius.
-    - Source light Gaussians have widths logarithmically spaced between 0.01" and 1.0".
-    - Gaussian centres are free parameters but tied across all components in each
-      basis to reduce dimensionality.
-    - This function is a convenience utility: it hides the technical setup of MGE
-      composition and provides a ready-to-use lens model for quick experimentation.
+    af.Model
+        An ``autofit.Model`` wrapping a ``Basis`` of linear Gaussians.
     """
 
     import os
@@ -83,60 +97,73 @@ def mge_model_from(
     from autogalaxy.profiles.light.linear import Gaussian, GaussianSph
     from autogalaxy.profiles.basis import Basis
 
-    # The sigma values of the Gaussians will be fixed to values spanning 0.01 to the mask radius, 3.0".
+    # The sigma values of the Gaussians will be fixed to values spanning 0.01 to the mask radius.
     log10_sigma_list = np.linspace(-4, np.log10(mask_radius), total_gaussians)
-
-    # By defining the centre here, it creates two free parameters that are assigned below to all Gaussians.
-
-    if centre_fixed is not None:
-        centre_0 = centre[0]
-        centre_1 = centre[1]
-    elif centre_prior_is_uniform:
-        centre_0 = af.UniformPrior(
-            lower_limit=centre[0] - 0.1, upper_limit=centre[0] + 0.1
-        )
-        centre_1 = af.UniformPrior(
-            lower_limit=centre[1] - 0.1, upper_limit=centre[1] + 0.1
-        )
-    else:
-        centre_0 = af.GaussianPrior(mean=centre[0], sigma=centre_sigma)
-        centre_1 = af.GaussianPrior(mean=centre[1], sigma=centre_sigma)
 
     if use_spherical:
         model_cls = GaussianSph
     else:
         model_cls = Gaussian
 
-        if ell_comps_prior_is_uniform:
-
-            ell_comps_0 = af.UniformPrior(lower_limit=-ell_comps_uniform_width, upper_limit=ell_comps_uniform_width)
-            ell_comps_1 = af.UniformPrior(lower_limit=-ell_comps_uniform_width, upper_limit=ell_comps_uniform_width)
-
+    def _make_centre_priors():
+        if centre_fixed is not None:
+            return centre[0], centre[1]
+        elif centre_prior_is_uniform:
+            return (
+                af.UniformPrior(
+                    lower_limit=centre[0] - 0.1, upper_limit=centre[0] + 0.1
+                ),
+                af.UniformPrior(
+                    lower_limit=centre[1] - 0.1, upper_limit=centre[1] + 0.1
+                ),
+            )
         else:
+            return (
+                af.GaussianPrior(mean=centre[0], sigma=centre_sigma),
+                af.GaussianPrior(mean=centre[1], sigma=centre_sigma),
+            )
 
-            ell_comps_0 = af.TruncatedGaussianPrior(mean=0.0, sigma=ell_comps_sigma, lower_limit=-1.0, upper_limit=1.0)
-            ell_comps_1 = af.TruncatedGaussianPrior(mean=0.0, sigma=ell_comps_sigma, lower_limit=-1.0, upper_limit=1.0)
+    def _make_ell_comps_priors():
+        if ell_comps_prior_is_uniform:
+            return (
+                af.UniformPrior(lower_limit=-ell_comps_uniform_width, upper_limit=ell_comps_uniform_width),
+                af.UniformPrior(lower_limit=-ell_comps_uniform_width, upper_limit=ell_comps_uniform_width),
+            )
+        else:
+            return (
+                af.TruncatedGaussianPrior(mean=0.0, sigma=ell_comps_sigma, lower_limit=-1.0, upper_limit=1.0),
+                af.TruncatedGaussianPrior(mean=0.0, sigma=ell_comps_sigma, lower_limit=-1.0, upper_limit=1.0),
+            )
+
+    # Shared centre priors (used when centre_per_basis=False).
+    if not centre_per_basis or centre_fixed is not None:
+        shared_centre_0, shared_centre_1 = _make_centre_priors()
 
     bulge_gaussian_list = []
 
     for j in range(gaussian_per_basis):
-        # A list of Gaussian model components whose parameters are customized belows.
+
+        # Per-basis centre priors when requested.
+        if centre_per_basis and centre_fixed is None:
+            centre_0, centre_1 = _make_centre_priors()
+        else:
+            centre_0, centre_1 = shared_centre_0, shared_centre_1
+
+        # Per-basis ell_comps priors (always independent across bases).
+        if not use_spherical:
+            ell_comps_0, ell_comps_1 = _make_ell_comps_priors()
 
         gaussian_list = af.Collection(
             af.Model(model_cls) for _ in range(total_gaussians)
         )
 
-        # Iterate over every Gaussian and customize its parameters.
-
         for i, gaussian in enumerate(gaussian_list):
-            gaussian.centre.centre_0 = centre_0  # All Gaussians have same y centre.
-            gaussian.centre.centre_1 = centre_1  # All Gaussians have same x centre.
+            gaussian.centre.centre_0 = centre_0
+            gaussian.centre.centre_1 = centre_1
             if not use_spherical:
                 gaussian.ell_comps.ell_comps_0 = ell_comps_0
                 gaussian.ell_comps.ell_comps_1 = ell_comps_1
-            gaussian.sigma = (
-                10 ** log10_sigma_list[i]
-            )  # All Gaussian sigmas are fixed to values above.
+            gaussian.sigma = 10 ** log10_sigma_list[i]
 
         bulge_gaussian_list += gaussian_list
 
