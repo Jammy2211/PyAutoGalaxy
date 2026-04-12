@@ -71,10 +71,8 @@ jobs:
         pip3 install pytest coverage pytest-cov
         pip install ./PyAutoConf
         pip install ./PyAutoFit
-        pip install ./PyAutoArray
-        pip install ./PyAutoArray[optional]
-        pip install ./PyAutoGalaxy
-        pip install ./PyAutoGalaxy[optional]
+        pip install "./PyAutoArray[optional]"
+        pip install "./PyAutoGalaxy[optional]"
     - name: Run tests
       run: |
         export ROOT_DIR=`pwd`
