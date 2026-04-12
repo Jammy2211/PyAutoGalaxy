@@ -983,7 +983,10 @@ class LensCalc:
         """
         import jax
         import jax.numpy as jnp
-        from jax.tree_util import Partial
+        try:
+            from jax.tree_util import Partial
+        except ImportError:
+            from functools import partial as Partial
 
         # Capture as local names so the closure holds no `self` reference.
         # ZeroSolver.zero_contour_finder is jit-compiled with `f` as a
