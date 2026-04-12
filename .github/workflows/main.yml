@@ -74,7 +74,7 @@ jobs:
         if [ "${{ matrix.python-version }}" = "3.12" ]; then
           pip install "./PyAutoArray[optional]" "./PyAutoGalaxy[optional]"
         else
-          pip install numba pynufft
+          pip install numba
         fi
     - name: Run tests
       run: |
