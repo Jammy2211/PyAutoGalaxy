@@ -90,7 +90,7 @@ def mge_model_from(
 
     import os
 
-    if os.environ.get("PYAUTO_WORKSPACE_SMALL_DATASETS") == "1":
+    if os.environ.get("PYAUTO_SMALL_DATASETS") == "1":
         total_gaussians = 2
         gaussian_per_basis = 1
 
