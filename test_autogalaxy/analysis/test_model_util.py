@@ -5,6 +5,106 @@ import autofit as af
 import autogalaxy as ag
 
 
+def test__mge_model_from__single_basis_elliptical():
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0, total_gaussians=5, gaussian_per_basis=1
+    )
+    assert model.prior_count == 4
+
+
+def test__mge_model_from__single_basis_spherical():
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0, total_gaussians=5, gaussian_per_basis=1, use_spherical=True
+    )
+    assert model.prior_count == 2
+
+
+def test__mge_model_from__two_bases_shared_centre():
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0, total_gaussians=5, gaussian_per_basis=2
+    )
+    # 2 shared centre + 2 ell_comps per basis * 2 = 6
+    assert model.prior_count == 6
+
+
+def test__mge_model_from__two_bases_centre_per_basis():
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0, total_gaussians=5, gaussian_per_basis=2, centre_per_basis=True
+    )
+    # 2 centre per basis * 2 + 2 ell_comps per basis * 2 = 8
+    assert model.prior_count == 8
+
+
+def test__mge_model_from__three_bases_shared_centre():
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0, total_gaussians=5, gaussian_per_basis=3
+    )
+    # 2 shared centre + 2 ell_comps * 3 = 8
+    assert model.prior_count == 8
+
+
+def test__mge_model_from__two_bases_spherical_shared_centre():
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0, total_gaussians=5, gaussian_per_basis=2, use_spherical=True
+    )
+    # Spherical: no ell_comps, shared centre = 2
+    assert model.prior_count == 2
+
+
+def test__mge_model_from__two_bases_spherical_centre_per_basis():
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0,
+        total_gaussians=5,
+        gaussian_per_basis=2,
+        use_spherical=True,
+        centre_per_basis=True,
+    )
+    # Spherical + centre_per_basis: 2 centre * 2 = 4
+    assert model.prior_count == 4
+
+
+def test__mge_model_from__centre_fixed_with_two_bases():
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0,
+        total_gaussians=5,
+        gaussian_per_basis=2,
+        centre_fixed=(0.0, 0.0),
+    )
+    # Centres fixed (0 free), 2 ell_comps per basis * 2 = 4
+    assert model.prior_count == 4
+
+
+def test__mge_model_from__centre_fixed_overrides_centre_per_basis():
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0,
+        total_gaussians=5,
+        gaussian_per_basis=2,
+        centre_fixed=(0.0, 0.0),
+        centre_per_basis=True,
+    )
+    # centre_fixed takes precedence: 0 centre + 4 ell_comps = 4
+    assert model.prior_count == 4
+
+
+def test__mge_model_from__backward_compat_single_basis():
+    """gaussian_per_basis=1 must produce identical output to the old code."""
+    model = ag.model_util.mge_model_from(mask_radius=3.0, total_gaussians=10)
+    assert model.prior_count == 4
+
+    instance = model.instance_from_prior_medians()
+    assert isinstance(instance, ag.lp_basis.Basis)
+    assert len(instance.profile_list) == 10
+
+
+def test__mge_model_from__total_gaussians_per_basis():
+    """With gaussian_per_basis=2 and total_gaussians=5, should produce 10 Gaussians."""
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0, total_gaussians=5, gaussian_per_basis=2
+    )
+    instance = model.instance_from_prior_medians()
+    assert len(instance.profile_list) == 10
+
+
 def test__mge_point_model_from__returns_basis_model_with_correct_gaussians():
     """
     mge_point_model_from should return an af.Model wrapping a Basis whose
