@@ -26,8 +26,8 @@ class NFWTruncatedSph(AbstractgNFW):
         self.truncation_radius = truncation_radius
         self.tau = self.truncation_radius / self.scale_radius
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -62,7 +62,7 @@ class NFWTruncatedSph(AbstractgNFW):
             2.0 * self.kappa_s * self.coord_func_l(grid_radius=grid_radius.array, xp=xp)
         )
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return xp.zeros(shape=grid.shape[0])
 

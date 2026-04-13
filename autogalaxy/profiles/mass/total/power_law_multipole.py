@@ -206,8 +206,8 @@ class PowerLawMultipole(MassProfile):
             a_r * xp.cos(polar_angle_grid) - a_angle * xp.sin(polar_angle_grid),
         )
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform
     def deflections_yx_2d_from(
         self, grid: aa.type.Grid1D2DLike, xp=np, **kwargs
     ) -> np.ndarray:
@@ -256,8 +256,8 @@ class PowerLawMultipole(MassProfile):
         )
 
     @aa.over_sample
-    @aa.grid_dec.to_array
-    @aa.grid_dec.transform
+    @aa.decorators.to_array
+    @aa.decorators.transform
     def convergence_2d_from(
         self, grid: aa.type.Grid1D2DLike, xp=np, **kwargs
     ) -> np.ndarray:
@@ -280,7 +280,7 @@ class PowerLawMultipole(MassProfile):
             * xp.cos(self.m * (angle - angle_m))
         )
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def potential_2d_from(
         self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ) -> np.ndarray:

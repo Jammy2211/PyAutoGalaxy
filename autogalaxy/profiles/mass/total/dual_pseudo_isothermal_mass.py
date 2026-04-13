@@ -262,8 +262,8 @@ class PIEMass(MassProfile):
         MAX_ELLIP = 0.99999
         return xp.min(xp.array([ellip, MAX_ELLIP]))
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform(rotate_back=True)
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform(rotate_back=True)
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -292,8 +292,8 @@ class PIEMass(MassProfile):
 
         return self.b0 / 2 * (1 / xp.sqrt(a**2 + radsq))
 
-    @aa.grid_dec.to_array
-    @aa.grid_dec.transform
+    @aa.decorators.to_array
+    @aa.decorators.transform
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Returns the two-dimensional projected convergence on a grid of (y,x)
@@ -317,7 +317,7 @@ class PIEMass(MassProfile):
 
         return kappa
 
-    @aa.grid_dec.transform
+    @aa.decorators.transform
     def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", xp=np, **kwargs):
         """
         Calculate the hessian matrix on a grid of (y,x) arc-second coordinates.
@@ -412,8 +412,8 @@ class dPIEMass(MassProfile):
         MAX_ELLIP = 0.99999
         return xp.min(xp.array([ellip, MAX_ELLIP]))
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform(rotate_back=True)
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform(rotate_back=True)
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -453,8 +453,8 @@ class dPIEMass(MassProfile):
             * (1 / xp.sqrt(a**2 + radsq) - 1 / xp.sqrt(s**2 + radsq))
         )
 
-    @aa.grid_dec.to_array
-    @aa.grid_dec.transform
+    @aa.decorators.to_array
+    @aa.decorators.transform
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
@@ -475,7 +475,7 @@ class dPIEMass(MassProfile):
         kappa = self._convergence(grid_radii, xp)
         return kappa
 
-    @aa.grid_dec.transform
+    @aa.decorators.transform
     def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", xp=np, **kwargs):
         """
         Calculate the hessian matrix on a grid of (y,x) arc-second coordinates.
@@ -529,7 +529,7 @@ class dPIEMass(MassProfile):
 
         return aa.Array2D(values=1.0 / det_A, mask=grid.mask)
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return xp.zeros(shape=grid.shape[0])
 
@@ -583,8 +583,8 @@ class dPIEMassSph(dPIEMass):
         self.rs = rs
         self.b0 = b0
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform(rotate_back=True)
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform(rotate_back=True)
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -619,8 +619,8 @@ class dPIEMassSph(dPIEMass):
 
         return xp.vstack((deflection_y, deflection_x)).T
 
-    @aa.grid_dec.to_array
-    @aa.grid_dec.transform
+    @aa.decorators.to_array
+    @aa.decorators.transform
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
@@ -638,7 +638,7 @@ class dPIEMassSph(dPIEMass):
 
         return self._convergence(xp.sqrt(radsq), xp)
 
-    @aa.grid_dec.transform
+    @aa.decorators.transform
     def analytical_hessian_2d_from(self, grid: "aa.type.Grid2DLike", xp=np, **kwargs):
         """
         Calculate the hessian matrix on a grid of (y,x) arc-second coordinates.

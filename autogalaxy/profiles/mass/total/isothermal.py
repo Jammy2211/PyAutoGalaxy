@@ -70,8 +70,8 @@ class Isothermal(PowerLaw):
         axis_ratio = super().axis_ratio(xp=xp)
         return xp.minimum(axis_ratio, 0.99999)
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform(rotate_back=True)
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform(rotate_back=True)
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -107,8 +107,8 @@ class Isothermal(PowerLaw):
         )
         return xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T)
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform
     def shear_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the (gamma_y, gamma_x) shear vector field on a grid of (y,x) arc-second coordinates.
@@ -174,8 +174,8 @@ class IsothermalSph(Isothermal):
         return 1.0
 
     @aa.over_sample
-    @aa.grid_dec.to_array
-    @aa.grid_dec.transform
+    @aa.decorators.to_array
+    @aa.decorators.transform
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the potential on a grid of (y,x) arc-second coordinates.
@@ -188,8 +188,8 @@ class IsothermalSph(Isothermal):
         eta = self.elliptical_radii_grid_from(grid=grid, xp=xp, **kwargs)
         return 2.0 * self.einstein_radius_rescaled(xp) * eta
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.

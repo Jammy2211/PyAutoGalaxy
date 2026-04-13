@@ -210,7 +210,7 @@ class Galaxy(af.ModelObject, OperateImageList):
             )
         ]
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def image_2d_from(
         self,
         grid: aa.type.Grid2DLike,
@@ -246,7 +246,7 @@ class Galaxy(af.ModelObject, OperateImageList):
             )
         return xp.zeros((grid.shape[0],))
 
-    @aa.grid_dec.to_vector_yx
+    @aa.decorators.to_vector_yx
     def deflections_yx_2d_from(
         self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ) -> np.ndarray:
@@ -277,7 +277,7 @@ class Galaxy(af.ModelObject, OperateImageList):
 
         return xp.zeros((grid.shape[0], 2))
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def convergence_2d_from(
         self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ) -> np.ndarray:
@@ -318,7 +318,7 @@ class Galaxy(af.ModelObject, OperateImageList):
         """
         return None
 
-    @aa.grid_dec.to_grid
+    @aa.decorators.to_grid
     def traced_grid_2d_from(
         self, grid: aa.type.Grid2DLike, xp=np
     ) -> aa.type.Grid2DLike:
@@ -355,7 +355,7 @@ class Galaxy(af.ModelObject, OperateImageList):
 
         return grid - self.deflections_yx_2d_from(grid=grid, xp=xp)
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def potential_2d_from(
         self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ) -> np.ndarray:

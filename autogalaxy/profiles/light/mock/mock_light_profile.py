@@ -27,7 +27,7 @@ class MockLightProfile(ag.LightProfile):
         self.value = value
         self.value1 = value1
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     @check_operated_only
     def image_2d_from(
         self, grid, xp=np, operated_only: Optional[bool] = None, **kwargs

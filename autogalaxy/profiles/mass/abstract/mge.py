@@ -147,8 +147,8 @@ class MGEDecomposer:
 
         return w
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform
     def deflections_2d_via_mge_from(
         self,
         grid: aa.type.Grid2DLike,
@@ -298,8 +298,8 @@ class MGEDecomposer:
         return xp.where(ind_pos_y[None, :], core, xp.conj(core))
 
     @aa.over_sample
-    @aa.grid_dec.to_array
-    @aa.grid_dec.transform
+    @aa.decorators.to_array
+    @aa.decorators.transform
     def convergence_2d_via_mge_from(
         self,
         grid: aa.type.Grid2DLike,

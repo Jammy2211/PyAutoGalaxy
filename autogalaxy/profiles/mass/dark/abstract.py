@@ -51,8 +51,8 @@ class AbstractgNFW(MassProfile, DarkProfile):
         self.inner_slope = inner_slope
 
     @aa.over_sample
-    @aa.grid_dec.to_array
-    @aa.grid_dec.transform
+    @aa.decorators.to_array
+    @aa.decorators.transform
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 

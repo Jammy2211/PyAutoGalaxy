@@ -99,7 +99,7 @@ class SphProfile(GeometryProfile):
     def __init__(self, centre: Tuple[float, float] = (0.0, 0.0)):
         super().__init__(centre=centre)
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def radial_grid_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs) -> np.ndarray:
         """
         Convert a grid of (y, x) coordinates, to their radial distances from the profile
@@ -126,7 +126,7 @@ class SphProfile(GeometryProfile):
         """
         return xp.cos(grid_angles), xp.sin(grid_angles)
 
-    @aa.grid_dec.to_grid
+    @aa.decorators.to_grid
     def _cartesian_grid_via_radial_from(
         self,
         grid: aa.type.Grid2DLike,
@@ -153,7 +153,7 @@ class SphProfile(GeometryProfile):
 
         return xp.multiply(radius[:, None], xp.vstack((sin_theta, cos_theta)).T)
 
-    @aa.grid_dec.to_grid
+    @aa.decorators.to_grid
     def transformed_to_reference_frame_grid_from(self, grid, xp=np, **kwargs):
         """
         Transform a grid of (y,x) coordinates to the reference frame of the profile.
@@ -167,7 +167,7 @@ class SphProfile(GeometryProfile):
         """
         return xp.subtract(grid.array, xp.array(self.centre))
 
-    @aa.grid_dec.to_grid
+    @aa.decorators.to_grid
     def transformed_from_reference_frame_grid_from(self, grid, xp=np, **kwargs):
         """
         Transform a grid of (y,x) coordinates from the reference frame of the profile to the original observer
@@ -282,7 +282,7 @@ class EllProfile(SphProfile):
         theta_coordinate_to_profile = xp.add(grid_angles, -self.angle_radians(xp=xp))
         return xp.cos(theta_coordinate_to_profile), xp.sin(theta_coordinate_to_profile)
 
-    @aa.grid_dec.to_grid
+    @aa.decorators.to_grid
     def rotated_grid_from_reference_frame_from(
         self, grid, xp=np, angle: Optional[float] = None, **kwargs
     ):
@@ -313,7 +313,7 @@ class EllProfile(SphProfile):
             grid_2d=grid, centre=(0.0, 0.0), angle=angle, xp=xp
         )
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def elliptical_radii_grid_from(
         self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ) -> np.ndarray:
@@ -332,7 +332,7 @@ class EllProfile(SphProfile):
             )
         )
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def eccentric_radii_grid_from(
         self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ) -> np.ndarray:
@@ -354,7 +354,7 @@ class EllProfile(SphProfile):
 
         return xp.multiply(xp.sqrt(self.axis_ratio(xp)), grid_radii.array)
 
-    @aa.grid_dec.to_grid
+    @aa.decorators.to_grid
     def transformed_to_reference_frame_grid_from(
         self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ) -> np.ndarray:
@@ -374,7 +374,7 @@ class EllProfile(SphProfile):
             grid_2d=grid.array, centre=self.centre, angle=self.angle(xp), xp=xp
         )
 
-    @aa.grid_dec.to_grid
+    @aa.decorators.to_grid
     def transformed_from_reference_frame_grid_from(
         self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ) -> aa.type.Grid2DLike:

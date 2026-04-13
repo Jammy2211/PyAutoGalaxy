@@ -93,8 +93,8 @@ class dPIEPotential(MassProfile):
             * (1 / xp.sqrt(a**2 + radsq) - 1 / xp.sqrt(s**2 + radsq))
         )
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform(rotate_back=True)
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform(rotate_back=True)
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -118,8 +118,8 @@ class dPIEPotential(MassProfile):
 
         return xp.vstack((deflection_y, deflection_x)).T
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
@@ -151,7 +151,7 @@ class dPIEPotential(MassProfile):
         # zero over all space
         return kappa_circ * (1 - asymm_term) + (alpha_circ / grid_radii) * asymm_term
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return xp.zeros(shape=grid.shape[0])
 
@@ -209,8 +209,8 @@ class dPIEPotentialSph(dPIEPotential):
         self.rs = rs
         self.b0 = b0
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -230,8 +230,8 @@ class dPIEPotentialSph(dPIEPotential):
 
         return aa.Grid2DIrregular.from_yx_1d(defl_y, defl_x)
 
-    @aa.grid_dec.to_array
-    @aa.grid_dec.transform
+    @aa.decorators.to_array
+    @aa.decorators.transform
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Returns the two dimensional projected convergence on a grid of (y,x) arc-second coordinates.
@@ -249,6 +249,6 @@ class dPIEPotentialSph(dPIEPotential):
 
         return self._convergence(xp.sqrt(radsq), xp)
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return xp.zeros(shape=grid.shape[0])
