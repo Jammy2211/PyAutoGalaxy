@@ -164,9 +164,9 @@ class Sersic(AbstractSersic, LightProfile):
         )
 
     @aa.over_sample
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     @check_operated_only
-    @aa.grid_dec.transform
+    @aa.decorators.transform
     def image_2d_from(
         self,
         grid: aa.type.Grid2DLike,

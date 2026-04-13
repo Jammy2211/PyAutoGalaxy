@@ -45,8 +45,8 @@ class NFW(gNFW, MassProfileCSE):
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform(rotate_back=True)
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform(rotate_back=True)
     def deflections_2d_via_analytic_from(
         self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ):
@@ -105,14 +105,14 @@ class NFW(gNFW, MassProfileCSE):
 
         return xp.multiply(self.scale_radius, xp.vstack((deflection_y, deflection_x)).T)
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform(rotate_back=True)
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform(rotate_back=True)
     def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self._deflections_2d_via_cse_from(grid=grid, **kwargs)
 
     @aa.over_sample
-    @aa.grid_dec.to_array
-    @aa.grid_dec.transform
+    @aa.decorators.to_array
+    @aa.decorators.transform
     def convergence_2d_via_cse_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the projected 2D convergence from a grid of (y,x) arc second coordinates, by computing and summing
@@ -185,8 +185,8 @@ class NFW(gNFW, MassProfileCSE):
             sample_points=sample_points,
         )
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform
     def shear_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Analytic calculation shear from Heyrovský & Karamazov 2024
@@ -227,8 +227,8 @@ class NFW(gNFW, MassProfileCSE):
 
         return aa.VectorYX2DIrregular(values=shear_field, grid=grid)
 
-    @aa.grid_dec.to_array
-    @aa.grid_dec.transform
+    @aa.decorators.to_array
+    @aa.decorators.transform
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Analytic calculation convergence from Heyrovský & Karamazov 2024
@@ -298,8 +298,8 @@ class NFWSph(NFW):
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform
     def deflections_2d_via_analytic_from(
         self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ):
@@ -331,8 +331,8 @@ class NFWSph(NFW):
         return xp.real(self.coord_func_h(grid_radius=grid_radius, xp=xp))
 
     @aa.over_sample
-    @aa.grid_dec.to_array
-    @aa.grid_dec.transform
+    @aa.decorators.to_array
+    @aa.decorators.transform
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the potential at a given set of arc-second gridded coordinates.

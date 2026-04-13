@@ -122,8 +122,8 @@ class AbstractSersic(MassProfile, MassProfileCSE, StellarProfile):
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self.deflections_2d_via_cse_from(grid=grid, xp=xp, **kwargs)
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform(rotate_back=True)
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform(rotate_back=True)
     def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the projected 2D deflection angles from a grid of (y,x) arc second coordinates, by computing and
@@ -141,8 +141,8 @@ class AbstractSersic(MassProfile, MassProfileCSE, StellarProfile):
         return self._deflections_2d_via_cse_from(grid=grid, xp=xp, **kwargs)
 
     @aa.over_sample
-    @aa.grid_dec.to_array
-    @aa.grid_dec.transform
+    @aa.decorators.to_array
+    @aa.decorators.transform
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """Calculate the projected convergence at a given set of arc-second gridded coordinates.
 
@@ -157,8 +157,8 @@ class AbstractSersic(MassProfile, MassProfileCSE, StellarProfile):
         )
 
     @aa.over_sample
-    @aa.grid_dec.to_array
-    @aa.grid_dec.transform
+    @aa.decorators.to_array
+    @aa.decorators.transform
     def convergence_2d_via_cse_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the projected 2D convergence from a grid of (y,x) arc second coordinates, by computing and summing
@@ -183,7 +183,7 @@ class AbstractSersic(MassProfile, MassProfileCSE, StellarProfile):
             grid_radius, xp=xp
         )
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return np.zeros(shape=grid.shape[0])
 

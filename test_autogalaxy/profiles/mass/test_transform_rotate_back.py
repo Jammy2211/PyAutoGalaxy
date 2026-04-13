@@ -2,7 +2,7 @@
 Tests for the automatic back-rotation feature of the transform decorator (Phase 2).
 
 These tests capture the expected deflection values from the current manual back-rotation
-approach. After switching to automatic back-rotation via @aa.grid_dec.transform(rotate_back=True),
+approach. After switching to automatic back-rotation via @aa.decorators.transform(rotate_back=True),
 the same values must be produced.
 """
 import numpy as np

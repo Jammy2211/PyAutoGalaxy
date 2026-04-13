@@ -75,7 +75,7 @@ class cNFW(AbstractgNFW):
             * (r.array + self.scale_radius) ** (-2.0)
         )
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Convergence (dimensionless surface mass density) for the cored NFW profile.
@@ -83,7 +83,7 @@ class cNFW(AbstractgNFW):
         """
         return xp.zeros(shape=grid.shape[0])
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Lensing potential for the cored NFW profile.
@@ -122,8 +122,8 @@ class cNFWSph(cNFW):
         self.scale_radius = scale_radius
         self.core_radius = core_radius
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -235,7 +235,7 @@ class cNFWSph(cNFW):
 
         return 2 * dev_F
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def convergence_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Convergence (dimensionless surface mass density) for the cored NFW profile.
@@ -243,7 +243,7 @@ class cNFWSph(cNFW):
         """
         return xp.zeros(shape=grid.shape[0])
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Lensing potential for the cored NFW profile.

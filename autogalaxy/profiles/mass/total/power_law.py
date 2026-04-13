@@ -37,7 +37,7 @@ class PowerLaw(PowerLawCore):
             core_radius=0.0,
         )
 
-    @aa.grid_dec.to_array
+    @aa.decorators.to_array
     def potential_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
 
         alpha = self.deflections_yx_2d_from(
@@ -52,8 +52,8 @@ class PowerLaw(PowerLawCore):
 
         return (x * alpha_x + y * alpha_y) / (3 - self.slope)
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform(rotate_back=True)
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform(rotate_back=True)
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -164,8 +164,8 @@ class PowerLawSph(PowerLaw):
             slope=slope,
         )
 
-    @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.decorators.to_vector_yx
+    @aa.decorators.transform
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         eta = self.radial_grid_from(grid=grid, xp=xp, **kwargs).array
         deflection_r = (
