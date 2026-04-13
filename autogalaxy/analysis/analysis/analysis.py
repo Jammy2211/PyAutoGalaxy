@@ -151,6 +151,10 @@ class Analysis(af.Analysis):
             analysis=self,
         )
 
+    @property
+    def supports_background_update(self) -> bool:
+        return True
+
     def perform_quick_update(self, paths, instance):
         """
         Perform a quick visualization update during non-linear search fitting.
