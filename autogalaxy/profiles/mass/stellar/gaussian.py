@@ -51,7 +51,7 @@ class Gaussian(MassProfile, StellarProfile):
         return self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
 
     @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.grid_dec.transform(rotate_back=True)
     def deflections_2d_via_analytic_from(
         self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ):
@@ -73,12 +73,7 @@ class Gaussian(MassProfile, StellarProfile):
             * self.zeta_from(grid=grid, xp=xp)
         )
 
-        return self.rotated_grid_from_reference_frame_from(
-            xp.multiply(
-                1.0, xp.vstack((-1.0 * xp.imag(deflections), xp.real(deflections))).T
-            ),
-            xp=xp,
-        )
+        return xp.vstack((-1.0 * xp.imag(deflections), xp.real(deflections))).T
 
     @aa.over_sample
     @aa.grid_dec.to_array

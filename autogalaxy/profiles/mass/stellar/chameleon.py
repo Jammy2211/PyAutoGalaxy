@@ -51,7 +51,7 @@ class Chameleon(MassProfile, StellarProfile):
         return self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
 
     @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.grid_dec.transform(rotate_back=True)
     def deflections_2d_via_analytic_from(
         self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ):
@@ -128,9 +128,7 @@ class Chameleon(MassProfile, StellarProfile):
         deflection_y = xp.subtract(deflection_y0, deflection_y1)
         deflection_x = xp.subtract(deflection_x0, deflection_x1)
 
-        return self.rotated_grid_from_reference_frame_from(
-            xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T), xp=xp
-        )
+        return xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T)
 
     @aa.over_sample
     @aa.grid_dec.to_array

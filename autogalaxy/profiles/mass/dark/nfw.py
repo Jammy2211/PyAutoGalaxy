@@ -46,7 +46,7 @@ class NFW(gNFW, MassProfileCSE):
         return self.deflections_2d_via_analytic_from(grid=grid, xp=xp, **kwargs)
 
     @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.grid_dec.transform(rotate_back=True)
     def deflections_2d_via_analytic_from(
         self, grid: aa.type.Grid2DLike, xp=np, **kwargs
     ):
@@ -103,14 +103,10 @@ class NFW(gNFW, MassProfileCSE):
         )
         deflection_y *= prefactor
 
-        return self.rotated_grid_from_reference_frame_from(
-            xp.multiply(self.scale_radius, xp.vstack((deflection_y, deflection_x)).T),
-            xp=xp,
-            **kwargs,
-        )
+        return xp.multiply(self.scale_radius, xp.vstack((deflection_y, deflection_x)).T)
 
     @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.grid_dec.transform(rotate_back=True)
     def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         return self._deflections_2d_via_cse_from(grid=grid, **kwargs)
 

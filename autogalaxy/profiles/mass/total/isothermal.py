@@ -71,7 +71,7 @@ class Isothermal(PowerLaw):
         return xp.minimum(axis_ratio, 0.99999)
 
     @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.grid_dec.transform(rotate_back=True)
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -105,11 +105,7 @@ class Isothermal(PowerLaw):
                 psi,
             )
         )
-        return self.rotated_grid_from_reference_frame_from(
-            grid=xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T),
-            xp=xp,
-            **kwargs,
-        )
+        return xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T)
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform

@@ -74,7 +74,7 @@ class PowerLawBroken(MassProfile):
         return xp.zeros(shape=grid.shape[0])
 
     @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.grid_dec.transform(rotate_back=True)
     def deflections_yx_2d_from(self, grid, xp=np, max_terms=20, **kwargs):
         """
         Returns the complex deflection angle from eq. 18 and 19
@@ -135,12 +135,7 @@ class PowerLawBroken(MassProfile):
             inner_part * (R <= self.break_radius) + outer_part * (R > self.break_radius)
         ).conjugate()
 
-        return self.rotated_grid_from_reference_frame_from(
-            grid=xp.multiply(
-                1.0, xp.vstack((xp.imag(deflections), xp.real(deflections))).T
-            ),
-            xp=xp,
-        )
+        return xp.vstack((xp.imag(deflections), xp.real(deflections))).T
 
     @staticmethod
     def hyp2f1_series(t, q, r, z, max_terms=20, xp=np):
