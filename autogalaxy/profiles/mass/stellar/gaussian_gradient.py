@@ -14,7 +14,7 @@ class GaussianGradient(Gaussian):
         mass_to_light_gradient: float = 0.0,
         mass_to_light_radius: float = 1.0,
     ):
-        """
+        r"""
         The elliptical Gaussian light profile with a gradient in its mass to light conversion.
 
         $\Psi (r) = \Psi_{o} \frac{(\sigma + 0.01)}{R_{ref}}^{\Tau}$

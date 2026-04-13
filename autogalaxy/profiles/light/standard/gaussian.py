@@ -17,7 +17,7 @@ class Gaussian(LightProfile):
         intensity: float = 0.1,
         sigma: float = 1.0,
     ):
-        """
+        r"""
         The elliptical Gaussian light profile.
 
         The intensity distribution of the profile is given by:

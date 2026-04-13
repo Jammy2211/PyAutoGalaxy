@@ -70,3 +70,7 @@ dev = ["pytest", "black"]
 
 [tool.pytest.ini_options]
 testpaths = ["test_autogalaxy"]
+filterwarnings = [
+    "ignore:cuda_plugin_extension:UserWarning",
+    "ignore::DeprecationWarning:jax",
+]

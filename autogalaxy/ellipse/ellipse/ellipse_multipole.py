@@ -12,7 +12,7 @@ class EllipseMultipole:
         m=4,
         multipole_comps: Tuple[float, float] = (0.0, 0.0),
     ):
-        """
+        r"""
         class representing the multipole of an ellispe with, which is used to perform ellipse fitting to
         2D data (e.g. an image).
 
@@ -122,7 +122,7 @@ class EllipseMultipoleScaled(EllipseMultipole):
         scaled_multipole_comps: Tuple[float, float] = (0.0, 0.0),
         major_axis=1.0,
     ):
-        """
+        r"""
         class representing the multipole of an ellipse, which is used to perform ellipse fitting to
         2D data (e.g. an image). This multipole is fit with its strength held relative to an ellipse with a
         major_axis of 1, allowing for a set of ellipse multipoles to be fit at different major axes but with
