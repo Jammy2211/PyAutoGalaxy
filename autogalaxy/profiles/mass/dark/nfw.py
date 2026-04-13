@@ -17,7 +17,7 @@ class NFW(gNFW, MassProfileCSE):
         kappa_s: float = 0.05,
         scale_radius: float = 1.0,
     ):
-        """
+        r"""
         The elliptical NFW profiles, used to fit the dark matter halo of the lens.
 
         Parameters
@@ -273,7 +273,7 @@ class NFWSph(NFW):
         kappa_s: float = 0.05,
         scale_radius: float = 1.0,
     ):
-        """
+        r"""
         The spherical NFW profiles, used to fit the dark matter halo of the lens.
 
         Parameters

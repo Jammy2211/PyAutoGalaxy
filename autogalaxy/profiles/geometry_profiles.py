@@ -189,7 +189,7 @@ class EllProfile(SphProfile):
         centre: Tuple[float, float] = (0.0, 0.0),
         ell_comps: Tuple[float, float] = (0.0, 0.0),
     ):
-        """
+        r"""
         An elliptical profile, which describes the geometry of profiles defined by an ellipse.
 
         The elliptical components (`ell_comps`) of this profile are used to define the `axis_ratio` (q)

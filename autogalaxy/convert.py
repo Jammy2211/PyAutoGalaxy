@@ -277,7 +277,7 @@ def shear_angle_from(gamma_1: float, gamma_2: float, xp=np) -> float:
 def multipole_k_m_and_phi_m_from(
     multipole_comps: Tuple[float, float], m: int, xp=np
 ) -> Tuple[float, float]:
-    """
+    r"""
     Returns the multipole normalization value `k_m` and angle `phi` from the multipole component parameters.
 
     The normalization and angle are given by:
@@ -333,7 +333,7 @@ def multipole_k_m_phi_m_and_shape_angle_from(
         ellipse_angle: Optional[float],
         xp=np
 ) -> Tuple[float, float, float]:
-    """
+    r"""
     Returns the multipole normalization value `k_m`, angle `phi` and shape_angle `s` from the multipole
     component parameters. The shape angle is the difference between the angle of the underlying elliptical profile and
     the multipole `phi_m` and is what defines the shape of the perturbation around the ellipse oriented towards the
@@ -404,7 +404,7 @@ def multipole_comps_from(
     shape_angle: Optional[float]=None, ellipse_angle: Optional[float]=None,
     xp=np
 ) -> Tuple[float, float]:
-    """
+    r"""
     Returns the multipole component parameters from their normalization value `k_m` and angle `phi`.
 
     .. math::

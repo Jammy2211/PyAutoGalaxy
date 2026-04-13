@@ -8,7 +8,7 @@ from autogalaxy.profiles.mass.total.power_law import PowerLaw
 
 
 def psi_from(grid, axis_ratio, core_radius, xp=np):
-    """
+    r"""
     Returns the $\Psi$ term in expressions for the calculation of the deflection of an elliptical isothermal mass
     distribution. This is used in the `Isothermal` and `Chameleon` `MassProfile`'s.
 

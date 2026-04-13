@@ -11,7 +11,7 @@ class Ellipse(EllProfile):
         ell_comps: Tuple[float, float] = (0.0, 0.0),
         major_axis: float = 1.0,
     ):
-        """
+        r"""
         class representing an ellispe, which is used to perform ellipse fitting to 2D data (e.g. an image).
 
         The elliptical components (`ell_comps`) of this profile are used to define the `axis_ratio` (q)
