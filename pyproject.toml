@@ -23,8 +23,8 @@ classifiers = [
 ]
 keywords = ["cli"]
 dependencies = [
-    "autofit",
-    "autoarray",
+    "autofit==2026.4.13.5",
+    "autoarray==2026.4.13.5",
     "colossus==1.3.1",
     "astropy>=5.0,<=7.2.0",
     "nautilus-sampler==1.0.5"
