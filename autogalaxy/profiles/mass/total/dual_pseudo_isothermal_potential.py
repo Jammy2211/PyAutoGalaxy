@@ -94,7 +94,7 @@ class dPIEPotential(MassProfile):
         )
 
     @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.grid_dec.transform(rotate_back=True)
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -116,12 +116,7 @@ class dPIEPotential(MassProfile):
         deflection_y = alpha_circ * xp.sqrt(1 + ellip) * (grid.array[:, 0] / grid_radii)
         deflection_x = alpha_circ * xp.sqrt(1 - ellip) * (grid.array[:, 1] / grid_radii)
 
-        # And here we convert back to the real axes
-        return self.rotated_grid_from_reference_frame_from(
-            grid=xp.multiply(1.0, xp.vstack((deflection_y, deflection_x)).T),
-            xp=xp,
-            **kwargs,
-        )
+        return xp.vstack((deflection_y, deflection_x)).T
 
     @aa.grid_dec.to_vector_yx
     @aa.grid_dec.transform

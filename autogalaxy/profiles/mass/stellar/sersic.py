@@ -123,7 +123,7 @@ class AbstractSersic(MassProfile, MassProfileCSE, StellarProfile):
         return self.deflections_2d_via_cse_from(grid=grid, xp=xp, **kwargs)
 
     @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.grid_dec.transform(rotate_back=True)
     def deflections_2d_via_cse_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the projected 2D deflection angles from a grid of (y,x) arc second coordinates, by computing and

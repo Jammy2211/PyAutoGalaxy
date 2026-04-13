@@ -98,7 +98,7 @@ class PowerLawCore(MassProfile):
         return self.einstein_radius_rescaled(xp) * self.axis_ratio(xp) * potential_grid
 
     @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.grid_dec.transform(rotate_back=True)
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -139,9 +139,7 @@ class PowerLawCore(MassProfile):
         deflection_y = calculate_deflection_component(1.0, 0)
         deflection_x = calculate_deflection_component(0.0, 1)
 
-        return self.rotated_grid_from_reference_frame_from(
-            grid=np.multiply(1.0, np.vstack((deflection_y, deflection_x)).T), xp=xp
-        )
+        return np.vstack((deflection_y, deflection_x)).T
 
     def convergence_func(self, grid_radius: float, xp=np) -> float:
         return self.einstein_radius_rescaled(xp) * (

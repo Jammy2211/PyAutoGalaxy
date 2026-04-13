@@ -53,7 +53,7 @@ class PowerLaw(PowerLawCore):
         return (x * alpha_x + y * alpha_y) / (3 - self.slope)
 
     @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.grid_dec.transform(rotate_back=True)
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -119,9 +119,7 @@ class PowerLaw(PowerLawCore):
         deflection_y *= rescale_factor
         deflection_x *= rescale_factor
 
-        return self.rotated_grid_from_reference_frame_from(
-            grid=xp.vstack((deflection_y, deflection_x)).T, xp=xp
-        )
+        return xp.vstack((deflection_y, deflection_x)).T
 
     def convergence_func(self, grid_radius: float, xp=np) -> float:
         return self.einstein_radius_rescaled(xp) * grid_radius.array ** (

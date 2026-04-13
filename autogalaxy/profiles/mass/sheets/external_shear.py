@@ -57,7 +57,7 @@ class ExternalShear(MassProfile):
         return -0.5 * shear_amp * rcoord**2 * xp.cos(2 * (phicoord - phig))
 
     @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.grid_dec.transform(rotate_back=True)
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles at a given set of arc-second gridded coordinates.
@@ -70,7 +70,4 @@ class ExternalShear(MassProfile):
         """
         deflection_y = -xp.multiply(self.magnitude(xp=xp), grid.array[:, 0])
         deflection_x = xp.multiply(self.magnitude(xp=xp), grid.array[:, 1])
-        return self.rotated_grid_from_reference_frame_from(
-            grid=xp.vstack((deflection_y, deflection_x)).T,
-            xp=xp,
-        )
+        return xp.vstack((deflection_y, deflection_x)).T

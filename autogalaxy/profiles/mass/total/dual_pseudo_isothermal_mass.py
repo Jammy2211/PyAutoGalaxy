@@ -263,7 +263,7 @@ class PIEMass(MassProfile):
         return xp.min(xp.array([ellip, MAX_ELLIP]))
 
     @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.grid_dec.transform(rotate_back=True)
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -283,12 +283,7 @@ class PIEMass(MassProfile):
         deflection_x = zis.real
         deflection_y = zis.imag
 
-        # And here we convert back to the real axes
-        return self.rotated_grid_from_reference_frame_from(
-            grid=xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T),
-            xp=xp,
-            **kwargs,
-        )
+        return xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T)
 
     def _convergence(self, radii, xp=np):
 
@@ -418,7 +413,7 @@ class dPIEMass(MassProfile):
         return xp.min(xp.array([ellip, MAX_ELLIP]))
 
     @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.grid_dec.transform(rotate_back=True)
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -443,12 +438,7 @@ class dPIEMass(MassProfile):
         deflection_x = zis.real
         deflection_y = zis.imag
 
-        # And here we convert back to the real axes
-        return self.rotated_grid_from_reference_frame_from(
-            grid=xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T),
-            xp=xp,
-            **kwargs,
-        )
+        return xp.multiply(factor, xp.vstack((deflection_y, deflection_x)).T)
 
     def _convergence(self, radii, xp=np):
 
@@ -594,7 +584,7 @@ class dPIEMassSph(dPIEMass):
         self.b0 = b0
 
     @aa.grid_dec.to_vector_yx
-    @aa.grid_dec.transform
+    @aa.grid_dec.transform(rotate_back=True)
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
         """
         Calculate the deflection angles on a grid of (y,x) arc-second coordinates.
@@ -627,12 +617,7 @@ class dPIEMassSph(dPIEMass):
         deflection_x = grid.array[:, 1] * factor
         deflection_y = grid.array[:, 0] * factor
 
-        # And here we convert back to the real axes
-        return self.rotated_grid_from_reference_frame_from(
-            grid=xp.multiply(1.0, xp.vstack((deflection_y, deflection_x)).T),
-            xp=xp,
-            **kwargs,
-        )
+        return xp.vstack((deflection_y, deflection_x)).T
 
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
