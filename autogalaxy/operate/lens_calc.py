@@ -359,9 +359,11 @@ class LensCalc:
 
         Two computational paths are available, selected via the `xp` parameter:
 
-        - **NumPy** (``xp=np``, default): finite-difference approximation. Deflection angles are
-          evaluated at four shifted positions around each grid coordinate (±y, ±x) and the
-          central difference is taken. JAX is not imported.
+        - **NumPy** (``xp=np``, default): 2-point central finite-difference approximation,
+          Richardson-extrapolated at step sizes ``h`` and ``h/2`` and combined as
+          ``(4 * H(h/2) - H(h)) / 3``. This cancels the leading ``O(h^2)`` truncation term,
+          giving ``O(h^4)`` accuracy and matching the JAX path to float64 precision. JAX is
+          not imported.
 
         - **JAX** (``xp=jnp``): exact derivatives via ``jax.jacfwd`` applied to
           ``deflections_yx_scalar``, vectorised over the grid with ``jnp.vectorize``.
@@ -377,8 +379,21 @@ class LensCalc:
             used and the type of the returned arrays.
         """
         if xp is np:
-            return self._hessian_via_finite_difference(grid=grid)
+            return self._hessian_via_richardson(grid=grid)
         return self._hessian_via_jax(grid=grid, xp=xp)
+
+    def _hessian_via_richardson(self, grid, buffer: float = 0.01) -> Tuple:
+        yy_h, xy_h, yx_h, xx_h = self._hessian_via_finite_difference(
+            grid=grid, buffer=buffer
+        )
+        yy_h2, xy_h2, yx_h2, xx_h2 = self._hessian_via_finite_difference(
+            grid=grid, buffer=buffer / 2.0
+        )
+        hessian_yy = (4.0 * yy_h2 - yy_h) / 3.0
+        hessian_xy = (4.0 * xy_h2 - xy_h) / 3.0
+        hessian_yx = (4.0 * yx_h2 - yx_h) / 3.0
+        hessian_xx = (4.0 * xx_h2 - xx_h) / 3.0
+        return hessian_yy, hessian_xy, hessian_yx, hessian_xx
 
     def _hessian_via_jax(self, grid, xp) -> Tuple:
         import jax
