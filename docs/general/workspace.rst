@@ -54,5 +54,5 @@ The **HowToGalaxy** lecture series are a collection of Jupyter notebooks describ
 fitting project and giving illustrations of different statistical methods and techniques.
 
 Checkout the
-`tutorials section <file:///Users/Jammy/Code/PyAutoJAX/PyAutoGalaxy/docs/_build/howtogalaxy/howtogalaxy.html>`_ for a
+`tutorials section <file:///Users/Jammy/Code/PyAutoLabs/PyAutoGalaxy/docs/_build/howtogalaxy/howtogalaxy.html>`_ for a
 full description of the lectures and online examples of every notebook.

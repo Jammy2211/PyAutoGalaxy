@@ -194,7 +194,7 @@ Scripts in `autogalaxy_workspace` and `autogalaxy_workspace_test` use `"""..."""
 
 ### Workspace (Examples & Notebooks)
 
-The `autogalaxy_workspace` at `/mnt/c/Users/Jammy/Code/PyAutoJAX/autogalaxy_workspace` contains runnable examples and tutorials. Key locations:
+The `autogalaxy_workspace` at `/mnt/c/Users/Jammy/Code/PyAutoLabs/autogalaxy_workspace` contains runnable examples and tutorials. Key locations:
 
 - `start_here.ipynb` / `start_here.py` – entry point overview of the API
 - `scripts/imaging/` – end-to-end scripts: `simulator.py`, `fit.py`, `modeling.py`, `likelihood_function.py`, `features/`
