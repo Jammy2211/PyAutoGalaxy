@@ -6,11 +6,11 @@ robust modeling of large galaxy samples.
 
 The chapter contains the following tutorials:
 
-`Tutorial 1: Search Chaining <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=notebooks/howtogalaxy/chapter_3_search_chaining/tutorial_1_search_chaining.ipynb>`_
+`Tutorial 1: Search Chaining <https://colab.research.google.com/github/PyAutoLabs/autogalaxy_workspace/blob/2026.4.13.6/notebooks/howtogalaxy/chapter_3_search_chaining/tutorial_1_search_chaining.ipynb>`_
 - Breaking the modeling procedure into a chained sequence of model-fits.
 
-`Tutorial 2: Prior Passing <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=notebooks/howtogalaxy/chapter_3_search_chaining/tutorial_2_prior_passing.ipynb>`_
+`Tutorial 2: Prior Passing <https://colab.research.google.com/github/PyAutoLabs/autogalaxy_workspace/blob/2026.4.13.6/notebooks/howtogalaxy/chapter_3_search_chaining/tutorial_2_prior_passing.ipynb>`_
 - How the results of earlier searches are passed to later searches.
 
-`Tutorial 3: x2 Galaxies <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=notebooks/howtogalaxy/chapter_3_search_chaining/tutorial_3_x2_galaxies.ipynb>`_
+`Tutorial 3: x2 Galaxies <https://colab.research.google.com/github/PyAutoLabs/autogalaxy_workspace/blob/2026.4.13.6/notebooks/howtogalaxy/chapter_3_search_chaining/tutorial_3_x2_galaxies.ipynb>`_
 - Modeling a dataset with two galaxies using chained searches.
