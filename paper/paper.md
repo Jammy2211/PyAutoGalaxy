@@ -75,7 +75,7 @@ massively parallel model-fitting and an SQLite3 database that allows large suite
 queried and analysed. Accompanying `PyAutoGalaxy` is the [autogalaxy workspace](https://github.com/Jammy2211/autogalaxy_workspace), 
 which includes example scripts, datasets and the `HowToGalaxy` lectures in Jupyter notebook format which introduce 
 non-experts to studies of galaxy morphology using `PyAutoGalaxy`. Readers can try `PyAutoGalaxy` right now by going 
-to [the introduction Jupyter notebook on Binder](https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release) or 
+to [the introduction Jupyter notebook on Colab](https://colab.research.google.com/github/PyAutoLabs/autogalaxy_workspace/blob/2026.4.13.6/start_here.ipynb) or 
 checkout the [readthedocs](https://pyautogalaxy.readthedocs.io/en/latest/) for a complete overview of `PyAutoGalaxy`'s 
 features.
 
@@ -156,7 +156,7 @@ contains example scripts for modeling and simulating galaxies and tutorials on h
 interferometer datasets before a `PyAutoGalaxy` analysis. Also included are the `HowToGalaxy` tutorials, a four-chapter 
 lecture series composed of over 20 Jupyter notebooks aimed at non-experts, introducing them to galaxy morphology 
 analysis, Bayesian inference and teaching them how to use `PyAutoGalaxy` for scientific study. The lectures 
-are available on [Binder](https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/HEAD) and may therefore be 
+are available on [Colab](https://colab.research.google.com/github/PyAutoLabs/autogalaxy_workspace/blob/2026.4.13.6/start_here.ipynb) and may therefore be 
 taken without a local `PyAutoGalaxy` installation.
 
 # Software Citations

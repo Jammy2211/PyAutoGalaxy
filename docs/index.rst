@@ -21,7 +21,7 @@ The following links are useful for new starters:
 
 - `The PyAutoGalaxy readthedocs <https://pyautogalaxy.readthedocs.io/en/latest/>`_, which includes `an overview of PyAutoGalaxy's core features <https://pyautogalaxy.readthedocs.io/en/latest/overview/overview_1_start_here.html>`_, `a new user starting guide <https://pyautogalaxy.readthedocs.io/en/latest/overview/overview_2_new_user_guide.html>`_ and `an installation guide <https://pyautogalaxy.readthedocs.io/en/latest/installation/overview.html>`_.
 
-- `The introduction Jupyter Notebook on Binder <https://mybinder.org/v2/gh/Jammy2211/autogalaxy_workspace/release?filepath=start_here.ipynb>`_, where you can try **PyAutoGalaxy** in a web browser (without installation).
+- `The introduction Jupyter Notebook on Colab <https://colab.research.google.com/github/PyAutoLabs/autogalaxy_workspace/blob/2026.4.13.6/start_here.ipynb>`_, where you can try **PyAutoGalaxy** in a web browser (without installation).
 
 - `The autogalaxy_workspace GitHub repository <https://github.com/Jammy2211/autogalaxy_workspace>`_, which includes example scripts and the `HowToGalaxy Jupyter notebook lectures <https://github.com/Jammy2211/autogalaxy_workspace/tree/main/notebooks/howtogalaxy>`_ which give new users a step-by-step introduction to **PyAutoGalaxy**.
 
