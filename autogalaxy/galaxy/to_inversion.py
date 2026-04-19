@@ -425,6 +425,22 @@ class GalaxiesToInversion(AbstractToInversion):
             except (AttributeError, KeyError, TypeError):
                 image_plane_mesh_grid = None
 
+            if image_plane_mesh_grid is None:
+                # Fallback for JAX JIT: after jax.jit unflatten the galaxy instances
+                # stored as keys in ``adapt_images`` are stale (different Python objects
+                # from those in the current tracer), so the dict key lookup above fails
+                # and yields None.  When the dict contains exactly one mesh-grid entry,
+                # take that single value by insertion order — this is always correct in
+                # the one-pixelised-source case (Delaunay/Hilbert image-mesh fits).
+                # fit-imaging-pytree-delaunay
+                try:
+                    dict_ = self.adapt_images.galaxy_image_plane_mesh_grid_dict
+                    vals = list(dict_.values()) if dict_ else []
+                    if len(vals) == 1:
+                        image_plane_mesh_grid = vals[0]
+                except (AttributeError, TypeError, KeyError):
+                    pass
+
             image_plane_mesh_grid_list.append(image_plane_mesh_grid)
 
         return image_plane_mesh_grid_list
