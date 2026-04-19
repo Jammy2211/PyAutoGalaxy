@@ -13,6 +13,7 @@ The `LightProfileLinearObjFuncList` subclass additionally supports regularizatio
 intensities to be penalized by a smoothness prior.
 """
 import inspect
+import itertools
 import numpy as np
 from typing import Dict, List, Optional
 
@@ -44,6 +45,22 @@ class LightProfileLinear(LightProfile):
     This inheritance is used throughout the `galaxy.py`, `tracer.py` and other modules to extract linear light
     profiles when performing a fit to data.
     """
+
+    _pytree_token_counter = itertools.count()
+    __exclude_identifier_fields__ = ("pytree_token",)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.pytree_token = next(LightProfileLinear._pytree_token_counter)
+
+    def __hash__(self):
+        return self.pytree_token
+
+    def __eq__(self, other):
+        return (
+            isinstance(other, LightProfileLinear)
+            and self.pytree_token == other.pytree_token
+        )
 
     @property
     def regularization(self):
