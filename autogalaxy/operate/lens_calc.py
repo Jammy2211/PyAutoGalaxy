@@ -625,6 +625,10 @@ class LensCalc:
         """
         tangential_eigen_values = self.tangential_eigen_value_from(grid=grid)
 
+        vals = tangential_eigen_values.native
+        if vals.min() > -1e-6 or vals.max() < 1e-6:
+            return []
+
         return self.contour_list_from(grid=grid, contour_array=tangential_eigen_values)
 
     @evaluation_grid
@@ -650,6 +654,10 @@ class LensCalc:
             critical curve to be computed more accurately using a higher resolution grid.
         """
         radial_eigen_values = self.radial_eigen_value_from(grid=grid)
+
+        vals = radial_eigen_values.native
+        if vals.min() > -1e-6 or vals.max() < 1e-6:
+            return []
 
         return self.contour_list_from(grid=grid, contour_array=radial_eigen_values)
 
