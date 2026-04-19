@@ -5,7 +5,7 @@ general:
   log10_min_value: 1.0e-4
   log10_max_value: 1.0e99
   zoom_around_mask: true
-  critical_curves_method: zero_contour
+  critical_curves_method: marching_squares
 inversion:
   reconstruction_vmax_factor: 0.5
   total_mappings_pixels: 8
