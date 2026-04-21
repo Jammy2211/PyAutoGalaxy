@@ -23,7 +23,9 @@ The following links are useful for new starters:
 
 - `The introduction Jupyter Notebook on Colab <https://colab.research.google.com/github/PyAutoLabs/autogalaxy_workspace/blob/2026.4.13.6/start_here.ipynb>`_, where you can try **PyAutoGalaxy** in a web browser (without installation).
 
-- `The autogalaxy_workspace GitHub repository <https://github.com/Jammy2211/autogalaxy_workspace>`_, which includes example scripts and the `HowToGalaxy Jupyter notebook lectures <https://github.com/Jammy2211/autogalaxy_workspace/tree/main/notebooks/howtogalaxy>`_ which give new users a step-by-step introduction to **PyAutoGalaxy**.
+- `The autogalaxy_workspace GitHub repository <https://github.com/PyAutoLabs/autogalaxy_workspace>`_: example scripts covering every **PyAutoGalaxy** use case.
+
+- `The HowToGalaxy GitHub repository <https://github.com/PyAutoLabs/HowToGalaxy>`_: a Jupyter notebook lecture series teaching galaxy modeling from the ground up.
 
 Core Aims
 =========
@@ -45,8 +47,9 @@ places a focus on **big data** analysis, including support for hierarchical mode
 galaxies, massively parallel model-fitting and an SQLite3 database that allows large suites of modeling results to be
 loaded, queried and analysed.
 
-The software comes distributed with the **HowToGalaxy** Jupyter notebook lectures, which are written assuming no
-previous knowledge about galaxy structure and teach a new user theory and statistics required to analyse
+The **HowToGalaxy** Jupyter notebook lectures, which live in their own
+`PyAutoLabs/HowToGalaxy <https://github.com/PyAutoLabs/HowToGalaxy>`_ repository, are written assuming no
+previous knowledge about galaxy structure and teach a new user the theory and statistics required to analyse
 galaxy data. Checkout `the howtogalaxy section of
 the readthedocs <https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/howtogalaxy.html>`_.
 

@@ -3,8 +3,8 @@
 HowToGalaxy Lectures
 ====================
 
-The best way to learn **PyAutoGalaxy** is by going through the **HowToGalaxy** lecture series on the
-`autogalaxy workspace <https://github.com/Jammy2211/autogalaxy_workspace>`_.
+The best way to learn **PyAutoGalaxy** is by going through the **HowToGalaxy** lecture series, which lives in its own
+repository at `PyAutoLabs/HowToGalaxy <https://github.com/PyAutoLabs/HowToGalaxy>`_.
 
 The lectures are provided as Jupyter notebooks (and Python scripts), and they are linked to via this readthedocs. The
 lectures are composed of five chapters
@@ -23,7 +23,8 @@ in the later chapters are pretty challenging, and familiarity and modeling is de
 you tackle them.
 
 Therefore, we recommend that you complete chapters 1 & 2 and then apply what you've learnt to the modeling of simulated
-and real galaxy data, using the scripts found in the 'autogalaxy_workspace'. Once you're happy
+and real galaxy data, using the scripts found in the
+`autogalaxy_workspace <https://github.com/PyAutoLabs/autogalaxy_workspace>`_. Once you're happy
 with the results and confident with your use of **PyAutoGalaxy**, you can then begin to cover the advanced functionality
 covered in chapters 3 & 4.
 
@@ -40,8 +41,8 @@ Notebooks are a different way to write, view and use Python code. Compared to th
 This makes them an ideal way for us to present the HowToFit lecture series, therefore I recommend you get yourself
 a Jupyter notebook viewer (https://jupyter.org/) if you havent done so already.
 
-If you *really* want to use Python scripts, all tutorials are supplied a .py python files in the 'scripts' folder of
-the workspace.
+If you *really* want to use Python scripts, all tutorials are also supplied as ``.py`` files in the ``scripts`` folder
+of the `HowToGalaxy repository <https://github.com/PyAutoLabs/HowToGalaxy>`_.
 
 Visualization
 -------------

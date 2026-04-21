@@ -34,7 +34,7 @@ PyAutoGalaxy: Open-Source Multi Wavelength Galaxy Structure & Morphology
 
 `Installation Guide <https://pyautogalaxy.readthedocs.io/en/latest/installation/overview.html>`_ |
 `readthedocs <https://pyautogalaxy.readthedocs.io/en/latest/index.html>`_ |
-`Introduction on Colab <https://colab.research.google.com/github/PyAutoLabs/autogalaxy_workspace/blob/2026.4.13.6/start_here.ipynb>`_
+`Introduction on Colab <https://colab.research.google.com/github/PyAutoLabs/autogalaxy_workspace/blob/2026.4.13.6/start_here.ipynb>`_ |
 `HowToGalaxy <https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/howtogalaxy.html>`_
 
 **PyAutoGalaxy** is software for analysing the morphologies and structures of galaxies:
@@ -56,7 +56,9 @@ The following links are useful for new starters:
 
 - `The introduction Jupyter Notebook on Google Colab <https://colab.research.google.com/github/PyAutoLabs/autogalaxy_workspace/blob/2026.4.13.6/start_here.ipynb>`_, where you can try **PyAutoGalaxy** in a web browser (without installation).
 
-- `The autogalaxy_workspace GitHub repository <https://github.com/Jammy2211/autogalaxy_workspace>`_, which includes example scripts and the `HowToGalaxy Jupyter notebook lectures <https://github.com/Jammy2211/autogalaxy_workspace/tree/main/notebooks/howtogalaxy>`_ which give new users a step-by-step introduction to **PyAutoGalaxy**.
+- `The autogalaxy_workspace GitHub repository <https://github.com/PyAutoLabs/autogalaxy_workspace>`_: example scripts covering every **PyAutoGalaxy** use case.
+
+- `The HowToGalaxy GitHub repository <https://github.com/PyAutoLabs/HowToGalaxy>`_: a Jupyter notebook lecture series teaching galaxy modeling from the ground up.
 
 Core Aims
 ---------
@@ -81,8 +83,6 @@ Slack is invitation-only. If you’d like to join, please send an email requesti
 
 For installation issues, bug reports, or feature requests, please raise an issue on the `GitHub issues page <https://github.com/Jammy2211/PyAutoGalaxy/issues>`_.
 
-Here’s a clean, **AutoGalaxy**-appropriate rewrite, keeping the same structure and tone but removing lensing-specific language:
-
 HowToGalaxy
 -----------
 
@@ -90,7 +90,7 @@ For users less familiar with galaxy analysis, Bayesian inference, and scientific
 the **HowToGalaxy** lectures. These introduce the basic principles of galaxy modeling and Bayesian inference, with
 the material pitched at undergraduate level and above.
 
-A complete overview of the lectures is provided on the `HowToGalaxy readthedocs page <https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/howtogalaxy.html>`_
+A complete overview of the lectures `is provided on the HowToGalaxy readthedocs page <https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/howtogalaxy.html>`_, and the notebooks themselves live in the `PyAutoLabs/HowToGalaxy <https://github.com/PyAutoLabs/HowToGalaxy>`_ repository.
 
 Citations
 ---------

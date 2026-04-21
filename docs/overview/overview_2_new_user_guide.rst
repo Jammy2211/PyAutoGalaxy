@@ -54,12 +54,11 @@ morphology were already familiar and the statistical techniques used for fitting
 For those less familiar with these concepts (e.g. undergraduate students, new PhD students or interested members of the
 public), things may have been less clear and a slower more detailed explanation of each concept would be beneficial.
 
-The **HowToGalaxy** Jupyter Notebook lectures are provide exactly this They are a 3+ chapter guide which thoroughly
-take you through the core concepts of galaxy light profiles, teach you the principles ofthe  statistical techniques
-used in modeling and ultimately will allow you to undertake scientific research like a professional astronomer.
+The **HowToGalaxy** Jupyter Notebook lectures provide exactly this. They are a 3+ chapter guide which thoroughly
+takes you through the core concepts of galaxy light profiles, teaches you the principles of the statistical
+techniques used in modeling and ultimately will allow you to undertake scientific research like a professional astronomer.
 
-If this sounds like it suits you, checkout the ``autogalaxy_workspace/notebooks/howtogalaxy`` package now, its it
-recommended you go here before anywhere else!
+If this sounds like it suits you, checkout the `HowToGalaxy <https://github.com/PyAutoLabs/HowToGalaxy>`_ repository now.
 
 Wrap Up
 -------

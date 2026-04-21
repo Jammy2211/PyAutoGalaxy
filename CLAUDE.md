@@ -199,10 +199,11 @@ The `autogalaxy_workspace` at `/mnt/c/Users/Jammy/Code/PyAutoLabs/autogalaxy_wor
 - `start_here.ipynb` / `start_here.py` – entry point overview of the API
 - `scripts/imaging/` – end-to-end scripts: `simulator.py`, `fit.py`, `modeling.py`, `likelihood_function.py`, `features/`
 - `scripts/interferometer/`, `scripts/ellipse/`, `scripts/multi/` – same structure for other dataset types
-- `scripts/howtogalaxy/` – chapter-by-chapter tutorial scripts (chapters 1–4 + optional)
 - `notebooks/` – Jupyter notebook equivalents of all `scripts/`
 - `scripts/guides/` – topic guides (e.g. linear profiles, pixelizations, chaining)
 - `config/` – workspace-level config that overrides package defaults when running workspace scripts
+
+The **HowToGalaxy** tutorial series lives in its own repository at `PyAutoLabs/HowToGalaxy` (no longer under the workspace).
 
 ### Namespace Conventions
 
