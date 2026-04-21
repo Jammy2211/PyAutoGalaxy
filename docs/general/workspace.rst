@@ -50,9 +50,10 @@ The folder where  modeling results are stored.
 HowToGalaxy
 -----------
 
-The **HowToGalaxy** lecture series are a collection of Jupyter notebooks describing how to build a **PyAutoGalaxy** model
-fitting project and giving illustrations of different statistical methods and techniques.
+The **HowToGalaxy** lecture series is a collection of Jupyter notebooks describing how to build a **PyAutoGalaxy** model
+fitting project and giving illustrations of different statistical methods and techniques. It ships as a standalone
+repository at `PyAutoLabs/HowToGalaxy <https://github.com/PyAutoLabs/HowToGalaxy>`_ (separate from the workspace).
 
 Checkout the
-`tutorials section <file:///Users/Jammy/Code/PyAutoLabs/PyAutoGalaxy/docs/_build/howtogalaxy/howtogalaxy.html>`_ for a
+`tutorials section <https://pyautogalaxy.readthedocs.io/en/latest/howtogalaxy/howtogalaxy.html>`_ for a
 full description of the lectures and online examples of every notebook.
