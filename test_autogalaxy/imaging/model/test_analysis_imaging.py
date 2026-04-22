@@ -37,3 +37,18 @@ def test__figure_of_merit__matches_correct_fit_given_galaxy_profiles(
     fit = ag.FitImaging(dataset=masked_imaging_7x7, galaxies=galaxies)
 
     assert fit.log_likelihood == fit_figure_of_merit
+
+
+def test__register_fit_imaging_pytrees__registers_fit_galaxies_and_dataset_model():
+    from autoarray.abstract_ndarray import _pytree_registered_classes
+    from autoarray.dataset.dataset_model import DatasetModel
+    from autogalaxy.galaxy.galaxies import Galaxies
+    from autogalaxy.imaging.fit_imaging import FitImaging
+
+    ag.AnalysisImaging._register_fit_imaging_pytrees()
+
+    assert FitImaging in _pytree_registered_classes
+    assert DatasetModel in _pytree_registered_classes
+    assert Galaxies in _pytree_registered_classes
+
+
