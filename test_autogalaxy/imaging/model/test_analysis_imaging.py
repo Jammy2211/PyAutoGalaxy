@@ -50,3 +50,5 @@ def test__register_fit_imaging_pytrees__registers_fit_galaxies_and_dataset_model
     assert FitImaging in _pytree_registered_classes
     assert DatasetModel in _pytree_registered_classes
     assert Galaxies in _pytree_registered_classes
+
+
