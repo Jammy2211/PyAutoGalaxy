@@ -110,20 +110,45 @@ class Isothermal(PowerLaw):
     @aa.decorators.to_vector_yx
     @aa.decorators.transform
     def shear_yx_2d_from(self, grid: aa.type.Grid2DLike, xp=np, **kwargs):
-        """
-        Calculate the (gamma_y, gamma_x) shear vector field on a grid of (y,x) arc-second coordinates.
+        r"""
+        Returns the analytic 2D weak-lensing shear vector field :math:`(\gamma_2, \gamma_1)` of the elliptical
+        isothermal mass distribution on a grid of ``(y, x)`` arc-second coordinates.
 
-        The result is returned as a `ShearYX2D` dats structure, which has shape [total_shear_vectors, 2], where
-        entries for [:,0] are the gamma_2 values and entries for [:,1] are the gamma_1 values.
+        For an axis-aligned isothermal profile centred on the origin the shear components reduce to:
 
-        Note therefore that this convention means the FIRST entries in the array are the gamma_2 values and the SECOND
-        entries are the gamma_1 values.
+        .. math::
+
+            \gamma_1 = -\kappa(\theta) \, \frac{x^2 - y^2}{x^2 + y^2}
+
+            \gamma_2 = -2 \, \kappa(\theta) \, \frac{x \, y}{x^2 + y^2}
+
+        where :math:`\kappa(\theta)` is the convergence at the rotated grid coordinate.  After evaluation in the
+        profile's reference frame the shear vector field is rotated back into the original frame using the
+        ``2 * angle`` rotation appropriate for a spin-2 quantity (the shear transforms as a spin-2 field, so a
+        coordinate rotation by ``angle`` rotates the components by ``2 * angle``).
+
+        This analytic path is mathematically equivalent to ``LensCalc.shear_yx_2d_via_hessian_from``, which
+        derives the same shear from finite-difference (or JAX) derivatives of ``deflections_yx_2d_from``.  The
+        cross-check is exercised in
+        ``test_autogalaxy/profiles/mass/total/test_isothermal.py::test__shear_yx_2d_from__matches_via_hessian``.
+
+        Convention
+        ----------
+        The result is returned as a vector-field with shape ``[total_shear_vectors, 2]`` where:
+
+        - ``[:, 0]`` are the :math:`\gamma_2` values
+        - ``[:, 1]`` are the :math:`\gamma_1` values
+
+        i.e. the FIRST column is :math:`\gamma_2` and the SECOND column is :math:`\gamma_1`.  This ordering
+        matches the convention used by ``ShearYX2D`` / ``ShearYX2DIrregular`` and
+        ``LensCalc.shear_yx_2d_via_hessian_from``.
 
         Parameters
         ----------
         grid
-            The grid of (y,x) arc-second coordinates the deflection angles are computed on.
-
+            The grid of (y,x) arc-second coordinates the shear vectors are computed on.
+        xp
+            The array module (``numpy`` or ``jax.numpy``).
         """
 
         convergence = self.convergence_2d_from(grid=grid, xp=xp, **kwargs)
