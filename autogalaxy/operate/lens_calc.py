@@ -519,33 +519,53 @@ class LensCalc:
         return convergence
 
     def shear_yx_2d_via_hessian_from(self, grid, xp=np) -> ShearYX2DIrregular:
-        """
-        Returns the 2D (y,x) shear vectors of the lensing object, which are computed from the 2D deflection angle map
-        via the Hessian using the expressions (see equation 57 https://inspirehep.net/literature/419263):
+        r"""
+        Returns the 2D weak-lensing shear vector field of the lensing object, computed from the deflection-angle
+        Hessian (see equation 57 of https://inspirehep.net/literature/419263):
 
-        `shear_y = hessian_{1,0} =  hessian_{0,1} = hessian_yx = hessian_xy`
-        `shear_x = 0.5 * (hessian_{0,0} - hessian_{1,1}) = 0.5 * (hessian_xx - hessian_yy)`
+        .. math::
 
-        By going via the Hessian, the shear vectors can be calculated at any (y,x) coordinate, therefore using either a
-        2D uniform or irregular grid.
+            \gamma_1 = \tfrac{1}{2} (\partial^2 \psi / \partial x^2 - \partial^2 \psi / \partial y^2)
+                     = 0.5 \, (H_{xx} - H_{yy})
 
-        This calculation of the shear vectors is independent of analytic calculations defined within `MassProfile`
-        objects and can therefore be used as a cross-check.
+            \gamma_2 = \partial^2 \psi / \partial x \partial y
+                     = H_{xy} = H_{yx}
 
-        The result is returned as a `ShearYX2D` dats structure, which has shape [total_shear_vectors, 2], where
-        entries for [:,0] are the gamma_2 values and entries for [:,1] are the gamma_1 values.
+        where :math:`\psi(\theta)` is the lensing potential and :math:`H_{ij}` are its second partial derivatives,
+        i.e. the components of the Hessian returned by ``hessian_from``.  The two components together encode the
+        full distortion tensor of a background source: :math:`\gamma_1` is the stretch along the x/y axes and
+        :math:`\gamma_2` is the stretch along the diagonals.
 
-        Note therefore that this convention means the FIRST entries in the array are the gamma_2 values and the SECOND
-        entries are the gamma_1 values.
+        Because the Hessian is computed numerically (Richardson-extrapolated finite differences in NumPy, or
+        ``jax.jacfwd`` in JAX), this routine works for **any** ``MassProfile``, ``Galaxy``, ``Galaxies`` or
+        ``Tracer`` that exposes ``deflections_yx_2d_from`` — no per-profile analytic formula is required.  It can
+        therefore be used as a numerical cross-check of analytic shear methods such as
+        ``Isothermal.shear_yx_2d_from`` (see ``test_isothermal.py``).  It also accepts both uniform ``Grid2D`` and
+        irregular ``Grid2DIrregular`` grids, which makes it the natural choice for simulating a weak-lensing
+        shear field on either a regular pixel grid or at the discrete positions of background source galaxies.
+
+        Convention
+        ----------
+        The result is returned as a ``ShearYX2DIrregular`` data structure of shape ``[total_shear_vectors, 2]``,
+        where:
+
+        - ``[:, 0]`` are the :math:`\gamma_2` values
+        - ``[:, 1]`` are the :math:`\gamma_1` values
+
+        Note therefore that the FIRST column is :math:`\gamma_2` and the SECOND column is :math:`\gamma_1`.  This
+        ordering matches the ``[y, x]`` ordering used elsewhere in the project for vector fields, since
+        :math:`\gamma_2` plays the role of the "y" component and :math:`\gamma_1` the "x" component when the shear
+        field is treated as a 2D pseudo-vector.
 
         Parameters
         ----------
-        grids
+        grid
             The 2D grid of (y,x) arc-second coordinates the deflection angles and Hessian are computed on.
         xp
-            The array module to use for the computation (e.g. `numpy` or `jax.numpy`). Passed through to
-            `hessian_from`. When `xp` is not `numpy` (e.g. inside a `jax.jit` trace) the result is returned
-            as a raw array of shape `(N, 2)` rather than a `ShearYX2DIrregular` wrapper.
+            The array module to use for the computation (e.g. ``numpy`` or ``jax.numpy``).  Passed through to
+            ``hessian_from``.  When ``xp`` is not ``numpy`` (e.g. inside a ``jax.jit`` trace) the result is
+            returned as a raw array of shape ``(N, 2)`` rather than a ``ShearYX2DIrregular`` wrapper, because
+            ``ShearYX2DIrregular`` is not a registered JAX pytree.
         """
 
         hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
