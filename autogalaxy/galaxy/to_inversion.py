@@ -213,6 +213,7 @@ class GalaxiesToInversion(AbstractToInversion):
         adapt_images: Optional[AdaptImages] = None,
         settings: aa.Settings = None,
         xp=np,
+        path_galaxies: Optional[List[Galaxy]] = None,
     ):
         """
         Interfaces a dataset and input list of galaxies with the inversion module. to setup a
@@ -247,8 +248,13 @@ class GalaxiesToInversion(AbstractToInversion):
             the pixelization's pixels to the brightest regions of the image.
         settings
             The settings of the inversion, which controls how the linear algebra calculation is performed.
+        path_galaxies
+            The full ordered list of galaxies that ``adapt_images.galaxy_path_list`` was aligned with (typically
+            ``tracer.galaxies`` in autolens, where ``galaxies`` is a per-plane subset). When ``None`` defaults to
+            ``galaxies`` — correct for the single-plane autogalaxy case.
         """
         self.galaxies = Galaxies(galaxies)
+        self.path_galaxies = path_galaxies if path_galaxies is not None else self.galaxies
 
         super().__init__(
             dataset=dataset,
@@ -418,28 +424,12 @@ class GalaxiesToInversion(AbstractToInversion):
         image_plane_mesh_grid_list = []
 
         for galaxy in self.galaxies.galaxies_with_cls_list_from(cls=aa.Pixelization):
-            try:
-                image_plane_mesh_grid = (
-                    self.adapt_images.galaxy_image_plane_mesh_grid_dict[galaxy]
-                )
-            except (AttributeError, KeyError, TypeError):
+            if self.adapt_images is None:
                 image_plane_mesh_grid = None
-
-            if image_plane_mesh_grid is None:
-                # Fallback for JAX JIT: after jax.jit unflatten the galaxy instances
-                # stored as keys in ``adapt_images`` are stale (different Python objects
-                # from those in the current tracer), so the dict key lookup above fails
-                # and yields None.  When the dict contains exactly one mesh-grid entry,
-                # take that single value by insertion order — this is always correct in
-                # the one-pixelised-source case (Delaunay/Hilbert image-mesh fits).
-                # fit-imaging-pytree-delaunay
-                try:
-                    dict_ = self.adapt_images.galaxy_image_plane_mesh_grid_dict
-                    vals = list(dict_.values()) if dict_ else []
-                    if len(vals) == 1:
-                        image_plane_mesh_grid = vals[0]
-                except (AttributeError, TypeError, KeyError):
-                    pass
+            else:
+                image_plane_mesh_grid = self.adapt_images.image_plane_mesh_grid_for_galaxy(
+                    galaxy, self.path_galaxies
+                )
 
             image_plane_mesh_grid_list.append(image_plane_mesh_grid)
 
@@ -551,10 +541,12 @@ class GalaxiesToInversion(AbstractToInversion):
         for mapper_index in range(len(mesh_grid_list)):
             galaxy = galaxies_with_pixelization_list[mapper_index]
 
-            try:
-                adapt_galaxy_image = self.adapt_images.galaxy_image_dict[galaxy]
-            except (AttributeError, KeyError):
+            if self.adapt_images is None:
                 adapt_galaxy_image = None
+            else:
+                adapt_galaxy_image = self.adapt_images.image_for_galaxy(
+                    galaxy, self.path_galaxies
+                )
 
             mapper = self.mapper_from(
                 mesh=pixelization_list[mapper_index].mesh,

@@ -169,8 +169,14 @@ class AnalysisDataset(Analysis):
         except AttributeError:
             pass
 
-    def adapt_images_via_instance_from(self, instance: af.ModelInstance) -> AdaptImages:
+    def adapt_images_via_instance_from(
+        self,
+        instance: af.ModelInstance,
+        galaxies=None,
+    ) -> AdaptImages:
         try:
-            return self.adapt_images.updated_via_instance_from(instance=instance)
+            return self.adapt_images.updated_via_instance_from(
+                instance=instance, galaxies=galaxies
+            )
         except AttributeError:
             pass
