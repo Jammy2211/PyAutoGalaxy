@@ -39,6 +39,7 @@ class AnalysisImaging(AnalysisDataset):
         settings: aa.Settings = None,
         title_prefix: str = None,
         use_jax: bool = True,
+        **kwargs,
     ):
         """
         Fits a galaxy model to an imaging dataset via a non-linear search.
@@ -77,6 +78,7 @@ class AnalysisImaging(AnalysisDataset):
             settings=settings,
             title_prefix=title_prefix,
             use_jax=use_jax,
+            **kwargs,
         )
 
     @property
