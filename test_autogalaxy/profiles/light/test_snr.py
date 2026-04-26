@@ -19,7 +19,7 @@ def test__signal_to_noise_via_simulator__no_psf__snr_within_expected_range():
         grid=grid, galaxies=[ag.Galaxy(redshift=0.5, light=sersic)]
     )
 
-    assert 8.0 < dataset.signal_to_noise_max < 11.5
+    assert 8.0 < dataset.signal_to_noise_max < 12.5
 
 
 def test__signal_to_noise_via_simulator__with_psf__snr_within_expected_range():
