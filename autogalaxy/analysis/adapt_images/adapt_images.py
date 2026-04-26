@@ -1,6 +1,6 @@
 from __future__ import annotations
 import numpy as np
-from typing import TYPE_CHECKING, Dict, Optional, Tuple
+from typing import TYPE_CHECKING, Dict, List, Optional, Tuple
 
 from autoconf import conf
 from autoconf import cached_property
@@ -73,6 +73,7 @@ class AdaptImages:
         galaxy_name_image_plane_mesh_grid_dict: Optional[
             Dict[Tuple[str, ...], aa.Grid2DIrregular]
         ] = None,
+        galaxy_path_list: Optional[List[str]] = None,
     ):
         """
         Contains the adapt-images which are used to make a pixelization's mesh and regularization adapt to the
@@ -116,6 +117,14 @@ class AdaptImages:
             galaxy_name_image_plane_mesh_grid_dict
         )
 
+        # Parallel to the analysis-time galaxies list (as built by
+        # ``Analysis.galaxies_via_instance_from``). Populated by
+        # ``updated_via_instance_from`` and used by ``image_for_galaxy`` to
+        # recover the galaxy's path-tuple key after a JAX unflatten has produced
+        # fresh ``Galaxy`` objects whose hashes no longer match
+        # ``galaxy_image_dict`` keys.
+        self.galaxy_path_list = galaxy_path_list
+
     @property
     def mask(self) -> aa.Mask2D:
         """
@@ -147,7 +156,9 @@ class AdaptImages:
 
         return adapt_model_image
 
-    def updated_via_instance_from(self, instance, mask=None) -> "AdaptImages":
+    def updated_via_instance_from(
+        self, instance, mask=None, galaxies: Optional[List["Galaxy"]] = None
+    ) -> "AdaptImages":
         """
         Returns adapt-images which have been updated to map galaxy instances instead of galaxy names.
 
@@ -170,12 +181,24 @@ class AdaptImages:
         mask
             A mask which can be applied to the adapt images, which is used when setting up the adaptive images
             via the aggregator and autofit database tools.
+        galaxies
+            Optional list of galaxies in the order used by the calling ``Analysis`` (i.e. the list passed to
+            ``FitImaging`` / ``Tracer``). When provided, a parallel ``galaxy_path_list`` is populated so that
+            ``image_for_galaxy`` can recover the path-tuple key for each galaxy after JAX has unflattened the
+            galaxy instances into fresh objects. When ``None`` the path list is populated in ``path_instance_tuples_for_class``
+            order, which matches ``Analysis.galaxies_via_instance_from`` for the common case (no
+            ``extra_galaxies`` / ``scaling_galaxies``).
 
         Returns
         -------
 
         """
         from autogalaxy.galaxy.galaxy import Galaxy
+
+        path_by_id = {
+            id(galaxy): str(galaxy_name)
+            for galaxy_name, galaxy in instance.path_instance_tuples_for_class(Galaxy)
+        }
 
         galaxy_image_dict = None
 
@@ -207,7 +230,73 @@ class AdaptImages:
                         self.galaxy_name_image_plane_mesh_grid_dict[galaxy_name]
                     )
 
+        if galaxies is not None:
+            galaxy_path_list = [path_by_id.get(id(g)) for g in galaxies]
+        else:
+            galaxy_path_list = [
+                str(galaxy_name)
+                for galaxy_name, _ in instance.path_instance_tuples_for_class(Galaxy)
+            ]
+
         return AdaptImages(
             galaxy_image_dict=galaxy_image_dict,
             galaxy_image_plane_mesh_grid_dict=galaxy_image_plane_mesh_grid_dict,
+            galaxy_name_image_dict=self.galaxy_name_image_dict,
+            galaxy_name_image_plane_mesh_grid_dict=self.galaxy_name_image_plane_mesh_grid_dict,
+            galaxy_path_list=galaxy_path_list,
         )
+
+    def image_for_galaxy(
+        self, galaxy: "Galaxy", galaxies: Optional[List["Galaxy"]] = None
+    ) -> Optional[aa.Array2D]:
+        """
+        Return the adapt image for ``galaxy``, robust to JAX ``jit`` boundaries.
+
+        ``galaxy_image_dict`` is keyed by the trace-time ``Galaxy`` instances. After ``jax.jit`` has flattened
+        and unflattened a ``FitImaging``, the galaxies inside it are fresh Python objects whose ``__hash__``
+        differs from the trace-time keys, so a direct lookup misses. This helper falls back to the path-tuple
+        keyed ``galaxy_name_image_dict`` using ``galaxy_path_list`` to map the post-unflatten galaxy back to
+        its trace-time path.
+
+        Returns ``None`` when no adapt image is associated with the galaxy.
+        """
+        try:
+            return self.galaxy_image_dict[galaxy]
+        except (AttributeError, KeyError, TypeError):
+            pass
+
+        path = self._path_for_galaxy(galaxy, galaxies)
+        if path is None or self.galaxy_name_image_dict is None:
+            return None
+        return self.galaxy_name_image_dict.get(path)
+
+    def image_plane_mesh_grid_for_galaxy(
+        self, galaxy: "Galaxy", galaxies: Optional[List["Galaxy"]] = None
+    ) -> Optional[aa.Grid2DIrregular]:
+        """
+        Return the image-plane mesh grid for ``galaxy``, robust to JAX ``jit`` boundaries.
+
+        Companion to :meth:`image_for_galaxy` for ``galaxy_image_plane_mesh_grid_dict`` /
+        ``galaxy_name_image_plane_mesh_grid_dict``.
+        """
+        try:
+            return self.galaxy_image_plane_mesh_grid_dict[galaxy]
+        except (AttributeError, KeyError, TypeError):
+            pass
+
+        path = self._path_for_galaxy(galaxy, galaxies)
+        if path is None or self.galaxy_name_image_plane_mesh_grid_dict is None:
+            return None
+        return self.galaxy_name_image_plane_mesh_grid_dict.get(path)
+
+    def _path_for_galaxy(
+        self, galaxy: "Galaxy", galaxies: Optional[List["Galaxy"]]
+    ) -> Optional[str]:
+        if not self.galaxy_path_list or galaxies is None:
+            return None
+        for index, candidate in enumerate(galaxies):
+            if candidate is galaxy:
+                if index < len(self.galaxy_path_list):
+                    return self.galaxy_path_list[index]
+                return None
+        return None
