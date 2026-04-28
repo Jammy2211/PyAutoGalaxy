@@ -2,9 +2,7 @@
     "description": "Release which is tied to the publication of PyAutoGalaxy in the Journal of Open Source software (JOSS).",
     "license": "other-open",
     "title": "PyAutoGalaxy: Open-Source Multiwavelength Galaxy Structure & Morphology",
-    "version": "2024.1.27.4",
     "upload_type": "software",
-    "publication_date": "2023-01-19",
     "creators": [
         {
             "affiliation": "Institute for Computational Cosmology, Stockton Rd, Durham DH1 3LE",
@@ -61,11 +59,6 @@
     ],
     "access_right": "open",
     "related_identifiers": [
-        {
-            "scheme": "url",
-            "identifier": "https://github.com/Jammy2211/PyAutoGalaxy/tree/2024.1.27.4",
-            "relation": "isSupplementTo"
-        },
         {
             "scheme": "doi",
             "identifier": "10.5281/zenodo.7546914",
