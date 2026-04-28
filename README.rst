@@ -20,6 +20,10 @@ PyAutoGalaxy: Open-Source Multi Wavelength Galaxy Structure & Morphology
 .. image:: https://joss.theoj.org/papers/10.21105/joss.04475/status.svg
    :target: https://doi.org/10.21105/joss.04475
 
+.. image:: https://pyopensci.org/badges/peer-reviewed.svg
+   :target: https://github.com/pyOpenSci/software-submission/issues/235
+   :alt: pyOpenSci Peer-Reviewed
+
 .. image:: https://zenodo.org/badge/DOI/10.5281/zenodo.7546914.svg
    :target: https://doi.org/10.5281/zenodo.7546914
    :alt: Zenodo DOI
