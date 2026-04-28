@@ -62,6 +62,19 @@ class LightProfileLinear(LightProfile):
             and self.pytree_token == other.pytree_token
         )
 
+    def __getstate__(self):
+        # pytree_token is a process-local counter increment used only as a
+        # stable hash/eq identity for jax.jit flatten/unflatten round-trips.
+        # Persisting it would copy a number from one process's counter into
+        # another's — the JAX path uses register_model's attr_const which
+        # reads vars(self) directly and is unaffected by __getstate__.
+        return {k: v for k, v in self.__dict__.items() if k != "pytree_token"}
+
+    def __setstate__(self, state):
+        self.__dict__.update(state)
+        if "pytree_token" not in state:
+            self.pytree_token = next(LightProfileLinear._pytree_token_counter)
+
     @property
     def regularization(self):
         return None
