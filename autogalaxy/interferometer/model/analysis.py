@@ -142,6 +142,10 @@ class AnalysisInterferometer(AnalysisDataset):
         FitInterferometer
             The fit of the galaxies to the interferometer dataset, which includes the log likelihood.
         """
+
+        if self._use_jax:
+            self._register_fit_interferometer_pytrees()
+
         galaxies = self.galaxies_via_instance_from(
             instance=instance,
         )
@@ -157,6 +161,27 @@ class AnalysisInterferometer(AnalysisDataset):
             settings=self.settings,
             xp=self._xp,
         )
+
+    @staticmethod
+    def _register_fit_interferometer_pytrees() -> None:
+        """Register every type reachable from a ``FitInterferometer`` return
+        value so ``jax.jit(fit_from)`` can flatten its output.
+
+        ``dataset``, ``adapt_images`` and ``settings`` are constants per
+        analysis — ride as aux so JAX does not recurse into them. Everything
+        else (``galaxies`` and the autoarray wrappers it carries) is dynamic
+        per fit.
+        """
+        from autoarray.abstract_ndarray import register_instance_pytree
+        from autoarray.dataset.dataset_model import DatasetModel
+        from autogalaxy.analysis.jax_pytrees import register_galaxies_pytree
+
+        register_instance_pytree(
+            FitInterferometer,
+            no_flatten=("dataset", "adapt_images", "settings"),
+        )
+        register_instance_pytree(DatasetModel)
+        register_galaxies_pytree()
 
     def save_attributes(self, paths: af.DirectoryPaths):
         """
