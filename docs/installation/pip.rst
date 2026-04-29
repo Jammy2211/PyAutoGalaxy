@@ -70,8 +70,7 @@ the ``autogalaxy_workspace``, reducing the download size):
 .. code-block:: bash
 
    cd /path/on/your/computer/you/want/to/put/the/autogalaxy_workspace
-   AUTOGALAXY_VERSION=$(python -c "import autogalaxy; print(autogalaxy.__version__)")
-   git clone https://github.com/Jammy2211/autogalaxy_workspace --branch $AUTOGALAXY_VERSION --depth 1
+   git clone https://github.com/Jammy2211/autogalaxy_workspace --depth 1
    cd autogalaxy_workspace
 
 Run the ``welcome.py`` script to get started!
