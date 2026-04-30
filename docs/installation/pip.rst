@@ -28,38 +28,12 @@ the installation has clean dependencies):
 
     pip install autogalaxy
 
-You may get warnings which state something like:
+If pip prints warnings about dependency version conflicts, these can usually be ignored — the instructions below
+will identify clearly if the installation is a success.
 
-.. code-block:: bash
-
-    ERROR: autoarray 2026.4.5.3 has requirement numpy<=1.22.1, but you'll have numpy 1.22.2 which is incompatible.
-    ERROR: numba 0.53.1 has requirement llvmlite<0.37,>=0.36.0rc1, but you'll have llvmlite 0.38.0 which is incompatible.
-
-If you see these messages, they do not mean that the installation has failed and the instructions below will
-identify clearly if the installation is a success.
-
-If there are no errors (but only the warnings above) **PyAutoGalaxy** is installed!
+If there are no errors **PyAutoGalaxy** is installed!
 
 If there is an error check out the `troubleshooting section <https://pyautogalaxy.readthedocs.io/en/latest/installation/troubleshooting.html>`_.
-
-Numba
------
-
-Numba (https://numba.pydata.org)  is an optional library which makes **PyAutoGalaxy** run a lot faster, which we
-strongly recommend users have installed.
-
-You can install numba via the following command:
-
-.. code-block:: bash
-
-    pip install numba
-
-Some users have experienced difficulties installing numba, which is why it is an optional library. If your
-installation is not successful, you can use **PyAutoGalaxy** without it installed for now, to familiarize yourself
-with the software and determine if it is the right software for you.
-
-If you decide that **PyAutoGalaxy** is the right software, then I recommend you commit the time to getting a
-successful numba install working, with more information provided `at this readthedocs page <https://pyautogalaxy.readthedocs.io/en/latest/installation/numba.html>`_
 
 Workspace
 ---------
@@ -82,6 +56,25 @@ Run the ``welcome.py`` script to get started!
 It should be clear that **PyAutoGalaxy** runs without issue.
 
 If there is an error check out the `troubleshooting section <https://pyautogalaxy.readthedocs.io/en/latest/installation/troubleshooting.html>`_.
+
+Numba
+-----
+
+Numba (https://numba.pydata.org)  is an optional library which makes **PyAutoGalaxy** run a lot faster, which we
+strongly recommend users have installed.
+
+You can install numba via the following command:
+
+.. code-block:: bash
+
+    pip install numba
+
+Some users have experienced difficulties installing numba, which is why it is an optional library. If your
+installation is not successful, you can use **PyAutoGalaxy** without it installed for now, to familiarize yourself
+with the software and determine if it is the right software for you.
+
+If you decide that **PyAutoGalaxy** is the right software, then I recommend you commit the time to getting a
+successful numba install working, with more information provided `at this readthedocs page <https://pyautogalaxy.readthedocs.io/en/latest/installation/numba.html>`_
 
 Optional
 --------

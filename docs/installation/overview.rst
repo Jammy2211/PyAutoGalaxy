@@ -20,13 +20,6 @@ The installation guide for both approaches can be found at:
 Users who wish to build **PyAutoGalaxy** from source (e.g. via a ``git clone``) should follow
 our `building from source installation guide <https://pyautogalaxy.readthedocs.io/en/latest/installation/source.html>`_.
 
-Known Issues
-------------
-
-There is a known issue installing **PyAutoGalaxy** via both ``conda`` and ``pip`` associated with the libraries ``llvmlite``
-and ``numba``. If your installation raises an error mentioning either library, follow the instructions in
-our `troubleshooting section <https://pyautogalaxy.readthedocs.io/en/latest/installation/troubleshooting.html>`_.
-
 Dependencies
 ------------
 
