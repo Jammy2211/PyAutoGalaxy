@@ -333,6 +333,8 @@ def _critical_curves_method():
 
     Returns ``"marching_squares"`` (the default) or ``"zero_contour"``.
     Any unrecognised value falls back to ``"marching_squares"`` with a warning.
+    If ``"zero_contour"`` is requested but ``jax_zero_contour`` is not installed
+    (e.g. Python <3.11), falls back to ``"marching_squares"`` with a warning.
     """
     from autoconf import conf
 
@@ -347,6 +349,18 @@ def _critical_curves_method():
             f"'{method}'. Falling back to 'marching_squares'."
         )
         return "marching_squares"
+
+    if method == "zero_contour":
+        try:
+            import jax_zero_contour  # noqa: F401
+        except ImportError:
+            logger.warning(
+                "critical_curves_method='zero_contour' requested, but "
+                "jax_zero_contour is not installed (Python <3.11 ships without "
+                "the [jax] extra). Falling back to 'marching_squares'."
+            )
+            return "marching_squares"
+
     return method
 
 

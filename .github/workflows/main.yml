@@ -70,13 +70,7 @@ jobs:
         pip3 install setuptools
         pip3 install wheel
         pip3 install pytest coverage pytest-cov
-        if [ "${{ matrix.python-version }}" = "3.12" ]; then
-          pip install ./PyAutoConf ./PyAutoFit ./PyAutoArray ./PyAutoGalaxy
-          pip install "./PyAutoArray[optional]" "./PyAutoGalaxy[optional]"
-        else
-          pip install ./PyAutoConf ./PyAutoFit ./PyAutoArray ./PyAutoGalaxy
-          pip install numba
-        fi
+        pip install ./PyAutoConf ./PyAutoFit "./PyAutoArray[optional]" "./PyAutoGalaxy[optional]"
     - name: Run tests
       run: |
         export ROOT_DIR=`pwd`
