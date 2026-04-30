@@ -120,6 +120,10 @@ from autoconf.fitsable import hdu_list_for_output_from
 
 __version__ = "2026.4.13.6"
 
+from autoconf import check_version
+
+check_version(__version__)
+
 
 def __getattr__(name):
     if name == "plot":
