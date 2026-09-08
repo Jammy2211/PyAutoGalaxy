@@ -1,8 +1,27 @@
+import pickle
+
 import pytest
 import numpy as np
 
 import autofit as af
 import autogalaxy as ag
+
+
+def _ell_comps_1_vector_index(model, profile_index):
+    """
+    The index, in a physical parameter vector, of the `ell_comps_1` prior shared by the
+    basis that `profile_list[profile_index]` belongs to.
+
+    A vector is ordered by prior id (`prior_tuples_ordered_by_id`), which is what
+    `instance_from_vector` and `assertions_satisfied_from_vector` both map, so the index
+    is found by matching the prior OBJECT rather than by reading `model.paths`. The paths
+    are not vector-aligned: `paths` has one entry per Gaussian (24 for two bases of three
+    Gaussians) while the model has only 6 priors, and `unique_prior_paths` names whichever
+    single Gaussian each shared prior resolves through -- the LAST of each basis, not the
+    first -- so a path-derived index would silently drift with `total_gaussians`.
+    """
+    ordered = [prior_tuple.prior for prior_tuple in model.prior_tuples_ordered_by_id]
+    return ordered.index(model.profile_list[profile_index].ell_comps.ell_comps_1)
 
 
 def test__mge_model_from__single_basis_elliptical():
@@ -25,6 +44,10 @@ def test__mge_model_from__two_bases_shared_centre():
     )
     # 2 shared centre + 2 ell_comps per basis * 2 = 6
     assert model.prior_count == 6
+
+    # `order_bases` defaults to False, so the bases stay exchangeable and the model
+    # carries no assertions.
+    assert model.gathered_assertions() == []
 
 
 def test__mge_model_from__two_bases_centre_per_basis():
@@ -192,6 +215,198 @@ def test__mge_model_from__default_sigma_list_is_bitwise_unchanged():
         assert sigma_list == [
             10 ** log10_sigma_list[i] for i in range(total_gaussians)
         ]
+
+
+def test__mge_model_from__order_bases_two_bases():
+    """
+    With two bases, `order_bases` adds a single assertion requiring the first basis'
+    shared `ell_comps_1` to exceed the second's, which deletes the exchange symmetry
+    between two otherwise identical bases.
+
+    The assertion's `name` is NOT asserted: `add_assertion(assertion, name=...)` sets
+    `assertion.name`, but `name` is a read-only property on `AbstractPriorModel` (it
+    returns the class name) and `add_assertion` swallows the resulting `AttributeError`,
+    so every assertion reports `"GreaterThanLessThanAssertion"` whatever name is passed.
+    The assertion is therefore identified by its operands, which is the stronger check
+    anyway -- it pins WHICH priors are ordered and in which direction.
+    """
+    total_gaussians = 5
+
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0,
+        total_gaussians=total_gaussians,
+        gaussian_per_basis=2,
+        order_bases=True,
+    )
+
+    assertions = model.gathered_assertions()
+
+    assert len(assertions) == 1
+    assert isinstance(assertions[0], af.GreaterThanLessThanAssertion)
+
+    ell_comps_1_basis_0 = model.profile_list[0].ell_comps.ell_comps_1
+    ell_comps_1_basis_1 = model.profile_list[total_gaussians].ell_comps.ell_comps_1
+
+    # `a > b` builds the assertion as (lower=b, greater=a) == (left=b, right=a).
+    assert assertions[0].left is ell_comps_1_basis_1
+    assert assertions[0].right is ell_comps_1_basis_0
+
+    # Adding assertions must not add parameters.
+    assert model.prior_count == 6
+
+    index_0 = _ell_comps_1_vector_index(model, 0)
+    index_1 = _ell_comps_1_vector_index(model, total_gaussians)
+
+    vector = list(model.physical_values_from_prior_medians)
+    vector[index_0] = 0.3
+    vector[index_1] = -0.3
+
+    assert model.assertions_satisfied_from_vector(vector)
+
+    instance = model.instance_from_vector(vector)
+    assert len(instance.profile_list) == 2 * total_gaussians
+
+    swapped = list(vector)
+    swapped[index_0] = -0.3
+    swapped[index_1] = 0.3
+
+    assert not model.assertions_satisfied_from_vector(swapped)
+
+    # The numpy enforcement path raises, which is what the search catches and turns into
+    # the resample figure of merit. `instance_from_vector` is NOT used to provoke it:
+    # `test_autogalaxy/config/general.yaml` sets `test: exception_override: true`, which
+    # makes `instance_for_arguments` skip `check_assertions` entirely for the whole unit
+    # test suite, so the raise is invoked directly on the same arguments the vector maps.
+    arguments = dict(
+        zip(
+            [prior_tuple.prior for prior_tuple in model.prior_tuples_ordered_by_id],
+            swapped,
+        )
+    )
+
+    with pytest.raises(af.exc.FitException):
+        model.check_assertions(arguments)
+
+
+def test__mge_model_from__order_bases_three_bases():
+    total_gaussians = 4
+
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0,
+        total_gaussians=total_gaussians,
+        gaussian_per_basis=3,
+        order_bases=True,
+    )
+
+    assertions = model.gathered_assertions()
+
+    assert len(assertions) == 2
+
+    ell_comps_1_list = [
+        model.profile_list[j * total_gaussians].ell_comps.ell_comps_1 for j in range(3)
+    ]
+
+    # Assertion j orders basis j above basis j + 1, giving a strictly decreasing chain.
+    for j, assertion in enumerate(assertions):
+        assert assertion.left is ell_comps_1_list[j + 1]
+        assert assertion.right is ell_comps_1_list[j]
+
+    assert model.prior_count == 8
+
+    vector = list(model.physical_values_from_prior_medians)
+
+    for j, value in enumerate([0.4, 0.0, -0.4]):
+        vector[_ell_comps_1_vector_index(model, j * total_gaussians)] = value
+
+    assert model.assertions_satisfied_from_vector(vector)
+
+    # Violating only the second link is enough to fail the chain.
+    vector[_ell_comps_1_vector_index(model, 2 * total_gaussians)] = 0.2
+
+    assert not model.assertions_satisfied_from_vector(vector)
+
+
+def test__mge_model_from__order_bases_single_basis_no_op():
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0, total_gaussians=5, gaussian_per_basis=1, order_bases=True
+    )
+
+    # One basis cannot be permuted with anything, so there is nothing to assert.
+    assert model.gathered_assertions() == []
+    assert model.prior_count == 4
+
+
+def test__mge_model_from__order_bases_spherical_raises():
+    with pytest.raises(ValueError):
+        ag.model_util.mge_model_from(
+            mask_radius=1.0,
+            total_gaussians=5,
+            gaussian_per_basis=2,
+            use_spherical=True,
+            order_bases=True,
+        )
+
+
+def test__mge_model_from__order_bases_model_pickles():
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0, total_gaussians=3, gaussian_per_basis=2, order_bases=True
+    )
+
+    assert len(pickle.dumps(model)) > 0
+
+
+def test__mge_model_from__ell_comps_limit():
+    """
+    `ell_comps_limit` sets the truncation box of the TruncatedGaussian ell_comps priors,
+    which callers such as the Euclid pipeline tighten to +/- 0.5 or +/- 0.7.
+    """
+    total_gaussians = 3
+
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0,
+        total_gaussians=total_gaussians,
+        gaussian_per_basis=2,
+        ell_comps_limit=0.5,
+    )
+
+    for gaussian in model.profile_list:
+        for prior in [gaussian.ell_comps.ell_comps_0, gaussian.ell_comps.ell_comps_1]:
+            assert isinstance(prior, af.TruncatedGaussianPrior)
+            assert prior.lower_limit == pytest.approx(-0.5, 1.0e-8)
+            assert prior.upper_limit == pytest.approx(0.5, 1.0e-8)
+
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0, total_gaussians=total_gaussians, gaussian_per_basis=2
+    )
+
+    for gaussian in model.profile_list:
+        for prior in [gaussian.ell_comps.ell_comps_0, gaussian.ell_comps.ell_comps_1]:
+            assert prior.lower_limit == pytest.approx(-1.0, 1.0e-8)
+            assert prior.upper_limit == pytest.approx(1.0, 1.0e-8)
+
+
+def test__mge_model_from__ell_comps_limit_does_not_alter_uniform_priors():
+    model = ag.model_util.mge_model_from(
+        mask_radius=1.0,
+        total_gaussians=3,
+        ell_comps_prior_is_uniform=True,
+        ell_comps_uniform_width=0.2,
+        ell_comps_limit=0.5,
+    )
+
+    prior = model.profile_list[0].ell_comps.ell_comps_0
+
+    assert isinstance(prior, af.UniformPrior)
+    assert prior.lower_limit == pytest.approx(-0.2, 1.0e-8)
+    assert prior.upper_limit == pytest.approx(0.2, 1.0e-8)
+
+
+def test__mge_model_from__ell_comps_limit_invalid_raises():
+    for ell_comps_limit in [0.0, -0.5, 1.5]:
+        with pytest.raises(ValueError):
+            ag.model_util.mge_model_from(
+                mask_radius=1.0, total_gaussians=5, ell_comps_limit=ell_comps_limit
+            )
 
 
 def test__mge_point_model_from__returns_basis_model_with_correct_gaussians():
