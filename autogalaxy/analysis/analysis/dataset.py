@@ -127,10 +127,11 @@ class AnalysisDataset(Analysis):
         - The settings associated with the pixelization.
         - The Cosmology.
 
+        The dataset itself is output as `dataset.fits` to the `image` folder by the `save_attributes` method of
+        each dataset-specific subclass (e.g. `AnalysisImaging`), with the mask in its `PrimaryHDU`.
+
         The following .fits files are also output via the plotter interface:
 
-        - The mask applied to the dataset, in the `PrimaryHDU` of `dataset.fits`.
-        - The dataset (data / noise-map / over sampler / etc.).
         - The adapt image's model image and galaxy images, if used.
 
         It is common for these attributes to be loaded by many of the template aggregator functions given in the

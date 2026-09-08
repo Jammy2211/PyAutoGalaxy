@@ -1,7 +1,5 @@
 from typing import List
 
-from autonerves.fitsable import hdu_list_for_output_from
-
 import autoarray as aa
 
 from autoarray.dataset.plot.imaging_plots import subplot_imaging_dataset, subplot_imaging_dataset_list
@@ -23,9 +21,7 @@ class PlotterImaging(Plotter):
         Output visualization of an ``Imaging`` dataset.
 
         Controlled by the ``[dataset]`` / ``[imaging]`` sections of
-        ``config/visualize/plots.yaml``.  Outputs a subplot of the imaging data
-        and, when enabled, a FITS file containing the mask, data, noise map, PSF,
-        and over-sample-size arrays.
+        ``config/visualize/plots.yaml``.  Outputs a subplot of the imaging data.
 
         Parameters
         ----------
@@ -42,23 +38,6 @@ class PlotterImaging(Plotter):
                 output_format=self.fmt,
                 title_prefix=self.title_prefix,
             )
-
-        if should_plot("fits_dataset"):
-            image_list = [
-                dataset.data.native_for_fits,
-                dataset.noise_map.native_for_fits,
-                dataset.psf.kernel.native_for_fits,
-                dataset.grids.lp.over_sample_size.native_for_fits.astype("float"),
-                dataset.grids.pixelization.over_sample_size.native_for_fits.astype("float"),
-            ]
-
-            hdu_list = hdu_list_for_output_from(
-                values_list=[image_list[0].mask.astype("float")] + image_list,
-                ext_name_list=["mask", "data", "noise_map", "psf",
-                               "over_sample_size_lp", "over_sample_size_pixelization"],
-                header_dict=dataset.mask.header_dict,
-            )
-            hdu_list.writeto(self.image_path / "dataset.fits", overwrite=True)
 
     def fit_imaging(self, fit: FitImaging, quick_update: bool = False):
         """
