@@ -132,6 +132,66 @@ def test__mge_model_from__backward_compat_single_basis():
     assert len(instance.profile_list) == 10
 
 
+def test__mge_model_from__positional_signature_is_unchanged():
+    """
+    The thirteen parameters that existed before `ell_comps_limit` and `order_bases`
+    were added must still be callable positionally, in their original order, with the
+    same result as the keyword call. `ell_comps_limit` and `order_bases` therefore sit
+    at the END of the signature: inserting either one earlier would silently rebind an
+    existing positional caller (an old positional `use_spherical=False` would arrive as
+    `ell_comps_limit=False` and raise, and a positional `True` would build elliptical
+    Gaussians instead of spherical ones).
+    """
+    args = (
+        2.0,  # mask_radius
+        5,  # total_gaussians
+        2,  # gaussian_per_basis
+        False,  # centre_prior_is_uniform
+        (0.1, -0.2),  # centre
+        None,  # centre_fixed
+        True,  # centre_per_basis
+        0.4,  # centre_sigma
+        False,  # ell_comps_prior_is_uniform
+        0.25,  # ell_comps_uniform_width
+        0.35,  # ell_comps_sigma
+        False,  # use_spherical
+        1.0e-3,  # sigma_min
+    )
+
+    model_positional = ag.model_util.mge_model_from(*args)
+    model_keyword = ag.model_util.mge_model_from(
+        mask_radius=args[0],
+        total_gaussians=args[1],
+        gaussian_per_basis=args[2],
+        centre_prior_is_uniform=args[3],
+        centre=args[4],
+        centre_fixed=args[5],
+        centre_per_basis=args[6],
+        centre_sigma=args[7],
+        ell_comps_prior_is_uniform=args[8],
+        ell_comps_uniform_width=args[9],
+        ell_comps_sigma=args[10],
+        use_spherical=args[11],
+        sigma_min=args[12],
+    )
+
+    assert model_positional.prior_count == model_keyword.prior_count
+    assert model_positional.cls is model_keyword.cls
+
+    instance_positional = model_positional.instance_from_prior_medians()
+    instance_keyword = model_keyword.instance_from_prior_medians()
+
+    assert type(instance_positional.profile_list[0]) is type(
+        instance_keyword.profile_list[0]
+    )
+    assert len(instance_positional.profile_list) == len(instance_keyword.profile_list)
+
+    # `order_bases` defaults to False whether the call is positional or keyword, so
+    # neither model carries assertions.
+    assert model_positional.gathered_assertions() == []
+    assert model_keyword.gathered_assertions() == []
+
+
 def test__mge_model_from__total_gaussians_per_basis():
     """With gaussian_per_basis=2 and total_gaussians=5, should produce 10 Gaussians."""
     model = ag.model_util.mge_model_from(

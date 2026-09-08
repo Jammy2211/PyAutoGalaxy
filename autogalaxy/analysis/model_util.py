@@ -16,9 +16,9 @@ def mge_model_from(
     ell_comps_prior_is_uniform: bool = False,
     ell_comps_uniform_width: float = 0.2,
     ell_comps_sigma : float = 0.3,
-    ell_comps_limit: float = 1.0,
     use_spherical: bool = False,
     sigma_min: float = 1e-4,
+    ell_comps_limit: float = 1.0,
     order_bases: bool = False,
 ) -> af.Collection:
     """
@@ -81,6 +81,14 @@ def mge_model_from(
         Half-width for uniform ell_comps priors.
     ell_comps_sigma
         Sigma for truncated-Gaussian ell_comps priors.
+    use_spherical
+        If True, use ``GaussianSph`` (no ell_comps). If False (default), use
+        ``Gaussian`` with ellipticity.
+    sigma_min
+        The smallest Gaussian width (`sigma`) in arcseconds, which sets the lower end
+        of the log-spaced sigma values. Defaults to ``1e-4``. Increase it (e.g. to a
+        tenth of the pixel scale) to stop the basis wasting components on scales the
+        data cannot resolve.
     ell_comps_limit
         Half-width of the box the truncated-Gaussian ell_comps priors are truncated to,
         giving ``lower_limit=-ell_comps_limit`` and ``upper_limit=+ell_comps_limit``.
@@ -93,14 +101,6 @@ def mge_model_from(
         the source. Setting the box *here* rather than overwriting the priors on the
         returned model keeps the prior objects the ones this function built, which
         matters because ``order_bases`` attaches an assertion that references them.
-    use_spherical
-        If True, use ``GaussianSph`` (no ell_comps). If False (default), use
-        ``Gaussian`` with ellipticity.
-    sigma_min
-        The smallest Gaussian width (`sigma`) in arcseconds, which sets the lower end
-        of the log-spaced sigma values. Defaults to ``1e-4``. Increase it (e.g. to a
-        tenth of the pixel scale) to stop the basis wasting components on scales the
-        data cannot resolve.
     order_bases
         If True, require the bases' shared ``ell_comps_1`` values to be strictly
         decreasing, ``basis_0 > basis_1 > ... > basis_{K-1}``, via ``K - 1`` assertions
@@ -120,29 +120,45 @@ def mge_model_from(
         it removes no physical solution.
 
         **Why ``ell_comps_1`` and not the magnitude.** The key must separate the modes
-        the search actually finds. On the Euclid phase-4 tiles the two bases commonly sit
-        against opposite edges of the ell_comps box, e.g. ``(0.007, -0.500)`` and
-        ``(-0.023, 0.497)``: equal in magnitude to within 0.003, but separated by ~1.0 in
-        ``ell_comps_1``. A magnitude key would cut straight through that pair and forbid
-        the very solution the data prefer, whereas the ``cos 2phi`` component separates it
-        cleanly.
+        the search actually finds. At the maximum-likelihood point either key admits
+        exactly one permutation, so the choice is not about which key can order a single
+        point -- it is about the posterior spread. The two modes are separated in the key
+        by ``|key(e_A) - key(e_B)|``, and when that separation is smaller than the marginal
+        posterior width in the key the constraint surface passes through both modes: the
+        retained region mixes the two labellings and the labels are still undetermined. On
+        the Euclid phase-4 tiles the two bases commonly sit against opposite edges of the
+        ell_comps box, e.g. ``(0.007, -0.500)`` and ``(-0.023, 0.497)``. For that pair the
+        magnitude separation is ``0.0025`` while the ``ell_comps_1`` separation is ``1.0``,
+        so the ``cos 2phi`` component separates the modes by far more than any plausible
+        marginal width and the magnitude does not.
 
         **Blind band.** No continuous key is exact for every configuration -- another tile
-        has the two bases only ``0.01`` apart in ``ell_comps_1``, inside the width the
-        search resolves. A result whose bases differ by a small ``|delta ell_comps_1|`` is
-        one where the ordering did not resolve the symmetry; read it as undetermined
-        labelling rather than as an ordered answer.
+        has the two bases only ``0.01`` apart in ``ell_comps_1``, a separation small
+        compared with a typical marginal posterior width, so there too the constraint
+        surface passes through both modes and ordering by ``ell_comps_1`` does not resolve
+        that tile. The diagnostic is a small ``|delta ell_comps_1|`` relative to the
+        posterior width: read such a result as undetermined labelling rather than as an
+        ordered answer.
 
         **Consequences of an assertion being part of the model.** It enters the PyAutoFit
         identifier, so turning ``order_bases`` on gives an otherwise identical fit a new
-        ``unique_id`` and a fresh output directory. It also makes the model an invalid
-        *target* for ``take_attributes``: PyAutoFit's ``assert_no_assertions`` refuses to
-        copy attributes into a model that already carries assertions, so build the ordered
-        model after any such prior-passing step. Enforcement is backend-specific but has
-        the same outcome -- NumPy raises ``af.exc.FitException`` from ``check_assertions``
-        and the search resamples; JAX cannot raise inside a trace and instead evaluates
-        the assertions as a traced boolean and maps a violating model to the resample
-        figure of merit (PyAutoFit #1583).
+        ``unique_id`` and a fresh output directory -- with PyAutoFit at or after the
+        identifier fix that ships alongside this option (PyAutoFit#1581 follow-up); on
+        older PyAutoFit the ordered and unordered models share an identifier and an
+        ordered fit would load a completed unordered result from the same directory. It
+        also makes the model an invalid *target* for ``take_attributes``: PyAutoFit's
+        ``assert_no_assertions`` refuses to copy attributes into a model that already
+        carries assertions, so build the ordered model after any such prior-passing step.
+        Prior passing in the other direction drops the ordering altogether: ``Result.model``
+        is built by ``gaussian_prior_model_for_arguments``, which clears ``_assertions``
+        (``PyAutoFit/autofit/mapper/prior_model/prior_model.py``, line 601), so a model
+        built from a result is unordered again -- recompose the ``Basis`` with
+        ``order_bases=True`` when chaining fits rather than reusing the result's model.
+        Enforcement is backend-specific but has the same outcome -- NumPy raises
+        ``af.exc.FitException`` from ``check_assertions`` and the search resamples; JAX
+        cannot raise inside a trace and instead evaluates the assertions as a traced
+        boolean and maps a violating model to the resample figure of merit (PyAutoFit
+        #1583).
 
     Returns
     -------
