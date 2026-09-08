@@ -237,10 +237,10 @@ class AnalysisImaging(AnalysisDataset):
         - The Cosmology.
         - The adapt image's model image and galaxy images, as `adapt_images.fits`, if used.
 
-        The following .fits files are also output via the plotter interface:
+        It also outputs, to the `image` folder, the file `dataset.fits`, which contains:
 
-        - The mask applied to the dataset, in the `PrimaryHDU` of `dataset.fits`.
-        - The imaging dataset as `dataset.fits` (data / noise-map / psf / over sampler / etc.).
+        - The mask applied to the dataset, in the `PrimaryHDU`.
+        - The imaging dataset (data / noise-map / psf / over sampler / etc.).
 
         It is common for these attributes to be loaded by many of the template aggregator functions given in the
         `aggregator` modules. For example, when using the database tools to perform a fit, the default behaviour is for
@@ -255,12 +255,6 @@ class AnalysisImaging(AnalysisDataset):
         """
         super().save_attributes(paths=paths)
 
-        # Output `dataset.fits` to the `files` folder so the aggregator loaders
-        # (e.g. `ImagingAgg`, `agg_util.mask_header_from`) can always reload the
-        # dataset via `fit.value(name="dataset")`, independently of whether the
-        # visualization `fits_dataset` output ran. The plotter interface also
-        # writes this file to the `image` folder for inspection, but that write
-        # is gated on visualization settings and is not guaranteed for every fit.
         image_list = [
             self.dataset.data.native_for_fits,
             self.dataset.noise_map.native_for_fits,
@@ -271,18 +265,27 @@ class AnalysisImaging(AnalysisDataset):
             ),
         ]
 
-        paths.save_fits(
-            name="dataset",
-            fits=hdu_list_for_output_from(
-                values_list=[image_list[0].mask.astype("float")] + image_list,
-                ext_name_list=[
-                    "mask",
-                    "data",
-                    "noise_map",
-                    "psf",
-                    "over_sample_size_lp",
-                    "over_sample_size_pixelization",
-                ],
-                header_dict=self.dataset.mask.header_dict,
-            ),
+        hdu_list = hdu_list_for_output_from(
+            values_list=[image_list[0].mask.astype("float")] + image_list,
+            ext_name_list=[
+                "mask",
+                "data",
+                "noise_map",
+                "psf",
+                "over_sample_size_lp",
+                "over_sample_size_pixelization",
+            ],
+            header_dict=self.dataset.mask.header_dict,
         )
+
+        # `dataset.fits` is written once per search, to the `image` folder, and is written
+        # unconditionally (it is not gated on any visualization setting). The write is skipped
+        # if the file already exists, so a resumed search does not rewrite it.
+        #
+        # The aggregator loaders (e.g. `ImagingAgg`, `agg_util.mask_header_from`) reload the
+        # dataset via `fit.value(name="dataset")`, which scans the `image` folder for .fits
+        # files, so this single write is all that is required.
+        dataset_path = paths.image_path / "dataset.fits"
+
+        if not dataset_path.exists():
+            hdu_list.writeto(dataset_path, overwrite=True)
