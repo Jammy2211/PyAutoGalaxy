@@ -1,4 +1,6 @@
 import functools
+import math
+from bisect import bisect_right
 from typing import Tuple
 
 import numpy as np
@@ -41,6 +43,42 @@ def _isothermal_lane_emden_table():
         raise RuntimeError("Could not tabulate the isothermal Lane-Emden solution.")
 
     return sol.t, sol.y[0], sol.y[2]
+
+
+@functools.lru_cache(maxsize=1)
+def _isothermal_lane_emden_lists():
+    """
+    The tabulated isothermal solution as Python lists, for the scalar
+    line-of-sight integrand below.
+    """
+    x_table, h_table, _ = _isothermal_lane_emden_table()
+    return x_table.tolist(), h_table.tolist()
+
+
+def _interp_lane_emden_h_scalar(x, x_table, h_table):
+    """
+    ``np.interp(x, x_table, h_table)`` for a single float ``x``, without the
+    numpy call overhead.
+
+    Bit-for-bit identical to ``np.interp``: the same bracketing index, the same
+    ``slope * (x - x_0) + h_0``, and the same clamping to the end values
+    outside the table.
+    """
+    index = bisect_right(x_table, x) - 1
+
+    if index < 0:
+        return h_table[0]
+    if index >= len(x_table) - 1:
+        return h_table[-1]
+
+    x_0 = x_table[index]
+    h_0 = h_table[index]
+
+    if x_0 == x:
+        return h_0
+
+    slope = (h_table[index + 1] - h_0) / (x_table[index + 1] - x_0)
+    return slope * (x - x_0) + h_0
 
 
 def _interp_lane_emden(x):
@@ -232,6 +270,81 @@ class KaplinghatCoredNFWSph(MassProfile, DarkProfile):
 
         return np.where(radii < self.interaction_radius, iso_density, nfw_density)
 
+    def _line_of_sight_density_integrand_from(self, radius):
+        """
+        ``f(z) = rho_3d(sqrt(radius^2 + z^2))``, the line-of-sight integrand of
+        `convergence_func`, as a closure over this profile's parameters.
+
+        The convergence quadrature evaluates it a few hundred times per radius,
+        and the deflection and potential integrals nest two further adaptive
+        quadratures outside it, so a single `potential_2d_from` call reaches it
+        of order a million times. Everything independent of ``z`` is therefore
+        hoisted out of the closure and the body runs on Python floats: it is the
+        same arithmetic as the array form in `_density_3d_from_radius`, to the
+        last bit, without paying numpy dispatch on every scalar evaluation.
+        Only the branch actually taken is evaluated, where the array form
+        computes both and selects with `np.where`.
+        """
+        radius_sq = radius**2
+
+        scale_radius = self.scale_radius
+        nfw_norm = self.kappa_s / scale_radius
+        interaction_radius = self.interaction_radius
+
+        if interaction_radius <= 0.0:
+
+            def integrand(z):
+                x = math.sqrt(radius_sq + z**2) / scale_radius
+                if x < 1.0e-12:
+                    x = 1.0e-12
+                return nfw_norm / (x * (1.0 + x) ** 2)
+
+            return integrand
+
+        central_density = self.central_density
+        isothermal_radius = self.isothermal_radius
+        x_table, h_table = _isothermal_lane_emden_lists()
+
+        def integrand(z):
+            radii = math.sqrt(radius_sq + z**2)
+
+            if radii < interaction_radius:
+                x = radii / isothermal_radius
+                if x < 1.0e-5:
+                    x = 1.0e-5
+                return central_density * np.exp(
+                    -_interp_lane_emden_h_scalar(x, x_table, h_table)
+                )
+
+            x = radii / scale_radius
+            if x < 1.0e-12:
+                x = 1.0e-12
+            return nfw_norm / (x * (1.0 + x) ** 2)
+
+        return integrand
+
+    @property
+    def _line_of_sight_z_max(self):
+        return max(500.0 * self.scale_radius, 50.0 * self.interaction_radius)
+
+    def _convergence_from_radius(self, radius, z_max):
+        """
+        The convergence at a single radius: the density integrated along the
+        line of sight. Shared by `convergence_func` and the projected-mass
+        integral of `radial_deflection_from_radius`, which would otherwise
+        re-enter the array plumbing once per quadrature node.
+        """
+        radius = float(max(radius, 1.0e-8))
+
+        integral = quad(
+            self._line_of_sight_density_integrand_from(radius),
+            0.0,
+            z_max,
+            epsrel=1.0e-5,
+            limit=100,
+        )[0]
+        return 2.0 * integral
+
     def density_3d_func(self, r, xp=np):
         radii = r.array if hasattr(r, "array") else r
         if xp is not np:
@@ -251,20 +364,11 @@ class KaplinghatCoredNFWSph(MassProfile, DarkProfile):
             values = self._nfw.convergence_func(aa.ArrayIrregular(radii), xp=np)
             return values[0] if scalar_input else values
 
-        z_max = max(500.0 * self.scale_radius, 50.0 * self.interaction_radius)
+        z_max = self._line_of_sight_z_max
 
-        def convergence_at_radius(radius):
-            radius = float(max(radius, 1.0e-8))
-            integral = quad(
-                lambda z: self._density_3d_from_radius(np.sqrt(radius**2 + z**2)),
-                0.0,
-                z_max,
-                epsrel=1.0e-5,
-                limit=100,
-            )[0]
-            return 2.0 * integral
-
-        convergence = np.array([convergence_at_radius(radius) for radius in radii])
+        convergence = np.array(
+            [self._convergence_from_radius(radius, z_max=z_max) for radius in radii]
+        )
         return convergence[0] if scalar_input else convergence
 
     @aa.over_sample
@@ -292,8 +396,10 @@ class KaplinghatCoredNFWSph(MassProfile, DarkProfile):
                 )
             )
 
+        z_max = self._line_of_sight_z_max
+
         mass_2d = quad(
-            lambda r: self.convergence_func(aa.ArrayIrregular([r]))[0] * r,
+            lambda r: self._convergence_from_radius(r, z_max=z_max) * r,
             0.0,
             radius,
             epsrel=1.0e-4,
