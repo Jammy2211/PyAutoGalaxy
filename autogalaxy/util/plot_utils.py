@@ -198,6 +198,7 @@ def plot_array(
     mask=None,
     cb_unit=None,
     ax=None,
+    arcsec_after_decimal=None,
 ):
     """Plot an autoarray ``Array2D`` to file or onto an existing ``Axes``.
 
@@ -244,6 +245,12 @@ def plot_array(
     ax : matplotlib.axes.Axes or None
         Existing ``Axes`` to draw into.  When provided the figure is *not*
         saved — the caller is responsible for saving.
+    arcsec_after_decimal : bool or None
+        Per-call override of the ``ticks.symbol_over_decimal`` config flag.
+        When ``True`` the arcsecond tick labels place the ``″`` symbol over
+        the decimal point (``3.″8``) instead of suffixing it (``3.8"``); when
+        ``False`` the suffix form is forced.  ``None`` (the default) reads the
+        config.
     """
     from autoarray.plot import plot_array as _aa_plot_array
 
@@ -281,6 +288,7 @@ def plot_array(
         vmin=vmin,
         vmax=vmax,
         cb_unit=cb_unit,
+        arcsec_after_decimal=arcsec_after_decimal,
         output_path=_output_path,
         output_filename=output_filename,
         output_format=output_format,
