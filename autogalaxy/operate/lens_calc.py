@@ -1301,6 +1301,120 @@ class LensCalc:
         seeds = [curve[len(curve) // 2] for curve in coarse_curves]
         return jnp.array(seeds)
 
+    def _seed_via_coarse_grid_argmin(
+        self,
+        kind="tangential",
+        grid_shape=(25, 25),
+        grid_extent=3.0,
+        pixel_scales=(0.05, 0.05),
+        xp=np,
+    ):
+        """
+        Returns a single Newton seed position near the critical curve, found by
+        an argmin over a coarse grid.
+
+        This is the JIT-traceable replacement for ``_init_guess_from_coarse_grid``
+        on the jit path. That method runs marching squares (``skimage``) over the
+        coarse eigen-value map and returns one seed per distinct contour segment,
+        which is strictly more informative -- but marching squares is Python
+        control flow over concrete array values and cannot be traced, so it is
+        unusable inside ``jax.jit``.
+
+        Here the eigen value is evaluated on the same coarse uniform grid and the
+        cell whose ``|eigen value|`` is smallest is returned as the seed. The grid
+        itself is a static NumPy constant even under jit, because ``grid_shape``
+        and ``grid_extent`` are Python values; only the eigen values evaluated on
+        it are traced. ``xp.argmin`` and indexing a constant array with the
+        resulting traced scalar are both jit-safe, so the whole body traces with
+        no Python branch on a traced value.
+
+        The eigen value is computed from the raw Hessian tuple returned by
+        ``hessian_from`` rather than through ``tangential_eigen_value_from``,
+        because the latter returns an ``aa.Array2D`` under NumPy and a raw array
+        under ``jax.numpy``; the raw-Hessian route is ``xp``-generic in one body.
+        The shear terms are symmetrised exactly as in ``_make_eigen_fn``.
+
+        Cells whose eigen value is not finite are masked out before the argmin.
+        The default ``25 x 25`` grid has an odd shape, so one cell sits exactly on
+        the origin, where an isothermal centre is singular; without the mask the
+        argmin would follow that NaN instead of the critical curve.
+
+        Limitations
+        -----------
+        Exactly **one** seed is returned -- the global minimum of
+        ``|eigen value|`` over the coarse grid. A model with several distinct
+        tangential critical curves (a cluster-scale lens, a multi-component
+        deflector) will therefore be seeded on only one of them. Callers with
+        such models should pass ``init_guess`` explicitly.
+
+        Cost is ``grid_shape[0] * grid_shape[1]`` Hessian evaluations (625 by
+        default), which is negligible next to the contour trace that follows.
+
+        Parameters
+        ----------
+        kind
+            ``"tangential"`` (eigen value = ``1 - kappa - |gamma|``) or
+            ``"radial"`` (``1 - kappa + |gamma|``).
+        grid_shape
+            Number of pixels along each axis of the coarse evaluation grid.
+        grid_extent
+            Half-width of the coarse grid in arc-seconds. This is the knob for
+            off-centre or cluster-scale lenses: the critical curve must fall
+            inside the grid for the argmin to find it.
+        pixel_scales
+            Accepted for signature symmetry with ``einstein_radius_jit_from``,
+            but **not used**: the JAX Hessian path takes its pixel scales from
+            the coarse grid itself (``_hessian_via_jax`` reads
+            ``grid.pixel_scales``), and the NumPy path uses finite differences
+            with its own adaptive step.
+        xp
+            The array module (``numpy`` or ``jax.numpy``), forwarded to
+            ``hessian_from``.
+
+        Returns
+        -------
+        Array of shape ``(1, 2)``
+            The ``(y, x)`` arc-second coordinate of the coarse cell closest to
+            the critical curve, ready to pass as ``init_guess``.
+        """
+        grid = aa.Grid2D.uniform(
+            shape_native=grid_shape,
+            pixel_scales=(
+                2.0 * grid_extent / grid_shape[0],
+                2.0 * grid_extent / grid_shape[1],
+            ),
+        )
+
+        if xp is np:
+            # The Richardson finite-difference path warns on the singular
+            # centre cell, which is exactly the cell the finite mask below
+            # discards. Expected, and not worth surfacing to the caller.
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore", UserWarning)
+                hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
+                    grid=grid, xp=xp
+                )
+        else:
+            hessian_yy, hessian_xy, hessian_yx, hessian_xx = self.hessian_from(
+                grid=grid, xp=xp
+            )
+
+        convergence = 0.5 * (hessian_yy + hessian_xx)
+        gamma_1 = 0.5 * (hessian_xx - hessian_yy)
+        gamma_2 = 0.5 * (hessian_xy + hessian_yx)  # symmetrised
+        shear = xp.sqrt(gamma_1**2 + gamma_2**2)
+
+        sign = -1.0 if kind == "tangential" else 1.0
+        eigen = 1.0 - convergence + sign * shear
+
+        score = xp.where(xp.isfinite(eigen), xp.abs(eigen), xp.inf)
+        idx = xp.argmin(score)
+
+        grid_values = grid.array if hasattr(grid, "array") else grid
+        seed = xp.asarray(grid_values)[idx]
+
+        return xp.reshape(seed, (1, 2))
+
     def _critical_curve_list_via_zero_contour(
         self,
         kind: str,
@@ -1684,12 +1798,14 @@ class LensCalc:
 
     def einstein_radius_jit_from(
         self,
-        init_guess,
+        init_guess=None,
         delta: float = 0.05,
         N: int = 500,
         pixel_scales: Tuple[float, float] = (0.05, 0.05),
         tol: float = 1e-6,
         max_newton: int = 5,
+        seed_grid_shape: Tuple[int, int] = (25, 25),
+        seed_grid_extent: float = 3.0,
     ):
         """
         JIT-friendly Einstein radius from the tangential critical curve.
@@ -1699,8 +1815,18 @@ class LensCalc:
         ``LATENT_BATCH_MODE='jit'``). Unlike ``einstein_radius_via_zero_contour_from``,
         this method:
 
-        - Requires an explicit ``init_guess`` — no marching-squares seed search
-          (which would require ``skimage`` and break the JAX trace).
+        - Finds its own Newton seed inside the trace when ``init_guess`` is not
+          given: the eigen value is evaluated on a coarse
+          ``seed_grid_shape`` grid of half-width ``seed_grid_extent`` arc-seconds
+          and the cell with the smallest ``|tangential eigen value|`` is taken as
+          the seed (``_seed_via_coarse_grid_argmin``). No ``skimage``, no
+          marching squares, and no Python control flow on traced values — unlike
+          ``_init_guess_from_coarse_grid``, which cannot be traced. The seed
+          search returns a **single** seed (the global minimum), so a model with
+          several distinct tangential critical curves is seeded on only one of
+          them; pass ``init_guess`` explicitly for those. It costs
+          ``seed_grid_shape[0] * seed_grid_shape[1]`` ``jacfwd`` Hessian
+          evaluations (625 by default), negligible next to the contour trace.
         - Skips ``ZeroSolver.path_reduce`` (variable-length output, not jit-able).
         - Computes the enclosed area directly from the raw NaN-padded paths
           array via a JAX-vectorised shoelace formula.
@@ -1716,11 +1842,13 @@ class LensCalc:
         Parameters
         ----------
         init_guess
-            JAX or NumPy array of shape ``(n_seeds, 2)`` — seed positions
-            (y, x) near the expected critical curve. For typical galaxy-scale
-            lenses centred on the image, a single seed at ``[[1.0, 0.0]]``
-            works; for clusters or off-centre lenses pass a small fan of
-            seeds (e.g. four at cardinal positions).
+            Optional JAX or NumPy array of shape ``(n_seeds, 2)`` — seed
+            positions (y, x) near the expected critical curve. ``None`` (the
+            default) runs the in-trace coarse-grid argmin seed search described
+            above, which is correct for any single-critical-curve model whose
+            curve falls inside ``seed_grid_extent``. Pass seeds explicitly for a
+            model with several distinct tangential critical curves (e.g. four at
+            cardinal positions), which the single-seed search cannot cover.
         delta
             Arc-second step size along the contour. Forwarded to ``ZeroSolver``.
         N
@@ -1732,6 +1860,15 @@ class LensCalc:
             Newton's method convergence tolerance.
         max_newton
             Maximum Newton iterations per step.
+        seed_grid_shape
+            Number of pixels along each axis of the coarse grid used by the
+            in-trace seed search. Ignored when ``init_guess`` is given.
+        seed_grid_extent
+            Half-width in arc-seconds of that coarse grid. This is the knob for
+            off-centre or cluster-scale lenses: the critical curve must fall
+            inside the grid for the argmin to find it (the default ±3" covers a
+            galaxy-scale lens centred near the origin). Ignored when
+            ``init_guess`` is given.
 
         Returns
         -------
@@ -1746,6 +1883,15 @@ class LensCalc:
             return float("nan")
         from jax_zero_contour import ZeroSolver
         import jax.numpy as jnp
+
+        if init_guess is None:
+            init_guess = self._seed_via_coarse_grid_argmin(
+                kind="tangential",
+                grid_shape=seed_grid_shape,
+                grid_extent=seed_grid_extent,
+                pixel_scales=pixel_scales,
+                xp=jnp,
+            )
 
         init_guess = jnp.atleast_2d(jnp.asarray(init_guess))
 

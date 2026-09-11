@@ -700,8 +700,10 @@ def test__einstein_radius_jit_from__method_exists_with_expected_signature():
     """
     `LensCalc.einstein_radius_jit_from` is the JIT-friendly Einstein-radius
     helper added for `Analysis.LATENT_BATCH_MODE='jit'` (see PyAutoFit). It
-    must remain on the class with `init_guess` as the only required
-    argument — pipelines pass a static `jnp.array([[1.0, 0.0]])` etc.
+    must remain on the class, and `init_guess` must be *optional* — the jit
+    path now finds its own Newton seed in-trace via
+    `_seed_via_coarse_grid_argmin`, so callers no longer have to supply a
+    static seed array. Callers with multi-curve models may still pass one.
 
     Runtime JAX behaviour is exercised in the workspace_test integration
     suite (no JAX in library unit tests per project policy).
@@ -715,12 +717,92 @@ def test__einstein_radius_jit_from__method_exists_with_expected_signature():
     sig = inspect.signature(LensCalc.einstein_radius_jit_from)
     params = sig.parameters
     assert "init_guess" in params
-    assert params["init_guess"].default is inspect.Parameter.empty, (
-        "init_guess must be a required argument — there is no JAX-friendly "
-        "default (the legacy `_init_guess_from_coarse_grid` uses skimage)"
+    assert params["init_guess"].default is None, (
+        "init_guess must be optional — the jit path finds its own seed "
+        "in-trace with `_seed_via_coarse_grid_argmin` (a JAX-native argmin "
+        "over a coarse eigen-value grid, no skimage)"
     )
-    for kw in ("delta", "N", "pixel_scales", "tol", "max_newton"):
+    for kw in (
+        "delta",
+        "N",
+        "pixel_scales",
+        "tol",
+        "max_newton",
+        "seed_grid_shape",
+        "seed_grid_extent",
+    ):
         assert kw in params, f"einstein_radius_jit_from missing kwarg {kw!r}"
+
+
+def test__seed_via_coarse_grid_argmin__centred_isothermal():
+    """
+    The in-trace seed finder returns the coarse-grid cell whose
+    |tangential eigen value| is smallest. For an SIS of Einstein radius 1.0"
+    centred on the origin the tangential critical curve is the circle of
+    radius 1.0", so the seed must land within one coarse cell width of it.
+
+    With the defaults the cell width is `2 * 3.0 / 25 = 0.24"`.
+
+    The centre cell of the (odd) 25x25 grid sits exactly on the singular
+    profile centre; the finite-mask in the helper is what stops the argmin
+    following that NaN instead of the critical curve.
+    """
+    mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=1.0)
+    od = LensCalc.from_mass_obj(mp)
+
+    seed = od._seed_via_coarse_grid_argmin(xp=np)
+
+    assert seed.shape == (1, 2)
+    assert np.all(np.isfinite(seed))
+
+    cell_width = 2.0 * 3.0 / 25
+    radius = np.hypot(seed[0, 0], seed[0, 1])
+    assert abs(radius - 1.0) < cell_width
+
+
+def test__seed_via_coarse_grid_argmin__off_centre_isothermal():
+    """
+    The seed search follows the model, not a hardcoded position. This is the
+    case a fixed ±1" cardinal fan of seeds cannot handle: an SIE of Einstein
+    radius 1.0" centred at (2.0, -1.5) has its tangential critical curve
+    nowhere near any of `[[1,0], [0,1], [-1,0], [0,-1]]`, so a fan-seeded
+    Newton solve starts from points 1.5-3.5" off the curve.
+
+    `grid_extent=5.0` widens the coarse grid enough to contain the curve;
+    the cell width is then `2 * 5.0 / 25 = 0.4"`.
+    """
+    mp = ag.mp.Isothermal(centre=(2.0, -1.5), ell_comps=(0.0, 0.0), einstein_radius=1.0)
+    od = LensCalc.from_mass_obj(mp)
+
+    seed = od._seed_via_coarse_grid_argmin(grid_extent=5.0, xp=np)
+
+    assert seed.shape == (1, 2)
+    assert np.all(np.isfinite(seed))
+
+    cell_width = 2.0 * 5.0 / 25
+    radius = np.hypot(seed[0, 0] - 2.0, seed[0, 1] - (-1.5))
+    assert abs(radius - 1.0) < cell_width
+
+
+def test__seed_via_coarse_grid_argmin__radial_kind__returns_finite_seed():
+    """
+    `kind="radial"` selects the `1 - kappa + |gamma|` eigen value. An SIS has
+    no radial critical curve at all (its radial eigen value never reaches
+    zero away from the singular centre), so there is no position to assert
+    against — the point of this test is only that the radial branch runs,
+    masks the singular centre cell, and returns a finite `(1, 2)` seed
+    rather than raising or handing back NaN.
+
+    A model with a genuine radial curve (e.g. `ag.mp.PowerLaw` with a core,
+    or an NFW) is exercised on the JAX path in the integration suite.
+    """
+    mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=1.0)
+    od = LensCalc.from_mass_obj(mp)
+
+    seed = od._seed_via_coarse_grid_argmin(kind="radial", xp=np)
+
+    assert seed.shape == (1, 2)
+    assert np.all(np.isfinite(seed))
 
 
 def test__analysis_dataset__latent_batch_mode_is_jit():
@@ -816,6 +898,35 @@ def test__einstein_radius_jit_from__missing_jax_zero_contour__returns_nan_and_wa
     matching = [
         r for r in caplog.records if "einstein_radius_jit_from" in r.message
     ]
+    assert len(matching) == 1
+
+
+def test__einstein_radius_jit_from__missing_dep__no_init_guess__returns_nan_and_warns(
+    monkeypatch, caplog
+):
+    """
+    The soft-fail early-out precedes the seed search, so a call with no
+    `init_guess` must behave exactly as the seeded call does when
+    `jax_zero_contour` is missing: NaN back, one warning, and no attempt to
+    import JAX or run `_seed_via_coarse_grid_argmin` (625 Hessians thrown
+    away would be a silly way to reach the same NaN).
+    """
+    _lens_calc_module._OPTIONAL_DEP_WARNED.discard("einstein_radius_jit_from")
+    _patch_missing_jax_zero_contour(monkeypatch)
+
+    mp = ag.mp.IsothermalSph(centre=(0.0, 0.0), einstein_radius=2.0)
+    od = LensCalc.from_mass_obj(mp)
+
+    def _fail(*args, **kwargs):
+        raise AssertionError("seed search ran despite the missing-dependency early-out")
+
+    monkeypatch.setattr(od, "_seed_via_coarse_grid_argmin", _fail)
+
+    with caplog.at_level(logging.WARNING, logger=_lens_calc_module.__name__):
+        result = od.einstein_radius_jit_from()
+
+    assert math.isnan(result)
+    matching = [r for r in caplog.records if "einstein_radius_jit_from" in r.message]
     assert len(matching) == 1
 
 
