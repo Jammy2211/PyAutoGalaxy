@@ -1,12 +1,17 @@
 import numpy as np
 from typing import Tuple
 from autogalaxy.convert import multipole_comps_from, multipole_k_m_and_phi_m_from
+from autogalaxy import convert
 
 
 from autogalaxy.ellipse.ellipse.ellipse import Ellipse
 
 
 class EllipseMultipole:
+    derived_parameters = {
+        ("multipole_comps_0", "multipole_comps_1"): convert.derived_multipole_from
+    }
+
     def __init__(
         self,
         m=4,
@@ -92,12 +97,16 @@ class EllipseMultipole:
         The (y,x) coordinates of the input points, which are perturbed by the multipole.
         """
         symmetry = 360 / self.m
-        k_orig, phi_orig = multipole_k_m_and_phi_m_from(self.multipole_comps, self.m, xp=xp)
+        k_orig, phi_orig = multipole_k_m_and_phi_m_from(
+            self.multipole_comps, self.m, xp=xp
+        )
         comps_adjusted = multipole_comps_from(
             k_orig,
             symmetry
             - 2 * phi_orig
-            + (symmetry - (ellipse.angle(xp=xp) - phi_orig)),  # Re-align light to match mass
+            + (
+                symmetry - (ellipse.angle(xp=xp) - phi_orig)
+            ),  # Re-align light to match mass
             self.m,
             xp=xp,
         )
@@ -119,6 +128,13 @@ class EllipseMultipole:
 
 
 class EllipseMultipoleScaled(EllipseMultipole):
+    derived_parameters = {
+        (
+            "scaled_multipole_comps_0",
+            "scaled_multipole_comps_1",
+        ): convert.derived_scaled_multipole_from
+    }
+
     def __init__(
         self,
         m=4,

@@ -1,6 +1,8 @@
 import numpy as np
 from typing import Tuple, Optional
 
+from autofit.mapper.prior_model.derived import Periodic
+
 # The ellipticity magnitude at which the axis-ratio conversion saturates. Beyond
 # it every magnitude maps onto the same axis ratio, so the likelihood is exactly
 # flat in the radial direction and carries no gradient there — a gradient search
@@ -110,7 +112,9 @@ def axis_ratio_and_angle_from(
 
     angle = 0.5 * xp.arctan2(
         ell_comps[0],
-        xp.where(xp.logical_and(ell_comps[0] == 0, ell_comps[1] == 0), 1.0, ell_comps[1]),
+        xp.where(
+            xp.logical_and(ell_comps[0] == 0, ell_comps[1] == 0), 1.0, ell_comps[1]
+        ),
     )
     angle *= 180.0 / xp.pi
 
@@ -252,7 +256,9 @@ def shear_magnitude_and_angle_from(
 
     angle = (
         0.5
-        * xp.arctan2(gamma_2, xp.where(xp.logical_and(gamma_1 == 0, gamma_2 == 0), 1.0, gamma_1))
+        * xp.arctan2(
+            gamma_2, xp.where(xp.logical_and(gamma_1 == 0, gamma_2 == 0), 1.0, gamma_1)
+        )
         * 180.0
         / xp.pi
     )
@@ -382,11 +388,11 @@ def multipole_k_m_and_phi_m_from(
 
 
 def multipole_k_m_phi_m_and_shape_angle_from(
-        multipole_comps: Tuple[float, float],
-        m: int,
-        ell_comps: Optional[Tuple[float, float]],
-        ellipse_angle: Optional[float],
-        xp=np
+    multipole_comps: Tuple[float, float],
+    m: int,
+    ell_comps: Optional[Tuple[float, float]],
+    ellipse_angle: Optional[float],
+    xp=np,
 ) -> Tuple[float, float, float]:
     r"""
     Returns the multipole normalization value `k_m`, angle `phi` and shape_angle `s` from the multipole
@@ -435,12 +441,13 @@ def multipole_k_m_phi_m_and_shape_angle_from(
     """
     if ellipse_angle is None:
         if ell_comps is None:
-            raise AssertionError('You must pass either the ell_comps or the position angle of the underlying distribution.')
+            raise AssertionError(
+                "You must pass either the ell_comps or the position angle of the underlying distribution."
+            )
         else:
             angle = ellipse_angle
     else:
         angle = angle_from(ell_comps, xp=xp)
-
 
     k_m, phi_m = multipole_k_m_and_phi_m_from(multipole_comps, m, xp=xp)
 
@@ -455,9 +462,12 @@ def multipole_k_m_phi_m_and_shape_angle_from(
 
 
 def multipole_comps_from(
-    k_m: float, phi_m: Optional[float], m: int,
-    shape_angle: Optional[float]=None, ellipse_angle: Optional[float]=None,
-    xp=np
+    k_m: float,
+    phi_m: Optional[float],
+    m: int,
+    shape_angle: Optional[float] = None,
+    ellipse_angle: Optional[float] = None,
+    xp=np,
 ) -> Tuple[float, float]:
     r"""
     Returns the multipole component parameters from their normalization value `k_m` and angle `phi`.
@@ -492,12 +502,79 @@ def multipole_comps_from(
     if phi_m is not None:
         angle = phi_m * float(m) * deg_to_rad
     elif (shape_angle is None) or (ellipse_angle is None):
-        raise AssertionError('You must provide EITHER phi_m OR shape_angle and ellipse_angle.')
+        raise AssertionError(
+            "You must provide EITHER phi_m OR shape_angle and ellipse_angle."
+        )
     else:
-        multipole_angle = ellipse_angle-shape_angle
+        multipole_angle = ellipse_angle - shape_angle
         angle = multipole_angle * float(m) * deg_to_rad
 
     multipole_comp_0 = k_m * xp.sin(angle)
     multipole_comp_1 = k_m * xp.cos(angle)
 
     return multipole_comp_0, multipole_comp_1
+
+
+# Derived-parameter conversions.
+#
+# PyAutoFit lets a model component declare, as a ``derived_parameters`` class
+# attribute, how the parameters it is *sampled* in convert to the ones it is
+# *read* in (``autofit.mapper.prior_model.derived``). The entries below are
+# those declarations' functions: each receives every parameter of the component
+# by name (the free ones as arrays over the posterior samples, the fixed ones as
+# floats) and returns the derived parameters by name. They are what the
+# ``corner_anesthetic_derived`` plots show. An angle is returned as ``Periodic``
+# with its period, so PyAutoFit recentres the samples on their circular mean and
+# a posterior peaked at the conversion's branch cut is not drawn as two peaks.
+
+
+def derived_shear_from(gamma_1, gamma_2, **kwargs) -> dict:
+    """A shear's magnitude and angle (degrees) from its ``gamma_1`` / ``gamma_2``."""
+    magnitude, angle = shear_magnitude_and_angle_from(gamma_1=gamma_1, gamma_2=gamma_2)
+    return {"magnitude": magnitude, "angle": Periodic(angle, period=180.0)}
+
+
+def derived_ellipse_from(ell_comps_0, ell_comps_1, **kwargs) -> dict:
+    """An ellipse's axis ratio and position angle (degrees) from its elliptical components."""
+    axis_ratio, angle = axis_ratio_and_angle_from(ell_comps=(ell_comps_0, ell_comps_1))
+    return {"axis_ratio": axis_ratio, "angle": Periodic(angle, period=180.0)}
+
+
+def derived_multipole_from(multipole_comps_0, multipole_comps_1, m, **kwargs) -> dict:
+    """A multipole's strength ``k_m`` and sky angle ``phi_m`` (degrees) from its components."""
+    k_m, phi_m = multipole_k_m_and_phi_m_from(
+        multipole_comps=(multipole_comps_0, multipole_comps_1), m=int(m)
+    )
+    return {"k_m": k_m, "phi_m": Periodic(phi_m, period=360.0 / int(m))}
+
+
+def derived_scaled_multipole_from(
+    scaled_multipole_comps_0, scaled_multipole_comps_1, m, **kwargs
+) -> dict:
+    """A scaled multipole's strength ``k_m`` (per unit major axis) and sky angle ``phi_m``."""
+    k_m, phi_m = multipole_k_m_and_phi_m_from(
+        multipole_comps=(scaled_multipole_comps_0, scaled_multipole_comps_1), m=int(m)
+    )
+    return {"k_m": k_m, "phi_m": Periodic(phi_m, period=360.0 / int(m))}
+
+
+def derived_light_multipoles_from(
+    multipole_3_comps_0,
+    multipole_3_comps_1,
+    multipole_4_comps_0,
+    multipole_4_comps_1,
+    **kwargs,
+) -> dict:
+    """The m=3 and m=4 strengths and angles (degrees) of a light profile's Fourier multipoles."""
+    k_3, phi_3 = multipole_k_m_and_phi_m_from(
+        multipole_comps=(multipole_3_comps_0, multipole_3_comps_1), m=3
+    )
+    k_4, phi_4 = multipole_k_m_and_phi_m_from(
+        multipole_comps=(multipole_4_comps_0, multipole_4_comps_1), m=4
+    )
+    return {
+        "k_3": k_3,
+        "phi_3": Periodic(phi_3, period=120.0),
+        "k_4": k_4,
+        "phi_4": Periodic(phi_4, period=90.0),
+    }
