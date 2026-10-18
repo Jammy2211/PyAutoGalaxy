@@ -8,8 +8,8 @@ from autogalaxy.ellipse.ellipse.ellipse import Ellipse
 
 
 class EllipseMultipole:
-    derived_parameters = {
-        ("multipole_comps_0", "multipole_comps_1"): convert.derived_multipole_from
+    latent_parameters = {
+        ("multipole_comps_0", "multipole_comps_1"): convert.latent_multipole_from
     }
 
     def __init__(
@@ -128,11 +128,11 @@ class EllipseMultipole:
 
 
 class EllipseMultipoleScaled(EllipseMultipole):
-    derived_parameters = {
+    latent_parameters = {
         (
             "scaled_multipole_comps_0",
             "scaled_multipole_comps_1",
-        ): convert.derived_scaled_multipole_from
+        ): convert.latent_scaled_multipole_from
     }
 
     def __init__(

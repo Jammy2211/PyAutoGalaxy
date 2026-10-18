@@ -29,13 +29,13 @@ class _LightProfileMultipoleMixin:
     multipole_3_comps: Tuple[float, float]
     multipole_4_comps: Tuple[float, float]
 
-    derived_parameters = {
+    latent_parameters = {
         (
             "multipole_3_comps_0",
             "multipole_3_comps_1",
             "multipole_4_comps_0",
             "multipole_4_comps_1",
-        ): convert.derived_light_multipoles_from
+        ): convert.latent_light_multipoles_from
     }
 
     def perturbed_radii_from(

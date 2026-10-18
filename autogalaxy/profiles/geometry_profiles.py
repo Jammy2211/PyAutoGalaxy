@@ -187,9 +187,9 @@ class SphProfile(GeometryProfile):
 
 class EllProfile(SphProfile):
     # How the sampled elliptical components are read: as an axis ratio and a
-    # position angle (PyAutoFit's derived-parameter protocol; inherited by
+    # position angle (PyAutoFit's latent-parameter protocol; inherited by
     # every light and mass profile, and extended by the multipole classes).
-    derived_parameters = {("ell_comps_0", "ell_comps_1"): convert.derived_ellipse_from}
+    latent_parameters = {("ell_comps_0", "ell_comps_1"): convert.latent_ellipse_from}
 
     def __init__(
         self,

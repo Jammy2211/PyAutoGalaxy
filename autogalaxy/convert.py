@@ -1,7 +1,7 @@
 import numpy as np
 from typing import Tuple, Optional
 
-from autofit.mapper.prior_model.derived import Periodic
+from autofit.mapper.prior_model.latent_parameters import Periodic
 
 # The ellipticity magnitude at which the axis-ratio conversion saturates. Beyond
 # it every magnitude maps onto the same axis ratio, so the likelihood is exactly
@@ -515,32 +515,32 @@ def multipole_comps_from(
     return multipole_comp_0, multipole_comp_1
 
 
-# Derived-parameter conversions.
+# Latent-parameter conversions.
 #
-# PyAutoFit lets a model component declare, as a ``derived_parameters`` class
+# PyAutoFit lets a model component declare, as a ``latent_parameters`` class
 # attribute, how the parameters it is *sampled* in convert to the ones it is
-# *read* in (``autofit.mapper.prior_model.derived``). The entries below are
+# *read* in (``autofit.mapper.prior_model.latent_parameters``). The entries below are
 # those declarations' functions: each receives every parameter of the component
 # by name (the free ones as arrays over the posterior samples, the fixed ones as
-# floats) and returns the derived parameters by name. They are what the
-# ``corner_anesthetic_derived`` plots show. An angle is returned as ``Periodic``
+# floats) and returns the latent parameters by name. They are what the
+# ``corner_anesthetic_latent`` plots show. An angle is returned as ``Periodic``
 # with its period, so PyAutoFit recentres the samples on their circular mean and
 # a posterior peaked at the conversion's branch cut is not drawn as two peaks.
 
 
-def derived_shear_from(gamma_1, gamma_2, **kwargs) -> dict:
+def latent_shear_from(gamma_1, gamma_2, **kwargs) -> dict:
     """A shear's magnitude and angle (degrees) from its ``gamma_1`` / ``gamma_2``."""
     magnitude, angle = shear_magnitude_and_angle_from(gamma_1=gamma_1, gamma_2=gamma_2)
     return {"magnitude": magnitude, "angle": Periodic(angle, period=180.0)}
 
 
-def derived_ellipse_from(ell_comps_0, ell_comps_1, **kwargs) -> dict:
+def latent_ellipse_from(ell_comps_0, ell_comps_1, **kwargs) -> dict:
     """An ellipse's axis ratio and position angle (degrees) from its elliptical components."""
     axis_ratio, angle = axis_ratio_and_angle_from(ell_comps=(ell_comps_0, ell_comps_1))
     return {"axis_ratio": axis_ratio, "angle": Periodic(angle, period=180.0)}
 
 
-def derived_multipole_from(multipole_comps_0, multipole_comps_1, m, **kwargs) -> dict:
+def latent_multipole_from(multipole_comps_0, multipole_comps_1, m, **kwargs) -> dict:
     """A multipole's strength ``k_m`` and sky angle ``phi_m`` (degrees) from its components."""
     k_m, phi_m = multipole_k_m_and_phi_m_from(
         multipole_comps=(multipole_comps_0, multipole_comps_1), m=int(m)
@@ -548,7 +548,7 @@ def derived_multipole_from(multipole_comps_0, multipole_comps_1, m, **kwargs) ->
     return {"k_m": k_m, "phi_m": Periodic(phi_m, period=360.0 / int(m))}
 
 
-def derived_scaled_multipole_from(
+def latent_scaled_multipole_from(
     scaled_multipole_comps_0, scaled_multipole_comps_1, m, **kwargs
 ) -> dict:
     """A scaled multipole's strength ``k_m`` (per unit major axis) and sky angle ``phi_m``."""
@@ -558,7 +558,7 @@ def derived_scaled_multipole_from(
     return {"k_m": k_m, "phi_m": Periodic(phi_m, period=360.0 / int(m))}
 
 
-def derived_light_multipoles_from(
+def latent_light_multipoles_from(
     multipole_3_comps_0,
     multipole_3_comps_1,
     multipole_4_comps_0,
