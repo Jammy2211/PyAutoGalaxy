@@ -112,9 +112,7 @@ def axis_ratio_and_angle_from(
 
     angle = 0.5 * xp.arctan2(
         ell_comps[0],
-        xp.where(
-            xp.logical_and(ell_comps[0] == 0, ell_comps[1] == 0), 1.0, ell_comps[1]
-        ),
+        xp.where(xp.logical_and(ell_comps[0] == 0, ell_comps[1] == 0), 1.0, ell_comps[1]),
     )
     angle *= 180.0 / xp.pi
 
@@ -256,9 +254,7 @@ def shear_magnitude_and_angle_from(
 
     angle = (
         0.5
-        * xp.arctan2(
-            gamma_2, xp.where(xp.logical_and(gamma_1 == 0, gamma_2 == 0), 1.0, gamma_1)
-        )
+        * xp.arctan2(gamma_2, xp.where(xp.logical_and(gamma_1 == 0, gamma_2 == 0), 1.0, gamma_1))
         * 180.0
         / xp.pi
     )
@@ -388,11 +384,11 @@ def multipole_k_m_and_phi_m_from(
 
 
 def multipole_k_m_phi_m_and_shape_angle_from(
-    multipole_comps: Tuple[float, float],
-    m: int,
-    ell_comps: Optional[Tuple[float, float]],
-    ellipse_angle: Optional[float],
-    xp=np,
+        multipole_comps: Tuple[float, float],
+        m: int,
+        ell_comps: Optional[Tuple[float, float]],
+        ellipse_angle: Optional[float],
+        xp=np
 ) -> Tuple[float, float, float]:
     r"""
     Returns the multipole normalization value `k_m`, angle `phi` and shape_angle `s` from the multipole
@@ -441,13 +437,12 @@ def multipole_k_m_phi_m_and_shape_angle_from(
     """
     if ellipse_angle is None:
         if ell_comps is None:
-            raise AssertionError(
-                "You must pass either the ell_comps or the position angle of the underlying distribution."
-            )
+            raise AssertionError('You must pass either the ell_comps or the position angle of the underlying distribution.')
         else:
             angle = ellipse_angle
     else:
         angle = angle_from(ell_comps, xp=xp)
+
 
     k_m, phi_m = multipole_k_m_and_phi_m_from(multipole_comps, m, xp=xp)
 
@@ -462,12 +457,9 @@ def multipole_k_m_phi_m_and_shape_angle_from(
 
 
 def multipole_comps_from(
-    k_m: float,
-    phi_m: Optional[float],
-    m: int,
-    shape_angle: Optional[float] = None,
-    ellipse_angle: Optional[float] = None,
-    xp=np,
+    k_m: float, phi_m: Optional[float], m: int,
+    shape_angle: Optional[float]=None, ellipse_angle: Optional[float]=None,
+    xp=np
 ) -> Tuple[float, float]:
     r"""
     Returns the multipole component parameters from their normalization value `k_m` and angle `phi`.
@@ -502,11 +494,9 @@ def multipole_comps_from(
     if phi_m is not None:
         angle = phi_m * float(m) * deg_to_rad
     elif (shape_angle is None) or (ellipse_angle is None):
-        raise AssertionError(
-            "You must provide EITHER phi_m OR shape_angle and ellipse_angle."
-        )
+        raise AssertionError('You must provide EITHER phi_m OR shape_angle and ellipse_angle.')
     else:
-        multipole_angle = ellipse_angle - shape_angle
+        multipole_angle = ellipse_angle-shape_angle
         angle = multipole_angle * float(m) * deg_to_rad
 
     multipole_comp_0 = k_m * xp.sin(angle)
