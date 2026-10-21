@@ -2,8 +2,8 @@
 Aggregator interface for loading ``Interferometer`` datasets from model-fit results.
 
 After an interferometer model-fit the dataset (complex visibilities, noise-map,
-uv-wavelengths, real-space mask, and transformer class) is written to a FITS file in
-the output directory or SQLite database.  This module reconstructs a fully-configured
+uv-wavelengths, real-space mask, transformer class and, if used, primary beam) is
+written to a FITS file in the output directory or SQLite database.  This module reconstructs a fully-configured
 ``aa.Interferometer`` object from those stored files.
 
 Two public objects are provided:
@@ -18,7 +18,7 @@ Two public objects are provided:
 
 from __future__ import annotations
 from functools import partial
-from typing import List
+from typing import List, Optional
 
 import numpy as np
 
@@ -57,6 +57,22 @@ def _has_hdu(hdu_list, name: str) -> bool:
         return False
 
     return True
+
+
+def _primary_beam_from(hdu_list) -> Optional[np.ndarray]:
+    """
+    Returns the primary beam stored in the `PRIMARY_BEAM` HDU of a `dataset.fits` HDU list written by
+    `autogalaxy.interferometer.model.analysis.interferometer_hdu_list_from`, as a float64 array of the native
+    shape of the real-space mask (masked pixels 0), or `None` if the file has no such HDU (the dataset had no
+    primary beam, or the file was written before the beam was persisted).
+
+    The HDU is detected by name only (`_has_hdu`), never via `_hdu`, whose fallback to the legacy positional
+    indices would misread another HDU as the beam.
+    """
+    if not _has_hdu(hdu_list, "primary_beam"):
+        return None
+
+    return np.asarray(hdu_list["PRIMARY_BEAM"].data, dtype="float64")
 
 
 def _sparse_terms_from(hdu_list, real_space_mask: aa.Mask2D) -> aa.SparseTerms:
@@ -178,6 +194,11 @@ def _interferometer_from(
     present). It is rebuilt via `Interferometer.from_sparse_terms`, so the returned dataset is array-free with
     its sparse operator re-attached, and a fit of it reproduces the original `log_evidence`.
 
+    If the dataset had a primary beam, `dataset.fits` has a trailing `PRIMARY_BEAM` HDU, which is passed back
+    as `primary_beam=` to either constructor, so the reloaded dataset (its transformer or sparse operator) and
+    any fit of it carry the same beam and reproduce the beamed likelihood. A file without that HDU (no beam, or
+    written before the beam was persisted) reloads with `primary_beam=None`.
+
     Each individual attribute can be loaded from the database via the `fit.value()` method.
 
     This method combines all of these attributes and returns a `Interferometer` object, including having its
@@ -203,11 +224,14 @@ def _interferometer_from(
 
         hdu_list = fit.value(name="dataset")
 
+        primary_beam = _primary_beam_from(hdu_list)
+
         if _has_hdu(hdu_list, "nufft_precision_operator"):
             dataset_list.append(
                 aa.Interferometer.from_sparse_terms(
                     _sparse_terms_from(hdu_list, real_space_mask=real_space_mask),
                     real_space_mask=real_space_mask,
+                    primary_beam=primary_beam,
                 )
             )
             continue
@@ -228,6 +252,7 @@ def _interferometer_from(
             uv_wavelengths=uv_wavelengths,
             real_space_mask=real_space_mask,
             transformer_class=transformer_class,
+            primary_beam=primary_beam,
         )
 
         dataset_list.append(dataset)
@@ -254,6 +279,9 @@ class InterferometerAgg:
     `SparseTerms` in `dataset.fits` instead of the visibilities (an HDU named `NUFFT_PRECISION_OPERATOR` is
     present). It is rebuilt via `Interferometer.from_sparse_terms`, so the returned dataset is array-free with
     its sparse operator re-attached, and a fit of it reproduces the original `log_evidence`.
+
+    A primary beam, if the dataset had one, is reloaded from the trailing `PRIMARY_BEAM` HDU and passed back
+    as `primary_beam=`, so the reloaded dataset carries the same beam.
 
         The `aggregator` contains the path to each of these files, and they can be loaded individually. This class
         can load them all at once and create an `Interferometer` object via the `_interferometer_from` method.

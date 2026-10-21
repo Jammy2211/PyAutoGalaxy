@@ -73,6 +73,23 @@ SPARSE_TERMS_SCALARS_ORDER = (
 )
 
 
+def _primary_beam_native_from(dataset: aa.Interferometer) -> Optional[np.ndarray]:
+    """
+    Returns the primary beam of `dataset` as a float64 array of the native shape of its real-space mask
+    (masked pixels 0), as written to the `PRIMARY_BEAM` HDU of `dataset.fits`, or `None` if the dataset
+    has no primary beam.
+    """
+    if dataset.primary_beam_slim is None:
+        return None
+
+    return np.asarray(
+        aa.Array2D(
+            values=dataset.primary_beam_slim, mask=dataset.real_space_mask
+        ).native.array,
+        dtype="float64",
+    )
+
+
 def interferometer_hdu_list_from(
     dataset: aa.Interferometer, include_fine_grids: bool = False
 ):
@@ -105,6 +122,13 @@ def interferometer_hdu_list_from(
     grids; rebuild them from the visibilities, or write this HDU list yourself with
     `include_fine_grids=True`, when they are needed.
 
+    A dataset with a primary beam (`Interferometer(primary_beam=...)`) also writes it, in both layouts, as a
+    trailing HDU with EXTNAME `PRIMARY_BEAM`: a float64 array of the native shape of the real-space mask with
+    masked pixels 0. It is the last HDU, so the positional indices of the legacy in-memory layout (0-3) are
+    unchanged, and a dataset without a primary beam writes no such HDU (the file is identical to one written
+    before the beam was persisted). The aggregator detects it by name and passes it back as `primary_beam=`,
+    so a fit of the reloaded dataset reproduces the beamed likelihood.
+
     Parameters
     ----------
     dataset
@@ -114,6 +138,15 @@ def interferometer_hdu_list_from(
     """
     mask = dataset.real_space_mask
 
+    primary_beam_native = _primary_beam_native_from(dataset)
+
+    if primary_beam_native is None:
+        primary_beam_values = []
+        primary_beam_ext_names = []
+    else:
+        primary_beam_values = [primary_beam_native]
+        primary_beam_ext_names = ["primary_beam"]
+
     if not dataset.is_array_free:
         return hdu_list_for_output_from(
             values_list=[
@@ -121,8 +154,15 @@ def interferometer_hdu_list_from(
                 dataset.data.in_array,
                 dataset.noise_map.in_array,
                 dataset.uv_wavelengths,
+                *primary_beam_values,
             ],
-            ext_name_list=["mask", "data", "noise_map", "uv_wavelengths"],
+            ext_name_list=[
+                "mask",
+                "data",
+                "noise_map",
+                "uv_wavelengths",
+                *primary_beam_ext_names,
+            ],
             header_dict=mask.header_dict,
         )
 
@@ -205,6 +245,7 @@ def interferometer_hdu_list_from(
                 dtype="float64",
             ),
             *fine_values,
+            *primary_beam_values,
         ],
         ext_name_list=[
             "mask",
@@ -213,6 +254,7 @@ def interferometer_hdu_list_from(
             "dirty_beam",
             "sparse_terms_scalars",
             *fine_ext_names,
+            *primary_beam_ext_names,
         ],
         header_dict=header_dict,
     )
@@ -418,6 +460,8 @@ class AnalysisInterferometer(AnalysisDataset):
         - The real space mask applied to the dataset, in the `PrimaryHDU`.
         - The interferometer dataset (data / noise-map / uv_wavelengths), or for an array-free dataset
           its `SparseTerms` (see `interferometer_hdu_list_from`).
+        - The primary beam on the real-space mask (native, masked pixels 0), as a trailing `PRIMARY_BEAM`
+          HDU, if the dataset has one, so the aggregator-rebuilt dataset and fit carry it.
 
         It is common for these attributes to be loaded by many of the template aggregator functions given in the
         `aggregator` modules. For example, when using the database tools to perform a fit, the default behaviour is for
