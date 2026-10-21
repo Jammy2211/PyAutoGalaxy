@@ -168,6 +168,9 @@ def test__interferometer_hdu_list_from__in_memory_dataset__unchanged_layout(
     np.testing.assert_array_equal(hdu_list[2].data, interferometer_7.noise_map.in_array)
     np.testing.assert_array_equal(hdu_list[3].data, interferometer_7.uv_wavelengths)
 
+    # A dataset without a primary beam writes no `PRIMARY_BEAM` HDU, so the layout is pinned at 4 HDUs.
+    assert len(hdu_list) == 4
+
 
 def test__save_attributes__array_free_dataset__aggregator_round_trip(
     interferometer_7, tmp_path
@@ -695,3 +698,267 @@ def test__sparse_terms_from__file_predating_fine_grids__reloads_none(interferome
     assert terms_reloaded.phase_centre == terms.phase_centre
     for name in ("sum_weights", "data_term", "noise_normalization", "n_vis", "eps"):
         assert getattr(terms_reloaded, name) == getattr(terms, name), name
+
+
+def _primary_beam_from(dataset):
+    """
+    A Gaussian primary beam on the real-space mask of `dataset` (peak 1 at the centre) whose FWHM is 2.2
+    arcsec, spanning a few of the mask's 1 arcsec pixels so the beam runs from 1 down to ~0.3.
+    """
+    import autoarray as aa
+    from autoarray.dataset.interferometer.primary_beam import ARCSEC_PER_RADIAN
+
+    dish_diameter_m = 12.0
+    fwhm_arcsec = 2.2
+    frequency_hz = 1.13 * 299792458.0 / dish_diameter_m / (fwhm_arcsec / ARCSEC_PER_RADIAN)
+
+    return aa.primary_beam_gaussian_from(
+        mask=dataset.real_space_mask,
+        frequency_hz=frequency_hz,
+        dish_diameter_m=dish_diameter_m,
+    )
+
+
+def _beamed_dataset_from(dataset, primary_beam):
+    import autoarray as aa
+
+    return aa.Interferometer(
+        data=dataset.data,
+        noise_map=dataset.noise_map,
+        uv_wavelengths=dataset.uv_wavelengths,
+        real_space_mask=dataset.real_space_mask,
+        transformer_class=type(dataset.transformer),
+        primary_beam=primary_beam,
+    )
+
+
+def _array_free_beamed_dataset_from(dataset, primary_beam):
+    import autoarray as aa
+
+    return aa.Interferometer.from_stream(
+        [(dataset.uv_wavelengths, dataset.data, dataset.noise_map)],
+        real_space_mask=dataset.real_space_mask,
+        transformer_class=type(dataset.transformer),
+        primary_beam=primary_beam,
+    )
+
+
+def _light_galaxies():
+    return [ag.Galaxy(redshift=0.5, bulge=ag.lp.Sersic(intensity=0.1))]
+
+
+def test__primary_beam__fixture_beam_spans_expected_range(interferometer_7):
+    import numpy as np
+
+    beam = np.asarray(_primary_beam_from(interferometer_7))
+
+    assert beam.max() == 1.0
+    assert 0.25 < beam.min() < 0.4
+
+
+def test__save_attributes__in_memory_beamed_dataset__aggregator_round_trip(
+    interferometer_7, tmp_path
+):
+    """
+    An in-memory dataset with a primary beam writes it as a trailing `PRIMARY_BEAM` HDU, and the aggregator
+    passes it back as `primary_beam=`, so the reloaded dataset carries an identical beam (on the dataset and
+    its transformer) and a fit of it reproduces the beamed log likelihood, which differs from the beamless one.
+    """
+    import numpy as np
+    import pytest
+    from astropy.io import fits
+
+    from autogalaxy.aggregator.interferometer.interferometer import (
+        _interferometer_from,
+    )
+
+    dataset = _beamed_dataset_from(
+        interferometer_7, primary_beam=_primary_beam_from(interferometer_7)
+    )
+
+    paths = af.DirectoryPaths(name="in_memory_beamed", path_prefix=str(tmp_path))
+
+    ag.AnalysisInterferometer(dataset=dataset, use_jax=False).save_attributes(
+        paths=paths
+    )
+
+    with fits.open(paths.image_path / "dataset.fits") as hdu_list:
+        assert [hdu.name for hdu in hdu_list] == [
+            "MASK",
+            "DATA",
+            "NOISE_MAP",
+            "UV_WAVELENGTHS",
+            "PRIMARY_BEAM",
+        ]
+        assert hdu_list["PRIMARY_BEAM"].data.shape == tuple(
+            dataset.real_space_mask.shape_native
+        )
+
+    dataset_reloaded = _interferometer_from(fit=_FitStub(paths=paths))[0]
+
+    assert not dataset_reloaded.is_array_free
+
+    np.testing.assert_array_equal(
+        dataset_reloaded.primary_beam_slim, dataset.primary_beam_slim
+    )
+    np.testing.assert_array_equal(
+        dataset_reloaded.transformer.primary_beam_slim,
+        dataset.transformer.primary_beam_slim,
+    )
+
+    for galaxies in (_light_galaxies(), _pixelization_only_galaxies()):
+        log_likelihood = ag.FitInterferometer(
+            dataset=dataset, galaxies=galaxies
+        ).log_likelihood
+        log_likelihood_reloaded = ag.FitInterferometer(
+            dataset=dataset_reloaded, galaxies=galaxies
+        ).log_likelihood
+        log_likelihood_beamless = ag.FitInterferometer(
+            dataset=interferometer_7, galaxies=galaxies
+        ).log_likelihood
+
+        assert log_likelihood_reloaded == pytest.approx(log_likelihood, rel=1.0e-10)
+        assert log_likelihood_reloaded != pytest.approx(
+            log_likelihood_beamless, rel=1.0e-6
+        )
+
+
+def test__save_attributes__array_free_beamed_dataset__aggregator_round_trip(
+    interferometer_7, tmp_path
+):
+    """
+    An array-free dataset with a primary beam writes it as a trailing `PRIMARY_BEAM` HDU after its
+    `SparseTerms`, and the aggregator passes it back to `from_sparse_terms`, so the reloaded sparse operator
+    carries an identical beam and fits reproduce the beamed log evidence / figure of merit.
+    """
+    import numpy as np
+    import pytest
+    from astropy.io import fits
+
+    from autogalaxy.aggregator.interferometer.interferometer import (
+        _interferometer_from,
+    )
+
+    dataset = _array_free_beamed_dataset_from(
+        interferometer_7, primary_beam=_primary_beam_from(interferometer_7)
+    )
+
+    paths = af.DirectoryPaths(name="array_free_beamed", path_prefix=str(tmp_path))
+
+    ag.AnalysisInterferometer(dataset=dataset, use_jax=False).save_attributes(
+        paths=paths
+    )
+
+    with fits.open(paths.image_path / "dataset.fits") as hdu_list:
+        assert [hdu.name for hdu in hdu_list][-1] == "PRIMARY_BEAM"
+
+    dataset_reloaded = _interferometer_from(fit=_FitStub(paths=paths))[0]
+
+    assert dataset_reloaded.is_array_free
+
+    np.testing.assert_array_equal(
+        dataset_reloaded.primary_beam_slim, dataset.primary_beam_slim
+    )
+    np.testing.assert_array_equal(
+        dataset_reloaded.sparse_operator.primary_beam_slim,
+        dataset.sparse_operator.primary_beam_slim,
+    )
+
+    galaxies = _pixelization_only_galaxies()
+
+    log_evidence = ag.FitInterferometer(dataset=dataset, galaxies=galaxies).log_evidence
+    log_evidence_reloaded = ag.FitInterferometer(
+        dataset=dataset_reloaded, galaxies=galaxies
+    ).log_evidence
+
+    assert log_evidence_reloaded == pytest.approx(log_evidence, rel=1.0e-10)
+    assert log_evidence_reloaded != pytest.approx(
+        ag.FitInterferometer(
+            dataset=_array_free_dataset_from(interferometer_7), galaxies=galaxies
+        ).log_evidence,
+        rel=1.0e-6,
+    )
+
+    galaxies = [*_light_galaxies(), *_pixelization_only_galaxies()]
+
+    figure_of_merit = ag.FitInterferometer(
+        dataset=dataset, galaxies=galaxies
+    ).figure_of_merit
+    figure_of_merit_reloaded = ag.FitInterferometer(
+        dataset=dataset_reloaded, galaxies=galaxies
+    ).figure_of_merit
+
+    assert figure_of_merit_reloaded == pytest.approx(figure_of_merit, rel=1.0e-10)
+
+
+def test__save_attributes__beamless_datasets__no_primary_beam_hdu_and_reload_without_beam(
+    interferometer_7, tmp_path
+):
+    from astropy.io import fits
+
+    from autogalaxy.aggregator.interferometer.interferometer import (
+        _interferometer_from,
+    )
+
+    for name, dataset in (
+        ("in_memory", interferometer_7),
+        ("array_free", _array_free_dataset_from(interferometer_7)),
+    ):
+        paths = af.DirectoryPaths(name=f"beamless_{name}", path_prefix=str(tmp_path))
+
+        ag.AnalysisInterferometer(dataset=dataset, use_jax=False).save_attributes(
+            paths=paths
+        )
+
+        with fits.open(paths.image_path / "dataset.fits") as hdu_list:
+            assert "PRIMARY_BEAM" not in [hdu.name for hdu in hdu_list]
+
+        dataset_reloaded = _interferometer_from(fit=_FitStub(paths=paths))[0]
+
+        assert dataset_reloaded.primary_beam is None
+        assert dataset_reloaded.primary_beam_slim is None
+
+
+def test__interferometer_from__outputs_written_before_primary_beam_persisted__reload_without_beam(
+    interferometer_7, tmp_path
+):
+    """
+    `dataset.fits` files written before the primary beam was persisted have no `PRIMARY_BEAM` HDU, even for a
+    beamed dataset. Both layouts reload with `primary_beam=None`, including a legacy in-memory file with no
+    EXTNAMEs at all (read by position), whose beam must not be read from any positional HDU.
+    """
+    from astropy.io import fits
+
+    from autogalaxy.aggregator.interferometer.interferometer import (
+        _interferometer_from,
+    )
+
+    beam = _primary_beam_from(interferometer_7)
+
+    for name, dataset, strip_ext_names in (
+        ("in_memory", _beamed_dataset_from(interferometer_7, beam), False),
+        ("in_memory_legacy", _beamed_dataset_from(interferometer_7, beam), True),
+        ("array_free", _array_free_beamed_dataset_from(interferometer_7, beam), False),
+    ):
+        paths = af.DirectoryPaths(name=f"old_{name}", path_prefix=str(tmp_path))
+
+        ag.AnalysisInterferometer(dataset=dataset, use_jax=False).save_attributes(
+            paths=paths
+        )
+
+        dataset_path = paths.image_path / "dataset.fits"
+
+        with fits.open(dataset_path) as hdu_list:
+            hdus = [hdu.copy() for hdu in hdu_list if hdu.name != "PRIMARY_BEAM"]
+
+        if strip_ext_names:
+            for hdu in hdus:
+                hdu.header.remove("EXTNAME", ignore_missing=True)
+
+        fits.HDUList(hdus).writeto(dataset_path, overwrite=True)
+
+        dataset_reloaded = _interferometer_from(fit=_FitStub(paths=paths))[0]
+
+        assert dataset_reloaded.primary_beam is None
+        assert dataset_reloaded.primary_beam_slim is None
+        assert dataset_reloaded.is_array_free == dataset.is_array_free
