@@ -331,11 +331,18 @@ def test__latent_parameters__declared_on_the_profile_classes():
 
 def test__latent_parameters__angle_posterior_at_the_branch_cut_is_not_split():
     # A shear whose angle posterior peaks at the edge of the conversion's range
-    # (near 135 / -45): without recentring the corner plot shows two peaks.
+    # (near 135 / -45): without recentring the corner plot shows two peaks. The
+    # recentring is for plots only (`recentre=True`); the latent output keeps the
+    # conversion's range.
     model = af.Model(ag.mp.ExternalShear)
     angles = np.array([130.0, 134.0, -44.0, -40.0])
     gamma_1, gamma_2 = ag.convert.shear_gamma_1_2_from(magnitude=0.05, angle=angles)
+    parameter_array = np.column_stack([gamma_1, gamma_2])
 
-    latent = model.latent_parameters_from(np.column_stack([gamma_1, gamma_2]))
+    latent = model.latent_parameters_from(parameter_array, recentre=True)
 
     assert np.ptp(latent.parameter_array[:, 1]) == pytest.approx(10.0)
+
+    latent = model.latent_parameters_from(parameter_array)
+
+    assert latent.parameter_array[:, 1] == pytest.approx(angles)
