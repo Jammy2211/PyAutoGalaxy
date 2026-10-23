@@ -1,4 +1,6 @@
+import numpy as np
 import pytest
+import autofit as af
 
 import autogalaxy as ag
 
@@ -276,3 +278,71 @@ def test__polar_conversions__jax_grad_at_origin_matches_finite_difference(name):
         )
 
         assert grad == pytest.approx(fd, abs=1.0e-6)
+
+
+def test__latent_parameter_conversions__invert_the_sampled_components():
+    # The functions each profile class declares to PyAutoFit's latent-parameter
+    # protocol, vectorised over samples.
+    gamma_1 = np.array([0.1, 0.0])
+    gamma_2 = np.array([0.0, 0.1])
+    latent = ag.convert.latent_shear_from(gamma_1=gamma_1, gamma_2=gamma_2)
+    assert latent["magnitude"] == pytest.approx([0.1, 0.1])
+    assert latent["angle"].values == pytest.approx([0.0, 45.0])
+    assert latent["angle"].period == 180.0
+
+    ell = ag.convert.ell_comps_from(axis_ratio=0.5, angle=30.0)
+    latent = ag.convert.latent_ellipse_from(
+        ell_comps_0=np.array([ell[0]]), ell_comps_1=np.array([ell[1]])
+    )
+    assert latent["axis_ratio"] == pytest.approx([0.5])
+    assert latent["angle"].values == pytest.approx([30.0])
+
+    comps = ag.convert.multipole_comps_from(k_m=0.05, phi_m=10.0, m=4)
+    latent = ag.convert.latent_multipole_from(
+        multipole_comps_0=np.array([comps[0]]),
+        multipole_comps_1=np.array([comps[1]]),
+        m=4.0,
+    )
+    assert latent["k_m"] == pytest.approx([0.05])
+    assert latent["phi_m"].values == pytest.approx([10.0])
+    assert latent["phi_m"].period == pytest.approx(90.0)
+
+
+def test__latent_parameters__declared_on_the_profile_classes():
+    from autofit.mapper.prior_model.latent_parameters import latent_parameters_for_class
+
+    assert ("ell_comps_0", "ell_comps_1") in latent_parameters_for_class(
+        ag.mp.Isothermal
+    )
+    assert ("gamma_1", "gamma_2") in latent_parameters_for_class(ag.mp.ExternalShear)
+    multipole = latent_parameters_for_class(ag.mp.PowerLawMultipole)
+    assert ("ell_comps_0", "ell_comps_1") in multipole
+    assert ("multipole_comps_0", "multipole_comps_1") in multipole
+    assert (
+        "scaled_multipole_comps_0",
+        "scaled_multipole_comps_1",
+    ) in latent_parameters_for_class(ag.EllipseMultipoleScaled)
+
+    model = af.Model(ag.mp.ExternalShear)
+    latent = model.latent_parameters_from(np.array([[0.1, 0.0]]))
+    assert latent.names == ["magnitude", "angle"]
+    assert latent.parameter_array[0] == pytest.approx([0.1, 0.0])
+
+
+def test__latent_parameters__angle_posterior_at_the_branch_cut_is_not_split():
+    # A shear whose angle posterior peaks at the edge of the conversion's range
+    # (near 135 / -45): without recentring the corner plot shows two peaks. The
+    # recentring is for plots only (`recentre=True`); the latent output keeps the
+    # conversion's range.
+    model = af.Model(ag.mp.ExternalShear)
+    angles = np.array([130.0, 134.0, -44.0, -40.0])
+    gamma_1, gamma_2 = ag.convert.shear_gamma_1_2_from(magnitude=0.05, angle=angles)
+    parameter_array = np.column_stack([gamma_1, gamma_2])
+
+    latent = model.latent_parameters_from(parameter_array, recentre=True)
+
+    assert np.ptp(latent.parameter_array[:, 1]) == pytest.approx(10.0)
+
+    latent = model.latent_parameters_from(parameter_array)
+
+    assert latent.parameter_array[:, 1] == pytest.approx(angles)

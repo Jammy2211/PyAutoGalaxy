@@ -8,6 +8,9 @@ from autogalaxy import convert
 
 
 class ExternalShear(MassProfile):
+    # Read as a magnitude and an angle rather than gamma_1 / gamma_2.
+    latent_parameters = {("gamma_1", "gamma_2"): convert.latent_shear_from}
+
     r"""
     Constant external shear field used in strong-lens mass models.
 
