@@ -16,6 +16,7 @@ Given any object that exposes `deflections_yx_2d_from` (a `MassProfile`, `Galaxy
 
 The class is constructed with `LensCalc.from_mass_obj(mass)` or `LensCalc.from_tracer(tracer)`.
 """
+
 from functools import wraps
 import importlib
 import logging
@@ -52,7 +53,9 @@ def _maybe_optional_dep_warn(import_name: str, feature_name: str) -> bool:
             logger.warning(
                 "Optional dependency '%s' not installed; '%s' returning "
                 "NaN/empty. pip install %s to enable it.",
-                import_name, feature_name, import_name,
+                import_name,
+                feature_name,
+                import_name,
             )
             _OPTIONAL_DEP_WARNED.add(feature_name)
         return True
@@ -87,6 +90,7 @@ def evaluation_grid(func):
     so it is not cropped (padding is less than one pixel in total). Below the
     cap, retain the requested spacing and existing integer rounding.
     """
+
     @wraps(func)
     def wrapper(
         lensing_obj, grid, pixel_scale: Union[Tuple[float, float], float] = 0.05
@@ -111,9 +115,7 @@ def evaluation_grid(func):
 
         if max(shape_native) > max_evaluation_grid_size:
             longest_axis = max(zoom_shape_native)
-            pixel_scale = (
-                grid.pixel_scale * longest_axis / max_evaluation_grid_size
-            )
+            pixel_scale = grid.pixel_scale * longest_axis / max_evaluation_grid_size
             # Integer ceiling avoids floating-point round-off adding a pixel
             # beyond the cap when an axis should land exactly on it.
             shape_native = tuple(
@@ -334,9 +336,7 @@ class LensCalc:
         shear = self.shear_yx_2d_via_hessian_from(grid=grid, xp=xp)
 
         if xp is np:
-            return aa.Array2D(
-                values=1 - convergence + shear.magnitudes, mask=grid.mask
-            )
+            return aa.Array2D(values=1 - convergence + shear.magnitudes, mask=grid.mask)
         magnitudes = xp.sqrt(shear[:, 0] ** 2 + shear[:, 1] ** 2)
         return 1 - convergence + magnitudes
 
@@ -616,9 +616,7 @@ class LensCalc:
         g0 = np.array(grid_values[:, 0], dtype=np.float64, copy=True)
         g1 = np.array(grid_values[:, 1], dtype=np.float64, copy=True)
 
-        grid_shift_y_up = aa.Grid2DIrregular(
-            values=np.stack([g0 + buffer, g1], axis=1)
-        )
+        grid_shift_y_up = aa.Grid2DIrregular(values=np.stack([g0 + buffer, g1], axis=1))
         grid_shift_y_down = aa.Grid2DIrregular(
             values=np.stack([g0 - buffer, g1], axis=1)
         )
@@ -777,12 +775,15 @@ class LensCalc:
 
     def magnification_2d_via_hessian_from(self, grid, xp=np) -> aa.ArrayIrregular:
         """
-        Returns the 2D magnification map of lensing object, which is computed from the 2D deflection angle map
-        via the Hessian using the expressions (see equation 60 https://inspirehep.net/literature/419263):
+        Returns the signed 2D magnification of the lensing object, which is computed from the 2D deflection angle
+        map via the Hessian using the expressions (see equation 60 https://inspirehep.net/literature/419263):
 
-        `magnification = 1.0 / det(Jacobian) = 1.0 / abs((1.0 - convergence)**2.0 - shear**2.0)`
-        `magnification = (1.0 - hessian_{0,0}) * (1.0 - hessian_{1, 1)) - hessian_{0,1}*hessian_{1,0}`
-        `magnification = (1.0 - hessian_xx) * (1.0 - hessian_yy)) - hessian_xy*hessian_yx`
+        `magnification = 1.0 / det(A)`
+        `det(A) = (1.0 - hessian_xx) * (1.0 - hessian_yy) - hessian_xy * hessian_yx`
+
+        No absolute value is taken: the sign of the returned magnification is the image parity (positive for
+        images at minima or maxima of the arrival-time surface, negative for saddle-point images). Take `abs()`
+        for the unsigned magnification.
 
         By going via the Hessian, the magnification can be calculated at any (y,x) coordinate, therefore using either a
         2D uniform or irregular grid.
@@ -1220,6 +1221,7 @@ class LensCalc:
         """
         import jax
         import jax.numpy as jnp
+
         try:
             from jax.tree_util import Partial
         except ImportError:
@@ -1237,14 +1239,12 @@ class LensCalc:
         def _f(pos):
             y, x = pos[0], pos[1]
             H = jnp.stack(
-                jax.jacfwd(_deflections_yx_scalar, argnums=(0, 1))(
-                    y, x, _pixel_scales
-                )
+                jax.jacfwd(_deflections_yx_scalar, argnums=(0, 1))(y, x, _pixel_scales)
             )
             convergence = 0.5 * (H[0, 0] + H[1, 1])
             gamma_1 = 0.5 * (H[1, 1] - H[0, 0])
             gamma_2 = 0.5 * (H[0, 1] + H[1, 0])  # symmetrised
-            shear = jnp.sqrt(gamma_1 ** 2 + gamma_2 ** 2)
+            shear = jnp.sqrt(gamma_1**2 + gamma_2**2)
             return 1.0 - convergence + _sign * shear
 
         return Partial(_f)
@@ -1297,9 +1297,7 @@ class LensCalc:
         else:
             eigen_values = self.radial_eigen_value_from(grid=grid)
 
-        coarse_curves = self.contour_list_from(
-            grid=grid, contour_array=eigen_values
-        )
+        coarse_curves = self.contour_list_from(grid=grid, contour_array=eigen_values)
 
         if not coarse_curves:
             raise ValueError(
@@ -1624,9 +1622,7 @@ class LensCalc:
             tol=tol,
             max_newton=max_newton,
         )
-        return [
-            cc - self.deflections_yx_2d_from(grid=cc) for cc in cc_list
-        ]
+        return [cc - self.deflections_yx_2d_from(grid=cc) for cc in cc_list]
 
     def tangential_caustic_list_via_zero_contour_from(
         self,
@@ -1889,9 +1885,7 @@ class LensCalc:
             ``area`` is the largest enclosed area across all seeds — robust
             to multiple seeds landing on the same critical curve).
         """
-        if _maybe_optional_dep_warn(
-            "jax_zero_contour", "einstein_radius_jit_from"
-        ):
+        if _maybe_optional_dep_warn("jax_zero_contour", "einstein_radius_jit_from"):
             return float("nan")
         from autogalaxy.operate._zero_contour import zero_solver_type
         import jax.numpy as jnp
